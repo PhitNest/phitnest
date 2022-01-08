@@ -1,0 +1,57 @@
+name: dating
+description: A new Flutter application.
+version: 1.0.0+1
+publish_to: 'none'
+environment:
+  sdk: ">=2.13.4 <3.0.0"
+
+dependencies:
+  shared_preferences: ^2.0.6
+  firebase_core: ^1.4.0
+  firebase_auth: ^3.0.1
+  cloud_firestore: ^2.4.0
+  image_picker: ^0.8.2
+  firebase_storage: ^10.0.1
+  progress_dialog:
+    git:
+      url: https://github.com/mostafaAbdelazim/progress_dialog.git
+  provider: ^5.0.0
+  url_launcher: ^6.0.2
+  intl: ^0.17.0
+  cached_network_image: ^3.1.0
+  uuid: ^3.0.4
+  video_thumbnail: ^0.3.3
+  path_provider: ^2.0.2
+  photo_view: ^0.12.0
+  video_player: ^2.1.12
+  flutter_facebook_auth: ^3.5.0
+  http: ^0.13.3
+  geolocator: ^7.3.1
+  latlong2: ^0.8.0
+  smooth_page_indicator: ^0.3.0-nullsafety.0
+  firebase_messaging: ^10.0.4
+  intl_phone_number_input: ^0.7.0+2
+  pin_code_fields: ^7.3.0
+  in_app_purchase: ^1.0.6
+  video_compress: ^3.1.0
+  flutter_native_image: ^0.0.6+1
+  flutter_sound: ^8.2.5
+  the_apple_sign_in: ^1.1.1
+  permission_handler: ^8.1.4+2
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.3
+  easy_localization: ^3.0.0
+dev_dependencies:
+  flutter_launcher_icons: ^0.9.1
+
+flutter_icons:
+  android: false
+  ios: true
+  image_path: 'assets/images/ic_launcher-playstore.png'
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/translations/
