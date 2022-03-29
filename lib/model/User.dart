@@ -22,7 +22,7 @@ class User with ChangeNotifier {
 
   String profilePictureURL;
 
-  String appIdentifier = 'Flutter Dating ${Platform.operatingSystem}';
+  String appIdentifier = 'PhitNest ${Platform.operatingSystem}';
 
   String fcmToken;
 
