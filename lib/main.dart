@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dating/firebase_options.dart';
 import 'package:dating/model/ConversationModel.dart';
 import 'package:dating/model/HomeConversationModel.dart';
 import 'package:dating/services/FirebaseHelper.dart';
@@ -28,7 +29,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
   await EasyLocalization.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     EasyLocalization(
       supportedLocales: [Locale('en'), Locale('ar'), Locale('fr')],
