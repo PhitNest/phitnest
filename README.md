@@ -18,3 +18,4 @@ samples, guidance on mobile development, and a full API reference.
 ### misc.
 - App id: com.phitnest.app
 - Android app id: com.phitnest.app.android
+- IOS app id: com.phitnest.app.ios
