@@ -63,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (homeConversationModel.isGroupChat)
       _groupNameController.text =
           homeConversationModel.conversationModel?.name ?? '';
-    _myRecorder!.openAudioSession().then((value) {
+    _myRecorder!.openRecorder().then((value) {
       setState(() {
         _mRecorderIsInitialized = true;
       });
@@ -1045,7 +1045,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
-    _myRecorder!.closeAudioSession();
+    _myRecorder!.closeRecorder();
     _myRecorder = null;
     _messageController.dispose();
     _groupNameController.dispose();
