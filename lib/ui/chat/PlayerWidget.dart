@@ -32,7 +32,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
   @override
   void dispose() {
     _localController.close();
-    _myPlayer.closeAudioSession();
+    _myPlayer.closePlayer();
     super.dispose();
   }
 
@@ -137,7 +137,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
   }
 
   void setupPlayer() async {
-    await _myPlayer.openAudioSession();
+    await _myPlayer.openPlayer();
     _sliderPosition.position = Duration(seconds: 0);
     _sliderPosition.maxPosition = Duration(seconds: 0);
     _myPlayer.dispositionStream()!.listen(_localController.add);
