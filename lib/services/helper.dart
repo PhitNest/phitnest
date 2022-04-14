@@ -241,7 +241,6 @@ bool isDarkMode(BuildContext context) {
 Future<Position?> getCurrentLocation() async {
   bool serviceEnabled;
   LocationPermission permission;
-
   // Test if location services are enabled.
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
@@ -252,6 +251,7 @@ Future<Position?> getCurrentLocation() async {
   }
 
   permission = await Geolocator.checkPermission();
+
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
@@ -276,8 +276,8 @@ Future<Position?> getCurrentLocation() async {
   Position? position;
   try {
     position = await Geolocator.getCurrentPosition(
-        forceAndroidLocationManager: true,
-        timeLimit: Duration(seconds: 10),
+        // This line breaks android emulator
+        // forceAndroidLocationManager: true,
         desiredAccuracy: LocationAccuracy.best);
   } catch (e) {
     print('getCurrentLocation $e');

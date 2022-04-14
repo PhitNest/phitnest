@@ -138,7 +138,7 @@ class _SignUpState extends State<SignUpScreen> {
                     height: 170,
                     child: _image == null
                         ? Image.asset(
-                      'assets/images/placeholder.jpg'.tr(),
+                            'assets/images/placeholder.jpg'.tr(),
                             fit: BoxFit.cover,
                           )
                         : Image.file(
