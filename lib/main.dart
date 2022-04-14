@@ -17,9 +17,6 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants.dart' as Constants;
@@ -27,7 +24,6 @@ import 'model/User.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
@@ -36,17 +32,17 @@ void main() async {
       path: 'assets/translations',
       fallbackLocale: Locale('en'),
       useFallbackTranslations: true,
-      child: MyApp(),
+      child: PhitnestApp(),
     ),
   );
 }
 
-class MyApp extends StatefulWidget {
+class PhitnestApp extends StatefulWidget {
   @override
-  MyAppState createState() => MyAppState();
+  State<PhitnestApp> createState() => _PhitnestAppState();
 }
 
-class MyAppState extends State<MyApp> with WidgetsBindingObserver {
+class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
   static User? currentUser;
   late StreamSubscription tokenStream;
 
@@ -137,12 +133,14 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         theme: ThemeData(
             bottomSheetTheme: BottomSheetThemeData(
                 backgroundColor: Colors.white.withOpacity(.9)),
-            accentColor: Color(Constants.COLOR_PRIMARY),
+            colorScheme:
+                ColorScheme.light(secondary: Color(Constants.COLOR_PRIMARY)),
             brightness: Brightness.light),
         darkTheme: ThemeData(
             bottomSheetTheme: BottomSheetThemeData(
                 backgroundColor: Colors.black12.withOpacity(.3)),
-            accentColor: Color(Constants.COLOR_PRIMARY),
+            colorScheme:
+                ColorScheme.dark(secondary: Color(Constants.COLOR_PRIMARY)),
             brightness: Brightness.dark),
         debugShowCheckedModeBanner: false,
         color: Color(Constants.COLOR_PRIMARY),
@@ -202,7 +200,7 @@ class OnBoardingState extends State<OnBoarding> {
         if (user != null) {
           user.active = true;
           await FireStoreUtils.updateCurrentUser(user);
-          MyAppState.currentUser = user;
+          _PhitnestAppState.currentUser = user;
           pushReplacement(context, HomeScreen(user: user));
         } else {
           pushReplacement(context, AuthScreen());
