@@ -93,12 +93,12 @@ class _MatchScreenState extends State<MatchScreen> {
                       onPressed: () async {
                         String channelID;
                         if (widget.matchedUser.userID
-                                .compareTo(MyAppState.currentUser!.userID) <
+                                .compareTo(PhitnestApp.currentUser!.userID) <
                             0) {
                           channelID = widget.matchedUser.userID +
-                              MyAppState.currentUser!.userID;
+                              PhitnestApp.currentUser!.userID;
                         } else {
-                          channelID = MyAppState.currentUser!.userID +
+                          channelID = PhitnestApp.currentUser!.userID +
                               widget.matchedUser.userID;
                         }
                         ConversationModel? conversationModel =

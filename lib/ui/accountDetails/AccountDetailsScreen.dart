@@ -420,7 +420,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     user.phoneNumber = mobile!;
     User? updatedUser = await FireStoreUtils.updateCurrentUser(user);
     if (updatedUser != null) {
-      MyAppState.currentUser = user;
+      PhitnestApp.currentUser = user;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

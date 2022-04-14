@@ -32,7 +32,7 @@ class _HomeState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    if (MyAppState.currentUser!.isVip) {
+    if (PhitnestApp.currentUser!.isVip) {
       checkSubscription();
     }
     user = widget.user;

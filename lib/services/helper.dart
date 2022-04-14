@@ -9,7 +9,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
@@ -286,9 +285,9 @@ Future<Position?> getCurrentLocation() async {
 }
 
 bool isInPreferredDistance(double distance) {
-  if (MyAppState.currentUser!.settings.distanceRadius.isNotEmpty) {
+  if (PhitnestApp.currentUser!.settings.distanceRadius.isNotEmpty) {
     if (distance <=
-        (int.tryParse(MyAppState.currentUser!.settings.distanceRadius) ?? 0)) {
+        (int.tryParse(PhitnestApp.currentUser!.settings.distanceRadius) ?? 0)) {
       return true;
     } else {
       return false;
@@ -299,8 +298,8 @@ bool isInPreferredDistance(double distance) {
 }
 
 bool isPreferredGender(String gender) {
-  if (MyAppState.currentUser!.settings.genderPreference != 'All') {
-    return gender == MyAppState.currentUser!.settings.genderPreference;
+  if (PhitnestApp.currentUser!.settings.genderPreference != 'All') {
+    return gender == PhitnestApp.currentUser!.settings.genderPreference;
   } else {
     return true;
   }

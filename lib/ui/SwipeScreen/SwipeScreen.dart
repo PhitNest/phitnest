@@ -308,7 +308,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
   }
 
   _undo() async {
-    if (MyAppState.currentUser!.isVip) {
+    if (PhitnestApp.currentUser!.isVip) {
       User undoUser = swipedUsers.removeLast();
       users.insert(0, undoUser);
       _fireStoreUtils.updateCardStream(users);
@@ -370,7 +370,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
                       (CardSwipeOrientation orientation, int index) async {
                     if (orientation == CardSwipeOrientation.LEFT ||
                         orientation == CardSwipeOrientation.RIGHT) {
-                      bool isValidSwipe = MyAppState.currentUser!.isVip
+                      bool isValidSwipe = PhitnestApp.currentUser!.isVip
                           ? true
                           : await _fireStoreUtils.incrementSwipe();
                       if (isValidSwipe) {

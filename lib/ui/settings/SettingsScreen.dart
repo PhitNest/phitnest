@@ -285,7 +285,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               hideProgress();
                               if (updateUser != null) {
                                 this.user = updateUser;
-                                MyAppState.currentUser = user;
+                                PhitnestApp.currentUser = user;
                                 ScaffoldMessenger.of(buildContext).showSnackBar(
                                   SnackBar(
                                     duration: Duration(seconds: 3),

@@ -210,7 +210,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
       try {
         auth.UserCredential? result = await FireStoreUtils.reAuthUser(
             widget.provider,
-            email: MyAppState.currentUser!.email,
+            email: PhitnestApp.currentUser!.email,
             password: _passwordController.text);
         if (result == null) {
           await hideProgress();

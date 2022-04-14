@@ -296,7 +296,7 @@ class _LoginScreen extends State<LoginScreen> {
           email!.trim(), password!.trim(), currentLocation!);
       await hideProgress();
       if (result != null && result is User) {
-        MyAppState.currentUser = result;
+        PhitnestApp.currentUser = result;
         pushAndRemoveUntil(context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
         showAlertDialog(context, 'Couldn\'t Authenticate'.tr(), result);
@@ -321,7 +321,7 @@ class _LoginScreen extends State<LoginScreen> {
       dynamic result = await FireStoreUtils.loginWithFacebook();
       await hideProgress();
       if (result != null && result is User) {
-        MyAppState.currentUser = result;
+        PhitnestApp.currentUser = result;
         pushAndRemoveUntil(context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
         showAlertDialog(context, 'Error'.tr(), result.tr());
@@ -342,7 +342,7 @@ class _LoginScreen extends State<LoginScreen> {
       dynamic result = await FireStoreUtils.loginWithApple();
       await hideProgress();
       if (result != null && result is User) {
-        MyAppState.currentUser = result;
+        PhitnestApp.currentUser = result;
         pushAndRemoveUntil(context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
         showAlertDialog(context, 'Error'.tr(), result.tr());

@@ -38,12 +38,13 @@ void main() async {
 }
 
 class PhitnestApp extends StatefulWidget {
+  static User? currentUser;
+
   @override
   State<PhitnestApp> createState() => _PhitnestAppState();
 }
 
 class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
-  static User? currentUser;
   late StreamSubscription tokenStream;
 
   /// this key is used to navigate to the appropriate screen when the
@@ -75,10 +76,10 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
       }
       tokenStream =
           FireStoreUtils.firebaseMessaging.onTokenRefresh.listen((event) {
-        if (currentUser != null) {
+        if (PhitnestApp.currentUser != null) {
           print('token $event');
-          currentUser!.fcmToken = event;
-          FireStoreUtils.updateCurrentUser(currentUser!);
+          PhitnestApp.currentUser!.fcmToken = event;
+          FireStoreUtils.updateCurrentUser(PhitnestApp.currentUser!);
         }
       });
       setState(() {
@@ -163,18 +164,19 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (auth.FirebaseAuth.instance.currentUser != null && currentUser != null) {
+    if (auth.FirebaseAuth.instance.currentUser != null &&
+        PhitnestApp.currentUser != null) {
       if (state == AppLifecycleState.paused) {
         //user offline
         tokenStream.pause();
-        currentUser!.active = false;
-        currentUser!.lastOnlineTimestamp = Timestamp.now();
-        FireStoreUtils.updateCurrentUser(currentUser!);
+        PhitnestApp.currentUser!.active = false;
+        PhitnestApp.currentUser!.lastOnlineTimestamp = Timestamp.now();
+        FireStoreUtils.updateCurrentUser(PhitnestApp.currentUser!);
       } else if (state == AppLifecycleState.resumed) {
         //user online
         tokenStream.resume();
-        currentUser!.active = true;
-        FireStoreUtils.updateCurrentUser(currentUser!);
+        PhitnestApp.currentUser!.active = true;
+        FireStoreUtils.updateCurrentUser(PhitnestApp.currentUser!);
       }
     }
   }
@@ -200,7 +202,7 @@ class OnBoardingState extends State<OnBoarding> {
         if (user != null) {
           user.active = true;
           await FireStoreUtils.updateCurrentUser(user);
-          _PhitnestAppState.currentUser = user;
+          PhitnestApp.currentUser = user;
           pushReplacement(context, HomeScreen(user: user));
         } else {
           pushReplacement(context, AuthScreen());

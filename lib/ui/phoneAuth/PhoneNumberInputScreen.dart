@@ -377,7 +377,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
               _verificationID!, code, _phoneNumber!, signUpLocation!);
           await hideProgress();
           if (result != null && result is User) {
-            MyAppState.currentUser = result;
+            PhitnestApp.currentUser = result;
             pushAndRemoveUntil(context, HomeScreen(user: result), false);
           } else if (result != null && result is String) {
             showAlertDialog(context, 'Failed'.tr(), result);
@@ -576,7 +576,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
               userCredential.user?.uid ?? '');
           if (user != null) {
             hideProgress();
-            MyAppState.currentUser = user;
+            PhitnestApp.currentUser = user;
             pushAndRemoveUntil(context, HomeScreen(user: user), false);
           } else {
             /// create a new user from phone login
@@ -603,7 +603,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                 await FireStoreUtils.firebaseCreateNewUser(user);
             hideProgress();
             if (errorMessage == null) {
-              MyAppState.currentUser = user;
+              PhitnestApp.currentUser = user;
               pushAndRemoveUntil(context, HomeScreen(user: user), false);
             } else {
               showAlertDialog(context, 'Failed'.tr(),

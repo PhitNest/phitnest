@@ -484,7 +484,7 @@ class _SignUpState extends State<SignUpScreen> {
           mobile!);
       await hideProgress();
       if (result != null && result is User) {
-        MyAppState.currentUser = result;
+        PhitnestApp.currentUser = result;
         pushAndRemoveUntil(context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
         showAlertDialog(context, 'Failed'.tr(), result);

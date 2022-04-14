@@ -244,7 +244,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         context, 'Deleting account...'.tr(), false);
                     await FireStoreUtils.deleteUser();
                     await hideProgress();
-                    MyAppState.currentUser = null;
+                    PhitnestApp.currentUser = null;
                     pushAndRemoveUntil(context, AuthScreen(), false);
                   }
                 },
@@ -285,7 +285,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   user.lastOnlineTimestamp = Timestamp.now();
                   await FireStoreUtils.updateCurrentUser(user);
                   await auth.FirebaseAuth.instance.signOut();
-                  MyAppState.currentUser = null;
+                  PhitnestApp.currentUser = null;
                   pushAndRemoveUntil(context, AuthScreen(), false);
                 },
               ),
@@ -313,7 +313,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               await _fireStoreUtils.deleteImage(user.profilePictureURL);
             user.profilePictureURL = '';
             await FireStoreUtils.updateCurrentUser(user);
-            MyAppState.currentUser = user;
+            PhitnestApp.currentUser = user;
             hideProgress();
             setState(() {});
           },
@@ -358,7 +358,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     user.profilePictureURL =
         await FireStoreUtils.uploadUserImageToFireStorage(image, user.userID);
     await FireStoreUtils.updateCurrentUser(user);
-    MyAppState.currentUser = user;
+    PhitnestApp.currentUser = user;
     hideProgress();
   }
 
@@ -442,7 +442,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             await _fireStoreUtils.deleteImage(url);
             user.photos = images;
             User? newUser = await FireStoreUtils.updateCurrentUser(user);
-            MyAppState.currentUser = newUser;
+            PhitnestApp.currentUser = newUser;
             if (newUser != null) {
               user = newUser;
               images.add(null);
@@ -506,7 +506,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               user.photos = images;
               User? newUser = await FireStoreUtils.updateCurrentUser(user);
               if (newUser != null) {
-                MyAppState.currentUser = newUser;
+                PhitnestApp.currentUser = newUser;
                 user = newUser;
               }
               images.add(null);
@@ -529,7 +529,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               user.photos = images;
               User? newUser = await FireStoreUtils.updateCurrentUser(user);
               if (newUser != null) {
-                MyAppState.currentUser = newUser;
+                PhitnestApp.currentUser = newUser;
                 user = newUser;
               }
               images.add(null);
