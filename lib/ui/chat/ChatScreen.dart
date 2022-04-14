@@ -546,7 +546,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget buildMessage(MessageData messageData, List<User> members) {
-    if (messageData.senderID == MyAppState.currentUser!.userID) {
+    if (messageData.senderID == PhitnestApp.currentUser!.userID) {
       return myMessageView(messageData);
     } else {
       return remoteMessageView(
@@ -958,7 +958,7 @@ class _ChatScreenState extends State<ChatScreen> {
     } else {
       String channelID;
       User friend = homeConversationModel.members.first;
-      User user = MyAppState.currentUser!;
+      User user = PhitnestApp.currentUser!;
       if (friend.userID.compareTo(user.userID) < 0) {
         channelID = friend.userID + user.userID;
       } else {
@@ -989,10 +989,10 @@ class _ChatScreenState extends State<ChatScreen> {
       message = MessageData(
           content: content,
           created: Timestamp.now(),
-          senderFirstName: MyAppState.currentUser!.firstName,
-          senderID: MyAppState.currentUser!.userID,
-          senderLastName: MyAppState.currentUser!.lastName,
-          senderProfilePictureURL: MyAppState.currentUser!.profilePictureURL,
+          senderFirstName: PhitnestApp.currentUser!.firstName,
+          senderID: PhitnestApp.currentUser!.userID,
+          senderLastName: PhitnestApp.currentUser!.lastName,
+          senderProfilePictureURL: PhitnestApp.currentUser!.profilePictureURL,
           url: url,
           videoThumbnail: videoThumbnail);
     } else {
@@ -1004,22 +1004,22 @@ class _ChatScreenState extends State<ChatScreen> {
           recipientLastName: homeConversationModel.members.first.lastName,
           recipientProfilePictureURL:
               homeConversationModel.members.first.profilePictureURL,
-          senderFirstName: MyAppState.currentUser!.firstName,
-          senderID: MyAppState.currentUser!.userID,
-          senderLastName: MyAppState.currentUser!.lastName,
-          senderProfilePictureURL: MyAppState.currentUser!.profilePictureURL,
+          senderFirstName: PhitnestApp.currentUser!.firstName,
+          senderID: PhitnestApp.currentUser!.userID,
+          senderLastName: PhitnestApp.currentUser!.lastName,
+          senderProfilePictureURL: PhitnestApp.currentUser!.profilePictureURL,
           url: url,
           videoThumbnail: videoThumbnail);
     }
     if (url != null) {
       if (url.mime.contains('image')) {
         message.content =
-            '${MyAppState.currentUser!.firstName} sent an image'.tr();
+            '${PhitnestApp.currentUser!.firstName} sent an image'.tr();
       } else if (url.mime.contains('video')) {
         message.content =
-            '${MyAppState.currentUser!.firstName} sent a video'.tr();
+            '${PhitnestApp.currentUser!.firstName} sent a video'.tr();
       } else if (url.mime.contains('audio')) {
-        message.content = '${MyAppState.currentUser!.firstName} sent a voice '
+        message.content = '${PhitnestApp.currentUser!.firstName} sent a voice '
                 'message'
             .tr();
       }
