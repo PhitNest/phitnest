@@ -1,7 +1,6 @@
 import 'package:phitnest/constants.dart';
+import 'package:phitnest/helpers/helper_library.dart';
 import 'package:phitnest/main.dart';
-import 'package:phitnest/services/firebase.dart';
-import 'package:phitnest/services/helper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';

@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:phitnest/constants.dart';
+import 'package:phitnest/helpers/dialog_helper.dart';
 import 'package:phitnest/main.dart';
 import 'package:phitnest/model/block_user_model.dart';
 import 'package:phitnest/model/channel_participation.dart';
@@ -17,8 +18,8 @@ import 'package:phitnest/model/swipe.dart';
 import 'package:phitnest/model/swipe_counter_model.dart';
 import 'package:phitnest/model/user.dart';
 import 'package:phitnest/model/user.dart' as location;
-import 'package:phitnest/services/helper.dart';
-import 'package:phitnest/ui/matchScreen/MatchScreen.dart';
+import 'package:phitnest/helpers/helper.dart';
+import 'package:phitnest/ui/matchScreen/match_screen.dart';
 import 'package:phitnest/ui/reauthScreen/reauth_user_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;

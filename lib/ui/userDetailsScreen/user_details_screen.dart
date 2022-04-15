@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:phitnest/CustomFlutterTinderCard.dart';
+import 'package:phitnest/custom_flutter_tinder_card.dart';
 import 'package:phitnest/constants.dart';
+import 'package:phitnest/helpers/helper_library.dart';
 import 'package:phitnest/model/user.dart';
-import 'package:phitnest/services/helper.dart';
-import 'package:phitnest/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
+import 'package:phitnest/ui/fullScreenImageViewer/full_screen_image_viewer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

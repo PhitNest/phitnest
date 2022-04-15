@@ -1,17 +1,13 @@
 import 'package:phitnest/constants.dart';
+import 'package:phitnest/helpers/helper_library.dart';
 import 'package:phitnest/main.dart';
 import 'package:phitnest/model/user.dart';
-import 'package:phitnest/services/firebase.dart';
-import 'package:phitnest/services/authentication.dart';
-import 'package:phitnest/services/helper.dart';
-import 'package:phitnest/ui/home/HomeScreen.dart';
-import 'package:phitnest/ui/phoneAuth/PhoneNumberInputScreen.dart';
-import 'package:phitnest/ui/resetPasswordScreen/ResetPasswordScreen.dart';
+
+import 'package:phitnest/ui/home/home_screen.dart';
+import 'package:phitnest/ui/phoneAuth/phone_number_input_screen.dart';
+import 'package:phitnest/ui/resetPasswordScreen/reset_password_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
