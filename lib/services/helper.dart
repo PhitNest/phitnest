@@ -2,64 +2,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dating/constants.dart';
-import 'package:dating/main.dart';
-import 'package:dating/model/User.dart' as user;
+import 'package:phitnest/constants.dart';
+import 'package:phitnest/main.dart';
+import 'package:phitnest/model/user.dart' as user;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-
-String? validateName(String? value) {
-  String pattern = r'(^[a-zA-Z ]*$)';
-  RegExp regExp = RegExp(pattern);
-  if (value?.length == 0) {
-    return 'Name is Required'.tr();
-  } else if (!regExp.hasMatch(value ?? '')) {
-    return 'Name must be a-z and A-Z'.tr();
-  }
-  return null;
-}
-
-String? validateMobile(String? value) {
-  String pattern = r'(^\+?[0-9]*$)';
-  RegExp regExp = RegExp(pattern);
-  if (value?.length == 0) {
-    return 'Mobile is Required'.tr();
-  } else if (!regExp.hasMatch(value ?? '')) {
-    return 'Mobile Number must be digits'.tr();
-  }
-  return null;
-}
-
-String? validatePassword(String? value) {
-  if ((value?.length ?? 0) < 6)
-    return 'Password must be more than 5 character'.tr();
-  else
-    return null;
-}
-
-String? validateEmail(String? value) {
-  String pattern =
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-  RegExp regex = RegExp(pattern);
-  if (!regex.hasMatch(value ?? ''))
-    return 'Enter Valid Email'.tr();
-  else
-    return null;
-}
-
-String? validateConfirmPassword(String? password, String? confirmPassword) {
-  if (password != confirmPassword) {
-    return 'Password doesn\'t match'.tr();
-  } else if (confirmPassword?.length == 0) {
-    return 'Confirm password is required'.tr();
-  } else {
-    return null;
-  }
-}
 
 //helper method to show progress
 late ProgressDialog progressDialog;

@@ -1,5 +1,5 @@
-import 'ConversationModel.dart';
-import 'User.dart';
+import 'conversation_model.dart';
+import 'user.dart';
 
 class HomeConversationModel {
   bool isGroupChat;

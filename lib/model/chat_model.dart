@@ -1,5 +1,5 @@
-import 'MessageData.dart';
-import 'User.dart';
+import 'message_data.dart';
+import 'user.dart';
 
 class ChatModel {
   List<MessageData> message = [];

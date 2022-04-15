@@ -1,5 +1,5 @@
-import 'package:dating/constants.dart';
-import 'package:dating/services/helper.dart';
+import 'package:phitnest/constants.dart';
+import 'package:phitnest/services/helper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
