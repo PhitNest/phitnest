@@ -15,11 +15,12 @@ void main() async {
   setupLocator();
   runApp(
     EasyLocalization(
-      supportedLocales: [Locale('en'), Locale('ar'), Locale('fr')],
-      path: 'assets/translations',
-      fallbackLocale: Locale('en'),
-      useFallbackTranslations: true,
-      child: PhitnestApp(),
-    ),
+        supportedLocales: [Locale('en'), Locale('ar'), Locale('fr')],
+        path: 'assets/translations',
+        fallbackLocale: Locale('en'),
+        useFallbackTranslations: true,
+        child: ChangeNotifierProvider(
+            create: (context) => AppModel(),
+            builder: (context, child) => const PhitnestApp())),
   );
 }

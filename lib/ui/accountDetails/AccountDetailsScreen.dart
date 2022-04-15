@@ -1,9 +1,10 @@
-import 'package:dating/constants.dart';
-import 'package:dating/main.dart';
-import 'package:dating/model/User.dart';
-import 'package:dating/services/FirebaseHelper.dart';
-import 'package:dating/services/helper.dart';
-import 'package:dating/ui/reauthScreen/reauth_user_screen.dart';
+import 'package:phitnest/constants.dart';
+import 'package:phitnest/main.dart';
+import 'package:phitnest/model/user.dart';
+import 'package:phitnest/services/firebase.dart';
+import 'package:phitnest/services/helper.dart';
+import 'package:phitnest/services/authentication.dart';
+import 'package:phitnest/ui/reauthScreen/reauth_user_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
