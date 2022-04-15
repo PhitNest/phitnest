@@ -1,19 +1,17 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:phitnest/CustomFlutterTinderCard.dart';
+import 'package:phitnest/custom_flutter_tinder_card.dart';
 import 'package:phitnest/constants.dart';
+import 'package:phitnest/helpers/helper_library.dart';
 import 'package:phitnest/main.dart';
 import 'package:phitnest/model/user.dart';
-import 'package:phitnest/services/firebase.dart';
-import 'package:phitnest/services/helper.dart';
-import 'package:phitnest/ui/matchScreen/MatchScreen.dart';
-import 'package:phitnest/ui/upgradeAccount/UpgradeAccount.dart';
-import 'package:phitnest/ui/userDetailsScreen/UserDetailsScreen.dart';
+import 'package:phitnest/ui/matchScreen/match_screen.dart';
+import 'package:phitnest/ui/upgradeAccount/upgrade_account.dart';
+import 'package:phitnest/ui/userDetailsScreen/user_details_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class SwipeScreen extends StatefulWidget {
   @override

@@ -1,9 +1,7 @@
 import 'package:phitnest/constants.dart';
-import 'package:phitnest/services/firebase.dart';
-import 'package:phitnest/services/authentication.dart';
-import 'package:phitnest/services/helper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:phitnest/helpers/helper_library.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   @override
