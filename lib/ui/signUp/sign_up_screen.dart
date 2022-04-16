@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:phitnest/constants.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/main.dart';
 import 'package:phitnest/model/user.dart';
 import 'package:phitnest/ui/home/home_screen.dart';
@@ -34,11 +34,14 @@ class _SignUpState extends State<SignUpScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        brightness: isDarkMode(context) ? Brightness.dark : Brightness.light,
+        brightness: DisplayUtils.isDarkMode(context)
+            ? Brightness.dark
+            : Brightness.light,
         elevation: 0.0,
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(
-            color: isDarkMode(context) ? Colors.white : Colors.black),
+            color:
+                DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -153,7 +156,9 @@ class _SignUpState extends State<SignUpScreen> {
                     backgroundColor: Color(COLOR_ACCENT),
                     child: Icon(
                       Icons.camera_alt,
-                      color: isDarkMode(context) ? Colors.black : Colors.white,
+                      color: DisplayUtils.isDarkMode(context)
+                          ? Colors.black
+                          : Colors.white,
                     ),
                     mini: true,
                     onPressed: _onCameraClick),
@@ -168,7 +173,7 @@ class _SignUpState extends State<SignUpScreen> {
             child: TextFormField(
               cursorColor: Color(COLOR_PRIMARY),
               textAlignVertical: TextAlignVertical.center,
-              validator: validateName,
+              validator: AuthenticationUtils.validateName,
               onSaved: (String? val) {
                 firstName = val;
               },
@@ -203,7 +208,7 @@ class _SignUpState extends State<SignUpScreen> {
           child: Padding(
             padding: const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
             child: TextFormField(
-              validator: validateName,
+              validator: AuthenticationUtils.validateName,
               textAlignVertical: TextAlignVertical.center,
               cursorColor: Color(COLOR_PRIMARY),
               onSaved: (String? val) {
@@ -244,7 +249,7 @@ class _SignUpState extends State<SignUpScreen> {
               textAlignVertical: TextAlignVertical.center,
               textInputAction: TextInputAction.next,
               cursorColor: Color(COLOR_PRIMARY),
-              validator: validateEmail,
+              validator: AuthenticationUtils.validateEmail,
               onSaved: (String? val) {
                 email = val;
               },
@@ -285,7 +290,7 @@ class _SignUpState extends State<SignUpScreen> {
               textAlignVertical: TextAlignVertical.center,
               textInputAction: TextInputAction.next,
               cursorColor: Color(COLOR_PRIMARY),
-              validator: validateMobile,
+              validator: AuthenticationUtils.validateMobile,
               onSaved: (String? val) {
                 mobile = val;
               },
@@ -323,7 +328,7 @@ class _SignUpState extends State<SignUpScreen> {
               textAlignVertical: TextAlignVertical.center,
               textInputAction: TextInputAction.next,
               controller: _passwordController,
-              validator: validatePassword,
+              validator: AuthenticationUtils.validatePassword,
               onSaved: (String? val) {
                 password = val;
               },
@@ -363,8 +368,8 @@ class _SignUpState extends State<SignUpScreen> {
               textInputAction: TextInputAction.done,
               onFieldSubmitted: (_) => _signUp(),
               obscureText: true,
-              validator: (val) =>
-                  validateConfirmPassword(_passwordController.text, val),
+              validator: (val) => AuthenticationUtils.validateConfirmPassword(
+                  _passwordController.text, val),
               onSaved: (String? val) {
                 confirmPassword = val;
               },
@@ -415,7 +420,9 @@ class _SignUpState extends State<SignUpScreen> {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: isDarkMode(context) ? Colors.black : Colors.white,
+                  color: DisplayUtils.isDarkMode(context)
+                      ? Colors.black
+                      : Colors.white,
                 ),
               ),
               onPressed: () => _signUp(),
@@ -428,13 +435,15 @@ class _SignUpState extends State<SignUpScreen> {
             child: Text(
               'OR'.tr(),
               style: TextStyle(
-                  color: isDarkMode(context) ? Colors.white : Colors.black),
+                  color: DisplayUtils.isDarkMode(context)
+                      ? Colors.white
+                      : Colors.black),
             ),
           ),
         ),
         InkWell(
           onTap: () {
-            push(context, PhoneNumberInputScreen(login: false));
+            NavigationUtils.push(context, PhoneNumberInputScreen(login: false));
           },
           child: Text(
             'Sign up with phone number'.tr(),
@@ -468,11 +477,11 @@ class _SignUpState extends State<SignUpScreen> {
   }
 
   _signUpWithEmailAndPassword() async {
-    await showProgress(
+    await DialogUtils.showProgress(
         context, 'Creating new account, Please wait...'.tr(), false);
-    signUpLocation = await getCurrentLocation();
+    signUpLocation = await LocationUtils.getCurrentLocation();
     if (signUpLocation != null) {
-      dynamic result = await FireStoreUtils.firebaseSignUpWithEmailAndPassword(
+      dynamic result = await FirebaseUtils.firebaseSignUpWithEmailAndPassword(
           email!.trim(),
           password!.trim(),
           _image,
@@ -480,17 +489,19 @@ class _SignUpState extends State<SignUpScreen> {
           lastName!,
           signUpLocation!,
           mobile!);
-      await hideProgress();
+      await DialogUtils.hideProgress();
       if (result != null && result is User) {
         PhitnestApp.currentUser = result;
-        pushAndRemoveUntil(context, HomeScreen(user: result), false);
+        NavigationUtils.pushAndRemoveUntil(
+            context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
-        showAlertDialog(context, 'Failed'.tr(), result);
+        DialogUtils.showAlertDialog(context, 'Failed'.tr(), result);
       } else {
-        showAlertDialog(context, 'Failed'.tr(), 'Couldn\'t sign up'.tr());
+        DialogUtils.showAlertDialog(
+            context, 'Failed'.tr(), 'Couldn\'t sign up'.tr());
       }
     } else {
-      await hideProgress();
+      await DialogUtils.hideProgress();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Location is required to match you with people from '
                 'your area.'

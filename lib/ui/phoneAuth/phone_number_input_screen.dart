@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:phitnest/constants.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/main.dart';
 import 'package:phitnest/model/user.dart';
 import 'package:phitnest/ui/home/home_screen.dart';
@@ -47,7 +47,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
         elevation: 0.0,
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(
-            color: isDarkMode(context) ? Colors.white : Colors.black),
+            color:
+                DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -105,7 +106,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                               backgroundColor: Color(COLOR_ACCENT),
                               child: Icon(
                                 CupertinoIcons.camera,
-                                color: isDarkMode(context)
+                                color: DisplayUtils.isDarkMode(context)
                                     ? Colors.black
                                     : Colors.white,
                               ),
@@ -129,7 +130,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                       child: TextFormField(
                         cursorColor: Color(COLOR_PRIMARY),
                         textAlignVertical: TextAlignVertical.center,
-                        validator: validateName,
+                        validator: AuthenticationUtils.validateName,
                         controller: _firstNameController,
                         onSaved: (String? val) {
                           firstName = val;
@@ -174,7 +175,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                       padding: const EdgeInsets.only(
                           top: 16.0, right: 8.0, left: 8.0),
                       child: TextFormField(
-                        validator: validateName,
+                        validator: AuthenticationUtils.validateName,
                         textAlignVertical: TextAlignVertical.center,
                         cursorColor: Color(COLOR_PRIMARY),
                         onSaved: (String? val) {
@@ -315,7 +316,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: isDarkMode(context)
+                              color: DisplayUtils.isDarkMode(context)
                                   ? Colors.black
                                   : Colors.white),
                         ),
@@ -329,7 +330,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                     child: Text(
                       'OR'.tr(),
                       style: TextStyle(
-                          color: isDarkMode(context)
+                          color: DisplayUtils.isDarkMode(context)
                               ? Colors.white
                               : Colors.black),
                     ),
@@ -365,33 +366,34 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
   /// @param code the code from input from code field
   /// creates a new user from phone login
   void _submitCode(String code) async {
-    await showProgress(context,
+    await DialogUtils.showProgress(context,
         widget.login ? 'Logging in...'.tr() : 'Signing up...'.tr(), false);
     try {
-      signUpLocation = await getCurrentLocation();
+      signUpLocation = await LocationUtils.getCurrentLocation();
       if (signUpLocation != null) {
         if (_verificationID != null) {
-          dynamic result = await FireStoreUtils.firebaseSubmitPhoneNumberCode(
+          dynamic result = await FirebaseUtils.firebaseSubmitPhoneNumberCode(
               _verificationID!, code, _phoneNumber!, signUpLocation!);
-          await hideProgress();
+          await DialogUtils.hideProgress();
           if (result != null && result is User) {
             PhitnestApp.currentUser = result;
-            pushAndRemoveUntil(context, HomeScreen(user: result), false);
+            NavigationUtils.pushAndRemoveUntil(
+                context, HomeScreen(user: result), false);
           } else if (result != null && result is String) {
-            showAlertDialog(context, 'Failed'.tr(), result);
+            DialogUtils.showAlertDialog(context, 'Failed'.tr(), result);
           } else {
-            showAlertDialog(context, 'Failed'.tr(),
+            DialogUtils.showAlertDialog(context, 'Failed'.tr(),
                 'Couldn\'t create new user with phone number.'.tr());
           }
         } else {
-          await hideProgress();
+          await DialogUtils.hideProgress();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Couldn\'t get verification ID'.tr()),
             duration: Duration(seconds: 6),
           ));
         }
       } else {
-        await hideProgress();
+        await DialogUtils.hideProgress();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Location is required to connect you with people from '
                   'your area.'
@@ -400,7 +402,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
         ));
       }
     } on auth.FirebaseAuthException catch (exception) {
-      hideProgress();
+      DialogUtils.hideProgress();
       String message = 'An error has occurred, please try again.'.tr();
       switch (exception.code) {
         case 'invalid-verification-code':
@@ -422,7 +424,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
       );
     } catch (e, s) {
       print('_PhoneNumberInputScreenState._submitCode $e $s');
-      hideProgress();
+      DialogUtils.hideProgress();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -514,12 +516,12 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
   /// navigate to [ContainerScreen] after wards
   _submitPhoneNumber(String phoneNumber) async {
     //send code
-    await showProgress(context, 'Sending code...'.tr(), true);
-    await FireStoreUtils.firebaseSubmitPhoneNumber(
+    await DialogUtils.showProgress(context, 'Sending code...'.tr(), true);
+    await FirebaseUtils.firebaseSubmitPhoneNumber(
       phoneNumber,
       (String verificationId) {
         if (mounted) {
-          hideProgress();
+          DialogUtils.hideProgress();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -534,7 +536,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
       },
       (String? verificationId, int? forceResendingToken) {
         if (mounted) {
-          hideProgress();
+          DialogUtils.hideProgress();
           _verificationID = verificationId;
           setState(() {
             _codeSent = true;
@@ -543,7 +545,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
       },
       (auth.FirebaseAuthException error) {
         if (mounted) {
-          hideProgress();
+          DialogUtils.hideProgress();
           print('${error.message} ${error.stackTrace}');
           String message = 'An error has occurred, please try again.'.tr();
           switch (error.code) {
@@ -570,19 +572,20 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
         if (mounted) {
           auth.UserCredential userCredential =
               await auth.FirebaseAuth.instance.signInWithCredential(credential);
-          User? user = await FireStoreUtils.getCurrentUser(
+          User? user = await FirebaseUtils.getCurrentUser(
               userCredential.user?.uid ?? '');
           if (user != null) {
-            hideProgress();
+            DialogUtils.hideProgress();
             PhitnestApp.currentUser = user;
-            pushAndRemoveUntil(context, HomeScreen(user: user), false);
+            NavigationUtils.pushAndRemoveUntil(
+                context, HomeScreen(user: user), false);
           } else {
             /// create a new user from phone login
             User user = User(
                 firstName: _firstNameController.text,
                 lastName: _firstNameController.text,
                 fcmToken:
-                    await FireStoreUtils.firebaseMessaging.getToken() ?? '',
+                    await FirebaseUtils.firebaseMessaging.getToken() ?? '',
                 phoneNumber: phoneNumber,
                 active: true,
                 lastOnlineTimestamp: Timestamp.now(),
@@ -598,13 +601,14 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                 profilePictureURL: '',
                 userID: userCredential.user?.uid ?? '');
             String? errorMessage =
-                await FireStoreUtils.firebaseCreateNewUser(user);
-            hideProgress();
+                await FirebaseUtils.firebaseCreateNewUser(user);
+            DialogUtils.hideProgress();
             if (errorMessage == null) {
               PhitnestApp.currentUser = user;
-              pushAndRemoveUntil(context, HomeScreen(user: user), false);
+              NavigationUtils.pushAndRemoveUntil(
+                  context, HomeScreen(user: user), false);
             } else {
-              showAlertDialog(context, 'Failed'.tr(),
+              DialogUtils.showAlertDialog(context, 'Failed'.tr(),
                   'Couldn\'t create new user with phone number.'.tr());
             }
           }

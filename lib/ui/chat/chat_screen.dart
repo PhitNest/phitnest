@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:phitnest/constants.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/main.dart';
 import 'package:phitnest/model/chat_model.dart';
 import 'package:phitnest/model/chat_video_container.dart';
@@ -40,7 +40,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final ImagePicker _imagePicker = ImagePicker();
   late HomeConversationModel homeConversationModel;
   TextEditingController _messageController = TextEditingController();
-  final FireStoreUtils _fireStoreUtils = FireStoreUtils();
   TextEditingController _groupNameController = TextEditingController();
   RecordingState currentRecordingState = RecordingState.HIDDEN;
   late Timer audioMessageTimer;
@@ -69,8 +68,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   setupStream() {
-    chatStream = _fireStoreUtils
-        .getChatMessages(homeConversationModel)
+    chatStream = FirebaseUtils.getChatMessages(homeConversationModel)
         .asBroadcastStream();
     chatStream.listen((chatModel) {
       if (mounted) {
@@ -100,7 +98,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   contentPadding: const EdgeInsets.all(0),
                   leading: Icon(
                     Icons.settings,
-                    color: isDarkMode(context)
+                    color: DisplayUtils.isDarkMode(context)
                         ? Colors.grey.shade200
                         : Colors.black,
                   ),
@@ -115,15 +113,19 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
         centerTitle: true,
         actionsIconTheme: IconThemeData(
-            color: isDarkMode(context) ? Colors.grey.shade200 : Colors.white),
+            color: DisplayUtils.isDarkMode(context)
+                ? Colors.grey.shade200
+                : Colors.white),
         iconTheme: IconThemeData(
-            color: isDarkMode(context) ? Colors.grey.shade200 : Colors.white),
+            color: DisplayUtils.isDarkMode(context)
+                ? Colors.grey.shade200
+                : Colors.white),
         backgroundColor: Color(COLOR_PRIMARY),
         title: homeConversationModel.isGroupChat
             ? Text(
                 homeConversationModel.conversationModel?.name ?? '',
                 style: TextStyle(
-                    color: isDarkMode(context)
+                    color: DisplayUtils.isDarkMode(context)
                         ? Colors.grey.shade200
                         : Colors.white,
                     fontWeight: FontWeight.bold),
@@ -135,7 +137,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   Text(
                     homeConversationModel.members.first.fullName(),
                     style: TextStyle(
-                        color: isDarkMode(context)
+                        color: DisplayUtils.isDarkMode(context)
                             ? Colors.grey.shade200
                             : Colors.white,
                         fontWeight: FontWeight.bold),
@@ -212,7 +214,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ),
                                     borderSide:
                                         BorderSide(style: BorderStyle.none)),
-                                color: isDarkMode(context)
+                                color: DisplayUtils.isDarkMode(context)
                                     ? Colors.grey[700]
                                     : Colors.grey.shade200,
                               ),
@@ -409,7 +411,7 @@ class _ChatScreenState extends State<ChatScreen> {
     String text = friend.active
         ? 'Active now'.tr()
         : 'Last seen on '
-                '${setLastSeen(friend.lastOnlineTimestamp.seconds)}'
+                '${TimeUtils.setLastSeen(friend.lastOnlineTimestamp.seconds)}'
             .tr();
     return Text(text,
         style: TextStyle(fontSize: 15, color: Colors.grey.shade200));
@@ -428,10 +430,10 @@ class _ChatScreenState extends State<ChatScreen> {
           isDefaultAction: false,
           onPressed: () async {
             Navigator.pop(context);
-            showProgress(context, 'Leaving group chat'.tr(), false);
-            bool isSuccessful = await _fireStoreUtils
-                .leaveGroup(homeConversationModel.conversationModel!);
-            hideProgress();
+            DialogUtils.showProgress(context, 'Leaving group chat'.tr(), false);
+            bool isSuccessful = await FirebaseUtils.leaveGroup(
+                homeConversationModel.conversationModel!);
+            DialogUtils.hideProgress();
             if (isSuccessful) {
               Navigator.pop(context);
             }
@@ -477,7 +479,7 @@ class _ChatScreenState extends State<ChatScreen> {
             XFile? image =
                 await _imagePicker.pickImage(source: ImageSource.gallery);
             if (image != null) {
-              Url url = await _fireStoreUtils.uploadChatImageToFireStorage(
+              Url url = await FirebaseUtils.uploadChatImageToFireStorage(
                   File(image.path), context);
               _sendMessage('', url, '');
             }
@@ -492,7 +494,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 await _imagePicker.pickVideo(source: ImageSource.gallery);
             if (galleryVideo != null) {
               ChatVideoContainer videoContainer =
-                  await _fireStoreUtils.uploadChatVideoToFireStorage(
+                  await FirebaseUtils.uploadChatVideoToFireStorage(
                       File(galleryVideo.path), context);
               _sendMessage(
                   '', videoContainer.videoUrl, videoContainer.thumbnailUrl);
@@ -507,7 +509,7 @@ class _ChatScreenState extends State<ChatScreen> {
             XFile? image =
                 await _imagePicker.pickImage(source: ImageSource.camera);
             if (image != null) {
-              Url url = await _fireStoreUtils.uploadChatImageToFireStorage(
+              Url url = await FirebaseUtils.uploadChatImageToFireStorage(
                   File(image.path), context);
               _sendMessage('', url, '');
             }
@@ -522,7 +524,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 await _imagePicker.pickVideo(source: ImageSource.camera);
             if (recordedVideo != null) {
               ChatVideoContainer videoContainer =
-                  await _fireStoreUtils.uploadChatVideoToFireStorage(
+                  await FirebaseUtils.uploadChatVideoToFireStorage(
                       File(recordedVideo.path), context);
               _sendMessage(
                   '', videoContainer.videoUrl, videoContainer.thumbnailUrl);
@@ -564,7 +566,8 @@ class _ChatScreenState extends State<ChatScreen> {
           Padding(
               padding: const EdgeInsets.only(right: 12.0),
               child: _myMessageContentWidget(messageData)),
-          displayCircleImage(messageData.senderProfilePictureURL, 35, false)
+          DisplayUtils.displayCircleImage(
+              messageData.senderProfilePictureURL, 35, false)
         ],
       ),
     );
@@ -616,7 +619,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               top: 6, bottom: 6, right: 4, left: 4),
                           child: PlayerWidget(
                             url: messageData.url!.url,
-                            color: isDarkMode(context)
+                            color: DisplayUtils.isDarkMode(context)
                                 ? Colors.grey.shade800
                                 : Colors.grey.shade200,
                           ),
@@ -638,7 +641,7 @@ class _ChatScreenState extends State<ChatScreen> {
               GestureDetector(
                 onTap: () {
                   if (messageData.videoThumbnail.isEmpty) {
-                    push(
+                    NavigationUtils.push(
                         context,
                         FullScreenImageViewer(
                           imageUrl: mediaUrl,
@@ -664,7 +667,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       heroTag: messageData.messageID,
                       backgroundColor: Color(COLOR_ACCENT),
                       onPressed: () {
-                        push(
+                        NavigationUtils.push(
                             context,
                             FullScreenVideoViewer(
                               heroTag: messageData.messageID,
@@ -673,8 +676,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       },
                       child: Icon(
                         Icons.play_arrow,
-                        color:
-                            isDarkMode(context) ? Colors.black : Colors.white,
+                        color: DisplayUtils.isDarkMode(context)
+                            ? Colors.black
+                            : Colors.white,
                       ),
                     )
                   : Container(
@@ -721,7 +725,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             textAlign: TextAlign.start,
                             textDirection: TextDirection.ltr,
                             style: TextStyle(
-                                color: isDarkMode(context)
+                                color: DisplayUtils.isDarkMode(context)
                                     ? Colors.black
                                     : Colors.white,
                                 fontSize: 16),
@@ -745,7 +749,8 @@ class _ChatScreenState extends State<ChatScreen> {
           Stack(
             alignment: Alignment.bottomRight,
             children: <Widget>[
-              displayCircleImage(sender.profilePictureURL, 35, false),
+              DisplayUtils.displayCircleImage(
+                  sender.profilePictureURL, 35, false),
               Positioned(
                   right: 1,
                   bottom: 1,
@@ -761,7 +766,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             : Colors.grey,
                         borderRadius: BorderRadius.circular(100),
                         border: Border.all(
-                            color: isDarkMode(context)
+                            color: DisplayUtils.isDarkMode(context)
                                 ? Color(0xFF303030)
                                 : Colors.white,
                             width: 1)),
@@ -797,7 +802,9 @@ class _ChatScreenState extends State<ChatScreen> {
             bottom: 0,
             child: Image.asset(
               'assets/images/chat_arrow_left.png',
-              color: isDarkMode(context) ? Colors.grey[600] : Colors.grey[300],
+              color: DisplayUtils.isDarkMode(context)
+                  ? Colors.grey[600]
+                  : Colors.grey[300],
               height: 12,
             ),
           ),
@@ -808,7 +815,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             child: Container(
               decoration: BoxDecoration(
-                  color: isDarkMode(context)
+                  color: DisplayUtils.isDarkMode(context)
                       ? Colors.grey.shade600
                       : Colors.grey.shade300,
                   shape: BoxShape.rectangle,
@@ -824,7 +831,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               top: 6, bottom: 6, right: 4, left: 4),
                           child: PlayerWidget(
                             url: messageData.url!.url,
-                            color: isDarkMode(context)
+                            color: DisplayUtils.isDarkMode(context)
                                 ? Color(COLOR_ACCENT)
                                 : Color(COLOR_PRIMARY),
                           )),
@@ -846,7 +853,7 @@ class _ChatScreenState extends State<ChatScreen> {
               GestureDetector(
                 onTap: () {
                   if (messageData.videoThumbnail.isEmpty) {
-                    push(
+                    NavigationUtils.push(
                         context,
                         FullScreenImageViewer(
                           imageUrl: mediaUrl,
@@ -872,7 +879,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       heroTag: messageData.messageID,
                       backgroundColor: Color(COLOR_ACCENT),
                       onPressed: () {
-                        push(
+                        NavigationUtils.push(
                             context,
                             FullScreenVideoViewer(
                               heroTag: messageData.messageID,
@@ -881,8 +888,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       },
                       child: Icon(
                         Icons.play_arrow,
-                        color:
-                            isDarkMode(context) ? Colors.black : Colors.white,
+                        color: DisplayUtils.isDarkMode(context)
+                            ? Colors.black
+                            : Colors.white,
                       ),
                     )
                   : Container(
@@ -901,7 +909,7 @@ class _ChatScreenState extends State<ChatScreen> {
             bottom: 0,
             child: Image.asset(
               'assets/images/chat_arrow_left.png',
-              color: isDarkMode(context)
+              color: DisplayUtils.isDarkMode(context)
                   ? Colors.grey.shade600
                   : Colors.grey.shade300,
               height: 12,
@@ -914,8 +922,9 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             child: Container(
               decoration: BoxDecoration(
-                  color:
-                      isDarkMode(context) ? Colors.grey[600] : Colors.grey[300],
+                  color: DisplayUtils.isDarkMode(context)
+                      ? Colors.grey[600]
+                      : Colors.grey[300],
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.all(Radius.circular(8))),
               child: Padding(
@@ -932,7 +941,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           textAlign: TextAlign.start,
                           textDirection: TextDirection.ltr,
                           style: TextStyle(
-                            color: isDarkMode(context)
+                            color: DisplayUtils.isDarkMode(context)
                                 ? Colors.white
                                 : Colors.black,
                             fontSize: 16,
@@ -969,8 +978,7 @@ class _ChatScreenState extends State<ChatScreen> {
           lastMessage: ''
                   '${user.fullName()} sent a message'
               .tr());
-      bool isSuccessful =
-          await _fireStoreUtils.createConversation(conversation);
+      bool isSuccessful = await FirebaseUtils.createConversation(conversation);
       if (isSuccessful) {
         homeConversationModel.conversationModel = conversation;
         setupStream();
@@ -1023,7 +1031,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
     if (await _checkChannelNullability(
         homeConversationModel.conversationModel)) {
-      await _fireStoreUtils.sendMessage(
+      await FirebaseUtils.sendMessage(
           homeConversationModel.members,
           homeConversationModel.isGroupChat,
           message,
@@ -1032,10 +1040,10 @@ class _ChatScreenState extends State<ChatScreen> {
           Timestamp.now();
       homeConversationModel.conversationModel!.lastMessage = message.content;
 
-      await _fireStoreUtils
-          .updateChannel(homeConversationModel.conversationModel!);
+      await FirebaseUtils.updateChannel(
+          homeConversationModel.conversationModel!);
     } else {
-      showAlertDialog(context, 'An Error Occurred'.tr(),
+      DialogUtils.showAlertDialog(context, 'An Error Occurred'.tr(),
           'Couldn\'t send Message, please try again later'.tr());
     }
   }
@@ -1097,15 +1105,15 @@ class _ChatScreenState extends State<ChatScreen> {
                               if (homeConversationModel
                                       .conversationModel!.name !=
                                   _groupNameController.text) {
-                                showProgress(
+                                DialogUtils.showProgress(
                                     context,
                                     'Renaming group, Please wait...'.tr(),
                                     false);
                                 homeConversationModel.conversationModel!.name =
                                     _groupNameController.text.trim();
-                                await _fireStoreUtils.updateChannel(
+                                await FirebaseUtils.updateChannel(
                                     homeConversationModel.conversationModel!);
-                                hideProgress();
+                                DialogUtils.hideProgress();
                               }
                               Navigator.pop(context);
                               setState(() {});
@@ -1132,10 +1140,10 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Text('Block user'.tr()),
           onPressed: () async {
             Navigator.pop(context);
-            showProgress(context, 'Blocking user...'.tr(), false);
-            bool isSuccessful = await _fireStoreUtils.blockUser(
+            DialogUtils.showProgress(context, 'Blocking user...'.tr(), false);
+            bool isSuccessful = await FirebaseUtils.blockUser(
                 homeConversationModel.members.first, 'block');
-            hideProgress();
+            DialogUtils.hideProgress();
             if (isSuccessful) {
               Navigator.pop(context);
               _showAlertDialog(
@@ -1157,10 +1165,10 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Text('Report user'.tr()),
           onPressed: () async {
             Navigator.pop(context);
-            showProgress(context, 'Reporting user...'.tr(), false);
-            bool isSuccessful = await _fireStoreUtils.blockUser(
+            DialogUtils.showProgress(context, 'Reporting user...'.tr(), false);
+            bool isSuccessful = await FirebaseUtils.blockUser(
                 homeConversationModel.members.first, 'report');
-            hideProgress();
+            DialogUtils.hideProgress();
             if (isSuccessful) {
               Navigator.pop(context);
               _showAlertDialog(
@@ -1224,7 +1232,7 @@ class _ChatScreenState extends State<ChatScreen> {
       audioMessageTime = 'Start Recording'.tr();
       currentRecordingState = RecordingState.HIDDEN;
     });
-    Url url = await _fireStoreUtils.uploadAudioFile(
+    Url url = await FirebaseUtils.uploadAudioFile(
         File(tempPathForAudioMessages), context);
     _sendMessage('', url, '');
   }
@@ -1245,7 +1253,7 @@ class _ChatScreenState extends State<ChatScreen> {
           toFile: tempPathForAudioMessages, codec: Codec.aacADTS);
       audioMessageTimer = Timer.periodic(Duration(seconds: 1), (timer) {
         setState(() {
-          audioMessageTime = updateTime(audioMessageTimer);
+          audioMessageTime = TimeUtils.updateTime(audioMessageTimer);
         });
       });
       setState(() {

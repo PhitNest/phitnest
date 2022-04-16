@@ -2,7 +2,7 @@ import 'package:phitnest/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class UpgradeAccount extends StatefulWidget {
@@ -40,7 +40,9 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
     return Container(
         height: MediaQuery.of(context).size.height * .85,
         decoration: BoxDecoration(
-          color: isDarkMode(context) ? Colors.grey[900] : Colors.white,
+          color: DisplayUtils.isDarkMode(context)
+              ? Colors.grey[900]
+              : Colors.white,
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(20),
           ),
@@ -97,27 +99,37 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                   Image.asset(
                     'assets/images/premium_account_1.png',
                     colorBlendMode: BlendMode.srcOver,
-                    color: isDarkMode(context) ? Colors.black12 : null,
+                    color: DisplayUtils.isDarkMode(context)
+                        ? Colors.black12
+                        : null,
                   ),
                   Image.asset(
                     'assets/images/premium_account_2.png',
                     colorBlendMode: BlendMode.srcOver,
-                    color: isDarkMode(context) ? Colors.black12 : null,
+                    color: DisplayUtils.isDarkMode(context)
+                        ? Colors.black12
+                        : null,
                   ),
                   Image.asset(
                     'assets/images/premium_account_3.png',
                     colorBlendMode: BlendMode.srcOver,
-                    color: isDarkMode(context) ? Colors.black12 : null,
+                    color: DisplayUtils.isDarkMode(context)
+                        ? Colors.black12
+                        : null,
                   ),
                   Image.asset(
                     'assets/images/premium_account_4.png',
                     colorBlendMode: BlendMode.srcOver,
-                    color: isDarkMode(context) ? Colors.black12 : null,
+                    color: DisplayUtils.isDarkMode(context)
+                        ? Colors.black12
+                        : null,
                   ),
                   Image.asset(
                     'assets/images/premium_account_5.png',
                     colorBlendMode: BlendMode.srcOver,
-                    color: isDarkMode(context) ? Colors.black12 : null,
+                    color: DisplayUtils.isDarkMode(context)
+                        ? Colors.black12
+                        : null,
                   )
                 ],
                 controller: controller,
@@ -131,8 +143,9 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                 effect: ScrollingDotsEffect(
                     dotWidth: 6,
                     dotHeight: 6,
-                    dotColor:
-                        isDarkMode(context) ? Colors.grey : Colors.black54,
+                    dotColor: DisplayUtils.isDarkMode(context)
+                        ? Colors.grey
+                        : Colors.black54,
                     activeDotColor: Color(COLOR_PRIMARY)),
               ),
             )
@@ -153,7 +166,9 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                 .tr(),
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: isDarkMode(context) ? Colors.white54 : Colors.black45,
+              color: DisplayUtils.isDarkMode(context)
+                  ? Colors.white54
+                  : Colors.black45,
             ),
           ),
         ),
@@ -329,9 +344,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
 
   _handlePurchase(PurchaseDetails purchase) async {
     if (purchase.status == PurchaseStatus.purchased) {
-      await showProgress(context, 'Processing purchase...'.tr(), false);
-      await FireStoreUtils.recordPurchase(purchase);
-      await hideProgress();
+      await DialogUtils.showProgress(
+          context, 'Processing purchase...'.tr(), false);
+      await FirebaseUtils.recordPurchase(purchase);
+      await DialogUtils.hideProgress();
     }
   }
 }

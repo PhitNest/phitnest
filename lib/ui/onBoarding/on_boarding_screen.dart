@@ -1,5 +1,5 @@
 import 'package:phitnest/constants.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/ui/auth/auth_screen.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
@@ -74,7 +74,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   child: OutlinedButton(
                     onPressed: () {
                       setFinishedOnBoarding();
-                      pushReplacement(context, AuthScreen());
+                      NavigationUtils.pushReplacement(context, AuthScreen());
                     },
                     child: Text(
                       'Continue'.tr(),

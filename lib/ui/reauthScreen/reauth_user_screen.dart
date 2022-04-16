@@ -1,5 +1,5 @@
 import 'package:phitnest/constants.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/main.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -92,7 +92,9 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
             child: Text(
               'Verify'.tr(),
               style: TextStyle(
-                  color: isDarkMode(context) ? Colors.black : Colors.white),
+                  color: DisplayUtils.isDarkMode(context)
+                      ? Colors.black
+                      : Colors.white),
             ),
           ),
         ),
@@ -147,7 +149,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
           return apple.AppleSignInButton(
             cornerRadius: 12.0,
             type: apple.ButtonType.continueButton,
-            style: isDarkMode(context)
+            style: DisplayUtils.isDarkMode(context)
                 ? apple.ButtonStyle.white
                 : apple.ButtonStyle.black,
             onPressed: () => appleButtonPressed(),
@@ -174,7 +176,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
                 fieldHeight: 40,
                 fieldWidth: 40,
                 activeColor: Color(COLOR_PRIMARY),
-                activeFillColor: isDarkMode(context)
+                activeFillColor: DisplayUtils.isDarkMode(context)
                     ? Colors.grey.shade700
                     : Colors.grey.shade100,
                 selectedFillColor: Colors.transparent,
@@ -202,27 +204,27 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
 
   passwordButtonPressed() async {
     if (_passwordController.text.isEmpty) {
-      showAlertDialog(context, 'Empty Password'.tr(),
+      DialogUtils.showAlertDialog(context, 'Empty Password'.tr(),
           'Password is required to update email'.tr());
     } else {
-      await showProgress(context, 'Verifying...'.tr(), false);
+      await DialogUtils.showProgress(context, 'Verifying...'.tr(), false);
       try {
-        auth.UserCredential? result = await FireStoreUtils.reAuthUser(
+        auth.UserCredential? result = await FirebaseUtils.reAuthUser(
             widget.provider,
             email: PhitnestApp.currentUser!.email,
             password: _passwordController.text);
         if (result == null) {
-          await hideProgress();
-          showAlertDialog(context, 'Couldn\'t verify'.tr(),
+          await DialogUtils.hideProgress();
+          DialogUtils.showAlertDialog(context, 'Couldn\'t verify'.tr(),
               'Please double check the password and try again.'.tr());
         } else {
           if (result.user != null) {
             if (widget.email != null)
               await result.user!.updateEmail(widget.email!);
-            await hideProgress();
+            await DialogUtils.hideProgress();
             Navigator.pop(context, true);
           } else {
-            await hideProgress();
+            await DialogUtils.hideProgress();
             Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -236,7 +238,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
         }
       } catch (e, s) {
         print('_ReAuthUserScreenState.passwordButtonPressed $e $s');
-        await hideProgress();
+        await DialogUtils.hideProgress();
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -252,7 +254,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
 
   facebookButtonPressed() async {
     try {
-      await showProgress(context, 'Verifying...'.tr(), false);
+      await DialogUtils.showProgress(context, 'Verifying...'.tr(), false);
       AccessToken? token;
       FacebookAuth facebookAuth = FacebookAuth.instance;
       if (await facebookAuth.accessToken == null) {
@@ -264,46 +266,49 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
         token = await facebookAuth.accessToken;
       }
       if (token != null)
-        await FireStoreUtils.reAuthUser(widget.provider, accessToken: token);
-      await hideProgress();
+        await FirebaseUtils.reAuthUser(widget.provider, accessToken: token);
+      await DialogUtils.hideProgress();
       Navigator.pop(context, true);
     } catch (e, s) {
-      await hideProgress();
+      await DialogUtils.hideProgress();
       print('facebookButtonPressed $e $s');
-      showAlertDialog(context, 'Error', 'Couldn\'t verify with facebook.'.tr());
+      DialogUtils.showAlertDialog(
+          context, 'Error', 'Couldn\'t verify with facebook.'.tr());
     }
   }
 
   appleButtonPressed() async {
     try {
-      await showProgress(context, 'Verifying...'.tr(), false);
+      await DialogUtils.showProgress(context, 'Verifying...'.tr(), false);
       final appleCredential = await apple.TheAppleSignIn.performRequests([
         apple.AppleIdRequest(
             requestedScopes: [apple.Scope.email, apple.Scope.fullName])
       ]);
       if (appleCredential.error != null) {
-        showAlertDialog(context, 'Error', 'Couldn\'t verify with apple.'.tr());
+        DialogUtils.showAlertDialog(
+            context, 'Error', 'Couldn\'t verify with apple.'.tr());
       }
       if (appleCredential.status == apple.AuthorizationStatus.authorized) {
-        await FireStoreUtils.reAuthUser(widget.provider,
+        await FirebaseUtils.reAuthUser(widget.provider,
             appleCredential: appleCredential);
       }
-      await hideProgress();
+      await DialogUtils.hideProgress();
       Navigator.pop(context, true);
     } catch (e, s) {
-      await hideProgress();
+      await DialogUtils.hideProgress();
       print('appleButtonPressed $e $s');
-      showAlertDialog(context, 'Error', 'Couldn\'t verify with apple.'.tr());
+      DialogUtils.showAlertDialog(
+          context, 'Error', 'Couldn\'t verify with apple.'.tr());
     }
   }
 
   _submitPhoneNumber() async {
-    await showProgress(context, 'Sending code...'.tr(), true);
-    await FireStoreUtils.firebaseSubmitPhoneNumber(
+    await DialogUtils.showProgress(context, 'Sending code...'.tr(), true);
+    await FirebaseUtils.firebaseSubmitPhoneNumber(
       widget.phoneNumber!,
       (String verificationId) {
         if (mounted) {
-          hideProgress();
+          DialogUtils.hideProgress();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -317,13 +322,13 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
         print('_ReAuthUserScreenState._submitPhoneNumber $verificationId');
         if (mounted) {
           print('_ReAuthUserScreenState.mounted');
-          await hideProgress();
+          await DialogUtils.hideProgress();
           _verificationID = verificationId;
         }
       },
       (auth.FirebaseAuthException error) async {
         if (mounted) {
-          await hideProgress();
+          await DialogUtils.hideProgress();
           print('${error.message} ${error.stackTrace}');
           String message = 'An error has occurred, please try again.'.tr();
           switch (error.code) {
@@ -354,11 +359,11 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
   }
 
   void _submitCode(String code) async {
-    await showProgress(context, 'Verifying...'.tr(), false);
+    await DialogUtils.showProgress(context, 'Verifying...'.tr(), false);
     try {
       if (_verificationID != null) {
         if (widget.deleteUser) {
-          await FireStoreUtils.reAuthUser(widget.provider,
+          await FirebaseUtils.reAuthUser(widget.provider,
               verificationId: _verificationID!, smsCode: code);
         } else {
           auth.PhoneAuthCredential credential =
@@ -367,10 +372,10 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
           await auth.FirebaseAuth.instance.currentUser!
               .updatePhoneNumber(credential);
         }
-        await hideProgress();
+        await DialogUtils.hideProgress();
         Navigator.pop(context, true);
       } else {
-        await hideProgress();
+        await DialogUtils.hideProgress();
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -381,7 +386,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
       }
     } on auth.FirebaseAuthException catch (exception) {
       print('_ReAuthUserScreenState._submitCode ${exception.toString()}');
-      await hideProgress();
+      await DialogUtils.hideProgress();
       Navigator.pop(context);
 
       String message = 'An error has occurred, please try again.'.tr();
@@ -405,7 +410,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
       );
     } catch (e, s) {
       print('_PhoneNumberInputScreenState._submitCode $e $s');
-      await hideProgress();
+      await DialogUtils.hideProgress();
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

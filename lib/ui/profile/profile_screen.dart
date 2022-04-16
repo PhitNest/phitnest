@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:phitnest/constants.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/main.dart';
 import 'package:phitnest/model/message_data.dart';
 import 'package:phitnest/model/user.dart';
@@ -33,7 +33,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final ImagePicker _imagePicker = ImagePicker();
   late User user;
-  FireStoreUtils _fireStoreUtils = FireStoreUtils();
   List images = [];
   List _pages = [];
   List<Widget> _gridPages = [];
@@ -67,8 +66,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               alignment: Alignment.bottomCenter,
               children: <Widget>[
                 Center(
-                    child:
-                        displayCircleImage(user.profilePictureURL, 130, false)),
+                    child: DisplayUtils.displayCircleImage(
+                        user.profilePictureURL, 130, false)),
                 Positioned(
                   left: 80,
                   right: 0,
@@ -77,8 +76,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundColor: Color(COLOR_ACCENT),
                       child: Icon(
                         Icons.camera_alt,
-                        color:
-                            isDarkMode(context) ? Colors.black : Colors.white,
+                        color: DisplayUtils.isDarkMode(context)
+                            ? Colors.black
+                            : Colors.white,
                       ),
                       mini: true,
                       onPressed: _onCameraClick),
@@ -93,7 +93,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 user.fullName(),
                 style: TextStyle(
-                    color: isDarkMode(context) ? Colors.white : Colors.black,
+                    color: DisplayUtils.isDarkMode(context)
+                        ? Colors.white
+                        : Colors.black,
                     fontSize: 20),
                 textAlign: TextAlign.center,
               ),
@@ -137,7 +139,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  push(context, AccountDetailsScreen(user: user));
+                  NavigationUtils.push(
+                      context, AccountDetailsScreen(user: user));
                 },
                 title: Text(
                   'Account Details'.tr(),
@@ -179,7 +182,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  push(context, SettingsScreen(user: user));
+                  NavigationUtils.push(context, SettingsScreen(user: user));
                 },
                 title: Text(
                   'Settings'.tr(),
@@ -187,13 +190,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 leading: Icon(
                   Icons.settings,
-                  color: isDarkMode(context) ? Colors.white70 : Colors.black45,
+                  color: DisplayUtils.isDarkMode(context)
+                      ? Colors.white70
+                      : Colors.black45,
                 ),
               ),
               ListTile(
                 dense: true,
                 onTap: () {
-                  push(context, ContactUsScreen());
+                  NavigationUtils.push(context, ContactUsScreen());
                 },
                 title: Text(
                   'Contact Us'.tr(),
@@ -238,12 +243,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   );
                   if (result != null && result) {
-                    await showProgress(
+                    await DialogUtils.showProgress(
                         context, 'Deleting account...'.tr(), false);
-                    await FireStoreUtils.deleteUser();
-                    await hideProgress();
+                    await FirebaseUtils.deleteUser();
+                    await DialogUtils.hideProgress();
                     PhitnestApp.currentUser = null;
-                    pushAndRemoveUntil(context, AuthScreen(), false);
+                    NavigationUtils.pushAndRemoveUntil(
+                        context, AuthScreen(), false);
                   }
                 },
                 title: Text(
@@ -275,16 +281,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: isDarkMode(context) ? Colors.white : Colors.black,
+                    color: DisplayUtils.isDarkMode(context)
+                        ? Colors.white
+                        : Colors.black,
                   ),
                 ),
                 onPressed: () async {
                   user.active = false;
                   user.lastOnlineTimestamp = Timestamp.now();
-                  await FireStoreUtils.updateCurrentUser(user);
+                  await FirebaseUtils.updateCurrentUser(user);
                   await auth.FirebaseAuth.instance.signOut();
                   PhitnestApp.currentUser = null;
-                  pushAndRemoveUntil(context, AuthScreen(), false);
+                  NavigationUtils.pushAndRemoveUntil(
+                      context, AuthScreen(), false);
                 },
               ),
             ),
@@ -306,13 +315,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           isDestructiveAction: true,
           onPressed: () async {
             Navigator.pop(context);
-            showProgress(context, 'Removing picture...'.tr(), false);
+            DialogUtils.showProgress(
+                context, 'Removing picture...'.tr(), false);
             if (user.profilePictureURL.isNotEmpty)
-              await _fireStoreUtils.deleteImage(user.profilePictureURL);
+              await FirebaseUtils.deleteImage(user.profilePictureURL);
             user.profilePictureURL = '';
-            await FireStoreUtils.updateCurrentUser(user);
+            await FirebaseUtils.updateCurrentUser(user);
             PhitnestApp.currentUser = user;
-            hideProgress();
+            DialogUtils.hideProgress();
             setState(() {});
           },
         ),
@@ -352,12 +362,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _imagePicked(File image) async {
-    showProgress(context, 'Uploading image...'.tr(), false);
+    DialogUtils.showProgress(context, 'Uploading image...'.tr(), false);
     user.profilePictureURL =
-        await FireStoreUtils.uploadUserImageToFireStorage(image, user.userID);
-    await FireStoreUtils.updateCurrentUser(user);
+        await FirebaseUtils.uploadUserImageToFireStorage(image, user.userID);
+    await FirebaseUtils.updateCurrentUser(user);
     PhitnestApp.currentUser = user;
-    hideProgress();
+    DialogUtils.hideProgress();
   }
 
   Widget _imageBuilder(String? url) {
@@ -377,7 +387,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ? Icon(
                 Icons.camera_alt,
                 size: 50,
-                color: isDarkMode(context) ? Colors.black : Colors.white,
+                color: DisplayUtils.isDarkMode(context)
+                    ? Colors.black
+                    : Colors.white,
               )
             : ClipRRect(
                 borderRadius: BorderRadius.circular(12),
@@ -389,14 +401,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     return Icon(
                       Icons.hourglass_empty,
                       size: 75,
-                      color: isDarkMode(context) ? Colors.black : Colors.white,
+                      color: DisplayUtils.isDarkMode(context)
+                          ? Colors.black
+                          : Colors.white,
                     );
                   },
                   errorWidget: (context, imageUrl, error) {
                     return Icon(
                       Icons.error_outline,
                       size: 75,
-                      color: isDarkMode(context) ? Colors.black : Colors.white,
+                      color: DisplayUtils.isDarkMode(context)
+                          ? Colors.black
+                          : Colors.white,
                     );
                   },
                 ),
@@ -437,9 +453,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Navigator.pop(context);
             images.removeLast();
             images.remove(url);
-            await _fireStoreUtils.deleteImage(url);
+            await FirebaseUtils.deleteImage(url);
             user.photos = images;
-            User? newUser = await FireStoreUtils.updateCurrentUser(user);
+            User? newUser = await FirebaseUtils.updateCurrentUser(user);
             PhitnestApp.currentUser = newUser;
             if (newUser != null) {
               user = newUser;
@@ -453,7 +469,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         CupertinoActionSheetAction(
           onPressed: () {
             Navigator.pop(context);
-            push(context, FullScreenImageViewer(imageUrl: url));
+            NavigationUtils.push(context, FullScreenImageViewer(imageUrl: url));
           },
           isDefaultAction: true,
           child: Text('View Picture'.tr()),
@@ -462,7 +478,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onPressed: () async {
             Navigator.pop(context);
             user.profilePictureURL = url;
-            dynamic result = await FireStoreUtils.updateCurrentUser(user);
+            dynamic result = await FirebaseUtils.updateCurrentUser(user);
             if (result != null) {
               user = result;
             }
@@ -497,12 +513,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             XFile? image =
                 await _imagePicker.pickImage(source: ImageSource.gallery);
             if (image != null) {
-              Url imageUrl = await _fireStoreUtils.uploadChatImageToFireStorage(
+              Url imageUrl = await FirebaseUtils.uploadChatImageToFireStorage(
                   File(image.path), context);
               images.removeLast();
               images.add(imageUrl.url);
               user.photos = images;
-              User? newUser = await FireStoreUtils.updateCurrentUser(user);
+              User? newUser = await FirebaseUtils.updateCurrentUser(user);
               if (newUser != null) {
                 PhitnestApp.currentUser = newUser;
                 user = newUser;
@@ -520,12 +536,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             XFile? image =
                 await _imagePicker.pickImage(source: ImageSource.camera);
             if (image != null) {
-              Url imageUrl = await _fireStoreUtils.uploadChatImageToFireStorage(
+              Url imageUrl = await FirebaseUtils.uploadChatImageToFireStorage(
                   File(image.path), context);
               images.removeLast();
               images.add(imageUrl.url);
               user.photos = images;
-              User? newUser = await FireStoreUtils.updateCurrentUser(user);
+              User? newUser = await FirebaseUtils.updateCurrentUser(user);
               if (newUser != null) {
                 PhitnestApp.currentUser = newUser;
                 user = newUser;

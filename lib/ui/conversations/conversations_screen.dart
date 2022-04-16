@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:phitnest/constants.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/model/conversation_model.dart';
 import 'package:phitnest/model/home_conversation_model.dart';
 import 'package:phitnest/model/user.dart';
 import 'package:phitnest/ui/chat/chat_screen.dart';
-import 'package:phitnest/ui/userDetailsScreen/user_details_screen.dart';
+import 'package:phitnest/ui/userDetails/user_details_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,6 @@ class ConversationsScreen extends StatefulWidget {
 
 class _ConversationsState extends State<ConversationsScreen> {
   late User user;
-  final fireStoreUtils = FireStoreUtils();
   late Future<List<User>> _matchesFuture;
   late Stream<List<HomeConversationModel>> _conversationsStream;
 
@@ -32,13 +31,13 @@ class _ConversationsState extends State<ConversationsScreen> {
   void initState() {
     super.initState();
     user = widget.user;
-    fireStoreUtils.getBlocks().listen((shouldRefresh) {
+    FirebaseUtils.getBlocks().listen((shouldRefresh) {
       if (shouldRefresh) {
         setState(() {});
       }
     });
-    _matchesFuture = fireStoreUtils.getMatchedUserObject(user.userID);
-    _conversationsStream = fireStoreUtils.getConversations(user.userID);
+    _matchesFuture = FirebaseUtils.getMatchedUserObject(user.userID);
+    _conversationsStream = FirebaseUtils.getConversations(user.userID);
   }
 
   @override
@@ -74,7 +73,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                     itemCount: snap.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       User friend = snap.data![index];
-                      return fireStoreUtils.validateIfUserBlocked(friend.userID)
+                      return FirebaseUtils.validateIfUserBlocked(friend.userID)
                           ? Container(
                               width: 0,
                               height: 0,
@@ -93,9 +92,9 @@ class _ConversationsState extends State<ConversationsScreen> {
                                     channelID = user.userID + friend.userID;
                                   }
                                   ConversationModel? conversationModel =
-                                      await fireStoreUtils
-                                          .getChannelByIdOrNull(channelID);
-                                  push(
+                                      await FirebaseUtils.getChannelByIdOrNull(
+                                          channelID);
+                                  NavigationUtils.push(
                                       context,
                                       ChatScreen(
                                           homeConversationModel:
@@ -107,7 +106,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                                 },
                                 child: Column(
                                   children: <Widget>[
-                                    displayCircleImage(
+                                    DisplayUtils.displayCircleImage(
                                         friend.profilePictureURL, 50, false),
                                     Expanded(
                                       child: Container(
@@ -168,7 +167,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                           child: _buildConversationRow(homeConversationModel),
                         );
                       } else {
-                        return fireStoreUtils.validateIfUserBlocked(
+                        return FirebaseUtils.validateIfUserBlocked(
                                 homeConversationModel.members.first.userID)
                             ? Container(
                                 width: 0,
@@ -202,7 +201,7 @@ class _ConversationsState extends State<ConversationsScreen> {
             padding: const EdgeInsets.only(left: 16.0, bottom: 12.8),
             child: InkWell(
               onTap: () {
-                push(context,
+                NavigationUtils.push(context,
                     ChatScreen(homeConversationModel: homeConversationModel));
               },
               child: Row(
@@ -210,11 +209,12 @@ class _ConversationsState extends State<ConversationsScreen> {
                   Stack(
                     clipBehavior: Clip.none,
                     children: <Widget>[
-                      displayCircleImage(user1Image, 44, false),
+                      DisplayUtils.displayCircleImage(user1Image, 44, false),
                       Positioned(
                           left: -16,
                           bottom: -12.8,
-                          child: displayCircleImage(user2Image, 44, true))
+                          child: DisplayUtils.displayCircleImage(
+                              user2Image, 44, true))
                     ],
                   ),
                   Expanded(
@@ -229,7 +229,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                             '${homeConversationModel.conversationModel!.name}',
                             style: TextStyle(
                               fontSize: 17,
-                              color: isDarkMode(context)
+                              color: DisplayUtils.isDarkMode(context)
                                   ? Colors.white
                                   : Colors.black,
                               fontFamily: Platform.isIOS ? 'sanFran' : 'Roboto',
@@ -238,7 +238,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
-                              '${homeConversationModel.conversationModel!.lastMessage} • ${formatTimestamp(homeConversationModel.conversationModel!.lastMessageDate.seconds)}',
+                              '${homeConversationModel.conversationModel!.lastMessage} • ${TimeUtils.formatTimestamp(homeConversationModel.conversationModel!.lastMessageDate.seconds)}',
                               maxLines: 1,
                               style: TextStyle(
                                   fontSize: 14, color: Color(0xffACACAC)),
@@ -254,7 +254,7 @@ class _ConversationsState extends State<ConversationsScreen> {
           )
         : InkWell(
             onTap: () {
-              push(context,
+              NavigationUtils.push(context,
                   ChatScreen(homeConversationModel: homeConversationModel));
             },
             child: Row(
@@ -262,7 +262,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                 Stack(
                   alignment: Alignment.bottomRight,
                   children: <Widget>[
-                    displayCircleImage(
+                    DisplayUtils.displayCircleImage(
                         homeConversationModel.members.first.profilePictureURL,
                         60,
                         false),
@@ -278,7 +278,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                                   : Colors.grey,
                               borderRadius: BorderRadius.circular(100),
                               border: Border.all(
-                                  color: isDarkMode(context)
+                                  color: DisplayUtils.isDarkMode(context)
                                       ? Color(0xFF303030)
                                       : Colors.white,
                                   width: 1.6)),
@@ -296,7 +296,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                           '${homeConversationModel.members.first.fullName()}',
                           style: TextStyle(
                               fontSize: 17,
-                              color: isDarkMode(context)
+                              color: DisplayUtils.isDarkMode(context)
                                   ? Colors.white
                                   : Colors.black,
                               fontFamily:
@@ -305,7 +305,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            '${homeConversationModel.conversationModel?.lastMessage} • ${formatTimestamp(homeConversationModel.conversationModel?.lastMessageDate.seconds ?? 0)}',
+                            '${homeConversationModel.conversationModel?.lastMessage} • ${TimeUtils.formatTimestamp(homeConversationModel.conversationModel?.lastMessageDate.seconds ?? 0)}',
                             maxLines: 1,
                             style: TextStyle(
                                 fontSize: 14, color: Color(0xffACACAC)),
@@ -332,7 +332,7 @@ class _ConversationsState extends State<ConversationsScreen> {
           isDefaultAction: true,
           onPressed: () async {
             Navigator.pop(context);
-            push(
+            NavigationUtils.push(
                 context,
                 UserDetailsScreen(
                   user: friend,

@@ -1,5 +1,5 @@
 import 'package:phitnest/constants.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -16,25 +16,33 @@ class ContactUsScreen extends StatelessWidget {
         backgroundColor: Color(COLOR_ACCENT),
         child: Icon(
           Icons.call,
-          color: isDarkMode(context) ? Colors.black : Colors.white,
+          color: DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white,
         ),
       ),
       appBar: AppBar(
-        brightness: isDarkMode(context) ? Brightness.dark : Brightness.light,
-        backgroundColor: isDarkMode(context) ? Colors.black : Colors.white,
+        brightness: DisplayUtils.isDarkMode(context)
+            ? Brightness.dark
+            : Brightness.light,
+        backgroundColor:
+            DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white,
         iconTheme: IconThemeData(
-            color: isDarkMode(context) ? Colors.white : Colors.black),
+            color:
+                DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black),
         title: Text(
           'Contact Us'.tr(),
           style: TextStyle(
-              color: isDarkMode(context) ? Colors.white : Colors.black),
+              color: DisplayUtils.isDarkMode(context)
+                  ? Colors.white
+                  : Colors.black),
         ),
         centerTitle: true,
       ),
       body: Column(children: <Widget>[
         Material(
             elevation: 2,
-            color: isDarkMode(context) ? Colors.black12 : Colors.white,
+            color: DisplayUtils.isDarkMode(context)
+                ? Colors.black12
+                : Colors.white,
             child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,8 +53,9 @@ class ContactUsScreen extends StatelessWidget {
                     child: Text(
                       'Our Address'.tr(),
                       style: TextStyle(
-                          color:
-                              isDarkMode(context) ? Colors.white : Colors.black,
+                          color: DisplayUtils.isDarkMode(context)
+                              ? Colors.white
+                              : Colors.black,
                           fontSize: 24,
                           fontWeight: FontWeight.bold),
                     ),
@@ -64,23 +73,27 @@ class ContactUsScreen extends StatelessWidget {
                       if (await canLaunch(url)) {
                         await launch(url);
                       } else {
-                        showAlertDialog(context, 'Couldn\'t send email'.tr(),
+                        DialogUtils.showAlertDialog(
+                            context,
+                            'Couldn\'t send email'.tr(),
                             'There is no mailing app installed'.tr());
                       }
                     },
                     title: Text(
                       'E-mail us'.tr(),
                       style: TextStyle(
-                          color:
-                              isDarkMode(context) ? Colors.white : Colors.black,
+                          color: DisplayUtils.isDarkMode(context)
+                              ? Colors.white
+                              : Colors.black,
                           fontSize: 24,
                           fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text('support@instamobile.zendesk.com'),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
-                      color:
-                          isDarkMode(context) ? Colors.white54 : Colors.black54,
+                      color: DisplayUtils.isDarkMode(context)
+                          ? Colors.white54
+                          : Colors.black54,
                     ),
                   )
                 ]))
