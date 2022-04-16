@@ -1,11 +1,11 @@
 import 'package:phitnest/constants.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/main.dart';
 import 'package:phitnest/model/user.dart';
 
 import 'package:phitnest/ui/home/home_screen.dart';
 import 'package:phitnest/ui/phoneAuth/phone_number_input_screen.dart';
-import 'package:phitnest/ui/resetPasswordScreen/reset_password_screen.dart';
+import 'package:phitnest/ui/resetPassword/reset_password_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -28,10 +28,13 @@ class _LoginScreen extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        brightness: isDarkMode(context) ? Brightness.dark : Brightness.light,
+        brightness: DisplayUtils.isDarkMode(context)
+            ? Brightness.dark
+            : Brightness.light,
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(
-            color: isDarkMode(context) ? Colors.white : Colors.black),
+            color:
+                DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black),
         elevation: 0.0,
       ),
       body: Form(
@@ -62,7 +65,7 @@ class _LoginScreen extends State<LoginScreen> {
                   textAlignVertical: TextAlignVertical.center,
                   textInputAction: TextInputAction.next,
                   style: TextStyle(fontSize: 18.0),
-                  validator: (val) => validateEmail(val),
+                  validator: (val) => AuthenticationUtils.validateEmail(val),
                   onSaved: (val) => email = val,
                   keyboardType: TextInputType.emailAddress,
                   cursorColor: Color(COLOR_PRIMARY),
@@ -100,7 +103,7 @@ class _LoginScreen extends State<LoginScreen> {
                   textAlignVertical: TextAlignVertical.center,
                   onSaved: (val) => password = val,
                   obscureText: true,
-                  validator: (val) => validatePassword(val),
+                  validator: (val) => AuthenticationUtils.validatePassword(val),
                   onFieldSubmitted: (password) => _login(),
                   textInputAction: TextInputAction.done,
                   style: TextStyle(fontSize: 18.0),
@@ -138,7 +141,8 @@ class _LoginScreen extends State<LoginScreen> {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
-                  onTap: () => push(context, ResetPasswordScreen()),
+                  onTap: () =>
+                      NavigationUtils.push(context, ResetPasswordScreen()),
                   child: Text(
                     'Forgot password?'.tr(),
                     style: TextStyle(
@@ -167,7 +171,9 @@ class _LoginScreen extends State<LoginScreen> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: isDarkMode(context) ? Colors.black : Colors.white,
+                      color: DisplayUtils.isDarkMode(context)
+                          ? Colors.black
+                          : Colors.white,
                     ),
                   ),
                   onPressed: () => _login(),
@@ -180,7 +186,9 @@ class _LoginScreen extends State<LoginScreen> {
                 child: Text(
                   'OR'.tr(),
                   style: TextStyle(
-                      color: isDarkMode(context) ? Colors.white : Colors.black),
+                      color: DisplayUtils.isDarkMode(context)
+                          ? Colors.white
+                          : Colors.black),
                 ),
               ),
             ),
@@ -237,7 +245,7 @@ class _LoginScreen extends State<LoginScreen> {
                     child: apple.AppleSignInButton(
                       cornerRadius: 25.0,
                       type: apple.ButtonType.signIn,
-                      style: isDarkMode(context)
+                      style: DisplayUtils.isDarkMode(context)
                           ? apple.ButtonStyle.white
                           : apple.ButtonStyle.black,
                       onPressed: () => loginWithApple(),
@@ -249,7 +257,8 @@ class _LoginScreen extends State<LoginScreen> {
 
             InkWell(
               onTap: () {
-                push(context, PhoneNumberInputScreen(login: true));
+                NavigationUtils.push(
+                    context, PhoneNumberInputScreen(login: true));
               },
               child: Center(
                 child: Padding(
@@ -286,23 +295,26 @@ class _LoginScreen extends State<LoginScreen> {
   /// @param email user email
   /// @param password user password
   _loginWithEmailAndPassword() async {
-    await showProgress(context, 'Logging in, please wait...'.tr(), false);
-    currentLocation = await getCurrentLocation();
+    await DialogUtils.showProgress(
+        context, 'Logging in, please wait...'.tr(), false);
+    currentLocation = await LocationUtils.getCurrentLocation();
     if (currentLocation != null) {
-      dynamic result = await FireStoreUtils.loginWithEmailAndPassword(
+      dynamic result = await FirebaseUtils.loginWithEmailAndPassword(
           email!.trim(), password!.trim(), currentLocation!);
-      await hideProgress();
+      await DialogUtils.hideProgress();
       if (result != null && result is User) {
         PhitnestApp.currentUser = result;
-        pushAndRemoveUntil(context, HomeScreen(user: result), false);
+        NavigationUtils.pushAndRemoveUntil(
+            context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
-        showAlertDialog(context, 'Couldn\'t Authenticate'.tr(), result);
+        DialogUtils.showAlertDialog(
+            context, 'Couldn\'t Authenticate'.tr(), result);
       } else {
-        showAlertDialog(context, 'Couldn\'t Authenticate'.tr(),
+        DialogUtils.showAlertDialog(context, 'Couldn\'t Authenticate'.tr(),
             'Login failed, Please try again.'.tr());
       }
     } else {
-      await hideProgress();
+      await DialogUtils.hideProgress();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Location is required to match you with people from '
                 'your area.'
@@ -314,42 +326,49 @@ class _LoginScreen extends State<LoginScreen> {
 
   loginWithFacebook() async {
     try {
-      await showProgress(context, 'Logging in, Please wait...'.tr(), false);
-      dynamic result = await FireStoreUtils.loginWithFacebook();
-      await hideProgress();
+      await DialogUtils.showProgress(
+          context, 'Logging in, Please wait...'.tr(), false);
+      dynamic result = await FirebaseUtils.loginWithFacebook();
+      await DialogUtils.hideProgress();
       if (result != null && result is User) {
         PhitnestApp.currentUser = result;
-        pushAndRemoveUntil(context, HomeScreen(user: result), false);
+        NavigationUtils.pushAndRemoveUntil(
+            context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
-        showAlertDialog(context, 'Error'.tr(), result.tr());
+        DialogUtils.showAlertDialog(context, 'Error'.tr(), result.tr());
       } else {
-        showAlertDialog(
+        DialogUtils.showAlertDialog(
             context, 'Error', 'Couldn\'t login with facebook.'.tr());
       }
     } catch (e, s) {
-      await hideProgress();
+      await DialogUtils.hideProgress();
       print('_LoginScreen.loginWithFacebook $e $s');
-      showAlertDialog(context, 'Error', 'Couldn\'t login with facebook.'.tr());
+      DialogUtils.showAlertDialog(
+          context, 'Error', 'Couldn\'t login with facebook.'.tr());
     }
   }
 
   loginWithApple() async {
     try {
-      await showProgress(context, 'Logging in, Please wait...'.tr(), false);
-      dynamic result = await FireStoreUtils.loginWithApple();
-      await hideProgress();
+      await DialogUtils.showProgress(
+          context, 'Logging in, Please wait...'.tr(), false);
+      dynamic result = await FirebaseUtils.loginWithApple();
+      await DialogUtils.hideProgress();
       if (result != null && result is User) {
         PhitnestApp.currentUser = result;
-        pushAndRemoveUntil(context, HomeScreen(user: result), false);
+        NavigationUtils.pushAndRemoveUntil(
+            context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
-        showAlertDialog(context, 'Error'.tr(), result.tr());
+        DialogUtils.showAlertDialog(context, 'Error'.tr(), result.tr());
       } else {
-        showAlertDialog(context, 'Error', 'Couldn\'t login with apple.'.tr());
+        DialogUtils.showAlertDialog(
+            context, 'Error', 'Couldn\'t login with apple.'.tr());
       }
     } catch (e, s) {
-      await hideProgress();
+      await DialogUtils.hideProgress();
       print('_LoginScreen.loginWithApple $e $s');
-      showAlertDialog(context, 'Error', 'Couldn\'t login with apple.'.tr());
+      DialogUtils.showAlertDialog(
+          context, 'Error', 'Couldn\'t login with apple.'.tr());
     }
   }
 }

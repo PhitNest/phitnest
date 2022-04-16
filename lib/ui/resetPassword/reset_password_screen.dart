@@ -1,7 +1,7 @@
 import 'package:phitnest/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   @override
@@ -19,7 +19,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(
-            color: isDarkMode(context) ? Colors.white : Colors.black),
+            color:
+                DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black),
         elevation: 0.0,
       ),
       body: Form(
@@ -50,7 +51,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   child: TextFormField(
                     textAlignVertical: TextAlignVertical.center,
                     textInputAction: TextInputAction.done,
-                    validator: validateEmail,
+                    validator: AuthenticationUtils.validateEmail,
                     onFieldSubmitted: (_) => resetPassword(),
                     onSaved: (val) => _emailAddress = val!,
                     style: TextStyle(fontSize: 18.0),
@@ -103,8 +104,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color:
-                            isDarkMode(context) ? Colors.black : Colors.white,
+                        color: DisplayUtils.isDarkMode(context)
+                            ? Colors.black
+                            : Colors.white,
                       ),
                     ),
                     onPressed: () => resetPassword(),
@@ -121,9 +123,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   resetPassword() async {
     if (_key.currentState?.validate() ?? false) {
       _key.currentState!.save();
-      await showProgress(context, 'Sending Email...'.tr(), false);
-      await FireStoreUtils.resetPassword(_emailAddress);
-      await hideProgress();
+      await DialogUtils.showProgress(context, 'Sending Email...'.tr(), false);
+      await FirebaseUtils.resetPassword(_emailAddress);
+      await DialogUtils.hideProgress();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

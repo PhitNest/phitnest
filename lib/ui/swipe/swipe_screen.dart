@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:phitnest/custom_flutter_tinder_card.dart';
 import 'package:phitnest/constants.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/main.dart';
 import 'package:phitnest/model/user.dart';
-import 'package:phitnest/ui/matchScreen/match_screen.dart';
+import 'package:phitnest/ui/match/match_screen.dart';
 import 'package:phitnest/ui/upgradeAccount/upgrade_account.dart';
-import 'package:phitnest/ui/userDetailsScreen/user_details_screen.dart';
+import 'package:phitnest/ui/userDetails/user_details_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,6 @@ class SwipeScreen extends StatefulWidget {
 }
 
 class _SwipeScreenState extends State<SwipeScreen> {
-  FireStoreUtils _fireStoreUtils = FireStoreUtils();
   late Stream<List<User>> tinderUsers;
   List<User> swipedUsers = [];
   List<User> users = [];
@@ -33,7 +32,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
 
   @override
   void dispose() {
-    _fireStoreUtils.closeTinderStream();
+    FirebaseUtils.closeTinderStream();
     super.dispose();
   }
 
@@ -84,16 +83,18 @@ class _SwipeScreenState extends State<SwipeScreen> {
                       return Icon(
                         Icons.account_circle,
                         size: MediaQuery.of(context).size.height * .4,
-                        color:
-                            isDarkMode(context) ? Colors.black : Colors.white,
+                        color: DisplayUtils.isDarkMode(context)
+                            ? Colors.black
+                            : Colors.white,
                       );
                     },
                     errorWidget: (context, imageUrl, error) {
                       return Icon(
                         Icons.account_circle,
                         size: MediaQuery.of(context).size.height * .4,
-                        color:
-                            isDarkMode(context) ? Colors.black : Colors.white,
+                        color: DisplayUtils.isDarkMode(context)
+                            ? Colors.black
+                            : Colors.white,
                       );
                     },
                   ),
@@ -241,13 +242,13 @@ class _SwipeScreenState extends State<SwipeScreen> {
           child: Text('Block user'.tr()),
           onPressed: () async {
             Navigator.pop(context);
-            showProgress(context, 'Blocking user...'.tr(), false);
-            bool isSuccessful = await _fireStoreUtils.blockUser(user, 'block');
-            hideProgress();
+            DialogUtils.showProgress(context, 'Blocking user...'.tr(), false);
+            bool isSuccessful = await FirebaseUtils.blockUser(user, 'block');
+            DialogUtils.hideProgress();
             if (isSuccessful) {
-              await _fireStoreUtils.onSwipeLeft(user);
+              await FirebaseUtils.onSwipeLeft(user);
               users.remove(user);
-              _fireStoreUtils.updateCardStream(users);
+              FirebaseUtils.updateCardStream(users);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('${user.fullName()} has been blocked.'.tr()),
@@ -268,13 +269,13 @@ class _SwipeScreenState extends State<SwipeScreen> {
           child: Text('Report user'.tr()),
           onPressed: () async {
             Navigator.pop(context);
-            showProgress(context, 'Reporting user...'.tr(), false);
-            bool isSuccessful = await _fireStoreUtils.blockUser(user, 'report');
-            hideProgress();
+            DialogUtils.showProgress(context, 'Reporting user...'.tr(), false);
+            bool isSuccessful = await FirebaseUtils.blockUser(user, 'report');
+            DialogUtils.hideProgress();
             if (isSuccessful) {
-              await _fireStoreUtils.onSwipeLeft(user);
+              await FirebaseUtils.onSwipeLeft(user);
               users.removeWhere((element) => element.userID == user.userID);
-              _fireStoreUtils.updateCardStream(users);
+              FirebaseUtils.updateCardStream(users);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -309,8 +310,8 @@ class _SwipeScreenState extends State<SwipeScreen> {
     if (PhitnestApp.currentUser!.isVip) {
       User undoUser = swipedUsers.removeLast();
       users.insert(0, undoUser);
-      _fireStoreUtils.updateCardStream(users);
-      await _fireStoreUtils.undo(undoUser);
+      FirebaseUtils.updateCardStream(users);
+      await FirebaseUtils.undo(undoUser);
     } else {
       _showUpgradeAccountDialog();
     }
@@ -370,33 +371,34 @@ class _SwipeScreenState extends State<SwipeScreen> {
                         orientation == CardSwipeOrientation.RIGHT) {
                       bool isValidSwipe = PhitnestApp.currentUser!.isVip
                           ? true
-                          : await _fireStoreUtils.incrementSwipe();
+                          : await FirebaseUtils.incrementSwipe();
                       if (isValidSwipe) {
                         if (orientation == CardSwipeOrientation.RIGHT) {
                           User? result =
-                              await _fireStoreUtils.onSwipeRight(data[index]);
+                              await FirebaseUtils.onSwipeRight(data[index]);
                           if (result != null) {
                             data.removeAt(index);
-                            _fireStoreUtils.updateCardStream(data);
-                            push(context, MatchScreen(matchedUser: result));
+                            FirebaseUtils.updateCardStream(data);
+                            NavigationUtils.push(
+                                context, MatchScreen(matchedUser: result));
                           } else {
                             swipedUsers.add(data[index]);
                             data.removeAt(index);
-                            _fireStoreUtils.updateCardStream(data);
+                            FirebaseUtils.updateCardStream(data);
                           }
                         } else if (orientation == CardSwipeOrientation.LEFT) {
                           swipedUsers.add(data[index]);
-                          await _fireStoreUtils.onSwipeLeft(data[index]);
+                          await FirebaseUtils.onSwipeLeft(data[index]);
                           data.removeAt(index);
-                          _fireStoreUtils.updateCardStream(data);
+                          FirebaseUtils.updateCardStream(data);
                         }
                       } else {
                         User returningUser = data.removeAt(index);
-                        _fireStoreUtils.updateCardStream(data);
+                        FirebaseUtils.updateCardStream(data);
                         _showUpgradeAccountDialog();
                         await Future.delayed(Duration(milliseconds: 200));
                         data.insert(0, returningUser);
-                        _fireStoreUtils.updateCardStream(data);
+                        FirebaseUtils.updateCardStream(data);
                       }
                     }
                   },
@@ -542,7 +544,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
   }
 
   _setupTinder() async {
-    tinderUsers = _fireStoreUtils.getTinderUsers();
-    await _fireStoreUtils.matchChecker(context);
+    tinderUsers = FirebaseUtils.getTinderUsers();
+    await FirebaseUtils.matchChecker(context);
   }
 }

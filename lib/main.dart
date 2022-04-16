@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:phitnest/firebase_options.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/model/app_model.dart';
 import 'package:phitnest/model/conversation_model.dart';
 import 'package:phitnest/model/home_conversation_model.dart';
@@ -72,11 +72,11 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
         FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
       }
       _tokenStream =
-          FireStoreUtils.firebaseMessaging.onTokenRefresh.listen((event) {
+          FirebaseUtils.firebaseMessaging.onTokenRefresh.listen((event) {
         if (PhitnestApp.currentUser != null) {
           print('token $event');
           PhitnestApp.currentUser!.fcmToken = event;
-          FireStoreUtils.updateCurrentUser(PhitnestApp.currentUser!);
+          FirebaseUtils.updateCurrentUser(PhitnestApp.currentUser!);
         }
       });
       // Set `initialized` state to true if Firebase initialization succeeds
@@ -156,12 +156,12 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
         _tokenStream?.pause();
         PhitnestApp.currentUser!.active = false;
         PhitnestApp.currentUser!.lastOnlineTimestamp = Timestamp.now();
-        FireStoreUtils.updateCurrentUser(PhitnestApp.currentUser!);
+        FirebaseUtils.updateCurrentUser(PhitnestApp.currentUser!);
       } else if (state == AppLifecycleState.resumed) {
         //user online
         _tokenStream?.resume();
         PhitnestApp.currentUser!.active = true;
-        FireStoreUtils.updateCurrentUser(PhitnestApp.currentUser!);
+        FirebaseUtils.updateCurrentUser(PhitnestApp.currentUser!);
       }
     }
   }
@@ -178,7 +178,8 @@ class Redirector extends StatelessWidget {
       body: Center(
         child: CircularProgressIndicator.adaptive(
           valueColor: AlwaysStoppedAnimation(Color(Constants.COLOR_PRIMARY)),
-          backgroundColor: isDarkMode(context) ? Colors.black : Colors.white,
+          backgroundColor:
+              DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white,
         ),
       ),
     );
@@ -192,20 +193,20 @@ class Redirector extends StatelessWidget {
     if (finishedOnBoarding) {
       auth.User? firebaseUser = auth.FirebaseAuth.instance.currentUser;
       if (firebaseUser != null) {
-        User? user = await FireStoreUtils.getCurrentUser(firebaseUser.uid);
+        User? user = await FirebaseUtils.getCurrentUser(firebaseUser.uid);
         if (user != null) {
           user.active = true;
-          await FireStoreUtils.updateCurrentUser(user);
+          await FirebaseUtils.updateCurrentUser(user);
           PhitnestApp.currentUser = user;
-          pushReplacement(context, HomeScreen(user: user));
+          NavigationUtils.pushReplacement(context, HomeScreen(user: user));
         } else {
-          pushReplacement(context, AuthScreen());
+          NavigationUtils.pushReplacement(context, AuthScreen());
         }
       } else {
-        pushReplacement(context, AuthScreen());
+        NavigationUtils.pushReplacement(context, AuthScreen());
       }
     } else {
-      pushReplacement(context, OnBoardingScreen());
+      NavigationUtils.pushReplacement(context, OnBoardingScreen());
     }
   }
 }

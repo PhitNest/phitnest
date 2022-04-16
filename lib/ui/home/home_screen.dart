@@ -1,9 +1,9 @@
 import 'package:phitnest/constants.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/main.dart';
 import 'package:phitnest/model/user.dart';
-import 'package:phitnest/ui/SwipeScreen/swipe_screen.dart';
-import 'package:phitnest/ui/conversationsScreen/conversations_screen.dart';
+import 'package:phitnest/ui/swipe/swipe_screen.dart';
+import 'package:phitnest/ui/conversations/conversations_screen.dart';
 import 'package:phitnest/ui/profile/profile_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ class _HomeState extends State<HomeScreen> {
     }
     user = widget.user;
     _currentWidget = SwipeScreen();
-    FireStoreUtils.firebaseMessaging.requestPermission(
+    FirebaseUtils.firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
       badge: true,
@@ -100,8 +100,9 @@ class _HomeState extends State<HomeScreen> {
                 )
               ],
               backgroundColor: Colors.transparent,
-              brightness:
-                  isDarkMode(context) ? Brightness.dark : Brightness.light,
+              brightness: DisplayUtils.isDarkMode(context)
+                  ? Brightness.dark
+                  : Brightness.light,
               centerTitle: true,
               elevation: 0,
             ),
@@ -113,8 +114,8 @@ class _HomeState extends State<HomeScreen> {
   }
 
   void checkSubscription() async {
-    await showProgress(context, 'Loading...', false);
-    await FireStoreUtils.isSubscriptionActive();
-    await hideProgress();
+    await DialogUtils.showProgress(context, 'Loading...', false);
+    await FirebaseUtils.isSubscriptionActive();
+    await DialogUtils.hideProgress();
   }
 }

@@ -1,7 +1,7 @@
 import 'package:phitnest/constants.dart';
 import 'package:phitnest/main.dart';
 import 'package:phitnest/model/user.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/ui/reauthScreen/reauth_user_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -31,19 +31,25 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     super.initState();
   }
 
+  Color _getBackgroundColor(BuildContext context) =>
+      DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white;
+
+  Color _getForegroundColor(BuildContext context) =>
+      DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: isDarkMode(context) ? Colors.black : Colors.white,
-          brightness: isDarkMode(context) ? Brightness.dark : Brightness.light,
+          backgroundColor: _getBackgroundColor(context),
+          brightness: DisplayUtils.isDarkMode(context)
+              ? Brightness.dark
+              : Brightness.light,
           centerTitle: true,
-          iconTheme: IconThemeData(
-              color: isDarkMode(context) ? Colors.white : Colors.black),
+          iconTheme: IconThemeData(color: _getForegroundColor(context)),
           title: Text(
             'Account Details'.tr(),
-            style: TextStyle(
-                color: isDarkMode(context) ? Colors.white : Colors.black),
+            style: TextStyle(color: _getForegroundColor(context)),
           ),
         ),
         body: SingleChildScrollView(
@@ -63,7 +69,9 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
               ),
               Material(
                   elevation: 2,
-                  color: isDarkMode(context) ? Colors.black12 : Colors.white,
+                  color: DisplayUtils.isDarkMode(context)
+                      ? Colors.black12
+                      : Colors.white,
                   child: ListView(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -72,9 +80,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                           title: Text(
                             'First Name'.tr(),
                             style: TextStyle(
-                              color: isDarkMode(context)
-                                  ? Colors.white
-                                  : Colors.black,
+                              color: _getForegroundColor(context),
                             ),
                           ),
                           trailing: ConstrainedBox(
@@ -83,15 +89,13 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                               onSaved: (String? val) {
                                 firstName = val;
                               },
-                              validator: validateName,
+                              validator: AuthenticationUtils.validateName,
                               textInputAction: TextInputAction.next,
                               textAlign: TextAlign.end,
                               initialValue: user.firstName,
                               style: TextStyle(
                                   fontSize: 18,
-                                  color: isDarkMode(context)
-                                      ? Colors.white
-                                      : Colors.black),
+                                  color: _getForegroundColor(context)),
                               cursorColor: Color(COLOR_ACCENT),
                               textCapitalization: TextCapitalization.words,
                               keyboardType: TextInputType.text,
@@ -106,10 +110,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                         ListTile(
                           title: Text(
                             'Last Name'.tr(),
-                            style: TextStyle(
-                                color: isDarkMode(context)
-                                    ? Colors.white
-                                    : Colors.black),
+                            style:
+                                TextStyle(color: _getForegroundColor(context)),
                           ),
                           trailing: ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: 100),
@@ -117,15 +119,13 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                               onSaved: (String? val) {
                                 lastName = val;
                               },
-                              validator: validateName,
+                              validator: AuthenticationUtils.validateName,
                               textInputAction: TextInputAction.next,
                               textAlign: TextAlign.end,
                               initialValue: user.lastName,
                               style: TextStyle(
                                   fontSize: 18,
-                                  color: isDarkMode(context)
-                                      ? Colors.white
-                                      : Colors.black),
+                                  color: _getForegroundColor(context)),
                               cursorColor: Color(COLOR_ACCENT),
                               textCapitalization: TextCapitalization.words,
                               keyboardType: TextInputType.text,
@@ -140,10 +140,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                         ListTile(
                           title: Text(
                             'Age'.tr(),
-                            style: TextStyle(
-                                color: isDarkMode(context)
-                                    ? Colors.white
-                                    : Colors.black),
+                            style:
+                                TextStyle(color: _getForegroundColor(context)),
                           ),
                           trailing: ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: 100),
@@ -156,9 +154,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                               initialValue: user.age,
                               style: TextStyle(
                                   fontSize: 18,
-                                  color: isDarkMode(context)
-                                      ? Colors.white
-                                      : Colors.black),
+                                  color: _getForegroundColor(context)),
                               cursorColor: Color(COLOR_ACCENT),
                               textCapitalization: TextCapitalization.words,
                               keyboardType: TextInputType.number,
@@ -173,10 +169,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                         ListTile(
                           title: Text(
                             'Bio'.tr(),
-                            style: TextStyle(
-                                color: isDarkMode(context)
-                                    ? Colors.white
-                                    : Colors.black),
+                            style:
+                                TextStyle(color: _getForegroundColor(context)),
                           ),
                           trailing: ConstrainedBox(
                             constraints: BoxConstraints(
@@ -192,9 +186,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                               textAlign: TextAlign.end,
                               style: TextStyle(
                                   fontSize: 18,
-                                  color: isDarkMode(context)
-                                      ? Colors.white
-                                      : Colors.black),
+                                  color: _getForegroundColor(context)),
                               cursorColor: Color(COLOR_ACCENT),
                               textCapitalization: TextCapitalization.words,
                               keyboardType: TextInputType.multiline,
@@ -209,10 +201,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                         ListTile(
                           title: Text(
                             'School'.tr(),
-                            style: TextStyle(
-                                color: isDarkMode(context)
-                                    ? Colors.white
-                                    : Colors.black),
+                            style:
+                                TextStyle(color: _getForegroundColor(context)),
                           ),
                           trailing: ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: 100),
@@ -225,9 +215,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                               initialValue: user.school,
                               style: TextStyle(
                                   fontSize: 18,
-                                  color: isDarkMode(context)
-                                      ? Colors.white
-                                      : Colors.black),
+                                  color: _getForegroundColor(context)),
                               cursorColor: Color(COLOR_ACCENT),
                               textCapitalization: TextCapitalization.words,
                               keyboardType: TextInputType.text,
@@ -250,7 +238,9 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
               ),
               Material(
                 elevation: 2,
-                color: isDarkMode(context) ? Colors.black12 : Colors.white,
+                color: DisplayUtils.isDarkMode(context)
+                    ? Colors.black12
+                    : Colors.white,
                 child: ListView(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -260,10 +250,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                         ListTile(
                           title: Text(
                             'Email Address'.tr(),
-                            style: TextStyle(
-                                color: isDarkMode(context)
-                                    ? Colors.white
-                                    : Colors.black),
+                            style:
+                                TextStyle(color: _getForegroundColor(context)),
                           ),
                           trailing: ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: 200),
@@ -271,15 +259,13 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                               onSaved: (String? val) {
                                 email = val;
                               },
-                              validator: validateEmail,
+                              validator: AuthenticationUtils.validateEmail,
                               textInputAction: TextInputAction.next,
                               initialValue: user.email,
                               textAlign: TextAlign.end,
                               style: TextStyle(
                                   fontSize: 18,
-                                  color: isDarkMode(context)
-                                      ? Colors.white
-                                      : Colors.black),
+                                  color: _getForegroundColor(context)),
                               cursorColor: Color(COLOR_ACCENT),
                               keyboardType: TextInputType.emailAddress,
                               decoration: InputDecoration(
@@ -293,10 +279,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                         ListTile(
                           title: Text(
                             'Phone Number'.tr(),
-                            style: TextStyle(
-                                color: isDarkMode(context)
-                                    ? Colors.white
-                                    : Colors.black),
+                            style:
+                                TextStyle(color: _getForegroundColor(context)),
                           ),
                           trailing: ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: 150),
@@ -304,15 +288,13 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                               onSaved: (String? val) {
                                 mobile = val;
                               },
-                              validator: validateMobile,
+                              validator: AuthenticationUtils.validateMobile,
                               textInputAction: TextInputAction.done,
                               initialValue: user.phoneNumber,
                               textAlign: TextAlign.end,
                               style: TextStyle(
                                   fontSize: 18,
-                                  color: isDarkMode(context)
-                                      ? Colors.white
-                                      : Colors.black),
+                                  color: _getForegroundColor(context)),
                               cursorColor: Color(COLOR_ACCENT),
                               keyboardType: TextInputType.phone,
                               decoration: InputDecoration(
@@ -332,8 +314,9 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                         const BoxConstraints(minWidth: double.infinity),
                     child: Material(
                       elevation: 2,
-                      color:
-                          isDarkMode(context) ? Colors.black12 : Colors.white,
+                      color: DisplayUtils.isDarkMode(context)
+                          ? Colors.black12
+                          : Colors.white,
                       child: CupertinoButton(
                         padding: const EdgeInsets.all(12.0),
                         onPressed: () async {
@@ -377,9 +360,10 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
           ),
         );
         if (result != null && result) {
-          await showProgress(context, 'Saving details...'.tr(), false);
+          await DialogUtils.showProgress(
+              context, 'Saving details...'.tr(), false);
           await _updateUser();
-          await hideProgress();
+          await DialogUtils.hideProgress();
         }
       } else if (authProvider == AuthProviders.PASSWORD &&
           auth.FirebaseAuth.instance.currentUser!.email != email) {
@@ -392,14 +376,15 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
           ),
         );
         if (result != null && result) {
-          await showProgress(context, 'Saving details...'.tr(), false);
+          await DialogUtils.showProgress(
+              context, 'Saving details...'.tr(), false);
           await _updateUser();
-          await hideProgress();
+          await DialogUtils.hideProgress();
         }
       } else {
-        showProgress(context, 'Saving details...'.tr(), false);
+        DialogUtils.showProgress(context, 'Saving details...'.tr(), false);
         await _updateUser();
-        hideProgress();
+        DialogUtils.hideProgress();
       }
     } else {
       setState(() {
@@ -416,7 +401,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     user.school = school!;
     user.email = email!;
     user.phoneNumber = mobile!;
-    User? updatedUser = await FireStoreUtils.updateCurrentUser(user);
+    User? updatedUser = await FirebaseUtils.updateCurrentUser(user);
     if (updatedUser != null) {
       PhitnestApp.currentUser = user;
       ScaffoldMessenger.of(context).showSnackBar(

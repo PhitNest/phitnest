@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:phitnest/constants.dart';
-import 'package:phitnest/helpers/dialog_helper.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/main.dart';
 import 'package:phitnest/model/block_user_model.dart';
 import 'package:phitnest/model/channel_participation.dart';
@@ -17,9 +16,8 @@ import 'package:phitnest/model/purchase_model.dart';
 import 'package:phitnest/model/swipe.dart';
 import 'package:phitnest/model/swipe_counter_model.dart';
 import 'package:phitnest/model/user.dart';
-import 'package:phitnest/model/user.dart' as location;
-import 'package:phitnest/helpers/helper.dart';
-import 'package:phitnest/ui/matchScreen/match_screen.dart';
+import 'package:phitnest/model/user.dart' as user;
+import 'package:phitnest/ui/match/match_screen.dart';
 import 'package:phitnest/ui/reauthScreen/reauth_user_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -30,7 +28,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
@@ -39,16 +36,16 @@ import 'package:uuid/uuid.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-class FireStoreUtils {
+class FirebaseUtils {
   static FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   static Reference storage = FirebaseStorage.instance.ref();
-  List<Swipe> matchedUsersList = [];
-  late StreamController<List<HomeConversationModel>> conversationsStream;
-  List<HomeConversationModel> homeConversations = [];
-  List<BlockUserModel> blockedList = [];
-  List<User> matches = [];
-  late StreamController<List<User>> tinderCardsStreamController;
+  static List<Swipe> matchedUsersList = [];
+  static late StreamController<List<HomeConversationModel>> conversationsStream;
+  static List<HomeConversationModel> homeConversations = [];
+  static List<BlockUserModel> blockedList = [];
+  static List<User> matches = [];
+  static late StreamController<List<User>> tinderCardsStreamController;
 
   static Future<User?> getCurrentUser(String uid) async {
     DocumentSnapshot<Map<String, dynamic>> userDocument =
@@ -72,15 +69,15 @@ class FireStoreUtils {
     });
   }
 
-  Future<Url> uploadChatImageToFireStorage(
+  static Future<Url> uploadChatImageToFireStorage(
       File image, BuildContext context) async {
-    showProgress(context, 'Uploading image...'.tr(), false);
+    DialogUtils.showProgress(context, 'Uploading image...'.tr(), false);
     var uniqueID = Uuid().v4();
     File compressedImage = await compressImage(image);
     Reference upload = storage.child('images/$uniqueID.png');
     UploadTask uploadTask = upload.putFile(compressedImage);
     uploadTask.snapshotEvents.listen((event) {
-      updateProgress(
+      DialogUtils.updateProgress(
           'Uploading image ${(event.bytesTransferred.toDouble() / 1000).toStringAsFixed(2)} /'
                   '${(event.totalBytes.toDouble() / 1000).toStringAsFixed(2)} '
                   'KB'
@@ -92,21 +89,21 @@ class FireStoreUtils {
     var storageRef = (await uploadTask.whenComplete(() {})).ref;
     var downloadUrl = await storageRef.getDownloadURL();
     var metaData = await storageRef.getMetadata();
-    hideProgress();
+    DialogUtils.hideProgress();
     return Url(
         mime: metaData.contentType ?? 'image', url: downloadUrl.toString());
   }
 
-  Future<ChatVideoContainer> uploadChatVideoToFireStorage(
+  static Future<ChatVideoContainer> uploadChatVideoToFireStorage(
       File video, BuildContext context) async {
-    showProgress(context, 'Uploading video...'.tr(), false);
+    DialogUtils.showProgress(context, 'Uploading video...'.tr(), false);
     var uniqueID = Uuid().v4();
     File compressedVideo = await _compressVideo(video);
     Reference upload = storage.child('videos/$uniqueID.mp4');
     SettableMetadata metadata = SettableMetadata(contentType: 'video');
     UploadTask uploadTask = upload.putFile(compressedVideo, metadata);
     uploadTask.snapshotEvents.listen((event) {
-      updateProgress(
+      DialogUtils.updateProgress(
           'Uploading video ${(event.bytesTransferred.toDouble() / 1000).toStringAsFixed(2)} /'
                   '${(event.totalBytes.toDouble() / 1000).toStringAsFixed(2)} '
                   'KB'
@@ -121,14 +118,14 @@ class FireStoreUtils {
         imageFormat: ImageFormat.PNG);
     final file = File(uint8list!);
     String thumbnailDownloadUrl = await uploadVideoThumbnailToFireStorage(file);
-    hideProgress();
+    DialogUtils.hideProgress();
     return ChatVideoContainer(
         videoUrl: Url(
             url: downloadUrl.toString(), mime: metaData.contentType ?? 'video'),
         thumbnailUrl: thumbnailDownloadUrl);
   }
 
-  Future<String> uploadVideoThumbnailToFireStorage(File file) async {
+  static Future<String> uploadVideoThumbnailToFireStorage(File file) async {
     var uniqueID = Uuid().v4();
     File compressedImage = await compressImage(file);
     Reference upload = storage.child('thumbnails/$uniqueID.png');
@@ -138,7 +135,7 @@ class FireStoreUtils {
     return downloadUrl.toString();
   }
 
-  Future<List<Swipe>> getMatches(String userID) async {
+  static Future<List<Swipe>> getMatches(String userID) async {
     List<Swipe> matchList = <Swipe>[];
     await firestore
         .collection(SWIPES)
@@ -157,7 +154,7 @@ class FireStoreUtils {
     return matchList.toSet().toList();
   }
 
-  Future<bool> removeMatch(String id) async {
+  static Future<bool> removeMatch(String id) async {
     bool isSuccessful = false;
     await firestore.collection(SWIPES).doc(id).delete().then((onValue) {
       isSuccessful = true;
@@ -168,7 +165,7 @@ class FireStoreUtils {
     return isSuccessful;
   }
 
-  Future<List<User>> getMatchedUserObject(String userID) async {
+  static Future<List<User>> getMatchedUserObject(String userID) async {
     List<String> friendIDs = [];
     matchedUsersList.clear();
     matchedUsersList = await getMatches(userID);
@@ -184,7 +181,8 @@ class FireStoreUtils {
     return matches;
   }
 
-  Stream<List<HomeConversationModel>> getConversations(String userID) async* {
+  static Stream<List<HomeConversationModel>> getConversations(
+      String userID) async* {
     conversationsStream = StreamController<List<HomeConversationModel>>();
     HomeConversationModel newHomeConversation;
 
@@ -211,7 +209,8 @@ class FireStoreUtils {
                 bool isGroupChat = !channel.id.contains(userID);
                 List<User> users = [];
                 if (isGroupChat) {
-                  getGroupMembers(channel.id).listen((listOfUsers) {
+                  FirebaseUtils.getGroupMembers(channel.id)
+                      .listen((listOfUsers) {
                     if (listOfUsers.isNotEmpty) {
                       users = listOfUsers;
                       newHomeConversation = HomeConversationModel(
@@ -237,7 +236,8 @@ class FireStoreUtils {
                     }
                   });
                 } else {
-                  getUserByID(channel.id.replaceAll(userID, '')).listen((user) {
+                  FirebaseUtils.getUserByID(channel.id.replaceAll(userID, ''))
+                      .listen((user) {
                     users.clear();
                     users.add(user);
                     newHomeConversation = HomeConversationModel(
@@ -271,13 +271,13 @@ class FireStoreUtils {
     yield* conversationsStream.stream;
   }
 
-  Stream<List<User>> getGroupMembers(String channelID) async* {
+  static Stream<List<User>> getGroupMembers(String channelID) async* {
     StreamController<List<User>> membersStreamController = StreamController();
-    getGroupMembersIDs(channelID).listen((memberIDs) {
+    FirebaseUtils.getGroupMembersIDs(channelID).listen((memberIDs) {
       if (memberIDs.isNotEmpty) {
         List<User> groupMembers = [];
         for (String id in memberIDs) {
-          getUserByID(id).listen((user) {
+          FirebaseUtils.getUserByID(id).listen((user) {
             groupMembers.add(user);
             membersStreamController.sink.add(groupMembers);
           });
@@ -289,7 +289,7 @@ class FireStoreUtils {
     yield* membersStreamController.stream;
   }
 
-  Stream<List<String>> getGroupMembersIDs(String channelID) async* {
+  static Stream<List<String>> getGroupMembersIDs(String channelID) async* {
     StreamController<List<String>> membersIDsStreamController =
         StreamController();
     firestore
@@ -311,7 +311,7 @@ class FireStoreUtils {
     yield* membersIDsStreamController.stream;
   }
 
-  Stream<User> getUserByID(String id) async* {
+  static Stream<User> getUserByID(String id) async* {
     StreamController<User> userStreamController = StreamController();
     firestore.collection(USERS).doc(id).snapshots().listen((user) {
       userStreamController.sink.add(User.fromJson(user.data() ?? {}));
@@ -319,7 +319,8 @@ class FireStoreUtils {
     yield* userStreamController.stream;
   }
 
-  Future<ConversationModel?> getChannelByIdOrNull(String channelID) async {
+  static Future<ConversationModel?> getChannelByIdOrNull(
+      String channelID) async {
     ConversationModel? conversationModel;
     await firestore.collection(CHANNELS).doc(channelID).get().then((channel) {
       if (channel.exists) {
@@ -331,7 +332,7 @@ class FireStoreUtils {
     return conversationModel;
   }
 
-  Stream<ChatModel> getChatMessages(
+  static Stream<ChatModel> getChatMessages(
       HomeConversationModel homeConversationModel) async* {
     StreamController<ChatModel> chatModelStreamController = StreamController();
     ChatModel chatModel = ChatModel();
@@ -382,7 +383,7 @@ class FireStoreUtils {
     yield* chatModelStreamController.stream;
   }
 
-  Future<void> sendMessage(List<User> members, bool isGroup,
+  static Future<void> sendMessage(List<User> members, bool isGroup,
       MessageData message, ConversationModel conversationModel) async {
     var ref = firestore
         .collection(CHANNELS)
@@ -434,7 +435,7 @@ class FireStoreUtils {
     });
   }
 
-  Future<bool> createConversation(ConversationModel conversation) async {
+  static Future<bool> createConversation(ConversationModel conversation) async {
     bool isSuccessful = false;
     await firestore
         .collection(CHANNELS)
@@ -446,8 +447,8 @@ class FireStoreUtils {
       ChannelParticipation myFriendParticipation = ChannelParticipation(
           user: conversation.id.replaceAll(PhitnestApp.currentUser!.userID, ''),
           channel: conversation.id);
-      await createChannelParticipation(myChannelParticipation);
-      await createChannelParticipation(myFriendParticipation);
+      await FirebaseUtils.createChannelParticipation(myChannelParticipation);
+      await FirebaseUtils.createChannelParticipation(myFriendParticipation);
       isSuccessful = true;
     }, onError: (e) {
       print((e as PlatformException).message);
@@ -456,21 +457,21 @@ class FireStoreUtils {
     return isSuccessful;
   }
 
-  Future<void> updateChannel(ConversationModel conversationModel) async {
+  static Future<void> updateChannel(ConversationModel conversationModel) async {
     await firestore
         .collection(CHANNELS)
         .doc(conversationModel.id)
         .update(conversationModel.toJson());
   }
 
-  Future<void> createChannelParticipation(
+  static Future<void> createChannelParticipation(
       ChannelParticipation channelParticipation) async {
     await firestore
         .collection(CHANNEL_PARTICIPATION)
         .add(channelParticipation.toJson());
   }
 
-  Future<HomeConversationModel> createGroupChat(
+  static Future<HomeConversationModel> createGroupChat(
       List<User> selectedUsers, String groupName) async {
     late HomeConversationModel groupConversationModel;
     DocumentReference channelDoc = firestore.collection(CHANNELS).doc();
@@ -496,7 +497,7 @@ class FireStoreUtils {
     return groupConversationModel;
   }
 
-  Future<bool> leaveGroup(ConversationModel conversationModel) async {
+  static Future<bool> leaveGroup(ConversationModel conversationModel) async {
     bool isSuccessful = false;
     conversationModel.lastMessage = '${PhitnestApp.currentUser!.fullName()} '
             'left'
@@ -521,7 +522,7 @@ class FireStoreUtils {
     return isSuccessful;
   }
 
-  Future<bool> blockUser(User blockedUser, String type) async {
+  static Future<bool> blockUser(User blockedUser, String type) async {
     bool isSuccessful = false;
     BlockUserModel blockUserModel = BlockUserModel(
         type: type,
@@ -537,7 +538,7 @@ class FireStoreUtils {
     return isSuccessful;
   }
 
-  Stream<bool> getBlocks() async* {
+  static Stream<bool> getBlocks() async* {
     StreamController<bool> refreshStreamController = StreamController();
     firestore
         .collection(REPORTS)
@@ -557,7 +558,7 @@ class FireStoreUtils {
     yield* refreshStreamController.stream;
   }
 
-  bool validateIfUserBlocked(String userID) {
+  static bool validateIfUserBlocked(String userID) {
     for (BlockUserModel blockedUser in blockedList) {
       if (userID == blockedUser.dest) {
         return true;
@@ -566,12 +567,12 @@ class FireStoreUtils {
     return false;
   }
 
-  Stream<List<User>> getTinderUsers() async* {
+  static Stream<List<User>> getTinderUsers() async* {
     tinderCardsStreamController = StreamController<List<User>>();
     List<User> tinderUsers = [];
-    Position? locationData = await getCurrentLocation();
+    Position? locationData = await LocationUtils.getCurrentLocation();
     if (locationData != null) {
-      PhitnestApp.currentUser!.location = location.UserLocation(
+      PhitnestApp.currentUser!.location = user.UserLocation(
           latitude: locationData.latitude, longitude: locationData.longitude);
       await firestore
           .collection(USERS)
@@ -583,9 +584,10 @@ class FireStoreUtils {
           try {
             if (tinderUser.id != PhitnestApp.currentUser!.userID) {
               User user = User.fromJson(tinderUser.data() ?? {});
-              double distance =
-                  getDistance(user.location, PhitnestApp.currentUser!.location);
-              if (await _isValidUserForTinderSwipe(user, distance)) {
+              double distance = LocationUtils.getDistance(
+                  user.location, PhitnestApp.currentUser!.location);
+              if (await FirebaseUtils._isValidUserForTinderSwipe(
+                  user, distance)) {
                 user.milesAway = '$distance Miles Away'.tr();
                 tinderUsers.insert(0, user);
                 tinderCardsStreamController.add(tinderUsers);
@@ -608,7 +610,15 @@ class FireStoreUtils {
     yield* tinderCardsStreamController.stream;
   }
 
-  Future<bool> _isValidUserForTinderSwipe(
+  static bool isPreferredGender(String gender) {
+    if (PhitnestApp.currentUser!.settings.genderPreference != 'All') {
+      return gender == PhitnestApp.currentUser!.settings.genderPreference;
+    } else {
+      return true;
+    }
+  }
+
+  static Future<bool> _isValidUserForTinderSwipe(
       User tinderUser, double distance) async {
     //make sure that we haven't swiped this user before
     QuerySnapshot result1 = await firestore
@@ -620,11 +630,11 @@ class FireStoreUtils {
       print('${(onError as PlatformException).message}');
     });
     return result1.docs.isEmpty &&
-        isPreferredGender(tinderUser.settings.gender) &&
-        isInPreferredDistance(distance);
+        FirebaseUtils.isPreferredGender(tinderUser.settings.gender) &&
+        LocationUtils.isInPreferredDistance(distance);
   }
 
-  matchChecker(BuildContext context) async {
+  static matchChecker(BuildContext context) async {
     String myID = PhitnestApp.currentUser!.userID;
     QuerySnapshot<Map<String, dynamic>> result = await firestore
         .collection(SWIPES)
@@ -650,12 +660,12 @@ class FireStoreUtils {
                   await firestore.collection(USERS).doc(match.user1).get();
               User matchedUser =
                   User.fromJson(matchedUserDocSnapshot.data() ?? {});
-              push(
+              NavigationUtils.push(
                   context,
                   MatchScreen(
                     matchedUser: matchedUser,
                   ));
-              updateHasBeenSeen(unSeenMatch.data() ?? {});
+              FirebaseUtils.updateHasBeenSeen(unSeenMatch.data() ?? {});
             });
           }
         } catch (e) {
@@ -666,7 +676,7 @@ class FireStoreUtils {
     }
   }
 
-  onSwipeLeft(User dislikedUser) async {
+  static onSwipeLeft(User dislikedUser) async {
     DocumentReference documentReference = firestore.collection(SWIPES).doc();
     Swipe leftSwipe = Swipe(
         id: documentReference.id,
@@ -678,7 +688,7 @@ class FireStoreUtils {
     await documentReference.set(leftSwipe.toJson());
   }
 
-  Future<User?> onSwipeRight(User user) async {
+  static Future<User?> onSwipeRight(User user) async {
     // check if this user sent a match request before ? if yes, it's a match,
     // if not, send him match request
     QuerySnapshot querySnapshot = await firestore
@@ -712,12 +722,13 @@ class FireStoreUtils {
     } else {
       //this user didn't send me a match request, let's send match request
       // and keep swiping
-      await sendSwipeRequest(user, PhitnestApp.currentUser!.userID);
+      await FirebaseUtils.sendSwipeRequest(
+          user, PhitnestApp.currentUser!.userID);
       return null;
     }
   }
 
-  Future<bool> sendSwipeRequest(User user, String myID) async {
+  static Future<bool> sendSwipeRequest(User user, String myID) async {
     bool isSuccessful = false;
     DocumentReference documentReference = firestore.collection(SWIPES).doc();
     Swipe swipe = Swipe(
@@ -735,12 +746,12 @@ class FireStoreUtils {
     return isSuccessful;
   }
 
-  updateHasBeenSeen(Map<String, dynamic> target) async {
+  static updateHasBeenSeen(Map<String, dynamic> target) async {
     target['hasBeenSeen'] = true;
     await firestore.collection(SWIPES).doc(target['id'] ?? '').update(target);
   }
 
-  Future<void> deleteImage(String imageFileUrl) async {
+  static Future<void> deleteImage(String imageFileUrl) async {
     var fileUrl = Uri.decodeFull(Path.basename(imageFileUrl))
         .replaceAll(RegExp(r'(\?alt).*'), '');
 
@@ -749,7 +760,7 @@ class FireStoreUtils {
     await firebaseStorageRef.delete();
   }
 
-  undo(User tinderUser) async {
+  static undo(User tinderUser) async {
     await firestore
         .collection(SWIPES)
         .where('user1', isEqualTo: PhitnestApp.currentUser!.userID)
@@ -762,15 +773,15 @@ class FireStoreUtils {
     });
   }
 
-  closeTinderStream() {
+  static closeTinderStream() {
     tinderCardsStreamController.close();
   }
 
-  void updateCardStream(List<User> data) {
+  static void updateCardStream(List<User> data) {
     tinderCardsStreamController.add(data);
   }
 
-  Future<bool> incrementSwipe() async {
+  static Future<bool> incrementSwipe() async {
     DocumentReference<Map<String, dynamic>> documentReference =
         firestore.collection(SWIPE_COUNT).doc(PhitnestApp.currentUser!.userID);
     DocumentSnapshot<Map<String, dynamic>> validationDocumentSnapshot =
@@ -782,7 +793,7 @@ class FireStoreUtils {
             .update({'count': validationDocumentSnapshot['count'] + 1});
         return true;
       } else {
-        return _shouldResetCounter(validationDocumentSnapshot);
+        return FirebaseUtils._shouldResetCounter(validationDocumentSnapshot);
       }
     } else {
       await firestore.doc(documentReference.path).set(SwipeCounter(
@@ -794,14 +805,14 @@ class FireStoreUtils {
     }
   }
 
-  Future<Url> uploadAudioFile(File file, BuildContext context) async {
-    showProgress(context, 'Uploading Audio...'.tr(), false);
+  static Future<Url> uploadAudioFile(File file, BuildContext context) async {
+    DialogUtils.showProgress(context, 'Uploading Audio...'.tr(), false);
     var uniqueID = Uuid().v4();
     Reference upload = storage.child('audio/$uniqueID.mp3');
     SettableMetadata metadata = SettableMetadata(contentType: 'audio');
     UploadTask uploadTask = upload.putFile(file, metadata);
     uploadTask.snapshotEvents.listen((event) {
-      updateProgress(
+      DialogUtils.updateProgress(
           'Uploading Audio ${(event.bytesTransferred.toDouble() / 1000).toStringAsFixed(2)} /'
                   '${(event.totalBytes.toDouble() / 1000).toStringAsFixed(2)} '
                   'KB'
@@ -813,12 +824,12 @@ class FireStoreUtils {
     var storageRef = (await uploadTask.whenComplete(() {})).ref;
     var downloadUrl = await storageRef.getDownloadURL();
     var metaData = await storageRef.getMetadata();
-    hideProgress();
+    DialogUtils.hideProgress();
     return Url(
         mime: metaData.contentType ?? 'audio', url: downloadUrl.toString());
   }
 
-  Future<bool> _shouldResetCounter(
+  static Future<bool> _shouldResetCounter(
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot) async {
     SwipeCounter counter = SwipeCounter.fromJson(documentSnapshot.data() ?? {});
     DateTime now = DateTime.now();
@@ -843,7 +854,7 @@ class FireStoreUtils {
   /// being compressed
   /// @param file the video file that will be compressed
   /// @return File a new compressed file with smaller size
-  Future<File> _compressVideo(File file) async {
+  static Future<File> _compressVideo(File file) async {
     MediaInfo? info = await VideoCompress.compressVideo(file.path,
         quality: VideoQuality.DefaultQuality,
         deleteOrigin: false,
@@ -1145,7 +1156,7 @@ class FireStoreUtils {
               email: emailAddress, password: password);
       String profilePicUrl = '';
       if (image != null) {
-        updateProgress('Uploading image, Please wait...'.tr());
+        DialogUtils.updateProgress('Uploading image, Please wait...'.tr());
         profilePicUrl =
             await uploadUserImageToFireStorage(image, result.user?.uid ?? '');
       }
@@ -1377,23 +1388,4 @@ class FireStoreUtils {
       return;
     }
   }
-}
-
-sendNotification(String token, String title, String body,
-    Map<String, dynamic>? payload) async {
-  await http.post(
-    Uri.parse('https://fcm.googleapis.com/fcm/send'),
-    headers: <String, String>{
-      'Content-Type': 'application/json',
-      'Authorization': 'key=$SERVER_KEY',
-    },
-    body: jsonEncode(
-      <String, dynamic>{
-        'notification': <String, dynamic>{'body': body, 'title': title},
-        'priority': 'high',
-        'data': payload ?? <String, dynamic>{},
-        'to': token
-      },
-    ),
-  );
 }

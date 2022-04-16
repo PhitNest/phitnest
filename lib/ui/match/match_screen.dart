@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:phitnest/constants.dart';
-import 'package:phitnest/helpers/helper_library.dart';
+import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/main.dart';
 import 'package:phitnest/model/conversation_model.dart';
 import 'package:phitnest/model/home_conversation_model.dart';
@@ -20,8 +20,6 @@ class MatchScreen extends StatefulWidget {
 }
 
 class _MatchScreenState extends State<MatchScreen> {
-  final FireStoreUtils _fireStoreUtils = FireStoreUtils();
-
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
@@ -60,7 +58,7 @@ class _MatchScreenState extends State<MatchScreen> {
                       'KEEP SWIPING'.tr(),
                       style: TextStyle(
                           fontSize: 16,
-                          color: isDarkMode(context)
+                          color: DisplayUtils.isDarkMode(context)
                               ? Colors.black
                               : Colors.white),
                     ),
@@ -84,7 +82,7 @@ class _MatchScreenState extends State<MatchScreen> {
                         'SEND A MESSAGE'.tr(),
                         style: TextStyle(
                             fontSize: 17,
-                            color: isDarkMode(context)
+                            color: DisplayUtils.isDarkMode(context)
                                 ? Colors.black
                                 : Colors.white),
                       ),
@@ -100,9 +98,8 @@ class _MatchScreenState extends State<MatchScreen> {
                               widget.matchedUser.userID;
                         }
                         ConversationModel? conversationModel =
-                            await _fireStoreUtils
-                                .getChannelByIdOrNull(channelID);
-                        pushReplacement(
+                            await FirebaseUtils.getChannelByIdOrNull(channelID);
+                        NavigationUtils.pushReplacement(
                           context,
                           ChatScreen(
                             homeConversationModel: HomeConversationModel(
