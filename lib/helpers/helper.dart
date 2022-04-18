@@ -1,15 +1,15 @@
-export 'package:phitnest/helpers/dialog_helper.dart';
-export 'package:phitnest/helpers/time_helper.dart';
-export 'package:phitnest/helpers/display_helper.dart';
-export 'package:phitnest/helpers/firebase_helper.dart';
-export 'package:phitnest/helpers/authentication_helper.dart';
-export 'package:phitnest/helpers/location_helper.dart';
+export 'package:phitnest/helpers/dialog/dialog_helper.dart';
+export 'package:phitnest/helpers/time/time_helper.dart';
+export 'package:phitnest/helpers/display/display_helper.dart';
+export 'package:phitnest/helpers/firebase/firebase_helper.dart';
+export 'package:phitnest/helpers/authentication/authentication_helper.dart';
+export 'package:phitnest/helpers/location/location_helper.dart';
 export 'package:phitnest/helpers/helper.dart';
-export 'package:phitnest/helpers/navigation_helper.dart';
+export 'package:phitnest/helpers/navigation/navigation_helper.dart';
 
 import 'dart:convert';
 
-import 'package:phitnest/constants.dart';
+import 'package:phitnest/constants/constants.dart';
 import 'package:http/http.dart' as http;
 
 sendNotification(String token, String title, String body,
