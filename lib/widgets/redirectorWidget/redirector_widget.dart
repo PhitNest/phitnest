@@ -3,7 +3,7 @@ import 'package:phitnest/constants/constants.dart' as Constants;
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:phitnest/main.dart';
-import 'package:phitnest/model/user.dart';
+import 'package:phitnest/models/user.dart';
 import 'package:phitnest/screens/auth/auth_screen.dart';
 import 'package:phitnest/screens/home/home_screen.dart';
 import 'package:phitnest/screens/onBoarding/on_boarding_screen.dart';

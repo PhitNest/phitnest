@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:phitnest/widgets/tinderCard/custom_flutter_tinder_card.dart';
 import 'package:phitnest/constants/constants.dart';
 import 'package:phitnest/helpers/helper.dart';
-import 'package:phitnest/model/user.dart';
+import 'package:phitnest/models/user.dart';
 import 'package:phitnest/screens/fullScreenImageViewer/full_screen_image_viewer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';

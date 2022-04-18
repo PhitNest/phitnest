@@ -1,7 +1,7 @@
 import 'package:phitnest/constants/constants.dart';
 import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/main.dart';
-import 'package:phitnest/model/user.dart';
+import 'package:phitnest/models/user.dart';
 import 'package:phitnest/screens/swipe/swipe_screen.dart';
 import 'package:phitnest/screens/conversations/conversations_screen.dart';
 import 'package:phitnest/screens/profile/profile_screen.dart';

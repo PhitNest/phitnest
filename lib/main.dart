@@ -15,5 +15,4 @@ void main() async {
   runApp(
     EasyLocalization(
             builder: (context, child) => const PhitnestApp())),
-  );
 }
