@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:phitnest/models/user/user_model.dart';
-import 'package:phitnest/main.dart';
 
 class LocationUtils {
   static Future<Position?> getCurrentLocation() async {
@@ -53,10 +52,9 @@ class LocationUtils {
   }
 
   static bool isInPreferredDistance(double distance) {
-    if (PhitnestApp.currentUser!.settings.distanceRadius.isNotEmpty) {
+    if (User.currentUser!.settings.distanceRadius.isNotEmpty) {
       if (distance <=
-          (int.tryParse(PhitnestApp.currentUser!.settings.distanceRadius) ??
-              0)) {
+          (int.tryParse(User.currentUser!.settings.distanceRadius) ?? 0)) {
         return true;
       } else {
         return false;

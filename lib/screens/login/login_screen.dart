@@ -4,7 +4,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
 import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
@@ -301,7 +300,7 @@ class _LoginScreen extends State<LoginScreen> {
           email!.trim(), password!.trim(), currentLocation!);
       await DialogUtils.hideProgress();
       if (result != null && result is User) {
-        PhitnestApp.currentUser = result;
+        User.currentUser = result;
         NavigationUtils.pushAndRemoveUntil(
             context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
@@ -329,7 +328,7 @@ class _LoginScreen extends State<LoginScreen> {
       dynamic result = await FirebaseUtils.loginWithFacebook();
       await DialogUtils.hideProgress();
       if (result != null && result is User) {
-        PhitnestApp.currentUser = result;
+        User.currentUser = result;
         NavigationUtils.pushAndRemoveUntil(
             context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
@@ -353,7 +352,7 @@ class _LoginScreen extends State<LoginScreen> {
       dynamic result = await FirebaseUtils.loginWithApple();
       await DialogUtils.hideProgress();
       if (result != null && result is User) {
-        PhitnestApp.currentUser = result;
+        User.currentUser = result;
         NavigationUtils.pushAndRemoveUntil(
             context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {

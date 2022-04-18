@@ -7,7 +7,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
 import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
@@ -491,7 +490,7 @@ class _SignUpState extends State<SignUpScreen> {
           mobile!);
       await DialogUtils.hideProgress();
       if (result != null && result is User) {
-        PhitnestApp.currentUser = result;
+        User.currentUser = result;
         NavigationUtils.pushAndRemoveUntil(
             context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {

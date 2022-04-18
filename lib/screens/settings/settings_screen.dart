@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
 import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/models/models.dart';
 
@@ -292,7 +291,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               DialogUtils.hideProgress();
                               if (updateUser != null) {
                                 this.user = updateUser;
-                                PhitnestApp.currentUser = user;
+                                User.currentUser = user;
                                 ScaffoldMessenger.of(buildContext).showSnackBar(
                                   SnackBar(
                                     duration: Duration(seconds: 3),

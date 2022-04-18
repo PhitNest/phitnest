@@ -36,9 +36,6 @@ void main() async {
 }
 
 class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
-  /// This is a reference to the current signed in user.
-  static User? currentUser;
-
   /// This stream listens for refresh tokens from firebase.
   static StreamSubscription? _tokenStream;
 
@@ -69,10 +66,10 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
       }
       _tokenStream =
           FirebaseUtils.firebaseMessaging.onTokenRefresh.listen((event) {
-        if (PhitnestApp.currentUser != null) {
+        if (User.currentUser != null) {
           print('token $event');
-          PhitnestApp.currentUser!.fcmToken = event;
-          FirebaseUtils.updateCurrentUser(PhitnestApp.currentUser!);
+          User.currentUser!.fcmToken = event;
+          FirebaseUtils.updateCurrentUser(User.currentUser!);
         }
       });
       // Set `initialized` state to true if Firebase initialization succeeds
@@ -146,18 +143,18 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (auth.FirebaseAuth.instance.currentUser != null &&
-        PhitnestApp.currentUser != null) {
+        User.currentUser != null) {
       if (state == AppLifecycleState.paused) {
         //user offline
         _tokenStream?.pause();
-        PhitnestApp.currentUser!.active = false;
-        PhitnestApp.currentUser!.lastOnlineTimestamp = Timestamp.now();
-        FirebaseUtils.updateCurrentUser(PhitnestApp.currentUser!);
+        User.currentUser!.active = false;
+        User.currentUser!.lastOnlineTimestamp = Timestamp.now();
+        FirebaseUtils.updateCurrentUser(User.currentUser!);
       } else if (state == AppLifecycleState.resumed) {
         //user online
         _tokenStream?.resume();
-        PhitnestApp.currentUser!.active = true;
-        FirebaseUtils.updateCurrentUser(PhitnestApp.currentUser!);
+        User.currentUser!.active = true;
+        FirebaseUtils.updateCurrentUser(User.currentUser!);
       }
     }
   }

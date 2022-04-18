@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class User with ChangeNotifier {
+  static User? currentUser;
+
   String email;
 
   String firstName;
