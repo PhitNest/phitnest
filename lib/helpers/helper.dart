@@ -9,7 +9,7 @@ export 'package:phitnest/helpers/navigation_helper.dart';
 
 import 'dart:convert';
 
-import 'package:phitnest/constants.dart';
+import 'package:phitnest/constants/constants.dart';
 import 'package:http/http.dart' as http;
 
 sendNotification(String token, String title, String body,

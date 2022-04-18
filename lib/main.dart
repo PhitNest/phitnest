@@ -8,19 +8,16 @@ import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/model/app_model.dart';
 import 'package:phitnest/model/conversation_model.dart';
 import 'package:phitnest/model/home_conversation_model.dart';
-import 'package:phitnest/ui/auth/auth_screen.dart';
-import 'package:phitnest/ui/chat/chat_screen.dart';
-import 'package:phitnest/ui/home/home_screen.dart';
-import 'package:phitnest/ui/onBoarding/on_boarding_screen.dart';
+import 'package:phitnest/widgets/redirectorWidget/redirector_widget.dart';
+import 'package:phitnest/screens/chat/chat_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'constants.dart' as Constants;
+import 'constants/constants.dart' as Constants;
 import 'model/user.dart';
 
 void main() async {
@@ -163,50 +160,6 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
         PhitnestApp.currentUser!.active = true;
         FirebaseUtils.updateCurrentUser(PhitnestApp.currentUser!);
       }
-    }
-  }
-}
-
-class Redirector extends StatelessWidget {
-  const Redirector({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    redirect(context);
-    return Scaffold(
-      backgroundColor: Color(Constants.COLOR_PRIMARY),
-      body: Center(
-        child: CircularProgressIndicator.adaptive(
-          valueColor: AlwaysStoppedAnimation(Color(Constants.COLOR_PRIMARY)),
-          backgroundColor:
-              DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white,
-        ),
-      ),
-    );
-  }
-
-  Future redirect(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool finishedOnBoarding =
-        (prefs.getBool(Constants.FINISHED_ON_BOARDING) ?? false);
-
-    if (finishedOnBoarding) {
-      auth.User? firebaseUser = auth.FirebaseAuth.instance.currentUser;
-      if (firebaseUser != null) {
-        User? user = await FirebaseUtils.getCurrentUser(firebaseUser.uid);
-        if (user != null) {
-          user.active = true;
-          await FirebaseUtils.updateCurrentUser(user);
-          PhitnestApp.currentUser = user;
-          NavigationUtils.pushReplacement(context, HomeScreen(user: user));
-        } else {
-          NavigationUtils.pushReplacement(context, AuthScreen());
-        }
-      } else {
-        NavigationUtils.pushReplacement(context, AuthScreen());
-      }
-    } else {
-      NavigationUtils.pushReplacement(context, OnBoardingScreen());
     }
   }
 }
