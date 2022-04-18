@@ -11,7 +11,6 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
 import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
@@ -377,7 +376,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
               _verificationID!, code, _phoneNumber!, signUpLocation!);
           await DialogUtils.hideProgress();
           if (result != null && result is User) {
-            PhitnestApp.currentUser = result;
+            User.currentUser = result;
             NavigationUtils.pushAndRemoveUntil(
                 context, HomeScreen(user: result), false);
           } else if (result != null && result is String) {
@@ -577,7 +576,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
               userCredential.user?.uid ?? '');
           if (user != null) {
             DialogUtils.hideProgress();
-            PhitnestApp.currentUser = user;
+            User.currentUser = user;
             NavigationUtils.pushAndRemoveUntil(
                 context, HomeScreen(user: user), false);
           } else {
@@ -605,7 +604,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                 await FirebaseUtils.firebaseCreateNewUser(user);
             DialogUtils.hideProgress();
             if (errorMessage == null) {
-              PhitnestApp.currentUser = user;
+              User.currentUser = user;
               NavigationUtils.pushAndRemoveUntil(
                   context, HomeScreen(user: user), false);
             } else {

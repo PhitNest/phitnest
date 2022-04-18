@@ -37,7 +37,7 @@ class Redirector extends StatelessWidget {
         if (user != null) {
           user.active = true;
           await FirebaseUtils.updateCurrentUser(user);
-          PhitnestApp.currentUser = user;
+          User.currentUser = user;
           NavigationUtils.pushReplacement(context, HomeScreen(user: user));
         } else {
           NavigationUtils.pushReplacement(context, AuthScreen());

@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -9,7 +7,6 @@ import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/models/models.dart';
 
 import 'package:phitnest/widgets/redirectorWidget/redirector_widget.dart';
-import 'package:phitnest/screens/chat/chat_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
@@ -36,9 +33,6 @@ void main() async {
 }
 
 class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
-  /// This is a reference to the current signed in user.
-  static User? currentUser;
-
   /// This stream listens for refresh tokens from firebase.
   static StreamSubscription? _tokenStream;
 
@@ -51,35 +45,25 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
 
   // Define an async function to initialize FlutterFire
   void initializeFirebase(BuildContext context) async {
+    AppModel model = Provider.of<AppModel>(context, listen: false);
+
     try {
-      // Wait for Firebase to initialize and set `_initialized` state to true
-      RemoteMessage? initialMessage =
-          await FirebaseMessaging.instance.getInitialMessage();
-      if (initialMessage != null) {
-        _handleNotification(initialMessage.data, _navigatorKey);
-      }
-      FirebaseMessaging.onMessageOpenedApp
-          .listen((RemoteMessage? remoteMessage) {
-        if (remoteMessage != null) {
-          _handleNotification(remoteMessage.data, _navigatorKey);
+      await NotificationUtils.initializeNotifications(_navigatorKey);
+
+      _tokenStream = FirebaseMessaging.instance.onTokenRefresh.listen((event) {
+        // Create a local variable so it can be promoted to non-nullable
+        User? currentUser = User.currentUser;
+        if (currentUser != null) {
+          currentUser.fcmToken = event;
+          FirebaseUtils.updateCurrentUser(currentUser);
         }
       });
-      if (!Platform.isIOS) {
-        FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
-      }
-      _tokenStream =
-          FirebaseUtils.firebaseMessaging.onTokenRefresh.listen((event) {
-        if (PhitnestApp.currentUser != null) {
-          print('token $event');
-          PhitnestApp.currentUser!.fcmToken = event;
-          FirebaseUtils.updateCurrentUser(PhitnestApp.currentUser!);
-        }
-      });
+
       // Set `initialized` state to true if Firebase initialization succeeds
-      Provider.of<AppModel>(context, listen: false).initialized = true;
+      model.initialized = true;
     } catch (e) {
       // Set `error` state to true if Firebase initialization fails
-      Provider.of<AppModel>(context, listen: false).error = true;
+      model.error = true;
     }
   }
 
@@ -110,6 +94,7 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
           )),
         );
       }
+
       // Show a loader until FlutterFire is initialized
       if (!model.initialized) {
         return Container(
@@ -119,6 +104,7 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
           ),
         );
       }
+
       return MaterialApp(
           navigatorKey: _navigatorKey,
           localizationsDelegates: context.localizationDelegates,
@@ -145,69 +131,21 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (auth.FirebaseAuth.instance.currentUser != null &&
-        PhitnestApp.currentUser != null) {
+    User? currentUser = User.currentUser;
+
+    if (auth.FirebaseAuth.instance.currentUser != null && currentUser != null) {
       if (state == AppLifecycleState.paused) {
         //user offline
         _tokenStream?.pause();
-        PhitnestApp.currentUser!.active = false;
-        PhitnestApp.currentUser!.lastOnlineTimestamp = Timestamp.now();
-        FirebaseUtils.updateCurrentUser(PhitnestApp.currentUser!);
+        currentUser.active = false;
+        currentUser.lastOnlineTimestamp = Timestamp.now();
+        FirebaseUtils.updateCurrentUser(currentUser);
       } else if (state == AppLifecycleState.resumed) {
         //user online
         _tokenStream?.resume();
-        PhitnestApp.currentUser!.active = true;
-        FirebaseUtils.updateCurrentUser(PhitnestApp.currentUser!);
+        currentUser.active = true;
+        FirebaseUtils.updateCurrentUser(currentUser);
       }
     }
-  }
-}
-
-void _handleNotification(
-    Map<String, dynamic> message, GlobalKey<NavigatorState> navigatorKey) {
-  /// right now we only handle click actions on chat messages only
-  try {
-    if (message.containsKey('members') &&
-        message.containsKey('isGroup') &&
-        message.containsKey('conversationModel')) {
-      List<User> members = List<User>.from(
-          (jsonDecode(message['members']) as List<dynamic>)
-              .map((e) => User.fromPayload(e))).toList();
-      bool isGroup = jsonDecode(message['isGroup']);
-      ConversationModel conversationModel = ConversationModel.fromPayload(
-          jsonDecode(message['conversationModel']));
-      navigatorKey.currentState?.push(
-        MaterialPageRoute(
-          builder: (_) => ChatScreen(
-            homeConversationModel: HomeConversationModel(
-              members: members,
-              isGroupChat: isGroup,
-              conversationModel: conversationModel,
-            ),
-          ),
-        ),
-      );
-    }
-  } catch (e, s) {
-    print('MyAppState._handleNotification $e $s');
-  }
-}
-
-/// this faction is called when the notification is clicked from system tray
-/// when the app is in the background or completely killed
-
-Future<dynamic> backgroundMessageHandler(RemoteMessage remoteMessage) async {
-  await Firebase.initializeApp();
-  Map<dynamic, dynamic> message = remoteMessage.data;
-  if (message.containsKey('data')) {
-    // Handle data message
-    print('backgroundMessageHandler message.containsKey(data)');
-    final dynamic data = message['data'];
-  }
-
-  if (message.containsKey('notification')) {
-    // Handle notification message
-    final dynamic notification = message['notification'];
-    print('backgroundMessageHandler message.containsKey(notification)');
   }
 }

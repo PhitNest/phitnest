@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
 import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
@@ -29,7 +28,7 @@ class _HomeState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    if (PhitnestApp.currentUser!.isVip) {
+    if (User.currentUser!.isVip) {
       checkSubscription();
     }
     user = widget.user;
