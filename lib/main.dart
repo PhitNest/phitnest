@@ -9,18 +9,11 @@ import 'constants/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
   ProgressWidget.initialize(COLOR_PRIMARY);
   setupLocator();
   runApp(
     EasyLocalization(
-        supportedLocales: [Locale('en'), Locale('ar'), Locale('fr')],
-        path: 'assets/translations',
-        fallbackLocale: Locale('en'),
-        useFallbackTranslations: true,
-        child: ChangeNotifierProvider(
-            create: (context) => AppModel(),
             builder: (context, child) => const PhitnestApp())),
   );
 }

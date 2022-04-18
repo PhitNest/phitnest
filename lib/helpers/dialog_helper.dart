@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:phitnest/constants.dart';
+import 'package:phitnest/constants/constants.dart';
 
 class DialogUtils {
   //helper method to show progress
