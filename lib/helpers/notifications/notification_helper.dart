@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -29,40 +30,24 @@ class NotificationUtils {
     );
   }
 
-  static void handleNotification(
-      Map<String, dynamic> message, GlobalKey<NavigatorState> navigatorKey) {
-    /// right now we only handle click actions on chat messages only
-    try {
-      if (message.containsKey('members') &&
-          message.containsKey('isGroup') &&
-          message.containsKey('conversationModel')) {
-        List<User> members = List<User>.from(
-            (jsonDecode(message['members']) as List<dynamic>)
-                .map((e) => User.fromPayload(e))).toList();
-        bool isGroup = jsonDecode(message['isGroup']);
-        ConversationModel conversationModel = ConversationModel.fromPayload(
-            jsonDecode(message['conversationModel']));
-        navigatorKey.currentState?.push(
-          MaterialPageRoute(
-            builder: (_) => ChatScreen(
-              homeConversationModel: HomeConversationModel(
-                members: members,
-                isGroupChat: isGroup,
-                conversationModel: conversationModel,
-              ),
-            ),
-          ),
-        );
-      }
-    } catch (e, s) {
-      print('MyAppState._handleNotification $e $s');
+  static initializeNotifications(GlobalKey<NavigatorState> key) async {
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    _handleNotification(initialMessage, key);
+
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      return _handleNotification(message, key);
+    });
+
+    if (!Platform.isIOS) {
+      FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
     }
   }
 
   /// this faction is called when the notification is clicked from system tray
   /// when the app is in the background or completely killed
-
-  static Future<dynamic> backgroundMessageHandler(
+  static Future<dynamic> _backgroundMessageHandler(
       RemoteMessage remoteMessage) async {
     await Firebase.initializeApp();
     Map<dynamic, dynamic> message = remoteMessage.data;
@@ -76,6 +61,39 @@ class NotificationUtils {
       // Handle notification message
       final dynamic notification = message['notification'];
       print('backgroundMessageHandler message.containsKey(notification)');
+    }
+  }
+
+  static void _handleNotification(
+      RemoteMessage? message, GlobalKey<NavigatorState> navigatorKey) {
+    /// right now we only handle click actions on chat messages only
+    if (message != null) {
+      Map<String, dynamic> data = message.data;
+      try {
+        if (data.containsKey('members') &&
+            data.containsKey('isGroup') &&
+            data.containsKey('conversationModel')) {
+          List<User> members = List<User>.from(
+              (jsonDecode(data['members']) as List<dynamic>)
+                  .map((e) => User.fromPayload(e))).toList();
+          bool isGroup = jsonDecode(data['isGroup']);
+          ConversationModel conversationModel = ConversationModel.fromPayload(
+              jsonDecode(data['conversationModel']));
+          navigatorKey.currentState?.push(
+            MaterialPageRoute(
+              builder: (_) => ChatScreen(
+                homeConversationModel: HomeConversationModel(
+                  members: members,
+                  isGroupChat: isGroup,
+                  conversationModel: conversationModel,
+                ),
+              ),
+            ),
+          );
+        }
+      } catch (e, s) {
+        print('MyAppState._handleNotification $e $s');
+      }
     }
   }
 }
