@@ -408,7 +408,7 @@ class FirebaseUtils {
             'members': payloadFriends.map((e) => e.toPayload()).toList()
           };
 
-          await sendNotification(
+          await NotificationUtils.sendNotification(
               element.fcmToken,
               isGroup ? conversationModel.name : User.currentUser!.fullName(),
               message.content,
@@ -697,7 +697,7 @@ class FirebaseUtils {
           user2: user.userID);
       await document.set(swipe.toJson());
       if (user.settings.pushNewMatchesEnabled) {
-        await sendNotification(
+        await NotificationUtils.sendNotification(
             user.fcmToken,
             'New match',
             'You have got a new '
