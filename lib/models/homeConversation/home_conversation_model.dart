@@ -1,5 +1,4 @@
-import 'conversation_model.dart';
-import 'user.dart';
+import 'package:phitnest/models/models.dart';
 
 class HomeConversationModel {
   bool isGroupChat;

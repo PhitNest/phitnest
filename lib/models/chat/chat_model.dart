@@ -1,5 +1,4 @@
-import 'message_data.dart';
-import 'user.dart';
+import 'package:phitnest/models/models.dart';
 
 class ChatModel {
   List<MessageData> message = [];

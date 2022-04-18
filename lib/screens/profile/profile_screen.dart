@@ -2,24 +2,18 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helper.dart';
-import 'package:phitnest/main.dart';
-import 'package:phitnest/models/message_data.dart';
-import 'package:phitnest/models/user.dart';
-import 'package:phitnest/screens/accountDetails/account_details_screen.dart';
-import 'package:phitnest/screens/auth/auth_screen.dart';
-import 'package:phitnest/screens/contactUs/contact_us_screen.dart';
-import 'package:phitnest/screens/fullScreenImageViewer/full_screen_image_viewer.dart';
-import 'package:phitnest/screens/reauthScreen/reauth_user_screen.dart';
-import 'package:phitnest/screens/settings/settings_screen.dart';
-import 'package:phitnest/screens/upgradeAccount/upgrade_account.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import 'package:phitnest/constants/constants.dart';
+import 'package:phitnest/main.dart';
+import 'package:phitnest/helpers/helper.dart';
+import 'package:phitnest/models/models.dart';
+import 'package:phitnest/screens/screens.dart';
 
 class ProfileScreen extends StatefulWidget {
   final User user;

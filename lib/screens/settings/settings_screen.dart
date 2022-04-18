@@ -1,10 +1,11 @@
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helper.dart';
-import 'package:phitnest/main.dart';
-import 'package:phitnest/models/user.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:phitnest/constants/constants.dart';
+import 'package:phitnest/main.dart';
+import 'package:phitnest/helpers/helper.dart';
+import 'package:phitnest/models/models.dart';
 
 class SettingsScreen extends StatefulWidget {
   final User user;

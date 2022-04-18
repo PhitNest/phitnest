@@ -3,18 +3,6 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helper.dart';
-import 'package:phitnest/main.dart';
-import 'package:phitnest/models/chat_model.dart';
-import 'package:phitnest/models/chat_video_container.dart';
-import 'package:phitnest/models/conversation_model.dart';
-import 'package:phitnest/models/home_conversation_model.dart';
-import 'package:phitnest/models/message_data.dart';
-import 'package:phitnest/models/user.dart';
-import 'package:phitnest/widgets/playerWidget/player_widget.dart';
-import 'package:phitnest/screens/fullScreenImageViewer/full_screen_image_viewer.dart';
-import 'package:phitnest/screens/fullScreenVideoViewer/full_screen_video_viewer.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +11,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
+
+import 'package:phitnest/constants/constants.dart';
+import 'package:phitnest/main.dart';
+import 'package:phitnest/helpers/helper.dart';
+import 'package:phitnest/models/models.dart';
+import 'package:phitnest/screens/screens.dart';
+import 'package:phitnest/widgets/widgets.dart';
 
 enum RecordingState { HIDDEN, VISIBLE, Recording }
 
@@ -69,7 +64,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   setupStream() {
     chatStream = FirebaseUtils.getChatMessages(homeConversationModel)
-        .asBroadcastStream();
+        .asBroadcastStream() as Stream<ChatModel>;
     chatStream.listen((chatModel) {
       if (mounted) {
         homeConversationModel.members = chatModel.members;

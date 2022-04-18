@@ -1,11 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helper.dart';
-import 'package:phitnest/main.dart';
-import 'package:phitnest/models/user.dart';
-import 'package:phitnest/screens/home/home_screen.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
@@ -14,6 +9,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+
+import 'package:phitnest/constants/constants.dart';
+import 'package:phitnest/main.dart';
+import 'package:phitnest/helpers/helper.dart';
+import 'package:phitnest/models/models.dart';
+import 'package:phitnest/screens/screens.dart';
 
 File? _image;
 
