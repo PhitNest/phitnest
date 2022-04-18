@@ -1,10 +1,11 @@
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helper.dart';
-import 'package:phitnest/screens/auth/auth_screen.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import 'package:phitnest/constants/constants.dart';
+import 'package:phitnest/helpers/helper.dart';
+import 'package:phitnest/screens/screens.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   @override

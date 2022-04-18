@@ -2,23 +2,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:phitnest/constants/constants.dart';
 import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/main.dart';
-import 'package:phitnest/models/block_user_model.dart';
-import 'package:phitnest/models/channel_participation.dart';
-import 'package:phitnest/models/chat_model.dart';
-import 'package:phitnest/models/chat_video_container.dart';
-import 'package:phitnest/models/conversation_model.dart';
-import 'package:phitnest/models/home_conversation_model.dart';
-import 'package:phitnest/models/message_data.dart';
-import 'package:phitnest/models/purchase_model.dart';
-import 'package:phitnest/models/swipe.dart';
-import 'package:phitnest/models/swipe_counter_model.dart';
-import 'package:phitnest/models/user.dart';
-import 'package:phitnest/models/user.dart' as user;
-import 'package:phitnest/screens/match/match_screen.dart';
-import 'package:phitnest/screens/reauthScreen/reauth_user_screen.dart';
+import 'package:phitnest/models/models.dart';
+import 'package:phitnest/screens/screens.dart';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -572,7 +562,7 @@ class FirebaseUtils {
     List<User> tinderUsers = [];
     Position? locationData = await LocationUtils.getCurrentLocation();
     if (locationData != null) {
-      PhitnestApp.currentUser!.location = user.UserLocation(
+      PhitnestApp.currentUser!.location = UserLocation(
           latitude: locationData.latitude, longitude: locationData.longitude);
       await firestore
           .collection(USERS)

@@ -1,10 +1,9 @@
-import 'package:phitnest/constants/constants.dart' as Constants;
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helper.dart';
-import 'package:phitnest/screens/signUp/sign_up_screen.dart';
-import 'package:phitnest/screens/login/login_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
+import 'package:phitnest/constants/constants.dart';
+import 'package:phitnest/helpers/helper.dart';
+import 'package:phitnest/screens/screens.dart';
 
 class AuthScreen extends StatelessWidget {
   @override
@@ -19,7 +18,7 @@ class AuthScreen extends StatelessWidget {
               'assets/images/app_logo.png',
               width: 150.0,
               height: 150.0,
-              color: Color(Constants.COLOR_PRIMARY),
+              color: Color(COLOR_PRIMARY),
               fit: BoxFit.cover,
             ),
           ),
@@ -30,7 +29,7 @@ class AuthScreen extends StatelessWidget {
               'Find your soul mate'.tr(),
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: Color(Constants.COLOR_PRIMARY),
+                  color: Color(COLOR_PRIMARY),
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold),
             ),

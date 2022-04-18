@@ -1,4 +1,4 @@
-import 'user.dart';
+import 'package:phitnest/models/user/user_model.dart';
 
 class ContactModel {
   ContactType type;

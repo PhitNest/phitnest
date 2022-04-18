@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:phitnest/models/user.dart' as user;
+import 'package:phitnest/models/user/user_model.dart';
 import 'package:phitnest/main.dart';
 
 class LocationUtils {
@@ -67,7 +67,7 @@ class LocationUtils {
   }
 
   static double getDistance(
-      user.UserLocation userLocation, user.UserLocation myLocation) {
+      UserLocation userLocation, UserLocation myLocation) {
     final Distance distance = Distance();
     final double milesAway = distance
         .as(

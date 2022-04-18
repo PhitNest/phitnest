@@ -1,4 +1,4 @@
-import 'message_data.dart';
+import 'package:phitnest/models/messageData/message_data_model.dart';
 
 class ChatVideoContainer {
   Url videoUrl;

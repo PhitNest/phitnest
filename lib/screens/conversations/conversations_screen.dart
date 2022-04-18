@@ -1,15 +1,13 @@
 import 'dart:io';
 
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helper.dart';
-import 'package:phitnest/models/conversation_model.dart';
-import 'package:phitnest/models/home_conversation_model.dart';
-import 'package:phitnest/models/user.dart';
-import 'package:phitnest/screens/chat/chat_screen.dart';
-import 'package:phitnest/screens/userDetails/user_details_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:phitnest/constants/constants.dart';
+import 'package:phitnest/helpers/helper.dart';
+import 'package:phitnest/models/models.dart';
+import 'package:phitnest/screens/screens.dart';
 
 class ConversationsScreen extends StatefulWidget {
   final User user;
