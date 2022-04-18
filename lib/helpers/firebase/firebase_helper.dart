@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:phitnest/constants/constants.dart';
 import 'package:phitnest/helpers/helper.dart';
-import 'package:phitnest/main.dart';
 import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
 
@@ -292,7 +291,7 @@ class FirebaseUtils {
           in participations.docs) {
         uids.add(document.data()?['user'] ?? '');
       }
-      if (uids.contains(PhitnestApp.currentUser!.userID)) {
+      if (uids.contains(User.currentUser!.userID)) {
         membersIDsStreamController.sink.add(uids);
       } else {
         membersIDsStreamController.sink.add([]);
@@ -330,7 +329,7 @@ class FirebaseUtils {
     List<User> listOfMembers = homeConversationModel.members;
     if (homeConversationModel.isGroupChat) {
       homeConversationModel.members.forEach((groupMember) {
-        if (groupMember.userID != PhitnestApp.currentUser!.userID) {
+        if (groupMember.userID != User.currentUser!.userID) {
           getUserByID(groupMember.userID).listen((updatedUser) {
             for (int i = 0; i < listOfMembers.length; i++) {
               if (listOfMembers[i].userID == updatedUser.userID) {
@@ -387,18 +386,18 @@ class FirebaseUtils {
       payloadFriends = [];
       payloadFriends.addAll(members);
     } else {
-      payloadFriends = [PhitnestApp.currentUser!];
+      payloadFriends = [User.currentUser!];
     }
 
     await Future.forEach(members, (User element) async {
-      if (element.userID != PhitnestApp.currentUser!.userID) {
+      if (element.userID != User.currentUser!.userID) {
         if (element.settings.pushNewMessages) {
           User? friend;
           if (isGroup) {
             friend = payloadFriends
                 .firstWhere((user) => user.fcmToken == element.fcmToken);
             payloadFriends.remove(friend);
-            payloadFriends.add(PhitnestApp.currentUser!);
+            payloadFriends.add(User.currentUser!);
           }
           Map<String, dynamic> payload = <String, dynamic>{
             'click_action': 'FLUTTER_NOTIFICATION_CLICK',
@@ -411,13 +410,11 @@ class FirebaseUtils {
 
           await sendNotification(
               element.fcmToken,
-              isGroup
-                  ? conversationModel.name
-                  : PhitnestApp.currentUser!.fullName(),
+              isGroup ? conversationModel.name : User.currentUser!.fullName(),
               message.content,
               payload);
           if (isGroup) {
-            payloadFriends.remove(PhitnestApp.currentUser);
+            payloadFriends.remove(User.currentUser);
             payloadFriends.add(friend!);
           }
         }
@@ -433,9 +430,9 @@ class FirebaseUtils {
         .set(conversation.toJson())
         .then((onValue) async {
       ChannelParticipation myChannelParticipation = ChannelParticipation(
-          user: PhitnestApp.currentUser!.userID, channel: conversation.id);
+          user: User.currentUser!.userID, channel: conversation.id);
       ChannelParticipation myFriendParticipation = ChannelParticipation(
-          user: conversation.id.replaceAll(PhitnestApp.currentUser!.userID, ''),
+          user: conversation.id.replaceAll(User.currentUser!.userID, ''),
           channel: conversation.id);
       await FirebaseUtils.createChannelParticipation(myChannelParticipation);
       await FirebaseUtils.createChannelParticipation(myFriendParticipation);
@@ -467,13 +464,13 @@ class FirebaseUtils {
     DocumentReference channelDoc = firestore.collection(CHANNELS).doc();
     ConversationModel conversationModel = ConversationModel();
     conversationModel.id = channelDoc.id;
-    conversationModel.creatorId = PhitnestApp.currentUser!.userID;
+    conversationModel.creatorId = User.currentUser!.userID;
     conversationModel.name = groupName;
     conversationModel.lastMessage =
-        '${PhitnestApp.currentUser!.fullName()} created this group'.tr();
+        '${User.currentUser!.fullName()} created this group'.tr();
     conversationModel.lastMessageDate = Timestamp.now();
     await channelDoc.set(conversationModel.toJson()).then((onValue) async {
-      selectedUsers.add(PhitnestApp.currentUser!);
+      selectedUsers.add(User.currentUser!);
       for (User user in selectedUsers) {
         ChannelParticipation channelParticipation = ChannelParticipation(
             channel: conversationModel.id, user: user.userID);
@@ -489,7 +486,7 @@ class FirebaseUtils {
 
   static Future<bool> leaveGroup(ConversationModel conversationModel) async {
     bool isSuccessful = false;
-    conversationModel.lastMessage = '${PhitnestApp.currentUser!.fullName()} '
+    conversationModel.lastMessage = '${User.currentUser!.fullName()} '
             'left'
         .tr();
     conversationModel.lastMessageDate = Timestamp.now();
@@ -497,7 +494,7 @@ class FirebaseUtils {
       await firestore
           .collection(CHANNEL_PARTICIPATION)
           .where('channel', isEqualTo: conversationModel.id)
-          .where('user', isEqualTo: PhitnestApp.currentUser!.userID)
+          .where('user', isEqualTo: User.currentUser!.userID)
           .get()
           .then((onValue) async {
         await firestore
@@ -516,7 +513,7 @@ class FirebaseUtils {
     bool isSuccessful = false;
     BlockUserModel blockUserModel = BlockUserModel(
         type: type,
-        source: PhitnestApp.currentUser!.userID,
+        source: User.currentUser!.userID,
         dest: blockedUser.userID,
         createdAt: Timestamp.now());
     await firestore
@@ -532,7 +529,7 @@ class FirebaseUtils {
     StreamController<bool> refreshStreamController = StreamController();
     firestore
         .collection(REPORTS)
-        .where('source', isEqualTo: PhitnestApp.currentUser!.userID)
+        .where('source', isEqualTo: User.currentUser!.userID)
         .snapshots()
         .listen((onData) {
       List<BlockUserModel> list = [];
@@ -562,7 +559,7 @@ class FirebaseUtils {
     List<User> tinderUsers = [];
     Position? locationData = await LocationUtils.getCurrentLocation();
     if (locationData != null) {
-      PhitnestApp.currentUser!.location = UserLocation(
+      User.currentUser!.location = UserLocation(
           latitude: locationData.latitude, longitude: locationData.longitude);
       await firestore
           .collection(USERS)
@@ -572,10 +569,10 @@ class FirebaseUtils {
         value.docs
             .forEach((DocumentSnapshot<Map<String, dynamic>> tinderUser) async {
           try {
-            if (tinderUser.id != PhitnestApp.currentUser!.userID) {
+            if (tinderUser.id != User.currentUser!.userID) {
               User user = User.fromJson(tinderUser.data() ?? {});
               double distance = LocationUtils.getDistance(
-                  user.location, PhitnestApp.currentUser!.location);
+                  user.location, User.currentUser!.location);
               if (await FirebaseUtils._isValidUserForTinderSwipe(
                   user, distance)) {
                 user.milesAway = '$distance Miles Away'.tr();
@@ -601,8 +598,8 @@ class FirebaseUtils {
   }
 
   static bool isPreferredGender(String gender) {
-    if (PhitnestApp.currentUser!.settings.genderPreference != 'All') {
-      return gender == PhitnestApp.currentUser!.settings.genderPreference;
+    if (User.currentUser!.settings.genderPreference != 'All') {
+      return gender == User.currentUser!.settings.genderPreference;
     } else {
       return true;
     }
@@ -613,7 +610,7 @@ class FirebaseUtils {
     //make sure that we haven't swiped this user before
     QuerySnapshot result1 = await firestore
         .collection(SWIPES)
-        .where('user1', isEqualTo: PhitnestApp.currentUser!.userID)
+        .where('user1', isEqualTo: User.currentUser!.userID)
         .where('user2', isEqualTo: tinderUser.userID)
         .get()
         .catchError((onError) {
@@ -625,7 +622,7 @@ class FirebaseUtils {
   }
 
   static matchChecker(BuildContext context) async {
-    String myID = PhitnestApp.currentUser!.userID;
+    String myID = User.currentUser!.userID;
     QuerySnapshot<Map<String, dynamic>> result = await firestore
         .collection(SWIPES)
         .where('user2', isEqualTo: myID)
@@ -671,7 +668,7 @@ class FirebaseUtils {
     Swipe leftSwipe = Swipe(
         id: documentReference.id,
         type: 'dislike',
-        user1: PhitnestApp.currentUser!.userID,
+        user1: User.currentUser!.userID,
         user2: dislikedUser.userID,
         createdAt: Timestamp.now(),
         hasBeenSeen: false);
@@ -684,7 +681,7 @@ class FirebaseUtils {
     QuerySnapshot querySnapshot = await firestore
         .collection(SWIPES)
         .where('user1', isEqualTo: user.userID)
-        .where('user2', isEqualTo: PhitnestApp.currentUser!.userID)
+        .where('user2', isEqualTo: User.currentUser!.userID)
         .where('type', isEqualTo: 'like')
         .get();
 
@@ -696,7 +693,7 @@ class FirebaseUtils {
           type: 'like',
           hasBeenSeen: true,
           createdAt: Timestamp.now(),
-          user1: PhitnestApp.currentUser!.userID,
+          user1: User.currentUser!.userID,
           user2: user.userID);
       await document.set(swipe.toJson());
       if (user.settings.pushNewMatchesEnabled) {
@@ -704,7 +701,7 @@ class FirebaseUtils {
             user.fcmToken,
             'New match',
             'You have got a new '
-                'match: ${PhitnestApp.currentUser!.fullName()}.',
+                'match: ${User.currentUser!.fullName()}.',
             null);
       }
 
@@ -712,8 +709,7 @@ class FirebaseUtils {
     } else {
       //this user didn't send me a match request, let's send match request
       // and keep swiping
-      await FirebaseUtils.sendSwipeRequest(
-          user, PhitnestApp.currentUser!.userID);
+      await FirebaseUtils.sendSwipeRequest(user, User.currentUser!.userID);
       return null;
     }
   }
@@ -753,7 +749,7 @@ class FirebaseUtils {
   static undo(User tinderUser) async {
     await firestore
         .collection(SWIPES)
-        .where('user1', isEqualTo: PhitnestApp.currentUser!.userID)
+        .where('user1', isEqualTo: User.currentUser!.userID)
         .where('user2', isEqualTo: tinderUser.userID)
         .get()
         .then((value) async {
@@ -773,7 +769,7 @@ class FirebaseUtils {
 
   static Future<bool> incrementSwipe() async {
     DocumentReference<Map<String, dynamic>> documentReference =
-        firestore.collection(SWIPE_COUNT).doc(PhitnestApp.currentUser!.userID);
+        firestore.collection(SWIPE_COUNT).doc(User.currentUser!.userID);
     DocumentSnapshot<Map<String, dynamic>> validationDocumentSnapshot =
         await documentReference.get();
     if (validationDocumentSnapshot.exists) {
@@ -787,7 +783,7 @@ class FirebaseUtils {
       }
     } else {
       await firestore.doc(documentReference.path).set(SwipeCounter(
-              authorID: PhitnestApp.currentUser!.userID,
+              authorID: User.currentUser!.userID,
               createdAt: Timestamp.now(),
               count: 1)
           .toJson());
@@ -1247,19 +1243,19 @@ class FirebaseUtils {
       // delete user records from subscriptions table
       await firestore
           .collection(SUBSCRIPTIONS)
-          .doc(PhitnestApp.currentUser!.userID)
+          .doc(User.currentUser!.userID)
           .delete();
 
       // delete user records from swipe_counts table
       await firestore
           .collection(SWIPE_COUNT)
-          .doc(PhitnestApp.currentUser!.userID)
+          .doc(User.currentUser!.userID)
           .delete();
 
       // delete user records from swipes table
       await firestore
           .collection(SWIPES)
-          .where('user1', isEqualTo: PhitnestApp.currentUser!.userID)
+          .where('user1', isEqualTo: User.currentUser!.userID)
           .get()
           .then((value) async {
         for (var doc in value.docs) {
@@ -1268,7 +1264,7 @@ class FirebaseUtils {
       });
       await firestore
           .collection(SWIPES)
-          .where('user2', isEqualTo: PhitnestApp.currentUser!.userID)
+          .where('user2', isEqualTo: User.currentUser!.userID)
           .get()
           .then((value) async {
         for (var doc in value.docs) {
@@ -1279,7 +1275,7 @@ class FirebaseUtils {
       // delete user records from CHANNEL_PARTICIPATION table
       await firestore
           .collection(CHANNEL_PARTICIPATION)
-          .where('user', isEqualTo: PhitnestApp.currentUser!.userID)
+          .where('user', isEqualTo: User.currentUser!.userID)
           .get()
           .then((value) async {
         for (var doc in value.docs) {
@@ -1290,7 +1286,7 @@ class FirebaseUtils {
       // delete user records from REPORTS table
       await firestore
           .collection(REPORTS)
-          .where('source', isEqualTo: PhitnestApp.currentUser!.userID)
+          .where('source', isEqualTo: User.currentUser!.userID)
           .get()
           .then((value) async {
         for (var doc in value.docs) {
@@ -1301,7 +1297,7 @@ class FirebaseUtils {
       // delete user records from REPORTS table
       await firestore
           .collection(REPORTS)
-          .where('dest', isEqualTo: PhitnestApp.currentUser!.userID)
+          .where('dest', isEqualTo: User.currentUser!.userID)
           .get()
           .then((value) async {
         for (var doc in value.docs) {
@@ -1332,20 +1328,20 @@ class FirebaseUtils {
       subscriptionPeriod:
           purchase.purchaseID == MONTHLY_SUBSCRIPTION ? 'monthly' : 'yearly',
       transactionDate: int.parse(purchase.transactionDate!),
-      userID: PhitnestApp.currentUser!.userID,
+      userID: User.currentUser!.userID,
     );
     await firestore
         .collection(SUBSCRIPTIONS)
-        .doc(PhitnestApp.currentUser!.userID)
+        .doc(User.currentUser!.userID)
         .set(purchaseModel.toJson());
-    PhitnestApp.currentUser!.isVip = true;
-    await updateCurrentUser(PhitnestApp.currentUser!);
+    User.currentUser!.isVip = true;
+    await updateCurrentUser(User.currentUser!);
   }
 
   static isSubscriptionActive() async {
     DocumentSnapshot<Map<String, dynamic>> userPurchase = await firestore
         .collection(SUBSCRIPTIONS)
-        .doc(PhitnestApp.currentUser!.userID)
+        .doc(User.currentUser!.userID)
         .get();
     if (userPurchase.exists) {
       try {
@@ -1362,11 +1358,11 @@ class FirebaseUtils {
         if (DateTime.now().isBefore(endOfSubscription)) {
           return true;
         } else {
-          PhitnestApp.currentUser!.isVip = false;
-          await updateCurrentUser(PhitnestApp.currentUser!);
+          User.currentUser!.isVip = false;
+          await updateCurrentUser(User.currentUser!);
           await firestore
               .collection(SUBSCRIPTIONS)
-              .doc(PhitnestApp.currentUser!.userID)
+              .doc(User.currentUser!.userID)
               .set({'active': false});
           return false;
         }

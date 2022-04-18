@@ -6,8 +6,8 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
 import 'package:phitnest/helpers/helper.dart';
+import 'package:phitnest/models/models.dart';
 
 enum AuthProviders { PASSWORD, PHONE, FACEBOOK, APPLE }
 
@@ -212,7 +212,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
       try {
         auth.UserCredential? result = await FirebaseUtils.reAuthUser(
             widget.provider,
-            email: PhitnestApp.currentUser!.email,
+            email: User.currentUser!.email,
             password: _passwordController.text);
         if (result == null) {
           await DialogUtils.hideProgress();

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
 import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
@@ -89,12 +88,12 @@ class _MatchScreenState extends State<MatchScreen> {
                       onPressed: () async {
                         String channelID;
                         if (widget.matchedUser.userID
-                                .compareTo(PhitnestApp.currentUser!.userID) <
+                                .compareTo(User.currentUser!.userID) <
                             0) {
                           channelID = widget.matchedUser.userID +
-                              PhitnestApp.currentUser!.userID;
+                              User.currentUser!.userID;
                         } else {
-                          channelID = PhitnestApp.currentUser!.userID +
+                          channelID = User.currentUser!.userID +
                               widget.matchedUser.userID;
                         }
                         ConversationModel? conversationModel =
