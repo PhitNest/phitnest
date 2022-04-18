@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -46,38 +45,25 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
 
   // Define an async function to initialize FlutterFire
   void initializeFirebase(BuildContext context) async {
+    AppModel model = Provider.of<AppModel>(context, listen: false);
+
     try {
-      // Wait for Firebase to initialize and set `_initialized` state to true
-      RemoteMessage? initialMessage =
-          await FirebaseMessaging.instance.getInitialMessage();
-      if (initialMessage != null) {
-        NotificationUtils.handleNotification(
-            initialMessage.data, _navigatorKey);
-      }
-      FirebaseMessaging.onMessageOpenedApp
-          .listen((RemoteMessage? remoteMessage) {
-        if (remoteMessage != null) {
-          NotificationUtils.handleNotification(
-              remoteMessage.data, _navigatorKey);
+      await NotificationUtils.initializeNotifications(_navigatorKey);
+
+      _tokenStream = FirebaseMessaging.instance.onTokenRefresh.listen((event) {
+        // Create a local variable so it can be promoted to non-nullable
+        User? currentUser = User.currentUser;
+        if (currentUser != null) {
+          currentUser.fcmToken = event;
+          FirebaseUtils.updateCurrentUser(currentUser);
         }
       });
-      if (!Platform.isIOS) {
-        FirebaseMessaging.onBackgroundMessage(
-            NotificationUtils.backgroundMessageHandler);
-      }
-      _tokenStream =
-          FirebaseUtils.firebaseMessaging.onTokenRefresh.listen((event) {
-        if (User.currentUser != null) {
-          print('token $event');
-          User.currentUser!.fcmToken = event;
-          FirebaseUtils.updateCurrentUser(User.currentUser!);
-        }
-      });
+
       // Set `initialized` state to true if Firebase initialization succeeds
-      Provider.of<AppModel>(context, listen: false).initialized = true;
+      model.initialized = true;
     } catch (e) {
       // Set `error` state to true if Firebase initialization fails
-      Provider.of<AppModel>(context, listen: false).error = true;
+      model.error = true;
     }
   }
 
@@ -108,6 +94,7 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
           )),
         );
       }
+
       // Show a loader until FlutterFire is initialized
       if (!model.initialized) {
         return Container(
@@ -117,6 +104,7 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
           ),
         );
       }
+
       return MaterialApp(
           navigatorKey: _navigatorKey,
           localizationsDelegates: context.localizationDelegates,
@@ -143,19 +131,20 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (auth.FirebaseAuth.instance.currentUser != null &&
-        User.currentUser != null) {
+    User? currentUser = User.currentUser;
+
+    if (auth.FirebaseAuth.instance.currentUser != null && currentUser != null) {
       if (state == AppLifecycleState.paused) {
         //user offline
         _tokenStream?.pause();
-        User.currentUser!.active = false;
-        User.currentUser!.lastOnlineTimestamp = Timestamp.now();
-        FirebaseUtils.updateCurrentUser(User.currentUser!);
+        currentUser.active = false;
+        currentUser.lastOnlineTimestamp = Timestamp.now();
+        FirebaseUtils.updateCurrentUser(currentUser);
       } else if (state == AppLifecycleState.resumed) {
         //user online
         _tokenStream?.resume();
-        User.currentUser!.active = true;
-        FirebaseUtils.updateCurrentUser(User.currentUser!);
+        currentUser.active = true;
+        FirebaseUtils.updateCurrentUser(currentUser);
       }
     }
   }
