@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:phitnest/model/user.dart' as user;
+import 'package:phitnest/models/user.dart' as user;
 import 'package:phitnest/main.dart';
 
 class LocationUtils {

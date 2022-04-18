@@ -1,7 +1,7 @@
 import 'package:phitnest/constants/constants.dart';
 import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/main.dart';
-import 'package:phitnest/model/user.dart';
+import 'package:phitnest/models/user.dart';
 
 import 'package:phitnest/screens/home/home_screen.dart';
 import 'package:phitnest/screens/phoneAuth/phone_number_input_screen.dart';

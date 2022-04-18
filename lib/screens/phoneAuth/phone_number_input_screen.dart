@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:phitnest/constants/constants.dart';
 import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/main.dart';
-import 'package:phitnest/model/user.dart';
+import 'package:phitnest/models/user.dart';
 import 'package:phitnest/screens/home/home_screen.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:firebase_auth/firebase_auth.dart' as auth;

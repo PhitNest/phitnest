@@ -5,9 +5,10 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:phitnest/firebase_options.dart';
 import 'package:phitnest/helpers/helper.dart';
-import 'package:phitnest/model/app_model.dart';
-import 'package:phitnest/model/conversation_model.dart';
-import 'package:phitnest/model/home_conversation_model.dart';
+import 'package:phitnest/models/app_model.dart';
+import 'package:phitnest/models/conversation_model.dart';
+import 'package:phitnest/models/home_conversation_model.dart';
+import 'package:phitnest/models/user.dart';
 import 'package:phitnest/widgets/redirectorWidget/redirector_widget.dart';
 import 'package:phitnest/screens/chat/chat_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -17,8 +18,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'constants/constants.dart' as Constants;
-import 'model/user.dart';
+import 'package:phitnest/constants/constants.dart' as Constants;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
