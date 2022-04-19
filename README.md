@@ -12,7 +12,7 @@
     3. Select (with space) android and iOS, then submit (with enter)
 
 5. Open android/app/build.gradle and ensure the following is present: ```apply plugin: ‘com.google.gms.google-services’```
-    (If is is present more than once in the file, delete the additional instances.)
+    (If it is present more than once in the file, delete the additional instances.)
 
 6. Back in firebase console, click authentication and enable authentication for email/password. Then, click on firestore database and enable firestore database.
 
