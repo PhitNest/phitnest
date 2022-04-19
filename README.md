@@ -11,15 +11,12 @@
     2. ```flutterfire configure```
     3. Select (with space) android and iOS, then submit (with enter)
 
-5. Open android/app/build.gradle and ensure the following is present:
+5. Open android/app/build.gradle and ensure the following is present: ```apply plugin: ‘com.google.gms.google-services’```
+    (If it is present more than once in the file, delete the additional instances.)
 
-If the line: ```apply plugin: ‘com.google.gms.google-services’``` is present more than once in the file, delete the additional instances.
+6. Back in firebase console, click authentication and enable authentication for email/password. Then, click on firestore database and enable firestore database.
 
-Back in firebase console, click authentication and enable authentication for email/password.
-Click on firestore database and enable firestore database.
-
-On firestore database, go to rules:
-Replace the current script with the script below:
+7. On firestore database, go to rules and replace the current script with the script below:
 ```
 rules_version = '2';
 service cloud.firestore {
