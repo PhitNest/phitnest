@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
 import 'package:phitnest/helpers/helper.dart';
 import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
@@ -33,7 +32,7 @@ class Redirector extends StatelessWidget {
     if (finishedOnBoarding) {
       auth.User? firebaseUser = auth.FirebaseAuth.instance.currentUser;
       if (firebaseUser != null) {
-        User? user = await FirebaseUtils.getCurrentUser(firebaseUser.uid);
+        User? user = await FirebaseUtils.loadUser(firebaseUser.uid);
         if (user != null) {
           user.active = true;
           await FirebaseUtils.updateCurrentUser(user);

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -572,8 +573,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
         if (mounted) {
           auth.UserCredential userCredential =
               await auth.FirebaseAuth.instance.signInWithCredential(credential);
-          User? user = await FirebaseUtils.getCurrentUser(
-              userCredential.user?.uid ?? '');
+          User? user =
+              await FirebaseUtils.loadUser(userCredential.user?.uid ?? '');
           if (user != null) {
             DialogUtils.hideProgress();
             User.currentUser = user;
@@ -584,8 +585,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
             User user = User(
                 firstName: _firstNameController.text,
                 lastName: _firstNameController.text,
-                fcmToken:
-                    await FirebaseUtils.firebaseMessaging.getToken() ?? '',
+                fcmToken: await FirebaseMessaging.instance.getToken() ?? '',
                 phoneNumber: phoneNumber,
                 active: true,
                 lastOnlineTimestamp: Timestamp.now(),
