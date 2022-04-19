@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helper.dart';
+import 'package:phitnest/helpers/helpers.dart';
 import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
 

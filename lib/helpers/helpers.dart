@@ -4,6 +4,6 @@ export 'package:phitnest/helpers/display/display_helper.dart';
 export 'package:phitnest/helpers/firebase/firebase_helper.dart';
 export 'package:phitnest/helpers/authentication/authentication_helper.dart';
 export 'package:phitnest/helpers/location/location_helper.dart';
-export 'package:phitnest/helpers/helper.dart';
+export 'package:phitnest/helpers/helpers.dart';
 export 'package:phitnest/helpers/navigation/navigation_helper.dart';
 export 'package:phitnest/helpers/notifications/notification_helper.dart';

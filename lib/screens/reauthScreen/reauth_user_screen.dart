@@ -6,7 +6,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helper.dart';
+import 'package:phitnest/helpers/helpers.dart';
 import 'package:phitnest/models/models.dart';
 
 enum AuthProviders { PASSWORD, PHONE, FACEBOOK, APPLE }

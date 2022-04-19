@@ -7,7 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helper.dart';
+import 'package:phitnest/helpers/helpers.dart';
 import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
 
