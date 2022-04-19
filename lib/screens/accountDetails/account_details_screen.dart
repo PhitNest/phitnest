@@ -89,7 +89,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                               onSaved: (String? val) {
                                 firstName = val;
                               },
-                              validator: AuthenticationUtils.validateName,
+                              validator: ValidationUtils.validateName,
                               textInputAction: TextInputAction.next,
                               textAlign: TextAlign.end,
                               initialValue: user.firstName,
@@ -119,7 +119,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                               onSaved: (String? val) {
                                 lastName = val;
                               },
-                              validator: AuthenticationUtils.validateName,
+                              validator: ValidationUtils.validateName,
                               textInputAction: TextInputAction.next,
                               textAlign: TextAlign.end,
                               initialValue: user.lastName,
@@ -259,7 +259,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                               onSaved: (String? val) {
                                 email = val;
                               },
-                              validator: AuthenticationUtils.validateEmail,
+                              validator: ValidationUtils.validateEmail,
                               textInputAction: TextInputAction.next,
                               initialValue: user.email,
                               textAlign: TextAlign.end,
@@ -288,7 +288,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                               onSaved: (String? val) {
                                 mobile = val;
                               },
-                              validator: AuthenticationUtils.validateMobile,
+                              validator: ValidationUtils.validateMobile,
                               textInputAction: TextInputAction.done,
                               initialValue: user.phoneNumber,
                               textAlign: TextAlign.end,

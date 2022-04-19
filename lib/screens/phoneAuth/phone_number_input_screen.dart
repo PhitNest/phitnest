@@ -131,7 +131,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                       child: TextFormField(
                         cursorColor: Color(COLOR_PRIMARY),
                         textAlignVertical: TextAlignVertical.center,
-                        validator: AuthenticationUtils.validateName,
+                        validator: ValidationUtils.validateName,
                         controller: _firstNameController,
                         onSaved: (String? val) {
                           firstName = val;
@@ -176,7 +176,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                       padding: const EdgeInsets.only(
                           top: 16.0, right: 8.0, left: 8.0),
                       child: TextFormField(
-                        validator: AuthenticationUtils.validateName,
+                        validator: ValidationUtils.validateName,
                         textAlignVertical: TextAlignVertical.center,
                         cursorColor: Color(COLOR_PRIMARY),
                         onSaved: (String? val) {

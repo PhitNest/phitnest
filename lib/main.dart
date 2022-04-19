@@ -1,3 +1,8 @@
+import 'package:phitnest/firebase_options.dart';
+import 'package:phitnest/helpers/helpers.dart';
+import 'package:phitnest/models/models.dart';
+
+import 'package:phitnest/widgets/redirectorWidget/redirector_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
