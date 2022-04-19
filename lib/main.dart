@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:phitnest/firebase_options.dart';
-import 'package:phitnest/helpers/helper.dart';
+import 'package:phitnest/helpers/helpers.dart';
 import 'package:phitnest/models/models.dart';
 
 import 'package:phitnest/widgets/redirectorWidget/redirector_widget.dart';

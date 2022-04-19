@@ -1,5 +1,3 @@
-library constants;
-
 const FINISHED_ON_BOARDING = 'finishedOnBoarding';
 const COLOR_ACCENT = 0xFFff8c9b;
 const COLOR_PRIMARY_DARK = 0xFFb42442;

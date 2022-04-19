@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helper.dart';
+import 'package:phitnest/helpers/helpers.dart';
 import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
 
