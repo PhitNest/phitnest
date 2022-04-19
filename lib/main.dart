@@ -33,9 +33,6 @@ void main() async {
 }
 
 class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
-  /// This stream listens for refresh tokens from firebase.
-  static StreamSubscription? _tokenStream;
-
   /// this key is used to navigate to the appropriate screen when the
   /// notification is clicked from the system tray.
   static GlobalKey<NavigatorState> _navigatorKey =
@@ -45,24 +42,20 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
 
   // Define an async function to initialize FlutterFire
   void initializeFirebase(BuildContext context) async {
+    // Update the model without listening for changes.
     AppModel model = Provider.of<AppModel>(context, listen: false);
 
     try {
+      // Initialize notification services
       await NotificationUtils.initializeNotifications(_navigatorKey);
 
-      _tokenStream = FirebaseMessaging.instance.onTokenRefresh.listen((event) {
-        // Create a local variable so it can be promoted to non-nullable
-        User? currentUser = User.currentUser;
-        if (currentUser != null) {
-          currentUser.fcmToken = event;
-          FirebaseUtils.updateCurrentUser(currentUser);
-        }
-      });
+      // Initialize the firebase messaging token stream
+      FirebaseUtils.initializeTokenStream();
 
-      // Set `initialized` state to true if Firebase initialization succeeds
+      // Set initialized state to true if Firebase initialization succeeds
       model.initialized = true;
     } catch (e) {
-      // Set `error` state to true if Firebase initialization fails
+      // Set error state to true if Firebase initialization fails
       model.error = true;
     }
   }
@@ -131,21 +124,6 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    User? currentUser = User.currentUser;
-
-    if (auth.FirebaseAuth.instance.currentUser != null && currentUser != null) {
-      if (state == AppLifecycleState.paused) {
-        //user offline
-        _tokenStream?.pause();
-        currentUser.active = false;
-        currentUser.lastOnlineTimestamp = Timestamp.now();
-        FirebaseUtils.updateCurrentUser(currentUser);
-      } else if (state == AppLifecycleState.resumed) {
-        //user online
-        _tokenStream?.resume();
-        currentUser.active = true;
-        FirebaseUtils.updateCurrentUser(currentUser);
-      }
-    }
+    FirebaseUtils.updateTokenStream(state);
   }
 }

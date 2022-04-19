@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +34,7 @@ class _HomeState extends State<HomeScreen> {
     }
     user = widget.user;
     _currentWidget = SwipeScreen();
-    FirebaseUtils.firebaseMessaging.requestPermission(
+    FirebaseMessaging.instance.requestPermission(
       alert: true,
       announcement: false,
       badge: true,

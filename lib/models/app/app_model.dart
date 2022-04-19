@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppModel extends ChangeNotifier {
   bool _initialized = false;
+
   bool _error = false;
 
   set initialized(initialized) {
