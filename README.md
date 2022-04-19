@@ -30,7 +30,7 @@ service cloud.firestore {
     
     match /swipes/{swipeId=**} {
     	allow read: if request.auth.uid == resource.data.user1 || 
-      	request.auth.uid == resource.data.user2;
+      	  request.auth.uid == resource.data.user2;
     }
     
     match /channel_participation/{docId} {
@@ -38,7 +38,8 @@ service cloud.firestore {
     }
     
     match /reports/{reportId} {
-    	allow read: if request.auth.uid == resource.data.source || request.auth.uid == resource.data.dest;
+    	allow read: if request.auth.uid == resource.data.source ||
+          request.auth.uid == resource.data.dest;
     }
     
     match /subscriptions/{userId} {
