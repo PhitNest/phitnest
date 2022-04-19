@@ -1,21 +1,56 @@
-# PhitNest App
+# Firebase Setup
 
-A new Flutter application.
+1. Create a firebase project https://console.firebase.google.com
 
-## Getting Started
+2. Create an Android app on the firebase console, no need to download the google-services.json file.
 
-This project is a starting point for a Flutter application.
+3. Create an iOS app on the firebase console, no need to download the GoogleService-Info.plist file.
 
-A few resources to get you started if this is your first Flutter project:
+4. Open a terminal. In the phitnest-app directory:
+    1. ```dart pub global activate flutterfire_cli```
+    2. ```flutterfire configure```
+    3. Select (with space) android and iOS, then submit (with enter)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+5. Open ```android/app/build.gradle``` and ensure the following is present:
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+If the line: ```apply plugin: ‘com.google.gms.google-services’``` is present more than once in the file, delete the additional instances.
 
-### misc.
-- App id: com.phitnest.app
-- Android app id: com.phitnest.app.android
-- IOS app id: com.phitnest.app.ios
+Back in firebase console, click authentication and enable authentication for email/password.
+Click on firestore database and enable firestore database.
+
+On firestore database, go to rules:
+Replace the current script with the script below:
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    allow read, write: if request.auth != null;
+
+    match /users/{userId} {
+      allow read, write: if request.auth.uid == userId;
+      allow read: if resource.data.showMe;
+    }
+    
+    match /swipes/{swipeId=**} {
+    	allow read: if request.auth.uid == resource.data.user1 || 
+      	request.auth.uid == resource.data.user2;
+    }
+    
+    match /channel_participation/{docId} {
+    	allow read: if request.auth.uid == resource.data.user;
+    }
+    
+    match /reports/{reportId} {
+    	allow read: if request.auth.uid == resource.data.source || request.auth.uid == resource.data.dest;
+    }
+    
+    match /subscriptions/{userId} {
+    	allow delete: if request.auth.uid == userId;
+    }
+    
+    match /swipe_counts/{userId} {
+    	allow delete: if request.auth.uid == userId;
+    }
+  }
+}
+```

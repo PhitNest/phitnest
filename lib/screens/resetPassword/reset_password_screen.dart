@@ -51,7 +51,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   child: TextFormField(
                     textAlignVertical: TextAlignVertical.center,
                     textInputAction: TextInputAction.done,
-                    validator: AuthenticationUtils.validateEmail,
+                    validator: ValidationUtils.validateEmail,
                     onFieldSubmitted: (_) => resetPassword(),
                     onSaved: (val) => _emailAddress = val!,
                     style: TextStyle(fontSize: 18.0),

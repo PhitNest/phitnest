@@ -172,7 +172,7 @@ class _SignUpState extends State<SignUpScreen> {
             child: TextFormField(
               cursorColor: Color(COLOR_PRIMARY),
               textAlignVertical: TextAlignVertical.center,
-              validator: AuthenticationUtils.validateName,
+              validator: ValidationUtils.validateName,
               onSaved: (String? val) {
                 firstName = val;
               },
@@ -207,7 +207,7 @@ class _SignUpState extends State<SignUpScreen> {
           child: Padding(
             padding: const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
             child: TextFormField(
-              validator: AuthenticationUtils.validateName,
+              validator: ValidationUtils.validateName,
               textAlignVertical: TextAlignVertical.center,
               cursorColor: Color(COLOR_PRIMARY),
               onSaved: (String? val) {
@@ -248,7 +248,7 @@ class _SignUpState extends State<SignUpScreen> {
               textAlignVertical: TextAlignVertical.center,
               textInputAction: TextInputAction.next,
               cursorColor: Color(COLOR_PRIMARY),
-              validator: AuthenticationUtils.validateEmail,
+              validator: ValidationUtils.validateEmail,
               onSaved: (String? val) {
                 email = val;
               },
@@ -289,7 +289,7 @@ class _SignUpState extends State<SignUpScreen> {
               textAlignVertical: TextAlignVertical.center,
               textInputAction: TextInputAction.next,
               cursorColor: Color(COLOR_PRIMARY),
-              validator: AuthenticationUtils.validateMobile,
+              validator: ValidationUtils.validateMobile,
               onSaved: (String? val) {
                 mobile = val;
               },
@@ -327,7 +327,7 @@ class _SignUpState extends State<SignUpScreen> {
               textAlignVertical: TextAlignVertical.center,
               textInputAction: TextInputAction.next,
               controller: _passwordController,
-              validator: AuthenticationUtils.validatePassword,
+              validator: ValidationUtils.validatePassword,
               onSaved: (String? val) {
                 password = val;
               },
@@ -367,7 +367,7 @@ class _SignUpState extends State<SignUpScreen> {
               textInputAction: TextInputAction.done,
               onFieldSubmitted: (_) => _signUp(),
               obscureText: true,
-              validator: (val) => AuthenticationUtils.validateConfirmPassword(
+              validator: (val) => ValidationUtils.validateConfirmPassword(
                   _passwordController.text, val),
               onSaved: (String? val) {
                 confirmPassword = val;

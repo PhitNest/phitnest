@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 
-class AuthenticationUtils {
+class ValidationUtils {
   static String? validateName(String? value) {
     String pattern = r'(^[a-zA-Z ]*$)';
     RegExp regExp = RegExp(pattern);
