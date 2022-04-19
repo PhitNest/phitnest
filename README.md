@@ -11,7 +11,7 @@
     2. ```flutterfire configure```
     3. Select (with space) android and iOS, then submit (with enter)
 
-5. Open ```android/app/build.gradle``` and ensure the following is present:
+5. Open android/app/build.gradle and ensure the following is present:
 
 If the line: ```apply plugin: ‘com.google.gms.google-services’``` is present more than once in the file, delete the additional instances.
 
