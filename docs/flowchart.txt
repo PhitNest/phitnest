@@ -1,0 +1,20 @@
+flowchart LR
+AccountDetailsScreen --> ReAuthUserScreen
+ConversationsScreen --> ChatScreen
+ConversationsScreen --> UserDetailsScreen
+HomeScreen --> ConversationsScreen
+HomeScreen --> ProfileScreen
+HomeScreen --> SwipeScreen
+LoginScreen --> HomeScreen
+LoginScreen --> PhoneNumberInputScreen
+LoginScreen --> ResetPasswordScreen
+MatchScreen --> ChatScreen
+PhoneNumberInputScreen --> HomeScreen
+ProfileScreen --> AccountDetailsScreen
+ProfileScreen --> ReAuthUserScreen
+ProfileScreen --> SettingsScreen
+ReAuthUserScreen --> PhoneNumberInputScreen
+SignUpScreen --> HomeScreen
+SignUpScreen --> PhoneNumberInputScreen
+SwipeScreen --> MatchScreen
+SwipeScreen --> UserDetailsScreen
