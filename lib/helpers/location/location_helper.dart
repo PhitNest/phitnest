@@ -52,9 +52,9 @@ class LocationUtils {
   }
 
   static bool isInPreferredDistance(double distance) {
-    if (User.currentUser!.settings.distanceRadius.isNotEmpty) {
+    if (UserModel.currentUser!.settings.distanceRadius.isNotEmpty) {
       if (distance <=
-          (int.tryParse(User.currentUser!.settings.distanceRadius) ?? 0)) {
+          (int.tryParse(UserModel.currentUser!.settings.distanceRadius) ?? 0)) {
         return true;
       } else {
         return false;

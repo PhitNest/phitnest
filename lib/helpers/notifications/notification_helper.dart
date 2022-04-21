@@ -73,9 +73,9 @@ class NotificationUtils {
         if (data.containsKey('members') &&
             data.containsKey('isGroup') &&
             data.containsKey('conversationModel')) {
-          List<User> members = List<User>.from(
+          List<UserModel> members = List<UserModel>.from(
               (jsonDecode(data['members']) as List<dynamic>)
-                  .map((e) => User.fromPayload(e))).toList();
+                  .map((e) => UserModel.fromPayload(e))).toList();
           bool isGroup = jsonDecode(data['isGroup']);
           ConversationModel conversationModel = ConversationModel.fromPayload(
               jsonDecode(data['conversationModel']));

@@ -298,8 +298,8 @@ class _LoginScreen extends State<LoginScreen> {
       dynamic result = await FirebaseUtils.loginWithEmailAndPassword(
           email!.trim(), password!.trim(), currentLocation!);
       await DialogUtils.hideProgress();
-      if (result != null && result is User) {
-        User.currentUser = result;
+      if (result != null && result is UserModel) {
+        UserModel.currentUser = result;
         NavigationUtils.pushAndRemoveUntil(
             context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
@@ -326,8 +326,8 @@ class _LoginScreen extends State<LoginScreen> {
           context, 'Logging in, Please wait...'.tr(), false);
       dynamic result = await FirebaseUtils.loginWithFacebook();
       await DialogUtils.hideProgress();
-      if (result != null && result is User) {
-        User.currentUser = result;
+      if (result != null && result is UserModel) {
+        UserModel.currentUser = result;
         NavigationUtils.pushAndRemoveUntil(
             context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
@@ -350,8 +350,8 @@ class _LoginScreen extends State<LoginScreen> {
           context, 'Logging in, Please wait...'.tr(), false);
       dynamic result = await FirebaseUtils.loginWithApple();
       await DialogUtils.hideProgress();
-      if (result != null && result is User) {
-        User.currentUser = result;
+      if (result != null && result is UserModel) {
+        UserModel.currentUser = result;
         NavigationUtils.pushAndRemoveUntil(
             context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {

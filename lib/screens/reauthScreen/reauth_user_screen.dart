@@ -212,7 +212,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
       try {
         auth.UserCredential? result = await FirebaseUtils.reAuthUser(
             widget.provider,
-            email: User.currentUser!.email,
+            email: UserModel.currentUser!.email,
             password: _passwordController.text);
         if (result == null) {
           await DialogUtils.hideProgress();

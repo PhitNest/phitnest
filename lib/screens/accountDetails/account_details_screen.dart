@@ -10,7 +10,7 @@ import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
 
 class AccountDetailsScreen extends StatefulWidget {
-  final User user;
+  final UserModel user;
 
   AccountDetailsScreen({Key? key, required this.user}) : super(key: key);
 
@@ -21,7 +21,7 @@ class AccountDetailsScreen extends StatefulWidget {
 }
 
 class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
-  late User user;
+  late UserModel user;
   GlobalKey<FormState> _key = GlobalKey();
   AutovalidateMode _validate = AutovalidateMode.disabled;
   String? firstName, lastName, age, bio, school, email, mobile;
@@ -402,9 +402,9 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     user.school = school!;
     user.email = email!;
     user.phoneNumber = mobile!;
-    User? updatedUser = await FirebaseUtils.updateCurrentUser(user);
+    UserModel? updatedUser = await FirebaseUtils.updateCurrentUser(user);
     if (updatedUser != null) {
-      User.currentUser = user;
+      UserModel.currentUser = user;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

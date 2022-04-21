@@ -490,8 +490,8 @@ class _SignUpState extends State<SignUpScreen> {
           signUpLocation!,
           mobile!);
       await DialogUtils.hideProgress();
-      if (result != null && result is User) {
-        User.currentUser = result;
+      if (result != null && result is UserModel) {
+        UserModel.currentUser = result;
         NavigationUtils.pushAndRemoveUntil(
             context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {

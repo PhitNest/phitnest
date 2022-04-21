@@ -3,7 +3,7 @@ import 'package:phitnest/models/models.dart';
 class HomeConversationModel {
   bool isGroupChat;
 
-  List<User> members;
+  List<UserModel> members;
 
   ConversationModel? conversationModel;
 

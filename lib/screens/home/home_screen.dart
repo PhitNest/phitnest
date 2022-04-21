@@ -12,7 +12,7 @@ import 'package:phitnest/screens/screens.dart';
 enum DrawerSelection { Conversations, Contacts, Search, Profile }
 
 class HomeScreen extends StatefulWidget {
-  final User user;
+  final UserModel user;
 
   HomeScreen({Key? key, required this.user}) : super(key: key);
 
@@ -23,14 +23,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeState extends State<HomeScreen> {
-  late User user;
+  late UserModel user;
   String _appBarTitle = 'Swipe'.tr();
   late Widget _currentWidget;
 
   @override
   void initState() {
     super.initState();
-    if (User.currentUser!.isVip) {
+    if (UserModel.currentUser!.isVip) {
       checkSubscription();
     }
     user = widget.user;
@@ -50,7 +50,7 @@ class _HomeState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: user,
-      child: Consumer<User>(
+      child: Consumer<UserModel>(
         builder: (context, user, _) {
           return Scaffold(
             appBar: AppBar(

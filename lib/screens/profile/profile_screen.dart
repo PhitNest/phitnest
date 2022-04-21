@@ -15,7 +15,7 @@ import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final User user;
+  final UserModel user;
 
   ProfileScreen({Key? key, required this.user}) : super(key: key);
 
@@ -25,7 +25,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ImagePicker _imagePicker = ImagePicker();
-  late User user;
+  late UserModel user;
   List images = [];
   List _pages = [];
   List<Widget> _gridPages = [];
@@ -240,7 +240,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         context, 'Deleting account...'.tr(), false);
                     await FirebaseUtils.deleteUser();
                     await DialogUtils.hideProgress();
-                    User.currentUser = null;
+                    UserModel.currentUser = null;
                     NavigationUtils.pushAndRemoveUntil(
                         context, AuthScreen(), false);
                   }
@@ -284,7 +284,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   user.lastOnlineTimestamp = Timestamp.now();
                   await FirebaseUtils.updateCurrentUser(user);
                   await auth.FirebaseAuth.instance.signOut();
-                  User.currentUser = null;
+                  UserModel.currentUser = null;
                   NavigationUtils.pushAndRemoveUntil(
                       context, AuthScreen(), false);
                 },
@@ -314,7 +314,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               await FirebaseUtils.deleteImage(user.profilePictureURL);
             user.profilePictureURL = '';
             await FirebaseUtils.updateCurrentUser(user);
-            User.currentUser = user;
+            UserModel.currentUser = user;
             DialogUtils.hideProgress();
             setState(() {});
           },
@@ -359,7 +359,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     user.profilePictureURL =
         await FirebaseUtils.uploadUserImageToFireStorage(image, user.userID);
     await FirebaseUtils.updateCurrentUser(user);
-    User.currentUser = user;
+    UserModel.currentUser = user;
     DialogUtils.hideProgress();
   }
 
@@ -448,8 +448,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             images.remove(url);
             await FirebaseUtils.deleteImage(url);
             user.photos = images;
-            User? newUser = await FirebaseUtils.updateCurrentUser(user);
-            User.currentUser = newUser;
+            UserModel? newUser = await FirebaseUtils.updateCurrentUser(user);
+            UserModel.currentUser = newUser;
             if (newUser != null) {
               user = newUser;
               images.add(null);
@@ -511,9 +511,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               images.removeLast();
               images.add(imageUrl.url);
               user.photos = images;
-              User? newUser = await FirebaseUtils.updateCurrentUser(user);
+              UserModel? newUser = await FirebaseUtils.updateCurrentUser(user);
               if (newUser != null) {
-                User.currentUser = newUser;
+                UserModel.currentUser = newUser;
                 user = newUser;
               }
               images.add(null);
@@ -534,9 +534,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               images.removeLast();
               images.add(imageUrl.url);
               user.photos = images;
-              User? newUser = await FirebaseUtils.updateCurrentUser(user);
+              UserModel? newUser = await FirebaseUtils.updateCurrentUser(user);
               if (newUser != null) {
-                User.currentUser = newUser;
+                UserModel.currentUser = newUser;
                 user = newUser;
               }
               images.add(null);
