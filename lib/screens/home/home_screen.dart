@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:phitnest/constants/constants.dart';
@@ -99,9 +100,9 @@ class _HomeState extends State<HomeScreen> {
                 )
               ],
               backgroundColor: Colors.transparent,
-              brightness: DisplayUtils.isDarkMode(context)
-                  ? Brightness.dark
-                  : Brightness.light,
+              systemOverlayStyle: DisplayUtils.isDarkMode(context)
+                  ? SystemUiOverlayStyle.dark
+                  : SystemUiOverlayStyle.light,
               centerTitle: true,
               elevation: 0,
             ),

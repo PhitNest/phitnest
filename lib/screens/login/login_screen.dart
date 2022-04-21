@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
@@ -25,9 +26,9 @@ class _LoginScreen extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        brightness: DisplayUtils.isDarkMode(context)
-            ? Brightness.dark
-            : Brightness.light,
+        systemOverlayStyle: DisplayUtils.isDarkMode(context)
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light,
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(
             color:
@@ -195,15 +196,13 @@ class _LoginScreen extends State<LoginScreen> {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(minWidth: double.infinity),
                 child: ElevatedButton.icon(
-                  label: Expanded(
-                    child: Text(
-                      'Facebook Login'.tr(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
+                  label: Text(
+                    'Facebook Login'.tr(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                   icon: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),

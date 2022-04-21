@@ -63,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   setupStream() {
     chatStream = FirebaseUtils.getChatMessages(homeConversationModel)
-        .asBroadcastStream() as Stream<ChatModel>;
+        .asBroadcastStream();
     chatStream.listen((chatModel) {
       if (mounted) {
         homeConversationModel.members = chatModel.members;
