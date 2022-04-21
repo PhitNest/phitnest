@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:phitnest/constants/constants.dart';
 import 'package:phitnest/helpers/helpers.dart';
@@ -42,9 +43,9 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: _getBackgroundColor(context),
-          brightness: DisplayUtils.isDarkMode(context)
-              ? Brightness.dark
-              : Brightness.light,
+          systemOverlayStyle: DisplayUtils.isDarkMode(context)
+              ? SystemUiOverlayStyle.dark
+              : SystemUiOverlayStyle.light,
           centerTitle: true,
           iconTheme: IconThemeData(color: _getForegroundColor(context)),
           title: Text(

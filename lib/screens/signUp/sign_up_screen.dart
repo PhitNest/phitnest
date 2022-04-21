@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -33,9 +34,9 @@ class _SignUpState extends State<SignUpScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        brightness: DisplayUtils.isDarkMode(context)
-            ? Brightness.dark
-            : Brightness.light,
+        systemOverlayStyle: DisplayUtils.isDarkMode(context)
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light,
         elevation: 0.0,
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(

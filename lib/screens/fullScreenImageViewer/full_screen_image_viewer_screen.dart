@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:photo_view/photo_view.dart';
 
 class FullScreenImageViewer extends StatelessWidget {
@@ -11,7 +12,7 @@ class FullScreenImageViewer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          brightness: Brightness.dark,
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
           elevation: 0.0,
           backgroundColor: Colors.black,
           iconTheme: IconThemeData(color: Colors.white),

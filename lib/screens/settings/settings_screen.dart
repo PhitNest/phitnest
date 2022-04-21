@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:phitnest/constants/constants.dart';
 import 'package:phitnest/helpers/helpers.dart';
@@ -45,9 +46,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black),
         backgroundColor:
             DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white,
-        brightness: DisplayUtils.isDarkMode(context)
-            ? Brightness.dark
-            : Brightness.light,
+        systemOverlayStyle: DisplayUtils.isDarkMode(context)
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light,
         centerTitle: true,
         title: Text(
           'Settings'.tr(),
