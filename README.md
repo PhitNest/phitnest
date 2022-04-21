@@ -2,7 +2,7 @@
 
 1. Create a firebase project https://console.firebase.google.com
 
-2. Create an Android app on the firebase console, no need to download the google-services.json file.
+2. Create an Android app on the firebase console, download the google-services.json and place it in the android/app directory.
 
 3. Create an iOS app on the firebase console, no need to download the GoogleService-Info.plist file.
 

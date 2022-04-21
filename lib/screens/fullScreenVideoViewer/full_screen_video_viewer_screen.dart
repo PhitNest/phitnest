@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
 class FullScreenVideoViewer extends StatefulWidget {
@@ -34,7 +35,7 @@ class _FullScreenVideoViewerState extends State<FullScreenVideoViewer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.dark,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         elevation: 0.0,
         backgroundColor: Colors.black,
         iconTheme: IconThemeData(color: Colors.white),

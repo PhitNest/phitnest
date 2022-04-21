@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:phitnest/constants/constants.dart';
@@ -21,9 +22,9 @@ class ContactUsScreen extends StatelessWidget {
         ),
       ),
       appBar: AppBar(
-        brightness: DisplayUtils.isDarkMode(context)
-            ? Brightness.dark
-            : Brightness.light,
+        systemOverlayStyle: DisplayUtils.isDarkMode(context)
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light,
         backgroundColor:
             DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white,
         iconTheme: IconThemeData(

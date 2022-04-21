@@ -1,3 +1,5 @@
+// ignore_for_file: close_sinks
+
 import 'dart:async';
 import 'dart:io';
 
@@ -1025,6 +1027,7 @@ class FirebaseUtils {
   static Future<String?> firebaseCreateNewUser(User user) async {
     try {
       await _firestore.collection(USERS).doc(user.userID).set(user.toJson());
+      return null;
     } catch (e, s) {
       print('FireStoreUtils.firebaseCreateNewUser $e $s');
       return 'Couldn\'t sign up'.tr();

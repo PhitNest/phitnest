@@ -21,13 +21,13 @@ class MatchScreen extends StatefulWidget {
 class _MatchScreenState extends State<MatchScreen> {
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     return Material(
       child: Stack(
         fit: StackFit.expand,
@@ -49,8 +49,8 @@ class _MatchScreenState extends State<MatchScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
-                      SystemChrome.setEnabledSystemUIOverlays(
-                          [SystemUiOverlay.bottom, SystemUiOverlay.top]);
+                      SystemChrome.setEnabledSystemUIMode(
+                          SystemUiMode.edgeToEdge);
                       Navigator.pop(context);
                     },
                     child: Text(
