@@ -401,7 +401,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ));
   }
 
-  Widget buildSubTitle(User friend) {
+  Widget buildSubTitle(UserModel friend) {
     String text = friend.active
         ? 'Active now'.tr()
         : 'Last seen on '
@@ -538,8 +538,8 @@ class _ChatScreenState extends State<ChatScreen> {
     showCupertinoModalPopup(context: context, builder: (context) => action);
   }
 
-  Widget buildMessage(MessageData messageData, List<User> members) {
-    if (messageData.senderID == User.currentUser!.userID) {
+  Widget buildMessage(MessageData messageData, List<UserModel> members) {
+    if (messageData.senderID == UserModel.currentUser!.userID) {
       return myMessageView(messageData);
     } else {
       return remoteMessageView(
@@ -733,7 +733,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Widget remoteMessageView(MessageData messageData, User sender) {
+  Widget remoteMessageView(MessageData messageData, UserModel sender) {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Row(
@@ -957,8 +957,8 @@ class _ChatScreenState extends State<ChatScreen> {
       return true;
     } else {
       String channelID;
-      User friend = homeConversationModel.members.first;
-      User user = User.currentUser!;
+      UserModel friend = homeConversationModel.members.first;
+      UserModel user = UserModel.currentUser!;
       if (friend.userID.compareTo(user.userID) < 0) {
         channelID = friend.userID + user.userID;
       } else {
@@ -988,10 +988,10 @@ class _ChatScreenState extends State<ChatScreen> {
       message = MessageData(
           content: content,
           created: Timestamp.now(),
-          senderFirstName: User.currentUser!.firstName,
-          senderID: User.currentUser!.userID,
-          senderLastName: User.currentUser!.lastName,
-          senderProfilePictureURL: User.currentUser!.profilePictureURL,
+          senderFirstName: UserModel.currentUser!.firstName,
+          senderID: UserModel.currentUser!.userID,
+          senderLastName: UserModel.currentUser!.lastName,
+          senderProfilePictureURL: UserModel.currentUser!.profilePictureURL,
           url: url,
           videoThumbnail: videoThumbnail);
     } else {
@@ -1003,20 +1003,22 @@ class _ChatScreenState extends State<ChatScreen> {
           recipientLastName: homeConversationModel.members.first.lastName,
           recipientProfilePictureURL:
               homeConversationModel.members.first.profilePictureURL,
-          senderFirstName: User.currentUser!.firstName,
-          senderID: User.currentUser!.userID,
-          senderLastName: User.currentUser!.lastName,
-          senderProfilePictureURL: User.currentUser!.profilePictureURL,
+          senderFirstName: UserModel.currentUser!.firstName,
+          senderID: UserModel.currentUser!.userID,
+          senderLastName: UserModel.currentUser!.lastName,
+          senderProfilePictureURL: UserModel.currentUser!.profilePictureURL,
           url: url,
           videoThumbnail: videoThumbnail);
     }
     if (url != null) {
       if (url.mime.contains('image')) {
-        message.content = '${User.currentUser!.firstName} sent an image'.tr();
+        message.content =
+            '${UserModel.currentUser!.firstName} sent an image'.tr();
       } else if (url.mime.contains('video')) {
-        message.content = '${User.currentUser!.firstName} sent a video'.tr();
+        message.content =
+            '${UserModel.currentUser!.firstName} sent a video'.tr();
       } else if (url.mime.contains('audio')) {
-        message.content = '${User.currentUser!.firstName} sent a voice '
+        message.content = '${UserModel.currentUser!.firstName} sent a voice '
                 'message'
             .tr();
       }

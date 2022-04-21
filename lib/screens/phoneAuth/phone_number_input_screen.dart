@@ -376,8 +376,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
           dynamic result = await FirebaseUtils.firebaseSubmitPhoneNumberCode(
               _verificationID!, code, _phoneNumber!, signUpLocation!);
           await DialogUtils.hideProgress();
-          if (result != null && result is User) {
-            User.currentUser = result;
+          if (result != null && result is UserModel) {
+            UserModel.currentUser = result;
             NavigationUtils.pushAndRemoveUntil(
                 context, HomeScreen(user: result), false);
           } else if (result != null && result is String) {
@@ -573,16 +573,16 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
         if (mounted) {
           auth.UserCredential userCredential =
               await auth.FirebaseAuth.instance.signInWithCredential(credential);
-          User? user =
+          UserModel? user =
               await FirebaseUtils.loadUser(userCredential.user?.uid ?? '');
           if (user != null) {
             DialogUtils.hideProgress();
-            User.currentUser = user;
+            UserModel.currentUser = user;
             NavigationUtils.pushAndRemoveUntil(
                 context, HomeScreen(user: user), false);
           } else {
             /// create a new user from phone login
-            User user = User(
+            UserModel user = UserModel(
                 firstName: _firstNameController.text,
                 lastName: _firstNameController.text,
                 fcmToken: await FirebaseMessaging.instance.getToken() ?? '',
@@ -604,7 +604,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                 await FirebaseUtils.firebaseCreateNewUser(user);
             DialogUtils.hideProgress();
             if (errorMessage == null) {
-              User.currentUser = user;
+              UserModel.currentUser = user;
               NavigationUtils.pushAndRemoveUntil(
                   context, HomeScreen(user: user), false);
             } else {

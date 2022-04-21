@@ -17,9 +17,9 @@ class SwipeScreen extends StatefulWidget {
 }
 
 class _SwipeScreenState extends State<SwipeScreen> {
-  late Stream<List<User>> tinderUsers;
-  List<User> swipedUsers = [];
-  List<User> users = [];
+  late Stream<List<UserModel>> tinderUsers;
+  List<UserModel> swipedUsers = [];
+  List<UserModel> users = [];
   CardController controller = CardController();
 
   @override
@@ -36,7 +36,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<User>>(
+    return StreamBuilder<List<UserModel>>(
       stream: tinderUsers,
       initialData: [],
       builder: (context, snapshot) {
@@ -58,7 +58,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
     );
   }
 
-  Widget _buildCard(User tinderUser) {
+  Widget _buildCard(UserModel tinderUser) {
     return GestureDetector(
       onTap: () async {
         _launchDetailsScreen(tinderUser);
@@ -211,7 +211,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
     );
   }
 
-  Future<void> _launchDetailsScreen(User tinderUser) async {
+  Future<void> _launchDetailsScreen(UserModel tinderUser) async {
     CardSwipeOrientation? result = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => UserDetailsScreen(
@@ -229,7 +229,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
     }
   }
 
-  _onCardSettingsClick(User user) {
+  _onCardSettingsClick(UserModel user) {
     final action = CupertinoActionSheet(
       message: Text(
         user.fullName(),
@@ -305,8 +305,8 @@ class _SwipeScreenState extends State<SwipeScreen> {
   }
 
   _undo() async {
-    if (User.currentUser!.isVip) {
-      User undoUser = swipedUsers.removeLast();
+    if (UserModel.currentUser!.isVip) {
+      UserModel undoUser = swipedUsers.removeLast();
       users.insert(0, undoUser);
       FirebaseUtils.updateCardStream(users);
       await FirebaseUtils.undo(undoUser);
@@ -315,7 +315,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
     }
   }
 
-  Widget _asyncCards(BuildContext context, List<User>? data) {
+  Widget _asyncCards(BuildContext context, List<UserModel>? data) {
     users = data ?? [];
     if (data == null || data.isEmpty)
       return Center(
@@ -367,12 +367,12 @@ class _SwipeScreenState extends State<SwipeScreen> {
                       (CardSwipeOrientation orientation, int index) async {
                     if (orientation == CardSwipeOrientation.LEFT ||
                         orientation == CardSwipeOrientation.RIGHT) {
-                      bool isValidSwipe = User.currentUser!.isVip
+                      bool isValidSwipe = UserModel.currentUser!.isVip
                           ? true
                           : await FirebaseUtils.incrementSwipe();
                       if (isValidSwipe) {
                         if (orientation == CardSwipeOrientation.RIGHT) {
-                          User? result =
+                          UserModel? result =
                               await FirebaseUtils.onSwipeRight(data[index]);
                           if (result != null) {
                             data.removeAt(index);
@@ -391,7 +391,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
                           FirebaseUtils.updateCardStream(data);
                         }
                       } else {
-                        User returningUser = data.removeAt(index);
+                        UserModel returningUser = data.removeAt(index);
                         FirebaseUtils.updateCardStream(data);
                         _showUpgradeAccountDialog();
                         await Future.delayed(Duration(milliseconds: 200));

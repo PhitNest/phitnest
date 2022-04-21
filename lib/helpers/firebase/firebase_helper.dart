@@ -35,8 +35,8 @@ class FirebaseUtils {
   static late StreamController<List<HomeConversationModel>> conversationsStream;
   static List<HomeConversationModel> homeConversations = [];
   static List<BlockUserModel> blockedList = [];
-  static List<User> matches = [];
-  static late StreamController<List<User>> tinderCardsStreamController;
+  static List<UserModel> matches = [];
+  static late StreamController<List<UserModel>> tinderCardsStreamController;
 
   /// This is a token stream for firebase messaging. This is initialized in
   /// [initializeTokenStream] and it is updated with calls to
@@ -49,7 +49,7 @@ class FirebaseUtils {
     // Listen for firebase messaging token changes
     _tokenStream = FirebaseMessaging.instance.onTokenRefresh.listen((token) {
       // Create a local variable so it can be promoted to non-nullable
-      User? currentUser = User.currentUser;
+      UserModel? currentUser = UserModel.currentUser;
       if (currentUser != null) {
         currentUser.fcmToken = token;
         FirebaseUtils.updateCurrentUser(currentUser);
@@ -62,7 +62,7 @@ class FirebaseUtils {
   /// This will resume the token stream and set the user's status to active
   /// when the app life cycle transitions to [AppLifecycleState.resumed].
   static updateTokenStream(AppLifecycleState state) {
-    User? currentUser = User.currentUser;
+    UserModel? currentUser = UserModel.currentUser;
 
     if (auth.FirebaseAuth.instance.currentUser != null && currentUser != null) {
       if (state == AppLifecycleState.paused) {
@@ -80,11 +80,11 @@ class FirebaseUtils {
     }
   }
 
-  static Future<User?> loadUser(String uid) async {
+  static Future<UserModel?> loadUser(String uid) async {
     DocumentSnapshot<Map<String, dynamic>> userDocument =
         await _firestore.collection(USERS).doc(uid).get();
     if (userDocument.exists) {
-      return User.fromJson(userDocument.data() ?? {});
+      return UserModel.fromJson(userDocument.data() ?? {});
     } else {
       return null;
     }
@@ -92,7 +92,7 @@ class FirebaseUtils {
 
   /// Updates the firebase document for [user] in the collection [USERS]
   /// Returns null on error.
-  static Future<User?> updateCurrentUser(User user) async {
+  static Future<UserModel?> updateCurrentUser(UserModel user) async {
     return await _firestore
         .collection(USERS)
         .doc(user.userID)
@@ -200,7 +200,7 @@ class FirebaseUtils {
     return isSuccessful;
   }
 
-  static Future<List<User>> getMatchedUserObject(String userID) async {
+  static Future<List<UserModel>> getMatchedUserObject(String userID) async {
     List<String> friendIDs = [];
     matchedUsersList.clear();
     matchedUsersList = await getMatches(userID);
@@ -210,7 +210,7 @@ class FirebaseUtils {
     matches.clear();
     for (String id in friendIDs) {
       await _firestore.collection(USERS).doc(id).get().then((user) {
-        matches.add(User.fromJson(user.data() ?? {}));
+        matches.add(UserModel.fromJson(user.data() ?? {}));
       });
     }
     return matches;
@@ -242,7 +242,7 @@ class FirebaseUtils {
                 .listen((channel) async {
               if (channel.exists) {
                 bool isGroupChat = !channel.id.contains(userID);
-                List<User> users = [];
+                List<UserModel> users = [];
                 if (isGroupChat) {
                   FirebaseUtils.getGroupMembers(channel.id)
                       .listen((listOfUsers) {
@@ -306,11 +306,12 @@ class FirebaseUtils {
     yield* conversationsStream.stream;
   }
 
-  static Stream<List<User>> getGroupMembers(String channelID) async* {
-    StreamController<List<User>> membersStreamController = StreamController();
+  static Stream<List<UserModel>> getGroupMembers(String channelID) async* {
+    StreamController<List<UserModel>> membersStreamController =
+        StreamController();
     FirebaseUtils.getGroupMembersIDs(channelID).listen((memberIDs) {
       if (memberIDs.isNotEmpty) {
-        List<User> groupMembers = [];
+        List<UserModel> groupMembers = [];
         for (String id in memberIDs) {
           FirebaseUtils.getUserByID(id).listen((user) {
             groupMembers.add(user);
@@ -337,7 +338,7 @@ class FirebaseUtils {
           in participations.docs) {
         uids.add(document.data()?['user'] ?? '');
       }
-      if (uids.contains(User.currentUser!.userID)) {
+      if (uids.contains(UserModel.currentUser!.userID)) {
         membersIDsStreamController.sink.add(uids);
       } else {
         membersIDsStreamController.sink.add([]);
@@ -346,10 +347,10 @@ class FirebaseUtils {
     yield* membersIDsStreamController.stream;
   }
 
-  static Stream<User> getUserByID(String id) async* {
-    StreamController<User> userStreamController = StreamController();
+  static Stream<UserModel> getUserByID(String id) async* {
+    StreamController<UserModel> userStreamController = StreamController();
     _firestore.collection(USERS).doc(id).snapshots().listen((user) {
-      userStreamController.sink.add(User.fromJson(user.data() ?? {}));
+      userStreamController.sink.add(UserModel.fromJson(user.data() ?? {}));
     });
     yield* userStreamController.stream;
   }
@@ -372,10 +373,10 @@ class FirebaseUtils {
     StreamController<ChatModel> chatModelStreamController = StreamController();
     ChatModel chatModel = ChatModel();
     List<MessageData> listOfMessages = [];
-    List<User> listOfMembers = homeConversationModel.members;
+    List<UserModel> listOfMembers = homeConversationModel.members;
     if (homeConversationModel.isGroupChat) {
       homeConversationModel.members.forEach((groupMember) {
-        if (groupMember.userID != User.currentUser!.userID) {
+        if (groupMember.userID != UserModel.currentUser!.userID) {
           getUserByID(groupMember.userID).listen((updatedUser) {
             for (int i = 0; i < listOfMembers.length; i++) {
               if (listOfMembers[i].userID == updatedUser.userID) {
@@ -389,7 +390,7 @@ class FirebaseUtils {
         }
       });
     } else {
-      User friend = homeConversationModel.members.first;
+      UserModel friend = homeConversationModel.members.first;
       getUserByID(friend.userID).listen((user) {
         listOfMembers.clear();
         listOfMembers.add(user);
@@ -418,7 +419,7 @@ class FirebaseUtils {
     yield* chatModelStreamController.stream;
   }
 
-  static Future<void> sendMessage(List<User> members, bool isGroup,
+  static Future<void> sendMessage(List<UserModel> members, bool isGroup,
       MessageData message, ConversationModel conversationModel) async {
     var ref = _firestore
         .collection(CHANNELS)
@@ -427,23 +428,23 @@ class FirebaseUtils {
         .doc();
     message.messageID = ref.id;
     await ref.set(message.toJson());
-    List<User> payloadFriends;
+    List<UserModel> payloadFriends;
     if (isGroup) {
       payloadFriends = [];
       payloadFriends.addAll(members);
     } else {
-      payloadFriends = [User.currentUser!];
+      payloadFriends = [UserModel.currentUser!];
     }
 
-    await Future.forEach(members, (User element) async {
-      if (element.userID != User.currentUser!.userID) {
+    await Future.forEach(members, (UserModel element) async {
+      if (element.userID != UserModel.currentUser!.userID) {
         if (element.settings.pushNewMessages) {
-          User? friend;
+          UserModel? friend;
           if (isGroup) {
             friend = payloadFriends
                 .firstWhere((user) => user.fcmToken == element.fcmToken);
             payloadFriends.remove(friend);
-            payloadFriends.add(User.currentUser!);
+            payloadFriends.add(UserModel.currentUser!);
           }
           Map<String, dynamic> payload = <String, dynamic>{
             'click_action': 'FLUTTER_NOTIFICATION_CLICK',
@@ -456,11 +457,13 @@ class FirebaseUtils {
 
           await NotificationUtils.sendNotification(
               element.fcmToken,
-              isGroup ? conversationModel.name : User.currentUser!.fullName(),
+              isGroup
+                  ? conversationModel.name
+                  : UserModel.currentUser!.fullName(),
               message.content,
               payload);
           if (isGroup) {
-            payloadFriends.remove(User.currentUser);
+            payloadFriends.remove(UserModel.currentUser);
             payloadFriends.add(friend!);
           }
         }
@@ -476,9 +479,9 @@ class FirebaseUtils {
         .set(conversation.toJson())
         .then((onValue) async {
       ChannelParticipation myChannelParticipation = ChannelParticipation(
-          user: User.currentUser!.userID, channel: conversation.id);
+          user: UserModel.currentUser!.userID, channel: conversation.id);
       ChannelParticipation myFriendParticipation = ChannelParticipation(
-          user: conversation.id.replaceAll(User.currentUser!.userID, ''),
+          user: conversation.id.replaceAll(UserModel.currentUser!.userID, ''),
           channel: conversation.id);
       await FirebaseUtils.createChannelParticipation(myChannelParticipation);
       await FirebaseUtils.createChannelParticipation(myFriendParticipation);
@@ -505,19 +508,19 @@ class FirebaseUtils {
   }
 
   static Future<HomeConversationModel> createGroupChat(
-      List<User> selectedUsers, String groupName) async {
+      List<UserModel> selectedUsers, String groupName) async {
     late HomeConversationModel groupConversationModel;
     DocumentReference channelDoc = _firestore.collection(CHANNELS).doc();
     ConversationModel conversationModel = ConversationModel();
     conversationModel.id = channelDoc.id;
-    conversationModel.creatorId = User.currentUser!.userID;
+    conversationModel.creatorId = UserModel.currentUser!.userID;
     conversationModel.name = groupName;
     conversationModel.lastMessage =
-        '${User.currentUser!.fullName()} created this group'.tr();
+        '${UserModel.currentUser!.fullName()} created this group'.tr();
     conversationModel.lastMessageDate = Timestamp.now();
     await channelDoc.set(conversationModel.toJson()).then((onValue) async {
-      selectedUsers.add(User.currentUser!);
-      for (User user in selectedUsers) {
+      selectedUsers.add(UserModel.currentUser!);
+      for (UserModel user in selectedUsers) {
         ChannelParticipation channelParticipation = ChannelParticipation(
             channel: conversationModel.id, user: user.userID);
         await createChannelParticipation(channelParticipation);
@@ -532,7 +535,7 @@ class FirebaseUtils {
 
   static Future<bool> leaveGroup(ConversationModel conversationModel) async {
     bool isSuccessful = false;
-    conversationModel.lastMessage = '${User.currentUser!.fullName()} '
+    conversationModel.lastMessage = '${UserModel.currentUser!.fullName()} '
             'left'
         .tr();
     conversationModel.lastMessageDate = Timestamp.now();
@@ -540,7 +543,7 @@ class FirebaseUtils {
       await _firestore
           .collection(CHANNEL_PARTICIPATION)
           .where('channel', isEqualTo: conversationModel.id)
-          .where('user', isEqualTo: User.currentUser!.userID)
+          .where('user', isEqualTo: UserModel.currentUser!.userID)
           .get()
           .then((onValue) async {
         await _firestore
@@ -555,11 +558,11 @@ class FirebaseUtils {
     return isSuccessful;
   }
 
-  static Future<bool> blockUser(User blockedUser, String type) async {
+  static Future<bool> blockUser(UserModel blockedUser, String type) async {
     bool isSuccessful = false;
     BlockUserModel blockUserModel = BlockUserModel(
         type: type,
-        source: User.currentUser!.userID,
+        source: UserModel.currentUser!.userID,
         dest: blockedUser.userID,
         createdAt: Timestamp.now());
     await _firestore
@@ -575,7 +578,7 @@ class FirebaseUtils {
     StreamController<bool> refreshStreamController = StreamController();
     _firestore
         .collection(REPORTS)
-        .where('source', isEqualTo: User.currentUser!.userID)
+        .where('source', isEqualTo: UserModel.currentUser!.userID)
         .snapshots()
         .listen((onData) {
       List<BlockUserModel> list = [];
@@ -600,12 +603,12 @@ class FirebaseUtils {
     return false;
   }
 
-  static Stream<List<User>> getTinderUsers() async* {
-    tinderCardsStreamController = StreamController<List<User>>();
-    List<User> tinderUsers = [];
+  static Stream<List<UserModel>> getTinderUsers() async* {
+    tinderCardsStreamController = StreamController<List<UserModel>>();
+    List<UserModel> tinderUsers = [];
     Position? locationData = await LocationUtils.getCurrentLocation();
     if (locationData != null) {
-      User.currentUser!.location = UserLocation(
+      UserModel.currentUser!.location = UserLocation(
           latitude: locationData.latitude, longitude: locationData.longitude);
       await _firestore
           .collection(USERS)
@@ -615,10 +618,10 @@ class FirebaseUtils {
         value.docs
             .forEach((DocumentSnapshot<Map<String, dynamic>> tinderUser) async {
           try {
-            if (tinderUser.id != User.currentUser!.userID) {
-              User user = User.fromJson(tinderUser.data() ?? {});
+            if (tinderUser.id != UserModel.currentUser!.userID) {
+              UserModel user = UserModel.fromJson(tinderUser.data() ?? {});
               double distance = LocationUtils.getDistance(
-                  user.location, User.currentUser!.location);
+                  user.location, UserModel.currentUser!.location);
               if (await FirebaseUtils._isValidUserForTinderSwipe(
                   user, distance)) {
                 user.milesAway = '$distance Miles Away'.tr();
@@ -644,19 +647,19 @@ class FirebaseUtils {
   }
 
   static bool isPreferredGender(String gender) {
-    if (User.currentUser!.settings.genderPreference != 'All') {
-      return gender == User.currentUser!.settings.genderPreference;
+    if (UserModel.currentUser!.settings.genderPreference != 'All') {
+      return gender == UserModel.currentUser!.settings.genderPreference;
     } else {
       return true;
     }
   }
 
   static Future<bool> _isValidUserForTinderSwipe(
-      User tinderUser, double distance) async {
+      UserModel tinderUser, double distance) async {
     //make sure that we haven't swiped this user before
     QuerySnapshot result1 = await _firestore
         .collection(SWIPES)
-        .where('user1', isEqualTo: User.currentUser!.userID)
+        .where('user1', isEqualTo: UserModel.currentUser!.userID)
         .where('user2', isEqualTo: tinderUser.userID)
         .get()
         .catchError((onError) {
@@ -668,7 +671,7 @@ class FirebaseUtils {
   }
 
   static matchChecker(BuildContext context) async {
-    String myID = User.currentUser!.userID;
+    String myID = UserModel.currentUser!.userID;
     QuerySnapshot<Map<String, dynamic>> result = await _firestore
         .collection(SWIPES)
         .where('user2', isEqualTo: myID)
@@ -691,8 +694,8 @@ class FirebaseUtils {
                 (DocumentSnapshot<Map<String, dynamic>> unSeenMatch) async {
               DocumentSnapshot<Map<String, dynamic>> matchedUserDocSnapshot =
                   await _firestore.collection(USERS).doc(match.user1).get();
-              User matchedUser =
-                  User.fromJson(matchedUserDocSnapshot.data() ?? {});
+              UserModel matchedUser =
+                  UserModel.fromJson(matchedUserDocSnapshot.data() ?? {});
               NavigationUtils.push(
                   context,
                   MatchScreen(
@@ -709,25 +712,25 @@ class FirebaseUtils {
     }
   }
 
-  static onSwipeLeft(User dislikedUser) async {
+  static onSwipeLeft(UserModel dislikedUser) async {
     DocumentReference documentReference = _firestore.collection(SWIPES).doc();
     Swipe leftSwipe = Swipe(
         id: documentReference.id,
         type: 'dislike',
-        user1: User.currentUser!.userID,
+        user1: UserModel.currentUser!.userID,
         user2: dislikedUser.userID,
         createdAt: Timestamp.now(),
         hasBeenSeen: false);
     await documentReference.set(leftSwipe.toJson());
   }
 
-  static Future<User?> onSwipeRight(User user) async {
+  static Future<UserModel?> onSwipeRight(UserModel user) async {
     // check if this user sent a match request before ? if yes, it's a match,
     // if not, send him match request
     QuerySnapshot querySnapshot = await _firestore
         .collection(SWIPES)
         .where('user1', isEqualTo: user.userID)
-        .where('user2', isEqualTo: User.currentUser!.userID)
+        .where('user2', isEqualTo: UserModel.currentUser!.userID)
         .where('type', isEqualTo: 'like')
         .get();
 
@@ -739,7 +742,7 @@ class FirebaseUtils {
           type: 'like',
           hasBeenSeen: true,
           createdAt: Timestamp.now(),
-          user1: User.currentUser!.userID,
+          user1: UserModel.currentUser!.userID,
           user2: user.userID);
       await document.set(swipe.toJson());
       if (user.settings.pushNewMatchesEnabled) {
@@ -747,7 +750,7 @@ class FirebaseUtils {
             user.fcmToken,
             'New match',
             'You have got a new '
-                'match: ${User.currentUser!.fullName()}.',
+                'match: ${UserModel.currentUser!.fullName()}.',
             null);
       }
 
@@ -755,12 +758,12 @@ class FirebaseUtils {
     } else {
       //this user didn't send me a match request, let's send match request
       // and keep swiping
-      await FirebaseUtils.sendSwipeRequest(user, User.currentUser!.userID);
+      await FirebaseUtils.sendSwipeRequest(user, UserModel.currentUser!.userID);
       return null;
     }
   }
 
-  static Future<bool> sendSwipeRequest(User user, String myID) async {
+  static Future<bool> sendSwipeRequest(UserModel user, String myID) async {
     bool isSuccessful = false;
     DocumentReference documentReference = _firestore.collection(SWIPES).doc();
     Swipe swipe = Swipe(
@@ -792,10 +795,10 @@ class FirebaseUtils {
     await firebaseStorageRef.delete();
   }
 
-  static undo(User tinderUser) async {
+  static undo(UserModel tinderUser) async {
     await _firestore
         .collection(SWIPES)
-        .where('user1', isEqualTo: User.currentUser!.userID)
+        .where('user1', isEqualTo: UserModel.currentUser!.userID)
         .where('user2', isEqualTo: tinderUser.userID)
         .get()
         .then((value) async {
@@ -809,13 +812,13 @@ class FirebaseUtils {
     tinderCardsStreamController.close();
   }
 
-  static void updateCardStream(List<User> data) {
+  static void updateCardStream(List<UserModel> data) {
     tinderCardsStreamController.add(data);
   }
 
   static Future<bool> incrementSwipe() async {
     DocumentReference<Map<String, dynamic>> documentReference =
-        _firestore.collection(SWIPE_COUNT).doc(User.currentUser!.userID);
+        _firestore.collection(SWIPE_COUNT).doc(UserModel.currentUser!.userID);
     DocumentSnapshot<Map<String, dynamic>> validationDocumentSnapshot =
         await documentReference.get();
     if (validationDocumentSnapshot.exists) {
@@ -829,7 +832,7 @@ class FirebaseUtils {
       }
     } else {
       await _firestore.doc(documentReference.path).set(SwipeCounter(
-              authorID: User.currentUser!.userID,
+              authorID: UserModel.currentUser!.userID,
               createdAt: Timestamp.now(),
               count: 1)
           .toJson());
@@ -926,7 +929,7 @@ class FirebaseUtils {
     auth.UserCredential authResult = await auth.FirebaseAuth.instance
         .signInWithCredential(
             auth.FacebookAuthProvider.credential(token.token));
-    User? user = await loadUser(authResult.user?.uid ?? '');
+    UserModel? user = await loadUser(authResult.user?.uid ?? '');
     List<String> fullName = (userData['name'] as String).split(' ');
     String firstName = '';
     String lastName = '';
@@ -944,7 +947,7 @@ class FirebaseUtils {
       dynamic result = await updateCurrentUser(user);
       return result;
     } else {
-      user = User(
+      user = UserModel(
           email: userData['email'] ?? '',
           firstName: firstName,
           profilePictureURL: userData['picture']['data']['url'] ?? '',
@@ -994,20 +997,20 @@ class FirebaseUtils {
   ) async {
     auth.UserCredential authResult =
         await auth.FirebaseAuth.instance.signInWithCredential(credential);
-    User? user = await loadUser(authResult.user?.uid ?? '');
+    UserModel? user = await loadUser(authResult.user?.uid ?? '');
     if (user != null) {
       user.active = true;
       user.fcmToken = await _firebaseMessaging.getToken() ?? '';
       dynamic result = await updateCurrentUser(user);
       return result;
     } else {
-      user = User(
+      user = UserModel(
           email: appleIdCredential.email ?? '',
           firstName: appleIdCredential.fullName?.givenName ?? 'Deleted',
           profilePictureURL: '',
           userID: authResult.user?.uid ?? '',
           lastOnlineTimestamp: Timestamp.now(),
-          lastName: appleIdCredential.fullName?.familyName ?? 'User',
+          lastName: appleIdCredential.fullName?.familyName ?? 'UserModel',
           active: true,
           fcmToken: await _firebaseMessaging.getToken() ?? '',
           phoneNumber: '',
@@ -1024,7 +1027,7 @@ class FirebaseUtils {
 
   /// save a new user document in the USERS table in firebase _firestore
   /// returns an error message on failure or null on success
-  static Future<String?> firebaseCreateNewUser(User user) async {
+  static Future<String?> firebaseCreateNewUser(UserModel user) async {
     try {
       await _firestore.collection(USERS).doc(user.userID).set(user.toJson());
       return null;
@@ -1044,9 +1047,9 @@ class FirebaseUtils {
           .signInWithEmailAndPassword(email: email, password: password);
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
           await _firestore.collection(USERS).doc(result.user?.uid ?? '').get();
-      User? user;
+      UserModel? user;
       if (documentSnapshot.exists) {
-        user = User.fromJson(documentSnapshot.data() ?? {});
+        user = UserModel.fromJson(documentSnapshot.data() ?? {});
         user.location = UserLocation(
             latitude: currentLocation.latitude,
             longitude: currentLocation.longitude);
@@ -1099,13 +1102,13 @@ class FirebaseUtils {
   static Future<dynamic> firebaseSubmitPhoneNumberCode(String verificationID,
       String code, String phoneNumber, Position signUpLocation,
       {String firstName = 'Anonymous',
-      String lastName = 'User',
+      String lastName = 'UserModel',
       File? image}) async {
     auth.AuthCredential authCredential = auth.PhoneAuthProvider.credential(
         verificationId: verificationID, smsCode: code);
     auth.UserCredential userCredential =
         await auth.FirebaseAuth.instance.signInWithCredential(authCredential);
-    User? user = await loadUser(userCredential.user?.uid ?? '');
+    UserModel? user = await loadUser(userCredential.user?.uid ?? '');
     if (user != null) {
       return user;
     } else {
@@ -1115,7 +1118,7 @@ class FirebaseUtils {
         profileImageUrl = await uploadUserImageToFireStorage(
             image, userCredential.user?.uid ?? '');
       }
-      User user = User(
+      UserModel user = UserModel(
         firstName: firstName,
         lastName: lastName,
         fcmToken: await _firebaseMessaging.getToken() ?? '',
@@ -1193,7 +1196,7 @@ class FirebaseUtils {
         profilePicUrl =
             await uploadUserImageToFireStorage(image, result.user?.uid ?? '');
       }
-      User user = User(
+      UserModel user = UserModel(
           email: emailAddress,
           signUpLocation: UserLocation(
               latitude: locationData.latitude,
@@ -1290,19 +1293,19 @@ class FirebaseUtils {
       // delete user records from subscriptions table
       await _firestore
           .collection(SUBSCRIPTIONS)
-          .doc(User.currentUser!.userID)
+          .doc(UserModel.currentUser!.userID)
           .delete();
 
       // delete user records from swipe_counts table
       await _firestore
           .collection(SWIPE_COUNT)
-          .doc(User.currentUser!.userID)
+          .doc(UserModel.currentUser!.userID)
           .delete();
 
       // delete user records from swipes table
       await _firestore
           .collection(SWIPES)
-          .where('user1', isEqualTo: User.currentUser!.userID)
+          .where('user1', isEqualTo: UserModel.currentUser!.userID)
           .get()
           .then((value) async {
         for (var doc in value.docs) {
@@ -1311,7 +1314,7 @@ class FirebaseUtils {
       });
       await _firestore
           .collection(SWIPES)
-          .where('user2', isEqualTo: User.currentUser!.userID)
+          .where('user2', isEqualTo: UserModel.currentUser!.userID)
           .get()
           .then((value) async {
         for (var doc in value.docs) {
@@ -1322,7 +1325,7 @@ class FirebaseUtils {
       // delete user records from CHANNEL_PARTICIPATION table
       await _firestore
           .collection(CHANNEL_PARTICIPATION)
-          .where('user', isEqualTo: User.currentUser!.userID)
+          .where('user', isEqualTo: UserModel.currentUser!.userID)
           .get()
           .then((value) async {
         for (var doc in value.docs) {
@@ -1333,7 +1336,7 @@ class FirebaseUtils {
       // delete user records from REPORTS table
       await _firestore
           .collection(REPORTS)
-          .where('source', isEqualTo: User.currentUser!.userID)
+          .where('source', isEqualTo: UserModel.currentUser!.userID)
           .get()
           .then((value) async {
         for (var doc in value.docs) {
@@ -1344,7 +1347,7 @@ class FirebaseUtils {
       // delete user records from REPORTS table
       await _firestore
           .collection(REPORTS)
-          .where('dest', isEqualTo: User.currentUser!.userID)
+          .where('dest', isEqualTo: UserModel.currentUser!.userID)
           .get()
           .then((value) async {
         for (var doc in value.docs) {
@@ -1375,20 +1378,20 @@ class FirebaseUtils {
       subscriptionPeriod:
           purchase.purchaseID == MONTHLY_SUBSCRIPTION ? 'monthly' : 'yearly',
       transactionDate: int.parse(purchase.transactionDate!),
-      userID: User.currentUser!.userID,
+      userID: UserModel.currentUser!.userID,
     );
     await _firestore
         .collection(SUBSCRIPTIONS)
-        .doc(User.currentUser!.userID)
+        .doc(UserModel.currentUser!.userID)
         .set(purchaseModel.toJson());
-    User.currentUser!.isVip = true;
-    await updateCurrentUser(User.currentUser!);
+    UserModel.currentUser!.isVip = true;
+    await updateCurrentUser(UserModel.currentUser!);
   }
 
   static isSubscriptionActive() async {
     DocumentSnapshot<Map<String, dynamic>> userPurchase = await _firestore
         .collection(SUBSCRIPTIONS)
-        .doc(User.currentUser!.userID)
+        .doc(UserModel.currentUser!.userID)
         .get();
     if (userPurchase.exists) {
       try {
@@ -1405,11 +1408,11 @@ class FirebaseUtils {
         if (DateTime.now().isBefore(endOfSubscription)) {
           return true;
         } else {
-          User.currentUser!.isVip = false;
-          await updateCurrentUser(User.currentUser!);
+          UserModel.currentUser!.isVip = false;
+          await updateCurrentUser(UserModel.currentUser!);
           await _firestore
               .collection(SUBSCRIPTIONS)
-              .doc(User.currentUser!.userID)
+              .doc(UserModel.currentUser!.userID)
               .set({'active': false});
           return false;
         }

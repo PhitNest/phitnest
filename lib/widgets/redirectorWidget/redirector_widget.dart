@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,13 +30,13 @@ class Redirector extends StatelessWidget {
     bool finishedOnBoarding = (prefs.getBool(FINISHED_ON_BOARDING) ?? false);
 
     if (finishedOnBoarding) {
-      auth.User? firebaseUser = auth.FirebaseAuth.instance.currentUser;
+      User? firebaseUser = FirebaseAuth.instance.currentUser;
       if (firebaseUser != null) {
-        User? user = await FirebaseUtils.loadUser(firebaseUser.uid);
+        UserModel? user = await FirebaseUtils.loadUser(firebaseUser.uid);
         if (user != null) {
           user.active = true;
           await FirebaseUtils.updateCurrentUser(user);
-          User.currentUser = user;
+          UserModel.currentUser = user;
           NavigationUtils.pushReplacement(context, HomeScreen(user: user));
         } else {
           NavigationUtils.pushReplacement(context, AuthScreen());

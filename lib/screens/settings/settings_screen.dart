@@ -8,7 +8,7 @@ import 'package:phitnest/helpers/helpers.dart';
 import 'package:phitnest/models/models.dart';
 
 class SettingsScreen extends StatefulWidget {
-  final User user;
+  final UserModel user;
 
   const SettingsScreen({Key? key, required this.user}) : super(key: key);
 
@@ -17,7 +17,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  late User user;
+  late UserModel user;
 
   late bool showMe, newMatches, messages, superLikes, topPicks;
 
@@ -287,12 +287,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               user.settings.pushSuperLikesEnabled = superLikes;
                               user.settings.pushNewMatchesEnabled = newMatches;
                               user.settings.distanceRadius = radius;
-                              User? updateUser =
+                              UserModel? updateUser =
                                   await FirebaseUtils.updateCurrentUser(user);
                               DialogUtils.hideProgress();
                               if (updateUser != null) {
                                 this.user = updateUser;
-                                User.currentUser = user;
+                                UserModel.currentUser = user;
                                 ScaffoldMessenger.of(buildContext).showSnackBar(
                                   SnackBar(
                                     duration: Duration(seconds: 3),

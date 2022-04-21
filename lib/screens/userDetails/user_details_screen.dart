@@ -11,7 +11,7 @@ import 'package:phitnest/screens/screens.dart';
 import 'package:phitnest/widgets/widgets.dart';
 
 class UserDetailsScreen extends StatefulWidget {
-  final User user;
+  final UserModel user;
   final bool isMatch;
 
   const UserDetailsScreen({Key? key, required this.user, required this.isMatch})
@@ -22,7 +22,7 @@ class UserDetailsScreen extends StatefulWidget {
 }
 
 class _UserDetailsScreenState extends State<UserDetailsScreen> {
-  late User user;
+  late UserModel user;
   List<String?> images = [];
   List _pages = [];
   PageController controller = PageController(
