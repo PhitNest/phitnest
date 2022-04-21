@@ -1,1 +1,14 @@
-export 'user/user.dart';
+export 'package:phitnest/models/app/app_model.dart';
+export 'package:phitnest/models/blockUser/block_user_model.dart';
+export 'package:phitnest/models/channelParticipation/channel_participation_model.dart';
+export 'package:phitnest/models/chat/chat_model.dart';
+export 'package:phitnest/models/chatVideoContainer/chat_video_container_model.dart';
+export 'package:phitnest/models/contact/contact_model.dart';
+export 'package:phitnest/models/conversation/conversation_model.dart';
+export 'package:phitnest/models/homeConversation/home_conversation_model.dart';
+export 'package:phitnest/models/messageData/message_data_model.dart';
+export 'package:phitnest/models/purchase/purchase_model.dart';
+export 'package:phitnest/models/swipe/swipe_model.dart';
+export 'package:phitnest/models/swipeCounter/swipe_counter_model.dart';
+export 'package:phitnest/models/user/user_model.dart';
+export 'package:phitnest/models/onBoarding/on_boarding_model.dart';

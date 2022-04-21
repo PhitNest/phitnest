@@ -33,7 +33,7 @@ class Redirector extends StatelessWidget {
     // Mobile settings
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    // Has this app ran before
+    // Has this app finished on boarding
     bool finishedOnBoarding = (prefs.getBool(FINISHED_ON_BOARDING) ?? false);
 
     if (finishedOnBoarding) {
@@ -57,7 +57,7 @@ class Redirector extends StatelessWidget {
       // firestore, redirect to auth screen
       NavigationUtils.pushReplacement(context, AuthScreen());
     } else {
-      // If app has not been ran yet, redirect to onboarding screen
+      // If app has not yet finished on boarding, redirect to onboarding screen
       NavigationUtils.pushReplacement(context, OnBoardingScreen());
     }
   }
