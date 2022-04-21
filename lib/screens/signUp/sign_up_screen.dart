@@ -492,8 +492,7 @@ class _SignUpState extends State<SignUpScreen> {
       await DialogUtils.hideProgress();
       if (result != null && result is UserModel) {
         UserModel.currentUser = result;
-        NavigationUtils.pushAndRemoveUntil(
-            context, HomeScreen(user: result), false);
+        NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
       } else if (result != null && result is String) {
         DialogUtils.showAlertDialog(context, 'Failed'.tr(), result);
       } else {

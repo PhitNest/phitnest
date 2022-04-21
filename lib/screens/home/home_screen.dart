@@ -12,9 +12,7 @@ import 'package:phitnest/screens/screens.dart';
 enum DrawerSelection { Conversations, Contacts, Search, Profile }
 
 class HomeScreen extends StatefulWidget {
-  final UserModel user;
-
-  HomeScreen({Key? key, required this.user}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeState createState() {
@@ -33,7 +31,7 @@ class _HomeState extends State<HomeScreen> {
     if (UserModel.currentUser!.isVip) {
       checkSubscription();
     }
-    user = widget.user;
+    user = UserModel.currentUser!;
     _currentWidget = SwipeScreen();
     FirebaseMessaging.instance.requestPermission(
       alert: true,
