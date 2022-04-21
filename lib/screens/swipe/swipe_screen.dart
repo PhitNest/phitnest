@@ -81,7 +81,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
                       return Icon(
                         Icons.account_circle,
                         size: MediaQuery.of(context).size.height * .4,
-                        color: DisplayUtils.isDarkMode(context)
+                        color: DisplayUtils.isDarkMode
                             ? Colors.black
                             : Colors.white,
                       );
@@ -90,7 +90,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
                       return Icon(
                         Icons.account_circle,
                         size: MediaQuery.of(context).size.height * .4,
-                        color: DisplayUtils.isDarkMode(context)
+                        color: DisplayUtils.isDarkMode
                             ? Colors.black
                             : Colors.white,
                       );

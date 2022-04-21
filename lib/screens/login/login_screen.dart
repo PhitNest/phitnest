@@ -26,13 +26,12 @@ class _LoginScreen extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        systemOverlayStyle: DisplayUtils.isDarkMode(context)
+        systemOverlayStyle: DisplayUtils.isDarkMode
             ? SystemUiOverlayStyle.dark
             : SystemUiOverlayStyle.light,
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(
-            color:
-                DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black),
+            color: DisplayUtils.isDarkMode ? Colors.white : Colors.black),
         elevation: 0.0,
       ),
       body: Form(
@@ -169,9 +168,8 @@ class _LoginScreen extends State<LoginScreen> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: DisplayUtils.isDarkMode(context)
-                          ? Colors.black
-                          : Colors.white,
+                      color:
+                          DisplayUtils.isDarkMode ? Colors.black : Colors.white,
                     ),
                   ),
                   onPressed: () => _login(),
@@ -184,7 +182,7 @@ class _LoginScreen extends State<LoginScreen> {
                 child: Text(
                   'OR'.tr(),
                   style: TextStyle(
-                      color: DisplayUtils.isDarkMode(context)
+                      color: DisplayUtils.isDarkMode
                           ? Colors.white
                           : Colors.black),
                 ),
@@ -241,7 +239,7 @@ class _LoginScreen extends State<LoginScreen> {
                     child: apple.AppleSignInButton(
                       cornerRadius: 25.0,
                       type: apple.ButtonType.signIn,
-                      style: DisplayUtils.isDarkMode(context)
+                      style: DisplayUtils.isDarkMode
                           ? apple.ButtonStyle.white
                           : apple.ButtonStyle.black,
                       onPressed: () => loginWithApple(),

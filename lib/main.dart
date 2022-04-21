@@ -93,6 +93,9 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
         );
       }
 
+      // Store theme setting for frequent use.
+      DisplayUtils.isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
       return MaterialApp(
           navigatorKey: _navigatorKey,
           localizationsDelegates: context.localizationDelegates,

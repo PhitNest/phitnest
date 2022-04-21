@@ -98,7 +98,7 @@ class _HomeState extends State<HomeScreen> {
                 )
               ],
               backgroundColor: Colors.transparent,
-              systemOverlayStyle: DisplayUtils.isDarkMode(context)
+              systemOverlayStyle: DisplayUtils.isDarkMode
                   ? SystemUiOverlayStyle.dark
                   : SystemUiOverlayStyle.light,
               centerTitle: true,

@@ -40,9 +40,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
     return Container(
         height: MediaQuery.of(context).size.height * .85,
         decoration: BoxDecoration(
-          color: DisplayUtils.isDarkMode(context)
-              ? Colors.grey[900]
-              : Colors.white,
+          color: DisplayUtils.isDarkMode ? Colors.grey[900] : Colors.white,
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(20),
           ),
@@ -99,37 +97,27 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                   Image.asset(
                     'assets/images/premium_account_1.png',
                     colorBlendMode: BlendMode.srcOver,
-                    color: DisplayUtils.isDarkMode(context)
-                        ? Colors.black12
-                        : null,
+                    color: DisplayUtils.isDarkMode ? Colors.black12 : null,
                   ),
                   Image.asset(
                     'assets/images/premium_account_2.png',
                     colorBlendMode: BlendMode.srcOver,
-                    color: DisplayUtils.isDarkMode(context)
-                        ? Colors.black12
-                        : null,
+                    color: DisplayUtils.isDarkMode ? Colors.black12 : null,
                   ),
                   Image.asset(
                     'assets/images/premium_account_3.png',
                     colorBlendMode: BlendMode.srcOver,
-                    color: DisplayUtils.isDarkMode(context)
-                        ? Colors.black12
-                        : null,
+                    color: DisplayUtils.isDarkMode ? Colors.black12 : null,
                   ),
                   Image.asset(
                     'assets/images/premium_account_4.png',
                     colorBlendMode: BlendMode.srcOver,
-                    color: DisplayUtils.isDarkMode(context)
-                        ? Colors.black12
-                        : null,
+                    color: DisplayUtils.isDarkMode ? Colors.black12 : null,
                   ),
                   Image.asset(
                     'assets/images/premium_account_5.png',
                     colorBlendMode: BlendMode.srcOver,
-                    color: DisplayUtils.isDarkMode(context)
-                        ? Colors.black12
-                        : null,
+                    color: DisplayUtils.isDarkMode ? Colors.black12 : null,
                   )
                 ],
                 controller: controller,
@@ -143,9 +131,8 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                 effect: ScrollingDotsEffect(
                     dotWidth: 6,
                     dotHeight: 6,
-                    dotColor: DisplayUtils.isDarkMode(context)
-                        ? Colors.grey
-                        : Colors.black54,
+                    dotColor:
+                        DisplayUtils.isDarkMode ? Colors.grey : Colors.black54,
                     activeDotColor: Color(COLOR_PRIMARY)),
               ),
             )
@@ -166,9 +153,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                 .tr(),
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: DisplayUtils.isDarkMode(context)
-                  ? Colors.white54
-                  : Colors.black45,
+              color: DisplayUtils.isDarkMode ? Colors.white54 : Colors.black45,
             ),
           ),
         ),

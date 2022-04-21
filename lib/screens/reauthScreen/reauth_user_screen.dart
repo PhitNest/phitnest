@@ -93,9 +93,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
             child: Text(
               'Verify'.tr(),
               style: TextStyle(
-                  color: DisplayUtils.isDarkMode(context)
-                      ? Colors.black
-                      : Colors.white),
+                  color: DisplayUtils.isDarkMode ? Colors.black : Colors.white),
             ),
           ),
         ),
@@ -150,7 +148,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
           return apple.AppleSignInButton(
             cornerRadius: 12.0,
             type: apple.ButtonType.continueButton,
-            style: DisplayUtils.isDarkMode(context)
+            style: DisplayUtils.isDarkMode
                 ? apple.ButtonStyle.white
                 : apple.ButtonStyle.black,
             onPressed: () => appleButtonPressed(),
@@ -177,7 +175,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
                 fieldHeight: 40,
                 fieldWidth: 40,
                 activeColor: Color(COLOR_PRIMARY),
-                activeFillColor: DisplayUtils.isDarkMode(context)
+                activeFillColor: DisplayUtils.isDarkMode
                     ? Colors.grey.shade700
                     : Colors.grey.shade100,
                 selectedFillColor: Colors.transparent,

@@ -57,7 +57,7 @@ class _MatchScreenState extends State<MatchScreen> {
                       'KEEP SWIPING'.tr(),
                       style: TextStyle(
                           fontSize: 16,
-                          color: DisplayUtils.isDarkMode(context)
+                          color: DisplayUtils.isDarkMode
                               ? Colors.black
                               : Colors.white),
                     ),
@@ -81,7 +81,7 @@ class _MatchScreenState extends State<MatchScreen> {
                         'SEND A MESSAGE'.tr(),
                         style: TextStyle(
                             fontSize: 17,
-                            color: DisplayUtils.isDarkMode(context)
+                            color: DisplayUtils.isDarkMode
                                 ? Colors.black
                                 : Colors.white),
                       ),

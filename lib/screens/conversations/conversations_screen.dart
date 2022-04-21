@@ -227,7 +227,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                             '${homeConversationModel.conversationModel!.name}',
                             style: TextStyle(
                               fontSize: 17,
-                              color: DisplayUtils.isDarkMode(context)
+                              color: DisplayUtils.isDarkMode
                                   ? Colors.white
                                   : Colors.black,
                               fontFamily: Platform.isIOS ? 'sanFran' : 'Roboto',
@@ -276,7 +276,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                                   : Colors.grey,
                               borderRadius: BorderRadius.circular(100),
                               border: Border.all(
-                                  color: DisplayUtils.isDarkMode(context)
+                                  color: DisplayUtils.isDarkMode
                                       ? Color(0xFF303030)
                                       : Colors.white,
                                   width: 1.6)),
@@ -294,7 +294,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                           '${homeConversationModel.members.first.fullName()}',
                           style: TextStyle(
                               fontSize: 17,
-                              color: DisplayUtils.isDarkMode(context)
+                              color: DisplayUtils.isDarkMode
                                   ? Colors.white
                                   : Colors.black,
                               fontFamily:
