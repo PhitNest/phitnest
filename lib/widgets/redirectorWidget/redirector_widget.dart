@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:phitnest/helpers/display/display_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:phitnest/constants/constants.dart';
@@ -21,16 +22,18 @@ class Redirector extends StatelessWidget {
         child: CircularProgressIndicator.adaptive(
           valueColor: AlwaysStoppedAnimation(Color(COLOR_PRIMARY)),
           backgroundColor:
-              DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white,
+              DisplayUtils.isDarkMode ? Colors.black : Colors.white,
         ),
       ),
     );
   }
 
-  Future redirect(BuildContext context) async {
+  /// Redirects the user to the correct page
+  Future<void> redirect(BuildContext context) async {
     // Mobile settings
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    // Has this app ran before
     bool finishedOnBoarding = (prefs.getBool(FINISHED_ON_BOARDING) ?? false);
 
     if (finishedOnBoarding) {
@@ -46,16 +49,15 @@ class Redirector extends StatelessWidget {
           await FirebaseUtils.updateCurrentUser(user);
           // Hold a static reference to the current signed in user model.
           UserModel.currentUser = user;
-          NavigationUtils.pushReplacement(context, HomeScreen(user: user));
-        } else {
-          NavigationUtils.pushReplacement(context, AuthScreen());
+          // Redirect to the home screen
+          return NavigationUtils.pushReplacement(context, HomeScreen());
         }
-      } else {
-        // If firebase has not yet authenticated, redirect to auth screen
-        NavigationUtils.pushReplacement(context, AuthScreen());
       }
+      // If firebase has not yet authenticated or the user does not exist in
+      // firestore, redirect to auth screen
+      NavigationUtils.pushReplacement(context, AuthScreen());
     } else {
-      // If app on boarding has not yet finished, redirect to onboarding screen
+      // If app has not been ran yet, redirect to onboarding screen
       NavigationUtils.pushReplacement(context, OnBoardingScreen());
     }
   }

@@ -34,14 +34,13 @@ class _SignUpState extends State<SignUpScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        systemOverlayStyle: DisplayUtils.isDarkMode(context)
+        systemOverlayStyle: DisplayUtils.isDarkMode
             ? SystemUiOverlayStyle.dark
             : SystemUiOverlayStyle.light,
         elevation: 0.0,
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(
-            color:
-                DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black),
+            color: DisplayUtils.isDarkMode ? Colors.white : Colors.black),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -156,9 +155,8 @@ class _SignUpState extends State<SignUpScreen> {
                     backgroundColor: Color(COLOR_ACCENT),
                     child: Icon(
                       Icons.camera_alt,
-                      color: DisplayUtils.isDarkMode(context)
-                          ? Colors.black
-                          : Colors.white,
+                      color:
+                          DisplayUtils.isDarkMode ? Colors.black : Colors.white,
                     ),
                     mini: true,
                     onPressed: _onCameraClick),
@@ -420,9 +418,7 @@ class _SignUpState extends State<SignUpScreen> {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: DisplayUtils.isDarkMode(context)
-                      ? Colors.black
-                      : Colors.white,
+                  color: DisplayUtils.isDarkMode ? Colors.black : Colors.white,
                 ),
               ),
               onPressed: () => _signUp(),
@@ -435,9 +431,7 @@ class _SignUpState extends State<SignUpScreen> {
             child: Text(
               'OR'.tr(),
               style: TextStyle(
-                  color: DisplayUtils.isDarkMode(context)
-                      ? Colors.white
-                      : Colors.black),
+                  color: DisplayUtils.isDarkMode ? Colors.white : Colors.black),
             ),
           ),
         ),

@@ -19,8 +19,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(
-            color:
-                DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black),
+            color: DisplayUtils.isDarkMode ? Colors.white : Colors.black),
         elevation: 0.0,
       ),
       body: Form(
@@ -104,7 +103,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: DisplayUtils.isDarkMode(context)
+                        color: DisplayUtils.isDarkMode
                             ? Colors.black
                             : Colors.white,
                       ),

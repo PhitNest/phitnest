@@ -69,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundColor: Color(COLOR_ACCENT),
                       child: Icon(
                         Icons.camera_alt,
-                        color: DisplayUtils.isDarkMode(context)
+                        color: DisplayUtils.isDarkMode
                             ? Colors.black
                             : Colors.white,
                       ),
@@ -86,9 +86,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 user.fullName(),
                 style: TextStyle(
-                    color: DisplayUtils.isDarkMode(context)
-                        ? Colors.white
-                        : Colors.black,
+                    color:
+                        DisplayUtils.isDarkMode ? Colors.white : Colors.black,
                     fontSize: 20),
                 textAlign: TextAlign.center,
               ),
@@ -183,9 +182,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 leading: Icon(
                   Icons.settings,
-                  color: DisplayUtils.isDarkMode(context)
-                      ? Colors.white70
-                      : Colors.black45,
+                  color:
+                      DisplayUtils.isDarkMode ? Colors.white70 : Colors.black45,
                 ),
               ),
               ListTile(
@@ -274,9 +272,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: DisplayUtils.isDarkMode(context)
-                        ? Colors.white
-                        : Colors.black,
+                    color:
+                        DisplayUtils.isDarkMode ? Colors.white : Colors.black,
                   ),
                 ),
                 onPressed: () async {
@@ -380,9 +377,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ? Icon(
                 Icons.camera_alt,
                 size: 50,
-                color: DisplayUtils.isDarkMode(context)
-                    ? Colors.black
-                    : Colors.white,
+                color: DisplayUtils.isDarkMode ? Colors.black : Colors.white,
               )
             : ClipRRect(
                 borderRadius: BorderRadius.circular(12),
@@ -394,18 +389,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     return Icon(
                       Icons.hourglass_empty,
                       size: 75,
-                      color: DisplayUtils.isDarkMode(context)
-                          ? Colors.black
-                          : Colors.white,
+                      color:
+                          DisplayUtils.isDarkMode ? Colors.black : Colors.white,
                     );
                   },
                   errorWidget: (context, imageUrl, error) {
                     return Icon(
                       Icons.error_outline,
                       size: 75,
-                      color: DisplayUtils.isDarkMode(context)
-                          ? Colors.black
-                          : Colors.white,
+                      color:
+                          DisplayUtils.isDarkMode ? Colors.black : Colors.white,
                     );
                   },
                 ),

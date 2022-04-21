@@ -18,33 +18,27 @@ class ContactUsScreen extends StatelessWidget {
         backgroundColor: Color(COLOR_ACCENT),
         child: Icon(
           Icons.call,
-          color: DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white,
+          color: DisplayUtils.isDarkMode ? Colors.black : Colors.white,
         ),
       ),
       appBar: AppBar(
-        systemOverlayStyle: DisplayUtils.isDarkMode(context)
+        systemOverlayStyle: DisplayUtils.isDarkMode
             ? SystemUiOverlayStyle.dark
             : SystemUiOverlayStyle.light,
-        backgroundColor:
-            DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white,
+        backgroundColor: DisplayUtils.isDarkMode ? Colors.black : Colors.white,
         iconTheme: IconThemeData(
-            color:
-                DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black),
+            color: DisplayUtils.isDarkMode ? Colors.white : Colors.black),
         title: Text(
           'Contact Us'.tr(),
           style: TextStyle(
-              color: DisplayUtils.isDarkMode(context)
-                  ? Colors.white
-                  : Colors.black),
+              color: DisplayUtils.isDarkMode ? Colors.white : Colors.black),
         ),
         centerTitle: true,
       ),
       body: Column(children: <Widget>[
         Material(
             elevation: 2,
-            color: DisplayUtils.isDarkMode(context)
-                ? Colors.black12
-                : Colors.white,
+            color: DisplayUtils.isDarkMode ? Colors.black12 : Colors.white,
             child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +49,7 @@ class ContactUsScreen extends StatelessWidget {
                     child: Text(
                       'Our Address'.tr(),
                       style: TextStyle(
-                          color: DisplayUtils.isDarkMode(context)
+                          color: DisplayUtils.isDarkMode
                               ? Colors.white
                               : Colors.black,
                           fontSize: 24,
@@ -84,7 +78,7 @@ class ContactUsScreen extends StatelessWidget {
                     title: Text(
                       'E-mail us'.tr(),
                       style: TextStyle(
-                          color: DisplayUtils.isDarkMode(context)
+                          color: DisplayUtils.isDarkMode
                               ? Colors.white
                               : Colors.black,
                           fontSize: 24,
@@ -93,7 +87,7 @@ class ContactUsScreen extends StatelessWidget {
                     subtitle: Text('support@instamobile.zendesk.com'),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
-                      color: DisplayUtils.isDarkMode(context)
+                      color: DisplayUtils.isDarkMode
                           ? Colors.white54
                           : Colors.black54,
                     ),

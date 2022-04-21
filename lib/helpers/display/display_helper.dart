@@ -2,13 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class DisplayUtils {
-  static bool isDarkMode(BuildContext context) {
-    if (Theme.of(context).brightness == Brightness.light) {
-      return false;
-    } else {
-      return true;
-    }
-  }
+  static bool isDarkMode = false;
 
   static Widget displayCircleImage(String picUrl, double size, hasBorder) =>
       CachedNetworkImage(
