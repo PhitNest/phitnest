@@ -6,7 +6,7 @@
 
 3. Create an iOS app on the firebase console, no need to download the GoogleService-Info.plist file.
 
-4. Open a terminal. In the phitnest-app directory:
+4. Open a terminal. In the phitnest-app directory (on dev branch):
     1. ```dart pub global activate flutterfire_cli```
     2. ```flutterfire configure```
     3. Select (with space) android and iOS, then submit (with enter)
