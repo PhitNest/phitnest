@@ -2,13 +2,6 @@
 # Created by https://www.toptal.com/developers/gitignore/api/flutter,androidstudio
 # Edit at https://www.toptal.com/developers/gitignore?templates=flutter,androidstudio
 
-android/app/google-services.json
-ios/firebase_app_id_file.json
-ios/GoogleService-Info.plist
-
-lib/firebase_options.dart
-
-
 ### Flutter ###
 # Flutter/Dart/Pub related
 **/doc/api/
