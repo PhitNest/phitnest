@@ -1,4 +1,4 @@
-# Firebase Setup
+# Firebase Personal Instance Setup
 
 1. Create a firebase project https://console.firebase.google.com
 
