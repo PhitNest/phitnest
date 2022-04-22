@@ -8,13 +8,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:phitnest/constants/constants.dart' as Constants;
+import 'package:phitnest/constants/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
+    // Set up easy localization
     EasyLocalization(
         supportedLocales: [Locale('en'), Locale('ar'), Locale('fr')],
         path: 'assets/translations',
@@ -34,7 +35,7 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
 
   const PhitnestApp({Key? key}) : super(key: key);
 
-  // Define an async function to initialize FlutterFire
+  // Async function to initialize firebase
   void initializeFirebase(BuildContext context) async {
     // Update the model without listening for changes.
     AppModel model = Provider.of<AppModel>(context, listen: false);
@@ -92,6 +93,9 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
         );
       }
 
+      // Store theme setting for frequent use.
+      DisplayUtils.isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
       return MaterialApp(
           navigatorKey: _navigatorKey,
           localizationsDelegates: context.localizationDelegates,
@@ -101,17 +105,16 @@ class PhitnestApp extends StatelessWidget with WidgetsBindingObserver {
           theme: ThemeData(
               bottomSheetTheme: BottomSheetThemeData(
                   backgroundColor: Colors.white.withOpacity(.9)),
-              colorScheme:
-                  ColorScheme.light(secondary: Color(Constants.COLOR_PRIMARY)),
+              colorScheme: ColorScheme.light(secondary: Color(COLOR_PRIMARY)),
               brightness: Brightness.light),
           darkTheme: ThemeData(
               bottomSheetTheme: BottomSheetThemeData(
                   backgroundColor: Colors.black12.withOpacity(.3)),
-              colorScheme:
-                  ColorScheme.dark(secondary: Color(Constants.COLOR_PRIMARY)),
+              colorScheme: ColorScheme.dark(secondary: Color(COLOR_PRIMARY)),
               brightness: Brightness.dark),
           debugShowCheckedModeBanner: false,
-          color: Color(Constants.COLOR_PRIMARY),
+          color: Color(COLOR_PRIMARY),
+          // The redirector will route the user to the proper page
           home: const Redirector());
     }));
   }

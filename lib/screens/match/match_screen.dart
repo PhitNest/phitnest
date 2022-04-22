@@ -10,7 +10,7 @@ import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
 
 class MatchScreen extends StatefulWidget {
-  final User matchedUser;
+  final UserModel matchedUser;
 
   MatchScreen({Key? key, required this.matchedUser}) : super(key: key);
 
@@ -57,7 +57,7 @@ class _MatchScreenState extends State<MatchScreen> {
                       'KEEP SWIPING'.tr(),
                       style: TextStyle(
                           fontSize: 16,
-                          color: DisplayUtils.isDarkMode(context)
+                          color: DisplayUtils.isDarkMode
                               ? Colors.black
                               : Colors.white),
                     ),
@@ -81,19 +81,19 @@ class _MatchScreenState extends State<MatchScreen> {
                         'SEND A MESSAGE'.tr(),
                         style: TextStyle(
                             fontSize: 17,
-                            color: DisplayUtils.isDarkMode(context)
+                            color: DisplayUtils.isDarkMode
                                 ? Colors.black
                                 : Colors.white),
                       ),
                       onPressed: () async {
                         String channelID;
                         if (widget.matchedUser.userID
-                                .compareTo(User.currentUser!.userID) <
+                                .compareTo(UserModel.currentUser!.userID) <
                             0) {
                           channelID = widget.matchedUser.userID +
-                              User.currentUser!.userID;
+                              UserModel.currentUser!.userID;
                         } else {
-                          channelID = User.currentUser!.userID +
+                          channelID = UserModel.currentUser!.userID +
                               widget.matchedUser.userID;
                         }
                         ConversationModel? conversationModel =

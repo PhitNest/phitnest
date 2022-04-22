@@ -92,7 +92,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   contentPadding: const EdgeInsets.all(0),
                   leading: Icon(
                     Icons.settings,
-                    color: DisplayUtils.isDarkMode(context)
+                    color: DisplayUtils.isDarkMode
                         ? Colors.grey.shade200
                         : Colors.black,
                   ),
@@ -107,19 +107,17 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
         centerTitle: true,
         actionsIconTheme: IconThemeData(
-            color: DisplayUtils.isDarkMode(context)
-                ? Colors.grey.shade200
-                : Colors.white),
+            color:
+                DisplayUtils.isDarkMode ? Colors.grey.shade200 : Colors.white),
         iconTheme: IconThemeData(
-            color: DisplayUtils.isDarkMode(context)
-                ? Colors.grey.shade200
-                : Colors.white),
+            color:
+                DisplayUtils.isDarkMode ? Colors.grey.shade200 : Colors.white),
         backgroundColor: Color(COLOR_PRIMARY),
         title: homeConversationModel.isGroupChat
             ? Text(
                 homeConversationModel.conversationModel?.name ?? '',
                 style: TextStyle(
-                    color: DisplayUtils.isDarkMode(context)
+                    color: DisplayUtils.isDarkMode
                         ? Colors.grey.shade200
                         : Colors.white,
                     fontWeight: FontWeight.bold),
@@ -131,7 +129,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   Text(
                     homeConversationModel.members.first.fullName(),
                     style: TextStyle(
-                        color: DisplayUtils.isDarkMode(context)
+                        color: DisplayUtils.isDarkMode
                             ? Colors.grey.shade200
                             : Colors.white,
                         fontWeight: FontWeight.bold),
@@ -208,7 +206,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ),
                                     borderSide:
                                         BorderSide(style: BorderStyle.none)),
-                                color: DisplayUtils.isDarkMode(context)
+                                color: DisplayUtils.isDarkMode
                                     ? Colors.grey[700]
                                     : Colors.grey.shade200,
                               ),
@@ -401,7 +399,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ));
   }
 
-  Widget buildSubTitle(User friend) {
+  Widget buildSubTitle(UserModel friend) {
     String text = friend.active
         ? 'Active now'.tr()
         : 'Last seen on '
@@ -538,8 +536,8 @@ class _ChatScreenState extends State<ChatScreen> {
     showCupertinoModalPopup(context: context, builder: (context) => action);
   }
 
-  Widget buildMessage(MessageData messageData, List<User> members) {
-    if (messageData.senderID == User.currentUser!.userID) {
+  Widget buildMessage(MessageData messageData, List<UserModel> members) {
+    if (messageData.senderID == UserModel.currentUser!.userID) {
       return myMessageView(messageData);
     } else {
       return remoteMessageView(
@@ -613,7 +611,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               top: 6, bottom: 6, right: 4, left: 4),
                           child: PlayerWidget(
                             url: messageData.url!.url,
-                            color: DisplayUtils.isDarkMode(context)
+                            color: DisplayUtils.isDarkMode
                                 ? Colors.grey.shade800
                                 : Colors.grey.shade200,
                           ),
@@ -670,7 +668,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       },
                       child: Icon(
                         Icons.play_arrow,
-                        color: DisplayUtils.isDarkMode(context)
+                        color: DisplayUtils.isDarkMode
                             ? Colors.black
                             : Colors.white,
                       ),
@@ -719,7 +717,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             textAlign: TextAlign.start,
                             textDirection: TextDirection.ltr,
                             style: TextStyle(
-                                color: DisplayUtils.isDarkMode(context)
+                                color: DisplayUtils.isDarkMode
                                     ? Colors.black
                                     : Colors.white,
                                 fontSize: 16),
@@ -733,7 +731,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Widget remoteMessageView(MessageData messageData, User sender) {
+  Widget remoteMessageView(MessageData messageData, UserModel sender) {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Row(
@@ -760,7 +758,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             : Colors.grey,
                         borderRadius: BorderRadius.circular(100),
                         border: Border.all(
-                            color: DisplayUtils.isDarkMode(context)
+                            color: DisplayUtils.isDarkMode
                                 ? Color(0xFF303030)
                                 : Colors.white,
                             width: 1)),
@@ -796,9 +794,8 @@ class _ChatScreenState extends State<ChatScreen> {
             bottom: 0,
             child: Image.asset(
               'assets/images/chat_arrow_left.png',
-              color: DisplayUtils.isDarkMode(context)
-                  ? Colors.grey[600]
-                  : Colors.grey[300],
+              color:
+                  DisplayUtils.isDarkMode ? Colors.grey[600] : Colors.grey[300],
               height: 12,
             ),
           ),
@@ -809,7 +806,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             child: Container(
               decoration: BoxDecoration(
-                  color: DisplayUtils.isDarkMode(context)
+                  color: DisplayUtils.isDarkMode
                       ? Colors.grey.shade600
                       : Colors.grey.shade300,
                   shape: BoxShape.rectangle,
@@ -825,7 +822,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               top: 6, bottom: 6, right: 4, left: 4),
                           child: PlayerWidget(
                             url: messageData.url!.url,
-                            color: DisplayUtils.isDarkMode(context)
+                            color: DisplayUtils.isDarkMode
                                 ? Color(COLOR_ACCENT)
                                 : Color(COLOR_PRIMARY),
                           )),
@@ -882,7 +879,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       },
                       child: Icon(
                         Icons.play_arrow,
-                        color: DisplayUtils.isDarkMode(context)
+                        color: DisplayUtils.isDarkMode
                             ? Colors.black
                             : Colors.white,
                       ),
@@ -903,7 +900,7 @@ class _ChatScreenState extends State<ChatScreen> {
             bottom: 0,
             child: Image.asset(
               'assets/images/chat_arrow_left.png',
-              color: DisplayUtils.isDarkMode(context)
+              color: DisplayUtils.isDarkMode
                   ? Colors.grey.shade600
                   : Colors.grey.shade300,
               height: 12,
@@ -916,7 +913,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             child: Container(
               decoration: BoxDecoration(
-                  color: DisplayUtils.isDarkMode(context)
+                  color: DisplayUtils.isDarkMode
                       ? Colors.grey[600]
                       : Colors.grey[300],
                   shape: BoxShape.rectangle,
@@ -935,7 +932,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           textAlign: TextAlign.start,
                           textDirection: TextDirection.ltr,
                           style: TextStyle(
-                            color: DisplayUtils.isDarkMode(context)
+                            color: DisplayUtils.isDarkMode
                                 ? Colors.white
                                 : Colors.black,
                             fontSize: 16,
@@ -957,8 +954,8 @@ class _ChatScreenState extends State<ChatScreen> {
       return true;
     } else {
       String channelID;
-      User friend = homeConversationModel.members.first;
-      User user = User.currentUser!;
+      UserModel friend = homeConversationModel.members.first;
+      UserModel user = UserModel.currentUser!;
       if (friend.userID.compareTo(user.userID) < 0) {
         channelID = friend.userID + user.userID;
       } else {
@@ -988,10 +985,10 @@ class _ChatScreenState extends State<ChatScreen> {
       message = MessageData(
           content: content,
           created: Timestamp.now(),
-          senderFirstName: User.currentUser!.firstName,
-          senderID: User.currentUser!.userID,
-          senderLastName: User.currentUser!.lastName,
-          senderProfilePictureURL: User.currentUser!.profilePictureURL,
+          senderFirstName: UserModel.currentUser!.firstName,
+          senderID: UserModel.currentUser!.userID,
+          senderLastName: UserModel.currentUser!.lastName,
+          senderProfilePictureURL: UserModel.currentUser!.profilePictureURL,
           url: url,
           videoThumbnail: videoThumbnail);
     } else {
@@ -1003,20 +1000,22 @@ class _ChatScreenState extends State<ChatScreen> {
           recipientLastName: homeConversationModel.members.first.lastName,
           recipientProfilePictureURL:
               homeConversationModel.members.first.profilePictureURL,
-          senderFirstName: User.currentUser!.firstName,
-          senderID: User.currentUser!.userID,
-          senderLastName: User.currentUser!.lastName,
-          senderProfilePictureURL: User.currentUser!.profilePictureURL,
+          senderFirstName: UserModel.currentUser!.firstName,
+          senderID: UserModel.currentUser!.userID,
+          senderLastName: UserModel.currentUser!.lastName,
+          senderProfilePictureURL: UserModel.currentUser!.profilePictureURL,
           url: url,
           videoThumbnail: videoThumbnail);
     }
     if (url != null) {
       if (url.mime.contains('image')) {
-        message.content = '${User.currentUser!.firstName} sent an image'.tr();
+        message.content =
+            '${UserModel.currentUser!.firstName} sent an image'.tr();
       } else if (url.mime.contains('video')) {
-        message.content = '${User.currentUser!.firstName} sent a video'.tr();
+        message.content =
+            '${UserModel.currentUser!.firstName} sent a video'.tr();
       } else if (url.mime.contains('audio')) {
-        message.content = '${User.currentUser!.firstName} sent a voice '
+        message.content = '${UserModel.currentUser!.firstName} sent a voice '
                 'message'
             .tr();
       }

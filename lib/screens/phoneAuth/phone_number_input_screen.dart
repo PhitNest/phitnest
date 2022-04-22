@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
-import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,8 +48,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
         elevation: 0.0,
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(
-            color:
-                DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black),
+            color: DisplayUtils.isDarkMode ? Colors.white : Colors.black),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -107,7 +106,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                               backgroundColor: Color(COLOR_ACCENT),
                               child: Icon(
                                 CupertinoIcons.camera,
-                                color: DisplayUtils.isDarkMode(context)
+                                color: DisplayUtils.isDarkMode
                                     ? Colors.black
                                     : Colors.white,
                               ),
@@ -317,7 +316,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: DisplayUtils.isDarkMode(context)
+                              color: DisplayUtils.isDarkMode
                                   ? Colors.black
                                   : Colors.white),
                         ),
@@ -331,7 +330,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                     child: Text(
                       'OR'.tr(),
                       style: TextStyle(
-                          color: DisplayUtils.isDarkMode(context)
+                          color: DisplayUtils.isDarkMode
                               ? Colors.white
                               : Colors.black),
                     ),
@@ -376,10 +375,9 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
           dynamic result = await FirebaseUtils.firebaseSubmitPhoneNumberCode(
               _verificationID!, code, _phoneNumber!, signUpLocation!);
           await DialogUtils.hideProgress();
-          if (result != null && result is User) {
-            User.currentUser = result;
-            NavigationUtils.pushAndRemoveUntil(
-                context, HomeScreen(user: result), false);
+          if (result != null && result is UserModel) {
+            UserModel.currentUser = result;
+            NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
           } else if (result != null && result is String) {
             DialogUtils.showAlertDialog(context, 'Failed'.tr(), result);
           } else {
@@ -402,7 +400,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
           duration: Duration(seconds: 6),
         ));
       }
-    } on auth.FirebaseAuthException catch (exception) {
+    } on FirebaseAuthException catch (exception) {
       DialogUtils.hideProgress();
       String message = 'An error has occurred, please try again.'.tr();
       switch (exception.code) {
@@ -544,7 +542,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
           });
         }
       },
-      (auth.FirebaseAuthException error) {
+      (FirebaseAuthException error) {
         if (mounted) {
           DialogUtils.hideProgress();
           print('${error.message} ${error.stackTrace}');
@@ -569,20 +567,19 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
           );
         }
       },
-      (auth.PhoneAuthCredential credential) async {
+      (PhoneAuthCredential credential) async {
         if (mounted) {
-          auth.UserCredential userCredential =
-              await auth.FirebaseAuth.instance.signInWithCredential(credential);
-          User? user =
+          UserCredential userCredential =
+              await FirebaseAuth.instance.signInWithCredential(credential);
+          UserModel? user =
               await FirebaseUtils.loadUser(userCredential.user?.uid ?? '');
           if (user != null) {
             DialogUtils.hideProgress();
-            User.currentUser = user;
-            NavigationUtils.pushAndRemoveUntil(
-                context, HomeScreen(user: user), false);
+            UserModel.currentUser = user;
+            NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
           } else {
             /// create a new user from phone login
-            User user = User(
+            UserModel user = UserModel(
                 firstName: _firstNameController.text,
                 lastName: _firstNameController.text,
                 fcmToken: await FirebaseMessaging.instance.getToken() ?? '',
@@ -604,9 +601,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                 await FirebaseUtils.firebaseCreateNewUser(user);
             DialogUtils.hideProgress();
             if (errorMessage == null) {
-              User.currentUser = user;
-              NavigationUtils.pushAndRemoveUntil(
-                  context, HomeScreen(user: user), false);
+              UserModel.currentUser = user;
+              NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
             } else {
               DialogUtils.showAlertDialog(context, 'Failed'.tr(),
                   'Couldn\'t create new user with phone number.'.tr());

@@ -10,7 +10,7 @@ import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
 
 class ConversationsScreen extends StatefulWidget {
-  final User user;
+  final UserModel user;
 
   const ConversationsScreen({Key? key, required this.user}) : super(key: key);
 
@@ -21,8 +21,8 @@ class ConversationsScreen extends StatefulWidget {
 }
 
 class _ConversationsState extends State<ConversationsScreen> {
-  late User user;
-  late Future<List<User>> _matchesFuture;
+  late UserModel user;
+  late Future<List<UserModel>> _matchesFuture;
   late Stream<List<HomeConversationModel>> _conversationsStream;
 
   @override
@@ -45,7 +45,7 @@ class _ConversationsState extends State<ConversationsScreen> {
         children: <Widget>[
           SizedBox(
             height: 100,
-            child: FutureBuilder<List<User>>(
+            child: FutureBuilder<List<UserModel>>(
               future: _matchesFuture,
               initialData: [],
               builder: (context, snap) {
@@ -70,7 +70,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                     scrollDirection: Axis.horizontal,
                     itemCount: snap.data!.length,
                     itemBuilder: (BuildContext context, int index) {
-                      User friend = snap.data![index];
+                      UserModel friend = snap.data![index];
                       return FirebaseUtils.validateIfUserBlocked(friend.userID)
                           ? Container(
                               width: 0,
@@ -227,7 +227,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                             '${homeConversationModel.conversationModel!.name}',
                             style: TextStyle(
                               fontSize: 17,
-                              color: DisplayUtils.isDarkMode(context)
+                              color: DisplayUtils.isDarkMode
                                   ? Colors.white
                                   : Colors.black,
                               fontFamily: Platform.isIOS ? 'sanFran' : 'Roboto',
@@ -276,7 +276,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                                   : Colors.grey,
                               borderRadius: BorderRadius.circular(100),
                               border: Border.all(
-                                  color: DisplayUtils.isDarkMode(context)
+                                  color: DisplayUtils.isDarkMode
                                       ? Color(0xFF303030)
                                       : Colors.white,
                                   width: 1.6)),
@@ -294,7 +294,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                           '${homeConversationModel.members.first.fullName()}',
                           style: TextStyle(
                               fontSize: 17,
-                              color: DisplayUtils.isDarkMode(context)
+                              color: DisplayUtils.isDarkMode
                                   ? Colors.white
                                   : Colors.black,
                               fontFamily:
@@ -318,7 +318,7 @@ class _ConversationsState extends State<ConversationsScreen> {
           );
   }
 
-  _onMatchLongPress(User friend) {
+  _onMatchLongPress(UserModel friend) {
     final action = CupertinoActionSheet(
       message: Text(
         friend.fullName(),

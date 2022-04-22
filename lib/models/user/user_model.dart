@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
-class User with ChangeNotifier {
-  static User? currentUser;
+class UserModel with ChangeNotifier {
+  static UserModel? currentUser;
 
   String email;
 
@@ -50,7 +50,7 @@ class User with ChangeNotifier {
 
   bool selected = false;
 
-  User({
+  UserModel({
     this.email = '',
     this.userID = '',
     this.profilePictureURL = '',
@@ -80,8 +80,8 @@ class User with ChangeNotifier {
     return '$firstName $lastName';
   }
 
-  factory User.fromJson(Map<String, dynamic> parsedJson) {
-    return User(
+  factory UserModel.fromJson(Map<String, dynamic> parsedJson) {
+    return UserModel(
         email: parsedJson['email'] ?? '',
         firstName: parsedJson['firstName'] ?? '',
         lastName: parsedJson['lastName'] ?? '',
@@ -109,8 +109,8 @@ class User with ChangeNotifier {
         photos: parsedJson['photos'] ?? [].cast<String>());
   }
 
-  factory User.fromPayload(Map<String, dynamic> parsedJson) {
-    return User(
+  factory UserModel.fromPayload(Map<String, dynamic> parsedJson) {
+    return UserModel(
         email: parsedJson['email'] ?? '',
         firstName: parsedJson['firstName'] ?? '',
         lastName: parsedJson['lastName'] ?? '',

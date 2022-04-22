@@ -8,7 +8,7 @@ import 'package:phitnest/helpers/helpers.dart';
 import 'package:phitnest/models/models.dart';
 
 class SettingsScreen extends StatefulWidget {
-  final User user;
+  final UserModel user;
 
   const SettingsScreen({Key? key, required this.user}) : super(key: key);
 
@@ -17,7 +17,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  late User user;
+  late UserModel user;
 
   late bool showMe, newMatches, messages, superLikes, topPicks;
 
@@ -42,20 +42,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
-            color:
-                DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black),
-        backgroundColor:
-            DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white,
-        systemOverlayStyle: DisplayUtils.isDarkMode(context)
+            color: DisplayUtils.isDarkMode ? Colors.white : Colors.black),
+        backgroundColor: DisplayUtils.isDarkMode ? Colors.black : Colors.white,
+        systemOverlayStyle: DisplayUtils.isDarkMode
             ? SystemUiOverlayStyle.dark
             : SystemUiOverlayStyle.light,
         centerTitle: true,
         title: Text(
           'Settings'.tr(),
           style: TextStyle(
-              color: DisplayUtils.isDarkMode(context)
-                  ? Colors.white
-                  : Colors.black),
+              color: DisplayUtils.isDarkMode ? Colors.white : Colors.black),
         ),
       ),
       body: SingleChildScrollView(
@@ -69,7 +65,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: Text(
                         'Discovery'.tr(),
                         style: TextStyle(
-                            color: DisplayUtils.isDarkMode(context)
+                            color: DisplayUtils.isDarkMode
                                 ? Colors.white54
                                 : Colors.black54,
                             fontSize: 18),
@@ -77,7 +73,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Material(
                       elevation: 2,
-                      color: DisplayUtils.isDarkMode(context)
+                      color: DisplayUtils.isDarkMode
                           ? Colors.black12
                           : Colors.white,
                       child: Column(
@@ -90,7 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 'Show Me on Flutter phitnest'.tr(),
                                 style: TextStyle(
                                   fontSize: 17,
-                                  color: DisplayUtils.isDarkMode(context)
+                                  color: DisplayUtils.isDarkMode
                                       ? Colors.white
                                       : Colors.black,
                                 ),
@@ -105,7 +101,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               'Distance Radius'.tr(),
                               style: TextStyle(
                                 fontSize: 17,
-                                color: DisplayUtils.isDarkMode(context)
+                                color: DisplayUtils.isDarkMode
                                     ? Colors.white
                                     : Colors.black,
                               ),
@@ -118,7 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       : 'Unlimited'.tr(),
                                   style: TextStyle(
                                       fontSize: 17,
-                                      color: DisplayUtils.isDarkMode(context)
+                                      color: DisplayUtils.isDarkMode
                                           ? Colors.white
                                           : Colors.black,
                                       fontWeight: FontWeight.bold)),
@@ -129,7 +125,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               'Gender'.tr(),
                               style: TextStyle(
                                 fontSize: 17,
-                                color: DisplayUtils.isDarkMode(context)
+                                color: DisplayUtils.isDarkMode
                                     ? Colors.white
                                     : Colors.black,
                               ),
@@ -139,7 +135,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               child: Text('$gender'.tr(),
                                   style: TextStyle(
                                       fontSize: 17,
-                                      color: DisplayUtils.isDarkMode(context)
+                                      color: DisplayUtils.isDarkMode
                                           ? Colors.white
                                           : Colors.black,
                                       fontWeight: FontWeight.bold)),
@@ -150,7 +146,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               'Gender Preference'.tr(),
                               style: TextStyle(
                                 fontSize: 17,
-                                color: DisplayUtils.isDarkMode(context)
+                                color: DisplayUtils.isDarkMode
                                     ? Colors.white
                                     : Colors.black,
                               ),
@@ -160,7 +156,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               child: Text('$prefGender'.tr(),
                                   style: TextStyle(
                                       fontSize: 17,
-                                      color: DisplayUtils.isDarkMode(context)
+                                      color: DisplayUtils.isDarkMode
                                           ? Colors.white
                                           : Colors.black,
                                       fontWeight: FontWeight.bold)),
@@ -175,7 +171,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: Text(
                         'Push Notifications'.tr(),
                         style: TextStyle(
-                            color: DisplayUtils.isDarkMode(context)
+                            color: DisplayUtils.isDarkMode
                                 ? Colors.white54
                                 : Colors.black54,
                             fontSize: 18),
@@ -183,7 +179,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Material(
                       elevation: 2,
-                      color: DisplayUtils.isDarkMode(context)
+                      color: DisplayUtils.isDarkMode
                           ? Colors.black12
                           : Colors.white,
                       child: Column(
@@ -196,7 +192,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 'New matches'.tr(),
                                 style: TextStyle(
                                   fontSize: 17,
-                                  color: DisplayUtils.isDarkMode(context)
+                                  color: DisplayUtils.isDarkMode
                                       ? Colors.white
                                       : Colors.black,
                                 ),
@@ -214,7 +210,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     'Messages'.tr(),
                                     style: TextStyle(
                                       fontSize: 17,
-                                      color: DisplayUtils.isDarkMode(context)
+                                      color: DisplayUtils.isDarkMode
                                           ? Colors.white
                                           : Colors.black,
                                     ),
@@ -232,7 +228,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     'Super Likes'.tr(),
                                     style: TextStyle(
                                       fontSize: 17,
-                                      color: DisplayUtils.isDarkMode(context)
+                                      color: DisplayUtils.isDarkMode
                                           ? Colors.white
                                           : Colors.black,
                                     ),
@@ -250,7 +246,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     'Top Picks'.tr(),
                                     style: TextStyle(
                                       fontSize: 17,
-                                      color: DisplayUtils.isDarkMode(context)
+                                      color: DisplayUtils.isDarkMode
                                           ? Colors.white
                                           : Colors.black,
                                     ),
@@ -270,7 +266,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             const BoxConstraints(minWidth: double.infinity),
                         child: Material(
                           elevation: 2,
-                          color: DisplayUtils.isDarkMode(context)
+                          color: DisplayUtils.isDarkMode
                               ? Colors.black12
                               : Colors.white,
                           child: CupertinoButton(
@@ -287,12 +283,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               user.settings.pushSuperLikesEnabled = superLikes;
                               user.settings.pushNewMatchesEnabled = newMatches;
                               user.settings.distanceRadius = radius;
-                              User? updateUser =
+                              UserModel? updateUser =
                                   await FirebaseUtils.updateCurrentUser(user);
                               DialogUtils.hideProgress();
                               if (updateUser != null) {
                                 this.user = updateUser;
-                                User.currentUser = user;
+                                UserModel.currentUser = user;
                                 ScaffoldMessenger.of(buildContext).showSnackBar(
                                   SnackBar(
                                     duration: Duration(seconds: 3),
@@ -309,7 +305,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               style: TextStyle(
                                   fontSize: 18, color: Color(COLOR_PRIMARY)),
                             ),
-                            color: DisplayUtils.isDarkMode(context)
+                            color: DisplayUtils.isDarkMode
                                 ? Colors.black12
                                 : Colors.white,
                           ),

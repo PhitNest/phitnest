@@ -1,17 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:phitnest/helpers/display/display_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helpers.dart';
 import 'package:phitnest/models/models.dart';
+import 'package:phitnest/helpers/helpers.dart';
 import 'package:phitnest/screens/screens.dart';
 
+/// This class will route the user to the proper page when the app is loaded.
 class Redirector extends StatelessWidget {
   const Redirector({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // This async function will route the user when on boarding is completed.
     redirect(context);
     return Scaffold(
       backgroundColor: Color(COLOR_PRIMARY),
@@ -19,32 +22,42 @@ class Redirector extends StatelessWidget {
         child: CircularProgressIndicator.adaptive(
           valueColor: AlwaysStoppedAnimation(Color(COLOR_PRIMARY)),
           backgroundColor:
-              DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white,
+              DisplayUtils.isDarkMode ? Colors.black : Colors.white,
         ),
       ),
     );
   }
 
-  Future redirect(BuildContext context) async {
+  /// Redirects the user to the correct page
+  Future<void> redirect(BuildContext context) async {
+    // Mobile settings
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Has this app finished on boarding
     bool finishedOnBoarding = (prefs.getBool(FINISHED_ON_BOARDING) ?? false);
 
     if (finishedOnBoarding) {
-      auth.User? firebaseUser = auth.FirebaseAuth.instance.currentUser;
+      // Firebase authentication user object
+      User? firebaseUser = FirebaseAuth.instance.currentUser;
       if (firebaseUser != null) {
-        User? user = await FirebaseUtils.loadUser(firebaseUser.uid);
+        // Load user model from firestore document
+        UserModel? user = await FirebaseUtils.loadUser(firebaseUser.uid);
         if (user != null) {
+          // If the user was found, set their activity to active, and update
+          // their activity in firestore.
           user.active = true;
           await FirebaseUtils.updateCurrentUser(user);
-          User.currentUser = user;
-          NavigationUtils.pushReplacement(context, HomeScreen(user: user));
-        } else {
-          NavigationUtils.pushReplacement(context, AuthScreen());
+          // Hold a static reference to the current signed in user model.
+          UserModel.currentUser = user;
+          // Redirect to the home screen
+          return NavigationUtils.pushReplacement(context, HomeScreen());
         }
-      } else {
-        NavigationUtils.pushReplacement(context, AuthScreen());
       }
+      // If firebase has not yet authenticated or the user does not exist in
+      // firestore, redirect to auth screen
+      NavigationUtils.pushReplacement(context, AuthScreen());
     } else {
+      // If app has not yet finished on boarding, redirect to onboarding screen
       NavigationUtils.pushReplacement(context, OnBoardingScreen());
     }
   }

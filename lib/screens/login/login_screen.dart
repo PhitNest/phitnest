@@ -26,13 +26,12 @@ class _LoginScreen extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        systemOverlayStyle: DisplayUtils.isDarkMode(context)
+        systemOverlayStyle: DisplayUtils.isDarkMode
             ? SystemUiOverlayStyle.dark
             : SystemUiOverlayStyle.light,
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(
-            color:
-                DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black),
+            color: DisplayUtils.isDarkMode ? Colors.white : Colors.black),
         elevation: 0.0,
       ),
       body: Form(
@@ -169,9 +168,8 @@ class _LoginScreen extends State<LoginScreen> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: DisplayUtils.isDarkMode(context)
-                          ? Colors.black
-                          : Colors.white,
+                      color:
+                          DisplayUtils.isDarkMode ? Colors.black : Colors.white,
                     ),
                   ),
                   onPressed: () => _login(),
@@ -184,7 +182,7 @@ class _LoginScreen extends State<LoginScreen> {
                 child: Text(
                   'OR'.tr(),
                   style: TextStyle(
-                      color: DisplayUtils.isDarkMode(context)
+                      color: DisplayUtils.isDarkMode
                           ? Colors.white
                           : Colors.black),
                 ),
@@ -241,7 +239,7 @@ class _LoginScreen extends State<LoginScreen> {
                     child: apple.AppleSignInButton(
                       cornerRadius: 25.0,
                       type: apple.ButtonType.signIn,
-                      style: DisplayUtils.isDarkMode(context)
+                      style: DisplayUtils.isDarkMode
                           ? apple.ButtonStyle.white
                           : apple.ButtonStyle.black,
                       onPressed: () => loginWithApple(),
@@ -298,10 +296,9 @@ class _LoginScreen extends State<LoginScreen> {
       dynamic result = await FirebaseUtils.loginWithEmailAndPassword(
           email!.trim(), password!.trim(), currentLocation!);
       await DialogUtils.hideProgress();
-      if (result != null && result is User) {
-        User.currentUser = result;
-        NavigationUtils.pushAndRemoveUntil(
-            context, HomeScreen(user: result), false);
+      if (result != null && result is UserModel) {
+        UserModel.currentUser = result;
+        NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
       } else if (result != null && result is String) {
         DialogUtils.showAlertDialog(
             context, 'Couldn\'t Authenticate'.tr(), result);
@@ -326,10 +323,9 @@ class _LoginScreen extends State<LoginScreen> {
           context, 'Logging in, Please wait...'.tr(), false);
       dynamic result = await FirebaseUtils.loginWithFacebook();
       await DialogUtils.hideProgress();
-      if (result != null && result is User) {
-        User.currentUser = result;
-        NavigationUtils.pushAndRemoveUntil(
-            context, HomeScreen(user: result), false);
+      if (result != null && result is UserModel) {
+        UserModel.currentUser = result;
+        NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
       } else if (result != null && result is String) {
         DialogUtils.showAlertDialog(context, 'Error'.tr(), result.tr());
       } else {
@@ -350,10 +346,9 @@ class _LoginScreen extends State<LoginScreen> {
           context, 'Logging in, Please wait...'.tr(), false);
       dynamic result = await FirebaseUtils.loginWithApple();
       await DialogUtils.hideProgress();
-      if (result != null && result is User) {
-        User.currentUser = result;
-        NavigationUtils.pushAndRemoveUntil(
-            context, HomeScreen(user: result), false);
+      if (result != null && result is UserModel) {
+        UserModel.currentUser = result;
+        NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
       } else if (result != null && result is String) {
         DialogUtils.showAlertDialog(context, 'Error'.tr(), result.tr());
       } else {

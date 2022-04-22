@@ -10,7 +10,7 @@ import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
 
 class AccountDetailsScreen extends StatefulWidget {
-  final User user;
+  final UserModel user;
 
   AccountDetailsScreen({Key? key, required this.user}) : super(key: key);
 
@@ -21,7 +21,7 @@ class AccountDetailsScreen extends StatefulWidget {
 }
 
 class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
-  late User user;
+  late UserModel user;
   GlobalKey<FormState> _key = GlobalKey();
   AutovalidateMode _validate = AutovalidateMode.disabled;
   String? firstName, lastName, age, bio, school, email, mobile;
@@ -33,17 +33,17 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
   }
 
   Color _getBackgroundColor(BuildContext context) =>
-      DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white;
+      DisplayUtils.isDarkMode ? Colors.black : Colors.white;
 
   Color _getForegroundColor(BuildContext context) =>
-      DisplayUtils.isDarkMode(context) ? Colors.white : Colors.black;
+      DisplayUtils.isDarkMode ? Colors.white : Colors.black;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: _getBackgroundColor(context),
-          systemOverlayStyle: DisplayUtils.isDarkMode(context)
+          systemOverlayStyle: DisplayUtils.isDarkMode
               ? SystemUiOverlayStyle.dark
               : SystemUiOverlayStyle.light,
           centerTitle: true,
@@ -70,9 +70,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
               ),
               Material(
                   elevation: 2,
-                  color: DisplayUtils.isDarkMode(context)
-                      ? Colors.black12
-                      : Colors.white,
+                  color:
+                      DisplayUtils.isDarkMode ? Colors.black12 : Colors.white,
                   child: ListView(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -239,9 +238,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
               ),
               Material(
                 elevation: 2,
-                color: DisplayUtils.isDarkMode(context)
-                    ? Colors.black12
-                    : Colors.white,
+                color: DisplayUtils.isDarkMode ? Colors.black12 : Colors.white,
                 child: ListView(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -315,7 +312,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                         const BoxConstraints(minWidth: double.infinity),
                     child: Material(
                       elevation: 2,
-                      color: DisplayUtils.isDarkMode(context)
+                      color: DisplayUtils.isDarkMode
                           ? Colors.black12
                           : Colors.white,
                       child: CupertinoButton(
@@ -402,9 +399,9 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     user.school = school!;
     user.email = email!;
     user.phoneNumber = mobile!;
-    User? updatedUser = await FirebaseUtils.updateCurrentUser(user);
+    UserModel? updatedUser = await FirebaseUtils.updateCurrentUser(user);
     if (updatedUser != null) {
-      User.currentUser = user;
+      UserModel.currentUser = user;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

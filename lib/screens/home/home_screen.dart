@@ -12,9 +12,7 @@ import 'package:phitnest/screens/screens.dart';
 enum DrawerSelection { Conversations, Contacts, Search, Profile }
 
 class HomeScreen extends StatefulWidget {
-  final User user;
-
-  HomeScreen({Key? key, required this.user}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeState createState() {
@@ -23,17 +21,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeState extends State<HomeScreen> {
-  late User user;
+  late UserModel user;
   String _appBarTitle = 'Swipe'.tr();
   late Widget _currentWidget;
 
   @override
   void initState() {
     super.initState();
-    if (User.currentUser!.isVip) {
+    if (UserModel.currentUser!.isVip) {
       checkSubscription();
     }
-    user = widget.user;
+    user = UserModel.currentUser!;
     _currentWidget = SwipeScreen();
     FirebaseMessaging.instance.requestPermission(
       alert: true,
@@ -50,7 +48,7 @@ class _HomeState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: user,
-      child: Consumer<User>(
+      child: Consumer<UserModel>(
         builder: (context, user, _) {
           return Scaffold(
             appBar: AppBar(
@@ -100,7 +98,7 @@ class _HomeState extends State<HomeScreen> {
                 )
               ],
               backgroundColor: Colors.transparent,
-              systemOverlayStyle: DisplayUtils.isDarkMode(context)
+              systemOverlayStyle: DisplayUtils.isDarkMode
                   ? SystemUiOverlayStyle.dark
                   : SystemUiOverlayStyle.light,
               centerTitle: true,

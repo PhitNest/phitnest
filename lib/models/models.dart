@@ -11,3 +11,4 @@ export 'package:phitnest/models/purchase/purchase_model.dart';
 export 'package:phitnest/models/swipe/swipe_model.dart';
 export 'package:phitnest/models/swipeCounter/swipe_counter_model.dart';
 export 'package:phitnest/models/user/user_model.dart';
+export 'package:phitnest/models/onBoarding/on_boarding_model.dart';

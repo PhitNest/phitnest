@@ -11,7 +11,7 @@ import 'package:phitnest/screens/screens.dart';
 import 'package:phitnest/widgets/widgets.dart';
 
 class UserDetailsScreen extends StatefulWidget {
-  final User user;
+  final UserModel user;
   final bool isMatch;
 
   const UserDetailsScreen({Key? key, required this.user, required this.isMatch})
@@ -22,7 +22,7 @@ class UserDetailsScreen extends StatefulWidget {
 }
 
 class _UserDetailsScreenState extends State<UserDetailsScreen> {
-  late User user;
+  late UserModel user;
   List<String?> images = [];
   List _pages = [];
   PageController controller = PageController(
@@ -45,8 +45,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor:
-            DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white));
+        statusBarColor: DisplayUtils.isDarkMode ? Colors.black : Colors.white));
     _gridPages = _buildGridView();
     return SafeArea(
       child: Scaffold(
@@ -298,18 +297,14 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
               return Icon(
                 Icons.hourglass_empty,
                 size: 75,
-                color: DisplayUtils.isDarkMode(context)
-                    ? Colors.black
-                    : Colors.white,
+                color: DisplayUtils.isDarkMode ? Colors.black : Colors.white,
               );
             },
             errorWidget: (context, imageUrl, error) {
               return Icon(
                 Icons.error_outline,
                 size: 75,
-                color: DisplayUtils.isDarkMode(context)
-                    ? Colors.black
-                    : Colors.white,
+                color: DisplayUtils.isDarkMode ? Colors.black : Colors.white,
               );
             },
           ),
@@ -327,14 +322,14 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
         return Icon(
           Icons.hourglass_empty,
           size: 75,
-          color: DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white,
+          color: DisplayUtils.isDarkMode ? Colors.black : Colors.white,
         );
       },
       errorWidget: (context, imageUrl, error) {
         return Icon(
           Icons.error_outline,
           size: 75,
-          color: DisplayUtils.isDarkMode(context) ? Colors.black : Colors.white,
+          color: DisplayUtils.isDarkMode ? Colors.black : Colors.white,
         );
       },
     );
