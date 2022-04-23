@@ -12,6 +12,7 @@ import 'package:phitnest/models/models.dart';
 enum AuthProviders { PASSWORD, PHONE, FACEBOOK, APPLE }
 
 class ReAuthUserScreen extends StatefulWidget {
+  final UserModel user;
   final AuthProviders provider;
   final String? email;
   final String? phoneNumber;
@@ -19,6 +20,7 @@ class ReAuthUserScreen extends StatefulWidget {
 
   ReAuthUserScreen(
       {Key? key,
+      required this.user,
       required this.provider,
       this.email,
       this.phoneNumber,
@@ -210,7 +212,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
       try {
         auth.UserCredential? result = await FirebaseUtils.reAuthUser(
             widget.provider,
-            email: UserModel.currentUser!.email,
+            email: widget.user.email,
             password: _passwordController.text);
         if (result == null) {
           await DialogUtils.hideProgress();

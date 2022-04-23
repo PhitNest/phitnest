@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:phitnest/models/app/app_model.dart';
 import 'package:provider/provider.dart';
 
 import 'package:phitnest/constants/constants.dart';
@@ -12,7 +13,9 @@ import 'package:phitnest/screens/screens.dart';
 enum DrawerSelection { Conversations, Contacts, Search, Profile }
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  final UserModel user;
+
+  HomeScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   _HomeState createState() {
@@ -28,11 +31,14 @@ class _HomeState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    if (UserModel.currentUser!.isVip) {
+    user = widget.user;
+    Provider.of<AppModel>(context, listen: false).currentUser = user;
+
+    if (user.isVip) {
       checkSubscription();
     }
-    user = UserModel.currentUser!;
-    _currentWidget = SwipeScreen();
+
+    _currentWidget = SwipeScreen(user: user);
     FirebaseMessaging.instance.requestPermission(
       alert: true,
       announcement: false,
@@ -56,7 +62,7 @@ class _HomeState extends State<HomeScreen> {
                 onTap: () {
                   setState(() {
                     _appBarTitle = 'Swipe'.tr();
-                    _currentWidget = SwipeScreen();
+                    _currentWidget = SwipeScreen(user: user);
                   });
                 },
                 child: Image.asset(
@@ -113,7 +119,7 @@ class _HomeState extends State<HomeScreen> {
 
   void checkSubscription() async {
     await DialogUtils.showProgress(context, 'Loading...', false);
-    await FirebaseUtils.isSubscriptionActive();
+    await FirebaseUtils.isSubscriptionActive(user);
     await DialogUtils.hideProgress();
   }
 }

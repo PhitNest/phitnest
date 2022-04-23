@@ -376,8 +376,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
               _verificationID!, code, _phoneNumber!, signUpLocation!);
           await DialogUtils.hideProgress();
           if (result != null && result is UserModel) {
-            UserModel.currentUser = result;
-            NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
+            NavigationUtils.pushAndRemoveUntil(
+                context, HomeScreen(user: result), false);
           } else if (result != null && result is String) {
             DialogUtils.showAlertDialog(context, 'Failed'.tr(), result);
           } else {
@@ -575,8 +575,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
               await FirebaseUtils.loadUser(userCredential.user?.uid ?? '');
           if (user != null) {
             DialogUtils.hideProgress();
-            UserModel.currentUser = user;
-            NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
+            NavigationUtils.pushAndRemoveUntil(
+                context, HomeScreen(user: user), false);
           } else {
             /// create a new user from phone login
             UserModel user = UserModel(
@@ -601,8 +601,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                 await FirebaseUtils.firebaseCreateNewUser(user);
             DialogUtils.hideProgress();
             if (errorMessage == null) {
-              UserModel.currentUser = user;
-              NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
+              NavigationUtils.pushAndRemoveUntil(
+                  context, HomeScreen(user: user), false);
             } else {
               DialogUtils.showAlertDialog(context, 'Failed'.tr(),
                   'Couldn\'t create new user with phone number.'.tr());

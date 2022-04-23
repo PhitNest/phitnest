@@ -3,14 +3,20 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:phitnest/helpers/helpers.dart';
+import 'package:phitnest/models/user/user_model.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class UpgradeAccount extends StatefulWidget {
+  final UserModel user;
+
+  UpgradeAccount({Key? key, required this.user}) : super(key: key);
+
   @override
   _UpgradeAccountState createState() => _UpgradeAccountState();
 }
 
 class _UpgradeAccountState extends State<UpgradeAccount> {
+  late UserModel user;
   List<String> _notFoundIds = [];
   List<ProductDetails> _products = [];
   List<PurchaseDetails> _purchases = [];
@@ -25,6 +31,8 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
 
   @override
   void initState() {
+    user = widget.user;
+
     initStoreInfo();
     super.initState();
   }
@@ -331,7 +339,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
     if (purchase.status == PurchaseStatus.purchased) {
       await DialogUtils.showProgress(
           context, 'Processing purchase...'.tr(), false);
-      await FirebaseUtils.recordPurchase(purchase);
+      await FirebaseUtils.recordPurchase(user, purchase);
       await DialogUtils.hideProgress();
     }
   }

@@ -29,13 +29,13 @@ class _ConversationsState extends State<ConversationsScreen> {
   void initState() {
     super.initState();
     user = widget.user;
-    FirebaseUtils.getBlocks().listen((shouldRefresh) {
+    FirebaseUtils.getBlocks(user).listen((shouldRefresh) {
       if (shouldRefresh) {
         setState(() {});
       }
     });
     _matchesFuture = FirebaseUtils.getMatchedUserObject(user.userID);
-    _conversationsStream = FirebaseUtils.getConversations(user.userID);
+    _conversationsStream = FirebaseUtils.getConversations(user, user.userID);
   }
 
   @override
@@ -95,6 +95,7 @@ class _ConversationsState extends State<ConversationsScreen> {
                                   NavigationUtils.push(
                                       context,
                                       ChatScreen(
+                                          user: user,
                                           homeConversationModel:
                                               HomeConversationModel(
                                                   isGroupChat: false,
@@ -199,8 +200,11 @@ class _ConversationsState extends State<ConversationsScreen> {
             padding: const EdgeInsets.only(left: 16.0, bottom: 12.8),
             child: InkWell(
               onTap: () {
-                NavigationUtils.push(context,
-                    ChatScreen(homeConversationModel: homeConversationModel));
+                NavigationUtils.push(
+                    context,
+                    ChatScreen(
+                        user: user,
+                        homeConversationModel: homeConversationModel));
               },
               child: Row(
                 children: <Widget>[
@@ -252,8 +256,11 @@ class _ConversationsState extends State<ConversationsScreen> {
           )
         : InkWell(
             onTap: () {
-              NavigationUtils.push(context,
-                  ChatScreen(homeConversationModel: homeConversationModel));
+              NavigationUtils.push(
+                  context,
+                  ChatScreen(
+                      user: user,
+                      homeConversationModel: homeConversationModel));
             },
             child: Row(
               children: <Widget>[

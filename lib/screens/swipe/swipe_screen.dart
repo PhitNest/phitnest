@@ -12,11 +12,15 @@ import 'package:phitnest/screens/screens.dart';
 import 'package:phitnest/widgets/widgets.dart';
 
 class SwipeScreen extends StatefulWidget {
+  final UserModel user;
+
+  SwipeScreen({Key? key, required this.user}) : super(key: key);
   @override
   _SwipeScreenState createState() => _SwipeScreenState();
 }
 
 class _SwipeScreenState extends State<SwipeScreen> {
+  late UserModel user;
   late Stream<List<UserModel>> tinderUsers;
   List<UserModel> swipedUsers = [];
   List<UserModel> users = [];
@@ -25,6 +29,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
   @override
   void initState() {
     super.initState();
+    user = widget.user;
     _setupTinder();
   }
 
@@ -229,7 +234,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
     }
   }
 
-  _onCardSettingsClick(UserModel user) {
+  _onCardSettingsClick(UserModel other) {
     final action = CupertinoActionSheet(
       message: Text(
         user.fullName(),
@@ -241,10 +246,11 @@ class _SwipeScreenState extends State<SwipeScreen> {
           onPressed: () async {
             Navigator.pop(context);
             DialogUtils.showProgress(context, 'Blocking user...'.tr(), false);
-            bool isSuccessful = await FirebaseUtils.blockUser(user, 'block');
+            bool isSuccessful =
+                await FirebaseUtils.blockUser(user, other, 'block');
             DialogUtils.hideProgress();
             if (isSuccessful) {
-              await FirebaseUtils.onSwipeLeft(user);
+              await FirebaseUtils.onSwipeLeft(user, other);
               users.remove(user);
               FirebaseUtils.updateCardStream(users);
               ScaffoldMessenger.of(context).showSnackBar(
@@ -268,10 +274,11 @@ class _SwipeScreenState extends State<SwipeScreen> {
           onPressed: () async {
             Navigator.pop(context);
             DialogUtils.showProgress(context, 'Reporting user...'.tr(), false);
-            bool isSuccessful = await FirebaseUtils.blockUser(user, 'report');
+            bool isSuccessful =
+                await FirebaseUtils.blockUser(user, other, 'report');
             DialogUtils.hideProgress();
             if (isSuccessful) {
-              await FirebaseUtils.onSwipeLeft(user);
+              await FirebaseUtils.onSwipeLeft(user, other);
               users.removeWhere((element) => element.userID == user.userID);
               FirebaseUtils.updateCardStream(users);
               ScaffoldMessenger.of(context).showSnackBar(
@@ -305,11 +312,11 @@ class _SwipeScreenState extends State<SwipeScreen> {
   }
 
   _undo() async {
-    if (UserModel.currentUser!.isVip) {
+    if (user.isVip) {
       UserModel undoUser = swipedUsers.removeLast();
       users.insert(0, undoUser);
       FirebaseUtils.updateCardStream(users);
-      await FirebaseUtils.undo(undoUser);
+      await FirebaseUtils.undo(user, undoUser);
     } else {
       _showUpgradeAccountDialog();
     }
@@ -367,18 +374,18 @@ class _SwipeScreenState extends State<SwipeScreen> {
                       (CardSwipeOrientation orientation, int index) async {
                     if (orientation == CardSwipeOrientation.LEFT ||
                         orientation == CardSwipeOrientation.RIGHT) {
-                      bool isValidSwipe = UserModel.currentUser!.isVip
+                      bool isValidSwipe = user.isVip
                           ? true
-                          : await FirebaseUtils.incrementSwipe();
+                          : await FirebaseUtils.incrementSwipe(user);
                       if (isValidSwipe) {
                         if (orientation == CardSwipeOrientation.RIGHT) {
-                          UserModel? result =
-                              await FirebaseUtils.onSwipeRight(data[index]);
+                          UserModel? result = await FirebaseUtils.onSwipeRight(
+                              user, data[index]);
                           if (result != null) {
                             data.removeAt(index);
                             FirebaseUtils.updateCardStream(data);
-                            NavigationUtils.push(
-                                context, MatchScreen(matchedUser: result));
+                            NavigationUtils.push(context,
+                                MatchScreen(user: user, matchedUser: result));
                           } else {
                             swipedUsers.add(data[index]);
                             data.removeAt(index);
@@ -386,7 +393,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
                           }
                         } else if (orientation == CardSwipeOrientation.LEFT) {
                           swipedUsers.add(data[index]);
-                          await FirebaseUtils.onSwipeLeft(data[index]);
+                          await FirebaseUtils.onSwipeLeft(user, data[index]);
                           data.removeAt(index);
                           FirebaseUtils.updateCardStream(data);
                         }
@@ -479,7 +486,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
               ),
             ),
             builder: (context) {
-              return UpgradeAccount();
+              return UpgradeAccount(user: user);
             },
           );
         },
@@ -518,7 +525,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
               ),
             ),
             builder: (context) {
-              return UpgradeAccount();
+              return UpgradeAccount(user: user);
             },
           );
         },
@@ -542,7 +549,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
   }
 
   _setupTinder() async {
-    tinderUsers = FirebaseUtils.getTinderUsers();
-    await FirebaseUtils.matchChecker(context);
+    tinderUsers = FirebaseUtils.getTinderUsers(user);
+    await FirebaseUtils.matchChecker(user, context);
   }
 }

@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:phitnest/helpers/display/display_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:phitnest/constants/constants.dart';
@@ -47,10 +46,9 @@ class Redirector extends StatelessWidget {
           // their activity in firestore.
           user.active = true;
           await FirebaseUtils.updateCurrentUser(user);
-          // Hold a static reference to the current signed in user model.
-          UserModel.currentUser = user;
           // Redirect to the home screen
-          return NavigationUtils.pushReplacement(context, HomeScreen());
+          return NavigationUtils.pushReplacement(
+              context, HomeScreen(user: user));
         }
       }
       // If firebase has not yet authenticated or the user does not exist in

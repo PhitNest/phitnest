@@ -283,12 +283,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               user.settings.pushSuperLikesEnabled = superLikes;
                               user.settings.pushNewMatchesEnabled = newMatches;
                               user.settings.distanceRadius = radius;
-                              UserModel? updateUser =
+                              bool success =
                                   await FirebaseUtils.updateCurrentUser(user);
                               DialogUtils.hideProgress();
-                              if (updateUser != null) {
-                                this.user = updateUser;
-                                UserModel.currentUser = user;
+                              if (success) {
                                 ScaffoldMessenger.of(buildContext).showSnackBar(
                                   SnackBar(
                                     duration: Duration(seconds: 3),
