@@ -11,18 +11,28 @@ import 'package:phitnest/screens/screens.dart';
 
 class MatchScreen extends StatefulWidget {
   final UserModel matchedUser;
+  final UserModel user;
 
-  MatchScreen({Key? key, required this.matchedUser}) : super(key: key);
+  MatchScreen({Key? key, required this.user, required this.matchedUser})
+      : super(key: key);
 
   @override
   _MatchScreenState createState() => _MatchScreenState();
 }
 
 class _MatchScreenState extends State<MatchScreen> {
+  late UserModel user;
+
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    user = widget.user;
   }
 
   @override
@@ -87,20 +97,18 @@ class _MatchScreenState extends State<MatchScreen> {
                       ),
                       onPressed: () async {
                         String channelID;
-                        if (widget.matchedUser.userID
-                                .compareTo(UserModel.currentUser!.userID) <
+                        if (widget.matchedUser.userID.compareTo(user.userID) <
                             0) {
-                          channelID = widget.matchedUser.userID +
-                              UserModel.currentUser!.userID;
+                          channelID = widget.matchedUser.userID + user.userID;
                         } else {
-                          channelID = UserModel.currentUser!.userID +
-                              widget.matchedUser.userID;
+                          channelID = user.userID + widget.matchedUser.userID;
                         }
                         ConversationModel? conversationModel =
                             await FirebaseUtils.getChannelByIdOrNull(channelID);
                         NavigationUtils.pushReplacement(
                           context,
                           ChatScreen(
+                            user: user,
                             homeConversationModel: HomeConversationModel(
                                 isGroupChat: false,
                                 members: [widget.matchedUser],

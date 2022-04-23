@@ -7,6 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:phitnest/models/app/app_model.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'package:phitnest/constants/constants.dart';
@@ -155,7 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     builder: (context) {
-                      return UpgradeAccount();
+                      return UpgradeAccount(user: user);
                     },
                   );
                 },
@@ -226,6 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   bool? result = await showDialog(
                     context: context,
                     builder: (context) => ReAuthUserScreen(
+                      user: user,
                       provider: authProvider!,
                       email: auth.FirebaseAuth.instance.currentUser!.email,
                       phoneNumber:
@@ -236,9 +239,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   if (result != null && result) {
                     await DialogUtils.showProgress(
                         context, 'Deleting account...'.tr(), false);
-                    await FirebaseUtils.deleteUser();
+                    await FirebaseUtils.deleteUser(user);
                     await DialogUtils.hideProgress();
-                    UserModel.currentUser = null;
+                    Provider.of<AppModel>(context, listen: false).currentUser =
+                        null;
                     NavigationUtils.pushAndRemoveUntil(
                         context, AuthScreen(), false);
                   }
@@ -281,7 +285,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   user.lastOnlineTimestamp = Timestamp.now();
                   await FirebaseUtils.updateCurrentUser(user);
                   await auth.FirebaseAuth.instance.signOut();
-                  UserModel.currentUser = null;
+                  Provider.of<AppModel>(context, listen: false).currentUser =
+                      null;
                   NavigationUtils.pushAndRemoveUntil(
                       context, AuthScreen(), false);
                 },
@@ -311,7 +316,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               await FirebaseUtils.deleteImage(user.profilePictureURL);
             user.profilePictureURL = '';
             await FirebaseUtils.updateCurrentUser(user);
-            UserModel.currentUser = user;
             DialogUtils.hideProgress();
             setState(() {});
           },
@@ -356,7 +360,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     user.profilePictureURL =
         await FirebaseUtils.uploadUserImageToFireStorage(image, user.userID);
     await FirebaseUtils.updateCurrentUser(user);
-    UserModel.currentUser = user;
     DialogUtils.hideProgress();
   }
 
@@ -441,13 +444,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             images.remove(url);
             await FirebaseUtils.deleteImage(url);
             user.photos = images;
-            UserModel? newUser = await FirebaseUtils.updateCurrentUser(user);
-            UserModel.currentUser = newUser;
-            if (newUser != null) {
-              user = newUser;
-              images.add(null);
-              setState(() {});
-            }
+            await FirebaseUtils.updateCurrentUser(user);
+            images.add(null);
+            setState(() {});
           },
           child: Text('Remove Picture'.tr()),
           isDestructiveAction: true,
@@ -504,11 +503,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               images.removeLast();
               images.add(imageUrl.url);
               user.photos = images;
-              UserModel? newUser = await FirebaseUtils.updateCurrentUser(user);
-              if (newUser != null) {
-                UserModel.currentUser = newUser;
-                user = newUser;
-              }
+              await FirebaseUtils.updateCurrentUser(user);
               images.add(null);
               setState(() {});
             }
@@ -527,11 +522,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               images.removeLast();
               images.add(imageUrl.url);
               user.photos = images;
-              UserModel? newUser = await FirebaseUtils.updateCurrentUser(user);
-              if (newUser != null) {
-                UserModel.currentUser = newUser;
-                user = newUser;
-              }
+              await FirebaseUtils.updateCurrentUser(user);
               images.add(null);
               setState(() {});
             }

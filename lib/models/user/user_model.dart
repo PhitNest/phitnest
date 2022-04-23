@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class UserModel with ChangeNotifier {
-  static UserModel? currentUser;
-
   String email;
 
   String firstName;

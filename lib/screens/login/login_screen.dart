@@ -297,8 +297,8 @@ class _LoginScreen extends State<LoginScreen> {
           email!.trim(), password!.trim(), currentLocation!);
       await DialogUtils.hideProgress();
       if (result != null && result is UserModel) {
-        UserModel.currentUser = result;
-        NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
+        NavigationUtils.pushAndRemoveUntil(
+            context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
         DialogUtils.showAlertDialog(
             context, 'Couldn\'t Authenticate'.tr(), result);
@@ -324,8 +324,8 @@ class _LoginScreen extends State<LoginScreen> {
       dynamic result = await FirebaseUtils.loginWithFacebook();
       await DialogUtils.hideProgress();
       if (result != null && result is UserModel) {
-        UserModel.currentUser = result;
-        NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
+        NavigationUtils.pushAndRemoveUntil(
+            context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
         DialogUtils.showAlertDialog(context, 'Error'.tr(), result.tr());
       } else {
@@ -347,8 +347,8 @@ class _LoginScreen extends State<LoginScreen> {
       dynamic result = await FirebaseUtils.loginWithApple();
       await DialogUtils.hideProgress();
       if (result != null && result is UserModel) {
-        UserModel.currentUser = result;
-        NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
+        NavigationUtils.pushAndRemoveUntil(
+            context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
         DialogUtils.showAlertDialog(context, 'Error'.tr(), result.tr());
       } else {

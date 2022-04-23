@@ -22,8 +22,10 @@ enum RecordingState { HIDDEN, VISIBLE, Recording }
 
 class ChatScreen extends StatefulWidget {
   final HomeConversationModel homeConversationModel;
+  final UserModel user;
 
-  const ChatScreen({Key? key, required this.homeConversationModel})
+  const ChatScreen(
+      {Key? key, required this.user, required this.homeConversationModel})
       : super(key: key);
 
   @override
@@ -31,6 +33,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  late UserModel user;
   final ImagePicker _imagePicker = ImagePicker();
   late HomeConversationModel homeConversationModel;
   TextEditingController _messageController = TextEditingController();
@@ -49,6 +52,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    user = widget.user;
     homeConversationModel = widget.homeConversationModel;
     if (homeConversationModel.isGroupChat)
       _groupNameController.text =
@@ -62,7 +66,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   setupStream() {
-    chatStream = FirebaseUtils.getChatMessages(homeConversationModel)
+    chatStream = FirebaseUtils.getChatMessages(user, homeConversationModel)
         .asBroadcastStream();
     chatStream.listen((chatModel) {
       if (mounted) {
@@ -424,7 +428,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Navigator.pop(context);
             DialogUtils.showProgress(context, 'Leaving group chat'.tr(), false);
             bool isSuccessful = await FirebaseUtils.leaveGroup(
-                homeConversationModel.conversationModel!);
+                user, homeConversationModel.conversationModel!);
             DialogUtils.hideProgress();
             if (isSuccessful) {
               Navigator.pop(context);
@@ -537,7 +541,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget buildMessage(MessageData messageData, List<UserModel> members) {
-    if (messageData.senderID == UserModel.currentUser!.userID) {
+    if (messageData.senderID == user.userID) {
       return myMessageView(messageData);
     } else {
       return remoteMessageView(
@@ -955,7 +959,6 @@ class _ChatScreenState extends State<ChatScreen> {
     } else {
       String channelID;
       UserModel friend = homeConversationModel.members.first;
-      UserModel user = UserModel.currentUser!;
       if (friend.userID.compareTo(user.userID) < 0) {
         channelID = friend.userID + user.userID;
       } else {
@@ -969,7 +972,8 @@ class _ChatScreenState extends State<ChatScreen> {
           lastMessage: ''
                   '${user.fullName()} sent a message'
               .tr());
-      bool isSuccessful = await FirebaseUtils.createConversation(conversation);
+      bool isSuccessful =
+          await FirebaseUtils.createConversation(user, conversation);
       if (isSuccessful) {
         homeConversationModel.conversationModel = conversation;
         setupStream();
@@ -985,10 +989,10 @@ class _ChatScreenState extends State<ChatScreen> {
       message = MessageData(
           content: content,
           created: Timestamp.now(),
-          senderFirstName: UserModel.currentUser!.firstName,
-          senderID: UserModel.currentUser!.userID,
-          senderLastName: UserModel.currentUser!.lastName,
-          senderProfilePictureURL: UserModel.currentUser!.profilePictureURL,
+          senderFirstName: user.firstName,
+          senderID: user.userID,
+          senderLastName: user.lastName,
+          senderProfilePictureURL: user.profilePictureURL,
           url: url,
           videoThumbnail: videoThumbnail);
     } else {
@@ -1000,22 +1004,20 @@ class _ChatScreenState extends State<ChatScreen> {
           recipientLastName: homeConversationModel.members.first.lastName,
           recipientProfilePictureURL:
               homeConversationModel.members.first.profilePictureURL,
-          senderFirstName: UserModel.currentUser!.firstName,
-          senderID: UserModel.currentUser!.userID,
-          senderLastName: UserModel.currentUser!.lastName,
-          senderProfilePictureURL: UserModel.currentUser!.profilePictureURL,
+          senderFirstName: user.firstName,
+          senderID: user.userID,
+          senderLastName: user.lastName,
+          senderProfilePictureURL: user.profilePictureURL,
           url: url,
           videoThumbnail: videoThumbnail);
     }
     if (url != null) {
       if (url.mime.contains('image')) {
-        message.content =
-            '${UserModel.currentUser!.firstName} sent an image'.tr();
+        message.content = '${user.firstName} sent an image'.tr();
       } else if (url.mime.contains('video')) {
-        message.content =
-            '${UserModel.currentUser!.firstName} sent a video'.tr();
+        message.content = '${user.firstName} sent a video'.tr();
       } else if (url.mime.contains('audio')) {
-        message.content = '${UserModel.currentUser!.firstName} sent a voice '
+        message.content = '${user.firstName} sent a voice '
                 'message'
             .tr();
       }
@@ -1023,6 +1025,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (await _checkChannelNullability(
         homeConversationModel.conversationModel)) {
       await FirebaseUtils.sendMessage(
+          user,
           homeConversationModel.members,
           homeConversationModel.isGroupChat,
           message,
@@ -1133,7 +1136,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Navigator.pop(context);
             DialogUtils.showProgress(context, 'Blocking user...'.tr(), false);
             bool isSuccessful = await FirebaseUtils.blockUser(
-                homeConversationModel.members.first, 'block');
+                user, homeConversationModel.members.first, 'block');
             DialogUtils.hideProgress();
             if (isSuccessful) {
               Navigator.pop(context);
@@ -1158,7 +1161,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Navigator.pop(context);
             DialogUtils.showProgress(context, 'Reporting user...'.tr(), false);
             bool isSuccessful = await FirebaseUtils.blockUser(
-                homeConversationModel.members.first, 'report');
+                user, homeConversationModel.members.first, 'report');
             DialogUtils.hideProgress();
             if (isSuccessful) {
               Navigator.pop(context);
