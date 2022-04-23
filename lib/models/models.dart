@@ -1,4 +1,3 @@
-export 'package:phitnest/models/app/app_model.dart';
 export 'package:phitnest/models/blockUser/block_user_model.dart';
 export 'package:phitnest/models/channelParticipation/channel_participation_model.dart';
 export 'package:phitnest/models/chat/chat_model.dart';
