@@ -37,6 +37,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.initState();
   }
 
+  ListTile _buildListOption(
+      String text, String currentValue, Function() callback) {
+    Color color = DisplayUtils.isDarkMode ? Colors.white : Colors.black;
+    double fontSize = 17;
+    return ListTile(
+        title: Text(
+          text.tr(),
+          style: TextStyle(fontSize: fontSize, color: color),
+        ),
+        trailing: GestureDetector(
+          onTap: callback,
+          child: Text(
+            currentValue.tr(),
+            style: TextStyle(
+                fontSize: fontSize, color: color, fontWeight: FontWeight.bold),
+          ),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,72 +115,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 showMe = newValue;
                                 setState(() {});
                               }),
-                          ListTile(
-                            title: Text(
-                              'Distance Radius'.tr(),
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: DisplayUtils.isDarkMode
-                                    ? Colors.white
-                                    : Colors.black,
-                              ),
-                            ),
-                            trailing: GestureDetector(
-                              onTap: _onDistanceRadiusClick,
-                              child: Text(
-                                  radius.isNotEmpty
-                                      ? '$radius Miles'.tr()
-                                      : 'Unlimited'.tr(),
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      color: DisplayUtils.isDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                          ),
-                          ListTile(
-                            title: Text(
-                              'Gender'.tr(),
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: DisplayUtils.isDarkMode
-                                    ? Colors.white
-                                    : Colors.black,
-                              ),
-                            ),
-                            trailing: GestureDetector(
-                              onTap: _onGenderClick,
-                              child: Text('$gender'.tr(),
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      color: DisplayUtils.isDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                          ),
-                          ListTile(
-                            title: Text(
-                              'Gender Preference'.tr(),
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: DisplayUtils.isDarkMode
-                                    ? Colors.white
-                                    : Colors.black,
-                              ),
-                            ),
-                            trailing: GestureDetector(
-                              onTap: _onGenderPrefClick,
-                              child: Text('$prefGender'.tr(),
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      color: DisplayUtils.isDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                          )
+                          _buildListOption(
+                              'Distance Radius',
+                              radius.isNotEmpty ? '$radius Miles' : 'Unlimited',
+                              _onDistanceRadiusClick),
+                          _buildListOption('Gender', gender, _onGenderClick),
+                          _buildListOption('Gender Preference', prefGender,
+                              _onGenderPrefClick()),
                         ],
                       ),
                     ),
