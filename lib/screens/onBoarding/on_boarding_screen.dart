@@ -1,18 +1,19 @@
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'package:phitnest/constants/constants.dart';
 import 'package:phitnest/helpers/helpers.dart';
 import 'package:phitnest/screens/screens.dart';
-import 'package:phitnest/models/models.dart';
 
 /// This is a slide show shown on the first use of the app.
-class OnBoardingScreen extends StatelessWidget {
-  const OnBoardingScreen({Key? key}) : super(key: key);
+class OnBoardingScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _State();
+}
 
+class _State extends State<OnBoardingScreen> {
   ///list of strings containing onBoarding titles
   static const List<String> _titlesList = [
     'Get a Date',
@@ -38,75 +39,73 @@ class OnBoardingScreen extends StatelessWidget {
     Icons.notifications_none
   ];
 
+  final PageController _pageController = PageController();
+
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(COLOR_PRIMARY),
-        // Provide a change notifier for this model down the widget tree
-        body: ChangeNotifierProvider(
-            create: (context) => OnBoardingModel(),
-            builder: (context, child) => Consumer<OnBoardingModel>(
-                  // Build a stack on each change notification
-                  builder: (context, model, child) => Stack(
-                    children: <Widget>[
-                      PageView.builder(
-                        itemBuilder: (context, index) => getPage(index),
-                        controller: model.pageController,
-                        itemCount: _titlesList.length,
-                        onPageChanged: (int index) =>
-                            // Update the current page
-                            model.currentIndex = index,
-                      ),
-                      Visibility(
-                        // If this is the final page, show the continue button
-                        visible: model.currentIndex + 1 == _titlesList.length,
-                        child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Align(
-                              alignment: Directionality.of(context) ==
-                                      TextDirection.ltr
-                                  ? Alignment.bottomRight
-                                  : Alignment.bottomLeft,
-                              child: OutlinedButton(
-                                onPressed: () {
-                                  // Upon pressing continue, finish on boarding
-                                  setFinishedOnBoarding();
-                                  // Continue to the authentication screen
-                                  NavigationUtils.pushReplacement(
-                                      context, AuthScreen());
-                                },
-                                child: Text(
-                                  'Continue'.tr(),
-                                  style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                    side: BorderSide(color: Colors.white),
-                                    shape: StadiumBorder()),
-                              ),
-                            )),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 50.0),
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: SmoothPageIndicator(
-                            controller: model.pageController,
-                            count: _titlesList.length,
-                            effect: ScrollingDotsEffect(
-                                activeDotColor: Colors.white,
-                                dotColor: Colors.grey.shade400,
-                                dotWidth: 8,
-                                dotHeight: 8,
-                                fixedCenter: true),
-                          ),
-                        ),
-                      )
-                    ],
+      backgroundColor: Color(COLOR_PRIMARY),
+      // Provide a change notifier for this model down the widget tree
+      body: Stack(
+        children: <Widget>[
+          PageView.builder(
+            itemBuilder: (context, index) => getPage(index),
+            controller: _pageController,
+            itemCount: _titlesList.length,
+            onPageChanged: (int index) =>
+                // Update the current page
+                setState(() => _currentIndex = index),
+          ),
+          Visibility(
+            // If this is the final page, show the continue button
+            visible: _currentIndex + 1 == _titlesList.length,
+            child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Align(
+                  alignment: Directionality.of(context) == TextDirection.ltr
+                      ? Alignment.bottomRight
+                      : Alignment.bottomLeft,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      // Upon pressing continue, finish on boarding
+                      setFinishedOnBoarding();
+                      // Continue to the authentication screen
+                      NavigationUtils.pushReplacement(context, AuthScreen());
+                    },
+                    child: Text(
+                      'Continue'.tr(),
+                      style: TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: Colors.white),
+                        shape: StadiumBorder()),
                   ),
-                )));
+                )),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 50.0),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: SmoothPageIndicator(
+                controller: _pageController,
+                count: _titlesList.length,
+                effect: ScrollingDotsEffect(
+                    activeDotColor: Colors.white,
+                    dotColor: Colors.grey.shade400,
+                    dotWidth: 8,
+                    dotHeight: 8,
+                    fixedCenter: true),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   /// Get the proper page given page index.
