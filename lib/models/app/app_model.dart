@@ -33,6 +33,7 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Initializes the token stream
   void initializeTokenStream() {
     _tokenStream = FirebaseMessaging.instance.onTokenRefresh.listen((token) {
       if (currentUser != null) {
