@@ -121,7 +121,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               _onDistanceRadiusClick),
                           _buildListOption('Gender', gender, _onGenderClick),
                           _buildListOption('Gender Preference', prefGender,
-                              _onGenderPrefClick()),
+                              _onGenderPrefClick),
                         ],
                       ),
                     ),
