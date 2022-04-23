@@ -352,6 +352,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         result = await showDialog(
           context: context,
           builder: (context) => ReAuthUserScreen(
+            user: user,
             provider: authProvider!,
             phoneNumber: mobile,
             deleteUser: false,
@@ -368,6 +369,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         result = await showDialog(
           context: context,
           builder: (context) => ReAuthUserScreen(
+            user: user,
             provider: authProvider!,
             email: email,
             deleteUser: false,
@@ -399,9 +401,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     user.school = school!;
     user.email = email!;
     user.phoneNumber = mobile!;
-    UserModel? updatedUser = await FirebaseUtils.updateCurrentUser(user);
-    if (updatedUser != null) {
-      UserModel.currentUser = user;
+    if (await FirebaseUtils.updateCurrentUser(user)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
