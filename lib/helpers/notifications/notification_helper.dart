@@ -7,10 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/models/app/app_model.dart';
 import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
 import 'package:provider/provider.dart';
+
+import '../../app.dart';
 
 class NotificationUtils {
   static sendNotification(String token, String title, String body,

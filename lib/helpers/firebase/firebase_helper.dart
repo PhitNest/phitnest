@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -891,9 +891,8 @@ class FirebaseUtils {
 
   static handleFacebookLogin(
       Map<String, dynamic> userData, AccessToken token) async {
-    auth.UserCredential authResult = await auth.FirebaseAuth.instance
-        .signInWithCredential(
-            auth.FacebookAuthProvider.credential(token.token));
+    UserCredential authResult = await FirebaseAuth.instance
+        .signInWithCredential(FacebookAuthProvider.credential(token.token));
     UserModel? user = await loadUser(authResult.user?.uid ?? '');
     List<String> fullName = (userData['name'] as String).split(' ');
     String firstName = '';
@@ -943,8 +942,7 @@ class FirebaseUtils {
     }
 
     if (appleCredential.status == apple.AuthorizationStatus.authorized) {
-      final auth.AuthCredential credential =
-          auth.OAuthProvider('apple.com').credential(
+      final AuthCredential credential = OAuthProvider('apple.com').credential(
         accessToken: String.fromCharCodes(
             appleCredential.credential?.authorizationCode ?? []),
         idToken: String.fromCharCodes(
@@ -957,11 +955,11 @@ class FirebaseUtils {
   }
 
   static handleAppleLogin(
-    auth.AuthCredential credential,
+    AuthCredential credential,
     apple.AppleIdCredential appleIdCredential,
   ) async {
-    auth.UserCredential authResult =
-        await auth.FirebaseAuth.instance.signInWithCredential(credential);
+    UserCredential authResult =
+        await FirebaseAuth.instance.signInWithCredential(credential);
     UserModel? user = await loadUser(authResult.user?.uid ?? '');
     if (user != null) {
       user.active = true;
@@ -1008,7 +1006,7 @@ class FirebaseUtils {
   static Future<dynamic> loginWithEmailAndPassword(
       String email, String password, Position currentLocation) async {
     try {
-      auth.UserCredential result = await auth.FirebaseAuth.instance
+      UserCredential result = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
           await _firestore.collection(USERS).doc(result.user?.uid ?? '').get();
@@ -1022,7 +1020,7 @@ class FirebaseUtils {
         await updateCurrentUser(user);
       }
       return user;
-    } on auth.FirebaseAuthException catch (exception, s) {
+    } on FirebaseAuthException catch (exception, s) {
       print(exception.toString() + '$s');
       switch ((exception).code) {
         case 'invalid-email':
@@ -1047,12 +1045,12 @@ class FirebaseUtils {
   ///be used later to login
   static firebaseSubmitPhoneNumber(
     String phoneNumber,
-    auth.PhoneCodeAutoRetrievalTimeout? phoneCodeAutoRetrievalTimeout,
-    auth.PhoneCodeSent? phoneCodeSent,
-    auth.PhoneVerificationFailed? phoneVerificationFailed,
-    auth.PhoneVerificationCompleted? phoneVerificationCompleted,
+    PhoneCodeAutoRetrievalTimeout? phoneCodeAutoRetrievalTimeout,
+    PhoneCodeSent? phoneCodeSent,
+    PhoneVerificationFailed? phoneVerificationFailed,
+    PhoneVerificationCompleted? phoneVerificationCompleted,
   ) {
-    auth.FirebaseAuth.instance.verifyPhoneNumber(
+    FirebaseAuth.instance.verifyPhoneNumber(
       timeout: Duration(minutes: 2),
       phoneNumber: phoneNumber,
       verificationCompleted: phoneVerificationCompleted!,
@@ -1069,10 +1067,10 @@ class FirebaseUtils {
       {String firstName = 'Anonymous',
       String lastName = 'UserModel',
       File? image}) async {
-    auth.AuthCredential authCredential = auth.PhoneAuthProvider.credential(
+    AuthCredential authCredential = PhoneAuthProvider.credential(
         verificationId: verificationID, smsCode: code);
-    auth.UserCredential userCredential =
-        await auth.FirebaseAuth.instance.signInWithCredential(authCredential);
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithCredential(authCredential);
     UserModel? user = await loadUser(userCredential.user?.uid ?? '');
     if (user != null) {
       return user;
@@ -1152,7 +1150,7 @@ class FirebaseUtils {
       Position locationData,
       String mobile) async {
     try {
-      auth.UserCredential result = await auth.FirebaseAuth.instance
+      UserCredential result = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: emailAddress, password: password);
       String profilePicUrl = '';
@@ -1190,7 +1188,7 @@ class FirebaseUtils {
       } else {
         return 'Couldn\'t sign up for firebase, Please try again.'.tr();
       }
-    } on auth.FirebaseAuthException catch (error) {
+    } on FirebaseAuthException catch (error) {
       print(error.toString() + '${error.stackTrace}');
       String message = 'Couldn\'t sign up'.tr();
       switch (error.code) {
@@ -1216,28 +1214,28 @@ class FirebaseUtils {
     }
   }
 
-  static Future<auth.UserCredential?> reAuthUser(AuthProviders provider,
+  static Future<UserCredential?> reAuthUser(AuthProviders provider,
       {String? email,
       String? password,
       String? smsCode,
       String? verificationId,
       AccessToken? accessToken,
       apple.AuthorizationResult? appleCredential}) async {
-    late auth.AuthCredential credential;
+    late AuthCredential credential;
     switch (provider) {
       case AuthProviders.PASSWORD:
-        credential = auth.EmailAuthProvider.credential(
-            email: email!, password: password!);
+        credential =
+            EmailAuthProvider.credential(email: email!, password: password!);
         break;
       case AuthProviders.PHONE:
-        credential = auth.PhoneAuthProvider.credential(
+        credential = PhoneAuthProvider.credential(
             smsCode: smsCode!, verificationId: verificationId!);
         break;
       case AuthProviders.FACEBOOK:
-        credential = auth.FacebookAuthProvider.credential(accessToken!.token);
+        credential = FacebookAuthProvider.credential(accessToken!.token);
         break;
       case AuthProviders.APPLE:
-        credential = auth.OAuthProvider('apple.com').credential(
+        credential = OAuthProvider('apple.com').credential(
           accessToken: String.fromCharCodes(
               appleCredential!.credential?.authorizationCode ?? []),
           idToken: String.fromCharCodes(
@@ -1245,13 +1243,12 @@ class FirebaseUtils {
         );
         break;
     }
-    return await auth.FirebaseAuth.instance.currentUser!
+    return await FirebaseAuth.instance.currentUser!
         .reauthenticateWithCredential(credential);
   }
 
   static resetPassword(String emailAddress) async =>
-      await auth.FirebaseAuth.instance
-          .sendPasswordResetEmail(email: emailAddress);
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: emailAddress);
 
   static deleteUser(UserModel user) async {
     try {
@@ -1317,11 +1314,11 @@ class FirebaseUtils {
       // delete user records from users table
       await _firestore
           .collection(USERS)
-          .doc(auth.FirebaseAuth.instance.currentUser!.uid)
+          .doc(FirebaseAuth.instance.currentUser!.uid)
           .delete();
 
       // delete user  from firebase auth
-      await auth.FirebaseAuth.instance.currentUser!.delete();
+      await FirebaseAuth.instance.currentUser!.delete();
     } catch (e, s) {
       print('FireStoreUtils.deleteUser $e $s');
     }
