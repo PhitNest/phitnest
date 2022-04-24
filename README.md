@@ -20,35 +20,8 @@
 ```
 rules_version = '2';
 service cloud.firestore {
-  match /databases/{database}/documents {
+  match /databases/{database}/documents/{document=**} {
     allow read, write: if request.auth != null;
-
-    match /users/{userId} {
-      allow read, write: if request.auth.uid == userId;
-      allow read: if resource.data.showMe;
-    }
-    
-    match /swipes/{swipeId=**} {
-    	allow read: if request.auth.uid == resource.data.user1 || 
-      	  request.auth.uid == resource.data.user2;
-    }
-    
-    match /channel_participation/{docId} {
-    	allow read: if request.auth.uid == resource.data.user;
-    }
-    
-    match /reports/{reportId} {
-    	allow read: if request.auth.uid == resource.data.source ||
-          request.auth.uid == resource.data.dest;
-    }
-    
-    match /subscriptions/{userId} {
-    	allow delete: if request.auth.uid == userId;
-    }
-    
-    match /swipe_counts/{userId} {
-    	allow delete: if request.auth.uid == userId;
-    }
   }
 }
 ```
