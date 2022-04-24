@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:phitnest/constants/constants.dart';
 
+/// This class is used to show modular dialog boxes
 class DialogUtils {
   //helper method to show progress
   static late ProgressDialog progressDialog;

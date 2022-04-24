@@ -9,7 +9,7 @@ export 'home/home_screen.dart';
 export 'login/login_screen.dart';
 export 'match/match_screen.dart';
 export 'onBoarding/on_boarding_screen.dart';
-export 'phoneAuth/phone_number_input_screen.dart';
+export 'phoneAuth/phone_auth_screen.dart';
 export 'profile/profile_screen.dart';
 export 'reauthScreen/reauth_user_screen.dart';
 export 'resetPassword/reset_password_screen.dart';
