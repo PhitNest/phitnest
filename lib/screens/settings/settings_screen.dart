@@ -3,9 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helpers.dart';
-import 'package:phitnest/models/models.dart';
+import '../../app.dart';
 
 class SettingsScreen extends StatefulWidget {
   final UserModel user;
@@ -245,7 +243,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               user.settings.distanceRadius = radius;
                               bool success =
                                   await FirebaseUtils.updateCurrentUser(user);
-                              DialogUtils.hideProgress();
+                              await DialogUtils.hideProgress();
                               if (success) {
                                 ScaffoldMessenger.of(buildContext).showSnackBar(
                                   SnackBar(

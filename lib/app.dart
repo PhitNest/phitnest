@@ -10,8 +10,14 @@ import 'package:provider/provider.dart';
 
 import 'constants/constants.dart';
 import 'helpers/helpers.dart';
-import 'models/user/user_model.dart';
-import 'screens/redirector/redirector_screen.dart';
+import 'models/models.dart';
+import 'screens/screens.dart';
+
+export 'constants/constants.dart';
+export 'helpers/helpers.dart';
+export 'models/models.dart';
+export 'screens/screens.dart';
+export 'widgets/widgets.dart';
 
 class AppModel {
   /// this key is used to navigate to the appropriate screen when the

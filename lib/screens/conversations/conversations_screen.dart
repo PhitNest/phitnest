@@ -4,10 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants/constants.dart';
-import '../../helpers/helpers.dart';
-import '../../models/models.dart';
-import '../screens.dart';
+import '../../app.dart';
 import 'provider/conversations_provider.dart';
 
 class ConversationsScreen extends StatelessWidget {

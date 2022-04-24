@@ -3,19 +3,12 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helpers.dart';
-import 'package:phitnest/models/models.dart';
-import 'package:phitnest/screens/screens.dart';
 
 import '../../app.dart';
 
@@ -209,10 +202,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 dense: true,
                 onTap: () async {
                   AuthProviders? authProvider;
-                  List<auth.UserInfo> userInfoList =
-                      auth.FirebaseAuth.instance.currentUser?.providerData ??
-                          [];
-                  await Future.forEach(userInfoList, (auth.UserInfo info) {
+                  List<UserInfo> userInfoList =
+                      FirebaseAuth.instance.currentUser?.providerData ?? [];
+                  await Future.forEach(userInfoList, (UserInfo info) {
                     switch (info.providerId) {
                       case 'password':
                         authProvider = AuthProviders.PASSWORD;
@@ -233,9 +225,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     builder: (context) => ReAuthUserScreen(
                       user: user,
                       provider: authProvider!,
-                      email: auth.FirebaseAuth.instance.currentUser!.email,
+                      email: FirebaseAuth.instance.currentUser!.email,
                       phoneNumber:
-                          auth.FirebaseAuth.instance.currentUser!.phoneNumber,
+                          FirebaseAuth.instance.currentUser!.phoneNumber,
                       deleteUser: true,
                     ),
                   );
@@ -288,7 +280,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   user.lastOnlineTimestamp = Timestamp.now();
                   await FirebaseUtils.updateCurrentUser(user);
                   await FirebaseFirestore.instance.terminate();
-                  await auth.FirebaseAuth.instance.signOut();
+                  await FirebaseAuth.instance.signOut();
                   Provider.of<AppModel>(context, listen: false).currentUser =
                       null;
                   NavigationUtils.pushAndRemoveUntil(
