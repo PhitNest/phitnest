@@ -2,10 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../constants/constants.dart';
-import '../../helpers/helpers.dart';
-import '../../models/models.dart';
-import '../screens.dart';
+import '../../app.dart';
 
 /// This class will route the user to the proper page when the app is loaded.
 class RedirectorScreen extends StatelessWidget {

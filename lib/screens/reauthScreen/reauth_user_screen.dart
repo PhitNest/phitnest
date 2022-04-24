@@ -1,13 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helpers.dart';
-import 'package:phitnest/models/models.dart';
+import '../../app.dart';
 
 enum AuthProviders { PASSWORD, PHONE, FACEBOOK, APPLE }
 
@@ -210,10 +208,8 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
     } else {
       await DialogUtils.showProgress(context, 'Verifying...'.tr(), false);
       try {
-        auth.UserCredential? result = await FirebaseUtils.reAuthUser(
-            widget.provider,
-            email: widget.user.email,
-            password: _passwordController.text);
+        UserCredential? result = await FirebaseUtils.reAuthUser(widget.provider,
+            email: widget.user.email, password: _passwordController.text);
         if (result == null) {
           await DialogUtils.hideProgress();
           DialogUtils.showAlertDialog(context, 'Couldn\'t verify'.tr(),
@@ -327,7 +323,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
           _verificationID = verificationId;
         }
       },
-      (auth.FirebaseAuthException error) async {
+      (FirebaseAuthException error) async {
         if (mounted) {
           await DialogUtils.hideProgress();
           print('${error.message} ${error.stackTrace}');
@@ -353,7 +349,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
           Navigator.pop(context);
         }
       },
-      (auth.PhoneAuthCredential credential) async {
+      (PhoneAuthCredential credential) async {
         print('_ReAuthUserScreenState._submitPhoneNumber');
       },
     );
@@ -367,10 +363,9 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
           await FirebaseUtils.reAuthUser(widget.provider,
               verificationId: _verificationID!, smsCode: code);
         } else {
-          auth.PhoneAuthCredential credential =
-              auth.PhoneAuthProvider.credential(
-                  smsCode: code, verificationId: _verificationID!);
-          await auth.FirebaseAuth.instance.currentUser!
+          PhoneAuthCredential credential = PhoneAuthProvider.credential(
+              smsCode: code, verificationId: _verificationID!);
+          await FirebaseAuth.instance.currentUser!
               .updatePhoneNumber(credential);
         }
         await DialogUtils.hideProgress();
@@ -385,7 +380,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
           ),
         );
       }
-    } on auth.FirebaseAuthException catch (exception) {
+    } on FirebaseAuthException catch (exception) {
       print('_ReAuthUserScreenState._submitCode ${exception.toString()}');
       await DialogUtils.hideProgress();
       Navigator.pop(context);

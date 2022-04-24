@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helpers.dart';
-import 'package:phitnest/screens/screens.dart';
+import '../../app.dart';
 
 /// This is a slide show shown on the first use of the app.
 class OnBoardingScreen extends StatefulWidget {

@@ -6,11 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../constants/constants.dart';
-import '../../helpers/helpers.dart';
-import '../../models/models.dart';
+import '../../app.dart';
 import 'provider/sign_up_provider.dart';
-import '../screens.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -421,7 +418,7 @@ class SignUpScreen extends StatelessWidget {
         ),
         InkWell(
           onTap: () {
-            NavigationUtils.push(context, PhoneNumberInputScreen(login: false));
+            NavigationUtils.push(context, PhoneAuthScreen(login: false));
           },
           child: Text(
             'Sign up with phone number'.tr(),

@@ -11,24 +11,20 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helpers.dart';
-import 'package:phitnest/models/models.dart';
-import 'package:phitnest/screens/screens.dart';
+import '../../app.dart';
 
 File? _image;
 
-class PhoneNumberInputScreen extends StatefulWidget {
+class PhoneAuthScreen extends StatefulWidget {
   final bool login;
 
-  const PhoneNumberInputScreen({Key? key, required this.login})
-      : super(key: key);
+  const PhoneAuthScreen({Key? key, required this.login}) : super(key: key);
 
   @override
-  _PhoneNumberInputScreenState createState() => _PhoneNumberInputScreenState();
+  _PhoneAuthScreenState createState() => _PhoneAuthScreenState();
 }
 
-class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
+class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   final ImagePicker _imagePicker = ImagePicker();
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
