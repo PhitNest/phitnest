@@ -1,83 +1,93 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:display/display.dart' as DisplayUtils;
 
-import 'ui/screens/providers.dart';
+import 'package:provider/provider.dart';
+
 import 'constants/constants.dart';
+import 'helpers/helpers.dart';
+import 'models/user/user_model.dart';
+import 'screens/redirector/redirector_screen.dart';
 
-/// Base MaterialApp widget
-class PhitnestApp extends StatefulWidget {
-  const PhitnestApp({Key? key}) : super(key: key);
-
-  @override
-  _PhitnestAppState createState() => _PhitnestAppState();
-}
-
-class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
-  /// This key is used to navigate to the appropriate screen when the
+class AppModel extends ChangeNotifier {
+  /// this key is used to navigate to the appropriate screen when the
   /// notification is clicked from the system tray.
-  final GlobalKey<NavigatorState> _navigatorKey =
+  final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey(debugLabel: 'Main Navigator');
 
-  @override
-  void initState() {
-    WidgetsBinding.instance?.addObserver(this);
-    super.initState();
+  /// This is a token stream for firebase messaging. It is updated with calls to
+  /// [updateLifeCycleState]
+  late final StreamSubscription<String> _tokenStream;
+
+  /// This is the current signed in user.
+  UserModel? currentUser;
+
+  AppModel() : super() {
+    _tokenStream = FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+      if (currentUser != null) {
+        currentUser!.fcmToken = token;
+        FirebaseUtils.updateCurrentUser(currentUser!);
+      }
+    });
   }
 
-  /// Used to generate a material page route for a given view.
-  generateRoute(Widget view) => MaterialPageRoute(builder: (_) => view);
+  void updateLifeCycleState(AppLifecycleState state) {
+    UserModel? user = currentUser;
+    if (FirebaseAuth.instance.currentUser != null && user != null) {
+      if (state == AppLifecycleState.paused) {
+        //user offline
+        _tokenStream.pause();
+        user.active = false;
+        user.lastOnlineTimestamp = Timestamp.now();
+        FirebaseUtils.updateCurrentUser(user);
+      } else if (state == AppLifecycleState.resumed) {
+        //user online
+        _tokenStream.resume();
+        user.active = true;
+        FirebaseUtils.updateCurrentUser(user);
+      }
+    }
+  }
+}
+
+class App extends StatelessWidget with WidgetsBindingObserver {
+  final AppModel model = AppModel();
 
   @override
   Widget build(BuildContext context) {
-    // Initialize dark mode settings
-    DisplayUtils.initialize(
-        darkMode: Theme.of(context).brightness == Brightness.dark,
-        primary: Color(COLOR_PRIMARY),
-        accent: Color(COLOR_ACCENT),
-        error: Theme.of(context).errorColor);
-
-    return MaterialApp(
-      navigatorKey: _navigatorKey,
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      title: 'Phitnest',
-      theme: ThemeData(
-          bottomSheetTheme: BottomSheetThemeData(
-              backgroundColor: Colors.white.withOpacity(.9)),
-          brightness: Brightness.light),
-      darkTheme: ThemeData(
-          bottomSheetTheme: BottomSheetThemeData(
-              backgroundColor: Colors.black12.withOpacity(.3)),
-          brightness: Brightness.dark),
-      debugShowCheckedModeBanner: false,
-      color: Color(COLOR_PRIMARY),
-      initialRoute: '/',
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case '/profile':
-            return generateRoute(const ProfileProvider());
-          case '/home':
-            return generateRoute(const HomeProvider());
-          case '/resetPassword':
-          case '/mobileAuth':
-          case '/login':
-            return generateRoute(const LoginProvider());
-          case '/signup':
-            return generateRoute(const SignupProvider());
-          case '/auth':
-            return generateRoute(const AuthProvider());
-          default:
-            return generateRoute(const OnBoardingProvider());
-        }
-      },
-    );
+    // Store theme setting for frequent use.
+    DisplayUtils.isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    WidgetsBinding.instance?.addObserver(this);
+    return ChangeNotifierProvider.value(
+        value: model,
+        child: MaterialApp(
+            navigatorKey: model.navigatorKey,
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+            title: 'Phitnest',
+            theme: ThemeData(
+                bottomSheetTheme: BottomSheetThemeData(
+                    backgroundColor: Colors.white.withOpacity(.9)),
+                colorScheme: ColorScheme.light(secondary: Color(COLOR_PRIMARY)),
+                brightness: Brightness.light),
+            darkTheme: ThemeData(
+                bottomSheetTheme: BottomSheetThemeData(
+                    backgroundColor: Colors.black12.withOpacity(.3)),
+                colorScheme: ColorScheme.dark(secondary: Color(COLOR_PRIMARY)),
+                brightness: Brightness.dark),
+            debugShowCheckedModeBanner: false,
+            color: Color(COLOR_PRIMARY),
+            // The redirector will route the user to the proper page
+            home: const RedirectorScreen()));
   }
 
   @override
-  void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
-    super.dispose();
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    model.updateLifeCycleState(state);
   }
 }

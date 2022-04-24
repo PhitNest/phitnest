@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:phitnest/models/app/app_model.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -15,6 +14,8 @@ import 'package:phitnest/constants/constants.dart';
 import 'package:phitnest/helpers/helpers.dart';
 import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
+
+import '../../app.dart';
 
 class ProfileScreen extends StatefulWidget {
   final UserModel user;

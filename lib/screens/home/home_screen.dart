@@ -2,13 +2,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:phitnest/models/app/app_model.dart';
 import 'package:provider/provider.dart';
 
 import 'package:phitnest/constants/constants.dart';
 import 'package:phitnest/helpers/helpers.dart';
 import 'package:phitnest/models/models.dart';
 import 'package:phitnest/screens/screens.dart';
+
+import '../../app.dart';
 
 enum DrawerSelection { Conversations, Contacts, Search, Profile }
 
