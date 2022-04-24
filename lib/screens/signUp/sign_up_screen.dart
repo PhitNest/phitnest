@@ -5,12 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 import '../../constants/constants.dart';
 import '../../helpers/helpers.dart';
 import '../../models/models.dart';
-import '../../providers/signUpScreen/sign_up_model.dart';
+import 'provider/sign_up_provider.dart';
 import '../screens.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -18,39 +17,36 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => SignUpScreenModel(),
-        child: Consumer<SignUpScreenModel>(
-            builder: ((context, SignUpScreenModel model, child) {
-          if (Platform.isAndroid) {
-            retrieveLostData(context, model);
-          }
-          return Scaffold(
-            appBar: AppBar(
-              systemOverlayStyle: DisplayUtils.isDarkMode
-                  ? SystemUiOverlayStyle.dark
-                  : SystemUiOverlayStyle.light,
-              elevation: 0.0,
-              backgroundColor: Colors.transparent,
-              iconTheme: IconThemeData(
-                  color: DisplayUtils.isDarkMode ? Colors.white : Colors.black),
+    return SignUpScreenProvider(builder: (context, state, child) {
+      if (Platform.isAndroid) {
+        _retrieveLostData(context, state);
+      }
+      return Scaffold(
+        appBar: AppBar(
+          systemOverlayStyle: DisplayUtils.isDarkMode
+              ? SystemUiOverlayStyle.dark
+              : SystemUiOverlayStyle.light,
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          iconTheme: IconThemeData(
+              color: DisplayUtils.isDarkMode ? Colors.white : Colors.black),
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.only(left: 16.0, right: 16, bottom: 16),
+            child: Form(
+              key: state.key,
+              autovalidateMode: state.validate,
+              child: _formUI(context, state),
             ),
-            body: SingleChildScrollView(
-              child: Container(
-                margin: EdgeInsets.only(left: 16.0, right: 16, bottom: 16),
-                child: Form(
-                  key: model.key,
-                  autovalidateMode: model.validate,
-                  child: formUI(context, model),
-                ),
-              ),
-            ),
-          );
-        })));
+          ),
+        ),
+      );
+    });
   }
 
-  Future<void> retrieveLostData(
-      BuildContext context, SignUpScreenModel model) async {
+  Future<void> _retrieveLostData(
+      BuildContext context, ScreenState model) async {
     final LostDataResponse? response =
         await model.imagePicker.retrieveLostData();
     if (response == null) {
@@ -61,7 +57,7 @@ class SignUpScreen extends StatelessWidget {
     }
   }
 
-  _onCameraClick(BuildContext context, SignUpScreenModel model) {
+  _onCameraClick(BuildContext context, ScreenState model) {
     final action = CupertinoActionSheet(
       message: Text(
         'Add profile picture'.tr(),
@@ -99,7 +95,7 @@ class SignUpScreen extends StatelessWidget {
     showCupertinoModalPopup(context: context, builder: (context) => action);
   }
 
-  Widget formUI(BuildContext context, SignUpScreenModel model) {
+  Widget _formUI(BuildContext context, ScreenState model) {
     return Column(
       children: <Widget>[
         Align(
@@ -440,29 +436,28 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  _signUp(BuildContext context, SignUpScreenModel model) async {
-    if (model.key.currentState?.validate() ?? false) {
-      model.key.currentState!.save();
-      await _signUpWithEmailAndPassword(context, model);
+  _signUp(BuildContext context, ScreenState state) async {
+    if (state.key.currentState?.validate() ?? false) {
+      state.key.currentState!.save();
+      await _signUpWithEmailAndPassword(context, state);
     } else {
-      model.validate = AutovalidateMode.onUserInteraction;
+      state.validate = AutovalidateMode.onUserInteraction;
     }
   }
 
-  _signUpWithEmailAndPassword(
-      BuildContext context, SignUpScreenModel model) async {
+  _signUpWithEmailAndPassword(BuildContext context, ScreenState state) async {
     await DialogUtils.showProgress(
         context, 'Creating new account, Please wait...'.tr(), false);
-    model.signUpLocation = await LocationUtils.getCurrentLocation();
-    if (model.signUpLocation != null) {
+    state.signUpLocation = await LocationUtils.getCurrentLocation();
+    if (state.signUpLocation != null) {
       dynamic result = await FirebaseUtils.firebaseSignUpWithEmailAndPassword(
-          model.email!.trim(),
-          model.password!.trim(),
-          model.image,
-          model.firstName!,
-          model.lastName!,
-          model.signUpLocation!,
-          model.mobile!);
+          state.email!.trim(),
+          state.password!.trim(),
+          state.image,
+          state.firstName!,
+          state.lastName!,
+          state.signUpLocation!,
+          state.mobile!);
       await DialogUtils.hideProgress();
       if (result != null && result is UserModel) {
         NavigationUtils.pushAndRemoveUntil(

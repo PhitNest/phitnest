@@ -1,45 +1,27 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:phitnest/screens/home/provider/home_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helpers.dart';
-import 'package:phitnest/models/models.dart';
-import 'package:phitnest/screens/screens.dart';
-
 import '../../app.dart';
+import '../../constants/constants.dart';
+import '../../helpers/helpers.dart';
+import '../../models/models.dart';
 
-enum DrawerSelection { Conversations, Contacts, Search, Profile }
-
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   final UserModel user;
 
   HomeScreen({Key? key, required this.user}) : super(key: key);
 
   @override
-  _HomeState createState() {
-    return _HomeState();
-  }
-}
-
-class _HomeState extends State<HomeScreen> {
-  late UserModel user;
-  String _appBarTitle = 'Swipe'.tr();
-  late Widget _currentWidget;
-
-  @override
-  void initState() {
-    super.initState();
-    user = widget.user;
+  Widget build(BuildContext context) {
     Provider.of<AppModel>(context, listen: false).currentUser = user;
 
     if (user.isVip) {
-      checkSubscription();
+      checkSubscription(context);
     }
 
-    _currentWidget = SwipeScreen(user: user);
     FirebaseMessaging.instance.requestPermission(
       alert: true,
       announcement: false,
@@ -49,69 +31,56 @@ class _HomeState extends State<HomeScreen> {
       provisional: false,
       sound: true,
     );
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: GestureDetector(
-          onTap: () {
-            setState(() {
-              _appBarTitle = 'Swipe'.tr();
-              _currentWidget = SwipeScreen(user: user);
-            });
-          },
-          child: Image.asset(
-            'assets/images/app_logo.png',
-            width: _appBarTitle == 'Swipe'.tr() ? 40 : 24,
-            height: _appBarTitle == 'Swipe'.tr() ? 40 : 24,
-            color: _appBarTitle == 'Swipe'.tr()
-                ? Color(COLOR_PRIMARY)
-                : Colors.grey,
-          ),
-        ),
-        leading: IconButton(
-            icon: Icon(
-              Icons.person,
-              color: _appBarTitle == 'Profile'.tr()
-                  ? Color(COLOR_PRIMARY)
-                  : Colors.grey,
+    return HomeScreenProvider(
+        user: user,
+        builder: (context, state, child) {
+          return Scaffold(
+            appBar: AppBar(
+              title: GestureDetector(
+                onTap: () => state.selection = Selection.Swipe,
+                child: Image.asset(
+                  'assets/images/app_logo.png',
+                  width: state.selection == Selection.Swipe ? 40 : 24,
+                  height: state.selection == Selection.Swipe ? 40 : 24,
+                  color: state.selection == Selection.Swipe
+                      ? Color(COLOR_PRIMARY)
+                      : Colors.grey,
+                ),
+              ),
+              leading: IconButton(
+                  icon: Icon(
+                    Icons.person,
+                    color: state.selection == Selection.Profile
+                        ? Color(COLOR_PRIMARY)
+                        : Colors.grey,
+                  ),
+                  iconSize: state.selection == Selection.Profile ? 35 : 24,
+                  onPressed: () => state.selection = Selection.Profile),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.message),
+                  onPressed: () => state.selection = Selection.Conversations,
+                  color: state.selection == Selection.Conversations
+                      ? Color(COLOR_PRIMARY)
+                      : Colors.grey,
+                  iconSize:
+                      state.selection == Selection.Conversations ? 35 : 24,
+                )
+              ],
+              backgroundColor: Colors.transparent,
+              systemOverlayStyle: DisplayUtils.isDarkMode
+                  ? SystemUiOverlayStyle.dark
+                  : SystemUiOverlayStyle.light,
+              centerTitle: true,
+              elevation: 0,
             ),
-            iconSize: _appBarTitle == 'Profile'.tr() ? 35 : 24,
-            onPressed: () {
-              setState(() {
-                _appBarTitle = 'Profile'.tr();
-                _currentWidget = ProfileScreen(user: user);
-              });
-            }),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.message),
-            onPressed: () {
-              setState(() {
-                _appBarTitle = 'Conversations'.tr();
-                _currentWidget = ConversationsScreen(user: user);
-              });
-            },
-            color: _appBarTitle == 'Conversations'.tr()
-                ? Color(COLOR_PRIMARY)
-                : Colors.grey,
-            iconSize: _appBarTitle == 'Conversations'.tr() ? 35 : 24,
-          )
-        ],
-        backgroundColor: Colors.transparent,
-        systemOverlayStyle: DisplayUtils.isDarkMode
-            ? SystemUiOverlayStyle.dark
-            : SystemUiOverlayStyle.light,
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: SafeArea(child: _currentWidget),
-    );
+            body: SafeArea(child: state.currentWidget),
+          );
+        });
   }
 
-  void checkSubscription() async {
+  void checkSubscription(BuildContext context) async {
     await DialogUtils.showProgress(context, 'Loading...', false);
     await FirebaseUtils.isSubscriptionActive(user);
     await DialogUtils.hideProgress();
