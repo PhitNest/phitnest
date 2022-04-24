@@ -1318,6 +1318,7 @@ class FirebaseUtils {
           .delete();
 
       // delete user  from firebase auth
+      await _firestore.terminate();
       await FirebaseAuth.instance.currentUser!.delete();
     } catch (e, s) {
       print('FireStoreUtils.deleteUser $e $s');

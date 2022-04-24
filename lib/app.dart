@@ -27,6 +27,8 @@ class AppModel {
   UserModel? currentUser;
 
   AppModel() : super() {
+    // When the token stream receives an event, update the users firebase
+    // messaging token stored in firestore.
     _tokenStream = FirebaseMessaging.instance.onTokenRefresh.listen((token) {
       if (currentUser != null) {
         currentUser!.fcmToken = token;
@@ -35,6 +37,8 @@ class AppModel {
     });
   }
 
+  /// When the app's life cycle updates, pause/resume the token stream and set
+  /// the activity boolean for the user.
   void updateLifeCycleState(AppLifecycleState state) {
     UserModel? user = currentUser;
     if (FirebaseAuth.instance.currentUser != null && user != null) {
@@ -55,6 +59,7 @@ class AppModel {
 }
 
 class App extends StatelessWidget with WidgetsBindingObserver {
+  /// This model holds the current user, token stream, and navigation key.
   final AppModel model = AppModel();
 
   @override
@@ -62,6 +67,8 @@ class App extends StatelessWidget with WidgetsBindingObserver {
     // Store theme setting for frequent use.
     DisplayUtils.isDarkMode = Theme.of(context).brightness == Brightness.dark;
     WidgetsBinding.instance?.addObserver(this);
+
+    // Pass the model down to children so they can access the current user.
     return Provider.value(
         value: model,
         child: MaterialApp(
