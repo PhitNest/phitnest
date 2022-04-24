@@ -1,13 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helpers.dart';
-import 'package:phitnest/models/models.dart';
-import 'package:phitnest/screens/screens.dart';
+import '../../app.dart';
 
 class AccountDetailsScreen extends StatefulWidget {
   final UserModel user;
@@ -337,9 +334,9 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     if (_key.currentState?.validate() ?? false) {
       _key.currentState!.save();
       AuthProviders? authProvider;
-      List<auth.UserInfo> userInfoList =
-          auth.FirebaseAuth.instance.currentUser?.providerData ?? [];
-      await Future.forEach(userInfoList, (auth.UserInfo info) {
+      List<UserInfo> userInfoList =
+          FirebaseAuth.instance.currentUser?.providerData ?? [];
+      await Future.forEach(userInfoList, (UserInfo info) {
         if (info.providerId == 'password') {
           authProvider = AuthProviders.PASSWORD;
         } else if (info.providerId == 'phone') {
@@ -348,7 +345,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
       });
       bool? result = false;
       if (authProvider == AuthProviders.PHONE &&
-          auth.FirebaseAuth.instance.currentUser!.phoneNumber != mobile) {
+          FirebaseAuth.instance.currentUser!.phoneNumber != mobile) {
         result = await showDialog(
           context: context,
           builder: (context) => ReAuthUserScreen(
@@ -365,7 +362,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
           await DialogUtils.hideProgress();
         }
       } else if (authProvider == AuthProviders.PASSWORD &&
-          auth.FirebaseAuth.instance.currentUser!.email != email) {
+          FirebaseAuth.instance.currentUser!.email != email) {
         result = await showDialog(
           context: context,
           builder: (context) => ReAuthUserScreen(

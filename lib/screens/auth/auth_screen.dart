@@ -1,9 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helpers.dart';
-import 'package:phitnest/screens/screens.dart';
+import '../../app.dart';
 
 class AuthScreen extends StatelessWidget {
   @override

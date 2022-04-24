@@ -1,13 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:phitnest/screens/login/provider/login_provider.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helpers.dart';
-import 'package:phitnest/models/models.dart';
-import 'package:phitnest/screens/screens.dart';
+import '../../app.dart';
+import 'provider/login_provider.dart';
 
 class LoginScreen extends StatelessWidget {
   @override

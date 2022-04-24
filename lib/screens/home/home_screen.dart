@@ -1,13 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:phitnest/screens/home/provider/home_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../app.dart';
-import '../../constants/constants.dart';
-import '../../helpers/helpers.dart';
-import '../../models/models.dart';
+import 'provider/home_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   final UserModel user;
