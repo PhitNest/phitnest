@@ -13,7 +13,7 @@ import 'helpers/helpers.dart';
 import 'models/user/user_model.dart';
 import 'screens/redirector/redirector_screen.dart';
 
-class AppModel extends ChangeNotifier {
+class AppModel {
   /// this key is used to navigate to the appropriate screen when the
   /// notification is clicked from the system tray.
   final GlobalKey<NavigatorState> navigatorKey =
@@ -62,7 +62,7 @@ class App extends StatelessWidget with WidgetsBindingObserver {
     // Store theme setting for frequent use.
     DisplayUtils.isDarkMode = Theme.of(context).brightness == Brightness.dark;
     WidgetsBinding.instance?.addObserver(this);
-    return ChangeNotifierProvider.value(
+    return Provider.value(
         value: model,
         child: MaterialApp(
             navigatorKey: model.navigatorKey,
