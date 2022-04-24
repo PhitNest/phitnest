@@ -418,7 +418,7 @@ class SignUpScreen extends StatelessWidget {
         ),
         InkWell(
           onTap: () {
-            NavigationUtils.push(context, PhoneNumberInputScreen(login: false));
+            NavigationUtils.push(context, PhoneAuthScreen(login: false));
           },
           child: Text(
             'Sign up with phone number'.tr(),

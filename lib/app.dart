@@ -9,12 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'constants/constants.dart';
-import 'helpers/helpers.dart';
+import 'utils/utils.dart';
 import 'models/models.dart';
 import 'screens/screens.dart';
 
 export 'constants/constants.dart';
-export 'helpers/helpers.dart';
+export 'utils/utils.dart';
 export 'models/models.dart';
 export 'screens/screens.dart';
 export 'widgets/widgets.dart';

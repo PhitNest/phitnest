@@ -22,10 +22,7 @@ import 'package:uuid/uuid.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helpers.dart';
-import 'package:phitnest/models/models.dart';
-import 'package:phitnest/screens/screens.dart';
+import '../../app.dart';
 
 class FirebaseUtils {
   static FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;

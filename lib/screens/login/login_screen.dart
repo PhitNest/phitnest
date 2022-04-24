@@ -239,8 +239,7 @@ class LoginScreen extends StatelessWidget {
 
               InkWell(
                 onTap: () {
-                  NavigationUtils.push(
-                      context, PhoneNumberInputScreen(login: true));
+                  NavigationUtils.push(context, PhoneAuthScreen(login: true));
                 },
                 child: Center(
                   child: Padding(

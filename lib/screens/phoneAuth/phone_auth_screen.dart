@@ -15,17 +15,16 @@ import '../../app.dart';
 
 File? _image;
 
-class PhoneNumberInputScreen extends StatefulWidget {
+class PhoneAuthScreen extends StatefulWidget {
   final bool login;
 
-  const PhoneNumberInputScreen({Key? key, required this.login})
-      : super(key: key);
+  const PhoneAuthScreen({Key? key, required this.login}) : super(key: key);
 
   @override
-  _PhoneNumberInputScreenState createState() => _PhoneNumberInputScreenState();
+  _PhoneAuthScreenState createState() => _PhoneAuthScreenState();
 }
 
-class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
+class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   final ImagePicker _imagePicker = ImagePicker();
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
