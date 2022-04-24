@@ -4,70 +4,64 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helpers.dart';
-import 'package:phitnest/models/models.dart';
-import 'package:phitnest/screens/screens.dart';
+import '../../constants/constants.dart';
+import '../../helpers/helpers.dart';
+import '../../models/models.dart';
+import '../../providers/signUpScreen/sign_up_model.dart';
+import '../screens.dart';
 
-File? _image;
-
-class SignUpScreen extends StatefulWidget {
-  @override
-  State createState() => _SignUpState();
-}
-
-class _SignUpState extends State<SignUpScreen> {
-  final ImagePicker _imagePicker = ImagePicker();
-  TextEditingController _passwordController = TextEditingController();
-  GlobalKey<FormState> _key = GlobalKey();
-  String? firstName, lastName, email, mobile, password, confirmPassword;
-  Position? signUpLocation;
-  AutovalidateMode _validate = AutovalidateMode.disabled;
+class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
-      retrieveLostData();
-    }
-    return Scaffold(
-      appBar: AppBar(
-        systemOverlayStyle: DisplayUtils.isDarkMode
-            ? SystemUiOverlayStyle.dark
-            : SystemUiOverlayStyle.light,
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(
-            color: DisplayUtils.isDarkMode ? Colors.white : Colors.black),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.only(left: 16.0, right: 16, bottom: 16),
-          child: Form(
-            key: _key,
-            autovalidateMode: _validate,
-            child: formUI(),
-          ),
-        ),
-      ),
-    );
+    return ChangeNotifierProvider(
+        create: (context) => SignUpScreenModel(),
+        child: Consumer<SignUpScreenModel>(
+            builder: ((context, SignUpScreenModel model, child) {
+          if (Platform.isAndroid) {
+            retrieveLostData(context, model);
+          }
+          return Scaffold(
+            appBar: AppBar(
+              systemOverlayStyle: DisplayUtils.isDarkMode
+                  ? SystemUiOverlayStyle.dark
+                  : SystemUiOverlayStyle.light,
+              elevation: 0.0,
+              backgroundColor: Colors.transparent,
+              iconTheme: IconThemeData(
+                  color: DisplayUtils.isDarkMode ? Colors.white : Colors.black),
+            ),
+            body: SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.only(left: 16.0, right: 16, bottom: 16),
+                child: Form(
+                  key: model.key,
+                  autovalidateMode: model.validate,
+                  child: formUI(context, model),
+                ),
+              ),
+            ),
+          );
+        })));
   }
 
-  Future<void> retrieveLostData() async {
-    final LostDataResponse? response = await _imagePicker.retrieveLostData();
+  Future<void> retrieveLostData(
+      BuildContext context, SignUpScreenModel model) async {
+    final LostDataResponse? response =
+        await model.imagePicker.retrieveLostData();
     if (response == null) {
       return;
     }
     if (response.file != null) {
-      setState(() {
-        _image = File(response.file!.path);
-      });
+      model.image = File(response.file!.path);
     }
   }
 
-  _onCameraClick() {
+  _onCameraClick(BuildContext context, SignUpScreenModel model) {
     final action = CupertinoActionSheet(
       message: Text(
         'Add profile picture'.tr(),
@@ -80,11 +74,8 @@ class _SignUpState extends State<SignUpScreen> {
           onPressed: () async {
             Navigator.pop(context);
             XFile? image =
-                await _imagePicker.pickImage(source: ImageSource.gallery);
-            if (image != null)
-              setState(() {
-                _image = File(image.path);
-              });
+                await model.imagePicker.pickImage(source: ImageSource.gallery);
+            if (image != null) model.image = File(image.path);
           },
         ),
         CupertinoActionSheetAction(
@@ -93,11 +84,8 @@ class _SignUpState extends State<SignUpScreen> {
           onPressed: () async {
             Navigator.pop(context);
             XFile? image =
-                await _imagePicker.pickImage(source: ImageSource.camera);
-            if (image != null)
-              setState(() {
-                _image = File(image.path);
-              });
+                await model.imagePicker.pickImage(source: ImageSource.camera);
+            if (image != null) model.image = File(image.path);
           },
         )
       ],
@@ -111,7 +99,7 @@ class _SignUpState extends State<SignUpScreen> {
     showCupertinoModalPopup(context: context, builder: (context) => action);
   }
 
-  Widget formUI() {
+  Widget formUI(BuildContext context, SignUpScreenModel model) {
     return Column(
       children: <Widget>[
         Align(
@@ -136,13 +124,13 @@ class _SignUpState extends State<SignUpScreen> {
                   child: SizedBox(
                     width: 170,
                     height: 170,
-                    child: _image == null
+                    child: model.image == null
                         ? Image.asset(
                             'assets/images/placeholder.jpg'.tr(),
                             fit: BoxFit.cover,
                           )
                         : Image.file(
-                            _image!,
+                            model.image!,
                             fit: BoxFit.cover,
                           ),
                   ),
@@ -159,7 +147,7 @@ class _SignUpState extends State<SignUpScreen> {
                           DisplayUtils.isDarkMode ? Colors.black : Colors.white,
                     ),
                     mini: true,
-                    onPressed: _onCameraClick),
+                    onPressed: () => _onCameraClick(context, model)),
               )
             ],
           ),
@@ -173,7 +161,7 @@ class _SignUpState extends State<SignUpScreen> {
               textAlignVertical: TextAlignVertical.center,
               validator: ValidationUtils.validateName,
               onSaved: (String? val) {
-                firstName = val;
+                model.firstName = val;
               },
               textInputAction: TextInputAction.next,
               decoration: InputDecoration(
@@ -210,7 +198,7 @@ class _SignUpState extends State<SignUpScreen> {
               textAlignVertical: TextAlignVertical.center,
               cursorColor: Color(COLOR_PRIMARY),
               onSaved: (String? val) {
-                lastName = val;
+                model.lastName = val;
               },
               textInputAction: TextInputAction.next,
               decoration: InputDecoration(
@@ -249,7 +237,7 @@ class _SignUpState extends State<SignUpScreen> {
               cursorColor: Color(COLOR_PRIMARY),
               validator: ValidationUtils.validateEmail,
               onSaved: (String? val) {
-                email = val;
+                model.email = val;
               },
               decoration: InputDecoration(
                 contentPadding:
@@ -290,7 +278,7 @@ class _SignUpState extends State<SignUpScreen> {
               cursorColor: Color(COLOR_PRIMARY),
               validator: ValidationUtils.validateMobile,
               onSaved: (String? val) {
-                mobile = val;
+                model.mobile = val;
               },
               decoration: InputDecoration(
                 contentPadding:
@@ -325,10 +313,10 @@ class _SignUpState extends State<SignUpScreen> {
               obscureText: true,
               textAlignVertical: TextAlignVertical.center,
               textInputAction: TextInputAction.next,
-              controller: _passwordController,
+              controller: model.passwordController,
               validator: ValidationUtils.validatePassword,
               onSaved: (String? val) {
-                password = val;
+                model.password = val;
               },
               style: TextStyle(fontSize: 18.0),
               cursorColor: Color(COLOR_PRIMARY),
@@ -364,12 +352,12 @@ class _SignUpState extends State<SignUpScreen> {
             child: TextFormField(
               textAlignVertical: TextAlignVertical.center,
               textInputAction: TextInputAction.done,
-              onFieldSubmitted: (_) => _signUp(),
+              onFieldSubmitted: (_) => _signUp(context, model),
               obscureText: true,
               validator: (val) => ValidationUtils.validateConfirmPassword(
-                  _passwordController.text, val),
+                  model.passwordController.text, val),
               onSaved: (String? val) {
-                confirmPassword = val;
+                model.confirmPassword = val;
               },
               style: TextStyle(fontSize: 18.0),
               cursorColor: Color(COLOR_PRIMARY),
@@ -421,7 +409,7 @@ class _SignUpState extends State<SignUpScreen> {
                   color: DisplayUtils.isDarkMode ? Colors.black : Colors.white,
                 ),
               ),
-              onPressed: () => _signUp(),
+              onPressed: () => _signUp(context, model),
             ),
           ),
         ),
@@ -452,37 +440,29 @@ class _SignUpState extends State<SignUpScreen> {
     );
   }
 
-  @override
-  void dispose() {
-    _passwordController.dispose();
-    _image = null;
-    super.dispose();
-  }
-
-  _signUp() async {
-    if (_key.currentState?.validate() ?? false) {
-      _key.currentState!.save();
-      await _signUpWithEmailAndPassword();
+  _signUp(BuildContext context, SignUpScreenModel model) async {
+    if (model.key.currentState?.validate() ?? false) {
+      model.key.currentState!.save();
+      await _signUpWithEmailAndPassword(context, model);
     } else {
-      setState(() {
-        _validate = AutovalidateMode.onUserInteraction;
-      });
+      model.validate = AutovalidateMode.onUserInteraction;
     }
   }
 
-  _signUpWithEmailAndPassword() async {
+  _signUpWithEmailAndPassword(
+      BuildContext context, SignUpScreenModel model) async {
     await DialogUtils.showProgress(
         context, 'Creating new account, Please wait...'.tr(), false);
-    signUpLocation = await LocationUtils.getCurrentLocation();
-    if (signUpLocation != null) {
+    model.signUpLocation = await LocationUtils.getCurrentLocation();
+    if (model.signUpLocation != null) {
       dynamic result = await FirebaseUtils.firebaseSignUpWithEmailAndPassword(
-          email!.trim(),
-          password!.trim(),
-          _image,
-          firstName!,
-          lastName!,
-          signUpLocation!,
-          mobile!);
+          model.email!.trim(),
+          model.password!.trim(),
+          model.image,
+          model.firstName!,
+          model.lastName!,
+          model.signUpLocation!,
+          model.mobile!);
       await DialogUtils.hideProgress();
       if (result != null && result is UserModel) {
         NavigationUtils.pushAndRemoveUntil(
