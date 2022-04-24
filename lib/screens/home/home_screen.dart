@@ -53,68 +53,61 @@ class _HomeState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: user,
-      child: Consumer<UserModel>(
-        builder: (context, user, _) {
-          return Scaffold(
-            appBar: AppBar(
-              title: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _appBarTitle = 'Swipe'.tr();
-                    _currentWidget = SwipeScreen(user: user);
-                  });
-                },
-                child: Image.asset(
-                  'assets/images/app_logo.png',
-                  width: _appBarTitle == 'Swipe'.tr() ? 40 : 24,
-                  height: _appBarTitle == 'Swipe'.tr() ? 40 : 24,
-                  color: _appBarTitle == 'Swipe'.tr()
-                      ? Color(COLOR_PRIMARY)
-                      : Colors.grey,
-                ),
-              ),
-              leading: IconButton(
-                  icon: Icon(
-                    Icons.person,
-                    color: _appBarTitle == 'Profile'.tr()
-                        ? Color(COLOR_PRIMARY)
-                        : Colors.grey,
-                  ),
-                  iconSize: _appBarTitle == 'Profile'.tr() ? 35 : 24,
-                  onPressed: () {
-                    setState(() {
-                      _appBarTitle = 'Profile'.tr();
-                      _currentWidget = ProfileScreen(user: user);
-                    });
-                  }),
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.message),
-                  onPressed: () {
-                    setState(() {
-                      _appBarTitle = 'Conversations'.tr();
-                      _currentWidget = ConversationsScreen(user: user);
-                    });
-                  },
-                  color: _appBarTitle == 'Conversations'.tr()
-                      ? Color(COLOR_PRIMARY)
-                      : Colors.grey,
-                  iconSize: _appBarTitle == 'Conversations'.tr() ? 35 : 24,
-                )
-              ],
-              backgroundColor: Colors.transparent,
-              systemOverlayStyle: DisplayUtils.isDarkMode
-                  ? SystemUiOverlayStyle.dark
-                  : SystemUiOverlayStyle.light,
-              centerTitle: true,
-              elevation: 0,
+    return Scaffold(
+      appBar: AppBar(
+        title: GestureDetector(
+          onTap: () {
+            setState(() {
+              _appBarTitle = 'Swipe'.tr();
+              _currentWidget = SwipeScreen(user: user);
+            });
+          },
+          child: Image.asset(
+            'assets/images/app_logo.png',
+            width: _appBarTitle == 'Swipe'.tr() ? 40 : 24,
+            height: _appBarTitle == 'Swipe'.tr() ? 40 : 24,
+            color: _appBarTitle == 'Swipe'.tr()
+                ? Color(COLOR_PRIMARY)
+                : Colors.grey,
+          ),
+        ),
+        leading: IconButton(
+            icon: Icon(
+              Icons.person,
+              color: _appBarTitle == 'Profile'.tr()
+                  ? Color(COLOR_PRIMARY)
+                  : Colors.grey,
             ),
-            body: SafeArea(child: _currentWidget),
-          );
-        },
+            iconSize: _appBarTitle == 'Profile'.tr() ? 35 : 24,
+            onPressed: () {
+              setState(() {
+                _appBarTitle = 'Profile'.tr();
+                _currentWidget = ProfileScreen(user: user);
+              });
+            }),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.message),
+            onPressed: () {
+              setState(() {
+                _appBarTitle = 'Conversations'.tr();
+                _currentWidget = ConversationsScreen(user: user);
+              });
+            },
+            color: _appBarTitle == 'Conversations'.tr()
+                ? Color(COLOR_PRIMARY)
+                : Colors.grey,
+            iconSize: _appBarTitle == 'Conversations'.tr() ? 35 : 24,
+          )
+        ],
+        backgroundColor: Colors.transparent,
+        systemOverlayStyle: DisplayUtils.isDarkMode
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light,
+        centerTitle: true,
+        elevation: 0,
       ),
+      body: SafeArea(child: _currentWidget),
     );
   }
 
