@@ -4,191 +4,188 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/helpers/helpers.dart';
-import 'package:phitnest/models/models.dart';
-import 'package:phitnest/screens/screens.dart';
+import '../../constants/constants.dart';
+import '../../helpers/helpers.dart';
+import '../../models/models.dart';
+import '../screens.dart';
+import 'provider/conversations_provider.dart';
 
-class ConversationsScreen extends StatefulWidget {
+class ConversationsScreen extends StatelessWidget {
   final UserModel user;
 
   const ConversationsScreen({Key? key, required this.user}) : super(key: key);
 
   @override
-  State createState() {
-    return _ConversationsState();
-  }
-}
-
-class _ConversationsState extends State<ConversationsScreen> {
-  late UserModel user;
-  late Future<List<UserModel>> _matchesFuture;
-  late Stream<List<HomeConversationModel>> _conversationsStream;
-
-  @override
-  void initState() {
-    super.initState();
-    user = widget.user;
-    FirebaseUtils.getBlocks(user).listen((shouldRefresh) {
-      if (shouldRefresh) {
-        setState(() {});
-      }
-    });
-    _matchesFuture = FirebaseUtils.getMatchedUserObject(user.userID);
-    _conversationsStream = FirebaseUtils.getConversations(user, user.userID);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView(
-        children: <Widget>[
-          SizedBox(
-            height: 100,
-            child: FutureBuilder<List<UserModel>>(
-              future: _matchesFuture,
-              initialData: [],
-              builder: (context, snap) {
-                if (snap.connectionState == ConnectionState.waiting)
-                  return Container(
-                    child: Center(
-                      child: CircularProgressIndicator.adaptive(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Color(COLOR_ACCENT)),
-                      ),
-                    ),
-                  );
-                if (!snap.hasData || (snap.data?.isEmpty ?? true)) {
-                  return Center(
-                    child: Text(
-                      'No Matches found.'.tr(),
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  );
-                } else {
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snap.data!.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      UserModel friend = snap.data![index];
-                      return FirebaseUtils.validateIfUserBlocked(friend.userID)
-                          ? Container(
-                              width: 0,
-                              height: 0,
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 8.0, left: 4, right: 4),
-                              child: InkWell(
-                                onLongPress: () => _onMatchLongPress(friend),
-                                onTap: () async {
-                                  String channelID;
-                                  if (friend.userID.compareTo(user.userID) <
-                                      0) {
-                                    channelID = friend.userID + user.userID;
-                                  } else {
-                                    channelID = user.userID + friend.userID;
-                                  }
-                                  ConversationModel? conversationModel =
-                                      await FirebaseUtils.getChannelByIdOrNull(
-                                          channelID);
-                                  NavigationUtils.push(
-                                      context,
-                                      ChatScreen(
-                                          user: user,
-                                          homeConversationModel:
-                                              HomeConversationModel(
-                                                  isGroupChat: false,
-                                                  members: [friend],
-                                                  conversationModel:
-                                                      conversationModel)));
-                                },
-                                child: Column(
-                                  children: <Widget>[
-                                    DisplayUtils.displayCircleImage(
-                                        friend.profilePictureURL, 50, false),
-                                    Expanded(
-                                      child: Container(
-                                        width: 75,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 8.0, left: 8, right: 8),
-                                          child: Text(
-                                            '${friend.firstName}',
-                                            textAlign: TextAlign.center,
-                                            maxLines: 1,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                    },
-                  );
-                }
-              },
-            ),
-          ),
-          StreamBuilder<List<HomeConversationModel>>(
-            stream: _conversationsStream,
-            initialData: [],
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Container(
-                  child: Center(
-                    child: CircularProgressIndicator.adaptive(
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(Color(COLOR_ACCENT)),
-                    ),
-                  ),
-                );
-              } else if (!snapshot.hasData ||
-                  (snapshot.data?.isEmpty ?? true)) {
-                return Center(
-                  child: Text(
-                    'No Conversations found.'.tr(),
-                    style: TextStyle(fontSize: 18),
-                  ),
-                );
-              } else {
-                return ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      final homeConversationModel = snapshot.data![index];
-                      if (homeConversationModel.isGroupChat) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16.0, right: 16, top: 8, bottom: 8),
-                          child: _buildConversationRow(homeConversationModel),
+    return ConversationsScreenProvider(
+        user: user,
+        builder: (context, state, child) {
+          return Container(
+            child: ListView(
+              children: <Widget>[
+                SizedBox(
+                  height: 100,
+                  child: FutureBuilder<List<UserModel>>(
+                    future: state.matchesFuture,
+                    initialData: [],
+                    builder: (context, snap) {
+                      if (snap.connectionState == ConnectionState.waiting)
+                        return Container(
+                          child: Center(
+                            child: CircularProgressIndicator.adaptive(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Color(COLOR_ACCENT)),
+                            ),
+                          ),
+                        );
+                      if (!snap.hasData || (snap.data?.isEmpty ?? true)) {
+                        return Center(
+                          child: Text(
+                            'No Matches found.'.tr(),
+                            style: TextStyle(fontSize: 18),
+                          ),
                         );
                       } else {
-                        return FirebaseUtils.validateIfUserBlocked(
-                                homeConversationModel.members.first.userID)
-                            ? Container(
-                                width: 0,
-                                height: 0,
-                              )
-                            : Padding(
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snap.data!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            UserModel friend = snap.data![index];
+                            return FirebaseUtils.validateIfUserBlocked(
+                                    friend.userID)
+                                ? Container(
+                                    width: 0,
+                                    height: 0,
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, left: 4, right: 4),
+                                    child: InkWell(
+                                      onLongPress: () =>
+                                          _onMatchLongPress(context, friend),
+                                      onTap: () async {
+                                        String channelID;
+                                        if (friend.userID
+                                                .compareTo(user.userID) <
+                                            0) {
+                                          channelID =
+                                              friend.userID + user.userID;
+                                        } else {
+                                          channelID =
+                                              user.userID + friend.userID;
+                                        }
+                                        ConversationModel? conversationModel =
+                                            await FirebaseUtils
+                                                .getChannelByIdOrNull(
+                                                    channelID);
+                                        NavigationUtils.push(
+                                            context,
+                                            ChatScreen(
+                                                user: user,
+                                                homeConversationModel:
+                                                    HomeConversationModel(
+                                                        isGroupChat: false,
+                                                        members: [friend],
+                                                        conversationModel:
+                                                            conversationModel)));
+                                      },
+                                      child: Column(
+                                        children: <Widget>[
+                                          DisplayUtils.displayCircleImage(
+                                              friend.profilePictureURL,
+                                              50,
+                                              false),
+                                          Expanded(
+                                            child: Container(
+                                              width: 75,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 8.0,
+                                                    left: 8,
+                                                    right: 8),
+                                                child: Text(
+                                                  '${friend.firstName}',
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 1,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ),
+                StreamBuilder<List<HomeConversationModel>>(
+                  stream: state.conversationsStream,
+                  initialData: [],
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                        child: Center(
+                          child: CircularProgressIndicator.adaptive(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(COLOR_ACCENT)),
+                          ),
+                        ),
+                      );
+                    } else if (!snapshot.hasData ||
+                        (snapshot.data?.isEmpty ?? true)) {
+                      return Center(
+                        child: Text(
+                          'No Conversations found.'.tr(),
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      );
+                    } else {
+                      return ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            final homeConversationModel = snapshot.data![index];
+                            if (homeConversationModel.isGroupChat) {
+                              return Padding(
                                 padding: const EdgeInsets.only(
                                     left: 16.0, right: 16, top: 8, bottom: 8),
                                 child: _buildConversationRow(
-                                    homeConversationModel),
+                                    context, homeConversationModel),
                               );
-                      }
-                    });
-              }
-            },
-          )
-        ],
-      ),
-    );
+                            } else {
+                              return FirebaseUtils.validateIfUserBlocked(
+                                      homeConversationModel
+                                          .members.first.userID)
+                                  ? Container(
+                                      width: 0,
+                                      height: 0,
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 16.0,
+                                          right: 16,
+                                          top: 8,
+                                          bottom: 8),
+                                      child: _buildConversationRow(
+                                          context, homeConversationModel),
+                                    );
+                            }
+                          });
+                    }
+                  },
+                )
+              ],
+            ),
+          );
+        });
   }
 
-  Widget _buildConversationRow(HomeConversationModel homeConversationModel) {
+  Widget _buildConversationRow(
+      BuildContext context, HomeConversationModel homeConversationModel) {
     String user1Image = '';
     String user2Image = '';
     if (homeConversationModel.members.length >= 2) {
@@ -325,7 +322,7 @@ class _ConversationsState extends State<ConversationsScreen> {
           );
   }
 
-  _onMatchLongPress(UserModel friend) {
+  _onMatchLongPress(BuildContext context, UserModel friend) {
     final action = CupertinoActionSheet(
       message: Text(
         friend.fullName(),

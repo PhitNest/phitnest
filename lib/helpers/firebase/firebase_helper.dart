@@ -175,13 +175,13 @@ class FirebaseUtils {
   }
 
   static Stream<List<HomeConversationModel>> getConversations(
-      UserModel user, String userID) async* {
+      UserModel user) async* {
     conversationsStream = StreamController<List<HomeConversationModel>>();
     HomeConversationModel newHomeConversation;
 
     _firestore
         .collection(CHANNEL_PARTICIPATION)
-        .where('user', isEqualTo: userID)
+        .where('user', isEqualTo: user.userID)
         .snapshots()
         .listen((querySnapshot) {
       if (querySnapshot.docs.isEmpty) {
@@ -199,7 +199,7 @@ class FirebaseUtils {
                 .snapshots()
                 .listen((channel) async {
               if (channel.exists) {
-                bool isGroupChat = !channel.id.contains(userID);
+                bool isGroupChat = !channel.id.contains(user.userID);
                 List<UserModel> users = [];
                 if (isGroupChat) {
                   FirebaseUtils.getGroupMembers(user, channel.id)
@@ -229,7 +229,8 @@ class FirebaseUtils {
                     }
                   });
                 } else {
-                  FirebaseUtils.getUserByID(channel.id.replaceAll(userID, ''))
+                  FirebaseUtils.getUserByID(
+                          channel.id.replaceAll(user.userID, ''))
                       .listen((user) {
                     users.clear();
                     users.add(user);
