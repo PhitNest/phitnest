@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../app.dart';
 
-abstract class BackEndModel {
+abstract class BackEndModel extends ChangeNotifier {
   UserModel? currentUser;
 
   void updateLifeCycleState(AppLifecycleState state);

@@ -28,10 +28,15 @@ class FirebaseModel extends BackEndModel {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   List<Swipe> _matchedUsersList = [];
-  late final StreamController<List<HomeConversationModel>> conversationsStream;
+  late final StreamController<List<HomeConversationModel>> _conversationsStream;
   final List<HomeConversationModel> _homeConversations = [];
   List<BlockUserModel> _blockedList = [];
   final List<UserModel> _matches = [];
+  late StreamController<List<UserModel>> _membersStreamController;
+  late StreamController<UserModel> _userStreamController;
+  late StreamController<List<String>> _membersIDsStreamController;
+  late StreamController<bool> _refreshStreamController;
+  late StreamController<ChatModel> _chatModelStreamController;
 
   /// This is a token stream for firebase messaging. It is updated with calls to
   /// [updateLifeCycleState]
@@ -41,9 +46,10 @@ class FirebaseModel extends BackEndModel {
     // When the token stream receives an event, update the users firebase
     // messaging token stored in firestore.
     _tokenStream = _firebaseMessaging.onTokenRefresh.listen((token) {
-      if (currentUser != null) {
-        currentUser!.fcmToken = token;
-        updateCurrentUser(currentUser!);
+      UserModel? user = currentUser;
+      if (user != null) {
+        user.fcmToken = token;
+        updateCurrentUser(user);
       }
     });
   }
@@ -658,8 +664,7 @@ class FirebaseModel extends BackEndModel {
 
   Stream<List<String>> getGroupMembersIDs(
       UserModel user, String channelID) async* {
-    StreamController<List<String>> membersIDsStreamController =
-        StreamController();
+    _membersIDsStreamController = StreamController();
     _firestore
         .collection(CHANNEL_PARTICIPATION)
         .where('channel', isEqualTo: channelID)
@@ -671,32 +676,31 @@ class FirebaseModel extends BackEndModel {
         uids.add(document.data()?['user'] ?? '');
       }
       if (uids.contains(user.userID)) {
-        membersIDsStreamController.sink.add(uids);
+        _membersIDsStreamController.sink.add(uids);
       } else {
-        membersIDsStreamController.sink.add([]);
+        _membersIDsStreamController.sink.add([]);
       }
     });
-    yield* membersIDsStreamController.stream;
+    yield* _membersIDsStreamController.stream;
   }
 
   Stream<List<UserModel>> getGroupMembers(
       UserModel user, String channelID) async* {
-    StreamController<List<UserModel>> membersStreamController =
-        StreamController();
+    _membersStreamController = StreamController();
     getGroupMembersIDs(user, channelID).listen((memberIDs) {
       if (memberIDs.isNotEmpty) {
         List<UserModel> groupMembers = [];
         for (String id in memberIDs) {
           getUserByID(id).listen((user) {
             groupMembers.add(user);
-            membersStreamController.sink.add(groupMembers);
+            _membersStreamController.sink.add(groupMembers);
           });
         }
       } else {
-        membersStreamController.sink.add([]);
+        _membersStreamController.sink.add([]);
       }
     });
-    yield* membersStreamController.stream;
+    yield* _membersStreamController.stream;
   }
 
   Future<String> uploadVideoThumbnailToFireStorage(File file) async {
@@ -737,7 +741,7 @@ class FirebaseModel extends BackEndModel {
   @override
   Stream<ChatModel> getChatMessages(
       HomeConversationModel homeConversationModel) async* {
-    StreamController<ChatModel> chatModelStreamController = StreamController();
+    _chatModelStreamController = StreamController();
     ChatModel chatModel = ChatModel();
     List<MessageData> listOfMessages = [];
     List<UserModel> listOfMembers = homeConversationModel.members;
@@ -752,7 +756,7 @@ class FirebaseModel extends BackEndModel {
             }
             chatModel.message = listOfMessages;
             chatModel.members = listOfMembers;
-            chatModelStreamController.sink.add(chatModel);
+            _chatModelStreamController.sink.add(chatModel);
           });
         }
       });
@@ -763,7 +767,7 @@ class FirebaseModel extends BackEndModel {
         listOfMembers.add(user);
         chatModel.message = listOfMessages;
         chatModel.members = listOfMembers;
-        chatModelStreamController.sink.add(chatModel);
+        _chatModelStreamController.sink.add(chatModel);
       });
     }
     if (homeConversationModel.conversationModel != null) {
@@ -780,10 +784,10 @@ class FirebaseModel extends BackEndModel {
         });
         chatModel.message = listOfMessages;
         chatModel.members = listOfMembers;
-        chatModelStreamController.sink.add(chatModel);
+        _chatModelStreamController.sink.add(chatModel);
       });
     }
-    yield* chatModelStreamController.stream;
+    yield* _chatModelStreamController.stream;
   }
 
   @override
@@ -810,7 +814,7 @@ class FirebaseModel extends BackEndModel {
   Stream<List<HomeConversationModel>> getConversations() async* {
     UserModel? user = currentUser;
     if (user != null) {
-      conversationsStream = StreamController<List<HomeConversationModel>>();
+      _conversationsStream = StreamController<List<HomeConversationModel>>();
       HomeConversationModel newHomeConversation;
 
       _firestore
@@ -819,7 +823,7 @@ class FirebaseModel extends BackEndModel {
           .snapshots()
           .listen((querySnapshot) {
         if (querySnapshot.docs.isEmpty) {
-          conversationsStream.sink.add(_homeConversations);
+          _conversationsStream.sink.add(_homeConversations);
         } else {
           _homeConversations.clear();
           Future.forEach(querySnapshot.docs,
@@ -858,7 +862,7 @@ class FirebaseModel extends BackEndModel {
                         _homeConversations.sort((a, b) => a
                             .conversationModel!.lastMessageDate
                             .compareTo(b.conversationModel!.lastMessageDate));
-                        conversationsStream.sink
+                        _conversationsStream.sink
                             .add(_homeConversations.reversed.toList());
                       }
                     });
@@ -886,7 +890,7 @@ class FirebaseModel extends BackEndModel {
                       _homeConversations.sort((a, b) => a
                           .conversationModel!.lastMessageDate
                           .compareTo(b.conversationModel!.lastMessageDate));
-                      conversationsStream.sink
+                      _conversationsStream.sink
                           .add(_homeConversations.reversed.toList());
                     });
                   }
@@ -896,13 +900,13 @@ class FirebaseModel extends BackEndModel {
           });
         }
       });
-      yield* conversationsStream.stream;
+      yield* _conversationsStream.stream;
     }
   }
 
   @override
   Stream<bool> getBlocks() async* {
-    StreamController<bool> refreshStreamController = StreamController();
+    _refreshStreamController = StreamController();
     _firestore
         .collection(REPORTS)
         .where('source', isEqualTo: currentUser!.userID)
@@ -915,18 +919,18 @@ class FirebaseModel extends BackEndModel {
       _blockedList = list;
 
       if (_homeConversations.isNotEmpty || _matches.isNotEmpty) {
-        refreshStreamController.sink.add(true);
+        _refreshStreamController.sink.add(true);
       }
     });
-    yield* refreshStreamController.stream;
+    yield* _refreshStreamController.stream;
   }
 
   Stream<UserModel> getUserByID(String id) async* {
-    StreamController<UserModel> userStreamController = StreamController();
+    _userStreamController = StreamController();
     _firestore.collection(USERS).doc(id).snapshots().listen((user) {
-      userStreamController.sink.add(UserModel.fromJson(user.data() ?? {}));
+      _userStreamController.sink.add(UserModel.fromJson(user.data() ?? {}));
     });
-    yield* userStreamController.stream;
+    yield* _userStreamController.stream;
   }
 
   @override
@@ -1417,5 +1421,16 @@ class FirebaseModel extends BackEndModel {
         print('FireStoreUtils.deleteUser $e $s');
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _userStreamController.close();
+    _refreshStreamController.close();
+    _membersIDsStreamController.close();
+    _chatModelStreamController.close();
+    _membersStreamController.close();
+    _conversationsStream.close();
+    super.dispose();
   }
 }
