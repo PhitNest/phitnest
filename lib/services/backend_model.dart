@@ -123,6 +123,9 @@ abstract class BackEndModel extends ChangeNotifier {
 
   Future<void> deleteUser();
 
+  Future<void> updateUserDetails(BuildContext context, String mobile,
+      String email, Future<void> Function() onUpdate);
+
   static BackEndModel getBackEnd(BuildContext context) =>
       Provider.of<BackEndModel>(context, listen: false);
 }

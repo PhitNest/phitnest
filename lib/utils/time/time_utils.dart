@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:phitnest/constants/constants.dart';
+
+import '../../app.dart';
 
 class TimeUtils {
   static String formatTimestamp(int timestamp) {
