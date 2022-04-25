@@ -48,7 +48,7 @@ class FirebaseModel extends BackEndModel {
       UserModel? user = currentUser;
       if (user != null) {
         user.fcmToken = token;
-        updateCurrentUser(user);
+        updateCurrentUser(user: user);
       }
     });
   }
@@ -118,45 +118,43 @@ class FirebaseModel extends BackEndModel {
         _tokenStream.pause();
         user.active = false;
         user.lastOnlineTimestamp = Timestamp.now();
-        updateCurrentUser(user);
+        updateCurrentUser(user: user);
       } else if (state == AppLifecycleState.resumed) {
         //user online
         _tokenStream.resume();
         user.active = true;
-        updateCurrentUser(user);
+        updateCurrentUser(user: user);
       }
     }
   }
 
   @override
-  Future<UserModel?> loadUser() async {
-    User? firebaseUser = _firebaseAuth.currentUser;
-    UserModel? user;
-    if (firebaseUser != null) {
-      // Load user model from firestore document
-      DocumentSnapshot<Map<String, dynamic>> userDocument =
-          await _firestore.collection(USERS).doc(firebaseUser.uid).get();
-      if (userDocument.exists) {
-        user = UserModel.fromJson(userDocument.data() ?? {});
+  Future<void> updateCurrentUser({UserModel? user}) async {
+    if (user == null) {
+      User? firebaseUser = _firebaseAuth.currentUser;
+      if (firebaseUser != null) {
+        // Load user model from firestore document
+        DocumentSnapshot<Map<String, dynamic>> userDocument =
+            await _firestore.collection(USERS).doc(firebaseUser.uid).get();
+        if (userDocument.exists) {
+          user = UserModel.fromJson(userDocument.data() ?? {});
+        }
+        _firebaseMessaging.requestPermission(
+          alert: true,
+          announcement: false,
+          badge: true,
+          carPlay: false,
+          criticalAlert: false,
+          provisional: false,
+          sound: true,
+        );
       }
-      _firebaseMessaging.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
-      );
     }
 
-    return user;
-  }
-
-  @override
-  Future<void> updateCurrentUser(UserModel user) async {
-    await super.updateCurrentUser(user);
-    await _firestore.collection(USERS).doc(user.userID).set(user.toJson());
+    if (user != null) {
+      await super.updateCurrentUser(user: user);
+      await _firestore.collection(USERS).doc(user.userID).set(user.toJson());
+    }
   }
 
   @override
@@ -179,7 +177,7 @@ class FirebaseModel extends BackEndModel {
           }
           if (DateTime.now().isAfter(endOfSubscription)) {
             user.isVip = false;
-            await updateCurrentUser(user);
+            await updateCurrentUser(user: user);
             await _firestore
                 .collection(SUBSCRIPTIONS)
                 .doc(user.userID)
@@ -204,7 +202,8 @@ class FirebaseModel extends BackEndModel {
     if (token != null) {
       UserCredential authResult = await _firebaseAuth
           .signInWithCredential(FacebookAuthProvider.credential(token.token));
-      UserModel? user = await loadUser();
+      updateCurrentUser();
+      UserModel? user = currentUser;
       Map<String, dynamic> userData = await _facebookAuth.getUserData();
 
       List<String> fullName = (userData['name'] as String).split(' ');
@@ -220,7 +219,7 @@ class FirebaseModel extends BackEndModel {
         user.lastName = lastName;
         user.email = userData['email'];
         user.fcmToken = await _firebaseMessaging.getToken() ?? '';
-        await updateCurrentUser(user);
+        await updateCurrentUser(user: user);
         return null;
       } else {
         user = UserModel(
@@ -260,11 +259,12 @@ class FirebaseModel extends BackEndModel {
       );
       UserCredential authResult =
           await _firebaseAuth.signInWithCredential(credential);
-      UserModel? user = await loadUser();
+      updateCurrentUser();
+      UserModel? user = currentUser;
       if (user != null) {
         user.active = true;
         user.fcmToken = await _firebaseMessaging.getToken() ?? '';
-        await updateCurrentUser(user);
+        await updateCurrentUser(user: user);
         return null;
       } else {
         apple.AppleIdCredential appleIdCredential = appleCredential.credential!;
@@ -302,7 +302,7 @@ class FirebaseModel extends BackEndModel {
             latitude: currentLocation.latitude,
             longitude: currentLocation.longitude);
         user.fcmToken = await _firebaseMessaging.getToken() ?? '';
-        await updateCurrentUser(user);
+        await updateCurrentUser(user: user);
         return null;
       }
       return 'No such account';
@@ -346,9 +346,10 @@ class FirebaseModel extends BackEndModel {
       verificationCompleted: (PhoneAuthCredential credential) async {
         UserCredential userCredential =
             await _firebaseAuth.signInWithCredential(credential);
-        UserModel? user = await loadUser();
+        updateCurrentUser();
+        UserModel? user = currentUser;
         if (user != null) {
-          await updateCurrentUser(user);
+          await updateCurrentUser(user: user);
           DialogUtils.hideProgress();
           onLogin();
         } else {
@@ -394,7 +395,8 @@ class FirebaseModel extends BackEndModel {
         verificationId: verificationID, smsCode: code);
     UserCredential userCredential =
         await _firebaseAuth.signInWithCredential(authCredential);
-    UserModel? user = await loadUser();
+    updateCurrentUser();
+    UserModel? user = currentUser;
     if (user != null) {
       return null;
     } else {
@@ -435,6 +437,7 @@ class FirebaseModel extends BackEndModel {
   Future<String?> _firebaseCreateNewUser(UserModel user) async {
     try {
       await _firestore.collection(USERS).doc(user.userID).set(user.toJson());
+      currentUser = user;
       return null;
     } catch (e, s) {
       print('FireStoreUtils.firebaseCreateNewUser $e $s');
@@ -1384,7 +1387,7 @@ class FirebaseModel extends BackEndModel {
           .doc(user.userID)
           .set(purchaseModel.toJson());
       user.isVip = true;
-      await updateCurrentUser(user);
+      await updateCurrentUser(user: user);
     }
   }
 
@@ -1477,7 +1480,11 @@ class FirebaseModel extends BackEndModel {
   }
 
   @override
-  void dispose() {
+  void dispose() async {
+    if (currentUser != null) {
+      currentUser!.active = false;
+      await updateCurrentUser(user: currentUser!);
+    }
     _userStreamController.close();
     _refreshStreamController.close();
     _membersIDsStreamController.close();

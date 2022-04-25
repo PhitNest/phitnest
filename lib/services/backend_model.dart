@@ -13,9 +13,7 @@ abstract class BackEndModel extends ChangeNotifier {
 
   void updateLifeCycleState(AppLifecycleState state);
 
-  Future<UserModel?> loadUser();
-
-  Future<void> updateCurrentUser(UserModel user) async {
+  Future<void> updateCurrentUser({UserModel? user}) async {
     currentUser = user;
   }
 

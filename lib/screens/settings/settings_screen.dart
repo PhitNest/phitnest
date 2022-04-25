@@ -242,7 +242,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               user.settings.pushNewMatchesEnabled = newMatches;
                               user.settings.distanceRadius = radius;
                               await BackEndModel.getBackEnd(context)
-                                  .updateCurrentUser(user);
+                                  .updateCurrentUser(user: user);
                               await DialogUtils.hideProgress();
                               ScaffoldMessenger.of(buildContext).showSnackBar(
                                 SnackBar(
