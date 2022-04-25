@@ -32,8 +32,8 @@ class LoginFunctions {
           state.email!.trim(), state.password!.trim(), state.currentLocation!);
       await DialogUtils.hideProgress();
       if (result == null) {
-        await backEnd.updateCurrentUser(result);
-        NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
+        NavigationUtils.pushAndRemoveUntil(
+            context, const RedirectorScreen(), false);
       } else {
         DialogUtils.showAlertDialog(context, 'Couldn\'t Authenticate'.tr(),
             'Login failed, Please try again.'.tr());
@@ -57,7 +57,8 @@ class LoginFunctions {
       dynamic result = await backEnd.loginWithFacebook();
       await DialogUtils.hideProgress();
       if (result == null) {
-        NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
+        NavigationUtils.pushAndRemoveUntil(
+            context, const RedirectorScreen(), false);
       } else {
         DialogUtils.showAlertDialog(context, 'Error'.tr(), result.tr());
       }
@@ -77,7 +78,8 @@ class LoginFunctions {
       dynamic result = await backEnd.loginWithApple();
       await DialogUtils.hideProgress();
       if (result == null) {
-        NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
+        NavigationUtils.pushAndRemoveUntil(
+            context, const RedirectorScreen(), false);
       } else {
         DialogUtils.showAlertDialog(
             context, 'Error', 'Couldn\'t login with apple.'.tr());
