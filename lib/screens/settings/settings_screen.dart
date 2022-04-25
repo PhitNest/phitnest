@@ -241,20 +241,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               user.settings.pushSuperLikesEnabled = superLikes;
                               user.settings.pushNewMatchesEnabled = newMatches;
                               user.settings.distanceRadius = radius;
-                              bool success =
-                                  await FirebaseUtils.updateCurrentUser(user);
+                              await BackEndModel.getBackEnd(context)
+                                  .updateCurrentUser(user);
                               await DialogUtils.hideProgress();
-                              if (success) {
-                                ScaffoldMessenger.of(buildContext).showSnackBar(
-                                  SnackBar(
-                                    duration: Duration(seconds: 3),
-                                    content: Text(
-                                      'Settings saved successfully'.tr(),
-                                      style: TextStyle(fontSize: 17),
-                                    ),
+                              ScaffoldMessenger.of(buildContext).showSnackBar(
+                                SnackBar(
+                                  duration: Duration(seconds: 3),
+                                  content: Text(
+                                    'Settings saved successfully'.tr(),
+                                    style: TextStyle(fontSize: 17),
                                   ),
-                                );
-                              }
+                                ),
+                              );
                             },
                             child: Text(
                               'Save'.tr(),

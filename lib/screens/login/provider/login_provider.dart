@@ -3,7 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 class ScreenState extends ChangeNotifier {
-  GlobalKey<FormState> key = GlobalKey();
+  GlobalKey<FormState> formKey = GlobalKey();
   AutovalidateMode _validate = AutovalidateMode.disabled;
   Position? currentLocation;
   String? email, password;

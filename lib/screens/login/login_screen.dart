@@ -4,12 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
 import '../../app.dart';
+import 'functions/login_functions.dart';
 import 'provider/login_provider.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LoginScreenProvider(builder: ((context, state, child) {
+      LoginFunctions functions = LoginFunctions(context, state);
+
       return Scaffold(
         appBar: AppBar(
           systemOverlayStyle: DisplayUtils.isDarkMode
@@ -21,7 +24,7 @@ class LoginScreen extends StatelessWidget {
           elevation: 0.0,
         ),
         body: Form(
-          key: state.key,
+          key: state.formKey,
           autovalidateMode: state.validate,
           child: ListView(
             children: <Widget>[
@@ -86,8 +89,8 @@ class LoginScreen extends StatelessWidget {
                     textAlignVertical: TextAlignVertical.center,
                     onSaved: (val) => state.password = val,
                     obscureText: true,
-                    validator: (val) => ValidationUtils.validatePassword(val),
-                    onFieldSubmitted: (password) => _login(context, state),
+                    validator: ValidationUtils.validatePassword,
+                    onFieldSubmitted: (password) => functions.login(),
                     textInputAction: TextInputAction.done,
                     style: TextStyle(fontSize: 18.0),
                     cursorColor: Color(COLOR_PRIMARY),
@@ -160,7 +163,7 @@ class LoginScreen extends StatelessWidget {
                             : Colors.white,
                       ),
                     ),
-                    onPressed: () => _login(context, state),
+                    onPressed: functions.login,
                   ),
                 ),
               ),
@@ -208,7 +211,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    onPressed: () async => loginWithFacebook(context),
+                    onPressed: functions.loginWithFacebook,
                   ),
                 ),
               ),
@@ -230,7 +233,7 @@ class LoginScreen extends StatelessWidget {
                         style: DisplayUtils.isDarkMode
                             ? apple.ButtonStyle.white
                             : apple.ButtonStyle.black,
-                        onPressed: () => loginWithApple(context),
+                        onPressed: functions.loginWithApple,
                       ),
                     );
                   }
@@ -260,92 +263,5 @@ class LoginScreen extends StatelessWidget {
         ),
       );
     }));
-  }
-
-  _login(BuildContext context, ScreenState state) async {
-    if (state.key.currentState?.validate() ?? false) {
-      state.key.currentState!.save();
-      await _loginWithEmailAndPassword(context, state);
-    } else {
-      state.validate = AutovalidateMode.onUserInteraction;
-    }
-  }
-
-  /// login with email and password with firebase
-  /// @param email user email
-  /// @param password user password
-  _loginWithEmailAndPassword(BuildContext context, ScreenState state) async {
-    await DialogUtils.showProgress(
-        context, 'Logging in, please wait...'.tr(), false);
-    state.currentLocation = await LocationUtils.getCurrentLocation();
-    if (state.currentLocation != null) {
-      dynamic result = await FirebaseUtils.loginWithEmailAndPassword(
-          state.email!.trim(), state.password!.trim(), state.currentLocation!);
-      await DialogUtils.hideProgress();
-      if (result != null && result is UserModel) {
-        NavigationUtils.pushAndRemoveUntil(
-            context, HomeScreen(user: result), false);
-      } else if (result != null && result is String) {
-        DialogUtils.showAlertDialog(
-            context, 'Couldn\'t Authenticate'.tr(), result);
-      } else {
-        DialogUtils.showAlertDialog(context, 'Couldn\'t Authenticate'.tr(),
-            'Login failed, Please try again.'.tr());
-      }
-    } else {
-      await DialogUtils.hideProgress();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Location is required to match you with people from '
-                'your area.'
-            .tr()),
-        duration: Duration(seconds: 6),
-      ));
-    }
-  }
-
-  loginWithFacebook(BuildContext context) async {
-    try {
-      await DialogUtils.showProgress(
-          context, 'Logging in, Please wait...'.tr(), false);
-      dynamic result = await FirebaseUtils.loginWithFacebook();
-      await DialogUtils.hideProgress();
-      if (result != null && result is UserModel) {
-        NavigationUtils.pushAndRemoveUntil(
-            context, HomeScreen(user: result), false);
-      } else if (result != null && result is String) {
-        DialogUtils.showAlertDialog(context, 'Error'.tr(), result.tr());
-      } else {
-        DialogUtils.showAlertDialog(
-            context, 'Error', 'Couldn\'t login with facebook.'.tr());
-      }
-    } catch (e, s) {
-      await DialogUtils.hideProgress();
-      print('_LoginScreen.loginWithFacebook $e $s');
-      DialogUtils.showAlertDialog(
-          context, 'Error', 'Couldn\'t login with facebook.'.tr());
-    }
-  }
-
-  loginWithApple(BuildContext context) async {
-    try {
-      await DialogUtils.showProgress(
-          context, 'Logging in, Please wait...'.tr(), false);
-      dynamic result = await FirebaseUtils.loginWithApple();
-      await DialogUtils.hideProgress();
-      if (result != null && result is UserModel) {
-        NavigationUtils.pushAndRemoveUntil(
-            context, HomeScreen(user: result), false);
-      } else if (result != null && result is String) {
-        DialogUtils.showAlertDialog(context, 'Error'.tr(), result.tr());
-      } else {
-        DialogUtils.showAlertDialog(
-            context, 'Error', 'Couldn\'t login with apple.'.tr());
-      }
-    } catch (e, s) {
-      await DialogUtils.hideProgress();
-      print('_LoginScreen.loginWithApple $e $s');
-      DialogUtils.showAlertDialog(
-          context, 'Error', 'Couldn\'t login with apple.'.tr());
-    }
   }
 }

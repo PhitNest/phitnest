@@ -398,24 +398,14 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     user.school = school!;
     user.email = email!;
     user.phoneNumber = mobile!;
-    if (await FirebaseUtils.updateCurrentUser(user)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Details saved successfully'.tr(),
-            style: TextStyle(fontSize: 17),
-          ),
+    await BackEndModel.getBackEnd(context).updateCurrentUser(user);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Details saved successfully'.tr(),
+          style: TextStyle(fontSize: 17),
         ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Couldn\'t save details, Please try again.'.tr(),
-            style: TextStyle(fontSize: 17),
-          ),
-        ),
-      );
-    }
+      ),
+    );
   }
 }

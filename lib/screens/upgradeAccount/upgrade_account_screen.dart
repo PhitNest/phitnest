@@ -336,9 +336,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
 
   _handlePurchase(PurchaseDetails purchase) async {
     if (purchase.status == PurchaseStatus.purchased) {
+      BackEndModel backEnd = BackEndModel.getBackEnd(context);
       await DialogUtils.showProgress(
           context, 'Processing purchase...'.tr(), false);
-      await FirebaseUtils.recordPurchase(user, purchase);
+      await backEnd.recordPurchase(purchase);
       await DialogUtils.hideProgress();
     }
   }
