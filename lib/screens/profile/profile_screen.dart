@@ -277,7 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   user.active = false;
                   user.lastOnlineTimestamp = Timestamp.now();
                   await BackEndModel.getBackEnd(context)
-                      .updateCurrentUser(user);
+                      .updateCurrentUser(user: user);
                   await FirebaseFirestore.instance.terminate();
                   await FirebaseAuth.instance.signOut();
                   Provider.of<BackEndModel>(context, listen: false)
@@ -310,7 +310,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             if (user.profilePictureURL.isNotEmpty)
               await BackEndModel.getBackEnd(context).deleteProfilePicture();
             user.profilePictureURL = '';
-            await BackEndModel.getBackEnd(context).updateCurrentUser(user);
+            await BackEndModel.getBackEnd(context)
+                .updateCurrentUser(user: user);
             DialogUtils.hideProgress();
             setState(() {});
           },
@@ -355,7 +356,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     user.profilePictureURL = await BackEndModel.getBackEnd(context)
         .uploadUserImageToFireStorage(
             image, BackEndModel.getBackEnd(context).currentUser!.userID);
-    await BackEndModel.getBackEnd(context).updateCurrentUser(user);
+    await BackEndModel.getBackEnd(context).updateCurrentUser(user: user);
     DialogUtils.hideProgress();
   }
 
@@ -440,7 +441,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             images.remove(url);
             await BackEndModel.getBackEnd(context).deleteProfilePicture();
             user.photos = images;
-            await BackEndModel.getBackEnd(context).updateCurrentUser(user);
+            await BackEndModel.getBackEnd(context)
+                .updateCurrentUser(user: user);
             images.add(null);
             setState(() {});
           },
@@ -459,7 +461,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onPressed: () async {
             Navigator.pop(context);
             user.profilePictureURL = url;
-            BackEndModel.getBackEnd(context).updateCurrentUser(user);
+            BackEndModel.getBackEnd(context).updateCurrentUser(user: user);
 
             setState(() {});
           },
@@ -497,7 +499,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               images.removeLast();
               images.add(imageUrl.url);
               user.photos = images;
-              await BackEndModel.getBackEnd(context).updateCurrentUser(user);
+              await BackEndModel.getBackEnd(context)
+                  .updateCurrentUser(user: user);
               images.add(null);
               setState(() {});
             }
@@ -516,7 +519,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               images.removeLast();
               images.add(imageUrl.url);
               user.photos = images;
-              await BackEndModel.getBackEnd(context).updateCurrentUser(user);
+              await BackEndModel.getBackEnd(context)
+                  .updateCurrentUser(user: user);
               images.add(null);
               setState(() {});
             }

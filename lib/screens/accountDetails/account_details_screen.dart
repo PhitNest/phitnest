@@ -348,7 +348,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     user.school = school!;
     user.email = email!;
     user.phoneNumber = mobile!;
-    await BackEndModel.getBackEnd(context).updateCurrentUser(user);
+    await BackEndModel.getBackEnd(context).updateCurrentUser(user: user);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
