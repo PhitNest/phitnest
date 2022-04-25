@@ -34,9 +34,12 @@ class RedirectorScreen extends StatelessWidget {
     if (finishedOnBoarding) {
       BackEndModel backEnd = BackEndModel.getBackEnd(context);
       UserModel? user = await backEnd.loadUser();
-
-      NavigationUtils.pushReplacement(
-          context, user == null ? AuthScreen() : HomeScreen());
+      if (user != null) {
+        await backEnd.updateCurrentUser(user);
+        NavigationUtils.pushReplacement(context, HomeScreen());
+      } else {
+        NavigationUtils.pushReplacement(context, AuthScreen());
+      }
     } else {
       // If app has not yet finished on boarding, redirect to onboarding screen
       NavigationUtils.pushReplacement(context, OnBoardingScreen());

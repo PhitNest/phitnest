@@ -230,7 +230,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           child: CupertinoButton(
                             padding: const EdgeInsets.all(12.0),
                             onPressed: () async {
-                              DialogUtils.showProgress(
+                              await DialogUtils.showProgress(
                                   context, 'Saving changes...'.tr(), true);
                               user.settings.genderPreference = prefGender;
                               user.settings.gender = gender;

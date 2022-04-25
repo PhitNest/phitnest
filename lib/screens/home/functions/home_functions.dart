@@ -14,7 +14,6 @@ class HomeFunctions {
 
   void setUserActive() async {
     _user.active = true;
-    await _backEnd.updateCurrentUser(_user);
   }
 
   void checkSubscription() async {
