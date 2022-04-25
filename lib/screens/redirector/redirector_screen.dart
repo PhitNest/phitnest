@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,24 +32,11 @@ class RedirectorScreen extends StatelessWidget {
     bool finishedOnBoarding = (prefs.getBool(FINISHED_ON_BOARDING) ?? false);
 
     if (finishedOnBoarding) {
-      // Firebase authentication user object
-      User? firebaseUser = FirebaseAuth.instance.currentUser;
-      if (firebaseUser != null) {
-        // Load user model from firestore document
-        UserModel? user = await FirebaseUtils.loadUser(firebaseUser.uid);
-        if (user != null) {
-          // If the user was found, set their activity to active, and update
-          // their activity in firestore.
-          user.active = true;
-          await FirebaseUtils.updateCurrentUser(user);
-          // Redirect to the home screen
-          return NavigationUtils.pushReplacement(
-              context, HomeScreen(user: user));
-        }
-      }
-      // If firebase has not yet authenticated or the user does not exist in
-      // firestore, redirect to auth screen
-      NavigationUtils.pushReplacement(context, AuthScreen());
+      BackEndModel backEnd = BackEndModel.getBackEnd(context);
+      UserModel? user = await backEnd.loadUser();
+
+      NavigationUtils.pushReplacement(
+          context, user == null ? AuthScreen() : HomeScreen());
     } else {
       // If app has not yet finished on boarding, redirect to onboarding screen
       NavigationUtils.pushReplacement(context, OnBoardingScreen());

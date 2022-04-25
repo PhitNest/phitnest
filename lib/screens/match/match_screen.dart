@@ -100,7 +100,8 @@ class _MatchScreenState extends State<MatchScreen> {
                           channelID = user.userID + widget.matchedUser.userID;
                         }
                         ConversationModel? conversationModel =
-                            await FirebaseUtils.getChannelByIdOrNull(channelID);
+                            await BackEndModel.getBackEnd(context)
+                                .getChannelByIdOrNull(channelID);
                         NavigationUtils.pushReplacement(
                           context,
                           ChatScreen(

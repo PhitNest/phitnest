@@ -443,11 +443,12 @@ class SignUpScreen extends StatelessWidget {
   }
 
   _signUpWithEmailAndPassword(BuildContext context, ScreenState state) async {
+    BackEndModel backEnd = BackEndModel.getBackEnd(context);
     await DialogUtils.showProgress(
         context, 'Creating new account, Please wait...'.tr(), false);
     state.signUpLocation = await LocationUtils.getCurrentLocation();
     if (state.signUpLocation != null) {
-      dynamic result = await FirebaseUtils.firebaseSignUpWithEmailAndPassword(
+      dynamic result = await backEnd.firebaseSignUpWithEmailAndPassword(
           state.email!.trim(),
           state.password!.trim(),
           state.image,
@@ -456,11 +457,8 @@ class SignUpScreen extends StatelessWidget {
           state.signUpLocation!,
           state.mobile!);
       await DialogUtils.hideProgress();
-      if (result != null && result is UserModel) {
-        NavigationUtils.pushAndRemoveUntil(
-            context, HomeScreen(user: result), false);
-      } else if (result != null && result is String) {
-        DialogUtils.showAlertDialog(context, 'Failed'.tr(), result);
+      if (result == null) {
+        NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
       } else {
         DialogUtils.showAlertDialog(
             context, 'Failed'.tr(), 'Couldn\'t sign up'.tr());

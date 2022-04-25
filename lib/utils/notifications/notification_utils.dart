@@ -5,10 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
-import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/models/models.dart';
-import 'package:phitnest/screens/screens.dart';
 import 'package:provider/provider.dart';
 
 import '../../app.dart';
@@ -85,7 +81,7 @@ class NotificationUtils {
           navigatorKey.currentState?.push(
             MaterialPageRoute(
               builder: (_) => ChatScreen(
-                user: Provider.of<AppModel>(navigatorKey.currentContext!,
+                user: Provider.of<BackEndModel>(navigatorKey.currentContext!,
                         listen: false)
                     .currentUser!,
                 homeConversationModel: HomeConversationModel(

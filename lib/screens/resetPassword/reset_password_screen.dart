@@ -123,7 +123,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     if (_key.currentState?.validate() ?? false) {
       _key.currentState!.save();
       await DialogUtils.showProgress(context, 'Sending Email...'.tr(), false);
-      await FirebaseUtils.resetPassword(_emailAddress);
+      await BackEndModel.getBackEnd(context).resetPassword(_emailAddress);
       await DialogUtils.hideProgress();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

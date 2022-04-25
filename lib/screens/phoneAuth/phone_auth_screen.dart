@@ -362,20 +362,18 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   /// @param code the code from input from code field
   /// creates a new user from phone login
   void _submitCode(String code) async {
+    BackEndModel backEnd = BackEndModel.getBackEnd(context);
     await DialogUtils.showProgress(context,
         widget.login ? 'Logging in...'.tr() : 'Signing up...'.tr(), false);
     try {
       signUpLocation = await LocationUtils.getCurrentLocation();
       if (signUpLocation != null) {
         if (_verificationID != null) {
-          dynamic result = await FirebaseUtils.firebaseSubmitPhoneNumberCode(
+          dynamic result = await backEnd.loginWithPhoneNumber(
               _verificationID!, code, _phoneNumber!, signUpLocation!);
           await DialogUtils.hideProgress();
-          if (result != null && result is UserModel) {
-            NavigationUtils.pushAndRemoveUntil(
-                context, HomeScreen(user: result), false);
-          } else if (result != null && result is String) {
-            DialogUtils.showAlertDialog(context, 'Failed'.tr(), result);
+          if (result == null) {
+            NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
           } else {
             DialogUtils.showAlertDialog(context, 'Failed'.tr(),
                 'Couldn\'t create new user with phone number.'.tr());
@@ -511,101 +509,47 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   /// navigate to [ContainerScreen] after wards
   _submitPhoneNumber(String phoneNumber) async {
     //send code
+    BackEndModel backEnd = BackEndModel.getBackEnd(context);
     await DialogUtils.showProgress(context, 'Sending code...'.tr(), true);
-    await FirebaseUtils.firebaseSubmitPhoneNumber(
-      phoneNumber,
-      (String verificationId) {
-        if (mounted) {
-          DialogUtils.hideProgress();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Code verification timeout, request new code.'.tr(),
-              ),
+    await backEnd.firebaseSubmitPhoneNumber(
+        _firstNameController.text,
+        _lastNameController.text,
+        signUpLocation!,
+        phoneNumber, (String verificationId) {
+      if (mounted) {
+        DialogUtils.hideProgress();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Code verification timeout, request new code.'.tr(),
             ),
-          );
-          setState(() {
-            _codeSent = false;
-          });
-        }
-      },
-      (String? verificationId, int? forceResendingToken) {
-        if (mounted) {
-          DialogUtils.hideProgress();
-          _verificationID = verificationId;
-          setState(() {
-            _codeSent = true;
-          });
-        }
-      },
-      (FirebaseAuthException error) {
-        if (mounted) {
-          DialogUtils.hideProgress();
-          print('${error.message} ${error.stackTrace}');
-          String message = 'An error has occurred, please try again.'.tr();
-          switch (error.code) {
-            case 'invalid-verification-code':
-              message = 'Invalid code or has been expired.'.tr();
-              break;
-            case 'user-disabled':
-              message = 'This user has been disabled.'.tr();
-              break;
-            default:
-              message = 'An error has occurred, please try again.'.tr();
-              break;
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                message,
-              ),
+          ),
+        );
+        setState(() {
+          _codeSent = false;
+        });
+      }
+    }, (String? verificationId, int? forceResendingToken) {
+      if (mounted) {
+        DialogUtils.hideProgress();
+        _verificationID = verificationId;
+        setState(() {
+          _codeSent = true;
+        });
+      }
+    }, (Exception error) async {
+      if (mounted) {
+        DialogUtils.hideProgress();
+        print('$error');
+        String message = 'Invalid code or has been expired.'.tr();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              message,
             ),
-          );
-        }
-      },
-      (PhoneAuthCredential credential) async {
-        if (mounted) {
-          UserCredential userCredential =
-              await FirebaseAuth.instance.signInWithCredential(credential);
-          UserModel? user =
-              await FirebaseUtils.loadUser(userCredential.user?.uid ?? '');
-          if (user != null) {
-            DialogUtils.hideProgress();
-            NavigationUtils.pushAndRemoveUntil(
-                context, HomeScreen(user: user), false);
-          } else {
-            /// create a new user from phone login
-            UserModel user = UserModel(
-                firstName: _firstNameController.text,
-                lastName: _firstNameController.text,
-                fcmToken: await FirebaseMessaging.instance.getToken() ?? '',
-                phoneNumber: phoneNumber,
-                active: true,
-                lastOnlineTimestamp: Timestamp.now(),
-                photos: [],
-                settings: UserSettings(),
-                location: UserLocation(
-                    latitude: signUpLocation!.latitude,
-                    longitude: signUpLocation!.longitude),
-                signUpLocation: UserLocation(
-                    latitude: signUpLocation!.latitude,
-                    longitude: signUpLocation!.longitude),
-                email: '',
-                profilePictureURL: '',
-                userID: userCredential.user?.uid ?? '');
-            String? errorMessage =
-                await FirebaseUtils.firebaseCreateNewUser(user);
-            DialogUtils.hideProgress();
-            if (errorMessage == null) {
-              NavigationUtils.pushAndRemoveUntil(
-                  context, HomeScreen(user: user), false);
-            } else {
-              DialogUtils.showAlertDialog(context, 'Failed'.tr(),
-                  'Couldn\'t create new user with phone number.'.tr());
-            }
-          }
-        }
-      },
-    );
+          ),
+        );
+      }
+    }, () => NavigationUtils.pushReplacement(context, HomeScreen()));
   }
 }
