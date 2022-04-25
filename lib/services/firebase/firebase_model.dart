@@ -41,7 +41,6 @@ class FirebaseModel extends BackEndModel {
   /// This is a token stream for firebase messaging. It is updated with calls to
   /// [updateLifeCycleState]
   late final StreamSubscription<String> _tokenStream;
-
   FirebaseModel() : super() {
     // When the token stream receives an event, update the users firebase
     // messaging token stored in firestore.
@@ -52,6 +51,60 @@ class FirebaseModel extends BackEndModel {
         updateCurrentUser(user);
       }
     });
+  }
+
+  @override
+  Future<void> updateUserDetails(BuildContext context, String mobile,
+      String email, Future<void> Function() onUpdate) async {
+    AuthProviders? authProvider;
+
+    List<UserInfo> userInfoList =
+        FirebaseAuth.instance.currentUser?.providerData ?? [];
+    await Future.forEach(userInfoList, (UserInfo info) {
+      if (info.providerId == 'password') {
+        authProvider = AuthProviders.PASSWORD;
+      } else if (info.providerId == 'phone') {
+        authProvider = AuthProviders.PHONE;
+      }
+    });
+    bool? result = false;
+    if (authProvider == AuthProviders.PHONE &&
+        FirebaseAuth.instance.currentUser!.phoneNumber != mobile) {
+      result = await showDialog(
+        context: context,
+        builder: (context) => ReAuthUserScreen(
+          user: currentUser!,
+          provider: authProvider!,
+          phoneNumber: mobile,
+          deleteUser: false,
+        ),
+      );
+      if (result != null && result) {
+        await DialogUtils.showProgress(context, 'Saving details...', true);
+        await onUpdate();
+        await DialogUtils.hideProgress();
+      }
+    } else if (authProvider == AuthProviders.PASSWORD &&
+        FirebaseAuth.instance.currentUser!.email != email) {
+      result = await showDialog(
+        context: context,
+        builder: (context) => ReAuthUserScreen(
+          user: currentUser!,
+          provider: authProvider!,
+          email: email,
+          deleteUser: false,
+        ),
+      );
+      if (result != null && result) {
+        await DialogUtils.showProgress(context, 'Saving details...', true);
+        await onUpdate();
+        await DialogUtils.hideProgress();
+      }
+    } else {
+      await DialogUtils.showProgress(context, 'Saving details...', true);
+      await onUpdate();
+      await DialogUtils.hideProgress();
+    }
   }
 
   /// When the app's life cycle updates, pause/resume the token stream and set

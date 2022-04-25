@@ -31,7 +31,7 @@ class App extends StatelessWidget with WidgetsBindingObserver {
     WidgetsBinding.instance?.addObserver(this);
 
     // Pass the back end down to children
-    return Provider.value(
+    return ChangeNotifierProvider.value(
         value: backendModel,
         child: MaterialApp(
             navigatorKey: navigatorKey,

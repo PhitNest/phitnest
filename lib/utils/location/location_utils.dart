@@ -1,7 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:phitnest/models/user/user_model.dart';
+
+import '../../app.dart';
 
 class LocationUtils {
   static Future<Position?> getCurrentLocation() async {

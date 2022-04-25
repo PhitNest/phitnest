@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -177,9 +176,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                               onSaved: (String? val) {
                                 bio = val;
                               },
+                              textInputAction: TextInputAction.next,
                               initialValue: user.bio,
-                              minLines: 1,
-                              maxLines: 3,
                               textAlign: TextAlign.end,
                               style: TextStyle(
                                   fontSize: 18,
@@ -333,56 +331,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
   _validateAndSave() async {
     if (_key.currentState?.validate() ?? false) {
       _key.currentState!.save();
-      AuthProviders? authProvider;
-      List<UserInfo> userInfoList =
-          FirebaseAuth.instance.currentUser?.providerData ?? [];
-      await Future.forEach(userInfoList, (UserInfo info) {
-        if (info.providerId == 'password') {
-          authProvider = AuthProviders.PASSWORD;
-        } else if (info.providerId == 'phone') {
-          authProvider = AuthProviders.PHONE;
-        }
-      });
-      bool? result = false;
-      if (authProvider == AuthProviders.PHONE &&
-          FirebaseAuth.instance.currentUser!.phoneNumber != mobile) {
-        result = await showDialog(
-          context: context,
-          builder: (context) => ReAuthUserScreen(
-            user: user,
-            provider: authProvider!,
-            phoneNumber: mobile,
-            deleteUser: false,
-          ),
-        );
-        if (result != null && result) {
-          await DialogUtils.showProgress(
-              context, 'Saving details...'.tr(), false);
-          await _updateUser();
-          await DialogUtils.hideProgress();
-        }
-      } else if (authProvider == AuthProviders.PASSWORD &&
-          FirebaseAuth.instance.currentUser!.email != email) {
-        result = await showDialog(
-          context: context,
-          builder: (context) => ReAuthUserScreen(
-            user: user,
-            provider: authProvider!,
-            email: email,
-            deleteUser: false,
-          ),
-        );
-        if (result != null && result) {
-          await DialogUtils.showProgress(
-              context, 'Saving details...'.tr(), false);
-          await _updateUser();
-          await DialogUtils.hideProgress();
-        }
-      } else {
-        DialogUtils.showProgress(context, 'Saving details...'.tr(), false);
-        await _updateUser();
-        DialogUtils.hideProgress();
-      }
+      BackEndModel.getBackEnd(context).updateUserDetails(
+          context, mobile!, email!, () async => await _updateUser());
     } else {
       setState(() {
         _validate = AutovalidateMode.onUserInteraction;
