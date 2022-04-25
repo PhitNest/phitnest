@@ -1,16 +1,18 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
+
 import '../../../app.dart';
 import '../provider/login_provider.dart';
 
 class LoginFunctions {
   final BuildContext context;
-  final ScreenState state;
+  final LoginScreenState state;
 
   LoginFunctions(this.context, this.state);
 
-  login() async {
+  Future<void> login() async {
     if (state.formKey.currentState?.validate() ?? false) {
       state.formKey.currentState!.save();
       await loginWithEmailAndPassword();
@@ -19,10 +21,28 @@ class LoginFunctions {
     }
   }
 
+  void updateEmail(String? email) {
+    state.email = email;
+  }
+
+  void updatePassword(String? password) {
+    state.password = password;
+  }
+
+  Future<bool> showApple() => apple.TheAppleSignIn.isAvailable();
+
+  void resetPassword() => NavigationUtils.push(
+        context,
+        ResetPasswordScreen(),
+      );
+
+  void loginWithPhone() =>
+      NavigationUtils.push(context, PhoneAuthScreen(login: true));
+
   /// login with email and password with firebase
   /// @param email user email
   /// @param password user password
-  loginWithEmailAndPassword() async {
+  Future<void> loginWithEmailAndPassword() async {
     BackEndModel backEnd = Provider.of<BackEndModel>(context, listen: false);
     await DialogUtils.showProgress(
         context, 'Logging in, please wait...'.tr(), false);
@@ -49,7 +69,7 @@ class LoginFunctions {
     }
   }
 
-  loginWithFacebook() async {
+  Future<void> loginWithFacebook() async {
     BackEndModel backEnd = Provider.of<BackEndModel>(context, listen: false);
     try {
       await DialogUtils.showProgress(
@@ -70,7 +90,7 @@ class LoginFunctions {
     }
   }
 
-  loginWithApple() async {
+  Future<void> loginWithApple() async {
     BackEndModel backEnd = Provider.of<BackEndModel>(context, listen: false);
     try {
       await DialogUtils.showProgress(

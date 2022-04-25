@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-class ScreenState extends ChangeNotifier {
+class LoginScreenState extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey();
   AutovalidateMode _validate = AutovalidateMode.disabled;
   Position? currentLocation;
@@ -17,8 +17,8 @@ class ScreenState extends ChangeNotifier {
 }
 
 class LoginScreenProvider extends StatelessWidget {
-  final Widget Function(BuildContext context, ScreenState state, Widget? child)
-      builder;
+  final Widget Function(
+      BuildContext context, LoginScreenState state, Widget? child) builder;
 
   const LoginScreenProvider({Key? key, required this.builder})
       : super(key: key);
@@ -26,8 +26,8 @@ class LoginScreenProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ScreenState(),
-      child: Consumer<ScreenState>(builder: builder),
+      create: (context) => LoginScreenState(),
+      child: Consumer<LoginScreenState>(builder: builder),
     );
   }
 }
