@@ -458,7 +458,8 @@ class SignUpScreen extends StatelessWidget {
           state.mobile!);
       await DialogUtils.hideProgress();
       if (result == null) {
-        NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
+        NavigationUtils.pushAndRemoveUntil(
+            context, const RedirectorScreen(), false);
       } else {
         DialogUtils.showAlertDialog(
             context, 'Failed'.tr(), 'Couldn\'t sign up'.tr());
