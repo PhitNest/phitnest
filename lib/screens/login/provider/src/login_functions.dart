@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
-import '../../../services/services.dart';
-import '../../screen_utils.dart';
-import '../../screens.dart';
-import 'model/login_model.dart';
+import '../../../../services/backend_model.dart';
+import '../../../screen_utils.dart';
+import '../../../screens.dart';
+import 'login_model.dart';
 
 class LoginFunctions {
   final BuildContext context;
-  final BackEndModel backEnd;
   final LoginModel model;
 
-  const LoginFunctions(
-      {required this.context, required this.backEnd, required this.model});
+  late final BackEndModel backEnd;
+
+  LoginFunctions({required this.context, required this.model}) {
+    backEnd = BackEndModel.getBackEnd(context);
+  }
 
   Future<void> login() async {
     if (model.formKey.currentState?.validate() ?? false) {

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'constants/constants.dart';
 import 'services/services.dart';
 import 'screens/screens.dart';
-import 'screens/utils/utils.dart';
+import 'utils/utils.dart';
 
 class App extends StatelessWidget with WidgetsBindingObserver {
   /// Holds all back end functionality and reference to current user
