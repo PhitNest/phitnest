@@ -1,7 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../app.dart';
+import '../../constants/constants.dart';
+import '../screens.dart';
 
 class AuthScreen extends StatelessWidget {
   @override
@@ -58,7 +59,8 @@ class AuthScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 onPressed: () {
-                  NavigationUtils.push(context, LoginScreen());
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
                 },
               ),
             ),
@@ -90,7 +92,8 @@ class AuthScreen extends StatelessWidget {
                       color: Color(COLOR_PRIMARY)),
                 ),
                 onPressed: () {
-                  NavigationUtils.push(context, SignUpScreen());
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SignUpScreen()));
                 },
               ),
             ),

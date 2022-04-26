@@ -18,7 +18,11 @@ import 'package:uuid/uuid.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-import '../../app.dart';
+import '../../constants/constants.dart';
+import '../../models/models.dart';
+import '../../screens/screen_utils.dart';
+import '../../screens/screens.dart';
+import '../services.dart';
 
 class FirebaseModel extends BackEndModel {
   final Reference _storage = FirebaseStorage.instance.ref();

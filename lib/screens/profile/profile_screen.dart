@@ -7,10 +7,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:phitnest/screens/screens.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../app.dart';
+import '../../constants/constants.dart';
+import '../../screens/screen_utils.dart';
+import '../../services/services.dart';
+import '../../models/models.dart';
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key? key}) : super(key: key);
@@ -127,8 +131,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  NavigationUtils.push(
-                      context, AccountDetailsScreen(user: user));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AccountDetailsScreen(user: user)));
                 },
                 title: Text(
                   'Account Details'.tr(),
@@ -170,7 +174,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  NavigationUtils.push(context, SettingsScreen(user: user));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => SettingsScreen(user: user)));
                 },
                 title: Text(
                   'Settings'.tr(),
@@ -185,7 +190,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  NavigationUtils.push(context, ContactUsScreen());
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ContactUsScreen()));
                 },
                 title: Text(
                   'Contact Us'.tr(),
@@ -236,8 +242,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     await DialogUtils.hideProgress();
                     Provider.of<BackEndModel>(context, listen: false)
                         .currentUser = null;
-                    NavigationUtils.pushAndRemoveUntil(
-                        context, AuthScreen(), false);
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => AuthScreen()),
+                        (route) => false);
                   }
                 },
                 title: Text(
@@ -282,8 +289,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   await FirebaseAuth.instance.signOut();
                   Provider.of<BackEndModel>(context, listen: false)
                       .currentUser = null;
-                  NavigationUtils.pushAndRemoveUntil(
-                      context, AuthScreen(), false);
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => AuthScreen()),
+                      (route) => false);
                 },
               ),
             ),
@@ -452,7 +460,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         CupertinoActionSheetAction(
           onPressed: () {
             Navigator.pop(context);
-            NavigationUtils.push(context, FullScreenImageViewer(imageUrl: url));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => FullScreenImageViewer(imageUrl: url)));
           },
           isDefaultAction: true,
           child: Text('View Picture'.tr()),

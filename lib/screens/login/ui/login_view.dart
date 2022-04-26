@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
-import '../../../app.dart';
+import '../../../constants/constants.dart';
+import '../../screen_utils.dart';
 
 class LoginView extends StatelessWidget {
   final GlobalKey<FormState> formKey;

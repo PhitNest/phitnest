@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../app.dart';
+import '../../../models/models.dart';
 
 class LocationUtils {
   static Future<Position?> getCurrentLocation() async {

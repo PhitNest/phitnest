@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../app.dart';
+import '../../../models/models.dart';
+import '../../../services/services.dart';
 
 class ScreenState extends ChangeNotifier {
   final UserModel user;

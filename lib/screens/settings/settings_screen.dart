@@ -3,7 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../app.dart';
+import '../../constants/constants.dart';
+import '../../models/models.dart';
+import '../../screens/screen_utils.dart';
+import '../../services/services.dart';
 
 class SettingsScreen extends StatefulWidget {
   final UserModel user;

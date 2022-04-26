@@ -4,7 +4,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../app.dart';
+import '../../constants/constants.dart';
+import '../../models/models.dart';
+import '../../services/services.dart';
+import '../screen_utils.dart';
+import '../screens.dart';
 import 'provider/conversations_provider.dart';
 
 class ConversationsScreen extends StatelessWidget {
@@ -82,9 +86,8 @@ class ConversationsScreen extends StatelessWidget {
                                                     context)
                                                 .getChannelByIdOrNull(
                                                     channelID);
-                                        NavigationUtils.push(
-                                            context,
-                                            ChatScreen(
+                                        Navigator.of(context).push(MaterialPageRoute(
+                                            builder: (context) => ChatScreen(
                                                 user: BackEndModel.getBackEnd(
                                                         context)
                                                     .currentUser!,
@@ -93,7 +96,7 @@ class ConversationsScreen extends StatelessWidget {
                                                         isGroupChat: false,
                                                         members: [friend],
                                                         conversationModel:
-                                                            conversationModel)));
+                                                            conversationModel))));
                                       },
                                       child: Column(
                                         children: <Widget>[
@@ -204,11 +207,10 @@ class ConversationsScreen extends StatelessWidget {
             padding: const EdgeInsets.only(left: 16.0, bottom: 12.8),
             child: InkWell(
               onTap: () {
-                NavigationUtils.push(
-                    context,
-                    ChatScreen(
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ChatScreen(
                         user: BackEndModel.getBackEnd(context).currentUser!,
-                        homeConversationModel: homeConversationModel));
+                        homeConversationModel: homeConversationModel)));
               },
               child: Row(
                 children: <Widget>[
@@ -260,11 +262,10 @@ class ConversationsScreen extends StatelessWidget {
           )
         : InkWell(
             onTap: () {
-              NavigationUtils.push(
-                  context,
-                  ChatScreen(
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ChatScreen(
                       user: BackEndModel.getBackEnd(context).currentUser!,
-                      homeConversationModel: homeConversationModel));
+                      homeConversationModel: homeConversationModel)));
             },
             child: Row(
               children: <Widget>[
@@ -341,12 +342,11 @@ class ConversationsScreen extends StatelessWidget {
           isDefaultAction: true,
           onPressed: () async {
             Navigator.pop(context);
-            NavigationUtils.push(
-                context,
-                UserDetailsScreen(
-                  user: friend,
-                  isMatch: true,
-                ));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => UserDetailsScreen(
+                      user: friend,
+                      isMatch: true,
+                    )));
           },
         ),
       ],

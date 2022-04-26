@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../app.dart';
+import '../../constants/constants.dart';
+import '../../screens/screen_utils.dart';
+import '../../screens/screens.dart';
+import '../../services/services.dart';
 import 'provider/sign_up_provider.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -418,7 +421,8 @@ class SignUpScreen extends StatelessWidget {
         ),
         InkWell(
           onTap: () {
-            NavigationUtils.push(context, PhoneAuthScreen(login: false));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => PhoneAuthScreen(login: false)));
           },
           child: Text(
             'Sign up with phone number'.tr(),
@@ -458,8 +462,9 @@ class SignUpScreen extends StatelessWidget {
           state.mobile!);
       await DialogUtils.hideProgress();
       if (result == null) {
-        NavigationUtils.pushAndRemoveUntil(
-            context, const RedirectorScreen(), false);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const RedirectorScreen()),
+            (route) => false);
       } else {
         DialogUtils.showAlertDialog(
             context, 'Failed'.tr(), 'Couldn\'t sign up'.tr());
