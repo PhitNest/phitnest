@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import '../../../constants/constants.dart';
 import '../../../models/models.dart';
 import '../../../services/services.dart';
-import '../../screens.dart';
+import '../../screens/screens.dart';
 
 class NotificationUtils {
   static sendNotification(String token, String title, String body,
