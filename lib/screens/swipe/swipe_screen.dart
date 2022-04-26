@@ -7,7 +7,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../app.dart';
+import '../../constants/constants.dart';
+import '../../models/models.dart';
+import '../../services/services.dart';
+import '../../widgets/widgets.dart';
+import '../screen_utils.dart';
+import '../screens.dart';
 
 class SwipeScreen extends StatefulWidget {
   SwipeScreen({Key? key}) : super(key: key);
@@ -384,11 +389,10 @@ class _SwipeScreenState extends State<SwipeScreen> {
                           if (result != null) {
                             data.removeAt(index);
                             _tinderCardsStreamController.add(data);
-                            NavigationUtils.push(
-                                context,
-                                MatchScreen(
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => MatchScreen(
                                     user: _backEnd.currentUser!,
-                                    matchedUser: result));
+                                    matchedUser: result)));
                           } else {
                             swipedUsers.add(data[index]);
                             data.removeAt(index);
@@ -556,8 +560,9 @@ class _SwipeScreenState extends State<SwipeScreen> {
     _tinderCardsStreamController = StreamController<List<UserModel>>();
     tinderUsers = _backEnd.getTinderUsers(_tinderCardsStreamController);
     await _backEnd.matchChecker(context, (user) {
-      NavigationUtils.push(
-          context, MatchScreen(user: _backEnd.currentUser!, matchedUser: user));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              MatchScreen(user: _backEnd.currentUser!, matchedUser: user)));
     });
   }
 }

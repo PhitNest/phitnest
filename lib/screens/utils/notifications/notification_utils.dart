@@ -7,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-import '../../app.dart';
+import '../../../constants/constants.dart';
+import '../../../models/models.dart';
+import '../../../services/services.dart';
+import '../../screens.dart';
 
 class NotificationUtils {
   static sendNotification(String token, String title, String body,

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../app.dart';
+import '../../constants/constants.dart';
+import '../screens.dart';
 
 /// This is a slide show shown on the first use of the app.
 class OnBoardingScreen extends StatefulWidget {
@@ -70,7 +71,8 @@ class _State extends State<OnBoardingScreen> {
                       // Upon pressing continue, finish on boarding
                       setFinishedOnBoarding();
                       // Continue to the authentication screen
-                      NavigationUtils.pushReplacement(context, AuthScreen());
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => AuthScreen()));
                     },
                     child: Text(
                       'Continue'.tr(),

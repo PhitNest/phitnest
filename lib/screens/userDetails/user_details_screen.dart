@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../app.dart';
+import '../../constants/constants.dart';
+import '../../models/models.dart';
+import '../../widgets/widgets.dart';
+import '../screen_utils.dart';
+import '../screens.dart';
 
 class UserDetailsScreen extends StatefulWidget {
   final UserModel user;
@@ -276,7 +280,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   Widget _imageBuilder(String url) {
     return GestureDetector(
       onTap: () {
-        NavigationUtils.push(context, FullScreenImageViewer(imageUrl: url));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: ((context) => FullScreenImageViewer(imageUrl: url))));
       },
       child: Card(
         shape: RoundedRectangleBorder(

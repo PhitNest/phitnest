@@ -6,7 +6,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
 
-import '../app.dart';
+import '../models/models.dart';
+import '../screens/screens.dart';
 
 abstract class BackEndModel extends ChangeNotifier {
   UserModel? currentUser;

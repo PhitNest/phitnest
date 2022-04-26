@@ -12,7 +12,12 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../app.dart';
+import '../../constants/constants.dart';
+import '../../models/models.dart';
+import '../../services/services.dart';
+import '../../widgets/widgets.dart';
+import '../screen_utils.dart';
+import '../screens.dart';
 
 enum RecordingState { HIDDEN, VISIBLE, Recording }
 
@@ -636,11 +641,10 @@ class _ChatScreenState extends State<ChatScreen> {
               GestureDetector(
                 onTap: () {
                   if (messageData.videoThumbnail.isEmpty) {
-                    NavigationUtils.push(
-                        context,
-                        FullScreenImageViewer(
-                          imageUrl: mediaUrl,
-                        ));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => FullScreenImageViewer(
+                              imageUrl: mediaUrl,
+                            )));
                   }
                 },
                 child: Hero(
@@ -662,12 +666,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       heroTag: messageData.messageID,
                       backgroundColor: Color(COLOR_ACCENT),
                       onPressed: () {
-                        NavigationUtils.push(
-                            context,
-                            FullScreenVideoViewer(
-                              heroTag: messageData.messageID,
-                              videoUrl: messageData.url!.url,
-                            ));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => FullScreenVideoViewer(
+                                  heroTag: messageData.messageID,
+                                  videoUrl: messageData.url!.url,
+                                )));
                       },
                       child: Icon(
                         Icons.play_arrow,
@@ -847,11 +850,10 @@ class _ChatScreenState extends State<ChatScreen> {
               GestureDetector(
                 onTap: () {
                   if (messageData.videoThumbnail.isEmpty) {
-                    NavigationUtils.push(
-                        context,
-                        FullScreenImageViewer(
-                          imageUrl: mediaUrl,
-                        ));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => FullScreenImageViewer(
+                              imageUrl: mediaUrl,
+                            )));
                   }
                 },
                 child: Hero(
@@ -873,12 +875,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       heroTag: messageData.messageID,
                       backgroundColor: Color(COLOR_ACCENT),
                       onPressed: () {
-                        NavigationUtils.push(
-                            context,
-                            FullScreenVideoViewer(
-                              heroTag: messageData.messageID,
-                              videoUrl: messageData.url!.url,
-                            ));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => FullScreenVideoViewer(
+                                  heroTag: messageData.messageID,
+                                  videoUrl: messageData.url!.url,
+                                )));
                       },
                       child: Icon(
                         Icons.play_arrow,

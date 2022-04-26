@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../app.dart';
+import '../../constants/constants.dart';
+import '../../screens/screen_utils.dart';
+import '../../screens/screens.dart';
+import '../../services/services.dart';
 
 /// This class will route the user to the proper page when the app is loaded.
 class RedirectorScreen extends StatelessWidget {
@@ -43,13 +46,16 @@ class RedirectorScreen extends StatelessWidget {
       // Return to auth screen if there are no existing credentials, otherwise
       // go to home screen
       if (backEnd.currentUser != null) {
-        NavigationUtils.pushReplacement(context, HomeScreen());
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomeScreen()));
       } else {
-        NavigationUtils.pushReplacement(context, AuthScreen());
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => AuthScreen()));
       }
     } else {
       // If app has not yet finished on boarding, redirect to onboarding screen
-      NavigationUtils.pushReplacement(context, OnBoardingScreen());
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => OnBoardingScreen()));
     }
   }
 }

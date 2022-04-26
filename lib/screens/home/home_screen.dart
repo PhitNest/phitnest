@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../app.dart';
+import '../../constants/constants.dart';
+import '../screen_utils.dart';
 import 'functions/home_functions.dart';
 import 'provider/home_provider.dart';
 

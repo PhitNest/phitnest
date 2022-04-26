@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,7 +9,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../../app.dart';
+import '../../constants/constants.dart';
+import '../../services/services.dart';
+import '../screen_utils.dart';
+import '../screens.dart';
 
 File? _image;
 
@@ -373,7 +374,9 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
               _verificationID!, code, _phoneNumber!, signUpLocation!);
           await DialogUtils.hideProgress();
           if (result == null) {
-            NavigationUtils.pushAndRemoveUntil(context, HomeScreen(), false);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+                (route) => false);
           } else {
             DialogUtils.showAlertDialog(context, 'Failed'.tr(),
                 'Couldn\'t create new user with phone number.'.tr());
@@ -550,6 +553,8 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
           ),
         );
       }
-    }, () => NavigationUtils.pushReplacement(context, HomeScreen()));
+    },
+        () => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomeScreen())));
   }
 }
