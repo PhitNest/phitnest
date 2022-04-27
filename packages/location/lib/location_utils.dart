@@ -1,8 +1,5 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-
-import '../../../models/models.dart';
 
 class LocationUtils {
   static Future<Position?> getCurrentLocation() async {
@@ -14,7 +11,7 @@ class LocationUtils {
       // Location services are not enabled don't continue
       // accessing the position and request users of the
       // App to enable the location services.
-      return Future.error('Location services are disabled.'.tr());
+      return Future.error('Location services are disabled.');
     }
 
     permission = await Geolocator.checkPermission();
@@ -27,15 +24,14 @@ class LocationUtils {
         // Android's shouldShowRequestPermissionRationale
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
-        return Future.error('Location permissions are denied'.tr());
+        return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
       return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.'
-              .tr());
+          'Location permissions are permanently denied, we cannot request permissions.');
     }
 
     // When we reach here, permissions are granted and we can
@@ -52,9 +48,9 @@ class LocationUtils {
     return position;
   }
 
-  static bool isInPreferredDistance(UserModel user, double distance) {
-    if (user.settings.distanceRadius.isNotEmpty) {
-      if (distance <= (int.tryParse(user.settings.distanceRadius) ?? 0)) {
+  static bool isInPreferredDistance(String radiusSetting, double distance) {
+    if (radiusSetting.isNotEmpty) {
+      if (distance <= (int.tryParse(radiusSetting) ?? 0)) {
         return true;
       } else {
         return false;
@@ -65,13 +61,10 @@ class LocationUtils {
   }
 
   static double getDistance(
-      UserLocation userLocation, UserLocation myLocation) {
+      double userLat, double userLong, double myLat, double myLong) {
     final Distance distance = Distance();
     final double milesAway = distance
-        .as(
-            LengthUnit.Mile,
-            LatLng(userLocation.latitude, userLocation.longitude),
-            LatLng(myLocation.latitude, myLocation.longitude))
+        .as(LengthUnit.Mile, LatLng(userLat, userLong), LatLng(myLat, myLong))
         .toDouble();
     return milesAway;
   }
