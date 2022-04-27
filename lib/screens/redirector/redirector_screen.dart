@@ -1,8 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:navigation/navigation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../app.dart';
+import '../../screens/screen_utils.dart';
+import '../../screens/screens.dart';
+import '../../services/services.dart';
 
 /// This class will route the user to the proper page when the app is loaded.
 class RedirectorScreen extends StatelessWidget {
@@ -12,6 +14,7 @@ class RedirectorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // This async function will route the user when on boarding is completed.
     redirect(context);
+    // Temporary loading screen
     return Scaffold(
       backgroundColor: Color(COLOR_PRIMARY),
       body: Center(
@@ -33,27 +36,23 @@ class RedirectorScreen extends StatelessWidget {
     bool finishedOnBoarding = (prefs.getBool(FINISHED_ON_BOARDING) ?? false);
 
     if (finishedOnBoarding) {
-      // Firebase authentication user object
-      User? firebaseUser = FirebaseAuth.instance.currentUser;
-      if (firebaseUser != null) {
-        // Load user model from firestore document
-        UserModel? user = await FirebaseUtils.loadUser(firebaseUser.uid);
-        if (user != null) {
-          // If the user was found, set their activity to active, and update
-          // their activity in firestore.
-          user.active = true;
-          await FirebaseUtils.updateCurrentUser(user);
-          // Redirect to the home screen
-          return NavigationUtils.pushReplacement(
-              context, HomeScreen(user: user));
-        }
+      final BackEndModel backEnd = BackEndModel.getBackEnd(context);
+
+      // Try updating current user with stored firebase credentials
+      if (backEnd.currentUser == null) {
+        await backEnd.updateCurrentUser();
       }
-      // If firebase has not yet authenticated or the user does not exist in
-      // firestore, redirect to auth screen
-      NavigationUtils.pushReplacement(context, AuthScreen());
+
+      // Return to auth screen if there are no existing credentials, otherwise
+      // go to home screen
+      if (backEnd.currentUser != null) {
+        Navigation.pushReplacement(context, HomeScreen());
+      } else {
+        Navigation.pushReplacement(context, AuthScreen());
+      }
     } else {
       // If app has not yet finished on boarding, redirect to onboarding screen
-      NavigationUtils.pushReplacement(context, OnBoardingScreen());
+      Navigation.pushReplacement(context, OnBoardingScreen());
     }
   }
 }

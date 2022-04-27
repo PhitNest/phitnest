@@ -3,7 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../app.dart';
+import '../../models/models.dart';
+import '../../screens/screen_utils.dart';
+import '../../services/services.dart';
 
 class SettingsScreen extends StatefulWidget {
   final UserModel user;
@@ -230,7 +232,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           child: CupertinoButton(
                             padding: const EdgeInsets.all(12.0),
                             onPressed: () async {
-                              DialogUtils.showProgress(
+                              await DialogUtils.showProgress(
                                   context, 'Saving changes...'.tr(), true);
                               user.settings.genderPreference = prefGender;
                               user.settings.gender = gender;
@@ -241,20 +243,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               user.settings.pushSuperLikesEnabled = superLikes;
                               user.settings.pushNewMatchesEnabled = newMatches;
                               user.settings.distanceRadius = radius;
-                              bool success =
-                                  await FirebaseUtils.updateCurrentUser(user);
+                              await BackEndModel.getBackEnd(context)
+                                  .updateCurrentUser(user: user);
                               await DialogUtils.hideProgress();
-                              if (success) {
-                                ScaffoldMessenger.of(buildContext).showSnackBar(
-                                  SnackBar(
-                                    duration: Duration(seconds: 3),
-                                    content: Text(
-                                      'Settings saved successfully'.tr(),
-                                      style: TextStyle(fontSize: 17),
-                                    ),
+                              ScaffoldMessenger.of(buildContext).showSnackBar(
+                                SnackBar(
+                                  duration: Duration(seconds: 3),
+                                  content: Text(
+                                    'Settings saved successfully'.tr(),
+                                    style: TextStyle(fontSize: 17),
                                   ),
-                                );
-                              }
+                                ),
+                              );
                             },
                             child: Text(
                               'Save'.tr(),

@@ -3,19 +3,22 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:navigation/navigation.dart';
 
-import '../../app.dart';
+import '../../models/models.dart';
+import '../../services/services.dart';
+import '../screen_utils.dart';
+import '../screens.dart';
 import 'provider/conversations_provider.dart';
 
 class ConversationsScreen extends StatelessWidget {
-  final UserModel user;
-
-  const ConversationsScreen({Key? key, required this.user}) : super(key: key);
+  const ConversationsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ConversationsScreenProvider(
-        user: user,
+        backEnd: BackEndModel.getBackEnd(context),
+        user: BackEndModel.getBackEnd(context).currentUser!,
         builder: (context, state, child) {
           return Container(
             child: ListView(
@@ -48,8 +51,8 @@ class ConversationsScreen extends StatelessWidget {
                           itemCount: snap.data!.length,
                           itemBuilder: (BuildContext context, int index) {
                             UserModel friend = snap.data![index];
-                            return FirebaseUtils.validateIfUserBlocked(
-                                    friend.userID)
+                            return BackEndModel.getBackEnd(context)
+                                    .validateIfUserBlocked(friend.userID)
                                 ? Container(
                                     width: 0,
                                     height: 0,
@@ -62,23 +65,33 @@ class ConversationsScreen extends StatelessWidget {
                                           _onMatchLongPress(context, friend),
                                       onTap: () async {
                                         String channelID;
-                                        if (friend.userID
-                                                .compareTo(user.userID) <
+                                        if (friend.userID.compareTo(
+                                                BackEndModel.getBackEnd(context)
+                                                    .currentUser!
+                                                    .userID) <
                                             0) {
-                                          channelID =
-                                              friend.userID + user.userID;
+                                          channelID = friend.userID +
+                                              BackEndModel.getBackEnd(context)
+                                                  .currentUser!
+                                                  .userID;
                                         } else {
                                           channelID =
-                                              user.userID + friend.userID;
+                                              BackEndModel.getBackEnd(context)
+                                                      .currentUser!
+                                                      .userID +
+                                                  friend.userID;
                                         }
                                         ConversationModel? conversationModel =
-                                            await FirebaseUtils
+                                            await BackEndModel.getBackEnd(
+                                                    context)
                                                 .getChannelByIdOrNull(
                                                     channelID);
-                                        NavigationUtils.push(
+                                        Navigation.push(
                                             context,
                                             ChatScreen(
-                                                user: user,
+                                                user: BackEndModel.getBackEnd(
+                                                        context)
+                                                    .currentUser!,
                                                 homeConversationModel:
                                                     HomeConversationModel(
                                                         isGroupChat: false,
@@ -154,9 +167,10 @@ class ConversationsScreen extends StatelessWidget {
                                     context, homeConversationModel),
                               );
                             } else {
-                              return FirebaseUtils.validateIfUserBlocked(
-                                      homeConversationModel
-                                          .members.first.userID)
+                              return BackEndModel.getBackEnd(context)
+                                      .validateIfUserBlocked(
+                                          homeConversationModel
+                                              .members.first.userID)
                                   ? Container(
                                       width: 0,
                                       height: 0,
@@ -194,10 +208,10 @@ class ConversationsScreen extends StatelessWidget {
             padding: const EdgeInsets.only(left: 16.0, bottom: 12.8),
             child: InkWell(
               onTap: () {
-                NavigationUtils.push(
+                Navigation.push(
                     context,
                     ChatScreen(
-                        user: user,
+                        user: BackEndModel.getBackEnd(context).currentUser!,
                         homeConversationModel: homeConversationModel));
               },
               child: Row(
@@ -250,10 +264,10 @@ class ConversationsScreen extends StatelessWidget {
           )
         : InkWell(
             onTap: () {
-              NavigationUtils.push(
+              Navigation.push(
                   context,
                   ChatScreen(
-                      user: user,
+                      user: BackEndModel.getBackEnd(context).currentUser!,
                       homeConversationModel: homeConversationModel));
             },
             child: Row(
@@ -331,12 +345,8 @@ class ConversationsScreen extends StatelessWidget {
           isDefaultAction: true,
           onPressed: () async {
             Navigator.pop(context);
-            NavigationUtils.push(
-                context,
-                UserDetailsScreen(
-                  user: friend,
-                  isMatch: true,
-                ));
+            Navigation.push(
+                context, UserDetailsScreen(user: friend, isMatch: true));
           },
         ),
       ],

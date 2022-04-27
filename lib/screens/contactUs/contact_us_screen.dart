@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../app.dart';
+import '../screen_utils.dart';
 
 class ContactUsScreen extends StatelessWidget {
   @override

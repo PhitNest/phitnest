@@ -11,8 +11,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
+import 'package:navigation/navigation.dart';
 
-import '../../app.dart';
+import '../../models/models.dart';
+import '../../services/services.dart';
+import '../../widgets/widgets.dart';
+import '../screen_utils.dart';
+import '../screens.dart';
 
 enum RecordingState { HIDDEN, VISIBLE, Recording }
 
@@ -62,7 +67,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   setupStream() {
-    chatStream = FirebaseUtils.getChatMessages(user, homeConversationModel)
+    chatStream = BackEndModel.getBackEnd(context)
+        .getChatMessages(homeConversationModel)
         .asBroadcastStream();
     chatStream.listen((chatModel) {
       if (mounted) {
@@ -423,8 +429,8 @@ class _ChatScreenState extends State<ChatScreen> {
           onPressed: () async {
             Navigator.pop(context);
             DialogUtils.showProgress(context, 'Leaving group chat'.tr(), false);
-            bool isSuccessful = await FirebaseUtils.leaveGroup(
-                user, homeConversationModel.conversationModel!);
+            bool isSuccessful = await BackEndModel.getBackEnd(context)
+                .leaveGroup(homeConversationModel.conversationModel!);
             DialogUtils.hideProgress();
             if (isSuccessful) {
               Navigator.pop(context);
@@ -471,8 +477,8 @@ class _ChatScreenState extends State<ChatScreen> {
             XFile? image =
                 await _imagePicker.pickImage(source: ImageSource.gallery);
             if (image != null) {
-              Url url = await FirebaseUtils.uploadChatImageToFireStorage(
-                  File(image.path), context);
+              Url url = await BackEndModel.getBackEnd(context)
+                  .uploadChatImageToFireStorage(File(image.path), context);
               _sendMessage('', url, '');
             }
           },
@@ -486,8 +492,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 await _imagePicker.pickVideo(source: ImageSource.gallery);
             if (galleryVideo != null) {
               ChatVideoContainer videoContainer =
-                  await FirebaseUtils.uploadChatVideoToFireStorage(
-                      File(galleryVideo.path), context);
+                  await BackEndModel.getBackEnd(context)
+                      .uploadChatVideoToFireStorage(
+                          File(galleryVideo.path), context);
               _sendMessage(
                   '', videoContainer.videoUrl, videoContainer.thumbnailUrl);
             }
@@ -501,8 +508,8 @@ class _ChatScreenState extends State<ChatScreen> {
             XFile? image =
                 await _imagePicker.pickImage(source: ImageSource.camera);
             if (image != null) {
-              Url url = await FirebaseUtils.uploadChatImageToFireStorage(
-                  File(image.path), context);
+              Url url = await BackEndModel.getBackEnd(context)
+                  .uploadChatImageToFireStorage(File(image.path), context);
               _sendMessage('', url, '');
             }
           },
@@ -516,8 +523,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 await _imagePicker.pickVideo(source: ImageSource.camera);
             if (recordedVideo != null) {
               ChatVideoContainer videoContainer =
-                  await FirebaseUtils.uploadChatVideoToFireStorage(
-                      File(recordedVideo.path), context);
+                  await BackEndModel.getBackEnd(context)
+                      .uploadChatVideoToFireStorage(
+                          File(recordedVideo.path), context);
               _sendMessage(
                   '', videoContainer.videoUrl, videoContainer.thumbnailUrl);
             }
@@ -633,11 +641,8 @@ class _ChatScreenState extends State<ChatScreen> {
               GestureDetector(
                 onTap: () {
                   if (messageData.videoThumbnail.isEmpty) {
-                    NavigationUtils.push(
-                        context,
-                        FullScreenImageViewer(
-                          imageUrl: mediaUrl,
-                        ));
+                    Navigation.push(
+                        context, FullScreenImageViewer(imageUrl: mediaUrl));
                   }
                 },
                 child: Hero(
@@ -659,12 +664,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       heroTag: messageData.messageID,
                       backgroundColor: Color(COLOR_ACCENT),
                       onPressed: () {
-                        NavigationUtils.push(
+                        Navigation.push(
                             context,
                             FullScreenVideoViewer(
-                              heroTag: messageData.messageID,
-                              videoUrl: messageData.url!.url,
-                            ));
+                                videoUrl: messageData.url!.url,
+                                heroTag: messageData.messageID));
                       },
                       child: Icon(
                         Icons.play_arrow,
@@ -844,11 +848,8 @@ class _ChatScreenState extends State<ChatScreen> {
               GestureDetector(
                 onTap: () {
                   if (messageData.videoThumbnail.isEmpty) {
-                    NavigationUtils.push(
-                        context,
-                        FullScreenImageViewer(
-                          imageUrl: mediaUrl,
-                        ));
+                    Navigation.push(
+                        context, FullScreenImageViewer(imageUrl: mediaUrl));
                   }
                 },
                 child: Hero(
@@ -870,12 +871,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       heroTag: messageData.messageID,
                       backgroundColor: Color(COLOR_ACCENT),
                       onPressed: () {
-                        NavigationUtils.push(
+                        Navigation.push(
                             context,
                             FullScreenVideoViewer(
-                              heroTag: messageData.messageID,
-                              videoUrl: messageData.url!.url,
-                            ));
+                                videoUrl: messageData.url!.url,
+                                heroTag: messageData.messageID));
                       },
                       child: Icon(
                         Icons.play_arrow,
@@ -968,8 +968,8 @@ class _ChatScreenState extends State<ChatScreen> {
           lastMessage: ''
                   '${user.fullName()} sent a message'
               .tr());
-      bool isSuccessful =
-          await FirebaseUtils.createConversation(user, conversation);
+      bool isSuccessful = await BackEndModel.getBackEnd(context)
+          .createConversation(conversation);
       if (isSuccessful) {
         homeConversationModel.conversationModel = conversation;
         setupStream();
@@ -1020,8 +1020,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
     if (await _checkChannelNullability(
         homeConversationModel.conversationModel)) {
-      await FirebaseUtils.sendMessage(
-          user,
+      await BackEndModel.getBackEnd(context).sendMessage(
           homeConversationModel.members,
           homeConversationModel.isGroupChat,
           message,
@@ -1030,8 +1029,8 @@ class _ChatScreenState extends State<ChatScreen> {
           Timestamp.now();
       homeConversationModel.conversationModel!.lastMessage = message.content;
 
-      await FirebaseUtils.updateChannel(
-          homeConversationModel.conversationModel!);
+      await BackEndModel.getBackEnd(context)
+          .updateChannel(homeConversationModel.conversationModel!);
     } else {
       DialogUtils.showAlertDialog(context, 'An Error Occurred'.tr(),
           'Couldn\'t send Message, please try again later'.tr());
@@ -1101,8 +1100,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                     false);
                                 homeConversationModel.conversationModel!.name =
                                     _groupNameController.text.trim();
-                                await FirebaseUtils.updateChannel(
-                                    homeConversationModel.conversationModel!);
+                                await BackEndModel.getBackEnd(context)
+                                    .updateChannel(homeConversationModel
+                                        .conversationModel!);
                                 DialogUtils.hideProgress();
                               }
                               Navigator.pop(context);
@@ -1131,8 +1131,8 @@ class _ChatScreenState extends State<ChatScreen> {
           onPressed: () async {
             Navigator.pop(context);
             DialogUtils.showProgress(context, 'Blocking user...'.tr(), false);
-            bool isSuccessful = await FirebaseUtils.blockUser(
-                user, homeConversationModel.members.first, 'block');
+            bool isSuccessful = await BackEndModel.getBackEnd(context)
+                .blockUser(homeConversationModel.members.first, 'block');
             DialogUtils.hideProgress();
             if (isSuccessful) {
               Navigator.pop(context);
@@ -1156,8 +1156,8 @@ class _ChatScreenState extends State<ChatScreen> {
           onPressed: () async {
             Navigator.pop(context);
             DialogUtils.showProgress(context, 'Reporting user...'.tr(), false);
-            bool isSuccessful = await FirebaseUtils.blockUser(
-                user, homeConversationModel.members.first, 'report');
+            bool isSuccessful = await BackEndModel.getBackEnd(context)
+                .blockUser(homeConversationModel.members.first, 'report');
             DialogUtils.hideProgress();
             if (isSuccessful) {
               Navigator.pop(context);
@@ -1222,8 +1222,8 @@ class _ChatScreenState extends State<ChatScreen> {
       audioMessageTime = 'Start Recording'.tr();
       currentRecordingState = RecordingState.HIDDEN;
     });
-    Url url = await FirebaseUtils.uploadAudioFile(
-        File(tempPathForAudioMessages), context);
+    Url url = await BackEndModel.getBackEnd(context)
+        .uploadAudioFile(File(tempPathForAudioMessages), context);
     _sendMessage('', url, '');
   }
 

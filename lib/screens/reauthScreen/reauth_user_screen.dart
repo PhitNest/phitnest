@@ -2,10 +2,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
-import '../../app.dart';
+import '../../screens/screen_utils.dart';
+import '../../services/services.dart';
+import '../../models/models.dart';
 
 enum AuthProviders { PASSWORD, PHONE, FACEBOOK, APPLE }
 
@@ -208,8 +211,9 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
     } else {
       await DialogUtils.showProgress(context, 'Verifying...'.tr(), false);
       try {
-        UserCredential? result = await FirebaseUtils.reAuthUser(widget.provider,
-            email: widget.user.email, password: _passwordController.text);
+        UserCredential? result = await BackEndModel.getBackEnd(context)
+            .reAuthUser(widget.provider,
+                email: widget.user.email, password: _passwordController.text);
         if (result == null) {
           await DialogUtils.hideProgress();
           DialogUtils.showAlertDialog(context, 'Couldn\'t verify'.tr(),
@@ -263,7 +267,8 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
         token = await facebookAuth.accessToken;
       }
       if (token != null)
-        await FirebaseUtils.reAuthUser(widget.provider, accessToken: token);
+        await BackEndModel.getBackEnd(context)
+            .reAuthUser(widget.provider, accessToken: token);
       await DialogUtils.hideProgress();
       Navigator.pop(context, true);
     } catch (e, s) {
@@ -286,8 +291,8 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
             context, 'Error', 'Couldn\'t verify with apple.'.tr());
       }
       if (appleCredential.status == apple.AuthorizationStatus.authorized) {
-        await FirebaseUtils.reAuthUser(widget.provider,
-            appleCredential: appleCredential);
+        await BackEndModel.getBackEnd(context)
+            .reAuthUser(widget.provider, appleCredential: appleCredential);
       }
       await DialogUtils.hideProgress();
       Navigator.pop(context, true);
@@ -300,59 +305,53 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
   }
 
   _submitPhoneNumber() async {
+    BackEndModel backEnd = BackEndModel.getBackEnd(context);
     await DialogUtils.showProgress(context, 'Sending code...'.tr(), true);
-    await FirebaseUtils.firebaseSubmitPhoneNumber(
-      widget.phoneNumber!,
-      (String verificationId) {
-        if (mounted) {
-          DialogUtils.hideProgress();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Code verification timeout, request new code.'.tr(),
-              ),
+    await backEnd.firebaseSubmitPhoneNumber(
+        backEnd.currentUser!.firstName,
+        backEnd.currentUser!.lastName,
+        Position(
+            longitude: 0,
+            latitude: 0,
+            timestamp: DateTime(0),
+            accuracy: 0,
+            altitude: 0,
+            heading: 0,
+            speed: 0,
+            speedAccuracy: 0),
+        widget.phoneNumber!, (String verificationId) {
+      if (mounted) {
+        DialogUtils.hideProgress();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Code verification timeout, request new code.'.tr(),
             ),
-          );
-        }
-      },
-      (String? verificationId, int? forceResendingToken) async {
-        print('_ReAuthUserScreenState._submitPhoneNumber $verificationId');
-        if (mounted) {
-          print('_ReAuthUserScreenState.mounted');
-          await DialogUtils.hideProgress();
-          _verificationID = verificationId;
-        }
-      },
-      (FirebaseAuthException error) async {
-        if (mounted) {
-          await DialogUtils.hideProgress();
-          print('${error.message} ${error.stackTrace}');
-          String message = 'An error has occurred, please try again.'.tr();
-          switch (error.code) {
-            case 'invalid-verification-code':
-              message = 'Invalid code or has been expired.'.tr();
-              break;
-            case 'user-disabled':
-              message = 'This user has been disabled.'.tr();
-              break;
-            default:
-              message = 'An error has occurred, please try again.'.tr();
-              break;
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                message,
-              ),
+          ),
+        );
+      }
+    }, (String? verificationId, int? forceResendingToken) async {
+      print('_ReAuthUserScreenState._submitPhoneNumber $verificationId');
+      if (mounted) {
+        print('_ReAuthUserScreenState.mounted');
+        await DialogUtils.hideProgress();
+        _verificationID = verificationId;
+      }
+    }, (Exception error) async {
+      if (mounted) {
+        await DialogUtils.hideProgress();
+        print('$error');
+        String message = 'An error has occurred, please try again.'.tr();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              message,
             ),
-          );
-          Navigator.pop(context);
-        }
-      },
-      (PhoneAuthCredential credential) async {
-        print('_ReAuthUserScreenState._submitPhoneNumber');
-      },
-    );
+          ),
+        );
+        Navigator.pop(context);
+      }
+    }, () async {});
   }
 
   void _submitCode(String code) async {
@@ -360,7 +359,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
     try {
       if (_verificationID != null) {
         if (widget.deleteUser) {
-          await FirebaseUtils.reAuthUser(widget.provider,
+          await BackEndModel.getBackEnd(context).reAuthUser(widget.provider,
               verificationId: _verificationID!, smsCode: code);
         } else {
           PhoneAuthCredential credential = PhoneAuthProvider.credential(

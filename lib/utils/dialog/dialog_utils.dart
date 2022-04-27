@@ -4,7 +4,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:phitnest/constants/constants.dart';
+
+import '../../../constants/constants.dart';
 
 /// This class is used to show modular dialog boxes
 class DialogUtils {

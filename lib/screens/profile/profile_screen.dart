@@ -7,15 +7,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:navigation/navigation.dart';
+import 'package:phitnest/screens/screens.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../app.dart';
+import '../../screens/screen_utils.dart';
+import '../../services/services.dart';
+import '../../models/models.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final UserModel user;
-
-  ProfileScreen({Key? key, required this.user}) : super(key: key);
+  ProfileScreen({Key? key}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -31,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    user = widget.user;
+    user = BackEndModel.getBackEnd(context).currentUser!;
     images.clear();
     images.addAll(user.photos);
     if (images.isNotEmpty) {
@@ -129,8 +131,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  NavigationUtils.push(
-                      context, AccountDetailsScreen(user: user));
+                  Navigation.push(context, AccountDetailsScreen(user: user));
                 },
                 title: Text(
                   'Account Details'.tr(),
@@ -172,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  NavigationUtils.push(context, SettingsScreen(user: user));
+                  Navigation.push(context, SettingsScreen(user: user));
                 },
                 title: Text(
                   'Settings'.tr(),
@@ -187,7 +188,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  NavigationUtils.push(context, ContactUsScreen());
+                  Navigation.push(context, ContactUsScreen());
                 },
                 title: Text(
                   'Contact Us'.tr(),
@@ -234,12 +235,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   if (result != null && result) {
                     await DialogUtils.showProgress(
                         context, 'Deleting account...'.tr(), false);
-                    await FirebaseUtils.deleteUser(user);
+                    await BackEndModel.getBackEnd(context).deleteUser();
                     await DialogUtils.hideProgress();
-                    Provider.of<AppModel>(context, listen: false).currentUser =
-                        null;
-                    NavigationUtils.pushAndRemoveUntil(
-                        context, AuthScreen(), false);
+                    Provider.of<BackEndModel>(context, listen: false)
+                        .currentUser = null;
+                    Navigation.pushAndRemoveUntil(context, AuthScreen());
                   }
                 },
                 title: Text(
@@ -278,13 +278,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onPressed: () async {
                   user.active = false;
                   user.lastOnlineTimestamp = Timestamp.now();
-                  await FirebaseUtils.updateCurrentUser(user);
+                  await BackEndModel.getBackEnd(context)
+                      .updateCurrentUser(user: user);
                   await FirebaseFirestore.instance.terminate();
                   await FirebaseAuth.instance.signOut();
-                  Provider.of<AppModel>(context, listen: false).currentUser =
-                      null;
-                  NavigationUtils.pushAndRemoveUntil(
-                      context, AuthScreen(), false);
+                  Provider.of<BackEndModel>(context, listen: false)
+                      .currentUser = null;
+                  Navigation.pushAndRemoveUntil(context, AuthScreen());
                 },
               ),
             ),
@@ -309,9 +309,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             DialogUtils.showProgress(
                 context, 'Removing picture...'.tr(), false);
             if (user.profilePictureURL.isNotEmpty)
-              await FirebaseUtils.deleteImage(user.profilePictureURL);
+              await BackEndModel.getBackEnd(context).deleteProfilePicture();
             user.profilePictureURL = '';
-            await FirebaseUtils.updateCurrentUser(user);
+            await BackEndModel.getBackEnd(context)
+                .updateCurrentUser(user: user);
             DialogUtils.hideProgress();
             setState(() {});
           },
@@ -353,9 +354,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _imagePicked(File image) async {
     DialogUtils.showProgress(context, 'Uploading image...'.tr(), false);
-    user.profilePictureURL =
-        await FirebaseUtils.uploadUserImageToFireStorage(image, user.userID);
-    await FirebaseUtils.updateCurrentUser(user);
+    user.profilePictureURL = await BackEndModel.getBackEnd(context)
+        .uploadUserImageToFireStorage(
+            image, BackEndModel.getBackEnd(context).currentUser!.userID);
+    await BackEndModel.getBackEnd(context).updateCurrentUser(user: user);
     DialogUtils.hideProgress();
   }
 
@@ -438,9 +440,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Navigator.pop(context);
             images.removeLast();
             images.remove(url);
-            await FirebaseUtils.deleteImage(url);
+            await BackEndModel.getBackEnd(context).deleteProfilePicture();
             user.photos = images;
-            await FirebaseUtils.updateCurrentUser(user);
+            await BackEndModel.getBackEnd(context)
+                .updateCurrentUser(user: user);
             images.add(null);
             setState(() {});
           },
@@ -450,7 +453,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         CupertinoActionSheetAction(
           onPressed: () {
             Navigator.pop(context);
-            NavigationUtils.push(context, FullScreenImageViewer(imageUrl: url));
+            Navigation.push(context, FullScreenImageViewer(imageUrl: url));
           },
           isDefaultAction: true,
           child: Text('View Picture'.tr()),
@@ -459,10 +462,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onPressed: () async {
             Navigator.pop(context);
             user.profilePictureURL = url;
-            dynamic result = await FirebaseUtils.updateCurrentUser(user);
-            if (result != null) {
-              user = result;
-            }
+            BackEndModel.getBackEnd(context).updateCurrentUser(user: user);
+
             setState(() {});
           },
           isDefaultAction: true,
@@ -494,12 +495,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             XFile? image =
                 await _imagePicker.pickImage(source: ImageSource.gallery);
             if (image != null) {
-              Url imageUrl = await FirebaseUtils.uploadChatImageToFireStorage(
-                  File(image.path), context);
+              Url imageUrl = await BackEndModel.getBackEnd(context)
+                  .uploadChatImageToFireStorage(File(image.path), context);
               images.removeLast();
               images.add(imageUrl.url);
               user.photos = images;
-              await FirebaseUtils.updateCurrentUser(user);
+              await BackEndModel.getBackEnd(context)
+                  .updateCurrentUser(user: user);
               images.add(null);
               setState(() {});
             }
@@ -513,12 +515,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             XFile? image =
                 await _imagePicker.pickImage(source: ImageSource.camera);
             if (image != null) {
-              Url imageUrl = await FirebaseUtils.uploadChatImageToFireStorage(
-                  File(image.path), context);
+              Url imageUrl = await BackEndModel.getBackEnd(context)
+                  .uploadChatImageToFireStorage(File(image.path), context);
               images.removeLast();
               images.add(imageUrl.url);
               user.photos = images;
-              await FirebaseUtils.updateCurrentUser(user);
+              await BackEndModel.getBackEnd(context)
+                  .updateCurrentUser(user: user);
               images.add(null);
               setState(() {});
             }

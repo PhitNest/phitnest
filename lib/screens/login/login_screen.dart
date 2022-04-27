@@ -1,15 +1,16 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
-import '../../app.dart';
+import '../screen_utils.dart';
 import 'provider/login_provider.dart';
 
 class LoginScreen extends StatelessWidget {
+  static final BorderRadius _borderRadius = BorderRadius.circular(25.0);
+
   @override
   Widget build(BuildContext context) {
-    return LoginScreenProvider(builder: ((context, state, child) {
+    return LoginScreenProvider(builder: ((context, model, functions, child) {
       return Scaffold(
         appBar: AppBar(
           systemOverlayStyle: DisplayUtils.isDarkMode
@@ -21,8 +22,8 @@ class LoginScreen extends StatelessWidget {
           elevation: 0.0,
         ),
         body: Form(
-          key: state.key,
-          autovalidateMode: state.validate,
+          key: model.formKey,
+          autovalidateMode: model.validate,
           child: ListView(
             children: <Widget>[
               ConstrainedBox(
@@ -31,7 +32,7 @@ class LoginScreen extends StatelessWidget {
                   padding:
                       const EdgeInsets.only(top: 32.0, right: 16.0, left: 16.0),
                   child: Text(
-                    'Sign In'.tr(),
+                    'Sign In',
                     style: TextStyle(
                         color: Color(COLOR_PRIMARY),
                         fontSize: 25.0,
@@ -48,30 +49,30 @@ class LoginScreen extends StatelessWidget {
                     textAlignVertical: TextAlignVertical.center,
                     textInputAction: TextInputAction.next,
                     style: TextStyle(fontSize: 18.0),
-                    validator: (val) => ValidationUtils.validateEmail(val),
-                    onSaved: (val) => state.email = val,
+                    validator: ValidationUtils.validateEmail,
+                    onSaved: functions.updateEmail,
                     keyboardType: TextInputType.emailAddress,
                     cursorColor: Color(COLOR_PRIMARY),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(left: 16, right: 16),
-                      hintText: 'E-mail Address'.tr(),
+                      hintText: 'E-mail Address',
                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
+                          borderRadius: _borderRadius,
                           borderSide: BorderSide(
                               color: Color(COLOR_PRIMARY), width: 2.0)),
                       errorBorder: OutlineInputBorder(
                         borderSide:
                             BorderSide(color: Theme.of(context).errorColor),
-                        borderRadius: BorderRadius.circular(25.0),
+                        borderRadius: _borderRadius,
                       ),
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide:
                             BorderSide(color: Theme.of(context).errorColor),
-                        borderRadius: BorderRadius.circular(25.0),
+                        borderRadius: _borderRadius,
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.grey.shade200),
-                        borderRadius: BorderRadius.circular(25.0),
+                        borderRadius: _borderRadius,
                       ),
                     ),
                   ),
@@ -84,33 +85,33 @@ class LoginScreen extends StatelessWidget {
                       const EdgeInsets.only(top: 32.0, right: 24.0, left: 24.0),
                   child: TextFormField(
                     textAlignVertical: TextAlignVertical.center,
-                    onSaved: (val) => state.password = val,
+                    onSaved: functions.updatePassword,
                     obscureText: true,
-                    validator: (val) => ValidationUtils.validatePassword(val),
-                    onFieldSubmitted: (password) => _login(context, state),
+                    validator: ValidationUtils.validatePassword,
+                    onFieldSubmitted: (_) => functions.login(),
                     textInputAction: TextInputAction.done,
                     style: TextStyle(fontSize: 18.0),
                     cursorColor: Color(COLOR_PRIMARY),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(left: 16, right: 16),
-                      hintText: 'Password'.tr(),
+                      hintText: 'Password',
                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
+                          borderRadius: _borderRadius,
                           borderSide: BorderSide(
                               color: Color(COLOR_PRIMARY), width: 2.0)),
                       errorBorder: OutlineInputBorder(
                         borderSide:
                             BorderSide(color: Theme.of(context).errorColor),
-                        borderRadius: BorderRadius.circular(25.0),
+                        borderRadius: _borderRadius,
                       ),
                       focusedErrorBorder: OutlineInputBorder(
                         borderSide:
                             BorderSide(color: Theme.of(context).errorColor),
-                        borderRadius: BorderRadius.circular(25.0),
+                        borderRadius: _borderRadius,
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.grey.shade200),
-                        borderRadius: BorderRadius.circular(25.0),
+                        borderRadius: _borderRadius,
                       ),
                     ),
                   ),
@@ -124,10 +125,9 @@ class LoginScreen extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
-                    onTap: () =>
-                        NavigationUtils.push(context, ResetPasswordScreen()),
+                    onTap: functions.resetPassword,
                     child: Text(
-                      'Forgot password?'.tr(),
+                      'Forgot password?',
                       style: TextStyle(
                           color: Colors.lightBlue,
                           fontWeight: FontWeight.bold,
@@ -147,11 +147,11 @@ class LoginScreen extends StatelessWidget {
                       primary: Color(COLOR_PRIMARY),
                       padding: EdgeInsets.only(top: 12, bottom: 12),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25.0),
+                          borderRadius: _borderRadius,
                           side: BorderSide(color: Color(COLOR_PRIMARY))),
                     ),
                     child: Text(
-                      'Log In'.tr(),
+                      'Log In',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -160,7 +160,7 @@ class LoginScreen extends StatelessWidget {
                             : Colors.white,
                       ),
                     ),
-                    onPressed: () => _login(context, state),
+                    onPressed: functions.login,
                   ),
                 ),
               ),
@@ -168,7 +168,7 @@ class LoginScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(32.0),
                 child: Center(
                   child: Text(
-                    'OR'.tr(),
+                    'OR',
                     style: TextStyle(
                         color: DisplayUtils.isDarkMode
                             ? Colors.white
@@ -183,7 +183,7 @@ class LoginScreen extends StatelessWidget {
                   constraints: const BoxConstraints(minWidth: double.infinity),
                   child: ElevatedButton.icon(
                     label: Text(
-                      'Facebook Login'.tr(),
+                      'Facebook Login',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 20,
@@ -202,18 +202,18 @@ class LoginScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       primary: Color(FACEBOOK_BUTTON_COLOR),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25.0),
+                        borderRadius: _borderRadius,
                         side: BorderSide(
                           color: Color(FACEBOOK_BUTTON_COLOR),
                         ),
                       ),
                     ),
-                    onPressed: () async => loginWithFacebook(context),
+                    onPressed: functions.loginWithFacebook,
                   ),
                 ),
               ),
               FutureBuilder<bool>(
-                future: apple.TheAppleSignIn.isAvailable(),
+                future: functions.showApple(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator.adaptive();
@@ -230,7 +230,7 @@ class LoginScreen extends StatelessWidget {
                         style: DisplayUtils.isDarkMode
                             ? apple.ButtonStyle.white
                             : apple.ButtonStyle.black,
-                        onPressed: () => loginWithApple(context),
+                        onPressed: functions.loginWithApple,
                       ),
                     );
                   }
@@ -238,14 +238,12 @@ class LoginScreen extends StatelessWidget {
               ),
 
               InkWell(
-                onTap: () {
-                  NavigationUtils.push(context, PhoneAuthScreen(login: true));
-                },
+                onTap: functions.loginWithPhone,
                 child: Center(
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
-                      'Login with phone number'.tr(),
+                      'Login with phone number',
                       style: TextStyle(
                           color: Colors.lightBlue,
                           fontWeight: FontWeight.bold,
@@ -260,92 +258,5 @@ class LoginScreen extends StatelessWidget {
         ),
       );
     }));
-  }
-
-  _login(BuildContext context, ScreenState state) async {
-    if (state.key.currentState?.validate() ?? false) {
-      state.key.currentState!.save();
-      await _loginWithEmailAndPassword(context, state);
-    } else {
-      state.validate = AutovalidateMode.onUserInteraction;
-    }
-  }
-
-  /// login with email and password with firebase
-  /// @param email user email
-  /// @param password user password
-  _loginWithEmailAndPassword(BuildContext context, ScreenState state) async {
-    await DialogUtils.showProgress(
-        context, 'Logging in, please wait...'.tr(), false);
-    state.currentLocation = await LocationUtils.getCurrentLocation();
-    if (state.currentLocation != null) {
-      dynamic result = await FirebaseUtils.loginWithEmailAndPassword(
-          state.email!.trim(), state.password!.trim(), state.currentLocation!);
-      await DialogUtils.hideProgress();
-      if (result != null && result is UserModel) {
-        NavigationUtils.pushAndRemoveUntil(
-            context, HomeScreen(user: result), false);
-      } else if (result != null && result is String) {
-        DialogUtils.showAlertDialog(
-            context, 'Couldn\'t Authenticate'.tr(), result);
-      } else {
-        DialogUtils.showAlertDialog(context, 'Couldn\'t Authenticate'.tr(),
-            'Login failed, Please try again.'.tr());
-      }
-    } else {
-      await DialogUtils.hideProgress();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Location is required to match you with people from '
-                'your area.'
-            .tr()),
-        duration: Duration(seconds: 6),
-      ));
-    }
-  }
-
-  loginWithFacebook(BuildContext context) async {
-    try {
-      await DialogUtils.showProgress(
-          context, 'Logging in, Please wait...'.tr(), false);
-      dynamic result = await FirebaseUtils.loginWithFacebook();
-      await DialogUtils.hideProgress();
-      if (result != null && result is UserModel) {
-        NavigationUtils.pushAndRemoveUntil(
-            context, HomeScreen(user: result), false);
-      } else if (result != null && result is String) {
-        DialogUtils.showAlertDialog(context, 'Error'.tr(), result.tr());
-      } else {
-        DialogUtils.showAlertDialog(
-            context, 'Error', 'Couldn\'t login with facebook.'.tr());
-      }
-    } catch (e, s) {
-      await DialogUtils.hideProgress();
-      print('_LoginScreen.loginWithFacebook $e $s');
-      DialogUtils.showAlertDialog(
-          context, 'Error', 'Couldn\'t login with facebook.'.tr());
-    }
-  }
-
-  loginWithApple(BuildContext context) async {
-    try {
-      await DialogUtils.showProgress(
-          context, 'Logging in, Please wait...'.tr(), false);
-      dynamic result = await FirebaseUtils.loginWithApple();
-      await DialogUtils.hideProgress();
-      if (result != null && result is UserModel) {
-        NavigationUtils.pushAndRemoveUntil(
-            context, HomeScreen(user: result), false);
-      } else if (result != null && result is String) {
-        DialogUtils.showAlertDialog(context, 'Error'.tr(), result.tr());
-      } else {
-        DialogUtils.showAlertDialog(
-            context, 'Error', 'Couldn\'t login with apple.'.tr());
-      }
-    } catch (e, s) {
-      await DialogUtils.hideProgress();
-      print('_LoginScreen.loginWithApple $e $s');
-      DialogUtils.showAlertDialog(
-          context, 'Error', 'Couldn\'t login with apple.'.tr());
-    }
   }
 }

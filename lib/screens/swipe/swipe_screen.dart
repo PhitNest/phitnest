@@ -1,22 +1,29 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:navigation/navigation.dart';
+import 'package:provider/provider.dart';
 
-import '../../app.dart';
+import '../../models/models.dart';
+import '../../services/services.dart';
+import '../../widgets/widgets.dart';
+import '../screen_utils.dart';
+import '../screens.dart';
 
 class SwipeScreen extends StatefulWidget {
-  final UserModel user;
-
-  SwipeScreen({Key? key, required this.user}) : super(key: key);
+  SwipeScreen({Key? key}) : super(key: key);
   @override
   _SwipeScreenState createState() => _SwipeScreenState();
 }
 
 class _SwipeScreenState extends State<SwipeScreen> {
-  late UserModel user;
+  late BackEndModel _backEnd;
+
+  late StreamController<List<UserModel>> _tinderCardsStreamController;
   late Stream<List<UserModel>> tinderUsers;
   List<UserModel> swipedUsers = [];
   List<UserModel> users = [];
@@ -25,13 +32,13 @@ class _SwipeScreenState extends State<SwipeScreen> {
   @override
   void initState() {
     super.initState();
-    user = widget.user;
+    _backEnd = Provider.of<BackEndModel>(context, listen: false);
     _setupTinder();
   }
 
   @override
   void dispose() {
-    FirebaseUtils.closeTinderStream();
+    _tinderCardsStreamController.close();
     super.dispose();
   }
 
@@ -213,14 +220,8 @@ class _SwipeScreenState extends State<SwipeScreen> {
   }
 
   Future<void> _launchDetailsScreen(UserModel tinderUser) async {
-    CardSwipeOrientation? result = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => UserDetailsScreen(
-          user: tinderUser,
-          isMatch: false,
-        ),
-      ),
-    );
+    CardSwipeOrientation? result = await Navigation.push(
+        context, UserDetailsScreen(user: tinderUser, isMatch: false));
     if (result != null) {
       if (result == CardSwipeOrientation.LEFT) {
         controller.triggerLeft();
@@ -233,7 +234,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
   _onCardSettingsClick(UserModel other) {
     final action = CupertinoActionSheet(
       message: Text(
-        user.fullName(),
+        _backEnd.currentUser!.fullName(),
         style: TextStyle(fontSize: 15.0),
       ),
       actions: <Widget>[
@@ -242,23 +243,24 @@ class _SwipeScreenState extends State<SwipeScreen> {
           onPressed: () async {
             Navigator.pop(context);
             DialogUtils.showProgress(context, 'Blocking user...'.tr(), false);
-            bool isSuccessful =
-                await FirebaseUtils.blockUser(user, other, 'block');
+            bool isSuccessful = await _backEnd.blockUser(other, 'block');
             DialogUtils.hideProgress();
             if (isSuccessful) {
-              await FirebaseUtils.onSwipeLeft(user, other);
-              users.remove(user);
-              FirebaseUtils.updateCardStream(users);
+              await _backEnd.onSwipeLeft(other);
+              users.remove(_backEnd.currentUser);
+              _tinderCardsStreamController.add(users);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('${user.fullName()} has been blocked.'.tr()),
+                  content: Text(
+                      '${_backEnd.currentUser!.fullName()} has been blocked.'
+                          .tr()),
                 ),
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                      'Couldn\'t block ${user.fullName()}, please try again later.'
+                      'Couldn\'t block ${_backEnd.currentUser!.fullName()}, please try again later.'
                           .tr()),
                 ),
               );
@@ -270,24 +272,25 @@ class _SwipeScreenState extends State<SwipeScreen> {
           onPressed: () async {
             Navigator.pop(context);
             DialogUtils.showProgress(context, 'Reporting user...'.tr(), false);
-            bool isSuccessful =
-                await FirebaseUtils.blockUser(user, other, 'report');
+            bool isSuccessful = await _backEnd.blockUser(other, 'report');
             DialogUtils.hideProgress();
             if (isSuccessful) {
-              await FirebaseUtils.onSwipeLeft(user, other);
-              users.removeWhere((element) => element.userID == user.userID);
-              FirebaseUtils.updateCardStream(users);
+              await _backEnd.onSwipeLeft(other);
+              users.removeWhere(
+                  (element) => element.userID == _backEnd.currentUser!.userID);
+              _tinderCardsStreamController.add(users);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                      '${user.fullName()} has been reported and blocked.'.tr()),
+                      '${_backEnd.currentUser!.fullName()} has been reported and blocked.'
+                          .tr()),
                 ),
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                      'Couldn\'t report ${user.fullName()}, please try again later.'
+                      'Couldn\'t report ${_backEnd.currentUser!.fullName()}, please try again later.'
                           .tr()),
                 ),
               );
@@ -308,11 +311,11 @@ class _SwipeScreenState extends State<SwipeScreen> {
   }
 
   _undo() async {
-    if (user.isVip) {
+    if (_backEnd.currentUser!.isVip) {
       UserModel undoUser = swipedUsers.removeLast();
       users.insert(0, undoUser);
-      FirebaseUtils.updateCardStream(users);
-      await FirebaseUtils.undo(user, undoUser);
+      _tinderCardsStreamController.add(users);
+      await _backEnd.undo(undoUser);
     } else {
       _showUpgradeAccountDialog();
     }
@@ -370,36 +373,40 @@ class _SwipeScreenState extends State<SwipeScreen> {
                       (CardSwipeOrientation orientation, int index) async {
                     if (orientation == CardSwipeOrientation.LEFT ||
                         orientation == CardSwipeOrientation.RIGHT) {
-                      bool isValidSwipe = user.isVip
+                      bool isValidSwipe = _backEnd.currentUser!.isVip
                           ? true
-                          : await FirebaseUtils.incrementSwipe(user);
+                          : await _backEnd.incrementSwipe();
                       if (isValidSwipe) {
                         if (orientation == CardSwipeOrientation.RIGHT) {
-                          UserModel? result = await FirebaseUtils.onSwipeRight(
-                              user, data[index]);
+                          UserModel? result =
+                              await _backEnd.onSwipeRight(data[index]);
                           if (result != null) {
                             data.removeAt(index);
-                            FirebaseUtils.updateCardStream(data);
-                            NavigationUtils.push(context,
-                                MatchScreen(user: user, matchedUser: result));
+                            _tinderCardsStreamController.add(data);
+                            Navigation.push(
+                                context,
+                                MatchScreen(
+                                    user: _backEnd.currentUser!,
+                                    matchedUser: result));
                           } else {
                             swipedUsers.add(data[index]);
                             data.removeAt(index);
-                            FirebaseUtils.updateCardStream(data);
+                            _tinderCardsStreamController.add(data);
                           }
                         } else if (orientation == CardSwipeOrientation.LEFT) {
                           swipedUsers.add(data[index]);
-                          await FirebaseUtils.onSwipeLeft(user, data[index]);
+                          await _backEnd.onSwipeLeft(data[index]);
                           data.removeAt(index);
-                          FirebaseUtils.updateCardStream(data);
+                          _tinderCardsStreamController.add(data);
                         }
                       } else {
                         UserModel returningUser = data.removeAt(index);
-                        FirebaseUtils.updateCardStream(data);
+                        _tinderCardsStreamController.add(data);
+
                         _showUpgradeAccountDialog();
                         await Future.delayed(Duration(milliseconds: 200));
                         data.insert(0, returningUser);
-                        FirebaseUtils.updateCardStream(data);
+                        _tinderCardsStreamController.add(data);
                       }
                     }
                   },
@@ -482,7 +489,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
               ),
             ),
             builder: (context) {
-              return UpgradeAccount(user: user);
+              return UpgradeAccount(user: _backEnd.currentUser!);
             },
           );
         },
@@ -521,7 +528,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
               ),
             ),
             builder: (context) {
-              return UpgradeAccount(user: user);
+              return UpgradeAccount(user: _backEnd.currentUser!);
             },
           );
         },
@@ -545,7 +552,11 @@ class _SwipeScreenState extends State<SwipeScreen> {
   }
 
   _setupTinder() async {
-    tinderUsers = FirebaseUtils.getTinderUsers(user);
-    await FirebaseUtils.matchChecker(user, context);
+    _tinderCardsStreamController = StreamController<List<UserModel>>();
+    tinderUsers = _backEnd.getTinderUsers(_tinderCardsStreamController);
+    await _backEnd.matchChecker(context, (user) {
+      Navigation.push(
+          context, MatchScreen(user: _backEnd.currentUser!, matchedUser: user));
+    });
   }
 }

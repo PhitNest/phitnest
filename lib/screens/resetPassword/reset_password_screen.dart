@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../app.dart';
+import '../../constants/constants.dart';
+import '../../screens/screen_utils.dart';
+import '../../services/services.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   @override
@@ -123,7 +125,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     if (_key.currentState?.validate() ?? false) {
       _key.currentState!.save();
       await DialogUtils.showProgress(context, 'Sending Email...'.tr(), false);
-      await FirebaseUtils.resetPassword(_emailAddress);
+      await BackEndModel.getBackEnd(context).resetPassword(_emailAddress);
       await DialogUtils.hideProgress();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

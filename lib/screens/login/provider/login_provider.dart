@@ -1,33 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
-class ScreenState extends ChangeNotifier {
-  GlobalKey<FormState> key = GlobalKey();
-  AutovalidateMode _validate = AutovalidateMode.disabled;
-  Position? currentLocation;
-  String? email, password;
-
-  AutovalidateMode get validate => _validate;
-
-  set validate(AutovalidateMode validate) {
-    _validate = validate;
-    notifyListeners();
-  }
-}
+import 'src/login_functions.dart';
+import 'src/login_model.dart';
 
 class LoginScreenProvider extends StatelessWidget {
-  final Widget Function(BuildContext context, ScreenState state, Widget? child)
-      builder;
+  final Widget Function(BuildContext context, LoginModel model,
+      LoginFunctions functions, Widget? child) builder;
 
-  const LoginScreenProvider({Key? key, required this.builder})
-      : super(key: key);
+  LoginScreenProvider({Key? key, required this.builder}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ScreenState(),
-      child: Consumer<ScreenState>(builder: builder),
-    );
+        create: (context) => LoginModel(),
+        child: Consumer<LoginModel>(builder: ((context, model, child) {
+          return builder(context, model,
+              LoginFunctions(context: context, model: model), child);
+        })));
   }
 }
