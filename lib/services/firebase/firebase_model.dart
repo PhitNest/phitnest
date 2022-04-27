@@ -62,8 +62,7 @@ class FirebaseModel extends BackEndModel {
       String email, Future<void> Function() onUpdate) async {
     AuthProviders? authProvider;
 
-    List<UserInfo> userInfoList =
-        FirebaseAuth.instance.currentUser?.providerData ?? [];
+    List<UserInfo> userInfoList = _firebaseAuth.currentUser?.providerData ?? [];
     await Future.forEach(userInfoList, (UserInfo info) {
       if (info.providerId == 'password') {
         authProvider = AuthProviders.PASSWORD;
@@ -73,7 +72,7 @@ class FirebaseModel extends BackEndModel {
     });
     bool? result = false;
     if (authProvider == AuthProviders.PHONE &&
-        FirebaseAuth.instance.currentUser!.phoneNumber != mobile) {
+        _firebaseAuth.currentUser!.phoneNumber != mobile) {
       result = await showDialog(
         context: context,
         builder: (context) => ReAuthUserScreen(
@@ -89,7 +88,7 @@ class FirebaseModel extends BackEndModel {
         await DialogUtils.hideProgress();
       }
     } else if (authProvider == AuthProviders.PASSWORD &&
-        FirebaseAuth.instance.currentUser!.email != email) {
+        _firebaseAuth.currentUser!.email != email) {
       result = await showDialog(
         context: context,
         builder: (context) => ReAuthUserScreen(
