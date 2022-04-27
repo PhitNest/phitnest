@@ -41,6 +41,8 @@ dependencies:
   easy_localization: ^3.0.0
   navigation:
     path: ./packages/navigation
+  location:
+    path: ./packages/location
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1
 

@@ -9,3 +9,15 @@ dependencies:
   flutter:
     sdk: flutter
   geolocator: ^8.2.0
+  latlong2: ^0.8.0
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.9.1
+
+flutter_icons:
+  android: false
+  ios: true
+  image_path: 'assets/images/ic_launcher-playstore.png'
+
+flutter:
+  uses-material-design: true

@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:location/location_utils.dart';
 import 'package:navigation/navigation.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../../constants/constants.dart';
 import '../../services/services.dart';
 import '../screen_utils.dart';
 import '../screens.dart';

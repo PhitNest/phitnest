@@ -11,6 +11,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:location/location_utils.dart';
 import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
@@ -18,7 +19,6 @@ import 'package:uuid/uuid.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-import '../../constants/constants.dart';
 import '../../models/models.dart';
 import '../../screens/screen_utils.dart';
 import '../../screens/screens.dart';
@@ -1060,8 +1060,11 @@ class FirebaseModel extends BackEndModel {
             try {
               if (tinderUser.id != user.userID) {
                 UserModel other = UserModel.fromJson(tinderUser.data() ?? {});
-                double distance =
-                    LocationUtils.getDistance(user.location, other.location);
+                double distance = LocationUtils.getDistance(
+                    user.location.latitude,
+                    user.location.longitude,
+                    other.location.latitude,
+                    other.location.longitude);
                 if (await isValidUserForTinderSwipe(other, distance)) {
                   other.milesAway = '$distance Miles Away';
                   tinderUsers.insert(0, other);
@@ -1108,7 +1111,8 @@ class FirebaseModel extends BackEndModel {
 
       return result1.docs.isEmpty &&
           isPreferredGender(tinderUser.settings.gender) &&
-          LocationUtils.isInPreferredDistance(user, distance);
+          LocationUtils.isInPreferredDistance(
+              user.settings.distanceRadius, distance);
     }
     return false;
   }
