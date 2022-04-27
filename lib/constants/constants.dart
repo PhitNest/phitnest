@@ -13,16 +13,14 @@ const FINISHED_ON_BOARDING = 'finishedOnBoarding';
 const COLOR_ACCENT = 0xFFff8c9b;
 const COLOR_PRIMARY_DARK = 0xFFb42442;
 const COLOR_PRIMARY = LOGO_OUTER_RING;
-
-// Font sizes
-const HEADER_SIZE_LARGE = 25.0;
-const HEADER_SIZE_MEDIUM = 24.0;
-const HEADER_SIZE_SMALL = 20.0;
-
-// Device preference key
-const FINISHED_ON_BOARDING_SETTING = 'finishedOnBoarding';
-
-// Time constants
+const FACEBOOK_BUTTON_COLOR = 0xFF415893;
+const USERS = 'users';
+const SWIPES = 'swipes';
+const CHANNEL_PARTICIPATION = 'channel_participation';
+const CHANNELS = 'channels';
+const THREAD = 'thread';
+const REPORTS = 'reports';
+const SUBSCRIPTIONS = 'subscriptions';
 const SECOND_MILLIS = 1000;
 const MINUTE_MILLIS = 60 * SECOND_MILLIS;
 const HOUR_MILLIS = 60 * MINUTE_MILLIS;
