@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:phitnest/services/backend_model.dart';
+import 'package:provider/provider.dart';
 
 class UserModel {
   String email;
@@ -76,6 +78,10 @@ class UserModel {
 
   String fullName() {
     return '$firstName $lastName';
+  }
+
+  static UserModel? fromContext(BuildContext context) {
+    return Provider.of<BackEndModel>(context).currentUser;
   }
 
   factory UserModel.fromJson(Map<String, dynamic> parsedJson) {

@@ -3,7 +3,6 @@ import 'package:phitnest/screens/userDetails/provider/src/user_details_functions
 import 'package:provider/provider.dart';
 
 import '../../../models/models.dart';
-import '../../../services/services.dart';
 import 'src/user_details_functions.dart';
 import 'src/user_details_model.dart';
 
@@ -22,10 +21,10 @@ class UserDetailsProvider extends StatelessWidget {
     return ChangeNotifierProvider(
         create: (context) => UserDetailsModel(),
         child: Consumer<UserDetailsModel>(builder: ((context, model, child) {
-          UserModel? user = BackEndModel.getBackEnd(context).currentUser!;
+          UserModel? user = UserModel.fromContext(context);
           return builder(
               context,
-              user,
+              user!,
               model,
               UserDetailsFunctions(context: context, user: user, model: model),
               child);
