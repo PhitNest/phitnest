@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:navigation/navigation.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
 import '../../../../services/backend_model.dart';
@@ -35,11 +36,10 @@ class LoginFunctions {
 
   Future<bool> showApple() => TheAppleSignIn.isAvailable();
 
-  void resetPassword() => Navigator.of(context)
-      .push(MaterialPageRoute(builder: (context) => ResetPasswordScreen()));
+  void resetPassword() => Navigation.push(context, ResetPasswordScreen());
 
-  void loginWithPhone() => Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => PhoneAuthScreen(login: true)));
+  void loginWithPhone() =>
+      Navigation.push(context, PhoneAuthScreen(login: true));
 
   /// login with email and password with firebase
   /// @param email user email
@@ -53,9 +53,7 @@ class LoginFunctions {
           model.email!.trim(), model.password!.trim(), model.currentLocation!);
       await DialogUtils.hideProgress();
       if (result == null) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const RedirectorScreen()),
-            (route) => false);
+        Navigation.pushAndRemoveUntil(context, const RedirectorScreen());
       } else {
         DialogUtils.showAlertDialog(context, 'Couldn\'t Authenticate',
             'Login failed, Please try again.');
@@ -77,9 +75,7 @@ class LoginFunctions {
       dynamic result = await backEnd.loginWithFacebook();
       await DialogUtils.hideProgress();
       if (result == null) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const RedirectorScreen()),
-            (route) => false);
+        Navigation.pushAndRemoveUntil(context, const RedirectorScreen());
       } else {
         DialogUtils.showAlertDialog(context, 'Error', result.tr());
       }
@@ -98,9 +94,7 @@ class LoginFunctions {
       dynamic result = await backEnd.loginWithApple();
       await DialogUtils.hideProgress();
       if (result == null) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const RedirectorScreen()),
-            (route) => false);
+        Navigation.pushAndRemoveUntil(context, const RedirectorScreen());
       } else {
         DialogUtils.showAlertDialog(
             context, 'Error', 'Couldn\'t login with apple.');

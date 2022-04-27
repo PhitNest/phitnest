@@ -7,11 +7,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:navigation/navigation.dart';
 import 'package:phitnest/screens/screens.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../constants/constants.dart';
 import '../../screens/screen_utils.dart';
 import '../../services/services.dart';
 import '../../models/models.dart';
@@ -131,8 +131,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => AccountDetailsScreen(user: user)));
+                  Navigation.push(context, AccountDetailsScreen(user: user));
                 },
                 title: Text(
                   'Account Details'.tr(),
@@ -174,8 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => SettingsScreen(user: user)));
+                  Navigation.push(context, SettingsScreen(user: user));
                 },
                 title: Text(
                   'Settings'.tr(),
@@ -190,8 +188,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ContactUsScreen()));
+                  Navigation.push(context, ContactUsScreen());
                 },
                 title: Text(
                   'Contact Us'.tr(),
@@ -242,9 +239,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     await DialogUtils.hideProgress();
                     Provider.of<BackEndModel>(context, listen: false)
                         .currentUser = null;
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => AuthScreen()),
-                        (route) => false);
+                    Navigation.pushAndRemoveUntil(context, AuthScreen());
                   }
                 },
                 title: Text(
@@ -289,9 +284,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   await FirebaseAuth.instance.signOut();
                   Provider.of<BackEndModel>(context, listen: false)
                       .currentUser = null;
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => AuthScreen()),
-                      (route) => false);
+                  Navigation.pushAndRemoveUntil(context, AuthScreen());
                 },
               ),
             ),
@@ -460,8 +453,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         CupertinoActionSheetAction(
           onPressed: () {
             Navigator.pop(context);
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => FullScreenImageViewer(imageUrl: url)));
+            Navigation.push(context, FullScreenImageViewer(imageUrl: url));
           },
           isDefaultAction: true,
           child: Text('View Picture'.tr()),

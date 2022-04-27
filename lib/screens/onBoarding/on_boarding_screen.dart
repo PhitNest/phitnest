@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
+import 'package:navigation/navigation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -71,8 +72,7 @@ class _State extends State<OnBoardingScreen> {
                       // Upon pressing continue, finish on boarding
                       setFinishedOnBoarding();
                       // Continue to the authentication screen
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => AuthScreen()));
+                      Navigation.pushReplacement(context, AuthScreen());
                     },
                     child: Text(
                       'Continue'.tr(),

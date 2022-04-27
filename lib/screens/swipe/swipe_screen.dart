@@ -5,9 +5,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:navigation/navigation.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants/constants.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
 import '../../widgets/widgets.dart';
@@ -220,14 +220,8 @@ class _SwipeScreenState extends State<SwipeScreen> {
   }
 
   Future<void> _launchDetailsScreen(UserModel tinderUser) async {
-    CardSwipeOrientation? result = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => UserDetailsScreen(
-          user: tinderUser,
-          isMatch: false,
-        ),
-      ),
-    );
+    CardSwipeOrientation? result = await Navigation.push(
+        context, UserDetailsScreen(user: tinderUser, isMatch: false));
     if (result != null) {
       if (result == CardSwipeOrientation.LEFT) {
         controller.triggerLeft();
@@ -389,10 +383,11 @@ class _SwipeScreenState extends State<SwipeScreen> {
                           if (result != null) {
                             data.removeAt(index);
                             _tinderCardsStreamController.add(data);
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => MatchScreen(
+                            Navigation.push(
+                                context,
+                                MatchScreen(
                                     user: _backEnd.currentUser!,
-                                    matchedUser: result)));
+                                    matchedUser: result));
                           } else {
                             swipedUsers.add(data[index]);
                             data.removeAt(index);
@@ -560,9 +555,8 @@ class _SwipeScreenState extends State<SwipeScreen> {
     _tinderCardsStreamController = StreamController<List<UserModel>>();
     tinderUsers = _backEnd.getTinderUsers(_tinderCardsStreamController);
     await _backEnd.matchChecker(context, (user) {
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) =>
-              MatchScreen(user: _backEnd.currentUser!, matchedUser: user)));
+      Navigation.push(
+          context, MatchScreen(user: _backEnd.currentUser!, matchedUser: user));
     });
   }
 }
