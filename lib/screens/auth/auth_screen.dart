@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:navigation/navigation.dart';
 
 import '../../constants/constants.dart';
 import '../screens.dart';
@@ -59,8 +60,7 @@ class AuthScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                  Navigation.push(context, LoginScreen());
                 },
               ),
             ),
@@ -92,8 +92,7 @@ class AuthScreen extends StatelessWidget {
                       color: Color(COLOR_PRIMARY)),
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => SignUpScreen()));
+                  Navigation.push(context, SignUpScreen());
                 },
               ),
             ),
