@@ -345,8 +345,7 @@ class ConversationsScreen extends StatelessWidget {
           isDefaultAction: true,
           onPressed: () async {
             Navigator.pop(context);
-            Navigation.push(
-                context, UserDetailsScreen(user: friend, isMatch: true));
+            Navigation.push(context, UserDetailsScreen(isMatch: true));
           },
         ),
       ],

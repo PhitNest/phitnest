@@ -220,8 +220,8 @@ class _SwipeScreenState extends State<SwipeScreen> {
   }
 
   Future<void> _launchDetailsScreen(UserModel tinderUser) async {
-    CardSwipeOrientation? result = await Navigation.push(
-        context, UserDetailsScreen(user: tinderUser, isMatch: false));
+    CardSwipeOrientation? result =
+        await Navigation.push(context, UserDetailsScreen(isMatch: false));
     if (result != null) {
       if (result == CardSwipeOrientation.LEFT) {
         controller.triggerLeft();
