@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:navigation/navigation.dart';
 
 import '../../screens/screen_utils.dart';
 import '../screens.dart';
@@ -387,9 +388,8 @@ class SignUpScreen extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      PhoneAuthScreen(login: false)));
+                              Navigation.push(
+                                  context, PhoneAuthScreen(login: false));
                             },
                             child: Text(
                               'Sign up with phone number',

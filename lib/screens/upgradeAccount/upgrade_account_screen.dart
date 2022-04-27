@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../constants/constants.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
 import '../screen_utils.dart';

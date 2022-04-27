@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:navigation/navigation.dart';
 import 'package:phitnest/screens/chat/chat_screen.dart';
 
-import '../../constants/constants.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
 import '../screen_utils.dart';
@@ -106,13 +106,14 @@ class _MatchScreenState extends State<MatchScreen> {
                         ConversationModel? conversationModel =
                             await BackEndModel.getBackEnd(context)
                                 .getChannelByIdOrNull(channelID);
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => ChatScreen(
+                        Navigation.pushReplacement(
+                            context,
+                            ChatScreen(
                                 user: user,
                                 homeConversationModel: HomeConversationModel(
                                     isGroupChat: false,
                                     members: [widget.matchedUser],
-                                    conversationModel: conversationModel))));
+                                    conversationModel: conversationModel)));
                       },
                     ),
                   ),

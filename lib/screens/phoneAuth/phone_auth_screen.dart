@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:navigation/navigation.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../../constants/constants.dart';
@@ -374,9 +375,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
               _verificationID!, code, _phoneNumber!, signUpLocation!);
           await DialogUtils.hideProgress();
           if (result == null) {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-                (route) => false);
+            Navigation.pushAndRemoveUntil(context, HomeScreen());
           } else {
             DialogUtils.showAlertDialog(context, 'Failed'.tr(),
                 'Couldn\'t create new user with phone number.'.tr());
@@ -553,8 +552,6 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
           ),
         );
       }
-    },
-        () => Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => HomeScreen())));
+    }, () => Navigation.pushReplacement(context, HomeScreen()));
   }
 }
