@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
+import 'package:display/display_utils.dart';
 
 import '../screen_utils.dart';
 import 'provider/login_provider.dart';

@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
 import 'package:provider/provider.dart';
+import 'package:display/display_utils.dart';
 
 import '../../models/models.dart';
 import '../../services/services.dart';

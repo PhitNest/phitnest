@@ -43,6 +43,8 @@ dependencies:
     path: ./packages/navigation
   location:
     path: ./packages/location
+  display:
+    path: ./packages/display
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1
 

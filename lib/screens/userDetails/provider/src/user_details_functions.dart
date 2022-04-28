@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:navigation/navigation.dart';
 import 'package:phitnest/screens/userDetails/provider/src/user_details_model.dart';
+import 'package:display/display_utils.dart';
 
 import '../../../../models/models.dart';
 import '../../../screen_utils.dart';
