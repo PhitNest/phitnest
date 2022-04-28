@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:display/display_utils.dart';
+import 'package:validation/validation_utils.dart';
 
 import '../../screens/screen_utils.dart';
 import '../../services/services.dart';

@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
 
-import '../../../constants/constants.dart';
+const SECOND_MILLIS = 1000;
+const MINUTE_MILLIS = 60 * SECOND_MILLIS;
+const HOUR_MILLIS = 60 * MINUTE_MILLIS;
 
 class TimeUtils {
   static String formatTimestamp(int timestamp) {
@@ -18,7 +20,7 @@ class TimeUtils {
     if (diff < 24 * HOUR_MILLIS) {
       return format.format(date);
     } else if (diff < 48 * HOUR_MILLIS) {
-      return 'Yesterday at ${format.format(date)}'.tr();
+      return 'Yesterday at ${format.format(date)}';
     } else {
       format = DateFormat('MMM d');
       return '${format.format(date)}';

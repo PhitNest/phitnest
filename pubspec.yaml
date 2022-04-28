@@ -48,6 +48,10 @@ dependencies:
     path: ./packages/location
   display:
     path: ./packages/display
+  validation:
+    path: ./packages/validation
+  time:
+    path: ./packages/time
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1
 
