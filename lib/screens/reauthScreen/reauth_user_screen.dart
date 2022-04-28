@@ -5,6 +5,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
+import 'package:display/display_utils.dart';
 
 import '../../screens/screen_utils.dart';
 import '../../services/services.dart';

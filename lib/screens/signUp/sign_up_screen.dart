@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:navigation/navigation.dart';
+import 'package:display/display_utils.dart';
 
 import '../../screens/screen_utils.dart';
 import '../screens.dart';

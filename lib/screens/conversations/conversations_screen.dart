@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
+import 'package:display/display_utils.dart';
 
 import '../../models/models.dart';
 import '../../services/services.dart';

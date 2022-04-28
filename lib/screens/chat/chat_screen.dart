@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:navigation/navigation.dart';
+import 'package:display/display_utils.dart';
 
 import '../../models/models.dart';
 import '../../services/services.dart';

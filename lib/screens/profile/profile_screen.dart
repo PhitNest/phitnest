@@ -11,6 +11,7 @@ import 'package:navigation/navigation.dart';
 import 'package:phitnest/screens/screens.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:display/display_utils.dart';
 
 import '../../screens/screen_utils.dart';
 import '../../services/services.dart';
