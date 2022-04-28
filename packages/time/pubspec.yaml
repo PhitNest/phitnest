@@ -1,16 +1,14 @@
-name: validation
-description: Validation Utils
+name: time
+description: Time Utils
 version: 1.0.0+1
 publish_to: 'none'
 environment:
-<<<<<<< HEAD
-  sdk: ">=2.13.4 <3.0.0"
-=======
   sdk: ">=2.13.4 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  easy_localization: ^3.0.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1
@@ -22,4 +20,3 @@ flutter_icons:
 
 flutter:
   uses-material-design: true
->>>>>>> ebc467ce (Time package)
