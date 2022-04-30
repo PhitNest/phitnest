@@ -5,22 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:display/display_utils.dart';
 import 'package:validation/validation_utils.dart';
 
-import '../../models/models.dart';
 import '../screen_utils.dart';
 import 'provider/account_details_provider.dart';
 
-class AccountDetailsScreen extends StatefulWidget {
-  final UserModel user;
+class AccountDetailsScreen extends StatelessWidget {
+  AccountDetailsScreen({Key? key}) : super(key: key);
 
-  AccountDetailsScreen({Key? key, required this.user}) : super(key: key);
-
-  @override
-  _AccountDetailsScreenState createState() {
-    return _AccountDetailsScreenState();
-  }
-}
-
-class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
   Color _getBackgroundColor(BuildContext context) =>
       DisplayUtils.isDarkMode ? Colors.black : Colors.white;
 

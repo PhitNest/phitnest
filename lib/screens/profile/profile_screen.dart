@@ -132,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  Navigation.push(context, AccountDetailsScreen(user: user));
+                  Navigation.push(context, AccountDetailsScreen());
                 },
                 title: Text(
                   'Account Details'.tr(),
