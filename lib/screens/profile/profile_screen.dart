@@ -155,7 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     builder: (context) {
-                      return UpgradeAccount(user: user);
+                      return UpgradeAccount();
                     },
                   );
                 },

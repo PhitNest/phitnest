@@ -490,7 +490,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
               ),
             ),
             builder: (context) {
-              return UpgradeAccount(user: _backEnd.currentUser!);
+              return UpgradeAccount();
             },
           );
         },
@@ -529,7 +529,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
               ),
             ),
             builder: (context) {
-              return UpgradeAccount(user: _backEnd.currentUser!);
+              return UpgradeAccount();
             },
           );
         },
