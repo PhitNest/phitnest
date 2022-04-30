@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../../models/models.dart';
+
 class UserDetailsModel extends ChangeNotifier {
+  final UserModel viewingUser;
+
   List<String?> images = [];
 
   List pages = [];
@@ -15,7 +19,7 @@ class UserDetailsModel extends ChangeNotifier {
 
   List<Widget> gridPages = [];
 
-  UserDetailsModel();
+  UserDetailsModel({required this.viewingUser});
 
   @override
   void dispose() {
