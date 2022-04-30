@@ -10,12 +10,10 @@ import '../../../screen_utils.dart';
 import '../../../screens.dart';
 
 class UserDetailsFunctions {
-  late final UserModel user;
   final BuildContext context;
   final UserDetailsModel model;
 
-  UserDetailsFunctions(
-      {required this.context, required this.user, required this.model}) {
+  UserDetailsFunctions({required this.context, required this.model}) {
     model.images = _getPhotoUrls();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: DisplayUtils.isDarkMode ? Colors.black : Colors.white));
@@ -23,8 +21,8 @@ class UserDetailsFunctions {
   }
 
   List<String?> _getPhotoUrls() {
-    List<String?> urls = [user.profilePictureURL];
-    urls.addAll(user.photos.cast<String>());
+    List<String?> urls = [model.viewingUser.profilePictureURL];
+    urls.addAll(model.viewingUser.photos.cast<String>());
     urls.removeWhere((element) => element == null);
     return urls;
   }
@@ -65,7 +63,9 @@ class UserDetailsFunctions {
           borderRadius: BorderRadius.circular(12),
           child: CachedNetworkImage(
             fit: BoxFit.cover,
-            imageUrl: user.profilePictureURL == DEFAULT_AVATAR_URL ? '' : url,
+            imageUrl: model.viewingUser.profilePictureURL == DEFAULT_AVATAR_URL
+                ? ''
+                : url,
             placeholder: (context, imageUrl) {
               return Icon(
                 Icons.hourglass_empty,
@@ -89,7 +89,7 @@ class UserDetailsFunctions {
   Widget buildImage(int index) {
     return CachedNetworkImage(
       fit: BoxFit.cover,
-      imageUrl: user.profilePictureURL == DEFAULT_AVATAR_URL
+      imageUrl: model.viewingUser.profilePictureURL == DEFAULT_AVATAR_URL
           ? ''
           : model.images[index]!,
       placeholder: (context, imageUrl) {

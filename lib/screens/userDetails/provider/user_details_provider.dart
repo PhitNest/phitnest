@@ -7,27 +7,22 @@ import 'src/user_details_functions.dart';
 import 'src/user_details_model.dart';
 
 class UserDetailsProvider extends StatelessWidget {
-  final Widget Function(
-      BuildContext context,
-      UserModel user,
-      UserDetailsModel model,
-      UserDetailsFunctions functions,
-      Widget? child) builder;
+  final UserModel viewingUser;
 
-  UserDetailsProvider({Key? key, required this.builder}) : super(key: key);
+  final Widget Function(BuildContext context, UserDetailsModel model,
+      UserDetailsFunctions functions, Widget? child) builder;
+
+  UserDetailsProvider(
+      {Key? key, required this.viewingUser, required this.builder})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) => UserDetailsModel(),
+        create: (context) => UserDetailsModel(viewingUser: viewingUser),
         child: Consumer<UserDetailsModel>(builder: ((context, model, child) {
-          UserModel? user = UserModel.fromContext(context);
-          return builder(
-              context,
-              user!,
-              model,
-              UserDetailsFunctions(context: context, user: user, model: model),
-              child);
+          return builder(context, model,
+              UserDetailsFunctions(context: context, model: model), child);
         })));
   }
 }

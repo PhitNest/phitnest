@@ -180,8 +180,8 @@ class SwipeFunctions {
   }
 
   Future<void> _launchDetailsScreen(UserModel tinderUser) async {
-    CardSwipeOrientation? result =
-        await Navigation.push(context, UserDetailsScreen(isMatch: false));
+    CardSwipeOrientation? result = await Navigation.push(
+        context, UserDetailsScreen(viewingUser: tinderUser, isMatch: false));
     if (result != null) {
       if (result == CardSwipeOrientation.LEFT) {
         model.controller.triggerLeft();
