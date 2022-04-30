@@ -1,3 +1,4 @@
+import 'package:display/display_utils.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'constants/constants.dart';
 import 'services/services.dart';
 import 'screens/screens.dart';
-import 'utils/utils.dart';
 
 class App extends StatelessWidget with WidgetsBindingObserver {
   /// Holds all back end functionality and reference to current user

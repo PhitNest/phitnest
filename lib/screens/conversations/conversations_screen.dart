@@ -4,6 +4,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation/navigation.dart';
+import 'package:display/display_utils.dart';
+import 'package:time/time_utils.dart';
 
 import '../../models/models.dart';
 import '../../services/services.dart';
@@ -346,7 +348,7 @@ class ConversationsScreen extends StatelessWidget {
           onPressed: () async {
             Navigator.pop(context);
             Navigation.push(
-                context, UserDetailsScreen(user: friend, isMatch: true));
+                context, UserDetailsScreen(viewingUser: friend, isMatch: true));
           },
         ),
       ],

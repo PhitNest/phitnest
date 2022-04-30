@@ -11,6 +11,7 @@ import 'package:navigation/navigation.dart';
 import 'package:phitnest/screens/screens.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:display/display_utils.dart';
 
 import '../../screens/screen_utils.dart';
 import '../../services/services.dart';
@@ -131,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  Navigation.push(context, AccountDetailsScreen(user: user));
+                  Navigation.push(context, AccountDetailsScreen());
                 },
                 title: Text(
                   'Account Details'.tr(),
@@ -154,7 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     builder: (context) {
-                      return UpgradeAccount(user: user);
+                      return UpgradeAccount();
                     },
                   );
                 },
