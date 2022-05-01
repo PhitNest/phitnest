@@ -17,11 +17,9 @@ import 'swipe_model.dart';
 class SwipeFunctions {
   late final BackEndModel _backEnd;
   final BuildContext context;
-  final UserModel user;
   final SwipeModel model;
 
-  SwipeFunctions(
-      {required this.context, required this.user, required this.model}) {
+  SwipeFunctions({required this.context, required this.model}) {
     _backEnd = BackEndModel.getBackEnd(context);
     _setupTinder();
   }
@@ -194,7 +192,7 @@ class SwipeFunctions {
   _onCardSettingsClick(UserModel other) {
     final action = CupertinoActionSheet(
       message: Text(
-        user.fullName(),
+        other.fullName(),
         style: TextStyle(fontSize: 15.0),
       ),
       actions: <Widget>[
@@ -202,24 +200,23 @@ class SwipeFunctions {
           child: Text('Block user'),
           onPressed: () async {
             Navigator.pop(context);
-            DialogUtils.showProgress(context, 'Blocking user...', false);
+            await DialogUtils.showProgress(context, 'Blocking user...', false);
             bool isSuccessful = await _backEnd.blockUser(other, 'block');
-            DialogUtils.hideProgress();
+            await DialogUtils.hideProgress();
             if (isSuccessful) {
               await _backEnd.onSwipeLeft(other);
-              model.users.remove(_backEnd.currentUser);
+              model.users.remove(other);
               model.tinderCardsStreamController.add(model.users);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(
-                      '${_backEnd.currentUser!.fullName()} has been blocked.'),
+                  content: Text('${other.fullName()} has been blocked.'),
                 ),
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                      'Couldn\'t block ${_backEnd.currentUser!.fullName()}, please try again later.'),
+                      'Couldn\'t block ${other.fullName()}, please try again later.'),
                 ),
               );
             }
@@ -234,20 +231,20 @@ class SwipeFunctions {
             DialogUtils.hideProgress();
             if (isSuccessful) {
               await _backEnd.onSwipeLeft(other);
-              model.users.removeWhere(
-                  (element) => element.userID == _backEnd.currentUser!.userID);
+              model.users
+                  .removeWhere((element) => element.userID == other.userID);
               model.tinderCardsStreamController.add(model.users);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                      '${_backEnd.currentUser!.fullName()} has been reported and blocked.'),
+                      '${other.fullName()} has been reported and blocked.'),
                 ),
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                      'Couldn\'t report ${_backEnd.currentUser!.fullName()}, please try again later.'),
+                      'Couldn\'t report ${other.fullName()}, please try again later.'),
                 ),
               );
             }
