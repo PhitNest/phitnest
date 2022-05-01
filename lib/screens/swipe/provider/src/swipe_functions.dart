@@ -264,14 +264,10 @@ class SwipeFunctions {
   }
 
   _undo() async {
-    if (_backEnd.currentUser!.isVip) {
-      UserModel undoUser = model.swipedUsers.removeLast();
-      model.users.insert(0, undoUser);
-      model.tinderCardsStreamController.add(model.users);
-      await _backEnd.undo(undoUser);
-    } else {
-      _showUpgradeAccountDialog();
-    }
+    UserModel undoUser = model.swipedUsers.removeLast();
+    model.users.insert(0, undoUser);
+    model.tinderCardsStreamController.add(model.users);
+    await _backEnd.undo(undoUser);
   }
 
   Widget asyncCards(BuildContext context, List<UserModel>? data) {
@@ -309,25 +305,21 @@ class SwipeFunctions {
                 height: MediaQuery.of(context).size.height * 0.9,
                 width: MediaQuery.of(context).size.width,
                 child: TinderSwapCard(
-                  animDuration: 500,
-                  orientation: AmassOrientation.BOTTOM,
-                  totalNum: data.length,
-                  stackNum: 3,
-                  swipeEdge: 15,
-                  maxWidth: MediaQuery.of(context).size.width,
-                  maxHeight: MediaQuery.of(context).size.height,
-                  minWidth: MediaQuery.of(context).size.width * 0.9,
-                  minHeight: MediaQuery.of(context).size.height * 0.9,
-                  cardBuilder: (context, index) => _buildCard(data[index]),
-                  cardController: model.controller,
-                  swipeCompleteCallback:
-                      (CardSwipeOrientation orientation, int index) async {
-                    if (orientation == CardSwipeOrientation.LEFT ||
-                        orientation == CardSwipeOrientation.RIGHT) {
-                      bool isValidSwipe = _backEnd.currentUser!.isVip
-                          ? true
-                          : await _backEnd.incrementSwipe();
-                      if (isValidSwipe) {
+                    animDuration: 500,
+                    orientation: AmassOrientation.BOTTOM,
+                    totalNum: data.length,
+                    stackNum: 3,
+                    swipeEdge: 15,
+                    maxWidth: MediaQuery.of(context).size.width,
+                    maxHeight: MediaQuery.of(context).size.height,
+                    minWidth: MediaQuery.of(context).size.width * 0.9,
+                    minHeight: MediaQuery.of(context).size.height * 0.9,
+                    cardBuilder: (context, index) => _buildCard(data[index]),
+                    cardController: model.controller,
+                    swipeCompleteCallback:
+                        (CardSwipeOrientation orientation, int index) async {
+                      if (orientation == CardSwipeOrientation.LEFT ||
+                          orientation == CardSwipeOrientation.RIGHT) {
                         if (orientation == CardSwipeOrientation.RIGHT) {
                           UserModel? result =
                               await _backEnd.onSwipeRight(data[index]);
@@ -354,14 +346,11 @@ class SwipeFunctions {
                         UserModel returningUser = data.removeAt(index);
                         model.tinderCardsStreamController.add(data);
 
-                        _showUpgradeAccountDialog();
                         await Future.delayed(Duration(milliseconds: 200));
                         data.insert(0, returningUser);
                         model.tinderCardsStreamController.add(data);
                       }
-                    }
-                  },
-                ),
+                    }),
               ),
             ]),
           ),
@@ -418,86 +407,6 @@ class SwipeFunctions {
             ),
           )
         ]);
-  }
-
-  void _showUpgradeAccountDialog() {
-    if (Platform.isAndroid) {
-      Widget okButton = TextButton(
-        child: Text('OK'),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      );
-      Widget upgradeButton = TextButton(
-        child: Text('Upgrade Now'),
-        onPressed: () {
-          Navigator.pop(context);
-          showModalBottomSheet(
-            context: context,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-            ),
-            builder: (context) {
-              return UpgradeAccount();
-            },
-          );
-        },
-      );
-      AlertDialog alert = AlertDialog(
-        title: Text('Upgrade account'),
-        content: Text('Upgrade your account now to have unlimited swipes per '
-            'day and the ability to undo a swipe.'),
-        actions: [upgradeButton, okButton],
-      );
-
-      // show the dialog
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        },
-      );
-    } else {
-      Widget okButton = TextButton(
-        child: Text('OK'),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      );
-      Widget upgradeButton = TextButton(
-        child: Text('Upgrade Now'),
-        onPressed: () {
-          Navigator.pop(context);
-          showModalBottomSheet(
-            context: context,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-            ),
-            builder: (context) {
-              return UpgradeAccount();
-            },
-          );
-        },
-      );
-      CupertinoAlertDialog alert = CupertinoAlertDialog(
-        title: Text('Upgrade account'),
-        content: Text('Upgrade your account now to have unlimited swipes per '
-            'day and the ability to undo a swipe.'),
-        actions: [upgradeButton, okButton],
-      );
-
-      // show the dialog
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        },
-      );
-    }
   }
 
   _setupTinder() async {

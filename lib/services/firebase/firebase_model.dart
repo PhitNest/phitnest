@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:location/location_utils.dart';
 import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
@@ -179,7 +178,6 @@ class FirebaseModel extends BackEndModel {
             endOfSubscription = purchaseDate.add(Duration(days: 365));
           }
           if (DateTime.now().isAfter(endOfSubscription)) {
-            user.isVip = false;
             await updateCurrentUser(user: user);
             await _firestore
                 .collection(SUBSCRIPTIONS)
@@ -419,7 +417,6 @@ class FirebaseModel extends BackEndModel {
         active: false,
         age: '',
         bio: '',
-        isVip: false,
         lastOnlineTimestamp: Timestamp.now(),
         photos: [],
         school: '',
@@ -480,7 +477,6 @@ class FirebaseModel extends BackEndModel {
           school: '',
           photos: [],
           lastOnlineTimestamp: Timestamp.now(),
-          isVip: false,
           bio: '',
           age: '',
           active: false,
@@ -1371,31 +1367,6 @@ class FirebaseModel extends BackEndModel {
     await _firestore
         .collection(CHANNEL_PARTICIPATION)
         .add(channelParticipation.toJson());
-  }
-
-  @override
-  Future<void> recordPurchase(PurchaseDetails purchase) async {
-    UserModel? user = currentUser;
-    if (user != null) {
-      PurchaseModel purchaseModel = PurchaseModel(
-        active: true,
-        productId: purchase.productID,
-        receipt: purchase.purchaseID ?? '',
-        serverVerificationData:
-            purchase.verificationData.serverVerificationData,
-        source: purchase.verificationData.source,
-        subscriptionPeriod:
-            purchase.purchaseID == MONTHLY_SUBSCRIPTION ? 'monthly' : 'yearly',
-        transactionDate: int.parse(purchase.transactionDate!),
-        userID: user.userID,
-      );
-      await _firestore
-          .collection(SUBSCRIPTIONS)
-          .doc(user.userID)
-          .set(purchaseModel.toJson());
-      user.isVip = true;
-      await updateCurrentUser(user: user);
-    }
   }
 
   @override

@@ -29,8 +29,6 @@ class UserModel {
 
   String fcmToken;
 
-  bool isVip;
-
   //tinder related fields
   UserLocation location;
 
@@ -62,7 +60,6 @@ class UserModel {
     lastOnlineTimestamp,
     settings,
     this.fcmToken = '',
-    this.isVip = false,
 
     //tinder related fields
     this.showMe = true,
@@ -92,7 +89,15 @@ class UserModel {
         lastName: parsedJson['lastName'] ?? '',
         active: parsedJson['active'] ?? false,
         lastOnlineTimestamp: parsedJson['lastOnlineTimestamp'],
-        settings: UserSettings.fromJson(parsedJson['settings']),
+        settings: parsedJson.containsKey('settings')
+            ? UserSettings.fromJson(parsedJson['settings'])
+            : UserSettings(),
+        phoneNumber: parsedJson['phoneNumber'] ?? '',
+        userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
+        profilePictureURL: parsedJson['profilePictureURL'] ?? '',
+        fcmToken: parsedJson['fcmToken'] ?? '',
+        //dating app related fields
+        showMe: parsedJson['showMe'] ?? parsedJson['showMeOnTinder'] ?? true,
         location: parsedJson.containsKey('location')
             ? UserLocation.fromJson(parsedJson['location'])
             : null,
@@ -129,7 +134,6 @@ class UserModel {
         school: parsedJson['school'] ?? 'N/A',
         age: parsedJson['age'] ?? '',
         bio: parsedJson['bio'] ?? 'N/A',
-        isVip: parsedJson['isVip'] ?? false,
         showMe: parsedJson['showMe'] ?? parsedJson['showMeOnTinder'] ?? true,
         photos: parsedJson['photos'] ?? [].cast<String>());
   }
@@ -144,18 +148,118 @@ class UserModel {
       'online': this.online,
       'settings': this.settings.toJson(),
       'lastOnlineTimestamp': this.lastOnlineTimestamp,
-      'recentPlatform': this.recentPlatform,
+      'profilePictureURL': this.profilePictureURL,
+      'appIdentifier': this.appIdentifier,
+      'fcmToken': this.fcmToken,
+
+      //tinder related fields
+      'showMe': this.settings.showMe,
+      'location': this.location.toJson(),
+      'signUpLocation': this.signUpLocation.toJson(),
+      'bio': this.bio,
+      'school': this.school,
+      'age': this.age,
       'photos': this.photos,
     };
 
-    if (this.location != null) {
-      json['location'] = this.location!.toJson();
-    }
+  Map<String, dynamic> toPayload() {
+    photos.toList().removeWhere((element) => element == null);
+    return {
+      'email': this.email,
+      'firstName': this.firstName,
+      'lastName': this.lastName,
+      'settings': this.settings.toJson(),
+      'phoneNumber': this.phoneNumber,
+      'id': this.userID,
+      'active': this.active,
+      'lastOnlineTimestamp': this.lastOnlineTimestamp.millisecondsSinceEpoch,
+      'profilePictureURL': this.profilePictureURL,
+      'appIdentifier': this.appIdentifier,
+      'fcmToken': this.fcmToken,
+      'location': this.location.toJson(),
+      'signUpLocation': this.signUpLocation.toJson(),
+      'showMe': this.settings.showMe,
+      'bio': this.bio,
+      'school': this.school,
+      'age': this.age,
+      'photos': this.photos,
+    };
+  }
+}
 
-    if (this.signUpLocation != null) {
-      json['signUpLocation'] = this.signUpLocation!.toJson();
-    }
+class UserSettings {
+  bool pushNewMessages;
 
-    return json;
+  bool pushNewMatchesEnabled;
+
+  bool pushSuperLikesEnabled;
+
+  bool pushTopPicksEnabled;
+
+  String genderPreference; // should be either 'Male' or 'Female' // or 'All'
+
+  String gender; // should be either 'Male' or 'Female'
+
+  String distanceRadius;
+
+  bool showMe;
+
+  UserSettings({
+    this.pushNewMessages = true,
+    this.pushNewMatchesEnabled = true,
+    this.pushSuperLikesEnabled = true,
+    this.pushTopPicksEnabled = true,
+    this.genderPreference = 'Female',
+    this.gender = 'Male',
+    this.distanceRadius = '10',
+    this.showMe = true,
+  });
+
+  factory UserSettings.fromJson(Map<dynamic, dynamic> parsedJson) {
+    return UserSettings(
+      pushNewMessages: parsedJson['pushNewMessages'] ?? true,
+      pushNewMatchesEnabled: parsedJson['pushNewMatchesEnabled'] ?? true,
+      pushSuperLikesEnabled: parsedJson['pushSuperLikesEnabled'] ?? true,
+      pushTopPicksEnabled: parsedJson['pushTopPicksEnabled'] ?? true,
+      genderPreference: parsedJson['genderPreference'] ?? 'Female',
+      gender: parsedJson['gender'] ?? 'Male',
+      distanceRadius: parsedJson['distanceRadius'] ?? '10',
+      showMe: parsedJson['showMe'] ?? true,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'pushNewMessages': this.pushNewMessages,
+      'pushNewMatchesEnabled': this.pushNewMatchesEnabled,
+      'pushSuperLikesEnabled': this.pushSuperLikesEnabled,
+      'pushTopPicksEnabled': this.pushTopPicksEnabled,
+      'genderPreference': this.genderPreference,
+      'gender': this.gender,
+      'distanceRadius': this.distanceRadius,
+      'showMe': this.showMe
+    };
+  }
+}
+
+class UserLocation {
+  double latitude;
+
+  double longitude;
+
+  UserLocation({this.latitude = 00.1, this.longitude = 00.1});
+
+  factory UserLocation.fromJson(Map<dynamic, dynamic>? parsedJson) {
+    return UserLocation(
+      latitude: parsedJson?['latitude'] ?? 00.1,
+      longitude: parsedJson?['longitude'] ?? 00.1,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'latitude': this.latitude,
+      'longitude': this.longitude,
+    };
   }
 }
