@@ -15,7 +15,7 @@ class _SwipeScreenState extends State<SwipeScreen> {
   @override
   Widget build(BuildContext context) {
     return SwipeProvider(
-        builder: ((context, user, model, functions, child) =>
+        builder: ((context, model, functions, child) =>
             StreamBuilder<List<UserModel>>(
               stream: model.tinderUsers,
               initialData: [],
