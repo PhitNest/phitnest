@@ -53,8 +53,6 @@ abstract class BackEndModel extends ChangeNotifier {
       Future<void> Function(Exception exception) phoneVerificationFailed,
       Future<void> Function() onLogin);
 
-  Future<void> recordPurchase(PurchaseDetails purchase);
-
   Stream<List<UserModel>> getTinderUsers(
       StreamController<List<UserModel>> tinderCardsStreamController);
 

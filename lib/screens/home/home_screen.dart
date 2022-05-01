@@ -14,7 +14,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     HomeFunctions functions = HomeFunctions(context);
     functions.setUserActive();
-    functions.checkSubscription();
 
     return HomeScreenProvider(builder: (context, state, child) {
       return Scaffold(

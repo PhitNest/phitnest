@@ -146,34 +146,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: context,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20),
-                      ),
-                    ),
-                    builder: (context) {
-                      return UpgradeAccount();
-                    },
-                  );
-                },
-                title: Text(
-                  user.isVip
-                      ? 'Cancel subscription'.tr()
-                      : 'Upgrade Account'.tr(),
-                  style: TextStyle(fontSize: 16),
-                ),
-                leading: Image.asset(
-                  'assets/images/vip.png',
-                  height: 24,
-                  width: 24,
-                ),
-              ),
-              ListTile(
-                dense: true,
-                onTap: () {
                   Navigation.push(context, SettingsScreen(user: user));
                 },
                 title: Text(

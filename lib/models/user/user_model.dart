@@ -28,8 +28,6 @@ class UserModel {
 
   String fcmToken;
 
-  bool isVip;
-
   //tinder related fields
   UserLocation location;
 
@@ -61,7 +59,6 @@ class UserModel {
     lastOnlineTimestamp,
     settings,
     this.fcmToken = '',
-    this.isVip = false,
 
     //tinder related fields
     this.showMe = true,
@@ -98,7 +95,6 @@ class UserModel {
         userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
         profilePictureURL: parsedJson['profilePictureURL'] ?? '',
         fcmToken: parsedJson['fcmToken'] ?? '',
-        isVip: parsedJson['isVip'] ?? false,
         //dating app related fields
         showMe: parsedJson['showMe'] ?? parsedJson['showMeOnTinder'] ?? true,
         location: parsedJson.containsKey('location')
@@ -137,7 +133,6 @@ class UserModel {
         school: parsedJson['school'] ?? 'N/A',
         age: parsedJson['age'] ?? '',
         bio: parsedJson['bio'] ?? 'N/A',
-        isVip: parsedJson['isVip'] ?? false,
         showMe: parsedJson['showMe'] ?? parsedJson['showMeOnTinder'] ?? true,
         photos: parsedJson['photos'] ?? [].cast<String>());
   }
@@ -156,7 +151,6 @@ class UserModel {
       'profilePictureURL': this.profilePictureURL,
       'appIdentifier': this.appIdentifier,
       'fcmToken': this.fcmToken,
-      'isVip': this.isVip,
 
       //tinder related fields
       'showMe': this.settings.showMe,
@@ -189,7 +183,6 @@ class UserModel {
       'bio': this.bio,
       'school': this.school,
       'age': this.age,
-      'isVip': this.isVip,
       'photos': this.photos,
     };
   }
