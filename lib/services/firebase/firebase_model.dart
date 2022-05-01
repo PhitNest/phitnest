@@ -1198,26 +1198,6 @@ class FirebaseModel extends BackEndModel {
     return isSuccessful;
   }
 
-  Future<bool> _shouldResetCounter(
-      DocumentSnapshot<Map<String, dynamic>> documentSnapshot) async {
-    SwipeCounter counter = SwipeCounter.fromJson(documentSnapshot.data() ?? {});
-    DateTime now = DateTime.now();
-    DateTime from = DateTime.fromMillisecondsSinceEpoch(
-        counter.createdAt.millisecondsSinceEpoch);
-    Duration diff = now.difference(from);
-    if (diff.inDays > 0) {
-      counter.count = 1;
-      counter.createdAt = Timestamp.now();
-      await _firestore
-          .collection(SWIPE_COUNT)
-          .doc(counter.authorID)
-          .update(counter.toJson());
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   @override
   Future<void> resetPassword(String emailAddress) async =>
       await FirebaseAuth.instance.sendPasswordResetEmail(email: emailAddress);
@@ -1268,33 +1248,6 @@ class FirebaseModel extends BackEndModel {
         await _firestore.collection(SWIPES).doc(value.docs.first.id).delete();
       }
     });
-  }
-
-  @override
-  Future<bool> incrementSwipe() async {
-    UserModel? user = currentUser;
-    if (user != null) {
-      DocumentReference<Map<String, dynamic>> documentReference =
-          _firestore.collection(SWIPE_COUNT).doc(user.userID);
-      DocumentSnapshot<Map<String, dynamic>> validationDocumentSnapshot =
-          await documentReference.get();
-      if (validationDocumentSnapshot.exists) {
-        if ((validationDocumentSnapshot['count'] ?? 1) < 10) {
-          await _firestore
-              .doc(documentReference.path)
-              .update({'count': validationDocumentSnapshot['count'] + 1});
-          return true;
-        } else {
-          return _shouldResetCounter(validationDocumentSnapshot);
-        }
-      } else {
-        await _firestore.doc(documentReference.path).set(SwipeCounter(
-                authorID: user.userID, createdAt: Timestamp.now(), count: 1)
-            .toJson());
-        return true;
-      }
-    }
-    return false;
   }
 
   @override

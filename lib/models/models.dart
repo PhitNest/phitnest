@@ -8,5 +8,4 @@ export 'homeConversation/home_conversation_model.dart';
 export 'messageData/message_data_model.dart';
 export 'purchase/purchase_model.dart';
 export 'swipe/swipe_model.dart';
-export 'swipeCounter/swipe_counter_model.dart';
 export 'user/user_model.dart';
