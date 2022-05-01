@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:location/location_utils.dart';
 import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
@@ -179,7 +178,6 @@ class FirebaseModel extends BackEndModel {
             endOfSubscription = purchaseDate.add(Duration(days: 365));
           }
           if (DateTime.now().isAfter(endOfSubscription)) {
-            user.isVip = false;
             await updateCurrentUser(user: user);
             await _firestore
                 .collection(SUBSCRIPTIONS)
@@ -419,7 +417,6 @@ class FirebaseModel extends BackEndModel {
         active: false,
         age: '',
         bio: '',
-        isVip: false,
         lastOnlineTimestamp: Timestamp.now(),
         photos: [],
         school: '',
@@ -480,7 +477,6 @@ class FirebaseModel extends BackEndModel {
           school: '',
           photos: [],
           lastOnlineTimestamp: Timestamp.now(),
-          isVip: false,
           bio: '',
           age: '',
           active: false,
@@ -1202,26 +1198,6 @@ class FirebaseModel extends BackEndModel {
     return isSuccessful;
   }
 
-  Future<bool> _shouldResetCounter(
-      DocumentSnapshot<Map<String, dynamic>> documentSnapshot) async {
-    SwipeCounter counter = SwipeCounter.fromJson(documentSnapshot.data() ?? {});
-    DateTime now = DateTime.now();
-    DateTime from = DateTime.fromMillisecondsSinceEpoch(
-        counter.createdAt.millisecondsSinceEpoch);
-    Duration diff = now.difference(from);
-    if (diff.inDays > 0) {
-      counter.count = 1;
-      counter.createdAt = Timestamp.now();
-      await _firestore
-          .collection(SWIPE_COUNT)
-          .doc(counter.authorID)
-          .update(counter.toJson());
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   @override
   Future<void> resetPassword(String emailAddress) async =>
       await FirebaseAuth.instance.sendPasswordResetEmail(email: emailAddress);
@@ -1272,33 +1248,6 @@ class FirebaseModel extends BackEndModel {
         await _firestore.collection(SWIPES).doc(value.docs.first.id).delete();
       }
     });
-  }
-
-  @override
-  Future<bool> incrementSwipe() async {
-    UserModel? user = currentUser;
-    if (user != null) {
-      DocumentReference<Map<String, dynamic>> documentReference =
-          _firestore.collection(SWIPE_COUNT).doc(user.userID);
-      DocumentSnapshot<Map<String, dynamic>> validationDocumentSnapshot =
-          await documentReference.get();
-      if (validationDocumentSnapshot.exists) {
-        if ((validationDocumentSnapshot['count'] ?? 1) < 10) {
-          await _firestore
-              .doc(documentReference.path)
-              .update({'count': validationDocumentSnapshot['count'] + 1});
-          return true;
-        } else {
-          return _shouldResetCounter(validationDocumentSnapshot);
-        }
-      } else {
-        await _firestore.doc(documentReference.path).set(SwipeCounter(
-                authorID: user.userID, createdAt: Timestamp.now(), count: 1)
-            .toJson());
-        return true;
-      }
-    }
-    return false;
   }
 
   @override
@@ -1371,31 +1320,6 @@ class FirebaseModel extends BackEndModel {
     await _firestore
         .collection(CHANNEL_PARTICIPATION)
         .add(channelParticipation.toJson());
-  }
-
-  @override
-  Future<void> recordPurchase(PurchaseDetails purchase) async {
-    UserModel? user = currentUser;
-    if (user != null) {
-      PurchaseModel purchaseModel = PurchaseModel(
-        active: true,
-        productId: purchase.productID,
-        receipt: purchase.purchaseID ?? '',
-        serverVerificationData:
-            purchase.verificationData.serverVerificationData,
-        source: purchase.verificationData.source,
-        subscriptionPeriod:
-            purchase.purchaseID == MONTHLY_SUBSCRIPTION ? 'monthly' : 'yearly',
-        transactionDate: int.parse(purchase.transactionDate!),
-        userID: user.userID,
-      );
-      await _firestore
-          .collection(SUBSCRIPTIONS)
-          .doc(user.userID)
-          .set(purchaseModel.toJson());
-      user.isVip = true;
-      await updateCurrentUser(user: user);
-    }
   }
 
   @override

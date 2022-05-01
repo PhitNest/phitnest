@@ -16,6 +16,5 @@ export 'resetPassword/reset_password_screen.dart';
 export 'settings/settings_screen.dart';
 export 'signUp/sign_up_screen.dart';
 export 'swipe/swipe_screen.dart';
-export 'upgradeAccount/upgrade_account_screen.dart';
 export 'userDetails/user_details_screen.dart';
 export 'redirector/redirector_screen.dart';

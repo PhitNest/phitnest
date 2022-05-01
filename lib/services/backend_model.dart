@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:provider/provider.dart';
 
 import '../models/models.dart';
@@ -53,8 +52,6 @@ abstract class BackEndModel extends ChangeNotifier {
       Future<void> Function(Exception exception) phoneVerificationFailed,
       Future<void> Function() onLogin);
 
-  Future<void> recordPurchase(PurchaseDetails purchase);
-
   Stream<List<UserModel>> getTinderUsers(
       StreamController<List<UserModel>> tinderCardsStreamController);
 
@@ -80,8 +77,6 @@ abstract class BackEndModel extends ChangeNotifier {
       String? verificationId,
       dynamic accessToken,
       dynamic appleCredential});
-
-  Future<bool> incrementSwipe();
 
   Future<void> deleteProfilePicture();
 
