@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 class DisplayUtils {
   static bool isDarkMode = false;
 
+  static void initialize(BuildContext context) {
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
+  }
+
   static Widget displayCircleImage(String picUrl, double size, hasBorder) =>
       CachedNetworkImage(
           imageBuilder: (context, imageProvider) =>
