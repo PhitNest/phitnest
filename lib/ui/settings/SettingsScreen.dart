@@ -1,8 +1,8 @@
-import 'package:dating/constants.dart';
-import 'package:dating/main.dart';
-import 'package:dating/model/User.dart';
-import 'package:dating/services/FirebaseHelper.dart';
-import 'package:dating/services/helper.dart';
+import 'package:Phitnest/constants.dart';
+import 'package:Phitnest/main.dart';
+import 'package:Phitnest/model/User.dart';
+import 'package:Phitnest/services/FirebaseHelper.dart';
+import 'package:Phitnest/services/helper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           SwitchListTile.adaptive(
                               activeColor: Color(COLOR_ACCENT),
                               title: Text(
-                                'Show Me on Flutter Dating'.tr(),
+                                'Show Me on Flutter Phitnest'.tr(),
                                 style: TextStyle(
                                   fontSize: 17,
                                   color: isDarkMode(context)
