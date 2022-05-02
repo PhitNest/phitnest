@@ -1,256 +1,40 @@
 {
   "project_info": {
-    "project_number": "443422962164",
-    "project_id": "instaflutter-85faa",
-    "storage_bucket": "instaflutter-85faa.appspot.com"
+    "project_number": "292449823269",
+    "project_id": "jp-phitnest",
+    "storage_bucket": "jp-phitnest.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:443422962164:android:2cae9f0116bd10e18089a1",
+        "mobilesdk_app_id": "1:292449823269:android:2fd83eef68adb1165bedcc",
         "android_client_info": {
-          "package_name": "com.instaflutter.chat.android"
+          "package_name": "com.phitnest.app.android"
         }
       },
       "oauth_client": [
         {
-          "client_id": "443422962164-2ume1uhegofo9fp79bra1m7btrokb7pf.apps.googleusercontent.com",
+          "client_id": "292449823269-4642843gqngmcaorgu36ak6b3n9n7l19.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCgsXMQCNIXk7-Xj_F2Zi2kWGku6WxhwY0"
+          "current_key": "AIzaSyBRMh3Bxb5_qAczlQpP7e6dOK6oqxdHO2E"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "443422962164-2ume1uhegofo9fp79bra1m7btrokb7pf.apps.googleusercontent.com",
+              "client_id": "292449823269-4642843gqngmcaorgu36ak6b3n9n7l19.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "443422962164-03u48o0o9h5aug7ipt216b90bcomfdt3.apps.googleusercontent.com",
+              "client_id": "292449823269-jrj8dqi364tffnks7k6df59q3ru8hs9f.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.instaflutter.real-estate.ios"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:443422962164:android:f00fa8f732cf8a478089a1",
-        "android_client_info": {
-          "package_name": "com.instaflutter.dating.android"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "443422962164-2ume1uhegofo9fp79bra1m7btrokb7pf.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCgsXMQCNIXk7-Xj_F2Zi2kWGku6WxhwY0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "443422962164-2ume1uhegofo9fp79bra1m7btrokb7pf.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "443422962164-03u48o0o9h5aug7ipt216b90bcomfdt3.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.instaflutter.real-estate.ios"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:443422962164:android:1fc566712e01cf838089a1",
-        "android_client_info": {
-          "package_name": "com.instaflutter.instagram.android"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "443422962164-2ume1uhegofo9fp79bra1m7btrokb7pf.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCgsXMQCNIXk7-Xj_F2Zi2kWGku6WxhwY0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "443422962164-2ume1uhegofo9fp79bra1m7btrokb7pf.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "443422962164-03u48o0o9h5aug7ipt216b90bcomfdt3.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.instaflutter.real-estate.ios"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:443422962164:android:d60fb92dd7f41f118089a1",
-        "android_client_info": {
-          "package_name": "com.instaflutter.real_estate.android"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "443422962164-2ume1uhegofo9fp79bra1m7btrokb7pf.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCgsXMQCNIXk7-Xj_F2Zi2kWGku6WxhwY0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "443422962164-2ume1uhegofo9fp79bra1m7btrokb7pf.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "443422962164-03u48o0o9h5aug7ipt216b90bcomfdt3.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.instaflutter.real-estate.ios"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:443422962164:android:472dee201487868a8089a1",
-        "android_client_info": {
-          "package_name": "com.instaflutter.socialnetwork.android"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "443422962164-2ume1uhegofo9fp79bra1m7btrokb7pf.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCgsXMQCNIXk7-Xj_F2Zi2kWGku6WxhwY0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "443422962164-2ume1uhegofo9fp79bra1m7btrokb7pf.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "443422962164-03u48o0o9h5aug7ipt216b90bcomfdt3.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.instaflutter.real-estate.ios"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:443422962164:android:3ccc81f53f3fc8978089a1",
-        "android_client_info": {
-          "package_name": "com.instaflutter.store_locator.android"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "443422962164-2ume1uhegofo9fp79bra1m7btrokb7pf.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCgsXMQCNIXk7-Xj_F2Zi2kWGku6WxhwY0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "443422962164-2ume1uhegofo9fp79bra1m7btrokb7pf.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "443422962164-03u48o0o9h5aug7ipt216b90bcomfdt3.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.instaflutter.real-estate.ios"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:443422962164:android:9d3194a6dc648f608089a1",
-        "android_client_info": {
-          "package_name": "com.instaflutter.universal_listing.android"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "443422962164-2ume1uhegofo9fp79bra1m7btrokb7pf.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCgsXMQCNIXk7-Xj_F2Zi2kWGku6WxhwY0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "443422962164-2ume1uhegofo9fp79bra1m7btrokb7pf.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "443422962164-03u48o0o9h5aug7ipt216b90bcomfdt3.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.instaflutter.real-estate.ios"
+                "bundle_id": "com.phitnest.app.ios"
               }
             }
           ]

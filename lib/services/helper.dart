@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dating/constants.dart';
-import 'package:dating/main.dart';
-import 'package:dating/model/User.dart' as user;
+import 'package:Phitnest/constants.dart';
+import 'package:Phitnest/main.dart';
+import 'package:Phitnest/model/User.dart' as user;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

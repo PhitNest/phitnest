@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dating/model/ConversationModel.dart';
-import 'package:dating/model/HomeConversationModel.dart';
-import 'package:dating/services/FirebaseHelper.dart';
-import 'package:dating/services/helper.dart';
-import 'package:dating/ui/auth/AuthScreen.dart';
-import 'package:dating/ui/chat/ChatScreen.dart';
-import 'package:dating/ui/home/HomeScreen.dart';
-import 'package:dating/ui/onBoarding/OnBoardingScreen.dart';
+import 'package:Phitnest/model/ConversationModel.dart';
+import 'package:Phitnest/model/HomeConversationModel.dart';
+import 'package:Phitnest/services/FirebaseHelper.dart';
+import 'package:Phitnest/services/helper.dart';
+import 'package:Phitnest/ui/auth/AuthScreen.dart';
+import 'package:Phitnest/ui/chat/ChatScreen.dart';
+import 'package:Phitnest/ui/home/HomeScreen.dart';
+import 'package:Phitnest/ui/onBoarding/OnBoardingScreen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
@@ -132,7 +132,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,
-        title: 'Flutter Dating'.tr(),
+        title: 'Flutter Phitnest'.tr(),
         theme: ThemeData(
             bottomSheetTheme: BottomSheetThemeData(
                 backgroundColor: Colors.white.withOpacity(.9)),

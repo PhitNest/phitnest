@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:dating/constants.dart';
-import 'package:dating/main.dart';
-import 'package:dating/model/User.dart';
-import 'package:dating/services/FirebaseHelper.dart';
-import 'package:dating/services/helper.dart';
-import 'package:dating/ui/home/HomeScreen.dart';
-import 'package:dating/ui/phoneAuth/PhoneNumberInputScreen.dart';
+import 'package:Phitnest/constants.dart';
+import 'package:Phitnest/main.dart';
+import 'package:Phitnest/model/User.dart';
+import 'package:Phitnest/services/FirebaseHelper.dart';
+import 'package:Phitnest/services/helper.dart';
+import 'package:Phitnest/ui/home/HomeScreen.dart';
+import 'package:Phitnest/ui/phoneAuth/PhoneNumberInputScreen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -138,7 +138,7 @@ class _SignUpState extends State<SignUpScreen> {
                     height: 170,
                     child: _image == null
                         ? Image.asset(
-                      'assets/images/placeholder.jpg'.tr(),
+                            'assets/images/placeholder.jpg'.tr(),
                             fit: BoxFit.cover,
                           )
                         : Image.file(

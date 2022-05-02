@@ -1,6 +1,6 @@
-import 'package:dating/constants.dart';
-import 'package:dating/services/FirebaseHelper.dart';
-import 'package:dating/services/helper.dart';
+import 'package:Phitnest/constants.dart';
+import 'package:Phitnest/services/FirebaseHelper.dart';
+import 'package:Phitnest/services/helper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -310,7 +310,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                       productDetails.price,
                       style: TextStyle(color: Colors.white),
                     ),
-              onPressed: () async {
+                    onPressed: () async {
                       PurchaseParam purchaseParam = PurchaseParam(
                           productDetails: productDetails,
                           applicationUserName: null);
