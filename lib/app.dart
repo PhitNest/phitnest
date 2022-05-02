@@ -20,7 +20,7 @@ class App extends StatelessWidget with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     // Store theme setting for frequent use
-    DisplayUtils.isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    DisplayUtils.initialize(context);
     WidgetsBinding.instance?.addObserver(this);
 
     // Pass the back end down to children
