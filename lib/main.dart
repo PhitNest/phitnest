@@ -7,10 +7,10 @@ import 'package:phitnest/model/ConversationModel.dart';
 import 'package:phitnest/model/HomeConversationModel.dart';
 import 'package:phitnest/services/FirebaseHelper.dart';
 import 'package:phitnest/services/helper.dart';
-import 'package:phitnest/ui/auth/AuthScreen.dart';
-import 'package:phitnest/ui/chat/ChatScreen.dart';
-import 'package:phitnest/ui/home/HomeScreen.dart';
-import 'package:phitnest/ui/onBoarding/OnBoardingScreen.dart';
+import 'package:phitnest/ui/screens/auth/AuthScreen.dart';
+import 'package:phitnest/ui/screens/chat/ChatScreen.dart';
+import 'package:phitnest/ui/screens/home/HomeScreen.dart';
+import 'package:phitnest/ui/screens/onBoarding/OnBoardingScreen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
@@ -21,7 +21,7 @@ import 'package:flutter/services.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'constants.dart' as Constants;
+import 'constants/constants.dart' as Constants;
 import 'model/User.dart';
 
 void main() async {
