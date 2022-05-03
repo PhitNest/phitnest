@@ -1,35 +1,17 @@
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
-import 'package:phitnest/model/User.dart';
-import 'package:phitnest/services/FirebaseHelper.dart';
 import 'package:phitnest/services/helper.dart';
-import 'package:phitnest/ui/screens/home/HomeScreen.dart';
+import 'package:phitnest/ui/screens/base_view.dart';
+import 'package:phitnest/ui/screens/login/model/login_model.dart';
 import 'package:phitnest/ui/screens/phoneAuth/PhoneNumberInputScreen.dart';
 import 'package:phitnest/ui/screens/resetPasswordScreen/ResetPasswordScreen.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:validation/validation.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends BaseView<LoginModel> {
   @override
-  State createState() {
-    return _LoginScreen();
-  }
-}
-
-class _LoginScreen extends State<LoginScreen> {
-  GlobalKey<FormState> _key = GlobalKey();
-  AutovalidateMode _validate = AutovalidateMode.disabled;
-  Position? currentLocation;
-  String? email, password;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, LoginModel model, Widget? child) {
     return Scaffold(
       appBar: AppBar(
         brightness: isDarkMode(context) ? Brightness.dark : Brightness.light,
@@ -39,8 +21,8 @@ class _LoginScreen extends State<LoginScreen> {
         elevation: 0.0,
       ),
       body: Form(
-        key: _key,
-        autovalidateMode: _validate,
+        key: model.formKey,
+        autovalidateMode: model.validate,
         child: ListView(
           children: <Widget>[
             ConstrainedBox(
@@ -67,7 +49,7 @@ class _LoginScreen extends State<LoginScreen> {
                   textInputAction: TextInputAction.next,
                   style: TextStyle(fontSize: 18.0),
                   validator: (val) => validateEmail(val),
-                  onSaved: (val) => email = val,
+                  onSaved: (val) => model.email = val,
                   keyboardType: TextInputType.emailAddress,
                   cursorColor: Color(COLOR_PRIMARY),
                   decoration: InputDecoration(
@@ -102,10 +84,10 @@ class _LoginScreen extends State<LoginScreen> {
                     const EdgeInsets.only(top: 32.0, right: 24.0, left: 24.0),
                 child: TextFormField(
                   textAlignVertical: TextAlignVertical.center,
-                  onSaved: (val) => password = val,
+                  onSaved: (val) => model.password = val,
                   obscureText: true,
                   validator: (val) => validatePassword(val),
-                  onFieldSubmitted: (password) => _login(),
+                  onFieldSubmitted: (password) => model.login(context),
                   textInputAction: TextInputAction.done,
                   style: TextStyle(fontSize: 18.0),
                   cursorColor: Color(COLOR_PRIMARY),
@@ -174,7 +156,7 @@ class _LoginScreen extends State<LoginScreen> {
                       color: isDarkMode(context) ? Colors.black : Colors.white,
                     ),
                   ),
-                  onPressed: () => _login(),
+                  onPressed: () => model.login(context),
                 ),
               ),
             ),
@@ -206,7 +188,7 @@ class _LoginScreen extends State<LoginScreen> {
                       style: isDarkMode(context)
                           ? apple.ButtonStyle.white
                           : apple.ButtonStyle.black,
-                      onPressed: () => loginWithApple(),
+                      onPressed: () => model.loginWithApple(context),
                     ),
                   );
                 }
@@ -235,66 +217,5 @@ class _LoginScreen extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  _login() async {
-    if (_key.currentState?.validate() ?? false) {
-      _key.currentState!.save();
-      await _loginWithEmailAndPassword();
-    } else {
-      setState(() {
-        _validate = AutovalidateMode.onUserInteraction;
-      });
-    }
-  }
-
-  /// login with email and password with firebase
-  /// @param email user email
-  /// @param password user password
-  _loginWithEmailAndPassword() async {
-    await showProgress(context, 'Logging in, please wait...'.tr(), false);
-    currentLocation = await getCurrentLocation();
-    if (currentLocation != null) {
-      dynamic result = await FireStoreUtils.loginWithEmailAndPassword(
-          email!.trim(), password!.trim(), currentLocation!);
-      await hideProgress();
-      if (result != null && result is User) {
-        MyAppState.currentUser = result;
-        pushAndRemoveUntil(context, HomeScreen(user: result), false);
-      } else if (result != null && result is String) {
-        showAlertDialog(context, 'Couldn\'t Authenticate'.tr(), result);
-      } else {
-        showAlertDialog(context, 'Couldn\'t Authenticate'.tr(),
-            'Login failed, Please try again.'.tr());
-      }
-    } else {
-      await hideProgress();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Location is required to match you with people from '
-                'your area.'
-            .tr()),
-        duration: Duration(seconds: 6),
-      ));
-    }
-  }
-
-  loginWithApple() async {
-    try {
-      await showProgress(context, 'Logging in, Please wait...'.tr(), false);
-      dynamic result = await FireStoreUtils.loginWithApple();
-      await hideProgress();
-      if (result != null && result is User) {
-        MyAppState.currentUser = result;
-        pushAndRemoveUntil(context, HomeScreen(user: result), false);
-      } else if (result != null && result is String) {
-        showAlertDialog(context, 'Error'.tr(), result.tr());
-      } else {
-        showAlertDialog(context, 'Error', 'Couldn\'t login with apple.'.tr());
-      }
-    } catch (e, s) {
-      await hideProgress();
-      print('_LoginScreen.loginWithApple $e $s');
-      showAlertDialog(context, 'Error', 'Couldn\'t login with apple.'.tr());
-    }
   }
 }
