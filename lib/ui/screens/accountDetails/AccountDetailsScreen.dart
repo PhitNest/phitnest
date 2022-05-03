@@ -8,6 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:validation/validation.dart';
 import 'package:flutter/widgets.dart';
 
 class AccountDetailsScreen extends StatefulWidget {

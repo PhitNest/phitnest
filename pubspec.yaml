@@ -41,6 +41,8 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.3
   easy_localization: ^3.0.0
+  validation:
+    path: ./packages/validation
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1
 
