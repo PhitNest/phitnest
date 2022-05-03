@@ -2,19 +2,19 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:Phitnest/constants.dart';
-import 'package:Phitnest/main.dart';
-import 'package:Phitnest/model/MessageData.dart';
-import 'package:Phitnest/model/User.dart';
-import 'package:Phitnest/services/FirebaseHelper.dart';
-import 'package:Phitnest/services/helper.dart';
-import 'package:Phitnest/ui/accountDetails/AccountDetailsScreen.dart';
-import 'package:Phitnest/ui/auth/AuthScreen.dart';
-import 'package:Phitnest/ui/contactUs/ContactUsScreen.dart';
-import 'package:Phitnest/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
-import 'package:Phitnest/ui/reauthScreen/reauth_user_screen.dart';
-import 'package:Phitnest/ui/settings/SettingsScreen.dart';
-import 'package:Phitnest/ui/upgradeAccount/UpgradeAccount.dart';
+import 'package:phitnest/constants.dart';
+import 'package:phitnest/main.dart';
+import 'package:phitnest/model/MessageData.dart';
+import 'package:phitnest/model/User.dart';
+import 'package:phitnest/services/FirebaseHelper.dart';
+import 'package:phitnest/services/helper.dart';
+import 'package:phitnest/ui/accountDetails/AccountDetailsScreen.dart';
+import 'package:phitnest/ui/auth/AuthScreen.dart';
+import 'package:phitnest/ui/contactUs/ContactUsScreen.dart';
+import 'package:phitnest/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
+import 'package:phitnest/ui/reauthScreen/reauth_user_screen.dart';
+import 'package:phitnest/ui/settings/SettingsScreen.dart';
+import 'package:phitnest/ui/upgradeAccount/UpgradeAccount.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
@@ -220,9 +220,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         break;
                       case 'phone':
                         authProvider = AuthProviders.PHONE;
-                        break;
-                      case 'facebook.com':
-                        authProvider = AuthProviders.FACEBOOK;
                         break;
                       case 'apple.com':
                         authProvider = AuthProviders.APPLE;

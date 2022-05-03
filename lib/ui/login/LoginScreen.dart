@@ -1,11 +1,11 @@
-import 'package:Phitnest/constants.dart';
-import 'package:Phitnest/main.dart';
-import 'package:Phitnest/model/User.dart';
-import 'package:Phitnest/services/FirebaseHelper.dart';
-import 'package:Phitnest/services/helper.dart';
-import 'package:Phitnest/ui/home/HomeScreen.dart';
-import 'package:Phitnest/ui/phoneAuth/PhoneNumberInputScreen.dart';
-import 'package:Phitnest/ui/resetPasswordScreen/ResetPasswordScreen.dart';
+import 'package:phitnest/constants.dart';
+import 'package:phitnest/main.dart';
+import 'package:phitnest/model/User.dart';
+import 'package:phitnest/services/FirebaseHelper.dart';
+import 'package:phitnest/services/helper.dart';
+import 'package:phitnest/ui/home/HomeScreen.dart';
+import 'package:phitnest/ui/phoneAuth/PhoneNumberInputScreen.dart';
+import 'package:phitnest/ui/resetPasswordScreen/ResetPasswordScreen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -187,44 +187,6 @@ class _LoginScreen extends State<LoginScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(right: 40.0, left: 40.0, bottom: 20),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(minWidth: double.infinity),
-                child: ElevatedButton.icon(
-                  label: Expanded(
-                    child: Text(
-                      'Facebook Login'.tr(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ),
-                  icon: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Image.asset(
-                      'assets/images/facebook_logo.png',
-                      color: Colors.white,
-                      height: 30,
-                      width: 30,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(FACEBOOK_BUTTON_COLOR),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      side: BorderSide(
-                        color: Color(FACEBOOK_BUTTON_COLOR),
-                      ),
-                    ),
-                  ),
-                  onPressed: () async => loginWithFacebook(),
-                ),
-              ),
-            ),
             FutureBuilder<bool>(
               future: apple.TheAppleSignIn.isAvailable(),
               builder: (context, snapshot) {
@@ -312,27 +274,6 @@ class _LoginScreen extends State<LoginScreen> {
             .tr()),
         duration: Duration(seconds: 6),
       ));
-    }
-  }
-
-  loginWithFacebook() async {
-    try {
-      await showProgress(context, 'Logging in, Please wait...'.tr(), false);
-      dynamic result = await FireStoreUtils.loginWithFacebook();
-      await hideProgress();
-      if (result != null && result is User) {
-        MyAppState.currentUser = result;
-        pushAndRemoveUntil(context, HomeScreen(user: result), false);
-      } else if (result != null && result is String) {
-        showAlertDialog(context, 'Error'.tr(), result.tr());
-      } else {
-        showAlertDialog(
-            context, 'Error', 'Couldn\'t login with facebook.'.tr());
-      }
-    } catch (e, s) {
-      await hideProgress();
-      print('_LoginScreen.loginWithFacebook $e $s');
-      showAlertDialog(context, 'Error', 'Couldn\'t login with facebook.'.tr());
     }
   }
 
