@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
+import 'package:phitnest/app.dart';
 import 'package:phitnest/model/User.dart' as user;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -235,9 +235,10 @@ Future<Position?> getCurrentLocation() async {
 }
 
 bool isInPreferredDistance(double distance) {
-  if (MyAppState.currentUser!.settings.distanceRadius.isNotEmpty) {
+  if (PhitnestAppState.currentUser!.settings.distanceRadius.isNotEmpty) {
     if (distance <=
-        (int.tryParse(MyAppState.currentUser!.settings.distanceRadius) ?? 0)) {
+        (int.tryParse(PhitnestAppState.currentUser!.settings.distanceRadius) ??
+            0)) {
       return true;
     } else {
       return false;
@@ -248,8 +249,8 @@ bool isInPreferredDistance(double distance) {
 }
 
 bool isPreferredGender(String gender) {
-  if (MyAppState.currentUser!.settings.genderPreference != 'All') {
-    return gender == MyAppState.currentUser!.settings.genderPreference;
+  if (PhitnestAppState.currentUser!.settings.genderPreference != 'All') {
+    return gender == PhitnestAppState.currentUser!.settings.genderPreference;
   } else {
     return true;
   }

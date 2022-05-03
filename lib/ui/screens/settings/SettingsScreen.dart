@@ -1,5 +1,5 @@
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
+import 'package:phitnest/app.dart';
 import 'package:phitnest/model/User.dart';
 import 'package:phitnest/services/FirebaseHelper.dart';
 import 'package:phitnest/services/helper.dart';
@@ -285,7 +285,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               await hideProgress();
                               if (updateUser != null) {
                                 this.user = updateUser;
-                                MyAppState.currentUser = user;
+                                PhitnestAppState.currentUser = user;
                                 ScaffoldMessenger.of(buildContext).showSnackBar(
                                   SnackBar(
                                     duration: Duration(seconds: 3),

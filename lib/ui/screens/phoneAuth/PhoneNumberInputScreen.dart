@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
+import 'package:phitnest/app.dart';
 import 'package:phitnest/model/User.dart';
 import 'package:phitnest/services/FirebaseHelper.dart';
 import 'package:phitnest/services/helper.dart';
@@ -378,7 +378,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
               _verificationID!, code, _phoneNumber!, signUpLocation!);
           await hideProgress();
           if (result != null && result is User) {
-            MyAppState.currentUser = result;
+            PhitnestAppState.currentUser = result;
             pushAndRemoveUntil(context, HomeScreen(user: result), false);
           } else if (result != null && result is String) {
             showAlertDialog(context, 'Failed'.tr(), result);
@@ -577,7 +577,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
               userCredential.user?.uid ?? '');
           if (user != null) {
             hideProgress();
-            MyAppState.currentUser = user;
+            PhitnestAppState.currentUser = user;
             pushAndRemoveUntil(context, HomeScreen(user: user), false);
           } else {
             /// create a new user from phone login
@@ -604,7 +604,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                 await FireStoreUtils.firebaseCreateNewUser(user);
             hideProgress();
             if (errorMessage == null) {
-              MyAppState.currentUser = user;
+              PhitnestAppState.currentUser = user;
               pushAndRemoveUntil(context, HomeScreen(user: user), false);
             } else {
               showAlertDialog(context, 'Failed'.tr(),

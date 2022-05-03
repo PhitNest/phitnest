@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
+import 'package:phitnest/app.dart';
 import 'package:phitnest/model/User.dart';
 import 'package:phitnest/services/FirebaseHelper.dart';
 import 'package:phitnest/services/helper.dart';
@@ -485,7 +485,7 @@ class _SignUpState extends State<SignUpScreen> {
           mobile!);
       await hideProgress();
       if (result != null && result is User) {
-        MyAppState.currentUser = result;
+        PhitnestAppState.currentUser = result;
         pushAndRemoveUntil(context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
         showAlertDialog(context, 'Failed'.tr(), result);

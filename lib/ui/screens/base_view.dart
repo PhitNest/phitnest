@@ -5,8 +5,8 @@ import '../../locator.dart';
 
 abstract class BaseView<T extends ChangeNotifier> extends StatefulWidget {
   Widget build(BuildContext context, T model, Widget? child);
-  onModelReady(T) {}
-  onDispose(T) {}
+  onModelReady(T model) {}
+  onDispose(T model) {}
 
   @override
   _BaseViewState<T> createState() => _BaseViewState<T>();

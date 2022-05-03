@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
+import 'package:phitnest/app.dart';
 import 'package:phitnest/model/ChatModel.dart';
 import 'package:phitnest/model/ChatVideoContainer.dart';
 import 'package:phitnest/model/ConversationModel.dart';
@@ -546,7 +546,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget buildMessage(MessageData messageData, List<User> members) {
-    if (messageData.senderID == MyAppState.currentUser!.userID) {
+    if (messageData.senderID == PhitnestAppState.currentUser!.userID) {
       return myMessageView(messageData);
     } else {
       return remoteMessageView(
@@ -958,7 +958,7 @@ class _ChatScreenState extends State<ChatScreen> {
     } else {
       String channelID;
       User friend = homeConversationModel.members.first;
-      User user = MyAppState.currentUser!;
+      User user = PhitnestAppState.currentUser!;
       if (friend.userID.compareTo(user.userID) < 0) {
         channelID = friend.userID + user.userID;
       } else {
@@ -989,10 +989,11 @@ class _ChatScreenState extends State<ChatScreen> {
       message = MessageData(
           content: content,
           created: Timestamp.now(),
-          senderFirstName: MyAppState.currentUser!.firstName,
-          senderID: MyAppState.currentUser!.userID,
-          senderLastName: MyAppState.currentUser!.lastName,
-          senderProfilePictureURL: MyAppState.currentUser!.profilePictureURL,
+          senderFirstName: PhitnestAppState.currentUser!.firstName,
+          senderID: PhitnestAppState.currentUser!.userID,
+          senderLastName: PhitnestAppState.currentUser!.lastName,
+          senderProfilePictureURL:
+              PhitnestAppState.currentUser!.profilePictureURL,
           url: url,
           videoThumbnail: videoThumbnail);
     } else {
@@ -1004,24 +1005,26 @@ class _ChatScreenState extends State<ChatScreen> {
           recipientLastName: homeConversationModel.members.first.lastName,
           recipientProfilePictureURL:
               homeConversationModel.members.first.profilePictureURL,
-          senderFirstName: MyAppState.currentUser!.firstName,
-          senderID: MyAppState.currentUser!.userID,
-          senderLastName: MyAppState.currentUser!.lastName,
-          senderProfilePictureURL: MyAppState.currentUser!.profilePictureURL,
+          senderFirstName: PhitnestAppState.currentUser!.firstName,
+          senderID: PhitnestAppState.currentUser!.userID,
+          senderLastName: PhitnestAppState.currentUser!.lastName,
+          senderProfilePictureURL:
+              PhitnestAppState.currentUser!.profilePictureURL,
           url: url,
           videoThumbnail: videoThumbnail);
     }
     if (url != null) {
       if (url.mime.contains('image')) {
         message.content =
-            '${MyAppState.currentUser!.firstName} sent an image'.tr();
+            '${PhitnestAppState.currentUser!.firstName} sent an image'.tr();
       } else if (url.mime.contains('video')) {
         message.content =
-            '${MyAppState.currentUser!.firstName} sent a video'.tr();
+            '${PhitnestAppState.currentUser!.firstName} sent a video'.tr();
       } else if (url.mime.contains('audio')) {
-        message.content = '${MyAppState.currentUser!.firstName} sent a voice '
-                'message'
-            .tr();
+        message.content =
+            '${PhitnestAppState.currentUser!.firstName} sent a voice '
+                    'message'
+                .tr();
       }
     }
     if (await _checkChannelNullability(

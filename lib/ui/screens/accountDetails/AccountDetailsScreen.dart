@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:validation/validation.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../../app.dart';
+
 class AccountDetailsScreen extends StatefulWidget {
   final User user;
 
@@ -421,7 +423,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     user.phoneNumber = mobile!;
     User? updatedUser = await FireStoreUtils.updateCurrentUser(user);
     if (updatedUser != null) {
-      MyAppState.currentUser = user;
+      PhitnestAppState.currentUser = user;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
