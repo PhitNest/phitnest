@@ -12,9 +12,7 @@ import 'package:phitnest/model/ChatVideoContainer.dart';
 import 'package:phitnest/model/ConversationModel.dart';
 import 'package:phitnest/model/HomeConversationModel.dart';
 import 'package:phitnest/model/MessageData.dart';
-import 'package:phitnest/model/PurchaseModel.dart';
 import 'package:phitnest/model/Swipe.dart';
-import 'package:phitnest/model/SwipeCounterModel.dart';
 import 'package:phitnest/model/User.dart';
 import 'package:phitnest/model/User.dart' as location;
 import 'package:phitnest/services/helper.dart';
@@ -29,7 +27,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
@@ -72,7 +69,7 @@ class FireStoreUtils {
 
   Future<Url> uploadChatImageToFireStorage(
       File image, BuildContext context) async {
-    showProgress(context, 'Uploading image...'.tr(), false);
+    await showProgress(context, 'Uploading image...'.tr(), false);
     var uniqueID = Uuid().v4();
     File compressedImage = await compressImage(image);
     Reference upload = storage.child('images/$uniqueID.png');
@@ -90,14 +87,14 @@ class FireStoreUtils {
     var storageRef = (await uploadTask.whenComplete(() {})).ref;
     var downloadUrl = await storageRef.getDownloadURL();
     var metaData = await storageRef.getMetadata();
-    hideProgress();
+    await hideProgress();
     return Url(
         mime: metaData.contentType ?? 'image', url: downloadUrl.toString());
   }
 
   Future<ChatVideoContainer> uploadChatVideoToFireStorage(
       File video, BuildContext context) async {
-    showProgress(context, 'Uploading video...'.tr(), false);
+    await showProgress(context, 'Uploading video...'.tr(), false);
     var uniqueID = Uuid().v4();
     File compressedVideo = await _compressVideo(video);
     Reference upload = storage.child('videos/$uniqueID.mp4');
@@ -119,7 +116,7 @@ class FireStoreUtils {
         imageFormat: ImageFormat.PNG);
     final file = File(uint8list!);
     String thumbnailDownloadUrl = await uploadVideoThumbnailToFireStorage(file);
-    hideProgress();
+    await hideProgress();
     return ChatVideoContainer(
         videoUrl: Url(
             url: downloadUrl.toString(), mime: metaData.contentType ?? 'video'),
@@ -768,32 +765,8 @@ class FireStoreUtils {
     tinderCardsStreamController.add(data);
   }
 
-  Future<bool> incrementSwipe() async {
-    DocumentReference<Map<String, dynamic>> documentReference =
-        firestore.collection(SWIPE_COUNT).doc(MyAppState.currentUser!.userID);
-    DocumentSnapshot<Map<String, dynamic>> validationDocumentSnapshot =
-        await documentReference.get();
-    if (validationDocumentSnapshot.exists) {
-      if ((validationDocumentSnapshot['count'] ?? 1) < 10) {
-        await firestore
-            .doc(documentReference.path)
-            .update({'count': validationDocumentSnapshot['count'] + 1});
-        return true;
-      } else {
-        return _shouldResetCounter(validationDocumentSnapshot);
-      }
-    } else {
-      await firestore.doc(documentReference.path).set(SwipeCounter(
-              authorID: MyAppState.currentUser!.userID,
-              createdAt: Timestamp.now(),
-              count: 1)
-          .toJson());
-      return true;
-    }
-  }
-
   Future<Url> uploadAudioFile(File file, BuildContext context) async {
-    showProgress(context, 'Uploading Audio...'.tr(), false);
+    await showProgress(context, 'Uploading Audio...'.tr(), false);
     var uniqueID = Uuid().v4();
     Reference upload = storage.child('audio/$uniqueID.mp3');
     SettableMetadata metadata = SettableMetadata(contentType: 'audio');
@@ -811,29 +784,9 @@ class FireStoreUtils {
     var storageRef = (await uploadTask.whenComplete(() {})).ref;
     var downloadUrl = await storageRef.getDownloadURL();
     var metaData = await storageRef.getMetadata();
-    hideProgress();
+    await hideProgress();
     return Url(
         mime: metaData.contentType ?? 'audio', url: downloadUrl.toString());
-  }
-
-  Future<bool> _shouldResetCounter(
-      DocumentSnapshot<Map<String, dynamic>> documentSnapshot) async {
-    SwipeCounter counter = SwipeCounter.fromJson(documentSnapshot.data() ?? {});
-    DateTime now = DateTime.now();
-    DateTime from = DateTime.fromMillisecondsSinceEpoch(
-        counter.createdAt.millisecondsSinceEpoch);
-    Duration diff = now.difference(from);
-    if (diff.inDays > 0) {
-      counter.count = 1;
-      counter.createdAt = Timestamp.now();
-      await firestore
-          .collection(SWIPE_COUNT)
-          .doc(counter.authorID)
-          .update(counter.toJson());
-      return true;
-    } else {
-      return false;
-    }
   }
 
   /// compress video file to make it load faster but with lower quality,
@@ -1012,7 +965,6 @@ class FireStoreUtils {
         active: true,
         age: '',
         bio: '',
-        isVip: false,
         lastOnlineTimestamp: Timestamp.now(),
         photos: [],
         school: '',
@@ -1093,7 +1045,6 @@ class FireStoreUtils {
           school: '',
           photos: [],
           lastOnlineTimestamp: Timestamp.now(),
-          isVip: false,
           bio: '',
           age: '',
           active: true,
@@ -1170,12 +1121,6 @@ class FireStoreUtils {
 
   static deleteUser() async {
     try {
-      // delete user records from subscriptions table
-      await firestore
-          .collection(SUBSCRIPTIONS)
-          .doc(MyAppState.currentUser!.userID)
-          .delete();
-
       // delete user records from swipe_counts table
       await firestore
           .collection(SWIPE_COUNT)
@@ -1245,63 +1190,6 @@ class FireStoreUtils {
       await auth.FirebaseAuth.instance.currentUser!.delete();
     } catch (e, s) {
       print('FireStoreUtils.deleteUser $e $s');
-    }
-  }
-
-  static recordPurchase(PurchaseDetails purchase) async {
-    PurchaseModel purchaseModel = PurchaseModel(
-      active: true,
-      productId: purchase.productID,
-      receipt: purchase.purchaseID ?? '',
-      serverVerificationData: purchase.verificationData.serverVerificationData,
-      source: purchase.verificationData.source,
-      subscriptionPeriod:
-          purchase.purchaseID == MONTHLY_SUBSCRIPTION ? 'monthly' : 'yearly',
-      transactionDate: int.parse(purchase.transactionDate!),
-      userID: MyAppState.currentUser!.userID,
-    );
-    await firestore
-        .collection(SUBSCRIPTIONS)
-        .doc(MyAppState.currentUser!.userID)
-        .set(purchaseModel.toJson());
-    MyAppState.currentUser!.isVip = true;
-    await updateCurrentUser(MyAppState.currentUser!);
-  }
-
-  static isSubscriptionActive() async {
-    DocumentSnapshot<Map<String, dynamic>> userPurchase = await firestore
-        .collection(SUBSCRIPTIONS)
-        .doc(MyAppState.currentUser!.userID)
-        .get();
-    if (userPurchase.exists) {
-      try {
-        PurchaseModel purchaseModel =
-            PurchaseModel.fromJson(userPurchase.data() ?? {});
-        DateTime purchaseDate =
-            DateTime.fromMillisecondsSinceEpoch(purchaseModel.transactionDate);
-        DateTime endOfSubscription = DateTime.now();
-        if (purchaseModel.productId == MONTHLY_SUBSCRIPTION) {
-          endOfSubscription = purchaseDate.add(Duration(days: 30));
-        } else if (purchaseModel.productId == YEARLY_SUBSCRIPTION) {
-          endOfSubscription = purchaseDate.add(Duration(days: 365));
-        }
-        if (DateTime.now().isBefore(endOfSubscription)) {
-          return true;
-        } else {
-          MyAppState.currentUser!.isVip = false;
-          await updateCurrentUser(MyAppState.currentUser!);
-          await firestore
-              .collection(SUBSCRIPTIONS)
-              .doc(MyAppState.currentUser!.userID)
-              .set({'active': false});
-          return false;
-        }
-      } catch (e, s) {
-        print('FireStoreUtils.isSubscriptionActive parse error $e $s');
-        return false;
-      }
-    } else {
-      return;
     }
   }
 }

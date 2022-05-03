@@ -14,7 +14,6 @@ import 'package:phitnest/ui/screens/contactUs/ContactUsScreen.dart';
 import 'package:phitnest/ui/screens/fullScreenImageViewer/FullScreenImageViewer.dart';
 import 'package:phitnest/ui/screens/reauthScreen/reauth_user_screen.dart';
 import 'package:phitnest/ui/screens/settings/SettingsScreen.dart';
-import 'package:phitnest/ui/screens/upgradeAccount/UpgradeAccount.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
@@ -153,34 +152,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 dense: true,
                 onTap: () {
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: context,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20),
-                      ),
-                    ),
-                    builder: (context) {
-                      return UpgradeAccount();
-                    },
-                  );
-                },
-                title: Text(
-                  user.isVip
-                      ? 'Cancel subscription'.tr()
-                      : 'Upgrade Account'.tr(),
-                  style: TextStyle(fontSize: 16),
-                ),
-                leading: Image.asset(
-                  'assets/images/vip.png',
-                  height: 24,
-                  width: 24,
-                ),
-              ),
-              ListTile(
-                dense: true,
-                onTap: () {
                   push(context, SettingsScreen(user: user));
                 },
                 title: Text(
@@ -305,13 +276,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           isDestructiveAction: true,
           onPressed: () async {
             Navigator.pop(context);
-            showProgress(context, 'Removing picture...'.tr(), false);
+            await showProgress(context, 'Removing picture...'.tr(), false);
             if (user.profilePictureURL.isNotEmpty)
               await _fireStoreUtils.deleteImage(user.profilePictureURL);
             user.profilePictureURL = '';
             await FireStoreUtils.updateCurrentUser(user);
             MyAppState.currentUser = user;
-            hideProgress();
+            await hideProgress();
             setState(() {});
           },
         ),
@@ -351,12 +322,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _imagePicked(File image) async {
-    showProgress(context, 'Uploading image...'.tr(), false);
+    await showProgress(context, 'Uploading image...'.tr(), false);
     user.profilePictureURL =
         await FireStoreUtils.uploadUserImageToFireStorage(image, user.userID);
     await FireStoreUtils.updateCurrentUser(user);
     MyAppState.currentUser = user;
-    hideProgress();
+    await hideProgress();
   }
 
   Widget _imageBuilder(String? url) {

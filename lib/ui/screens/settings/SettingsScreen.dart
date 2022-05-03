@@ -269,7 +269,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           child: CupertinoButton(
                             padding: const EdgeInsets.all(12.0),
                             onPressed: () async {
-                              showProgress(
+                              await showProgress(
                                   context, 'Saving changes...'.tr(), true);
                               user.settings.genderPreference = prefGender;
                               user.settings.gender = gender;
@@ -282,7 +282,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               user.settings.distanceRadius = radius;
                               User? updateUser =
                                   await FireStoreUtils.updateCurrentUser(user);
-                              hideProgress();
+                              await hideProgress();
                               if (updateUser != null) {
                                 this.user = updateUser;
                                 MyAppState.currentUser = user;

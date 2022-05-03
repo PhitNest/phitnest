@@ -32,9 +32,7 @@ class _HomeState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    if (MyAppState.currentUser!.isVip) {
-      checkSubscription();
-    }
+
     user = widget.user;
     _currentWidget = SwipeScreen();
     FireStoreUtils.firebaseMessaging.requestPermission(
@@ -112,11 +110,5 @@ class _HomeState extends State<HomeScreen> {
         },
       ),
     );
-  }
-
-  void checkSubscription() async {
-    await showProgress(context, 'Loading...', false);
-    await FireStoreUtils.isSubscriptionActive();
-    await hideProgress();
   }
 }
