@@ -128,24 +128,29 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
       );
     }
     return MaterialApp(
-        navigatorKey: navigatorKey,
-        localizationsDelegates: context.localizationDelegates,
-        supportedLocales: context.supportedLocales,
-        locale: context.locale,
-        title: 'Flutter phitnest'.tr(),
-        theme: ThemeData(
-            bottomSheetTheme: BottomSheetThemeData(
-                backgroundColor: Colors.white.withOpacity(.9)),
-            accentColor: Color(Constants.COLOR_PRIMARY),
-            brightness: Brightness.light),
-        darkTheme: ThemeData(
-            bottomSheetTheme: BottomSheetThemeData(
-                backgroundColor: Colors.black12.withOpacity(.3)),
-            accentColor: Color(Constants.COLOR_PRIMARY),
-            brightness: Brightness.dark),
-        debugShowCheckedModeBanner: false,
-        color: Color(Constants.COLOR_PRIMARY),
-        home: OnBoarding());
+      navigatorKey: navigatorKey,
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
+      title: 'Flutter phitnest'.tr(),
+      theme: ThemeData(
+          bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: Colors.white.withOpacity(.9)),
+          brightness: Brightness.light),
+      darkTheme: ThemeData(
+          bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: Colors.black12.withOpacity(.3)),
+          brightness: Brightness.dark),
+      debugShowCheckedModeBanner: false,
+      color: Color(Constants.COLOR_PRIMARY),
+      initialRoute: '/',
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          default:
+            return MaterialPageRoute(builder: (_) => OnBoarding());
+        }
+      },
+    );
   }
 
   @override
