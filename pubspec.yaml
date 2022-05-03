@@ -43,6 +43,8 @@ dependencies:
   easy_localization: ^3.0.0
   validation:
     path: ./packages/validation
+  progress_widgets:
+    path: ./packages/progress_widgets
   get_it: ^7.2.0
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1
