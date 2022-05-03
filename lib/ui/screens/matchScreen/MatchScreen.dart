@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
+import 'package:phitnest/app.dart';
 import 'package:phitnest/model/ConversationModel.dart';
 import 'package:phitnest/model/HomeConversationModel.dart';
 import 'package:phitnest/model/User.dart';
@@ -92,13 +92,13 @@ class _MatchScreenState extends State<MatchScreen> {
                       ),
                       onPressed: () async {
                         String channelID;
-                        if (widget.matchedUser.userID
-                                .compareTo(MyAppState.currentUser!.userID) <
+                        if (widget.matchedUser.userID.compareTo(
+                                PhitnestAppState.currentUser!.userID) <
                             0) {
                           channelID = widget.matchedUser.userID +
-                              MyAppState.currentUser!.userID;
+                              PhitnestAppState.currentUser!.userID;
                         } else {
-                          channelID = MyAppState.currentUser!.userID +
+                          channelID = PhitnestAppState.currentUser!.userID +
                               widget.matchedUser.userID;
                         }
                         ConversationModel? conversationModel =

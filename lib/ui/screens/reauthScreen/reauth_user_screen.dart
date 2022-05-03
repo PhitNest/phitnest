@@ -1,5 +1,5 @@
 import 'package:phitnest/constants/constants.dart';
-import 'package:phitnest/main.dart';
+import 'package:phitnest/app.dart';
 import 'package:phitnest/services/FirebaseHelper.dart';
 import 'package:phitnest/services/helper.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -177,7 +177,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
       try {
         auth.UserCredential? result = await FireStoreUtils.reAuthUser(
             widget.provider,
-            email: MyAppState.currentUser!.email,
+            email: PhitnestAppState.currentUser!.email,
             password: _passwordController.text);
         if (result == null) {
           await hideProgress();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../../../main.dart';
+import '../../../../app.dart';
 import '../../../../model/User.dart';
 import '../../../../services/FirebaseHelper.dart';
 import '../../../../services/helper.dart';
@@ -40,7 +40,7 @@ class LoginModel extends ChangeNotifier {
           email!.trim(), password!.trim(), currentLocation!);
       await hideProgress();
       if (result != null && result is User) {
-        MyAppState.currentUser = result;
+        PhitnestAppState.currentUser = result;
         pushAndRemoveUntil(context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
         showAlertDialog(context, 'Couldn\'t Authenticate', result);
@@ -64,7 +64,7 @@ class LoginModel extends ChangeNotifier {
       dynamic result = await FireStoreUtils.loginWithApple();
       await hideProgress();
       if (result != null && result is User) {
-        MyAppState.currentUser = result;
+        PhitnestAppState.currentUser = result;
         pushAndRemoveUntil(context, HomeScreen(user: result), false);
       } else if (result != null && result is String) {
         showAlertDialog(context, 'Error', result);
