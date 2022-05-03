@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:phitnest/locator.dart';
 import 'package:phitnest/model/ConversationModel.dart';
 import 'package:phitnest/model/HomeConversationModel.dart';
 import 'package:phitnest/services/FirebaseHelper.dart';
@@ -27,6 +28,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
+  setupLocator();
   runApp(
     EasyLocalization(
       supportedLocales: [Locale('en'), Locale('ar'), Locale('fr')],
