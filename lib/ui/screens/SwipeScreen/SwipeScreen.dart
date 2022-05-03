@@ -8,7 +8,6 @@ import 'package:phitnest/model/User.dart';
 import 'package:phitnest/services/FirebaseHelper.dart';
 import 'package:phitnest/services/helper.dart';
 import 'package:phitnest/ui/screens/matchScreen/MatchScreen.dart';
-import 'package:phitnest/ui/screens/upgradeAccount/UpgradeAccount.dart';
 import 'package:phitnest/ui/screens/userDetailsScreen/UserDetailsScreen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -243,9 +242,9 @@ class _SwipeScreenState extends State<SwipeScreen> {
           child: Text('Block user'.tr()),
           onPressed: () async {
             Navigator.pop(context);
-            showProgress(context, 'Blocking user...'.tr(), false);
+            await showProgress(context, 'Blocking user...'.tr(), false);
             bool isSuccessful = await _fireStoreUtils.blockUser(user, 'block');
-            hideProgress();
+            await hideProgress();
             if (isSuccessful) {
               await _fireStoreUtils.onSwipeLeft(user);
               users.remove(user);
@@ -270,9 +269,9 @@ class _SwipeScreenState extends State<SwipeScreen> {
           child: Text('Report user'.tr()),
           onPressed: () async {
             Navigator.pop(context);
-            showProgress(context, 'Reporting user...'.tr(), false);
+            await showProgress(context, 'Reporting user...'.tr(), false);
             bool isSuccessful = await _fireStoreUtils.blockUser(user, 'report');
-            hideProgress();
+            await hideProgress();
             if (isSuccessful) {
               await _fireStoreUtils.onSwipeLeft(user);
               users.removeWhere((element) => element.userID == user.userID);
@@ -308,14 +307,10 @@ class _SwipeScreenState extends State<SwipeScreen> {
   }
 
   _undo() async {
-    if (MyAppState.currentUser!.isVip) {
-      User undoUser = swipedUsers.removeLast();
-      users.insert(0, undoUser);
-      _fireStoreUtils.updateCardStream(users);
-      await _fireStoreUtils.undo(undoUser);
-    } else {
-      _showUpgradeAccountDialog();
-    }
+    User undoUser = swipedUsers.removeLast();
+    users.insert(0, undoUser);
+    _fireStoreUtils.updateCardStream(users);
+    await _fireStoreUtils.undo(undoUser);
   }
 
   Widget _asyncCards(BuildContext context, List<User>? data) {
@@ -370,34 +365,22 @@ class _SwipeScreenState extends State<SwipeScreen> {
                       (CardSwipeOrientation orientation, int index) async {
                     if (orientation == CardSwipeOrientation.LEFT ||
                         orientation == CardSwipeOrientation.RIGHT) {
-                      bool isValidSwipe = MyAppState.currentUser!.isVip
-                          ? true
-                          : await _fireStoreUtils.incrementSwipe();
-                      if (isValidSwipe) {
-                        if (orientation == CardSwipeOrientation.RIGHT) {
-                          User? result =
-                              await _fireStoreUtils.onSwipeRight(data[index]);
-                          if (result != null) {
-                            data.removeAt(index);
-                            _fireStoreUtils.updateCardStream(data);
-                            push(context, MatchScreen(matchedUser: result));
-                          } else {
-                            swipedUsers.add(data[index]);
-                            data.removeAt(index);
-                            _fireStoreUtils.updateCardStream(data);
-                          }
-                        } else if (orientation == CardSwipeOrientation.LEFT) {
+                      if (orientation == CardSwipeOrientation.RIGHT) {
+                        User? result =
+                            await _fireStoreUtils.onSwipeRight(data[index]);
+                        if (result != null) {
+                          data.removeAt(index);
+                          _fireStoreUtils.updateCardStream(data);
+                          push(context, MatchScreen(matchedUser: result));
+                        } else {
                           swipedUsers.add(data[index]);
-                          await _fireStoreUtils.onSwipeLeft(data[index]);
                           data.removeAt(index);
                           _fireStoreUtils.updateCardStream(data);
                         }
-                      } else {
-                        User returningUser = data.removeAt(index);
-                        _fireStoreUtils.updateCardStream(data);
-                        _showUpgradeAccountDialog();
-                        await Future.delayed(Duration(milliseconds: 200));
-                        data.insert(0, returningUser);
+                      } else if (orientation == CardSwipeOrientation.LEFT) {
+                        swipedUsers.add(data[index]);
+                        await _fireStoreUtils.onSwipeLeft(data[index]);
+                        data.removeAt(index);
                         _fireStoreUtils.updateCardStream(data);
                       }
                     }
@@ -459,88 +442,6 @@ class _SwipeScreenState extends State<SwipeScreen> {
             ),
           )
         ]);
-  }
-
-  void _showUpgradeAccountDialog() {
-    if (Platform.isAndroid) {
-      Widget okButton = TextButton(
-        child: Text('OK'.tr()),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      );
-      Widget upgradeButton = TextButton(
-        child: Text('Upgrade Now'.tr()),
-        onPressed: () {
-          Navigator.pop(context);
-          showModalBottomSheet(
-            context: context,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-            ),
-            builder: (context) {
-              return UpgradeAccount();
-            },
-          );
-        },
-      );
-      AlertDialog alert = AlertDialog(
-        title: Text('Upgrade account'.tr()),
-        content: Text('Upgrade your account now to have unlimited swipes per '
-                'day and the ability to undo a swipe.'
-            .tr()),
-        actions: [upgradeButton, okButton],
-      );
-
-      // show the dialog
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        },
-      );
-    } else {
-      Widget okButton = TextButton(
-        child: Text('OK'.tr()),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      );
-      Widget upgradeButton = TextButton(
-        child: Text('Upgrade Now'.tr()),
-        onPressed: () {
-          Navigator.pop(context);
-          showModalBottomSheet(
-            context: context,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-            ),
-            builder: (context) {
-              return UpgradeAccount();
-            },
-          );
-        },
-      );
-      CupertinoAlertDialog alert = CupertinoAlertDialog(
-        title: Text('Upgrade account'.tr()),
-        content: Text('Upgrade your account now to have unlimited swipes per '
-                'day and the ability to undo a swipe.'
-            .tr()),
-        actions: [upgradeButton, okButton],
-      );
-
-      // show the dialog
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        },
-      );
-    }
   }
 
   _setupTinder() async {

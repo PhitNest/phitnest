@@ -26,8 +26,6 @@ class User with ChangeNotifier {
 
   String fcmToken;
 
-  bool isVip;
-
   //tinder related fields
   UserLocation location;
 
@@ -59,7 +57,6 @@ class User with ChangeNotifier {
     lastOnlineTimestamp,
     settings,
     this.fcmToken = '',
-    this.isVip = false,
 
     //tinder related fields
     this.showMe = true,
@@ -92,7 +89,6 @@ class User with ChangeNotifier {
         userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
         profilePictureURL: parsedJson['profilePictureURL'] ?? '',
         fcmToken: parsedJson['fcmToken'] ?? '',
-        isVip: parsedJson['isVip'] ?? false,
         //dating app related fields
         showMe: parsedJson['showMe'] ?? parsedJson['showMeOnTinder'] ?? true,
         location: parsedJson.containsKey('location')
@@ -131,7 +127,6 @@ class User with ChangeNotifier {
         school: parsedJson['school'] ?? 'N/A',
         age: parsedJson['age'] ?? '',
         bio: parsedJson['bio'] ?? 'N/A',
-        isVip: parsedJson['isVip'] ?? false,
         showMe: parsedJson['showMe'] ?? parsedJson['showMeOnTinder'] ?? true,
         photos: parsedJson['photos'] ?? [].cast<String>());
   }
@@ -150,7 +145,6 @@ class User with ChangeNotifier {
       'profilePictureURL': this.profilePictureURL,
       'appIdentifier': this.appIdentifier,
       'fcmToken': this.fcmToken,
-      'isVip': this.isVip,
 
       //tinder related fields
       'showMe': this.settings.showMe,
@@ -183,7 +177,6 @@ class User with ChangeNotifier {
       'bio': this.bio,
       'school': this.school,
       'age': this.age,
-      'isVip': this.isVip,
       'photos': this.photos,
     };
   }

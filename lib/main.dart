@@ -18,7 +18,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants/constants.dart' as Constants;
@@ -26,7 +25,6 @@ import 'model/User.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
   runApp(
