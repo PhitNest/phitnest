@@ -944,7 +944,6 @@ class FireStoreUtils {
       }
       return user;
     } on auth.FirebaseAuthException catch (exception, s) {
-      print(exception.toString() + '$s');
       switch ((exception).code) {
         case 'invalid-email':
           return 'Email address is malformed.'.tr();
@@ -959,7 +958,6 @@ class FireStoreUtils {
       }
       return 'Unexpected firebase error, Please try again.'.tr();
     } catch (e, s) {
-      print(e.toString() + '$s');
       return 'Login failed, Please try again.'.tr();
     }
   }

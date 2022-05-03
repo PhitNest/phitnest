@@ -9,6 +9,7 @@ import 'package:phitnest/ui/screens/resetPasswordScreen/ResetPasswordScreen.dart
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:validation/validation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
