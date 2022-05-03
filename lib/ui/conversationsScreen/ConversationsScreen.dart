@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:Phitnest/constants.dart';
-import 'package:Phitnest/model/ConversationModel.dart';
-import 'package:Phitnest/model/HomeConversationModel.dart';
-import 'package:Phitnest/model/User.dart';
-import 'package:Phitnest/services/FirebaseHelper.dart';
-import 'package:Phitnest/services/helper.dart';
-import 'package:Phitnest/ui/chat/ChatScreen.dart';
-import 'package:Phitnest/ui/userDetailsScreen/UserDetailsScreen.dart';
+import 'package:phitnest/constants.dart';
+import 'package:phitnest/model/ConversationModel.dart';
+import 'package:phitnest/model/HomeConversationModel.dart';
+import 'package:phitnest/model/User.dart';
+import 'package:phitnest/services/FirebaseHelper.dart';
+import 'package:phitnest/services/helper.dart';
+import 'package:phitnest/ui/chat/ChatScreen.dart';
+import 'package:phitnest/ui/userDetailsScreen/UserDetailsScreen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

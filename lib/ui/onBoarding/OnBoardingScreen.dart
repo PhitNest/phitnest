@@ -1,6 +1,6 @@
-import 'package:Phitnest/constants.dart';
-import 'package:Phitnest/services/helper.dart';
-import 'package:Phitnest/ui/auth/AuthScreen.dart';
+import 'package:phitnest/constants.dart';
+import 'package:phitnest/services/helper.dart';
+import 'package:phitnest/ui/auth/AuthScreen.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

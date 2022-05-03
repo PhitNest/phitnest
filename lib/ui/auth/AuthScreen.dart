@@ -1,8 +1,8 @@
-import 'package:Phitnest/constants.dart' as Constants;
-import 'package:Phitnest/constants.dart';
-import 'package:Phitnest/services/helper.dart';
-import 'package:Phitnest/ui//signUp/SignUpScreen.dart';
-import 'package:Phitnest/ui/login/LoginScreen.dart';
+import 'package:phitnest/constants.dart' as Constants;
+import 'package:phitnest/constants.dart';
+import 'package:phitnest/services/helper.dart';
+import 'package:phitnest/ui//signUp/SignUpScreen.dart';
+import 'package:phitnest/ui/login/LoginScreen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 

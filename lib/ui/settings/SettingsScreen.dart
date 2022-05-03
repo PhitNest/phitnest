@@ -1,8 +1,8 @@
-import 'package:Phitnest/constants.dart';
-import 'package:Phitnest/main.dart';
-import 'package:Phitnest/model/User.dart';
-import 'package:Phitnest/services/FirebaseHelper.dart';
-import 'package:Phitnest/services/helper.dart';
+import 'package:phitnest/constants.dart';
+import 'package:phitnest/main.dart';
+import 'package:phitnest/model/User.dart';
+import 'package:phitnest/services/FirebaseHelper.dart';
+import 'package:phitnest/services/helper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           SwitchListTile.adaptive(
                               activeColor: Color(COLOR_ACCENT),
                               title: Text(
-                                'Show Me on Flutter Phitnest'.tr(),
+                                'Show Me on Flutter phitnest'.tr(),
                                 style: TextStyle(
                                   fontSize: 17,
                                   color: isDarkMode(context)

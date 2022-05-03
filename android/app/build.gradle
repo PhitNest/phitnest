@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -44,7 +44,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.instaflutter.dating.android"
+        applicationId "com.phitnest.app.android"
         minSdkVersion 24
         multiDexEnabled = true
         targetSdkVersion 31

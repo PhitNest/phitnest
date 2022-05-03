@@ -3,19 +3,19 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:Phitnest/constants.dart';
-import 'package:Phitnest/main.dart';
-import 'package:Phitnest/model/ChatModel.dart';
-import 'package:Phitnest/model/ChatVideoContainer.dart';
-import 'package:Phitnest/model/ConversationModel.dart';
-import 'package:Phitnest/model/HomeConversationModel.dart';
-import 'package:Phitnest/model/MessageData.dart';
-import 'package:Phitnest/model/User.dart';
-import 'package:Phitnest/services/FirebaseHelper.dart';
-import 'package:Phitnest/services/helper.dart';
-import 'package:Phitnest/ui/chat/PlayerWidget.dart';
-import 'package:Phitnest/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
-import 'package:Phitnest/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
+import 'package:phitnest/constants.dart';
+import 'package:phitnest/main.dart';
+import 'package:phitnest/model/ChatModel.dart';
+import 'package:phitnest/model/ChatVideoContainer.dart';
+import 'package:phitnest/model/ConversationModel.dart';
+import 'package:phitnest/model/HomeConversationModel.dart';
+import 'package:phitnest/model/MessageData.dart';
+import 'package:phitnest/model/User.dart';
+import 'package:phitnest/services/FirebaseHelper.dart';
+import 'package:phitnest/services/helper.dart';
+import 'package:phitnest/ui/chat/PlayerWidget.dart';
+import 'package:phitnest/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
+import 'package:phitnest/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -63,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (homeConversationModel.isGroupChat)
       _groupNameController.text =
           homeConversationModel.conversationModel?.name ?? '';
-    _myRecorder!.openAudioSession().then((value) {
+    _myRecorder!.openRecorder().then((value) {
       setState(() {
         _mRecorderIsInitialized = true;
       });
@@ -1045,7 +1045,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
-    _myRecorder!.closeAudioSession();
+    _myRecorder!.closeRecorder();
     _myRecorder = null;
     _messageController.dispose();
     _groupNameController.dispose();

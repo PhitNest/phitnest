@@ -1,6 +1,6 @@
-import 'package:Phitnest/constants.dart';
-import 'package:Phitnest/services/FirebaseHelper.dart';
-import 'package:Phitnest/services/helper.dart';
+import 'package:phitnest/constants.dart';
+import 'package:phitnest/services/FirebaseHelper.dart';
+import 'package:phitnest/services/helper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';

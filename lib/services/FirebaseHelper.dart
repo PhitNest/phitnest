@@ -3,30 +3,29 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:Phitnest/constants.dart';
-import 'package:Phitnest/main.dart';
-import 'package:Phitnest/model/BlockUserModel.dart';
-import 'package:Phitnest/model/ChannelParticipation.dart';
-import 'package:Phitnest/model/ChatModel.dart';
-import 'package:Phitnest/model/ChatVideoContainer.dart';
-import 'package:Phitnest/model/ConversationModel.dart';
-import 'package:Phitnest/model/HomeConversationModel.dart';
-import 'package:Phitnest/model/MessageData.dart';
-import 'package:Phitnest/model/PurchaseModel.dart';
-import 'package:Phitnest/model/Swipe.dart';
-import 'package:Phitnest/model/SwipeCounterModel.dart';
-import 'package:Phitnest/model/User.dart';
-import 'package:Phitnest/model/User.dart' as location;
-import 'package:Phitnest/services/helper.dart';
-import 'package:Phitnest/ui/matchScreen/MatchScreen.dart';
-import 'package:Phitnest/ui/reauthScreen/reauth_user_screen.dart';
+import 'package:phitnest/constants.dart';
+import 'package:phitnest/main.dart';
+import 'package:phitnest/model/BlockUserModel.dart';
+import 'package:phitnest/model/ChannelParticipation.dart';
+import 'package:phitnest/model/ChatModel.dart';
+import 'package:phitnest/model/ChatVideoContainer.dart';
+import 'package:phitnest/model/ConversationModel.dart';
+import 'package:phitnest/model/HomeConversationModel.dart';
+import 'package:phitnest/model/MessageData.dart';
+import 'package:phitnest/model/PurchaseModel.dart';
+import 'package:phitnest/model/Swipe.dart';
+import 'package:phitnest/model/SwipeCounterModel.dart';
+import 'package:phitnest/model/User.dart';
+import 'package:phitnest/model/User.dart' as location;
+import 'package:phitnest/services/helper.dart';
+import 'package:phitnest/ui/matchScreen/MatchScreen.dart';
+import 'package:phitnest/ui/reauthScreen/reauth_user_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -856,71 +855,6 @@ class FireStoreUtils {
     }
   }
 
-  static loginWithFacebook() async {
-    /// creates a user for this facebook login when this user first time login
-    /// and save the new user object to firebase and firebase auth
-    FacebookAuth facebookAuth = FacebookAuth.instance;
-    bool isLogged = await facebookAuth.accessToken != null;
-    if (!isLogged) {
-      LoginResult result = await facebookAuth
-          .login(); // by default we request the email and the public profile
-      if (result.status == LoginStatus.success) {
-        // you are logged
-        AccessToken? token = await facebookAuth.accessToken;
-        return await handleFacebookLogin(
-            await facebookAuth.getUserData(), token!);
-      }
-    } else {
-      AccessToken? token = await facebookAuth.accessToken;
-      return await handleFacebookLogin(
-          await facebookAuth.getUserData(), token!);
-    }
-  }
-
-  static handleFacebookLogin(
-      Map<String, dynamic> userData, AccessToken token) async {
-    auth.UserCredential authResult = await auth.FirebaseAuth.instance
-        .signInWithCredential(
-            auth.FacebookAuthProvider.credential(token.token));
-    User? user = await getCurrentUser(authResult.user?.uid ?? '');
-    List<String> fullName = (userData['name'] as String).split(' ');
-    String firstName = '';
-    String lastName = '';
-    if (fullName.isNotEmpty) {
-      firstName = fullName.first;
-      lastName = fullName.skip(1).join(' ');
-    }
-    if (user != null) {
-      user.profilePictureURL = userData['picture']['data']['url'];
-      user.firstName = firstName;
-      user.lastName = lastName;
-      user.email = userData['email'];
-      user.active = true;
-      user.fcmToken = await firebaseMessaging.getToken() ?? '';
-      dynamic result = await updateCurrentUser(user);
-      return result;
-    } else {
-      user = User(
-          email: userData['email'] ?? '',
-          firstName: firstName,
-          profilePictureURL: userData['picture']['data']['url'] ?? '',
-          userID: authResult.user?.uid ?? '',
-          lastOnlineTimestamp: Timestamp.now(),
-          lastName: lastName,
-          active: true,
-          fcmToken: await firebaseMessaging.getToken() ?? '',
-          phoneNumber: '',
-          photos: [],
-          settings: UserSettings());
-      String? errorMessage = await firebaseCreateNewUser(user);
-      if (errorMessage == null) {
-        return user;
-      } else {
-        return errorMessage;
-      }
-    }
-  }
-
   static loginWithApple() async {
     final appleCredential = await apple.TheAppleSignIn.performRequests([
       apple.AppleIdRequest(
@@ -1208,7 +1142,6 @@ class FireStoreUtils {
       String? password,
       String? smsCode,
       String? verificationId,
-      AccessToken? accessToken,
       apple.AuthorizationResult? appleCredential}) async {
     late auth.AuthCredential credential;
     switch (provider) {
@@ -1219,9 +1152,6 @@ class FireStoreUtils {
       case AuthProviders.PHONE:
         credential = auth.PhoneAuthProvider.credential(
             smsCode: smsCode!, verificationId: verificationId!);
-        break;
-      case AuthProviders.FACEBOOK:
-        credential = auth.FacebookAuthProvider.credential(accessToken!.token);
         break;
       case AuthProviders.APPLE:
         credential = auth.OAuthProvider('apple.com').credential(

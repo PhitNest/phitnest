@@ -1,15 +1,15 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:Phitnest/CustomFlutterTinderCard.dart';
-import 'package:Phitnest/constants.dart';
-import 'package:Phitnest/main.dart';
-import 'package:Phitnest/model/User.dart';
-import 'package:Phitnest/services/FirebaseHelper.dart';
-import 'package:Phitnest/services/helper.dart';
-import 'package:Phitnest/ui/matchScreen/MatchScreen.dart';
-import 'package:Phitnest/ui/upgradeAccount/UpgradeAccount.dart';
-import 'package:Phitnest/ui/userDetailsScreen/UserDetailsScreen.dart';
+import 'package:phitnest/CustomFlutterTinderCard.dart';
+import 'package:phitnest/constants.dart';
+import 'package:phitnest/main.dart';
+import 'package:phitnest/model/User.dart';
+import 'package:phitnest/services/FirebaseHelper.dart';
+import 'package:phitnest/services/helper.dart';
+import 'package:phitnest/ui/matchScreen/MatchScreen.dart';
+import 'package:phitnest/ui/upgradeAccount/UpgradeAccount.dart';
+import 'package:phitnest/ui/userDetailsScreen/UserDetailsScreen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
