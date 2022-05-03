@@ -22,7 +22,7 @@ class User with ChangeNotifier {
 
   String profilePictureURL;
 
-  String appIdentifier = 'Flutter Dating ${Platform.operatingSystem}';
+  String recentPlatform = '${Platform.operatingSystem}';
 
   String fcmToken;
 
@@ -143,7 +143,7 @@ class User with ChangeNotifier {
       'active': this.active,
       'lastOnlineTimestamp': this.lastOnlineTimestamp,
       'profilePictureURL': this.profilePictureURL,
-      'appIdentifier': this.appIdentifier,
+      'recentPlatform': this.recentPlatform,
       'fcmToken': this.fcmToken,
 
       //tinder related fields
@@ -169,7 +169,7 @@ class User with ChangeNotifier {
       'active': this.active,
       'lastOnlineTimestamp': this.lastOnlineTimestamp.millisecondsSinceEpoch,
       'profilePictureURL': this.profilePictureURL,
-      'appIdentifier': this.appIdentifier,
+      'recentPlatform': this.recentPlatform,
       'fcmToken': this.fcmToken,
       'location': this.location.toJson(),
       'signUpLocation': this.signUpLocation.toJson(),
