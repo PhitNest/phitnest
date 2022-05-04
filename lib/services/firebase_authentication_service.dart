@@ -1,0 +1,121 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:phitnest/locator.dart';
+import 'package:phitnest/services/authentication_service.dart';
+import 'package:phitnest/services/database_service.dart';
+import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
+
+import '../models/user_model.dart';
+
+class FirebaseAuthenticationService extends AuthenticationService {
+  /// Instance of firebase auth
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+  // Instance of database service
+  final DatabaseService _database = locator<DatabaseService>();
+
+  @override
+  Future<String?> loginWithApple(Position? position) async {
+    // Request authorization from apple
+    apple.AuthorizationResult appleAuth =
+        await apple.TheAppleSignIn.performRequests([
+      apple.AppleIdRequest(
+          requestedScopes: [apple.Scope.email, apple.Scope.fullName])
+    ]);
+
+    // Return error if apple denies request
+    if (appleAuth.error != null) {
+      return 'Couldn\'t login with apple.';
+    }
+
+    // If authorized by apple
+    if (appleAuth.status == apple.AuthorizationStatus.authorized) {
+      // Auth request
+      apple.AppleIdCredential? appleIdCredential = appleAuth.credential;
+
+      // Get OAuth credential from auth request
+      AuthCredential credential = OAuthProvider('apple.com').credential(
+        accessToken:
+            String.fromCharCodes(appleIdCredential?.authorizationCode ?? []),
+        idToken: String.fromCharCodes(appleIdCredential?.identityToken ?? []),
+      );
+
+      // Pass the OAuth credential to firebase auth
+      UserCredential authResult =
+          await firebaseAuth.signInWithCredential(credential);
+
+      // Load the user model from database service using uid
+      userModel = await _database.getUserModel(authResult.user?.uid ?? '');
+
+      if (userModel != null) {
+        userModel!.active = true;
+      } else {
+        userModel = UserModel(
+            email: appleIdCredential!.email ?? '',
+            firstName: appleIdCredential.fullName?.givenName ?? 'Deleted',
+            profilePictureURL: '',
+            userID: authResult.user?.uid ?? '',
+            lastName: appleIdCredential.fullName?.familyName ?? 'User',
+            active: true,
+            phoneNumber: '',
+            photos: [],
+            settings: UserSettings());
+      }
+
+      // If position is not null, update the user position
+      if (position != null) {
+        userModel!.location = UserLocation(
+            latitude: position.latitude, longitude: position.longitude);
+      }
+
+      // Update the database model
+      return await _database.updateUserModel(userModel!);
+    }
+
+    // Return error
+    return 'Couldn\'t login with apple.';
+  }
+
+  @override
+  Future<String?> loginWithEmailAndPassword(
+      String email, String password, Position? position) async {
+    try {
+      // Get the user credentials from firebase auth
+      UserCredential result = await firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
+
+      // Get the user model from the database service
+      userModel = await _database.getUserModel(result.user?.uid ?? '');
+
+      // If the user returned is null, return an error message
+      if (userModel == null) {
+        return 'Login failed';
+      }
+
+      // If position is not null, save the current user position
+      if (position != null) {
+        userModel!.location = UserLocation(
+            latitude: position.latitude, longitude: position.longitude);
+      }
+
+      // Update the user model in the database service
+      return await _database.updateUserModel(userModel!);
+    } on FirebaseAuthException catch (exception) {
+      switch ((exception).code) {
+        case 'invalid-email':
+          return 'Email address is malformed.';
+        case 'wrong-password':
+          return 'Wrong password.';
+        case 'user-not-found':
+          return 'No user corresponding to the given email address.';
+        case 'user-disabled':
+          return 'This user has been disabled.';
+        case 'too-many-requests':
+          return 'Too many attempts to sign in as this user.';
+      }
+      return 'Unexpected firebase error, Please try again.';
+    } catch (e) {
+      return 'Login failed, Please try again.';
+    }
+  }
+}

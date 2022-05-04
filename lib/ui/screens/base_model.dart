@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 
 class BaseModel extends ChangeNotifier {
-  bool _loading = true;
+  late bool _loading;
+
+  BaseModel({bool initiallyLoading = false}) {
+    _loading = initiallyLoading;
+  }
 
   bool get loading => _loading;
 
   set loading(bool loading) {
-    _loading = loading;
-    notifyListeners();
+    if (_loading != loading) {
+      _loading = loading;
+      notifyListeners();
+    }
   }
 }

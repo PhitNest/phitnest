@@ -13,6 +13,8 @@ class OnBoardingView extends BaseView<OnBoardingModel> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getBool(FINISHED_ON_BOARDING) ?? false) {
       Navigator.pushNamed(context, '/auth');
+    } else {
+      model.loading = false;
     }
   }
 

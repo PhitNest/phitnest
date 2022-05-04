@@ -6,15 +6,15 @@ import 'base_model.dart';
 import '../../../locator.dart';
 
 abstract class BaseView<T extends BaseModel> extends StatefulWidget {
-  init(BuildContext context, T model) async {}
-  onDispose(T model) async {}
+  init(BuildContext context, T model) {}
+  onDispose(T model) {}
 
   Widget build(BuildContext context, T model);
 
   Widget buildLoading(BuildContext context, T model) {
-    return Scaffold(
-      backgroundColor: Color(COLOR_PRIMARY),
-      body: Center(
+    return Center(
+      child: Container(
+        color: Color(COLOR_PRIMARY),
         child: CircularProgressIndicator.adaptive(
           valueColor: AlwaysStoppedAnimation(Color(COLOR_PRIMARY)),
           backgroundColor: Theme.of(context).brightness == Brightness.dark
@@ -34,7 +34,7 @@ class _BaseViewState<T extends BaseModel> extends State<BaseView<T>> {
 
   @override
   void initState() {
-    widget.init(context, model).then((_) => model.loading = false);
+    widget.init(context, model);
     super.initState();
   }
 
@@ -50,8 +50,8 @@ class _BaseViewState<T extends BaseModel> extends State<BaseView<T>> {
   }
 
   @override
-  void dispose() async {
-    await widget.onDispose(model);
+  void dispose() {
+    widget.onDispose(model);
     super.dispose();
   }
 }
