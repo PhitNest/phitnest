@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:phitnest/old/constants/constants.dart';
-import 'package:phitnest/ui/screens/onBoarding/widgets/on_boarding_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import 'provider/on_boarding_model.dart';
+import '../../../constants/constants.dart';
 import '../base_view.dart';
+import 'widgets/on_boarding_page.dart';
+import 'model/on_boarding_model.dart';
 
 class OnBoardingView extends BaseView<OnBoardingModel> {
   @override
   init(BuildContext context, OnBoardingModel model) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getBool(FINISHED_ON_BOARDING) ?? false) {
-      Navigator.pushNamed(context, '/auth');
+      Navigator.pushNamedAndRemoveUntil(context, '/auth', ((_) => false));
     } else {
       model.loading = false;
     }

@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:phitnest/services/database_service.dart';
 
-import '../constants/constants.dart';
-import '../models/user_model.dart';
+import '../../constants/constants.dart';
+import '../../models/user_model.dart';
+
+import '../database_service.dart';
 
 class FirestoreDatabaseService extends DatabaseService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;

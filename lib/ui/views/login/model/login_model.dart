@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
-import 'package:phitnest/services/authentication_service.dart';
 
-import '../../base_model.dart';
+import '../../../../services/authentication_service.dart';
 import '../../../../locator.dart';
+import '../../base_model.dart';
 
 enum LoginMethod { email, apple }
 
 class LoginModel extends BaseModel {
-  GlobalKey<FormState> formKey = GlobalKey();
-  Position? currentLocation;
+  final GlobalKey<FormState> formKey = GlobalKey();
   String? email, password;
 
   AutovalidateMode _validate = AutovalidateMode.disabled;
@@ -26,12 +25,12 @@ class LoginModel extends BaseModel {
   Future<String?> login(LoginMethod method) async {
     if (formKey.currentState?.validate() ?? false) {
       formKey.currentState!.save();
-      currentLocation = await getCurrentLocation();
+      Position? currentLocation = await getCurrentLocation();
       if (currentLocation != null) {
         switch (method) {
           case LoginMethod.email:
             return await _auth.loginWithEmailAndPassword(
-                email!.trim(), password!.trim(), currentLocation!);
+                email!.trim(), password!.trim(), currentLocation);
           case LoginMethod.apple:
             try {
               return await _auth.loginWithApple(currentLocation);

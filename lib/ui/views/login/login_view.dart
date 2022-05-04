@@ -10,6 +10,18 @@ import 'model/login_model.dart';
 class LoginView extends BaseView<LoginModel> {
   @override
   Widget build(BuildContext context, LoginModel model) {
+    loginClick(LoginMethod method) => showProgressUntil(
+        context: context,
+        message: 'Logging in, please wait...',
+        showUntil: () => model.login(method),
+        onDone: (result) {
+          if (result != null) {
+            showAlertDialog(context, 'Login Failed', result);
+          } else {
+            Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+          }
+        });
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -86,8 +98,7 @@ class LoginView extends BaseView<LoginModel> {
                   onSaved: (val) => model.password = val,
                   obscureText: true,
                   validator: (val) => validatePassword(val),
-                  onFieldSubmitted: (_) =>
-                      loginClick(context, model, LoginMethod.email),
+                  onFieldSubmitted: (_) => loginClick(LoginMethod.email),
                   textInputAction: TextInputAction.done,
                   style: TextStyle(fontSize: 18.0),
                   cursorColor: Color(COLOR_PRIMARY),
@@ -158,8 +169,7 @@ class LoginView extends BaseView<LoginModel> {
                               : Colors.white,
                         ),
                       ),
-                      onPressed: () =>
-                          loginClick(context, model, LoginMethod.email))),
+                      onPressed: () => loginClick(LoginMethod.email))),
             ),
             Padding(
               padding: const EdgeInsets.all(32.0),
@@ -191,8 +201,7 @@ class LoginView extends BaseView<LoginModel> {
                         style: Theme.of(context).brightness == Brightness.dark
                             ? apple.ButtonStyle.white
                             : apple.ButtonStyle.black,
-                        onPressed: () =>
-                            loginClick(context, model, LoginMethod.apple)),
+                        onPressed: () => loginClick(LoginMethod.apple)),
                   );
                 }
               },
@@ -220,19 +229,5 @@ class LoginView extends BaseView<LoginModel> {
         ),
       ),
     );
-  }
-
-  void loginClick(BuildContext context, LoginModel model, LoginMethod method) {
-    showProgressUntil(
-        context: context,
-        message: 'Logging in, please wait...',
-        showUntil: () => model.login(method),
-        onDone: (result) async {
-          if (result != null) {
-            showAlertDialog(context, 'Login Failed', result);
-          } else {
-            Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
-          }
-        });
   }
 }

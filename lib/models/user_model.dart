@@ -3,14 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../services/authentication_service.dart';
-import '../locator.dart';
-
 class UserModel with ChangeNotifier {
-  static UserModel? getCurrent(BuildContext context) {
-    return locator<AuthenticationService>().userModel;
-  }
-
   String email;
 
   String firstName;
@@ -19,9 +12,9 @@ class UserModel with ChangeNotifier {
 
   UserSettings settings;
 
-  String phoneNumber;
+  String mobile;
 
-  bool active;
+  bool online;
 
   Timestamp lastOnlineTimestamp;
 
@@ -31,14 +24,11 @@ class UserModel with ChangeNotifier {
 
   String recentPlatform = '${Platform.operatingSystem}';
 
-  String fcmToken;
-
-  //tinder related fields
   UserLocation location;
 
   UserLocation signUpLocation;
 
-  bool showMe;
+  bool public;
 
   String bio;
 
@@ -58,15 +48,14 @@ class UserModel with ChangeNotifier {
     this.userID = '',
     this.profilePictureURL = '',
     this.firstName = '',
-    this.phoneNumber = '',
+    this.mobile = '',
     this.lastName = '',
-    this.active = false,
+    this.online = false,
     lastOnlineTimestamp,
     settings,
-    this.fcmToken = '',
 
     //tinder related fields
-    this.showMe = true,
+    this.public = true,
     UserLocation? location,
     UserLocation? signUpLocation,
     this.school = '',
@@ -87,17 +76,16 @@ class UserModel with ChangeNotifier {
         email: parsedJson['email'] ?? '',
         firstName: parsedJson['firstName'] ?? '',
         lastName: parsedJson['lastName'] ?? '',
-        active: parsedJson['active'] ?? false,
+        online: parsedJson['online'] ?? false,
         lastOnlineTimestamp: parsedJson['lastOnlineTimestamp'],
         settings: parsedJson.containsKey('settings')
             ? UserSettings.fromJson(parsedJson['settings'])
             : UserSettings(),
-        phoneNumber: parsedJson['phoneNumber'] ?? '',
-        userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
+        mobile: parsedJson['mobile'] ?? '',
+        userID: parsedJson['userID'] ?? '',
         profilePictureURL: parsedJson['profilePictureURL'] ?? '',
-        fcmToken: parsedJson['fcmToken'] ?? '',
         //dating app related fields
-        showMe: parsedJson['showMe'] ?? parsedJson['showMeOnTinder'] ?? true,
+        public: parsedJson['public'] ?? true,
         location: parsedJson.containsKey('location')
             ? UserLocation.fromJson(parsedJson['location'])
             : UserLocation(),
@@ -115,16 +103,15 @@ class UserModel with ChangeNotifier {
         email: parsedJson['email'] ?? '',
         firstName: parsedJson['firstName'] ?? '',
         lastName: parsedJson['lastName'] ?? '',
-        active: parsedJson['active'] ?? false,
+        online: parsedJson['online'] ?? false,
         lastOnlineTimestamp: Timestamp.fromMillisecondsSinceEpoch(
             parsedJson['lastOnlineTimestamp']),
         settings: parsedJson.containsKey('settings')
             ? UserSettings.fromJson(parsedJson['settings'])
             : UserSettings(),
-        phoneNumber: parsedJson['phoneNumber'] ?? '',
-        userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
+        mobile: parsedJson['mobile'] ?? '',
+        userID: parsedJson['userID'] ?? '',
         profilePictureURL: parsedJson['profilePictureURL'] ?? '',
-        fcmToken: parsedJson['fcmToken'] ?? '',
         location: parsedJson.containsKey('location')
             ? UserLocation.fromJson(parsedJson['location'])
             : UserLocation(),
@@ -134,7 +121,7 @@ class UserModel with ChangeNotifier {
         school: parsedJson['school'] ?? 'N/A',
         age: parsedJson['age'] ?? '',
         bio: parsedJson['bio'] ?? 'N/A',
-        showMe: parsedJson['showMe'] ?? parsedJson['showMeOnTinder'] ?? true,
+        public: parsedJson['public'] ?? true,
         photos: parsedJson['photos'] ?? [].cast<String>());
   }
 
@@ -145,16 +132,12 @@ class UserModel with ChangeNotifier {
       'firstName': this.firstName,
       'lastName': this.lastName,
       'settings': this.settings.toJson(),
-      'phoneNumber': this.phoneNumber,
-      'id': this.userID,
-      'active': this.active,
+      'mobile': this.mobile,
+      'userID': this.userID,
+      'online': this.online,
       'lastOnlineTimestamp': this.lastOnlineTimestamp,
       'profilePictureURL': this.profilePictureURL,
       'recentPlatform': this.recentPlatform,
-      'fcmToken': this.fcmToken,
-
-      //tinder related fields
-      'showMe': this.settings.showMe,
       'location': this.location.toJson(),
       'signUpLocation': this.signUpLocation.toJson(),
       'bio': this.bio,
@@ -171,16 +154,14 @@ class UserModel with ChangeNotifier {
       'firstName': this.firstName,
       'lastName': this.lastName,
       'settings': this.settings.toJson(),
-      'phoneNumber': this.phoneNumber,
-      'id': this.userID,
-      'active': this.active,
+      'mobile': this.mobile,
+      'userID': this.userID,
+      'online': this.online,
       'lastOnlineTimestamp': this.lastOnlineTimestamp.millisecondsSinceEpoch,
       'profilePictureURL': this.profilePictureURL,
       'recentPlatform': this.recentPlatform,
-      'fcmToken': this.fcmToken,
       'location': this.location.toJson(),
       'signUpLocation': this.signUpLocation.toJson(),
-      'showMe': this.settings.showMe,
       'bio': this.bio,
       'school': this.school,
       'age': this.age,
@@ -204,8 +185,6 @@ class UserSettings {
 
   String distanceRadius;
 
-  bool showMe;
-
   UserSettings({
     this.pushNewMessages = true,
     this.pushNewMatchesEnabled = true,
@@ -214,7 +193,6 @@ class UserSettings {
     this.genderPreference = 'Female',
     this.gender = 'Male',
     this.distanceRadius = '10',
-    this.showMe = true,
   });
 
   factory UserSettings.fromJson(Map<dynamic, dynamic> parsedJson) {
@@ -226,7 +204,6 @@ class UserSettings {
       genderPreference: parsedJson['genderPreference'] ?? 'Female',
       gender: parsedJson['gender'] ?? 'Male',
       distanceRadius: parsedJson['distanceRadius'] ?? '10',
-      showMe: parsedJson['showMe'] ?? true,
     );
   }
 
@@ -239,7 +216,6 @@ class UserSettings {
       'genderPreference': this.genderPreference,
       'gender': this.gender,
       'distanceRadius': this.distanceRadius,
-      'showMe': this.showMe
     };
   }
 }
