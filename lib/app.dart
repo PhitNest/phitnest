@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'constants/constants.dart';
 import 'services/authentication_service.dart';
 import 'ui/screens/auth/auth_view.dart';
+import 'ui/screens/login/login_view.dart';
 import 'ui/screens/onBoarding/on_boarding_view.dart';
 
 class PhitnestApp extends StatefulWidget {
@@ -26,34 +27,38 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (_) => AuthenticationService(),
-        child: MaterialApp(
-          navigatorKey: _navigatorKey,
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          title: 'Phitnest',
-          theme: ThemeData(
-              bottomSheetTheme: BottomSheetThemeData(
-                  backgroundColor: Colors.white.withOpacity(.9)),
-              brightness: Brightness.light),
-          darkTheme: ThemeData(
-              bottomSheetTheme: BottomSheetThemeData(
-                  backgroundColor: Colors.black12.withOpacity(.3)),
-              brightness: Brightness.dark),
-          debugShowCheckedModeBanner: false,
-          color: Color(COLOR_PRIMARY),
-          initialRoute: '/',
-          onGenerateRoute: (settings) {
-            switch (settings.name) {
-              case '/auth':
-                return MaterialPageRoute(builder: (_) => AuthView());
-              default:
-                return MaterialPageRoute(builder: (_) => OnBoardingView());
-            }
-          },
-        ));
+    return MaterialApp(
+      navigatorKey: _navigatorKey,
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
+      title: 'Phitnest',
+      theme: ThemeData(
+          bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: Colors.white.withOpacity(.9)),
+          brightness: Brightness.light),
+      darkTheme: ThemeData(
+          bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: Colors.black12.withOpacity(.3)),
+          brightness: Brightness.dark),
+      debugShowCheckedModeBanner: false,
+      color: Color(COLOR_PRIMARY),
+      initialRoute: '/',
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/home':
+          case '/resetPassword':
+          case '/mobileAuth':
+          case '/login':
+          case '/signUp':
+            return MaterialPageRoute(builder: (_) => LoginView());
+          case '/auth':
+            return MaterialPageRoute(builder: (_) => AuthView());
+          default:
+            return MaterialPageRoute(builder: (_) => OnBoardingView());
+        }
+      },
+    );
   }
 
   @override

@@ -13,11 +13,17 @@ class ProgressWidget {
   }
 }
 
-showProgressUntil(BuildContext context, String message,
-    Future<dynamic>? Function() showUntil) async {
+showProgressUntil(
+    {required BuildContext context,
+    required String message,
+    required Future? Function() showUntil,
+    Future? Function(dynamic result)? onDone}) async {
   await showProgress(context, message, false);
   dynamic retVal = await showUntil();
   await hideProgress();
+  if (onDone != null) {
+    onDone(retVal);
+  }
   return retVal;
 }
 

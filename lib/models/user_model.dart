@@ -4,10 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../services/authentication_service.dart';
+import '../locator.dart';
 
 class UserModel with ChangeNotifier {
   static UserModel? getCurrent(BuildContext context) {
-    return AuthenticationService.instance(context).userModel;
+    return locator<AuthenticationService>().userModel;
   }
 
   String email;

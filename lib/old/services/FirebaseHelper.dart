@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:phitnest/old/app.dart';
-import 'package:phitnest/old/constants/constants.dart';
+import 'package:phitnest/constants/constants.dart';
 import 'package:phitnest/old/model/BlockUserModel.dart';
 import 'package:phitnest/old/model/ChannelParticipation.dart';
 import 'package:phitnest/old/model/ChatModel.dart';
 import 'package:phitnest/old/model/ChatVideoContainer.dart';
 import 'package:phitnest/old/model/ConversationModel.dart';
+import '../app.dart';
 import 'package:phitnest/old/model/HomeConversationModel.dart';
 import 'package:phitnest/old/model/MessageData.dart';
 import 'package:phitnest/old/model/Swipe.dart';

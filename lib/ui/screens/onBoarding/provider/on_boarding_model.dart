@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../base_model.dart';
 
 class OnBoardingModel extends BaseModel {
+  OnBoardingModel() : super(initiallyLoading: true);
+
   final PageController pageController = PageController();
 
   ///list of strings containing onBoarding titles
