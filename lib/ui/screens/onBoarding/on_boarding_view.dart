@@ -47,7 +47,8 @@ class OnBoardingView extends BaseView<OnBoardingModel> {
                   onPressed: () async {
                     (await SharedPreferences.getInstance())
                         .setBool(FINISHED_ON_BOARDING, true);
-                    Navigator.pushNamed(context, '/auth');
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/auth', (_) => false);
                   },
                   child: Text(
                     'Continue',

@@ -231,7 +231,7 @@ class LoginView extends BaseView<LoginModel> {
           if (result != null) {
             showAlertDialog(context, 'Login Failed', result);
           } else {
-            Navigator.pushNamed(context, '/home');
+            Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
           }
         });
   }
