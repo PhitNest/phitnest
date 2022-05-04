@@ -1,18 +1,20 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:phitnest/locator.dart';
-import 'package:phitnest/services/authentication_service.dart';
-import 'package:phitnest/services/database_service.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
-import '../models/user_model.dart';
+import '../../models/user_model.dart';
+import '../../locator.dart';
+import '../authentication_service.dart';
+import '../database_service.dart';
 
 class FirebaseAuthenticationService extends AuthenticationService {
+  final DatabaseService _database = locator<DatabaseService>();
+
   /// Instance of firebase auth
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
-  // Instance of database service
-  final DatabaseService _database = locator<DatabaseService>();
 
   @override
   Future<String?> loginWithApple(Position? position) async {
@@ -48,7 +50,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
       userModel = await _database.getUserModel(authResult.user?.uid ?? '');
 
       if (userModel != null) {
-        userModel!.active = true;
+        userModel!.online = true;
       } else {
         userModel = UserModel(
             email: appleIdCredential!.email ?? '',
@@ -56,8 +58,8 @@ class FirebaseAuthenticationService extends AuthenticationService {
             profilePictureURL: '',
             userID: authResult.user?.uid ?? '',
             lastName: appleIdCredential.fullName?.familyName ?? 'User',
-            active: true,
-            phoneNumber: '',
+            online: true,
+            mobile: '',
             photos: [],
             settings: UserSettings());
       }
@@ -117,5 +119,85 @@ class FirebaseAuthenticationService extends AuthenticationService {
     } catch (e) {
       return 'Login failed, Please try again.';
     }
+  }
+
+  @override
+  Future<String?> signupWithEmailAndPassword(
+      String emailAddress,
+      String password,
+      File? profilePicture,
+      String firstName,
+      String lastName,
+      Position locationData,
+      String mobile) async {
+    try {
+      // Create credenetials with a given email/pass
+      UserCredential result = await firebaseAuth.createUserWithEmailAndPassword(
+          email: emailAddress, password: password);
+
+      // Either have null profile pic url, or upload the pic file to storage
+      // service
+      String profilePicUrl = profilePicture == null
+          ? ''
+          : ''; //await uploadUserImageToFireStorage(image, result.user?.uid ?? '');
+
+      // Create a new user model and initialize the current user
+      userModel = UserModel(
+          email: emailAddress,
+          signUpLocation: UserLocation(
+              latitude: locationData.latitude,
+              longitude: locationData.longitude),
+          location: UserLocation(
+              latitude: locationData.latitude,
+              longitude: locationData.longitude),
+          public: true,
+          settings: UserSettings(),
+          school: '',
+          photos: [],
+          lastOnlineTimestamp: Timestamp.now(),
+          bio: '',
+          age: '',
+          online: true,
+          mobile: mobile,
+          firstName: firstName,
+          userID: result.user?.uid ?? '',
+          lastName: lastName,
+          profilePictureURL: profilePicUrl);
+
+      // Update user model in database service
+      String? errorMessage = await _database.updateUserModel(userModel!);
+      if (errorMessage == null) {
+        return null;
+      } else {
+        return 'Couldn\'t sign up for firebase, Please try again.';
+      }
+    } on FirebaseAuthException catch (error) {
+      String message = 'Couldn\'t sign up';
+      switch (error.code) {
+        case 'email-already-in-use':
+          message = 'Email already in use, Please pick another email!';
+          break;
+        case 'invalid-email':
+          message = 'Enter valid e-mail';
+          break;
+        case 'operation-not-allowed':
+          message = 'Email/password accounts are not enabled';
+          break;
+        case 'weak-password':
+          message = 'Password must be more than 5 characters';
+          break;
+        case 'too-many-requests':
+          message = 'Too many requests, Please try again later.';
+          break;
+      }
+      return message;
+    } catch (e) {
+      return 'Couldn\'t sign up';
+    }
+  }
+
+  @override
+  Future<UserModel> checkCredentialCache() {
+    throw UnimplementedError();
   }
 }

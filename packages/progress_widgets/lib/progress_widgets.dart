@@ -17,7 +17,7 @@ showProgressUntil(
     {required BuildContext context,
     required String message,
     required Future? Function() showUntil,
-    Future? Function(dynamic result)? onDone}) async {
+    Function(dynamic result)? onDone}) async {
   await showProgress(context, message, false);
   dynamic retVal = await showUntil();
   await hideProgress();

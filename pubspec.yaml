@@ -47,6 +47,8 @@ dependencies:
     path: ./packages/progress_widgets
   location:
     path: ./packages/location
+  select_photo:
+    path: ./packages/select_photo
   get_it: ^7.2.0
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1

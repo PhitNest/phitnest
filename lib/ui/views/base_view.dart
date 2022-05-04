@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/constants.dart';
-import 'base_model.dart';
 import '../../../locator.dart';
+import 'base_model.dart';
 
 abstract class BaseView<T extends BaseModel> extends StatefulWidget {
   init(BuildContext context, T model) {}

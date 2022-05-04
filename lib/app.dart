@@ -1,12 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'constants/constants.dart';
-import 'services/authentication_service.dart';
-import 'ui/screens/auth/auth_view.dart';
-import 'ui/screens/login/login_view.dart';
-import 'ui/screens/onBoarding/on_boarding_view.dart';
+import 'ui/views/views.dart';
 
 class PhitnestApp extends StatefulWidget {
   @override
@@ -50,8 +46,9 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
           case '/resetPassword':
           case '/mobileAuth':
           case '/login':
-          case '/signUp':
             return MaterialPageRoute(builder: (_) => LoginView());
+          case '/signUp':
+            return MaterialPageRoute(builder: (_) => SignupView());
           case '/auth':
             return MaterialPageRoute(builder: (_) => AuthView());
           default:

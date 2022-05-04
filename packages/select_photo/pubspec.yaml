@@ -1,0 +1,11 @@
+name: select_photo
+description: Selecting Photo Utils
+version: 1.0.0+1
+publish_to: 'none'
+environment:
+  sdk: ">=2.13.4 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  image_picker: ^0.8.2
