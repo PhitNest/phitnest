@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phitnest/ui/widgets/styles/heading_text_style.dart';
 
 import '../../../services/authentication_service.dart';
 import '../../../constants/constants.dart';
@@ -41,10 +42,7 @@ class AuthView extends StatelessWidget {
             child: Text(
               'Find your soul mate',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Color(COLOR_PRIMARY),
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold),
+              style: HeadingTextStyle(Size.MEDIUM),
             ),
           ),
           Padding(
@@ -97,10 +95,7 @@ class AuthView extends StatelessWidget {
                 ),
                 child: Text(
                   'Sign Up',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(COLOR_PRIMARY)),
+                  style: HeadingTextStyle(Size.SMALL),
                 ),
                 onPressed: () => Navigator.pushNamed(context, '/signUp'),
               ),
