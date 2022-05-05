@@ -141,15 +141,11 @@ class FirebaseAuthenticationService extends AuthenticationService {
             latitude: locationData.latitude, longitude: locationData.longitude),
         location: UserLocation(
             latitude: locationData.latitude, longitude: locationData.longitude),
-        public: true,
         settings:
             // Upload the profile picture to storage service before doing this
             UserSettings(profilePictureURL: profilePicture == null ? '' : ''),
-        school: '',
         photos: [],
         lastOnlineTimestamp: Timestamp.now(),
-        bio: '',
-        age: '',
         online: true,
         mobile: mobile,
         firstName: firstName,
