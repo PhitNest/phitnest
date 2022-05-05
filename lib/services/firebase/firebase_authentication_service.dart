@@ -11,6 +11,7 @@ import '../../models/user_settings_model.dart';
 import '../authentication_service.dart';
 import '../database_service.dart';
 
+/// Firebase implementation of the authentication service.
 class FirebaseAuthenticationService extends AuthenticationService {
   /// Instance of database service
   final DatabaseService _database = locator<DatabaseService>();
@@ -126,7 +127,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
       File? profilePicture,
       String firstName,
       String lastName,
-      Position locationData,
+      Position? locationData,
       String mobile) async {
     try {
       // Create credenetials with a given email/pass
@@ -136,10 +137,6 @@ class FirebaseAuthenticationService extends AuthenticationService {
       // Create a new user model and initialize the current user
       userModel = UserModel(
         email: emailAddress,
-        signUpLocation: UserLocation(
-            latitude: locationData.latitude, longitude: locationData.longitude),
-        location: UserLocation(
-            latitude: locationData.latitude, longitude: locationData.longitude),
         settings:
             // Upload the profile picture to storage service before doing this
             UserSettings(profilePictureURL: profilePicture == null ? '' : ''),
@@ -149,6 +146,14 @@ class FirebaseAuthenticationService extends AuthenticationService {
         userID: result.user?.uid ?? '',
         lastName: lastName,
       );
+
+      // If the location is not null, set it
+      if (locationData != null) {
+        userModel!.signUpLocation = UserLocation(
+            latitude: locationData.latitude, longitude: locationData.longitude);
+        userModel!.location = UserLocation(
+            latitude: locationData.latitude, longitude: locationData.longitude);
+      }
 
       // Update user model in database service
       String? errorMessage = await _database.updateUserModel(userModel!);

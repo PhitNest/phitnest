@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:display/display.dart' as DisplayUtils;
 
 import 'ui/views/views.dart';
 import 'constants/constants.dart';
@@ -24,6 +25,11 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize dark mode settings
+    DisplayUtils.initialize(
+        darkMode: Theme.of(context).brightness == Brightness.dark,
+        error: Theme.of(context).errorColor);
+
     return MaterialApp(
       navigatorKey: _navigatorKey,
       localizationsDelegates: context.localizationDelegates,

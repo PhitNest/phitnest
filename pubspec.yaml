@@ -49,6 +49,8 @@ dependencies:
     path: ./packages/location
   select_photo:
     path: ./packages/select_photo
+  display:
+    path: ./packages/display
   get_it: ^7.2.0
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1

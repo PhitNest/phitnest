@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// This is the view for a single onBoarding page
 class OnBoardingPageWidget extends StatelessWidget {
   final dynamic image;
   final String title;

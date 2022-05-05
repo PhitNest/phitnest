@@ -4,8 +4,12 @@ import '../../../services/authentication_service.dart';
 import '../../../constants/constants.dart';
 import '../../../locator.dart';
 
+/// This is the auth view. This is a stateless view.
 class AuthView extends StatelessWidget {
   Widget build(BuildContext context) {
+    // Ask the authentication service if the user is authenticated, and when
+    // it responds, if the user is authenticated redirect them to the home
+    // route. This is the equivalent of the redirect view.
     locator<AuthenticationService>().isAuthenticated().then((authenticated) {
       if (authenticated) {
         Navigator.pushNamed(context, '/home');
@@ -63,9 +67,7 @@ class AuthView extends StatelessWidget {
                   'Log In',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/login');
-                },
+                onPressed: () => Navigator.pushNamed(context, '/login'),
               ),
             ),
           ),
@@ -95,9 +97,7 @@ class AuthView extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: Color(COLOR_PRIMARY)),
                 ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/signUp');
-                },
+                onPressed: () => Navigator.pushNamed(context, '/signUp'),
               ),
             ),
           )

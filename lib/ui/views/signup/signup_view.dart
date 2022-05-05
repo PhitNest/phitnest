@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:display/display.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:select_photo/select_photo.dart';
@@ -8,24 +9,38 @@ import 'package:validation/validation.dart';
 import '../../../services/authentication_service.dart';
 import '../../../constants/constants.dart';
 import '../../../locator.dart';
-import '../base_view.dart';
+import '../redirected_view.dart';
 import 'model/signup_model.dart';
 
-class SignupView extends BaseView<SignupModel> {
+/// This view contains a form allowing users to sign up.
+class SignupView extends RedirectedView<SignupModel> {
+  /// If the user is authenticated, redirect them to the home view.
+  @override
+  Future<bool> get shouldRedirect =>
+      locator<AuthenticationService>().isAuthenticated();
+
+  /// Redirect to the home view.
+  @override
+  String get redirectRoute => '/home';
+
   @override
   init(BuildContext context, SignupModel model) async {
-    if (await locator<AuthenticationService>().isAuthenticated()) {
-      Navigator.pushNamed(context, '/home');
-    } else {
-      if (Platform.isAndroid) {
-        model.image ??= await retrieveLostData();
-      }
-      model.loading = false;
+    await super.init(context, model);
+
+    // Android camera data
+    if (Platform.isAndroid) {
+      model.image ??= await retrieveLostData();
     }
+
+    // Finished loading
+    model.loading = false;
   }
 
   @override
   Widget build(BuildContext context, SignupModel model) {
+    // This function will show a progress widget until sign up is finished.
+    // If the sign up method returns an error, show it in an alert dialog.
+    // Otherwise (successful signup), navigate to the home view.
     signupClick() => showProgressUntil(
         context: context,
         message: 'Creating new account, Please wait...',
@@ -42,10 +57,8 @@ class SignupView extends BaseView<SignupModel> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : Colors.black),
+        iconTheme:
+            IconThemeData(color: isDarkMode ? Colors.white : Colors.black),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -96,10 +109,7 @@ class SignupView extends BaseView<SignupModel> {
                             backgroundColor: Color(COLOR_ACCENT),
                             child: Icon(
                               Icons.camera_alt,
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.black
-                                  : Colors.white,
+                              color: isDarkMode ? Colors.black : Colors.white,
                             ),
                             mini: true,
                             onPressed: () => selectPhoto(
@@ -119,9 +129,7 @@ class SignupView extends BaseView<SignupModel> {
                       cursorColor: Color(COLOR_PRIMARY),
                       textAlignVertical: TextAlignVertical.center,
                       validator: validateName,
-                      onSaved: (String? val) {
-                        model.firstName = val;
-                      },
+                      onSaved: (String? val) => model.firstName = val,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         contentPadding:
@@ -133,13 +141,11 @@ class SignupView extends BaseView<SignupModel> {
                             borderSide: BorderSide(
                                 color: Color(COLOR_PRIMARY), width: 2.0)),
                         errorBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Theme.of(context).errorColor),
+                          borderSide: BorderSide(color: errorColor),
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Theme.of(context).errorColor),
+                          borderSide: BorderSide(color: errorColor),
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -159,9 +165,7 @@ class SignupView extends BaseView<SignupModel> {
                       validator: validateName,
                       textAlignVertical: TextAlignVertical.center,
                       cursorColor: Color(COLOR_PRIMARY),
-                      onSaved: (String? val) {
-                        model.lastName = val;
-                      },
+                      onSaved: (String? val) => model.lastName = val,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         contentPadding:
@@ -173,13 +177,11 @@ class SignupView extends BaseView<SignupModel> {
                             borderSide: BorderSide(
                                 color: Color(COLOR_PRIMARY), width: 2.0)),
                         errorBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Theme.of(context).errorColor),
+                          borderSide: BorderSide(color: errorColor),
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Theme.of(context).errorColor),
+                          borderSide: BorderSide(color: errorColor),
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -201,9 +203,7 @@ class SignupView extends BaseView<SignupModel> {
                       textInputAction: TextInputAction.next,
                       cursorColor: Color(COLOR_PRIMARY),
                       validator: validateEmail,
-                      onSaved: (String? val) {
-                        model.email = val;
-                      },
+                      onSaved: (String? val) => model.email = val,
                       decoration: InputDecoration(
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -214,13 +214,11 @@ class SignupView extends BaseView<SignupModel> {
                             borderSide: BorderSide(
                                 color: Color(COLOR_PRIMARY), width: 2.0)),
                         errorBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Theme.of(context).errorColor),
+                          borderSide: BorderSide(color: errorColor),
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Theme.of(context).errorColor),
+                          borderSide: BorderSide(color: errorColor),
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -245,9 +243,7 @@ class SignupView extends BaseView<SignupModel> {
                       textInputAction: TextInputAction.next,
                       cursorColor: Color(COLOR_PRIMARY),
                       validator: validateMobile,
-                      onSaved: (String? val) {
-                        model.mobile = val;
-                      },
+                      onSaved: (String? val) => model.mobile = val,
                       decoration: InputDecoration(
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -258,13 +254,11 @@ class SignupView extends BaseView<SignupModel> {
                             borderSide: BorderSide(
                                 color: Color(COLOR_PRIMARY), width: 2.0)),
                         errorBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Theme.of(context).errorColor),
+                          borderSide: BorderSide(color: errorColor),
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Theme.of(context).errorColor),
+                          borderSide: BorderSide(color: errorColor),
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -286,9 +280,7 @@ class SignupView extends BaseView<SignupModel> {
                       textInputAction: TextInputAction.next,
                       controller: model.passwordController,
                       validator: validatePassword,
-                      onSaved: (String? val) {
-                        model.password = val;
-                      },
+                      onSaved: (String? val) => model.password = val,
                       style: TextStyle(fontSize: 18.0),
                       cursorColor: Color(COLOR_PRIMARY),
                       decoration: InputDecoration(
@@ -301,13 +293,11 @@ class SignupView extends BaseView<SignupModel> {
                             borderSide: BorderSide(
                                 color: Color(COLOR_PRIMARY), width: 2.0)),
                         errorBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Theme.of(context).errorColor),
+                          borderSide: BorderSide(color: errorColor),
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Theme.of(context).errorColor),
+                          borderSide: BorderSide(color: errorColor),
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -330,9 +320,7 @@ class SignupView extends BaseView<SignupModel> {
                       obscureText: true,
                       validator: (val) => validateConfirmPassword(
                           model.passwordController.text, val),
-                      onSaved: (String? val) {
-                        model.confirmPassword = val;
-                      },
+                      onSaved: (String? val) => model.confirmPassword = val,
                       style: TextStyle(fontSize: 18.0),
                       cursorColor: Color(COLOR_PRIMARY),
                       decoration: InputDecoration(
@@ -345,13 +333,11 @@ class SignupView extends BaseView<SignupModel> {
                             borderSide: BorderSide(
                                 color: Color(COLOR_PRIMARY), width: 2.0)),
                         errorBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Theme.of(context).errorColor),
+                          borderSide: BorderSide(color: errorColor),
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         focusedErrorBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Theme.of(context).errorColor),
+                          borderSide: BorderSide(color: errorColor),
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -384,9 +370,7 @@ class SignupView extends BaseView<SignupModel> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.black
-                              : Colors.white,
+                          color: isDarkMode ? Colors.black : Colors.white,
                         ),
                       ),
                       onPressed: signupClick,
@@ -399,9 +383,7 @@ class SignupView extends BaseView<SignupModel> {
                     child: Text(
                       'OR',
                       style: TextStyle(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black),
+                          color: isDarkMode ? Colors.white : Colors.black),
                     ),
                   ),
                 ),

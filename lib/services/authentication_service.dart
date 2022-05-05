@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 
 import '../models/user_model.dart';
 
+/// Abstract representation of the authentication service.
 abstract class AuthenticationService {
   /// This is the current logged in user model.
   UserModel? userModel;
@@ -31,6 +32,6 @@ abstract class AuthenticationService {
       File? profilePicture,
       String firstName,
       String lastName,
-      Position locationData,
+      Position? locationData,
       String mobile);
 }

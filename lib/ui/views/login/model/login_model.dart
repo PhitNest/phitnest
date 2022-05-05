@@ -8,40 +8,48 @@ import '../../base_model.dart';
 
 enum LoginMethod { email, apple }
 
+/// This is the view model for the login view.
 class LoginModel extends BaseModel {
-  final GlobalKey<FormState> formKey = GlobalKey();
-  String? email, password;
-
-  AutovalidateMode _validate = AutovalidateMode.disabled;
-  AutovalidateMode get validate => _validate;
-
+  /// Authentication service instance
   AuthenticationService _auth = locator<AuthenticationService>();
 
-  LoginModel() : super(initiallyLoading: true);
+  /// Form key
+  final GlobalKey<FormState> formKey = GlobalKey();
+
+  /// Form fields
+  String? email, password;
+
+  /// Validation
+  AutovalidateMode _validate = AutovalidateMode.disabled;
+
+  AutovalidateMode get validate => _validate;
 
   set validate(AutovalidateMode validate) {
     _validate = validate;
     notifyListeners();
   }
 
+  /// Initially, the login view will be loading until we set the loading flag
+  /// to false.
+  LoginModel() : super(initiallyLoading: true);
+
+  /// Validate
   Future<String?> login(LoginMethod method) async {
     if (formKey.currentState?.validate() ?? false) {
       formKey.currentState!.save();
+
+      // Request user position
       Position? currentLocation = await getCurrentLocation();
-      if (currentLocation != null) {
-        switch (method) {
-          case LoginMethod.email:
-            return await _auth.loginWithEmailAndPassword(
-                email!.trim(), password!.trim(), currentLocation);
-          case LoginMethod.apple:
-            try {
-              return await _auth.loginWithApple(currentLocation);
-            } catch (e) {
-              return 'Failed to login with Apple';
-            }
-        }
-      } else {
-        return 'Location is required to match you with people from your area.';
+      switch (method) {
+        case LoginMethod.email:
+          return await _auth.loginWithEmailAndPassword(
+              email!.trim(), password!.trim(), currentLocation);
+        case LoginMethod.apple:
+          try {
+            return await _auth.loginWithApple(currentLocation);
+          } catch (e) {
+            return 'Failed to login with Apple';
+          }
       }
     } else {
       validate = AutovalidateMode.onUserInteraction;

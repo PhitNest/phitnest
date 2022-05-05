@@ -5,6 +5,7 @@ import '../../models/user_model.dart';
 
 import '../database_service.dart';
 
+/// Firebase implementation of the database service.
 class FirestoreDatabaseService extends DatabaseService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
