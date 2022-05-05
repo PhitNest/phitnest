@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../base_model.dart';
 
+/// This is the view model for the onBoarding view
 class OnBoardingModel extends BaseModel {
+  /// The on boarding view will initially load
   OnBoardingModel() : super(initiallyLoading: true);
 
+  /// Controls the page shown on the view
   final PageController pageController = PageController();
 
   ///list of strings containing onBoarding titles
@@ -40,6 +43,7 @@ class OnBoardingModel extends BaseModel {
 
   bool get isLastPage => _currentIndex + 1 == titlesList.length;
 
+  /// This will rebuild the view
   set currentIndex(int currentIndex) {
     _currentIndex = currentIndex;
     notifyListeners();

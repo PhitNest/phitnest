@@ -1,3 +1,4 @@
+import 'package:display/display.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
@@ -6,21 +7,36 @@ import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 import '../../../services/authentication_service.dart';
 import '../../../constants/constants.dart';
 import '../../../locator.dart';
-import '../base_view.dart';
+import '../redirected_view.dart';
 import 'model/login_model.dart';
 
-class LoginView extends BaseView<LoginModel> {
+/// This view contains a form and makes login requests to authentication
+/// service.
+class LoginView extends RedirectedView<LoginModel> {
+  /// Redirect to home if authenticated.
+  @override
+  Future<bool> get shouldRedirect =>
+      locator<AuthenticationService>().isAuthenticated();
+
+  /// Redirect to home
+  @override
+  String get redirectRoute => '/home';
+
   @override
   init(BuildContext context, LoginModel model) async {
-    if (await locator<AuthenticationService>().isAuthenticated()) {
-      Navigator.pushNamed(context, '/home');
-    } else {
-      model.loading = false;
-    }
+    // Wait for redirect logic
+    await super.init(context, model);
+
+    // Finished loading
+    model.loading = false;
   }
 
   @override
   Widget build(BuildContext context, LoginModel model) {
+    // This function will show a progress widget while we wait for a login
+    // request to go through the authentication service. This will show an alert
+    // with an error message if there is an error or it will redirect the user
+    // to the home view.
     loginClick(LoginMethod method) => showProgressUntil(
         context: context,
         message: 'Logging in, please wait...',
@@ -36,10 +52,8 @@ class LoginView extends BaseView<LoginModel> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : Colors.black),
+        iconTheme:
+            IconThemeData(color: isDarkMode ? Colors.white : Colors.black),
         elevation: 0.0,
       ),
       body: Form(
@@ -70,7 +84,7 @@ class LoginView extends BaseView<LoginModel> {
                   textAlignVertical: TextAlignVertical.center,
                   textInputAction: TextInputAction.next,
                   style: TextStyle(fontSize: 18.0),
-                  validator: (val) => validateEmail(val),
+                  validator: validateEmail,
                   onSaved: (val) => model.email = val,
                   keyboardType: TextInputType.emailAddress,
                   cursorColor: Color(COLOR_PRIMARY),
@@ -82,13 +96,11 @@ class LoginView extends BaseView<LoginModel> {
                         borderSide: BorderSide(
                             color: Color(COLOR_PRIMARY), width: 2.0)),
                     errorBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).errorColor),
+                      borderSide: BorderSide(color: errorColor),
                       borderRadius: BorderRadius.circular(25.0),
                     ),
                     focusedErrorBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).errorColor),
+                      borderSide: BorderSide(color: errorColor),
                       borderRadius: BorderRadius.circular(25.0),
                     ),
                     enabledBorder: OutlineInputBorder(
@@ -108,7 +120,7 @@ class LoginView extends BaseView<LoginModel> {
                   textAlignVertical: TextAlignVertical.center,
                   onSaved: (val) => model.password = val,
                   obscureText: true,
-                  validator: (val) => validatePassword(val),
+                  validator: validatePassword,
                   onFieldSubmitted: (_) => loginClick(LoginMethod.email),
                   textInputAction: TextInputAction.done,
                   style: TextStyle(fontSize: 18.0),
@@ -121,13 +133,11 @@ class LoginView extends BaseView<LoginModel> {
                         borderSide: BorderSide(
                             color: Color(COLOR_PRIMARY), width: 2.0)),
                     errorBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).errorColor),
+                      borderSide: BorderSide(color: errorColor),
                       borderRadius: BorderRadius.circular(25.0),
                     ),
                     focusedErrorBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).errorColor),
+                      borderSide: BorderSide(color: errorColor),
                       borderRadius: BorderRadius.circular(25.0),
                     ),
                     enabledBorder: OutlineInputBorder(
@@ -139,8 +149,7 @@ class LoginView extends BaseView<LoginModel> {
               ),
             ),
 
-            /// forgot password text, navigates user to ResetPasswordScreen
-            /// and this is only visible when logging with email and password
+            /// Forgot password text, navigates user to ResetPasswordScreen
             Padding(
               padding: const EdgeInsets.only(top: 16, right: 24),
               child: Align(
@@ -175,9 +184,7 @@ class LoginView extends BaseView<LoginModel> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.black
-                              : Colors.white,
+                          color: isDarkMode ? Colors.black : Colors.white,
                         ),
                       ),
                       onPressed: () => loginClick(LoginMethod.email))),
@@ -188,12 +195,11 @@ class LoginView extends BaseView<LoginModel> {
                 child: Text(
                   'OR',
                   style: TextStyle(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : Colors.black),
+                      color: isDarkMode ? Colors.white : Colors.black),
                 ),
               ),
             ),
+            // Apple login UI
             FutureBuilder<bool>(
               future: apple.TheAppleSignIn.isAvailable(),
               builder: (context, snapshot) {
@@ -209,7 +215,7 @@ class LoginView extends BaseView<LoginModel> {
                     child: apple.AppleSignInButton(
                         cornerRadius: 25.0,
                         type: apple.ButtonType.signIn,
-                        style: Theme.of(context).brightness == Brightness.dark
+                        style: isDarkMode
                             ? apple.ButtonStyle.white
                             : apple.ButtonStyle.black,
                         onPressed: () => loginClick(LoginMethod.apple)),
@@ -217,11 +223,9 @@ class LoginView extends BaseView<LoginModel> {
                 }
               },
             ),
-
+            // Mobile authentication
             InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, '/mobileAuth');
-              },
+              onTap: () => Navigator.pushNamed(context, '/mobileAuth'),
               child: Center(
                 child: Padding(
                   padding: EdgeInsets.all(8.0),

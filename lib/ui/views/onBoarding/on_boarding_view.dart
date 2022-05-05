@@ -5,23 +5,36 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../services/authentication_service.dart';
 import '../../../constants/constants.dart';
 import '../../../locator.dart';
-import '../base_view.dart';
+import '../redirected_view.dart';
 import 'widgets/on_boarding_page.dart';
 import 'model/on_boarding_model.dart';
 
-class OnBoardingView extends BaseView<OnBoardingModel> {
+/// This view will only be shown to the user one time. If it has already been
+/// shown, or the user is authenticated, they will be redirected accordingly.
+class OnBoardingView extends RedirectedView<OnBoardingModel> {
+  /// Immediately redirect to home if the user is authenticated.
+  @override
+  Future<bool> get shouldRedirect =>
+      locator<AuthenticationService>().isAuthenticated();
+
+  /// Redirect to home
+  @override
+  String get redirectRoute => '/home';
+
   @override
   init(BuildContext context, OnBoardingModel model) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool(FINISHED_ON_BOARDING) ?? false) {
-      Navigator.pushNamedAndRemoveUntil(
-          context,
-          await locator<AuthenticationService>().isAuthenticated()
-              ? '/home'
-              : '/auth',
-          ((_) => false));
-    } else {
-      model.loading = false;
+    // Run the redirect logic
+    await super.init(context, model);
+
+    // Only run this if we are not redirecting to home.
+    if (!await shouldRedirect) {
+      // Redirect to auth if we have already seen on boarding.
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool(FINISHED_ON_BOARDING) ?? false) {
+        Navigator.pushNamedAndRemoveUntil(context, '/auth', ((_) => false));
+      } else {
+        model.loading = false;
+      }
     }
   }
 
@@ -42,6 +55,7 @@ class OnBoardingView extends BaseView<OnBoardingModel> {
             model.currentIndex = index;
           },
         ),
+        // Only show the continue button if this is the last page
         Visibility(
           visible: model.isLastPage,
           child: Padding(
@@ -51,12 +65,13 @@ class OnBoardingView extends BaseView<OnBoardingModel> {
                     ? Alignment.bottomRight
                     : Alignment.bottomLeft,
                 child: OutlinedButton(
-                  onPressed: () async {
-                    (await SharedPreferences.getInstance())
-                        .setBool(FINISHED_ON_BOARDING, true);
+                  // Set on boarding finished to true and redirect to auth.
+                  onPressed: () =>
+                      SharedPreferences.getInstance().then((instance) {
+                    instance.setBool(FINISHED_ON_BOARDING, true);
                     Navigator.pushNamedAndRemoveUntil(
                         context, '/auth', (_) => false);
-                  },
+                  }),
                   child: Text(
                     'Continue',
                     style: TextStyle(
