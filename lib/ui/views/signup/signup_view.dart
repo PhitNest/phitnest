@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:display/display.dart';
 import 'package:flutter/material.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:select_photo/select_photo.dart';
 import 'package:validation/validation.dart';
@@ -221,22 +222,24 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                     ),
                   ),
                 ),
-
-                /// user mobile text field, this is hidden in case of sign up with
-                /// phone number
                 ConstrainedBox(
                   constraints: BoxConstraints(minWidth: double.infinity),
                   child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-                    child: TextFormField(
+                    padding: const EdgeInsets.only(
+                        top: 16.0, right: 8.0, left: 16.0),
+                    child: InternationalPhoneNumberInput(
+                      autoFocusSearch: true,
+                      spaceBetweenSelectorAndTextField: 0,
                       keyboardType: TextInputType.phone,
-                      textAlignVertical: TextAlignVertical.center,
-                      textInputAction: TextInputAction.next,
-                      cursorColor: Color(COLOR_PRIMARY),
-                      validator: validateMobile,
-                      onSaved: (String? val) => model.mobile = val,
-                      decoration: InputDecoration(
+                      selectorConfig: SelectorConfig(
+                          selectorType: PhoneInputSelectorType.BOTTOM_SHEET),
+                      initialValue: PhoneNumber(isoCode: 'US'),
+                      keyboardAction: TextInputAction.next,
+                      autoValidateMode: model.validate,
+                      searchBoxDecoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 16)),
+                      inputDecoration: InputDecoration(
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                         fillColor: Colors.white,
@@ -258,6 +261,11 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                           borderRadius: BorderRadius.circular(25.0),
                         ),
                       ),
+                      textAlignVertical: TextAlignVertical.center,
+                      cursorColor: Color(COLOR_PRIMARY),
+                      validator: validateMobile,
+                      onInputChanged: (PhoneNumber number) =>
+                          model.mobile = number.phoneNumber,
                     ),
                   ),
                 ),
