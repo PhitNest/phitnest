@@ -5,17 +5,23 @@ import 'package:progress_widgets/progress_widgets.dart';
 import 'package:select_photo/select_photo.dart';
 import 'package:validation/validation.dart';
 
+import '../../../services/authentication_service.dart';
 import '../../../constants/constants.dart';
+import '../../../locator.dart';
 import '../base_view.dart';
 import 'model/signup_model.dart';
 
 class SignupView extends BaseView<SignupModel> {
   @override
   init(BuildContext context, SignupModel model) async {
-    if (Platform.isAndroid) {
-      model.image ??= await retrieveLostData();
+    if (await locator<AuthenticationService>().isAuthenticated()) {
+      Navigator.pushNamed(context, '/home');
+    } else {
+      if (Platform.isAndroid) {
+        model.image ??= await retrieveLostData();
+      }
+      model.loading = false;
     }
-    return super.init(context, model);
   }
 
   @override

@@ -8,9 +8,9 @@ abstract class AuthenticationService {
   /// This is the current logged in user model.
   UserModel? userModel;
 
-  /// Checks if user credentials are cached, if they are load the user from 
-  /// database.
-  Future<UserModel> checkCredentialCache();
+  /// Checks if the user is authenticated. If the user is authenticated but the
+  /// model is not yet initialized, get [userModel] from the database service.
+  Future<bool> isAuthenticated();
 
   /// Requests login service from apple, and initializes [userModel] with the
   /// result. Returns null if the login was successful, returns an error if the

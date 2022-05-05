@@ -17,6 +17,8 @@ class LoginModel extends BaseModel {
 
   AuthenticationService _auth = locator<AuthenticationService>();
 
+  LoginModel() : super(initiallyLoading: true);
+
   set validate(AutovalidateMode validate) {
     _validate = validate;
     notifyListeners();

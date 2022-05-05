@@ -3,11 +3,22 @@ import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
+import '../../../services/authentication_service.dart';
 import '../../../constants/constants.dart';
+import '../../../locator.dart';
 import '../base_view.dart';
 import 'model/login_model.dart';
 
 class LoginView extends BaseView<LoginModel> {
+  @override
+  init(BuildContext context, LoginModel model) async {
+    if (await locator<AuthenticationService>().isAuthenticated()) {
+      Navigator.pushNamed(context, '/home');
+    } else {
+      model.loading = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context, LoginModel model) {
     loginClick(LoginMethod method) => showProgressUntil(

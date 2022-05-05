@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../../../services/authentication_service.dart';
 import '../../../constants/constants.dart';
+import '../../../locator.dart';
 
 class AuthView extends StatelessWidget {
   Widget build(BuildContext context) {
+    locator<AuthenticationService>().isAuthenticated().then((authenticated) {
+      if (authenticated) {
+        Navigator.pushNamed(context, '/home');
+      }
+    });
+
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
