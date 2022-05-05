@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../constants/constants.dart';
-import '../redirected/pre_auth_view.dart';
+import '../redirected/redirected.dart';
 import 'widgets/on_boarding_page.dart';
 import 'model/on_boarding_model.dart';
 

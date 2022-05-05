@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../redirected/authenticated_view.dart';
+import '../views.dart';
 import 'model/home_model.dart';
 
 /// This is the view shown when users have been authenticated.

@@ -1,4 +1,4 @@
-import '../models/user_model.dart';
+import '../../models/models.dart';
 
 /// Abstract representation of the database service
 abstract class DatabaseService {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../services/authentication_service.dart';
-import '../../../../models/user_model.dart';
+import '../../../../models/models.dart';
 import '../../../../locator.dart';
 import '../../base_model.dart';
 
