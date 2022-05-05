@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:display/display.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:phitnest/ui/views/signup/widgets/signup_form_field.dart';
 import 'package:phitnest/ui/widgets/decorations/text_field_decoration.dart';
+import 'package:phitnest/ui/widgets/profilePictureSelector/profile_picture_selector_widget.dart';
+import 'package:phitnest/ui/widgets/styles/heading_text_style.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:select_photo/select_photo.dart';
 import 'package:validation/validation.dart';
@@ -68,98 +71,47 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                     alignment: Alignment.topLeft,
                     child: Text(
                       'Create new account',
-                      style: TextStyle(
-                          color: Color(COLOR_PRIMARY),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25.0),
+                      style: HeadingTextStyle(Size.LARGE),
                     )),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 8.0, top: 32, right: 8, bottom: 8),
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: <Widget>[
-                      CircleAvatar(
-                        radius: 65,
-                        backgroundColor: Colors.grey.shade400,
-                        child: ClipOval(
-                          child: SizedBox(
-                            width: 170,
-                            height: 170,
-                            child: model.image == null
-                                ? Image.asset(
-                                    'assets/images/placeholder.jpg',
-                                    fit: BoxFit.cover,
-                                  )
-                                : Image.file(
-                                    model.image!,
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                          left: 80,
-                          right: 0,
-                          child: FloatingActionButton(
-                            backgroundColor: Color(COLOR_ACCENT),
-                            child: Icon(
-                              Icons.camera_alt,
-                              color: isDarkMode ? Colors.black : Colors.white,
-                            ),
-                            mini: true,
-                            onPressed: () => selectPhoto(
-                                context,
-                                'Select Profile Picture',
-                                (photo) => model.image = photo),
-                          )),
-                    ],
-                  ),
-                ),
+                    padding: const EdgeInsets.only(
+                        left: 8.0, top: 32, right: 8, bottom: 8),
+                    child: ProfilePictureSelector(
+                        initialImage: model.image,
+                        onDone: (photo) => model.image = photo)),
                 ConstrainedBox(
                   constraints: BoxConstraints(minWidth: double.infinity),
                   child: Padding(
                     padding:
                         const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-                    child: TextFormField(
-                        cursorColor: Color(COLOR_PRIMARY),
-                        textAlignVertical: TextAlignVertical.center,
-                        validator: validateName,
-                        onSaved: (String? val) => model.firstName = val,
-                        textInputAction: TextInputAction.next,
-                        decoration: TextFieldInputDecoration('First Name')),
-                  ),
-                ),
-                ConstrainedBox(
-                  constraints: BoxConstraints(minWidth: double.infinity),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-                    child: TextFormField(
+                    child: SignupFormField(
+                      hint: 'First Name',
+                      onSaved: (String? firstName) =>
+                          model.firstName = firstName,
                       validator: validateName,
-                      textAlignVertical: TextAlignVertical.center,
-                      cursorColor: Color(COLOR_PRIMARY),
-                      onSaved: (String? val) => model.lastName = val,
-                      textInputAction: TextInputAction.next,
-                      decoration: TextFieldInputDecoration('Last Name'),
                     ),
                   ),
                 ),
                 ConstrainedBox(
                   constraints: BoxConstraints(minWidth: double.infinity),
                   child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-                    child: TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      textAlignVertical: TextAlignVertical.center,
-                      textInputAction: TextInputAction.next,
-                      cursorColor: Color(COLOR_PRIMARY),
-                      validator: validateEmail,
-                      onSaved: (String? val) => model.email = val,
-                      decoration: TextFieldInputDecoration('Email Address'),
-                    ),
-                  ),
+                      padding: const EdgeInsets.only(
+                          top: 16.0, right: 8.0, left: 8.0),
+                      child: SignupFormField(
+                          hint: 'Last Name',
+                          validator: validateName,
+                          onSaved: (String? lastName) =>
+                              model.lastName = lastName)),
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: double.infinity),
+                  child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 16.0, right: 8.0, left: 8.0),
+                      child: SignupFormField(
+                          hint: 'Email Address',
+                          validator: validateEmail,
+                          onSaved: (String? email) => model.email = email)),
                 ),
                 ConstrainedBox(
                   constraints: BoxConstraints(minWidth: double.infinity),
@@ -192,36 +144,26 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                   child: Padding(
                     padding:
                         const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-                    child: TextFormField(
-                        obscureText: true,
-                        textAlignVertical: TextAlignVertical.center,
-                        textInputAction: TextInputAction.next,
-                        controller: model.passwordController,
-                        validator: validatePassword,
-                        onSaved: (String? val) => model.password = val,
-                        style: TextStyle(fontSize: 18.0),
-                        cursorColor: Color(COLOR_PRIMARY),
-                        decoration: TextFieldInputDecoration('Password')),
+                    child: SignupFormField(
+                      hint: 'Password',
+                      onSaved: (String? password) => model.password = password,
+                      validator: validatePassword,
+                    ),
                   ),
                 ),
                 ConstrainedBox(
                   constraints: BoxConstraints(minWidth: double.infinity),
                   child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-                    child: TextFormField(
-                        textAlignVertical: TextAlignVertical.center,
-                        textInputAction: TextInputAction.done,
-                        onFieldSubmitted: (_) => signupClick(),
-                        obscureText: true,
-                        validator: (val) => validateConfirmPassword(
-                            model.passwordController.text, val),
-                        onSaved: (String? val) => model.confirmPassword = val,
-                        style: TextStyle(fontSize: 18.0),
-                        cursorColor: Color(COLOR_PRIMARY),
-                        decoration:
-                            TextFieldInputDecoration('Confirm Password')),
-                  ),
+                      padding: const EdgeInsets.only(
+                          top: 16.0, right: 8.0, left: 8.0),
+                      child: SignupFormField(
+                          hint: 'Confirm Password',
+                          onSubmit: signupClick,
+                          validator: (String? password) =>
+                              validateConfirmPassword(
+                                  model.passwordController.text, password),
+                          onSaved: (String? password) =>
+                              model.confirmPassword = password)),
                 ),
                 Padding(
                   padding:

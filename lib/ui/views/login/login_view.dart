@@ -1,5 +1,6 @@
 import 'package:display/display.dart';
 import 'package:flutter/material.dart';
+import 'package:phitnest/ui/widgets/styles/heading_text_style.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
@@ -63,10 +64,7 @@ class LoginView extends PreAuthenticationView<LoginModel> {
                     const EdgeInsets.only(top: 32.0, right: 16.0, left: 16.0),
                 child: Text(
                   'Sign In',
-                  style: TextStyle(
-                      color: Color(COLOR_PRIMARY),
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold),
+                  style: HeadingTextStyle(Size.LARGE),
                 ),
               ),
             ),
