@@ -1123,12 +1123,6 @@ class FireStoreUtils {
 
   static deleteUser() async {
     try {
-      // delete user records from swipe_counts table
-      await firestore
-          .collection(SWIPE_COUNT)
-          .doc(PhitnestAppState.currentUser!.userID)
-          .delete();
-
       // delete user records from swipes table
       await firestore
           .collection(SWIPES)

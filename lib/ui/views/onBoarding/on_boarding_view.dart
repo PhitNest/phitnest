@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../../services/authentication_service.dart';
 import '../../../constants/constants.dart';
+import '../../../locator.dart';
 import '../base_view.dart';
 import 'widgets/on_boarding_page.dart';
 import 'model/on_boarding_model.dart';
@@ -12,7 +14,12 @@ class OnBoardingView extends BaseView<OnBoardingModel> {
   init(BuildContext context, OnBoardingModel model) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getBool(FINISHED_ON_BOARDING) ?? false) {
-      Navigator.pushNamedAndRemoveUntil(context, '/auth', ((_) => false));
+      Navigator.pushNamedAndRemoveUntil(
+          context,
+          await locator<AuthenticationService>().isAuthenticated()
+              ? '/home'
+              : '/auth',
+          ((_) => false));
     } else {
       model.loading = false;
     }

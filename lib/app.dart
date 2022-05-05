@@ -1,17 +1,18 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import 'constants/constants.dart';
 import 'ui/views/views.dart';
+import 'constants/constants.dart';
 
+/// Base MaterialApp widget
 class PhitnestApp extends StatefulWidget {
   @override
   _PhitnestAppState createState() => _PhitnestAppState();
 }
 
 class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
-  /// this key is used to navigate to the appropriate screen when the
-  /// notification is clicked from the system tray
+  /// This key is used to navigate to the appropriate screen when the
+  /// notification is clicked from the system tray.
   final GlobalKey<NavigatorState> _navigatorKey =
       GlobalKey(debugLabel: 'Main Navigator');
 
@@ -43,6 +44,7 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/home':
+            return MaterialPageRoute(builder: (_) => HomeView());
           case '/resetPassword':
           case '/mobileAuth':
           case '/login':

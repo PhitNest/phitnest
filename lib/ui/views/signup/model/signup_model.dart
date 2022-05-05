@@ -16,6 +16,8 @@ class SignupModel extends BaseModel {
   File? _image;
   AutovalidateMode _validate = AutovalidateMode.disabled;
 
+  SignupModel() : super(initiallyLoading: true);
+
   AutovalidateMode get validate => _validate;
 
   set validate(AutovalidateMode validate) {

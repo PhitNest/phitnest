@@ -12,17 +12,19 @@ abstract class BaseView<T extends BaseModel> extends StatefulWidget {
   Widget build(BuildContext context, T model);
 
   Widget buildLoading(BuildContext context, T model) {
-    return Center(
-      child: Container(
-        color: Color(COLOR_PRIMARY),
-        child: CircularProgressIndicator.adaptive(
-          valueColor: AlwaysStoppedAnimation(Color(COLOR_PRIMARY)),
-          backgroundColor: Theme.of(context).brightness == Brightness.dark
-              ? Colors.black
-              : Colors.white,
-        ),
-      ),
-    );
+    return Scaffold(
+        backgroundColor: Color(COLOR_PRIMARY),
+        body: Center(
+          child: Container(
+            color: Color(COLOR_PRIMARY),
+            child: CircularProgressIndicator.adaptive(
+              valueColor: AlwaysStoppedAnimation(Color(COLOR_PRIMARY)),
+              backgroundColor: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.black
+                  : Colors.white,
+            ),
+          ),
+        ));
   }
 
   @override

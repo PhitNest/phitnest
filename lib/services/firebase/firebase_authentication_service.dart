@@ -197,7 +197,17 @@ class FirebaseAuthenticationService extends AuthenticationService {
   }
 
   @override
-  Future<UserModel> checkCredentialCache() {
-    throw UnimplementedError();
+  Future<bool> isAuthenticated() async {
+    if (userModel != null) {
+      return true;
+    }
+
+    String? uid = firebaseAuth.currentUser?.uid;
+    if (uid != null) {
+      userModel = await _database.getUserModel(uid);
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -1,18 +1,23 @@
 import 'package:get_it/get_it.dart';
 
-import 'services/services.dart';
-import 'services/firebase/firebase_service.dart';
 import 'ui/views/models.dart';
+import 'services/firebase/firebase_service.dart';
+import 'services/services.dart';
 
+/// This provides access to all of our services, and factory constructors for
+/// UI state
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
+  // Register each service
   locator.registerLazySingleton<AuthenticationService>(
       () => FirebaseAuthenticationService());
   locator
       .registerLazySingleton<DatabaseService>(() => FirestoreDatabaseService());
 
+  // Register each UI view model
   locator.registerFactory(() => OnBoardingModel());
   locator.registerFactory(() => LoginModel());
   locator.registerFactory(() => SignupModel());
+  locator.registerFactory(() => HomeModel());
 }
