@@ -12,23 +12,26 @@ class AuthView extends StatelessWidget {
     // route. This is the equivalent of the redirect view.
     locator<AuthenticationService>().isAuthenticated().then((authenticated) {
       if (authenticated) {
-        Navigator.pushNamed(context, '/home');
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
       }
     });
 
     return Scaffold(
-      body: Column(
+        body: Center(
+            // This scroll view blocks render overflows when the user has the
+            // keyboard open (popping back from login or signup with keyboard
+            // still open)
+            child: SingleChildScrollView(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Center(
-            child: Image.asset(
-              'assets/images/app_logo.png',
-              width: 150.0,
-              height: 150.0,
-              color: Color(COLOR_PRIMARY),
-              fit: BoxFit.cover,
-            ),
+          Image.asset(
+            LOGO_PATH,
+            width: 150.0,
+            height: 150.0,
+            color: Color(COLOR_PRIMARY),
+            fit: BoxFit.cover,
           ),
           Padding(
             padding:
@@ -103,6 +106,6 @@ class AuthView extends StatelessWidget {
           )
         ],
       ),
-    );
+    )));
   }
 }

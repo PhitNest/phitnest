@@ -15,7 +15,7 @@ class UserModel {
   String recentPlatform = '${Platform.operatingSystem}';
   UserLocation? location;
   UserLocation? signUpLocation;
-  List<dynamic> photos;
+  List<String> photos;
 
   String fullName() {
     return '$firstName $lastName';
@@ -53,7 +53,6 @@ class UserModel {
   }
 
   Map<String, dynamic> toJson() {
-    photos.toList().removeWhere((element) => element == null);
     return {
       'userID': this.userID,
       'email': this.email,

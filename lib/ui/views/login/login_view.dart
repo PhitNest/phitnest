@@ -4,31 +4,23 @@ import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
-import '../../../services/authentication_service.dart';
 import '../../../constants/constants.dart';
-import '../../../locator.dart';
-import '../redirected_view.dart';
+import '../redirected/pre_auth_view.dart';
 import 'model/login_model.dart';
 
 /// This view contains a form and makes login requests to authentication
 /// service.
-class LoginView extends RedirectedView<LoginModel> {
-  /// Redirect to home if authenticated.
-  @override
-  Future<bool> get shouldRedirect =>
-      locator<AuthenticationService>().isAuthenticated();
-
-  /// Redirect to home
-  @override
-  String get redirectRoute => '/home';
-
+class LoginView extends PreAuthenticationView<LoginModel> {
   @override
   init(BuildContext context, LoginModel model) async {
     // Wait for redirect logic
     await super.init(context, model);
 
-    // Finished loading
-    model.loading = false;
+    // Only close loading widget if we are not redirecting
+    if (!await shouldRedirect) {
+      // Finished loading
+      model.loading = false;
+    }
   }
 
   @override
