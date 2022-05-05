@@ -1,16 +1,18 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
+import '../../models/user_location_model.dart';
 import '../../models/user_model.dart';
 import '../../locator.dart';
+import '../../models/user_settings_model.dart';
 import '../authentication_service.dart';
 import '../database_service.dart';
 
 class FirebaseAuthenticationService extends AuthenticationService {
+  /// Instance of database service
   final DatabaseService _database = locator<DatabaseService>();
 
   /// Instance of firebase auth
@@ -57,10 +59,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
             firstName: appleIdCredential.fullName?.givenName ?? 'Deleted',
             userID: authResult.user?.uid ?? '',
             lastName: appleIdCredential.fullName?.familyName ?? 'User',
-            online: true,
-            mobile: '',
-            photos: [],
-            settings: UserSettings());
+            online: true);
       }
 
       // If position is not null, update the user position
@@ -144,8 +143,6 @@ class FirebaseAuthenticationService extends AuthenticationService {
         settings:
             // Upload the profile picture to storage service before doing this
             UserSettings(profilePictureURL: profilePicture == null ? '' : ''),
-        photos: [],
-        lastOnlineTimestamp: Timestamp.now(),
         online: true,
         mobile: mobile,
         firstName: firstName,
@@ -194,9 +191,10 @@ class FirebaseAuthenticationService extends AuthenticationService {
     String? uid = firebaseAuth.currentUser?.uid;
     if (uid != null) {
       userModel = await _database.getUserModel(uid);
-      return true;
-    } else {
-      return false;
+      if (userModel != null) {
+        return true;
+      }
     }
+    return false;
   }
 }
