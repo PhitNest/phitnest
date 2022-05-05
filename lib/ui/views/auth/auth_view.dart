@@ -6,6 +6,8 @@ import '../../../locator.dart';
 
 /// This is the auth view. This is a stateless view.
 class AuthView extends StatelessWidget {
+  const AuthView({Key? key}) : super(key: key);
+
   Widget build(BuildContext context) {
     // Ask the authentication service if the user is authenticated, and when
     // it responds, if the user is authenticated redirect them to the home

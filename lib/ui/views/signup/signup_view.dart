@@ -13,6 +13,8 @@ import 'model/signup_model.dart';
 
 /// This view contains a form allowing users to sign up.
 class SignupView extends PreAuthenticationView<SignupModel> {
+  const SignupView({Key? key}) : super(key: key);
+
   @override
   init(BuildContext context, SignupModel model) async {
     await super.init(context, model);
