@@ -6,34 +6,26 @@ import 'package:progress_widgets/progress_widgets.dart';
 import 'package:select_photo/select_photo.dart';
 import 'package:validation/validation.dart';
 
-import '../../../services/authentication_service.dart';
 import '../../../constants/constants.dart';
-import '../../../locator.dart';
-import '../redirected_view.dart';
+import '../redirected/pre_auth_view.dart';
 import 'model/signup_model.dart';
 
 /// This view contains a form allowing users to sign up.
-class SignupView extends RedirectedView<SignupModel> {
-  /// If the user is authenticated, redirect them to the home view.
-  @override
-  Future<bool> get shouldRedirect =>
-      locator<AuthenticationService>().isAuthenticated();
-
-  /// Redirect to the home view.
-  @override
-  String get redirectRoute => '/home';
-
+class SignupView extends PreAuthenticationView<SignupModel> {
   @override
   init(BuildContext context, SignupModel model) async {
     await super.init(context, model);
 
-    // Android camera data
-    if (Platform.isAndroid) {
-      model.image ??= await retrieveLostData();
-    }
+    // If we are not redirecting
+    if (!await shouldRedirect) {
+      // Android camera data
+      if (Platform.isAndroid) {
+        model.image ??= await retrieveLostData();
+      }
 
-    // Finished loading
-    model.loading = false;
+      // Finished loading
+      model.loading = false;
+    }
   }
 
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'base_view.dart';
-import 'base_model.dart';
+import '../base_view.dart';
+import '../base_model.dart';
 
 /// This view will redirect a user to a given route on initialization if a given
 /// condition is met.
