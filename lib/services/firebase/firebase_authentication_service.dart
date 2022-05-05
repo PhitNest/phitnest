@@ -2,15 +2,11 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
-import '../../models/user_location_model.dart';
-import '../../models/user_model.dart';
+import '../../models/models.dart';
 import '../../locator.dart';
-import '../../models/user_settings_model.dart';
-import '../authentication_service.dart';
-import '../database_service.dart';
+import '../services.dart';
 
 /// Firebase implementation of the authentication service.
 class FirebaseAuthenticationService extends AuthenticationService {

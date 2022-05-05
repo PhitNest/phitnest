@@ -3,9 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 
 import '../../constants/constants.dart';
-import '../../models/user_location_model.dart';
-import '../../models/user_model.dart';
-
+import '../../models/models.dart';
 import '../database_service.dart';
 
 /// Firebase implementation of the database service.

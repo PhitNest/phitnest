@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../redirected/authenticated_view.dart';
+import '../redirected/redirected.dart';
 import 'model/profile_model.dart';
 
 class ProfileView extends AuthenticatedView<ProfileModel> {

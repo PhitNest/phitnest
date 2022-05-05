@@ -8,7 +8,7 @@ import 'package:select_photo/select_photo.dart';
 import 'package:validation/validation.dart';
 
 import '../../../constants/constants.dart';
-import '../redirected/pre_auth_view.dart';
+import '../redirected/redirected.dart';
 import 'model/signup_model.dart';
 
 /// This view contains a form allowing users to sign up.

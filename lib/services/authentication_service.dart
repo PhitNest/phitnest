@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:geolocator/geolocator.dart';
 
-import '../models/user_model.dart';
+import '../../models/models.dart';
 
 /// Abstract representation of the authentication service.
 abstract class AuthenticationService {

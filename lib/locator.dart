@@ -20,4 +20,5 @@ void setupLocator() {
   locator.registerFactory(() => LoginModel());
   locator.registerFactory(() => SignupModel());
   locator.registerFactory(() => HomeModel());
+  locator.registerFactory(() => ProfileModel());
 }

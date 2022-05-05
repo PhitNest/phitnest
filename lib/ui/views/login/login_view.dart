@@ -5,7 +5,7 @@ import 'package:validation/validation.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
 import '../../../constants/constants.dart';
-import '../redirected/pre_auth_view.dart';
+import '../redirected/redirected.dart';
 import 'model/login_model.dart';
 
 /// This view contains a form and makes login requests to authentication
