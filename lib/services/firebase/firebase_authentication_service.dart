@@ -55,7 +55,6 @@ class FirebaseAuthenticationService extends AuthenticationService {
         userModel = UserModel(
             email: appleIdCredential!.email ?? '',
             firstName: appleIdCredential.fullName?.givenName ?? 'Deleted',
-            profilePictureURL: '',
             userID: authResult.user?.uid ?? '',
             lastName: appleIdCredential.fullName?.familyName ?? 'User',
             online: true,
@@ -135,34 +134,28 @@ class FirebaseAuthenticationService extends AuthenticationService {
       UserCredential result = await firebaseAuth.createUserWithEmailAndPassword(
           email: emailAddress, password: password);
 
-      // Either have null profile pic url, or upload the pic file to storage
-      // service
-      String profilePicUrl = profilePicture == null
-          ? ''
-          : ''; //await uploadUserImageToFireStorage(image, result.user?.uid ?? '');
-
       // Create a new user model and initialize the current user
       userModel = UserModel(
-          email: emailAddress,
-          signUpLocation: UserLocation(
-              latitude: locationData.latitude,
-              longitude: locationData.longitude),
-          location: UserLocation(
-              latitude: locationData.latitude,
-              longitude: locationData.longitude),
-          public: true,
-          settings: UserSettings(),
-          school: '',
-          photos: [],
-          lastOnlineTimestamp: Timestamp.now(),
-          bio: '',
-          age: '',
-          online: true,
-          mobile: mobile,
-          firstName: firstName,
-          userID: result.user?.uid ?? '',
-          lastName: lastName,
-          profilePictureURL: profilePicUrl);
+        email: emailAddress,
+        signUpLocation: UserLocation(
+            latitude: locationData.latitude, longitude: locationData.longitude),
+        location: UserLocation(
+            latitude: locationData.latitude, longitude: locationData.longitude),
+        public: true,
+        settings:
+            // Upload the profile picture to storage service before doing this
+            UserSettings(profilePictureURL: profilePicture == null ? '' : ''),
+        school: '',
+        photos: [],
+        lastOnlineTimestamp: Timestamp.now(),
+        bio: '',
+        age: '',
+        online: true,
+        mobile: mobile,
+        firstName: firstName,
+        userID: result.user?.uid ?? '',
+        lastName: lastName,
+      );
 
       // Update user model in database service
       String? errorMessage = await _database.updateUserModel(userModel!);
