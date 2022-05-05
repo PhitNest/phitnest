@@ -4,35 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
   String email;
-
   String firstName;
-
   String lastName;
-
   UserSettings settings;
-
   String mobile;
-
   bool online;
-
   Timestamp lastOnlineTimestamp;
-
   String userID;
-
   String recentPlatform = '${Platform.operatingSystem}';
-
   UserLocation location;
-
   UserLocation signUpLocation;
-
-  bool public;
-
-  String bio;
-
-  String school;
-
-  String age;
-
   List<dynamic> photos;
 
   //internal use only, don't save to db
@@ -51,12 +32,8 @@ class UserModel {
     settings,
 
     //tinder related fields
-    this.public = true,
     UserLocation? location,
     UserLocation? signUpLocation,
-    this.school = '',
-    this.age = '',
-    this.bio = '',
     this.photos = const [],
   })  : this.lastOnlineTimestamp = lastOnlineTimestamp ?? Timestamp.now(),
         this.settings = settings ?? UserSettings(),
@@ -80,16 +57,12 @@ class UserModel {
         mobile: parsedJson['mobile'] ?? '',
         userID: parsedJson['userID'] ?? '',
         //dating app related fields
-        public: parsedJson['public'] ?? true,
         location: parsedJson.containsKey('location')
             ? UserLocation.fromJson(parsedJson['location'])
             : UserLocation(),
         signUpLocation: parsedJson.containsKey('signUpLocation')
             ? UserLocation.fromJson(parsedJson['signUpLocation'])
             : UserLocation(),
-        school: parsedJson['school'] ?? 'N/A',
-        age: parsedJson['age'] ?? '',
-        bio: parsedJson['bio'] ?? 'N/A',
         photos: parsedJson['photos'] ?? [].cast<String>());
   }
 
@@ -112,10 +85,6 @@ class UserModel {
         signUpLocation: parsedJson.containsKey('signUpLocation')
             ? UserLocation.fromJson(parsedJson['signUpLocation'])
             : UserLocation(),
-        school: parsedJson['school'] ?? 'N/A',
-        age: parsedJson['age'] ?? '',
-        bio: parsedJson['bio'] ?? 'N/A',
-        public: parsedJson['public'] ?? true,
         photos: parsedJson['photos'] ?? [].cast<String>());
   }
 
@@ -133,9 +102,6 @@ class UserModel {
       'recentPlatform': this.recentPlatform,
       'location': this.location.toJson(),
       'signUpLocation': this.signUpLocation.toJson(),
-      'bio': this.bio,
-      'school': this.school,
-      'age': this.age,
       'photos': this.photos,
     };
   }
@@ -154,9 +120,6 @@ class UserModel {
       'recentPlatform': this.recentPlatform,
       'location': this.location.toJson(),
       'signUpLocation': this.signUpLocation.toJson(),
-      'bio': this.bio,
-      'school': this.school,
-      'age': this.age,
       'photos': this.photos,
     };
   }
@@ -175,24 +138,35 @@ class UserSettings {
 
   String distanceRadius;
 
+  bool public;
+
+  String bio;
+
+  String age;
+
   UserSettings({
     this.pushNewMessages = true,
     this.pushNewMatchesEnabled = true,
     this.profilePictureURL = '',
     this.genderPreference = 'Female',
     this.gender = 'Male',
+    this.age = '',
+    this.bio = '',
+    this.public = true,
     this.distanceRadius = '10',
   });
 
   factory UserSettings.fromJson(Map<dynamic, dynamic> parsedJson) {
     return UserSettings(
-      pushNewMessages: parsedJson['pushNewMessages'] ?? true,
-      pushNewMatchesEnabled: parsedJson['pushNewMatchesEnabled'] ?? true,
-      profilePictureURL: parsedJson['profilePictureURL'] ?? '',
-      genderPreference: parsedJson['genderPreference'] ?? 'Female',
-      gender: parsedJson['gender'] ?? 'Male',
-      distanceRadius: parsedJson['distanceRadius'] ?? '10',
-    );
+        pushNewMessages: parsedJson['pushNewMessages'] ?? true,
+        pushNewMatchesEnabled: parsedJson['pushNewMatchesEnabled'] ?? true,
+        profilePictureURL: parsedJson['profilePictureURL'] ?? '',
+        genderPreference: parsedJson['genderPreference'] ?? 'Female',
+        gender: parsedJson['gender'] ?? 'Male',
+        distanceRadius: parsedJson['distanceRadius'] ?? '10',
+        age: parsedJson['age'] ?? '',
+        bio: parsedJson['bio'] ?? '',
+        public: parsedJson['public'] ?? true);
   }
 
   Map<String, dynamic> toJson() {
@@ -203,6 +177,9 @@ class UserSettings {
       'genderPreference': this.genderPreference,
       'gender': this.gender,
       'distanceRadius': this.distanceRadius,
+      'age': this.age,
+      'bio': this.bio,
+      'public': this.public
     };
   }
 }
