@@ -7,6 +7,8 @@ import 'base_model.dart';
 
 /// This class provides state in the form of a base model to UI views.
 abstract class BaseView<T extends BaseModel> extends StatefulWidget {
+  const BaseView({Key? key}) : super(key: key);
+
   /// This is called in the initState method.
   init(BuildContext context, T model) {}
 

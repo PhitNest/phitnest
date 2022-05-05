@@ -11,6 +11,8 @@ import 'model/login_model.dart';
 /// This view contains a form and makes login requests to authentication
 /// service.
 class LoginView extends PreAuthenticationView<LoginModel> {
+  const LoginView({Key? key}) : super(key: key);
+
   @override
   init(BuildContext context, LoginModel model) async {
     // Wait for redirect logic

@@ -10,6 +10,8 @@ import 'model/on_boarding_model.dart';
 /// This view will only be shown to the user one time. If it has already been
 /// shown, or the user is authenticated, they will be redirected accordingly.
 class OnBoardingView extends PreAuthenticationView<OnBoardingModel> {
+  const OnBoardingView({Key? key}) : super(key: key);
+
   @override
   init(BuildContext context, OnBoardingModel model) async {
     // Run the redirect logic

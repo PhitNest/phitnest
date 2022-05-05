@@ -7,6 +7,8 @@ import 'constants/constants.dart';
 
 /// Base MaterialApp widget
 class PhitnestApp extends StatefulWidget {
+  const PhitnestApp({Key? key}) : super(key: key);
+
   @override
   _PhitnestAppState createState() => _PhitnestAppState();
 }
@@ -22,6 +24,9 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
     WidgetsBinding.instance?.addObserver(this);
     super.initState();
   }
+
+  /// Used to generate a material page route for a given view.
+  generateRoute(Widget view) => MaterialPageRoute(builder: (_) => view);
 
   @override
   Widget build(BuildContext context) {
@@ -49,18 +54,20 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
       initialRoute: '/',
       onGenerateRoute: (settings) {
         switch (settings.name) {
+          case '/profile':
+            return generateRoute(const ProfileView());
           case '/home':
-            return MaterialPageRoute(builder: (_) => HomeView());
+            return generateRoute(const HomeView());
           case '/resetPassword':
           case '/mobileAuth':
           case '/login':
-            return MaterialPageRoute(builder: (_) => LoginView());
+            return generateRoute(const LoginView());
           case '/signUp':
-            return MaterialPageRoute(builder: (_) => SignupView());
+            return generateRoute(const SignupView());
           case '/auth':
-            return MaterialPageRoute(builder: (_) => AuthView());
+            return generateRoute(const AuthView());
           default:
-            return MaterialPageRoute(builder: (_) => OnBoardingView());
+            return generateRoute(const OnBoardingView());
         }
       },
     );
