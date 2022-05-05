@@ -15,7 +15,7 @@ class UserModel {
   String recentPlatform = '${Platform.operatingSystem}';
   UserLocation? location;
   UserLocation? signUpLocation;
-  List<String> photos;
+  List photos;
 
   String fullName() {
     return '$firstName $lastName';
@@ -47,13 +47,17 @@ class UserModel {
         online: parsedJson['online'],
         lastOnlineTimestamp: parsedJson['lastOnlineTimestamp'],
         settings: UserSettings.fromJson(parsedJson['settings']),
-        location: UserLocation.fromJson(parsedJson['location']),
-        signUpLocation: UserLocation.fromJson(parsedJson['signUpLocation']),
+        location: parsedJson.containsKey('location')
+            ? UserLocation.fromJson(parsedJson['location'])
+            : null,
+        signUpLocation: parsedJson.containsKey('signUpLocation')
+            ? UserLocation.fromJson(parsedJson['signUpLocation'])
+            : null,
         photos: parsedJson['photos']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    Map<String, dynamic> json = {
       'userID': this.userID,
       'email': this.email,
       'firstName': this.firstName,
@@ -63,9 +67,17 @@ class UserModel {
       'settings': this.settings.toJson(),
       'lastOnlineTimestamp': this.lastOnlineTimestamp,
       'recentPlatform': this.recentPlatform,
-      'location': this.location?.toJson(),
-      'signUpLocation': this.signUpLocation?.toJson(),
       'photos': this.photos,
     };
+
+    if (this.location != null) {
+      json['location'] = this.location!.toJson();
+    }
+
+    if (this.signUpLocation != null) {
+      json['signUpLocation'] = this.signUpLocation!.toJson();
+    }
+
+    return json;
   }
 }
