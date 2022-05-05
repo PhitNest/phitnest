@@ -4,6 +4,7 @@ import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
+import '../../widgets/decorations/text_field_decoration.dart';
 import '../../../constants/constants.dart';
 import '../redirected/redirected.dart';
 import 'model/login_model.dart';
@@ -75,34 +76,14 @@ class LoginView extends PreAuthenticationView<LoginModel> {
                 padding:
                     const EdgeInsets.only(top: 32.0, right: 24.0, left: 24.0),
                 child: TextFormField(
-                  textAlignVertical: TextAlignVertical.center,
-                  textInputAction: TextInputAction.next,
-                  style: TextStyle(fontSize: 18.0),
-                  validator: validateEmail,
-                  onSaved: (val) => model.email = val,
-                  keyboardType: TextInputType.emailAddress,
-                  cursorColor: Color(COLOR_PRIMARY),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 16, right: 16),
-                    hintText: 'E-mail Address',
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(
-                            color: Color(COLOR_PRIMARY), width: 2.0)),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: errorColor),
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: errorColor),
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade200),
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                  ),
-                ),
+                    textAlignVertical: TextAlignVertical.center,
+                    textInputAction: TextInputAction.next,
+                    style: TextStyle(fontSize: 18.0),
+                    validator: validateEmail,
+                    onSaved: (val) => model.email = val,
+                    keyboardType: TextInputType.emailAddress,
+                    cursorColor: Color(COLOR_PRIMARY),
+                    decoration: TextFieldInputDecoration('Email Address')),
               ),
             ),
             ConstrainedBox(
@@ -111,35 +92,15 @@ class LoginView extends PreAuthenticationView<LoginModel> {
                 padding:
                     const EdgeInsets.only(top: 32.0, right: 24.0, left: 24.0),
                 child: TextFormField(
-                  textAlignVertical: TextAlignVertical.center,
-                  onSaved: (val) => model.password = val,
-                  obscureText: true,
-                  validator: validatePassword,
-                  onFieldSubmitted: (_) => loginClick(LoginMethod.email),
-                  textInputAction: TextInputAction.done,
-                  style: TextStyle(fontSize: 18.0),
-                  cursorColor: Color(COLOR_PRIMARY),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 16, right: 16),
-                    hintText: 'Password',
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(
-                            color: Color(COLOR_PRIMARY), width: 2.0)),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: errorColor),
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: errorColor),
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade200),
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                  ),
-                ),
+                    textAlignVertical: TextAlignVertical.center,
+                    onSaved: (val) => model.password = val,
+                    obscureText: true,
+                    validator: validatePassword,
+                    onFieldSubmitted: (_) => loginClick(LoginMethod.email),
+                    textInputAction: TextInputAction.done,
+                    style: TextStyle(fontSize: 18.0),
+                    cursorColor: Color(COLOR_PRIMARY),
+                    decoration: TextFieldInputDecoration('Password')),
               ),
             ),
 
@@ -170,7 +131,7 @@ class LoginView extends PreAuthenticationView<LoginModel> {
                         primary: Color(COLOR_PRIMARY),
                         padding: EdgeInsets.only(top: 12, bottom: 12),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25.0),
+                            borderRadius: BORDER_RADIUS,
                             side: BorderSide(color: Color(COLOR_PRIMARY))),
                       ),
                       child: Text(

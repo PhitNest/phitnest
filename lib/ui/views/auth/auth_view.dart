@@ -65,7 +65,7 @@ class AuthView extends StatelessWidget {
                   textStyle: TextStyle(color: Colors.white),
                   padding: EdgeInsets.only(top: 12, bottom: 12),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25.0),
+                      borderRadius: BORDER_RADIUS,
                       side: BorderSide(color: Color(COLOR_PRIMARY))),
                 ),
                 child: Text(
@@ -88,7 +88,7 @@ class AuthView extends StatelessWidget {
                   ),
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                     RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25.0),
+                      borderRadius: BORDER_RADIUS,
                       side: BorderSide(
                         color: Color(COLOR_PRIMARY),
                       ),

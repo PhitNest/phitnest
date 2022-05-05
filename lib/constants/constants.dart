@@ -1,4 +1,6 @@
 // Logo colors
+import 'package:flutter/material.dart';
+
 const LOGO_INNER_RING = 0xFF206D81;
 const LOGO_MIDDLE_RING = 0xFF289D9F;
 const LOGO_OUTER_RING = 0xFF4FB3AF;
@@ -23,6 +25,7 @@ const CHANNEL_PARTICIPATION = 'channel_participation';
 const CHANNELS = 'channels';
 const THREAD = 'thread';
 const REPORTS = 'reports';
+final BorderRadius BORDER_RADIUS = BorderRadius.circular(25.0);
 
 const SERVER_KEY =
     'AAAAeliTfEs:APA91bGve5fyExjSiUCB0oI09Br1yGUSb0tPHelAk7L0FUytHWGOMlBPexJubTwSjjJTaIlK7oto3jDevoj9c5Q4Qalk6QEtQ9Y3tYfTxHD7OrmPZuVJjVGGciPBJXThG9QHCZQqx9Id';

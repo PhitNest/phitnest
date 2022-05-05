@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:display/display.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:phitnest/ui/widgets/decorations/text_field_decoration.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:select_photo/select_photo.dart';
 import 'package:validation/validation.dart';
@@ -121,34 +122,12 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                     padding:
                         const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
                     child: TextFormField(
-                      cursorColor: Color(COLOR_PRIMARY),
-                      textAlignVertical: TextAlignVertical.center,
-                      validator: validateName,
-                      onSaved: (String? val) => model.firstName = val,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                        fillColor: Colors.white,
-                        hintText: 'First Name',
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(
-                                color: Color(COLOR_PRIMARY), width: 2.0)),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: errorColor),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: errorColor),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade200),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                      ),
-                    ),
+                        cursorColor: Color(COLOR_PRIMARY),
+                        textAlignVertical: TextAlignVertical.center,
+                        validator: validateName,
+                        onSaved: (String? val) => model.firstName = val,
+                        textInputAction: TextInputAction.next,
+                        decoration: TextFieldInputDecoration('First Name')),
                   ),
                 ),
                 ConstrainedBox(
@@ -162,28 +141,7 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                       cursorColor: Color(COLOR_PRIMARY),
                       onSaved: (String? val) => model.lastName = val,
                       textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                        fillColor: Colors.white,
-                        hintText: 'Last Name',
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(
-                                color: Color(COLOR_PRIMARY), width: 2.0)),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: errorColor),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: errorColor),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade200),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                      ),
+                      decoration: TextFieldInputDecoration('Last Name'),
                     ),
                   ),
                 ),
@@ -199,28 +157,7 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                       cursorColor: Color(COLOR_PRIMARY),
                       validator: validateEmail,
                       onSaved: (String? val) => model.email = val,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                        fillColor: Colors.white,
-                        hintText: 'Email Address',
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(
-                                color: Color(COLOR_PRIMARY), width: 2.0)),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: errorColor),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: errorColor),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade200),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                      ),
+                      decoration: TextFieldInputDecoration('Email Address'),
                     ),
                   ),
                 ),
@@ -241,28 +178,7 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                       searchBoxDecoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 8, horizontal: 16)),
-                      inputDecoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                        fillColor: Colors.white,
-                        hintText: 'Mobile',
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(
-                                color: Color(COLOR_PRIMARY), width: 2.0)),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: errorColor),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: errorColor),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade200),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                      ),
+                      inputDecoration: TextFieldInputDecoration('Mobile'),
                       textAlignVertical: TextAlignVertical.center,
                       cursorColor: Color(COLOR_PRIMARY),
                       validator: validateMobile,
@@ -277,37 +193,15 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                     padding:
                         const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
                     child: TextFormField(
-                      obscureText: true,
-                      textAlignVertical: TextAlignVertical.center,
-                      textInputAction: TextInputAction.next,
-                      controller: model.passwordController,
-                      validator: validatePassword,
-                      onSaved: (String? val) => model.password = val,
-                      style: TextStyle(fontSize: 18.0),
-                      cursorColor: Color(COLOR_PRIMARY),
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                        fillColor: Colors.white,
-                        hintText: 'Password',
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(
-                                color: Color(COLOR_PRIMARY), width: 2.0)),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: errorColor),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: errorColor),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade200),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                      ),
-                    ),
+                        obscureText: true,
+                        textAlignVertical: TextAlignVertical.center,
+                        textInputAction: TextInputAction.next,
+                        controller: model.passwordController,
+                        validator: validatePassword,
+                        onSaved: (String? val) => model.password = val,
+                        style: TextStyle(fontSize: 18.0),
+                        cursorColor: Color(COLOR_PRIMARY),
+                        decoration: TextFieldInputDecoration('Password')),
                   ),
                 ),
                 ConstrainedBox(
@@ -316,38 +210,17 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                     padding:
                         const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
                     child: TextFormField(
-                      textAlignVertical: TextAlignVertical.center,
-                      textInputAction: TextInputAction.done,
-                      onFieldSubmitted: (_) => signupClick(),
-                      obscureText: true,
-                      validator: (val) => validateConfirmPassword(
-                          model.passwordController.text, val),
-                      onSaved: (String? val) => model.confirmPassword = val,
-                      style: TextStyle(fontSize: 18.0),
-                      cursorColor: Color(COLOR_PRIMARY),
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                        fillColor: Colors.white,
-                        hintText: 'Confirm Password',
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(
-                                color: Color(COLOR_PRIMARY), width: 2.0)),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: errorColor),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: errorColor),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade200),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                      ),
-                    ),
+                        textAlignVertical: TextAlignVertical.center,
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) => signupClick(),
+                        obscureText: true,
+                        validator: (val) => validateConfirmPassword(
+                            model.passwordController.text, val),
+                        onSaved: (String? val) => model.confirmPassword = val,
+                        style: TextStyle(fontSize: 18.0),
+                        cursorColor: Color(COLOR_PRIMARY),
+                        decoration:
+                            TextFieldInputDecoration('Confirm Password')),
                   ),
                 ),
                 Padding(
@@ -361,7 +234,7 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                         primary: Color(COLOR_PRIMARY),
                         padding: EdgeInsets.only(top: 12, bottom: 12),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25.0),
+                          borderRadius: BORDER_RADIUS,
                           side: BorderSide(
                             color: Color(COLOR_PRIMARY),
                           ),

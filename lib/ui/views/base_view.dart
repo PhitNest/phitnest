@@ -1,8 +1,9 @@
+import 'package:display/display.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants/constants.dart';
 import '../../../locator.dart';
+import '../../constants/constants.dart';
 import 'base_model.dart';
 
 /// This class provides state in the form of a base model to UI views.
@@ -27,9 +28,7 @@ abstract class BaseView<T extends BaseModel> extends StatefulWidget {
           color: Color(COLOR_PRIMARY),
           child: CircularProgressIndicator.adaptive(
             valueColor: AlwaysStoppedAnimation(Color(COLOR_PRIMARY)),
-            backgroundColor: Theme.of(context).brightness == Brightness.dark
-                ? Colors.black
-                : Colors.white,
+            backgroundColor: isDarkMode ? Colors.black : Colors.white,
           ),
         ),
       ));
