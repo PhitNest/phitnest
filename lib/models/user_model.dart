@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
-class UserModel with ChangeNotifier {
+class UserModel {
   String email;
 
   String firstName;
@@ -19,8 +18,6 @@ class UserModel with ChangeNotifier {
   Timestamp lastOnlineTimestamp;
 
   String userID;
-
-  String profilePictureURL;
 
   String recentPlatform = '${Platform.operatingSystem}';
 
@@ -46,7 +43,6 @@ class UserModel with ChangeNotifier {
   UserModel({
     this.email = '',
     this.userID = '',
-    this.profilePictureURL = '',
     this.firstName = '',
     this.mobile = '',
     this.lastName = '',
@@ -83,7 +79,6 @@ class UserModel with ChangeNotifier {
             : UserSettings(),
         mobile: parsedJson['mobile'] ?? '',
         userID: parsedJson['userID'] ?? '',
-        profilePictureURL: parsedJson['profilePictureURL'] ?? '',
         //dating app related fields
         public: parsedJson['public'] ?? true,
         location: parsedJson.containsKey('location')
@@ -111,7 +106,6 @@ class UserModel with ChangeNotifier {
             : UserSettings(),
         mobile: parsedJson['mobile'] ?? '',
         userID: parsedJson['userID'] ?? '',
-        profilePictureURL: parsedJson['profilePictureURL'] ?? '',
         location: parsedJson.containsKey('location')
             ? UserLocation.fromJson(parsedJson['location'])
             : UserLocation(),
@@ -136,7 +130,6 @@ class UserModel with ChangeNotifier {
       'userID': this.userID,
       'online': this.online,
       'lastOnlineTimestamp': this.lastOnlineTimestamp,
-      'profilePictureURL': this.profilePictureURL,
       'recentPlatform': this.recentPlatform,
       'location': this.location.toJson(),
       'signUpLocation': this.signUpLocation.toJson(),
@@ -158,7 +151,6 @@ class UserModel with ChangeNotifier {
       'userID': this.userID,
       'online': this.online,
       'lastOnlineTimestamp': this.lastOnlineTimestamp.millisecondsSinceEpoch,
-      'profilePictureURL': this.profilePictureURL,
       'recentPlatform': this.recentPlatform,
       'location': this.location.toJson(),
       'signUpLocation': this.signUpLocation.toJson(),
@@ -175,9 +167,7 @@ class UserSettings {
 
   bool pushNewMatchesEnabled;
 
-  bool pushSuperLikesEnabled;
-
-  bool pushTopPicksEnabled;
+  String profilePictureURL;
 
   String genderPreference; // should be either 'Male' or 'Female' // or 'All'
 
@@ -188,8 +178,7 @@ class UserSettings {
   UserSettings({
     this.pushNewMessages = true,
     this.pushNewMatchesEnabled = true,
-    this.pushSuperLikesEnabled = true,
-    this.pushTopPicksEnabled = true,
+    this.profilePictureURL = '',
     this.genderPreference = 'Female',
     this.gender = 'Male',
     this.distanceRadius = '10',
@@ -199,8 +188,7 @@ class UserSettings {
     return UserSettings(
       pushNewMessages: parsedJson['pushNewMessages'] ?? true,
       pushNewMatchesEnabled: parsedJson['pushNewMatchesEnabled'] ?? true,
-      pushSuperLikesEnabled: parsedJson['pushSuperLikesEnabled'] ?? true,
-      pushTopPicksEnabled: parsedJson['pushTopPicksEnabled'] ?? true,
+      profilePictureURL: parsedJson['profilePictureURL'] ?? '',
       genderPreference: parsedJson['genderPreference'] ?? 'Female',
       gender: parsedJson['gender'] ?? 'Male',
       distanceRadius: parsedJson['distanceRadius'] ?? '10',
@@ -211,8 +199,7 @@ class UserSettings {
     return {
       'pushNewMessages': this.pushNewMessages,
       'pushNewMatchesEnabled': this.pushNewMatchesEnabled,
-      'pushSuperLikesEnabled': this.pushSuperLikesEnabled,
-      'pushTopPicksEnabled': this.pushTopPicksEnabled,
+      'profilePictureURL': this.profilePictureURL,
       'genderPreference': this.genderPreference,
       'gender': this.gender,
       'distanceRadius': this.distanceRadius,
