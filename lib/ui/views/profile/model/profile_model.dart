@@ -7,7 +7,7 @@ import '../../base_model.dart';
 
 class ProfileModel extends BaseModel {
   UserModel? userModel;
-  List<String?> images = [];
+  List images = [];
   List pages = [];
   List<Widget> gridPages = [];
   PageController controller = PageController();
