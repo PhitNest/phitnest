@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 
 import '../../constants/constants.dart';
+import '../../models/user_location_model.dart';
 import '../../models/user_model.dart';
 
 import '../database_service.dart';
@@ -31,5 +34,18 @@ class FirestoreDatabaseService extends DatabaseService {
     } else {
       return null;
     }
+  }
+
+  @override
+  Future<bool> updateLocation(UserModel user) async {
+    Position? position = await getCurrentLocation();
+
+    if (position != null) {
+      user.location = UserLocation(
+          latitude: position.latitude, longitude: position.longitude);
+      await updateUserModel(user);
+      return true;
+    }
+    return false;
   }
 }

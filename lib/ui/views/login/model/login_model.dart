@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart';
 
 import '../../../../services/authentication_service.dart';
 import '../../../../locator.dart';
@@ -38,15 +36,15 @@ class LoginModel extends BaseModel {
     if (formKey.currentState?.validate() ?? false) {
       formKey.currentState!.save();
 
-      // Request user position
-      Position? currentLocation = await getCurrentLocation();
       switch (method) {
         case LoginMethod.email:
           return await _auth.loginWithEmailAndPassword(
-              email!.trim(), password!.trim(), currentLocation);
+            email!.trim(),
+            password!.trim(),
+          );
         case LoginMethod.apple:
           try {
-            return await _auth.loginWithApple(currentLocation);
+            return await _auth.loginWithApple();
           } catch (e) {
             return 'Failed to login with Apple';
           }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
 import '../../models/user_location_model.dart';
@@ -20,7 +21,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
-  Future<String?> loginWithApple(Position? position) async {
+  Future<String?> loginWithApple() async {
     // Request authorization from apple
     apple.AuthorizationResult appleAuth =
         await apple.TheAppleSignIn.performRequests([
@@ -63,12 +64,6 @@ class FirebaseAuthenticationService extends AuthenticationService {
             online: true);
       }
 
-      // If position is not null, update the user position
-      if (position != null) {
-        userModel!.location = UserLocation(
-            latitude: position.latitude, longitude: position.longitude);
-      }
-
       // Update the database model
       return await _database.updateUserModel(userModel!);
     }
@@ -79,7 +74,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
 
   @override
   Future<String?> loginWithEmailAndPassword(
-      String email, String password, Position? position) async {
+      String email, String password) async {
     try {
       // Get the user credentials from firebase auth
       UserCredential result = await firebaseAuth.signInWithEmailAndPassword(
@@ -91,12 +86,6 @@ class FirebaseAuthenticationService extends AuthenticationService {
       // If the user returned is null, return an error message
       if (userModel == null) {
         return 'Login failed';
-      }
-
-      // If position is not null, save the current user position
-      if (position != null) {
-        userModel!.location = UserLocation(
-            latitude: position.latitude, longitude: position.longitude);
       }
 
       // Update the user model in the database service
@@ -150,8 +139,6 @@ class FirebaseAuthenticationService extends AuthenticationService {
       // If the location is not null, set it
       if (locationData != null) {
         userModel!.signUpLocation = UserLocation(
-            latitude: locationData.latitude, longitude: locationData.longitude);
-        userModel!.location = UserLocation(
             latitude: locationData.latitude, longitude: locationData.longitude);
       }
 
