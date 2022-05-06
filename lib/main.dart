@@ -14,6 +14,7 @@ void main() async {
   ProgressWidget.initialize(COLOR_PRIMARY);
   setupLocator();
   runApp(
+    // Set up easy localization
     EasyLocalization(
       supportedLocales: [Locale('en'), Locale('ar'), Locale('fr')],
       path: 'assets/translations',

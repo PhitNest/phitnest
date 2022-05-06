@@ -33,5 +33,6 @@ const HOUR_MILLIS = 60 * MINUTE_MILLIS;
 // Database document collection index
 const USERS = 'users';
 
+
 const DEFAULT_AVATAR_URL =
     'https://www.iosapptemplates.com/wp-content/uploads/2019/06/empty-avatar.jpg';
