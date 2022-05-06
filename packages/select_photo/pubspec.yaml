@@ -1,5 +1,5 @@
-name: location
-description: Location Utils
+name: select_photo
+description: Selecting Photo Utils
 version: 1.0.0+1
 publish_to: 'none'
 environment:
@@ -8,4 +8,4 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  geolocator: ^8.2.0
+  image_picker: ^0.8.2

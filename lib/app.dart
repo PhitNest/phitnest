@@ -1,55 +1,83 @@
-import 'package:display/display_utils.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:display/display.dart' as DisplayUtils;
 
-import 'package:provider/provider.dart';
-
+import 'ui/screens/providers.dart';
 import 'constants/constants.dart';
-import 'services/services.dart';
-import 'screens/screens.dart';
 
-class App extends StatelessWidget with WidgetsBindingObserver {
-  /// Holds all back end functionality and reference to current user
-  final BackEndModel backendModel = FirebaseModel();
+/// Base MaterialApp widget
+class PhitnestApp extends StatefulWidget {
+  const PhitnestApp({Key? key}) : super(key: key);
 
-  /// this key is used to navigate to the appropriate screen when the
-  /// notification is clicked from the system tray
-  final GlobalKey<NavigatorState> navigatorKey =
+  @override
+  _PhitnestAppState createState() => _PhitnestAppState();
+}
+
+class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
+  /// This key is used to navigate to the appropriate screen when the
+  /// notification is clicked from the system tray.
+  final GlobalKey<NavigatorState> _navigatorKey =
       GlobalKey(debugLabel: 'Main Navigator');
 
   @override
-  Widget build(BuildContext context) {
-    // Store theme setting for frequent use
-    DisplayUtils.initialize(context);
+  void initState() {
     WidgetsBinding.instance?.addObserver(this);
+    super.initState();
+  }
 
-    // Pass the back end down to children
-    return ChangeNotifierProvider.value(
-        value: backendModel,
-        child: MaterialApp(
-            navigatorKey: navigatorKey,
-            localizationsDelegates: context.localizationDelegates,
-            supportedLocales: context.supportedLocales,
-            locale: context.locale,
-            title: 'Phitnest',
-            theme: ThemeData(
-                bottomSheetTheme: BottomSheetThemeData(
-                    backgroundColor: Colors.white.withOpacity(.9)),
-                colorScheme: ColorScheme.light(secondary: Color(COLOR_PRIMARY)),
-                brightness: Brightness.light),
-            darkTheme: ThemeData(
-                bottomSheetTheme: BottomSheetThemeData(
-                    backgroundColor: Colors.black12.withOpacity(.3)),
-                colorScheme: ColorScheme.dark(secondary: Color(COLOR_PRIMARY)),
-                brightness: Brightness.dark),
-            debugShowCheckedModeBanner: false,
-            color: Color(COLOR_PRIMARY),
-            // The redirector will route the user to the proper page
-            home: const RedirectorScreen()));
+  /// Used to generate a material page route for a given view.
+  generateRoute(Widget view) => MaterialPageRoute(builder: (_) => view);
+
+  @override
+  Widget build(BuildContext context) {
+    // Initialize dark mode settings
+    DisplayUtils.initialize(
+        darkMode: Theme.of(context).brightness == Brightness.dark,
+        primary: Color(COLOR_PRIMARY),
+        accent: Color(COLOR_ACCENT),
+        error: Theme.of(context).errorColor);
+
+    return MaterialApp(
+      navigatorKey: _navigatorKey,
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
+      title: 'Phitnest',
+      theme: ThemeData(
+          bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: Colors.white.withOpacity(.9)),
+          brightness: Brightness.light),
+      darkTheme: ThemeData(
+          bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: Colors.black12.withOpacity(.3)),
+          brightness: Brightness.dark),
+      debugShowCheckedModeBanner: false,
+      color: Color(COLOR_PRIMARY),
+      initialRoute: '/',
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/profile':
+            return generateRoute(const ProfileProvider());
+          case '/home':
+            return generateRoute(const HomeProvider());
+          case '/resetPassword':
+          case '/mobileAuth':
+          case '/login':
+            return generateRoute(const LoginProvider());
+          case '/signup':
+            return generateRoute(const SignupProvider());
+          case '/auth':
+            return generateRoute(const AuthProvider());
+          default:
+            return generateRoute(const OnBoardingProvider());
+        }
+      },
+    );
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    backendModel.updateLifeCycleState(state);
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
   }
 }

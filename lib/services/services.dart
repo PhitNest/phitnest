@@ -1,2 +1,2 @@
-export 'backend_model.dart';
-export 'firebase/firebase_model.dart';
+export 'database_service.dart';
+export 'authentication_service.dart';
