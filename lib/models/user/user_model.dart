@@ -17,9 +17,7 @@ class UserModel {
   UserLocation? signUpLocation;
   List photos;
 
-  String fullName() {
-    return '$firstName $lastName';
-  }
+  String get fullName => '$firstName $lastName';
 
   UserModel({
     this.userID = '',
@@ -37,24 +35,22 @@ class UserModel {
             lastOnlineTimestamp ?? DateTime.now().millisecondsSinceEpoch,
         this.settings = settings ?? UserSettings();
 
-  factory UserModel.fromJson(Map<String, dynamic> parsedJson) {
-    return UserModel(
-        userID: parsedJson['userID'],
-        email: parsedJson['email'],
-        firstName: parsedJson['firstName'],
-        lastName: parsedJson['lastName'],
-        mobile: parsedJson['mobile'],
-        online: parsedJson['online'],
-        lastOnlineTimestamp: parsedJson['lastOnlineTimestamp'],
-        settings: UserSettings.fromJson(parsedJson['settings']),
-        location: parsedJson.containsKey('location')
-            ? UserLocation.fromJson(parsedJson['location'])
-            : null,
-        signUpLocation: parsedJson.containsKey('signUpLocation')
-            ? UserLocation.fromJson(parsedJson['signUpLocation'])
-            : null,
-        photos: parsedJson['photos']);
-  }
+  factory UserModel.fromJson(Map<String, dynamic> parsedJson) => UserModel(
+      userID: parsedJson['userID'],
+      email: parsedJson['email'],
+      firstName: parsedJson['firstName'],
+      lastName: parsedJson['lastName'],
+      mobile: parsedJson['mobile'],
+      online: parsedJson['online'],
+      lastOnlineTimestamp: parsedJson['lastOnlineTimestamp'],
+      settings: UserSettings.fromJson(parsedJson['settings']),
+      location: parsedJson.containsKey('location')
+          ? UserLocation.fromJson(parsedJson['location'])
+          : null,
+      signUpLocation: parsedJson.containsKey('signUpLocation')
+          ? UserLocation.fromJson(parsedJson['signUpLocation'])
+          : null,
+      photos: parsedJson['photos']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {
