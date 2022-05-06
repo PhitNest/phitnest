@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../constants/constants.dart';
-import '../../../widgets/decorations/text_field_decoration.dart';
+import 'text_form_style_decoration.dart';
 
-class SignupFormField extends StatelessWidget {
+class TextInputFormField extends StatelessWidget {
   final String hint;
 
   final Function(String? text) onSaved;
@@ -12,7 +12,7 @@ class SignupFormField extends StatelessWidget {
 
   final String? Function(String? text) validator;
 
-  const SignupFormField({
+  const TextInputFormField({
     Key? key,
     required this.hint,
     required this.validator,
@@ -32,6 +32,6 @@ class SignupFormField extends StatelessWidget {
         onSaved: onSaved,
         style: TextStyle(fontSize: 18.0),
         cursorColor: Color(COLOR_PRIMARY),
-        decoration: TextFieldInputDecoration(hint));
+        decoration: TextFormStyleDecoration(hint: hint));
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:phitnest/ui/widgets/styles/heading_text_style.dart';
 
 import '../../../services/authentication_service.dart';
 import '../../../constants/constants.dart';
 import '../../../locator.dart';
+import '../../widgets/textStyles/heading_text_style.dart';
 
 /// This is the auth view. This is a stateless view.
 class AuthView extends StatelessWidget {
@@ -68,7 +68,7 @@ class AuthView extends StatelessWidget {
                 ),
                 child: Text(
                   'Log In',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                 ),
                 onPressed: () => Navigator.pushNamed(context, '/login'),
               ),
