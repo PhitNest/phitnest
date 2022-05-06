@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'text_form_style_decoration.dart';
 
+/// This is a text form field widget
 class TextInputFormField extends StatelessWidget {
   final String hint;
   final Function(String? text) onSaved;
