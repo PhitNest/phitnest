@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
+import 'package:phitnest/ui/screens/auth/auth_model.dart';
 
-import 'ui/views/models.dart';
+import 'ui/screens/models.dart';
 import 'services/firebase/firebase_service.dart';
 import 'services/services.dart';
 
@@ -21,4 +22,5 @@ void setupLocator() {
   locator.registerFactory(() => SignupModel());
   locator.registerFactory(() => HomeModel());
   locator.registerFactory(() => ProfileModel());
+  locator.registerFactory(() => AuthModel());
 }
