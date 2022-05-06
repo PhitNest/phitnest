@@ -76,7 +76,7 @@ class SignupView extends BaseView {
                       padding: const EdgeInsets.only(
                           left: 8.0, top: 32, right: 8, bottom: 8),
                       child: ProfilePictureSelector(
-                          initialImage: image, onDone: onSaveImage)),
+                          initialImage: image, onSelected: onSaveImage)),
                   ConstrainedBox(
                     constraints: BoxConstraints(minWidth: double.infinity),
                     child: Padding(

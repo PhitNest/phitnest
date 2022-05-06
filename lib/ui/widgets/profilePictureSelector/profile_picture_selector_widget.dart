@@ -4,12 +4,15 @@ import 'package:display/display.dart';
 import 'package:flutter/material.dart';
 import 'package:select_photo/select_photo.dart';
 
+/// This will allow you to select a photo from native camera for profile picture
 class ProfilePictureSelector extends StatelessWidget {
   final File? initialImage;
-  final Function(File? selectedImage) onDone;
+
+  /// This is called when the image is selected
+  final Function(File? selectedImage) onSelected;
 
   const ProfilePictureSelector(
-      {Key? key, required this.onDone, this.initialImage})
+      {Key? key, required this.onSelected, this.initialImage})
       : super(key: key);
 
   @override
@@ -47,7 +50,7 @@ class ProfilePictureSelector extends StatelessWidget {
               ),
               mini: true,
               onPressed: () =>
-                  selectPhoto(context, 'Select Profile Picture', onDone),
+                  selectPhoto(context, 'Select Profile Picture', onSelected),
             )),
       ],
     );

@@ -20,10 +20,8 @@ class SignupProvider
       if (Platform.isAndroid) {
         model.image = await retrieveLostData();
       }
-
       return true;
     }
-
     return false;
   }
 
