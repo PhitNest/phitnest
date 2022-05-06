@@ -74,69 +74,28 @@ class UserModel {
         this.location = location ?? UserLocation(),
         this.signUpLocation = signUpLocation ?? UserLocation();
 
-  String fullName() {
-    return '$firstName $lastName';
-  }
+  String get fullName => '$firstName $lastName';
 
   static UserModel? fromContext(BuildContext context) {
     return Provider.of<BackEndModel>(context).currentUser;
   }
 
-  factory UserModel.fromJson(Map<String, dynamic> parsedJson) {
-    return UserModel(
-        email: parsedJson['email'] ?? '',
-        firstName: parsedJson['firstName'] ?? '',
-        lastName: parsedJson['lastName'] ?? '',
-        active: parsedJson['active'] ?? false,
-        lastOnlineTimestamp: parsedJson['lastOnlineTimestamp'],
-        settings: parsedJson.containsKey('settings')
-            ? UserSettings.fromJson(parsedJson['settings'])
-            : UserSettings(),
-        phoneNumber: parsedJson['phoneNumber'] ?? '',
-        userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
-        profilePictureURL: parsedJson['profilePictureURL'] ?? '',
-        fcmToken: parsedJson['fcmToken'] ?? '',
-        //dating app related fields
-        showMe: parsedJson['showMe'] ?? parsedJson['showMeOnTinder'] ?? true,
-        location: parsedJson.containsKey('location')
-            ? UserLocation.fromJson(parsedJson['location'])
-            : null,
-        signUpLocation: parsedJson.containsKey('signUpLocation')
-            ? UserLocation.fromJson(parsedJson['signUpLocation'])
-            : UserLocation(),
-        school: parsedJson['school'] ?? 'N/A',
-        age: parsedJson['age'] ?? '',
-        bio: parsedJson['bio'] ?? 'N/A',
-        photos: parsedJson['photos'] ?? [].cast<String>());
-  }
-
-  factory UserModel.fromPayload(Map<String, dynamic> parsedJson) {
-    return UserModel(
-        email: parsedJson['email'] ?? '',
-        firstName: parsedJson['firstName'] ?? '',
-        lastName: parsedJson['lastName'] ?? '',
-        active: parsedJson['active'] ?? false,
-        lastOnlineTimestamp: Timestamp.fromMillisecondsSinceEpoch(
-            parsedJson['lastOnlineTimestamp']),
-        settings: parsedJson.containsKey('settings')
-            ? UserSettings.fromJson(parsedJson['settings'])
-            : UserSettings(),
-        phoneNumber: parsedJson['phoneNumber'] ?? '',
-        userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
-        profilePictureURL: parsedJson['profilePictureURL'] ?? '',
-        fcmToken: parsedJson['fcmToken'] ?? '',
-        location: parsedJson.containsKey('location')
-            ? UserLocation.fromJson(parsedJson['location'])
-            : UserLocation(),
-        signUpLocation: parsedJson.containsKey('signUpLocation')
-            ? UserLocation.fromJson(parsedJson['signUpLocation'])
-            : UserLocation(),
-        school: parsedJson['school'] ?? 'N/A',
-        age: parsedJson['age'] ?? '',
-        bio: parsedJson['bio'] ?? 'N/A',
-        showMe: parsedJson['showMe'] ?? parsedJson['showMeOnTinder'] ?? true,
-        photos: parsedJson['photos'] ?? [].cast<String>());
-  }
+  factory UserModel.fromJson(Map<String, dynamic> parsedJson) => UserModel(
+      userID: parsedJson['userID'],
+      email: parsedJson['email'],
+      firstName: parsedJson['firstName'],
+      lastName: parsedJson['lastName'],
+      mobile: parsedJson['mobile'],
+      online: parsedJson['online'],
+      lastOnlineTimestamp: parsedJson['lastOnlineTimestamp'],
+      settings: UserSettings.fromJson(parsedJson['settings']),
+      location: parsedJson.containsKey('location')
+          ? UserLocation.fromJson(parsedJson['location'])
+          : null,
+      signUpLocation: parsedJson.containsKey('signUpLocation')
+          ? UserLocation.fromJson(parsedJson['signUpLocation'])
+          : null,
+      photos: parsedJson['photos']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {
