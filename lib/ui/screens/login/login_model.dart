@@ -9,7 +9,7 @@ enum LoginMethod { email, apple }
 /// This is the view model for the login view.
 class LoginModel extends BaseModel {
   /// Authentication service instance
-  AuthenticationService _auth = locator<AuthenticationService>();
+  final AuthenticationService _authService = locator<AuthenticationService>();
 
   /// Form key
   final GlobalKey<FormState> formKey = GlobalKey();
@@ -27,10 +27,6 @@ class LoginModel extends BaseModel {
     notifyListeners();
   }
 
-  /// Initially, the login view will be loading until we set the loading flag
-  /// to false.
-  LoginModel() : super(initiallyLoading: true);
-
   /// Validate
   Future<String?> login(String method) async {
     if (formKey.currentState?.validate() ?? false) {
@@ -39,12 +35,12 @@ class LoginModel extends BaseModel {
       switch (method) {
         case 'apple':
           try {
-            return await _auth.loginWithApple();
+            return await _authService.loginWithApple();
           } catch (e) {
             return 'Failed to login with Apple';
           }
         default:
-          return await _auth.loginWithEmailAndPassword(
+          return await _authService.loginWithEmailAndPassword(
             email!.trim(),
             password!.trim(),
           );

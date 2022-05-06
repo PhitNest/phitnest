@@ -4,9 +4,6 @@ import '../models.dart';
 
 /// This is the view model for the onBoarding view
 class OnBoardingModel extends BaseModel {
-  /// The on boarding view will initially load
-  OnBoardingModel() : super(initiallyLoading: true);
-
   /// Controls the page shown on the view
   final PageController pageController = PageController();
 

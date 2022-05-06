@@ -13,7 +13,6 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
       await model.updateLocation();
       return true;
     }
-
     return false;
   }
 
