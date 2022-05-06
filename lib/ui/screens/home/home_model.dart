@@ -5,11 +5,12 @@ import '../models.dart';
 
 /// This is the view model for the home view.
 class HomeModel extends BaseModel {
-  Future<bool> updateLocation() async {
-    UserModel? user = locator<AuthenticationService>().userModel;
+  final AuthenticationService _authService = locator<AuthenticationService>();
+  final DatabaseService _databaseService = locator<DatabaseService>();
 
-    return user != null
-        ? await locator<DatabaseService>().updateLocation(user)
-        : false;
+  Future<bool> updateLocation() async {
+    UserModel? user = _authService.userModel;
+
+    return user != null ? await _databaseService.updateLocation(user) : false;
   }
 }

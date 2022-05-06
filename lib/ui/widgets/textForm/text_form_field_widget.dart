@@ -5,17 +5,11 @@ import 'text_form_style_decoration.dart';
 
 class TextInputFormField extends StatelessWidget {
   final String hint;
-
   final Function(String? text) onSaved;
-
   final Function()? onSubmit;
-
   final String? Function(String? text) validator;
-
   final TextEditingController? controller;
-
   final bool hide;
-
   final TextInputType? inputType;
 
   const TextInputFormField({
@@ -30,19 +24,17 @@ class TextInputFormField extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-        textAlignVertical: TextAlignVertical.center,
-        textInputAction:
-            onSubmit == null ? TextInputAction.next : TextInputAction.done,
-        onFieldSubmitted: (_) => onSubmit == null ? {} : onSubmit!(),
-        obscureText: hide,
-        keyboardType: inputType,
-        validator: validator,
-        onSaved: onSaved,
-        controller: controller ?? TextEditingController(),
-        style: TextStyle(fontSize: 18.0),
-        cursorColor: primaryColor,
-        decoration: TextFormStyleDecoration(hint: hint));
-  }
+  Widget build(BuildContext context) => TextFormField(
+      textAlignVertical: TextAlignVertical.center,
+      textInputAction:
+          onSubmit == null ? TextInputAction.next : TextInputAction.done,
+      onFieldSubmitted: (_) => onSubmit == null ? {} : onSubmit!(),
+      obscureText: hide,
+      keyboardType: inputType,
+      validator: validator,
+      onSaved: onSaved,
+      controller: controller ?? TextEditingController(),
+      style: TextStyle(fontSize: 18.0),
+      cursorColor: primaryColor,
+      decoration: TextFormStyleDecoration(hint: hint));
 }

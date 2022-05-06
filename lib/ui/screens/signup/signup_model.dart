@@ -11,6 +11,8 @@ import '../models.dart';
 
 /// View model for sign up view
 class SignupModel extends BaseModel {
+  final AuthenticationService _authService = locator<AuthenticationService>();
+
   /// Password text controller
   final TextEditingController passwordController = TextEditingController();
 
@@ -53,7 +55,7 @@ class SignupModel extends BaseModel {
     if (formKey.currentState?.validate() ?? false) {
       formKey.currentState!.save();
       Position? signUpLocation = await getCurrentLocation();
-      return await locator<AuthenticationService>().signupWithEmailAndPassword(
+      return await _authService.signupWithEmailAndPassword(
           email!.trim(),
           password!.trim(),
           _image,
