@@ -1,12 +1,12 @@
 import 'package:display/display.dart';
 import 'package:flutter/material.dart';
-import 'package:phitnest/ui/widgets/styles/heading_text_style.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
-import '../../widgets/decorations/text_field_decoration.dart';
 import '../../../constants/constants.dart';
+import '../../widgets/textForm/text_form.dart';
+import '../../widgets/textStyles/heading_text_style.dart';
 import '../redirected/redirected.dart';
 import 'model/login_model.dart';
 
@@ -69,37 +69,27 @@ class LoginView extends PreAuthenticationView<LoginModel> {
               ),
             ),
             ConstrainedBox(
-              constraints: BoxConstraints(minWidth: double.infinity),
-              child: Padding(
-                padding:
-                    const EdgeInsets.only(top: 32.0, right: 24.0, left: 24.0),
-                child: TextFormField(
-                    textAlignVertical: TextAlignVertical.center,
-                    textInputAction: TextInputAction.next,
-                    style: TextStyle(fontSize: 18.0),
+                constraints: BoxConstraints(minWidth: double.infinity),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(top: 32.0, right: 24.0, left: 24.0),
+                  child: TextInputFormField(
+                    hint: 'Email Address',
+                    onSaved: (String? email) => model.email = email,
                     validator: validateEmail,
-                    onSaved: (val) => model.email = val,
-                    keyboardType: TextInputType.emailAddress,
-                    cursorColor: Color(COLOR_PRIMARY),
-                    decoration: TextFieldInputDecoration('Email Address')),
-              ),
-            ),
+                  ),
+                )),
             ConstrainedBox(
               constraints: BoxConstraints(minWidth: double.infinity),
               child: Padding(
-                padding:
-                    const EdgeInsets.only(top: 32.0, right: 24.0, left: 24.0),
-                child: TextFormField(
-                    textAlignVertical: TextAlignVertical.center,
-                    onSaved: (val) => model.password = val,
-                    obscureText: true,
+                  padding:
+                      const EdgeInsets.only(top: 32.0, right: 24.0, left: 24.0),
+                  child: TextInputFormField(
+                    hint: 'Password',
                     validator: validatePassword,
-                    onFieldSubmitted: (_) => loginClick(LoginMethod.email),
-                    textInputAction: TextInputAction.done,
-                    style: TextStyle(fontSize: 18.0),
-                    cursorColor: Color(COLOR_PRIMARY),
-                    decoration: TextFieldInputDecoration('Password')),
-              ),
+                    onSaved: (String? password) => model.password = password,
+                    onSubmit: () => loginClick(LoginMethod.email),
+                  )),
             ),
 
             /// Forgot password text, navigates user to ResetPasswordScreen

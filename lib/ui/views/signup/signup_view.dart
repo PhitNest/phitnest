@@ -3,15 +3,14 @@ import 'dart:io';
 import 'package:display/display.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:phitnest/ui/views/signup/widgets/signup_form_field.dart';
-import 'package:phitnest/ui/widgets/decorations/text_field_decoration.dart';
-import 'package:phitnest/ui/widgets/profilePictureSelector/profile_picture_selector_widget.dart';
-import 'package:phitnest/ui/widgets/styles/heading_text_style.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:select_photo/select_photo.dart';
 import 'package:validation/validation.dart';
 
 import '../../../constants/constants.dart';
+import '../../widgets/profilePictureSelector/profile_picture_selector_widget.dart';
+import '../../widgets/textStyles/heading_text_style.dart';
+import '../../widgets/textForm/text_form.dart';
 import '../redirected/redirected.dart';
 import 'model/signup_model.dart';
 
@@ -84,7 +83,7 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                   child: Padding(
                     padding:
                         const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-                    child: SignupFormField(
+                    child: TextInputFormField(
                       hint: 'First Name',
                       onSaved: (String? firstName) =>
                           model.firstName = firstName,
@@ -97,7 +96,7 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                   child: Padding(
                       padding: const EdgeInsets.only(
                           top: 16.0, right: 8.0, left: 8.0),
-                      child: SignupFormField(
+                      child: TextInputFormField(
                           hint: 'Last Name',
                           validator: validateName,
                           onSaved: (String? lastName) =>
@@ -108,7 +107,7 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                   child: Padding(
                       padding: const EdgeInsets.only(
                           top: 16.0, right: 8.0, left: 8.0),
-                      child: SignupFormField(
+                      child: TextInputFormField(
                           hint: 'Email Address',
                           validator: validateEmail,
                           onSaved: (String? email) => model.email = email)),
@@ -116,21 +115,23 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                 ConstrainedBox(
                   constraints: BoxConstraints(minWidth: double.infinity),
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 16.0, right: 8.0, left: 16.0),
+                    padding:
+                        const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
                     child: InternationalPhoneNumberInput(
-                      autoFocusSearch: true,
                       spaceBetweenSelectorAndTextField: 0,
                       keyboardType: TextInputType.phone,
                       selectorConfig: SelectorConfig(
+                          leadingPadding: 8,
+                          useEmoji: true,
+                          trailingSpace: false,
                           selectorType: PhoneInputSelectorType.BOTTOM_SHEET),
                       initialValue: PhoneNumber(isoCode: 'US'),
                       keyboardAction: TextInputAction.next,
                       autoValidateMode: model.validate,
                       searchBoxDecoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 16)),
-                      inputDecoration: TextFieldInputDecoration('Mobile'),
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 8)),
+                      inputDecoration: TextFormStyleDecoration(hint: 'Mobile'),
                       textAlignVertical: TextAlignVertical.center,
                       cursorColor: Color(COLOR_PRIMARY),
                       validator: validateMobile,
@@ -144,7 +145,7 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                   child: Padding(
                     padding:
                         const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-                    child: SignupFormField(
+                    child: TextInputFormField(
                       hint: 'Password',
                       onSaved: (String? password) => model.password = password,
                       validator: validatePassword,
@@ -156,7 +157,7 @@ class SignupView extends PreAuthenticationView<SignupModel> {
                   child: Padding(
                       padding: const EdgeInsets.only(
                           top: 16.0, right: 8.0, left: 8.0),
-                      child: SignupFormField(
+                      child: TextInputFormField(
                           hint: 'Confirm Password',
                           onSubmit: signupClick,
                           validator: (String? password) =>
