@@ -4,8 +4,6 @@ import 'package:display/display.dart';
 import 'package:flutter/material.dart';
 import 'package:select_photo/select_photo.dart';
 
-import '../../../constants/constants.dart';
-
 class ProfilePictureSelector extends StatelessWidget {
   final File? initialImage;
   final Function(File? selectedImage) onDone;
@@ -42,7 +40,7 @@ class ProfilePictureSelector extends StatelessWidget {
             left: 80,
             right: 0,
             child: FloatingActionButton(
-              backgroundColor: Color(COLOR_ACCENT),
+              backgroundColor: accentColor,
               child: Icon(
                 Icons.camera_alt,
                 color: isDarkMode ? Colors.black : Colors.white,

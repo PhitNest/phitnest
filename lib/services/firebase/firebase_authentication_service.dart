@@ -14,7 +14,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
   final DatabaseService _database = locator<DatabaseService>();
 
   /// Instance of firebase auth
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
   Future<String?> loginWithApple() async {
@@ -26,44 +26,45 @@ class FirebaseAuthenticationService extends AuthenticationService {
     ]);
 
     // Return error if apple denies request
-    if (appleAuth.error != null) {
-      return 'Couldn\'t login with apple.';
-    }
+    if (appleAuth.error == null) {
+      // If authorized by apple
+      if (appleAuth.status == apple.AuthorizationStatus.authorized) {
+        // Auth request
+        apple.AppleIdCredential? appleIdCredential = appleAuth.credential;
 
-    // If authorized by apple
-    if (appleAuth.status == apple.AuthorizationStatus.authorized) {
-      // Auth request
-      apple.AppleIdCredential? appleIdCredential = appleAuth.credential;
+        // Get OAuth credential from auth request
+        AuthCredential credential = OAuthProvider('apple.com').credential(
+          accessToken:
+              String.fromCharCodes(appleIdCredential?.authorizationCode ?? []),
+          idToken: String.fromCharCodes(appleIdCredential?.identityToken ?? []),
+        );
 
-      // Get OAuth credential from auth request
-      AuthCredential credential = OAuthProvider('apple.com').credential(
-        accessToken:
-            String.fromCharCodes(appleIdCredential?.authorizationCode ?? []),
-        idToken: String.fromCharCodes(appleIdCredential?.identityToken ?? []),
-      );
+        // Pass the OAuth credential to firebase auth
+        UserCredential authResult =
+            await _firebaseAuth.signInWithCredential(credential);
 
-      // Pass the OAuth credential to firebase auth
-      UserCredential authResult =
-          await firebaseAuth.signInWithCredential(credential);
+        User? firebaseUser = authResult.user;
 
-      // Load the user model from database service using uid
-      userModel = await _database.getUserModel(authResult.user?.uid ?? '');
+        if (firebaseUser != null) {
+          // Load the user model from database service using uid
+          userModel = await _database.getUserModel(firebaseUser.uid);
 
-      if (userModel != null) {
-        userModel!.online = true;
-      } else {
-        userModel = UserModel(
-            email: appleIdCredential!.email ?? '',
-            firstName: appleIdCredential.fullName?.givenName ?? 'Deleted',
-            userID: authResult.user?.uid ?? '',
-            lastName: appleIdCredential.fullName?.familyName ?? 'User',
-            online: true);
+          if (userModel != null) {
+            userModel!.online = true;
+          } else {
+            userModel = UserModel(
+                email: appleIdCredential!.email ?? '',
+                firstName: appleIdCredential.fullName?.givenName ?? 'Deleted',
+                userID: firebaseUser.uid,
+                lastName: appleIdCredential.fullName?.familyName ?? 'User',
+                online: true);
+          }
+
+          // Update the database model
+          return await _database.updateUserModel(userModel!);
+        }
       }
-
-      // Update the database model
-      return await _database.updateUserModel(userModel!);
     }
-
     // Return error
     return 'Couldn\'t login with apple.';
   }
@@ -73,19 +74,21 @@ class FirebaseAuthenticationService extends AuthenticationService {
       String email, String password) async {
     try {
       // Get the user credentials from firebase auth
-      UserCredential result = await firebaseAuth.signInWithEmailAndPassword(
+      UserCredential result = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
 
-      // Get the user model from the database service
-      userModel = await _database.getUserModel(result.user?.uid ?? '');
+      User? firebaseUser = result.user;
 
-      // If the user returned is null, return an error message
-      if (userModel == null) {
-        return 'Login failed';
+      if (firebaseUser != null) {
+        // Get the user model from the database service
+        userModel = await _database.getUserModel(firebaseUser.uid);
+
+        // If the user returned is null, return an error message
+        if (userModel != null) {
+          // Update the user model in the database service
+          return await _database.updateUserModel(userModel!);
+        }
       }
-
-      // Update the user model in the database service
-      return await _database.updateUserModel(userModel!);
     } on FirebaseAuthException catch (exception) {
       switch ((exception).code) {
         case 'invalid-email':
@@ -99,10 +102,8 @@ class FirebaseAuthenticationService extends AuthenticationService {
         case 'too-many-requests':
           return 'Too many attempts to sign in as this user.';
       }
-      return 'Unexpected firebase error, Please try again.';
-    } catch (e) {
-      return 'Login failed, Please try again.';
-    }
+    } catch (ignored) {}
+    return 'Login failed';
   }
 
   @override
@@ -116,8 +117,9 @@ class FirebaseAuthenticationService extends AuthenticationService {
       String mobile) async {
     try {
       // Create credenetials with a given email/pass
-      UserCredential result = await firebaseAuth.createUserWithEmailAndPassword(
-          email: emailAddress, password: password);
+      UserCredential result =
+          await _firebaseAuth.createUserWithEmailAndPassword(
+              email: emailAddress, password: password);
 
       // Create a new user model and initialize the current user
       userModel = UserModel(
@@ -139,12 +141,9 @@ class FirebaseAuthenticationService extends AuthenticationService {
       }
 
       // Update user model in database service
-      String? errorMessage = await _database.updateUserModel(userModel!);
-      if (errorMessage == null) {
-        return null;
-      } else {
-        return 'Couldn\'t sign up for firebase, Please try again.';
-      }
+      return await _database.updateUserModel(userModel!) == null
+          ? null
+          : 'Couldn\'t sign up for firebase, Please try again.';
     } on FirebaseAuthException catch (error) {
       String message = 'Couldn\'t sign up';
       switch (error.code) {
@@ -175,8 +174,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
     if (userModel != null) {
       return true;
     }
-
-    String? uid = firebaseAuth.currentUser?.uid;
+    String? uid = _firebaseAuth.currentUser?.uid;
     if (uid != null) {
       userModel = await _database.getUserModel(uid);
       if (userModel != null) {

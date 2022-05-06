@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:display/display.dart' as DisplayUtils;
 
-import 'ui/views/views.dart';
+import 'ui/screens/providers.dart';
 import 'constants/constants.dart';
 
 /// Base MaterialApp widget
@@ -33,6 +33,8 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
     // Initialize dark mode settings
     DisplayUtils.initialize(
         darkMode: Theme.of(context).brightness == Brightness.dark,
+        primary: Color(COLOR_PRIMARY),
+        accent: Color(COLOR_ACCENT),
         error: Theme.of(context).errorColor);
 
     return MaterialApp(
@@ -55,19 +57,19 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/profile':
-            return generateRoute(const ProfileView());
+            return generateRoute(const ProfileProvider());
           case '/home':
-            return generateRoute(const HomeView());
+            return generateRoute(const HomeProvider());
           case '/resetPassword':
           case '/mobileAuth':
           case '/login':
-            return generateRoute(const LoginView());
-          case '/signUp':
-            return generateRoute(const SignupView());
+            return generateRoute(const LoginProvider());
+          case '/signup':
+            return generateRoute(const SignupProvider());
           case '/auth':
-            return generateRoute(const AuthView());
+            return generateRoute(const AuthProvider());
           default:
-            return generateRoute(const OnBoardingView());
+            return generateRoute(const OnBoardingProvider());
         }
       },
     );

@@ -12,26 +12,21 @@ class FirestoreDatabaseService extends DatabaseService {
 
   @override
   Future<String?> updateUserModel(UserModel user) async {
-    return await firestore
-        .collection(USERS)
-        .doc(user.userID)
-        .set(user.toJson())
-        .then((document) {
+    try {
+      await firestore.collection(USERS).doc(user.userID).set(user.toJson());
       return null;
-    }, onError: (e) {
-      return e;
-    });
+    } catch (e) {
+      return '$e';
+    }
   }
 
   @override
   Future<UserModel?> getUserModel(String uid) async {
     DocumentSnapshot<Map<String, dynamic>> userDocument =
         await firestore.collection(USERS).doc(uid).get();
-    if (userDocument.exists) {
-      return UserModel.fromJson(userDocument.data() ?? {});
-    } else {
-      return null;
-    }
+    return userDocument.exists
+        ? UserModel.fromJson(userDocument.data() ?? {})
+        : null;
   }
 
   @override
