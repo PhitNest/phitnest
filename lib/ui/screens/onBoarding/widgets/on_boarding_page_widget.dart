@@ -1,4 +1,6 @@
+import 'package:display/display.dart';
 import 'package:flutter/material.dart';
+import 'package:phitnest/ui/widgets/logo/logo_widget.dart';
 
 /// This is the view for a single onBoarding page
 class OnBoardingPageWidget extends StatelessWidget {
@@ -20,32 +22,26 @@ class OnBoardingPageWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        image is String
-            ? Image.asset(
-                image,
+      children: [
+        image == null
+            ? LogoWidget(
                 color: Colors.white,
-                width: 150,
-                height: 150,
-                fit: BoxFit.cover,
               )
             : Icon(
                 image as IconData,
                 color: Colors.white,
                 size: 150,
               ),
-        SizedBox(height: 40),
         Text(
           title.toUpperCase(),
-          style: TextStyle(
-              color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+          style: HeadingTextStyle(size: Size.SMALL, color: Colors.white),
           textAlign: TextAlign.center,
         ),
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
             subTitle,
-            style: TextStyle(color: Colors.white, fontSize: 14.0),
+            style: BodyTextStyle(size: Size.SMALL, color: Colors.white),
             textAlign: TextAlign.center,
           ),
         ),

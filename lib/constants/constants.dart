@@ -17,11 +17,6 @@ const COLOR_PRIMARY = LOGO_OUTER_RING;
 // Device preference key
 const FINISHED_ON_BOARDING_SETTING = 'finishedOnBoarding';
 
-// Time constants
-const SECOND_MILLIS = 1000;
-const MINUTE_MILLIS = 60 * SECOND_MILLIS;
-const HOUR_MILLIS = 60 * MINUTE_MILLIS;
-
 // Database document collection index
 const USERS = 'users';
 

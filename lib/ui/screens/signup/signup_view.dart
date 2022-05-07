@@ -52,12 +52,7 @@ class SignupView extends BaseView {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: Colors.transparent,
-          iconTheme:
-              IconThemeData(color: isDarkMode ? Colors.white : Colors.black),
-        ),
+        appBar: BackButtonAppBar(),
         body: SingleChildScrollView(
           child: Container(
             margin: EdgeInsets.only(left: 16.0, right: 16, bottom: 16),
@@ -170,29 +165,9 @@ class SignupView extends BaseView {
                   Padding(
                     padding: const EdgeInsets.only(
                         right: 40.0, left: 40.0, top: 40.0),
-                    child: ConstrainedBox(
-                      constraints:
-                          const BoxConstraints(minWidth: double.infinity),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: primaryColor,
-                          padding: EdgeInsets.only(top: 12, bottom: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: borderRadius,
-                            side: BorderSide(
-                              color: primaryColor,
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          'Sign Up',
-                          style: HeadingTextStyle(
-                            size: Size.SMALL,
-                            color: isDarkMode ? Colors.black : Colors.white,
-                          ),
-                        ),
-                        onPressed: onClickSignup,
-                      ),
+                    child: StyledButton(
+                      text: 'Sign Up',
+                      onClick: onClickSignup,
                     ),
                   ),
                   Padding(

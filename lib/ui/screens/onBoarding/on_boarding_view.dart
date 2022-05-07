@@ -32,7 +32,7 @@ class OnBoardingView extends BaseView {
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: primaryColor,
-        body: Stack(children: <Widget>[
+        body: Stack(children: [
           PageView.builder(
               itemBuilder: (context, index) => OnBoardingPageWidget(
                   image: image,
@@ -54,13 +54,11 @@ class OnBoardingView extends BaseView {
                   child: OutlinedButton(
                     // Set on boarding finished to true and redirect to auth.
                     onPressed: onClickContinue,
-                    child: Text(
-                      'Continue',
-                      style: TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
+                    child: Text('Continue',
+                        style: BodyTextStyle(
+                            size: Size.SMALL,
+                            color: Colors.white,
+                            weight: FontWeight.bold)),
                     style: OutlinedButton.styleFrom(
                         side: BorderSide(color: Colors.white),
                         shape: StadiumBorder()),

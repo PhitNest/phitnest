@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'app.dart';
 
-bool usePreview = false;
+bool usePreview = true;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

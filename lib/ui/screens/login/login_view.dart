@@ -33,18 +33,8 @@ class LoginView extends BaseView {
 
   @override
   Widget build(BuildContext context) {
-    // This function will show a progress widget while we wait for a login
-    // request to go through the authentication service. This will show an alert
-    // with an error message if there is an error or it will redirect the user
-    // to the home view.
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        iconTheme:
-            IconThemeData(color: isDarkMode ? Colors.white : Colors.black),
-        elevation: 0.0,
-      ),
+      appBar: BackButtonAppBar(),
       body: Form(
         key: formKey,
         autovalidateMode: validate,
@@ -107,24 +97,10 @@ class LoginView extends BaseView {
             ),
             Padding(
               padding: const EdgeInsets.only(right: 40.0, left: 40.0, top: 40),
-              child: ConstrainedBox(
-                  constraints: const BoxConstraints(minWidth: double.infinity),
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: primaryColor,
-                        padding: EdgeInsets.only(top: 12, bottom: 12),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: borderRadius,
-                            side: BorderSide(color: primaryColor)),
-                      ),
-                      child: Text(
-                        'Log In',
-                        style: HeadingTextStyle(
-                          size: Size.SMALL,
-                          color: isDarkMode ? Colors.black : Colors.white,
-                        ),
-                      ),
-                      onPressed: () => onClickLogin('email'))),
+              child: StyledButton(
+                text: 'Login',
+                onClick: () => onClickLogin,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(32.0),
