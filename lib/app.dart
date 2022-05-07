@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:display/display.dart' as DisplayUtils;
@@ -39,10 +40,12 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
 
     return MaterialApp(
       navigatorKey: _navigatorKey,
+      useInheritedMediaQuery: true,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
-      locale: context.locale,
+      locale: DevicePreview.locale(context),
       title: 'Phitnest',
+      builder: DevicePreview.appBuilder,
       theme: ThemeData(
           bottomSheetTheme: BottomSheetThemeData(
               backgroundColor: Colors.white.withOpacity(.9)),
