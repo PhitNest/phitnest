@@ -15,11 +15,6 @@ const COLOR_ACCENT = 0xFFff8c9b;
 const COLOR_PRIMARY_DARK = 0xFFb42442;
 const COLOR_PRIMARY = LOGO_OUTER_RING;
 
-// Font sizes
-const HEADER_SIZE_LARGE = 25.0;
-const HEADER_SIZE_MEDIUM = 24.0;
-const HEADER_SIZE_SMALL = 20.0;
-
 // Device preference key
 const FINISHED_ON_BOARDING_SETTING = 'finishedOnBoarding';
 

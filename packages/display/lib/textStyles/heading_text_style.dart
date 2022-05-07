@@ -1,11 +1,13 @@
-import 'package:display/display.dart';
 import 'package:flutter/material.dart';
 
-import '../../../constants/constants.dart';
-
-enum Size { LARGE, MEDIUM, SMALL }
+import '../display.dart';
 
 class HeadingTextStyle extends TextStyle {
+  // Font sizes
+  static const HEADER_SIZE_LARGE = 25.0;
+  static const HEADER_SIZE_MEDIUM = 24.0;
+  static const HEADER_SIZE_SMALL = 20.0;
+
   HeadingTextStyle({required Size size, Color? color})
       : super(
             color: color ?? primaryColor,
