@@ -2,7 +2,6 @@ import 'package:display/display.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/constants.dart';
-import '../../widgets/widgets.dart';
 import '../views.dart';
 
 /// This is the auth screen view

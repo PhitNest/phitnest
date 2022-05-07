@@ -1,5 +1,4 @@
 import 'package:get_it/get_it.dart';
-import 'package:phitnest/ui/screens/auth/auth_model.dart';
 
 import 'ui/screens/models.dart';
 import 'services/firebase/firebase_service.dart';
