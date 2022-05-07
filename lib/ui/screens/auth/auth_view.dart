@@ -1,5 +1,7 @@
 import 'package:display/display.dart';
 import 'package:flutter/material.dart';
+import 'package:phitnest/ui/widgets/logo/logo_widget.dart';
+import 'package:phitnest/ui/widgets/styledButton/styled_button.dart';
 
 import '../../../constants/constants.dart';
 import '../views.dart';
@@ -21,85 +23,46 @@ class AuthView extends BaseView {
               // keyboard open (popping back from login or signup with keyboard
               // still open)
               child: SingleChildScrollView(
+                  child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset(
-              LOGO_PATH,
-              width: 150.0,
-              height: 150.0,
-              color: primaryColor,
-              fit: BoxFit.cover,
+          children: [
+            LogoWidget(
+              scale: 2,
+            ),
+            Text(
+              'Connecting Communities',
+              textAlign: TextAlign.center,
+              style: HeadingTextStyle(size: Size.MEDIUM),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 16, top: 32, right: 16, bottom: 8),
-              child: Text(
-                'Find your soul mate',
-                textAlign: TextAlign.center,
-                style: HeadingTextStyle(size: Size.MEDIUM),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-              child: Text(
-                'Match and chat with people you like from your area',
-                style: TextStyle(fontSize: 18),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 40.0, left: 40.0, top: 40),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(minWidth: double.infinity),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: primaryColor,
-                    textStyle:
-                        HeadingTextStyle(size: Size.SMALL, color: Colors.white),
-                    padding: EdgeInsets.only(top: 12, bottom: 12),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: borderRadius,
-                        side: BorderSide(color: primaryColor)),
+              padding: const EdgeInsets.only(left: 24, right: 24, top: 16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Match and get active with people in your area',
+                    style: BodyTextStyle(size: Size.LARGE),
+                    textAlign: TextAlign.center,
                   ),
-                  child: Text(
-                    'Log In',
-                    style:
-                        HeadingTextStyle(size: Size.SMALL, color: Colors.white),
-                  ),
-                  onPressed: onClickLogin,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  right: 40.0, left: 40.0, top: 20, bottom: 20),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(minWidth: double.infinity),
-                child: TextButton(
-                  style: ButtonStyle(
-                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      EdgeInsets.only(top: 12, bottom: 12),
-                    ),
-                    shape: MaterialStateProperty.all<OutlinedBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: borderRadius,
-                        side: BorderSide(
-                          color: primaryColor,
-                        ),
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40, bottom: 20),
+                    child: StyledButton(
+                      text: 'Log In',
+                      onClick: onClickLogin,
                     ),
                   ),
-                  child: Text(
-                    'Sign Up',
-                    style: HeadingTextStyle(size: Size.SMALL),
-                  ),
-                  onPressed: onClickSignup,
-                ),
+                  StyledButton(
+                    text: 'Sign Up',
+                    onClick: onClickSignup,
+                    buttonColor: Colors.white,
+                    textColor: primaryColor,
+                  )
+                ],
               ),
-            )
+            ),
           ],
         ),
-      )));
+      ))));
 }

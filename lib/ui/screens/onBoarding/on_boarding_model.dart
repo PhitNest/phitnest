@@ -9,7 +9,7 @@ class OnBoardingModel extends BaseModel {
 
   ///list of strings containing onBoarding titles
   final List<String> _titlesList = [
-    'Get a Date',
+    'Welcome!',
     'Private Messages',
     'Send Photos',
     'Get Notified'
@@ -18,7 +18,7 @@ class OnBoardingModel extends BaseModel {
   /// list of strings containing onBoarding subtitles, the small text under the
   /// title
   final List<String> _subtitlesList = [
-    'Swipe right to get a match with people you like from your area.',
+    '',
     'Chat privately with people you match.',
     'Have fun with your matches by sending photos and videos to each other.',
     'Receive notifications when you get new messages and matches.'
@@ -27,7 +27,7 @@ class OnBoardingModel extends BaseModel {
   /// list containing image paths or IconData representing the image of each
   /// page
   final List<dynamic> _imageList = [
-    'assets/images/app_logo.png',
+    null,
     Icons.chat_bubble_outline,
     Icons.photo_camera,
     Icons.notifications_none
