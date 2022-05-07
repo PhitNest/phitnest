@@ -1,4 +1,4 @@
-import 'package:display/display_utils.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -23,29 +23,44 @@ class App extends StatelessWidget with WidgetsBindingObserver {
     DisplayUtils.initialize(context);
     WidgetsBinding.instance?.addObserver(this);
 
-    // Pass the back end down to children
-    return ChangeNotifierProvider.value(
-        value: backendModel,
-        child: MaterialApp(
-            navigatorKey: navigatorKey,
-            localizationsDelegates: context.localizationDelegates,
-            supportedLocales: context.supportedLocales,
-            locale: context.locale,
-            title: 'Phitnest',
-            theme: ThemeData(
-                bottomSheetTheme: BottomSheetThemeData(
-                    backgroundColor: Colors.white.withOpacity(.9)),
-                colorScheme: ColorScheme.light(secondary: Color(COLOR_PRIMARY)),
-                brightness: Brightness.light),
-            darkTheme: ThemeData(
-                bottomSheetTheme: BottomSheetThemeData(
-                    backgroundColor: Colors.black12.withOpacity(.3)),
-                colorScheme: ColorScheme.dark(secondary: Color(COLOR_PRIMARY)),
-                brightness: Brightness.dark),
-            debugShowCheckedModeBanner: false,
-            color: Color(COLOR_PRIMARY),
-            // The redirector will route the user to the proper page
-            home: const RedirectorScreen()));
+    return MaterialApp(
+      navigatorKey: _navigatorKey,
+      useInheritedMediaQuery: true,
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: DevicePreview.locale(context),
+      title: 'Phitnest',
+      builder: DevicePreview.appBuilder,
+      theme: ThemeData(
+          bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: Colors.white.withOpacity(.9)),
+          brightness: Brightness.light),
+      darkTheme: ThemeData(
+          bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: Colors.black12.withOpacity(.3)),
+          brightness: Brightness.dark),
+      debugShowCheckedModeBanner: false,
+      color: Color(COLOR_PRIMARY),
+      initialRoute: '/',
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/profile':
+            return generateRoute(const ProfileProvider());
+          case '/home':
+            return generateRoute(const HomeProvider());
+          case '/resetPassword':
+          case '/mobileAuth':
+          case '/login':
+            return generateRoute(const LoginProvider());
+          case '/signup':
+            return generateRoute(const SignupProvider());
+          case '/auth':
+            return generateRoute(const AuthProvider());
+          default:
+            return generateRoute(const OnBoardingProvider());
+        }
+      },
+    );
   }
 
   @override
