@@ -8,8 +8,13 @@ class BodyTextStyle extends TextStyle {
   static const MEDIUM = 15.0;
   static const SMALL = 14.0;
 
-  BodyTextStyle({required Size size, Color? color, FontWeight? weight})
+  BodyTextStyle(
+      {required Size size,
+      Color? color,
+      FontWeight? weight,
+      double? letterSpacing})
       : super(
+            letterSpacing: letterSpacing,
             color: color,
             fontWeight: weight,
             fontSize: size == Size.LARGE
