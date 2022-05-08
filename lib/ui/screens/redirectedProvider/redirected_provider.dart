@@ -8,7 +8,7 @@ import '../views.dart';
 /// condition is met.
 abstract class RedirectedProvider<T extends BaseModel, K extends BaseView>
     extends BaseProvider<T, K> {
-  const RedirectedProvider({Key? key}) : super(key: key);
+  RedirectedProvider({Key? key}) : super(key: key);
 
   /// This is the route to redirect to.
   String get redirectRoute;
@@ -18,6 +18,8 @@ abstract class RedirectedProvider<T extends BaseModel, K extends BaseView>
 
   @override
   init(BuildContext context, T model) async {
+    if (!await super.init(context, model)) return false;
+
     if (await shouldRedirect) {
       Navigator.pushNamedAndRemoveUntil(context, redirectRoute, (_) => false);
       return false;

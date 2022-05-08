@@ -9,7 +9,7 @@ class OnBoardingModel extends BaseModel {
 
   ///list of strings containing onBoarding titles
   final List<String> _titlesList = [
-    'Welcome!',
+    'Welcome to PhitNest',
     'Private Messages',
     'Send Photos',
     'Get Notified'

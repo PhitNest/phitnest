@@ -33,6 +33,7 @@ class OnBoardingView extends BaseView {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: primaryColor,
         body: Stack(children: [
+          // Build the page widget
           PageView.builder(
               itemBuilder: (context, index) => OnBoardingPageWidget(
                   image: image,
@@ -45,42 +46,40 @@ class OnBoardingView extends BaseView {
           // Only show the continue button if this is the last page
           Visibility(
             visible: isLastPage,
-            child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Align(
-                  alignment: Directionality.of(context) == TextDirection.ltr
-                      ? Alignment.bottomRight
-                      : Alignment.bottomLeft,
-                  child: OutlinedButton(
-                    // Set on boarding finished to true and redirect to auth.
-                    onPressed: onClickContinue,
-                    child: Text('Continue',
-                        style: BodyTextStyle(
-                            size: Size.SMALL,
-                            color: Colors.white,
-                            weight: FontWeight.bold)),
-                    style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: Colors.white),
-                        shape: StadiumBorder()),
-                  ),
-                )),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 50.0),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: SmoothPageIndicator(
-                controller: pageController,
-                count: numPages,
-                effect: ScrollingDotsEffect(
-                    activeDotColor: Colors.white,
-                    dotColor: Colors.grey.shade400,
-                    dotWidth: 8,
-                    dotHeight: 8,
-                    fixedCenter: true),
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              alignment: Directionality.of(context) == TextDirection.ltr
+                  ? Alignment.bottomRight
+                  : Alignment.bottomLeft,
+              child: OutlinedButton(
+                // Set on boarding finished to true and redirect to auth.
+                onPressed: onClickContinue,
+                child: Text('Continue',
+                    style: BodyTextStyle(
+                        size: Size.SMALL,
+                        color: Colors.white,
+                        weight: FontWeight.bold)),
+                style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.white),
+                    shape: StadiumBorder()),
               ),
             ),
-          )
+          ),
+          // Show dots at the bottom to indicate current screen
+          Container(
+            padding: const EdgeInsets.only(bottom: 50.0),
+            alignment: Alignment.bottomCenter,
+            child: SmoothPageIndicator(
+              controller: pageController,
+              count: numPages,
+              effect: ScrollingDotsEffect(
+                  activeDotColor: Colors.white,
+                  dotColor: Colors.grey.shade400,
+                  dotWidth: 8,
+                  dotHeight: 8,
+                  fixedCenter: true),
+            ),
+          ),
         ]),
       );
 }

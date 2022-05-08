@@ -8,36 +8,37 @@ import 'on_boarding_view.dart';
 
 class OnBoardingProvider
     extends PreAuthenticationProvider<OnBoardingModel, OnBoardingView> {
-  const OnBoardingProvider({Key? key}) : super(key: key);
+  OnBoardingProvider({Key? key}) : super(key: key);
 
   @override
   init(BuildContext context, OnBoardingModel model) async {
-    if (await super.init(context, model)) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      if (prefs.getBool(FINISHED_ON_BOARDING_SETTING) ?? false) {
-        Navigator.pushNamedAndRemoveUntil(context, '/auth', ((_) => false));
-        return false;
-      } else {
-        return true;
-      }
+    if (!await super.init(context, model)) return false;
+
+    if ((await SharedPreferences.getInstance())
+            .getBool(FINISHED_ON_BOARDING_SETTING) ??
+        false) {
+      Navigator.pushNamedAndRemoveUntil(context, '/auth', ((_) => false));
+      return false;
+    } else {
+      return true;
     }
-    return false;
   }
 
   @override
-  OnBoardingView buildView(BuildContext context, OnBoardingModel model) =>
-      OnBoardingView(
-          image: model.image,
-          title: model.title,
-          subtitle: model.subtitle,
-          pageController: model.pageController,
-          numPages: model.numPages,
-          isLastPage: model.isLastPage,
-          onPageChange: (int newPage) => model.currentIndex = newPage,
-          onClickContinue: () =>
-              SharedPreferences.getInstance().then((instance) {
-                instance.setBool(FINISHED_ON_BOARDING_SETTING, true);
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/auth', (_) => false);
-              }));
+  Widget buildLoading(BuildContext context, String? text) =>
+      super.buildLoading(context, 'Device Data');
+
+  @override
+  OnBoardingView build(BuildContext context) => OnBoardingView(
+      image: model.image,
+      title: model.title,
+      subtitle: model.subtitle,
+      pageController: model.pageController,
+      numPages: model.numPages,
+      isLastPage: model.isLastPage,
+      onPageChange: (int newPage) => model.currentIndex = newPage,
+      onClickContinue: () => SharedPreferences.getInstance().then((instance) {
+            instance.setBool(FINISHED_ON_BOARDING_SETTING, true);
+            Navigator.pushNamedAndRemoveUntil(context, '/auth', (_) => false);
+          }));
 }

@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants/constants.dart';
+const LOGO_PATH = 'assets/images/app_logo.png';
+const LOGO_PATH_WITH_TEXT = 'assets/images/app_logo_text.png';
 
 class LogoWidget extends StatelessWidget {
   final double scale;
   final Color? color;
+  final bool showText;
+  final EdgeInsets? padding;
 
-  const LogoWidget({Key? key, this.scale = 1, this.color}) : super(key: key);
+  const LogoWidget(
+      {Key? key,
+      this.padding,
+      this.showText = false,
+      this.scale = 1,
+      this.color})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Image.asset(
-        LOGO_PATH,
-        scale: 1 / scale,
+  Widget build(BuildContext context) => Container(
+      padding: padding ?? EdgeInsets.zero,
+      child: Image.asset(
+        showText ? LOGO_PATH_WITH_TEXT : LOGO_PATH,
+        width: 216 * scale,
+        height: 216 * scale,
         fit: BoxFit.cover,
         color: color,
-      );
+      ));
 }

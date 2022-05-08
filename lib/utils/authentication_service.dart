@@ -16,7 +16,7 @@ abstract class AuthenticationService {
   /// Requests login service from apple, and initializes [userModel] with the
   /// result. Returns null if the login was successful, returns an error if the
   /// login fails.
-  Future<String?> loginWithApple();
+  Future<String?> loginWithApple(Position? locationData, String? ip);
 
   /// Sends a login request to authentication and initializes [userModel]. If
   /// the login is successful, return null. Otherwise, return an error message.
@@ -31,6 +31,7 @@ abstract class AuthenticationService {
       File? profilePicture,
       String firstName,
       String lastName,
+      String ip,
       Position? locationData,
       String mobile);
 }

@@ -7,16 +7,19 @@ class StyledButton extends StatelessWidget {
   final Color? buttonColor;
   final Color? textColor;
   final Function() onClick;
+  final EdgeInsets? padding;
 
   StyledButton(
       {required this.text,
       required this.onClick,
       this.textColor,
       this.buttonColor,
+      this.padding,
       this.minWidth = double.infinity});
 
   @override
-  Widget build(BuildContext context) => ConstrainedBox(
+  Widget build(BuildContext context) => Container(
+        padding: padding ?? EdgeInsets.all(5),
         constraints: BoxConstraints(minWidth: minWidth),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(

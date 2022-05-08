@@ -8,8 +8,4 @@ abstract class DatabaseService {
 
   /// Get the user model for the given uid
   Future<UserModel?> getUserModel(String uid);
-
-  /// Updates the users location using the location service, and updates the
-  /// user document. Returns true if the location was updated.
-  Future<bool> updateLocation(UserModel user);
 }

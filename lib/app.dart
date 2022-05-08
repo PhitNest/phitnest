@@ -45,19 +45,19 @@ class App extends StatelessWidget with WidgetsBindingObserver {
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/profile':
-            return generateRoute(const ProfileProvider());
+            return generateRoute(ProfileProvider());
           case '/home':
-            return generateRoute(const HomeProvider());
+            return generateRoute(HomeProvider());
           case '/resetPassword':
           case '/mobileAuth':
           case '/login':
-            return generateRoute(const LoginProvider());
+            return generateRoute(LoginProvider());
           case '/signup':
-            return generateRoute(const SignupProvider());
+            return generateRoute(SignupProvider());
           case '/auth':
-            return generateRoute(const AuthProvider());
+            return generateRoute(AuthProvider());
           default:
-            return generateRoute(const OnBoardingProvider());
+            return generateRoute(OnBoardingProvider());
         }
       },
     );

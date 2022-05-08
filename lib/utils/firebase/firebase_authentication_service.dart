@@ -17,7 +17,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
-  Future<String?> loginWithApple() async {
+  Future<String?> loginWithApple(Position? locationData, String? ip) async {
     // Request authorization from apple
     apple.AuthorizationResult appleAuth =
         await apple.TheAppleSignIn.performRequests([
@@ -48,16 +48,22 @@ class FirebaseAuthenticationService extends AuthenticationService {
         if (firebaseUser != null) {
           // Load the user model from database service using uid
           userModel = await _database.getUserModel(firebaseUser.uid);
-
           if (userModel != null) {
             userModel!.online = true;
           } else {
             userModel = UserModel(
+                signupIP: ip,
                 email: appleIdCredential!.email ?? '',
                 firstName: appleIdCredential.fullName?.givenName ?? 'Deleted',
                 userID: firebaseUser.uid,
                 lastName: appleIdCredential.fullName?.familyName ?? 'User',
                 online: true);
+            // If the location is not null, set it
+            if (locationData != null) {
+              userModel!.signupLocation = UserLocation(
+                  latitude: locationData.latitude,
+                  longitude: locationData.longitude);
+            }
           }
 
           // Update the database model
@@ -113,6 +119,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
       File? profilePicture,
       String firstName,
       String lastName,
+      String? ip,
       Position? locationData,
       String mobile) async {
     try {
@@ -123,20 +130,20 @@ class FirebaseAuthenticationService extends AuthenticationService {
 
       // Create a new user model and initialize the current user
       userModel = UserModel(
-        email: emailAddress,
-        settings:
-            // Upload the profile picture to storage service before doing this
-            UserSettings(profilePictureURL: profilePicture == null ? '' : ''),
-        online: true,
-        mobile: mobile,
-        firstName: firstName,
-        userID: result.user?.uid ?? '',
-        lastName: lastName,
-      );
+          email: emailAddress,
+          settings:
+              // Upload the profile picture to storage service before doing this
+              UserSettings(profilePictureURL: profilePicture == null ? '' : ''),
+          online: true,
+          mobile: mobile,
+          firstName: firstName,
+          userID: result.user?.uid ?? '',
+          lastName: lastName,
+          signupIP: ip);
 
       // If the location is not null, set it
       if (locationData != null) {
-        userModel!.signUpLocation = UserLocation(
+        userModel!.signupLocation = UserLocation(
             latitude: locationData.latitude, longitude: locationData.longitude);
       }
 

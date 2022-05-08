@@ -30,6 +30,8 @@ dependencies:
     path: ./packages/location
   display:
     path: ./packages/display
+  ip:
+    path: ./packages/ip
   get_it: ^7.2.0
   device_preview: ^1.0.0
 dev_dependencies:
