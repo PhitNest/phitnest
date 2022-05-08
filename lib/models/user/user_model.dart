@@ -8,28 +8,32 @@ class UserModel {
   String email;
   String firstName;
   String lastName;
-  String mobile;
+  String? mobile;
   bool online;
   UserSettings settings;
   int lastOnlineTimestamp;
   String recentPlatform = '${Platform.operatingSystem}';
   UserLocation? location;
-  UserLocation? signUpLocation;
+  UserLocation? signupLocation;
+  String? recentIP;
+  String? signupIP;
   List photos;
 
   String get fullName => '$firstName $lastName';
 
   UserModel({
-    this.userID = '',
-    this.email = '',
-    this.firstName = '',
+    required this.userID,
+    required this.email,
+    required this.firstName,
+    this.recentIP,
+    this.signupIP,
     this.lastName = '',
-    this.mobile = '',
+    this.mobile,
     this.online = false,
     int? lastOnlineTimestamp,
     UserSettings? settings,
     this.location,
-    this.signUpLocation,
+    this.signupLocation,
     this.photos = const [],
   })  : this.lastOnlineTimestamp =
             lastOnlineTimestamp ?? DateTime.now().millisecondsSinceEpoch,
@@ -39,16 +43,18 @@ class UserModel {
       userID: parsedJson['userID'],
       email: parsedJson['email'],
       firstName: parsedJson['firstName'],
-      lastName: parsedJson['lastName'],
+      lastName: parsedJson['lastName'] ?? '',
+      recentIP: parsedJson['recentIP'],
+      signupIP: parsedJson['signupIP'],
       mobile: parsedJson['mobile'],
-      online: parsedJson['online'],
+      online: parsedJson['online'] ?? false,
       lastOnlineTimestamp: parsedJson['lastOnlineTimestamp'],
       settings: UserSettings.fromJson(parsedJson['settings']),
       location: parsedJson.containsKey('location')
           ? UserLocation.fromJson(parsedJson['location'])
           : null,
-      signUpLocation: parsedJson.containsKey('signUpLocation')
-          ? UserLocation.fromJson(parsedJson['signUpLocation'])
+      signupLocation: parsedJson.containsKey('signupLocation')
+          ? UserLocation.fromJson(parsedJson['signupLocation'])
           : null,
       photos: parsedJson['photos']);
 
@@ -58,7 +64,6 @@ class UserModel {
       'email': this.email,
       'firstName': this.firstName,
       'lastName': this.lastName,
-      'mobile': this.mobile,
       'online': this.online,
       'settings': this.settings.toJson(),
       'lastOnlineTimestamp': this.lastOnlineTimestamp,
@@ -66,12 +71,24 @@ class UserModel {
       'photos': this.photos,
     };
 
+    if (this.mobile != null) {
+      json['mobile'] = this.mobile;
+    }
+
+    if (this.signupIP != null) {
+      json['signupIP'] = this.signupIP;
+    }
+
+    if (this.recentIP != null) {
+      json['recentIP'] = this.recentIP;
+    }
+
     if (this.location != null) {
       json['location'] = this.location!.toJson();
     }
 
-    if (this.signUpLocation != null) {
-      json['signUpLocation'] = this.signUpLocation!.toJson();
+    if (this.signupLocation != null) {
+      json['signupLocation'] = this.signupLocation!.toJson();
     }
 
     return json;

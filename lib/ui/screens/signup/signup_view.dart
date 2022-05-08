@@ -10,33 +10,42 @@ import '../views.dart';
 /// This view contains a form allowing users to sign up.
 class SignupView extends BaseView {
   final GlobalKey<FormState> formKey;
+  final TextEditingController firstNameController;
+  final TextEditingController lastNameController;
+  final TextEditingController emailController;
+  final TextEditingController mobileController;
   final TextEditingController passwordController;
   final AutovalidateMode validate;
   final File? image;
   final Function() onClickSignup;
   final Function(File? image) onSaveImage;
-  final String? Function(String? confirmPassword) validateName;
-  final Function(String? confirmPassword) onSaveFirstName;
-  final Function(String? confirmPassword) onSaveLastName;
+  final String? Function(String? firstName) validateFirstName;
+  final String? Function(String? lastName) validateLastName;
+  final Function(String? firstName) onSaveFirstName;
+  final Function(String? lastName) onSaveLastName;
   final String? Function(String? email) validateEmail;
-  final Function(String? confirmPassword) onSaveEmail;
-  final String? Function(String? confirmPassword) validateMobile;
-  final Function(String? confirmPassword) onSaveMobile;
-  final String? Function(String? confirmPassword) validatePassword;
-  final Function(String? confirmPassword) onSavePassword;
+  final Function(String? email) onSaveEmail;
+  final String? Function(String? mobile) validateMobile;
+  final Function(String? mobile) onSaveMobile;
+  final String? Function(String? password) validatePassword;
+  final Function(String? password) onSavePassword;
   final String? Function(String? confirmPassword) validateConfirmPassword;
   final Function(String? confirmPassword) onSaveConfirmPassword;
-  final Function() onClickMobile;
 
   const SignupView({
     Key? key,
     required this.formKey,
+    required this.firstNameController,
+    required this.lastNameController,
+    required this.emailController,
+    required this.mobileController,
     required this.passwordController,
     required this.validate,
     required this.image,
     required this.onClickSignup,
     required this.onSaveImage,
-    required this.validateName,
+    required this.validateFirstName,
+    required this.validateLastName,
     required this.onSaveFirstName,
     required this.onSaveLastName,
     required this.validateEmail,
@@ -47,7 +56,6 @@ class SignupView extends BaseView {
     required this.onSavePassword,
     required this.validateConfirmPassword,
     required this.onSaveConfirmPassword,
-    required this.onClickMobile,
   }) : super(key: key);
 
   @override
@@ -79,9 +87,10 @@ class SignupView extends BaseView {
                           top: 16.0, right: 8.0, left: 8.0),
                       child: TextInputFormField(
                         hint: 'First Name',
+                        controller: firstNameController,
                         inputType: TextInputType.name,
                         onSaved: onSaveFirstName,
-                        validator: validateName,
+                        validator: validateFirstName,
                       ),
                     ),
                   ),
@@ -93,7 +102,8 @@ class SignupView extends BaseView {
                         child: TextInputFormField(
                             hint: 'Last Name',
                             inputType: TextInputType.name,
-                            validator: validateName,
+                            controller: lastNameController,
+                            validator: validateLastName,
                             onSaved: onSaveLastName)),
                   ),
                   ConstrainedBox(
@@ -104,6 +114,7 @@ class SignupView extends BaseView {
                         child: TextInputFormField(
                             hint: 'Email Address',
                             inputType: TextInputType.emailAddress,
+                            controller: emailController,
                             validator: validateEmail,
                             onSaved: onSaveEmail)),
                   ),
@@ -115,6 +126,7 @@ class SignupView extends BaseView {
                       child: InternationalPhoneNumberInput(
                           spaceBetweenSelectorAndTextField: 0,
                           keyboardType: TextInputType.phone,
+                          textFieldController: mobileController,
                           selectorConfig: SelectorConfig(
                               leadingPadding: 8,
                               useEmoji: true,
@@ -170,27 +182,6 @@ class SignupView extends BaseView {
                       onClick: onClickSignup,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(32.0),
-                    child: Center(
-                      child: Text(
-                        'OR',
-                        style: TextStyle(
-                            color: isDarkMode ? Colors.white : Colors.black),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: onClickMobile,
-                    child: Text(
-                      'Sign up with phone number',
-                      style: TextStyle(
-                          color: Colors.lightBlue,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                          letterSpacing: 1),
-                    ),
-                  )
                 ],
               ),
             ),

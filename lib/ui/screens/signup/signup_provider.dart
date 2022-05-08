@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:ip/ip.dart';
+import 'package:location/location.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:select_photo/select_photo.dart';
 import 'package:validation/validation.dart';
@@ -11,7 +13,7 @@ import 'signup_model.dart';
 
 class SignupProvider
     extends PreAuthenticationProvider<SignupModel, SignupView> {
-  const SignupProvider({Key? key}) : super(key: key);
+  SignupProvider({Key? key}) : super(key: key);
 
   @override
   init(BuildContext context, SignupModel model) async {
@@ -26,25 +28,31 @@ class SignupProvider
   }
 
   @override
-  SignupView buildView(BuildContext context, SignupModel model) => SignupView(
+  SignupView build(BuildContext context) => SignupView(
         formKey: model.formKey,
+        firstNameController: model.firstNameController,
+        lastNameController: model.lastNameController,
+        emailController: model.emailController,
+        mobileController: model.mobileController,
         passwordController: model.passwordController,
         validate: model.validate,
         image: model.image,
         onClickSignup: () => showProgressUntil(
             context: context,
             message: 'Creating new account, Please wait...',
-            showUntil: model.signUp,
+            showUntil: signUp,
             onDone: (result) {
               if (result != null) {
-                showAlertDialog(context, 'Login Failed', result);
+                showAlertDialog(context, 'Signup Failed', result);
               } else {
                 Navigator.pushNamedAndRemoveUntil(
                     context, '/home', (_) => false);
               }
             }),
         onSaveImage: (File? image) => model.image = image,
-        validateName: validateName,
+        validateFirstName: validateName,
+        validateLastName: (String? lastName) =>
+            lastName == '' ? null : validateName(lastName),
         onSaveFirstName: (String? firstName) => model.firstName = firstName,
         onSaveLastName: (String? lastName) => model.lastName = lastName,
         validateEmail: validateEmail,
@@ -58,6 +66,26 @@ class SignupProvider
                 model.passwordController.text, confirmPassword),
         onSaveConfirmPassword: (String? confirmPassword) =>
             model.confirmPassword = confirmPassword,
-        onClickMobile: () => Navigator.pushNamed(context, '/mobileAuth'),
       );
+
+  /// Validate the form, request the user location, and make a registration
+  /// request to the authentication service. Return null if the registration
+  /// is successful, and return an error message otherwise.
+  Future<String?> signUp() async {
+    if (model.formKey.currentState?.validate() ?? false) {
+      model.formKey.currentState!.save();
+      return await authService.signupWithEmailAndPassword(
+          model.email!.trim(),
+          model.password!.trim(),
+          model.image,
+          model.firstName!,
+          model.lastName!,
+          await userIP,
+          await getCurrentLocation(),
+          model.mobile!);
+    } else {
+      model.validate = AutovalidateMode.onUserInteraction;
+      return 'Invalid input';
+    }
+  }
 }

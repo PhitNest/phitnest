@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../services/services.dart';
-import '../../../../../locator.dart';
 import '../../models.dart';
 import '../../views.dart';
 import '../redirected_provider.dart';
@@ -9,7 +7,7 @@ import '../redirected_provider.dart';
 /// This is a provider that will redirect if the user is not authenticated.
 abstract class AuthenticatedProvider<T extends BaseModel, K extends BaseView>
     extends RedirectedProvider<T, K> {
-  const AuthenticatedProvider({Key? key}) : super(key: key);
+  AuthenticatedProvider({Key? key}) : super(key: key);
 
   /// Redirected unauthenticated users to the base route.
   @override
@@ -17,6 +15,5 @@ abstract class AuthenticatedProvider<T extends BaseModel, K extends BaseView>
 
   /// Redirect the user to the base route if they are not authenticated.
   @override
-  Future<bool> get shouldRedirect async =>
-      !await locator<AuthenticationService>().isAuthenticated();
+  Future<bool> get shouldRedirect async => !await authService.isAuthenticated();
 }

@@ -1,9 +1,7 @@
 import 'package:display/display.dart';
 import 'package:flutter/material.dart';
-import 'package:phitnest/ui/widgets/logo/logo_widget.dart';
-import 'package:phitnest/ui/widgets/styledButton/styled_button.dart';
 
-import '../../../constants/constants.dart';
+import '../../widgets/widgets.dart';
 import '../views.dart';
 
 /// This is the auth screen view
@@ -18,6 +16,7 @@ class AuthView extends BaseView {
   }) : super(key: key);
 
   Widget build(BuildContext context) => Scaffold(
+          // Center everything
           body: Center(
               // This scroll view blocks render overflows when the user has the
               // keyboard open (popping back from login or signup with keyboard
@@ -29,29 +28,31 @@ class AuthView extends BaseView {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             LogoWidget(
-              scale: 2,
-            ),
-            Text(
-              'Connecting Communities',
-              textAlign: TextAlign.center,
-              style: HeadingTextStyle(size: Size.MEDIUM),
+              showText: true,
+              padding: EdgeInsets.symmetric(vertical: 30),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 24, right: 24, top: 16),
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text(
+                  'Connecting Communities',
+                  textAlign: TextAlign.center,
+                  style: HeadingTextStyle(size: Size.MEDIUM),
+                )),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Match and get active with people in your area',
-                    style: BodyTextStyle(size: Size.LARGE),
-                    textAlign: TextAlign.center,
-                  ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 40, bottom: 20),
-                    child: StyledButton(
-                      text: 'Log In',
-                      onClick: onClickLogin,
-                    ),
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Text(
+                        'Let\'s promote health and fitness together',
+                        style: BodyTextStyle(size: Size.LARGE),
+                        textAlign: TextAlign.center,
+                      )),
+                  StyledButton(
+                    text: 'Log In',
+                    onClick: onClickLogin,
                   ),
                   StyledButton(
                     text: 'Sign Up',
