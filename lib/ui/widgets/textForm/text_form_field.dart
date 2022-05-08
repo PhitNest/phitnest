@@ -40,7 +40,7 @@ class TextInputFormField extends StatelessWidget {
           validator: validator,
           onSaved: onSaved,
           controller: controller ?? TextEditingController(),
-          style: const TextStyle(fontSize: 18.0),
+          style: BodyTextStyle(size: Size.LARGE),
           cursorColor: primaryColor,
           decoration: TextFormStyleDecoration(hint: hint)));
 }
