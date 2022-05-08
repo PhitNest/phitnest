@@ -8,7 +8,7 @@ import 'app.dart';
 import 'locator.dart';
 import 'constants/constants.dart';
 
-bool usePreview = true;
+bool usePreview = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

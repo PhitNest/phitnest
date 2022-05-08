@@ -19,7 +19,7 @@ class LoadingWidget extends StatefulWidget {
 class _LoadingWidgetState extends State<LoadingWidget>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller =
-      AnimationController(vsync: this, duration: Duration(seconds: 2))
+      AnimationController(vsync: this, duration: Duration(seconds: 1))
         ..repeat();
 
   int numDots = 0;
@@ -51,7 +51,7 @@ class _LoadingWidgetState extends State<LoadingWidget>
                     angle: _controller.value * 2 * pi,
                     child: LogoWidget(
                       padding: EdgeInsets.all(20),
-                      scale: 0.5,
+                      scale: 0.25,
                       color: Colors.white,
                     ),
                   )),

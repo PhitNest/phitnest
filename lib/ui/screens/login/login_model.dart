@@ -9,6 +9,10 @@ class LoginModel extends BaseModel {
   /// Form key
   final GlobalKey<FormState> formKey = GlobalKey();
 
+  final emailController = TextEditingController();
+
+  final passwordController = TextEditingController();
+
   /// Form fields
   String? email, password;
 
