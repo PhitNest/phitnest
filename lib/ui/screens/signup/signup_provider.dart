@@ -28,7 +28,7 @@ class SignupProvider
   }
 
   @override
-  SignupView build(BuildContext context) => SignupView(
+  SignupView build(BuildContext context, SignupModel model) => SignupView(
         formKey: model.formKey,
         firstNameController: model.firstNameController,
         lastNameController: model.lastNameController,
@@ -40,7 +40,7 @@ class SignupProvider
         onClickSignup: () => showProgressUntil(
             context: context,
             message: 'Creating new account, Please wait...',
-            showUntil: signUp,
+            showUntil: () => signUp(model),
             onDone: (result) {
               if (result != null) {
                 showAlertDialog(context, 'Signup Failed', result);
@@ -65,7 +65,7 @@ class SignupProvider
   /// Validate the form, request the user location, and make a registration
   /// request to the authentication service. Return null if the registration
   /// is successful, and return an error message otherwise.
-  Future<String?> signUp() async {
+  Future<String?> signUp(SignupModel model) async {
     if (model.formKey.currentState?.validate() ?? false) {
       model.formKey.currentState!.save();
       return await authService.signupWithEmailAndPassword(

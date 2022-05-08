@@ -21,7 +21,7 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
       await updateActivity();
 
   @override
-  HomeView build(BuildContext context) => const HomeView();
+  HomeView build(BuildContext context, HomeModel model) => const HomeView();
 
   Future<bool> updateActivity() async {
     if (user != null) {
