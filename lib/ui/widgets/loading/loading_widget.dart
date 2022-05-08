@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 
 import '../widgets.dart';
 
-const MAX_NUM_DOTS = 4;
+const MAX_NUM_DOTS = 3;
+
+// INCREASE THIS TO SHIFT THE LOADING TEXT LEFT, DECREASE TO SHIFT RIGHT
+const TEXT_OFFSET = 75;
 
 class LoadingWidget extends StatefulWidget {
   final String? text;
@@ -26,13 +29,13 @@ class _LoadingWidgetState extends State<LoadingWidget>
 
   @override
   Widget build(BuildContext context) {
-    String text = 'Loading' + (widget.text != null ? ' ${widget.text}' : '');
+    String text = widget.text ?? 'loading';
 
     for (int i = 0; i < numDots; i++) {
       text += '.';
     }
 
-    numDots = (numDots + 1) % MAX_NUM_DOTS;
+    numDots = (numDots + 1) % (MAX_NUM_DOTS + 1);
 
     Future.delayed(Duration(milliseconds: 250), () {
       try {
@@ -55,10 +58,15 @@ class _LoadingWidgetState extends State<LoadingWidget>
                       color: Colors.white,
                     ),
                   )),
-          Text(
-            text,
-            style: HeadingTextStyle(size: Size.SMALL, color: Colors.white),
-          )
+          Container(
+              padding: EdgeInsets.only(
+                  left: (MediaQuery.of(context).size.width - TEXT_OFFSET) / 2),
+              constraints: BoxConstraints(minWidth: double.infinity),
+              child: Text(
+                text,
+                textAlign: TextAlign.left,
+                style: HeadingTextStyle(size: Size.SMALL, color: Colors.white),
+              ))
         ])));
   }
 
