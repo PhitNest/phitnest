@@ -10,6 +10,8 @@ import '../views.dart';
 class LoginView extends BaseView {
   final GlobalKey<FormState> formKey;
   final AutovalidateMode validate;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
   final String? Function(String? email) validateEmail;
   final Function(String? email) onSaveEmail;
   final String? Function(String? password) validatePassword;
@@ -21,6 +23,8 @@ class LoginView extends BaseView {
   const LoginView(
       {Key? key,
       required this.formKey,
+      required this.emailController,
+      required this.passwordController,
       required this.validate,
       required this.validateEmail,
       required this.onSaveEmail,
@@ -59,6 +63,7 @@ class LoginView extends BaseView {
                   child: TextInputFormField(
                     hint: 'Email Address',
                     onSaved: onSaveEmail,
+                    controller: emailController,
                     inputType: TextInputType.emailAddress,
                     validator: validateEmail,
                   ),
@@ -71,6 +76,7 @@ class LoginView extends BaseView {
                   child: TextInputFormField(
                     hint: 'Password',
                     validator: validatePassword,
+                    controller: passwordController,
                     onSaved: onSavePassword,
                     hide: true,
                     onSubmit: () => onClickLogin('email'),
@@ -99,7 +105,7 @@ class LoginView extends BaseView {
               padding: const EdgeInsets.only(right: 40.0, left: 40.0, top: 40),
               child: StyledButton(
                 text: 'Login',
-                onClick: () => onClickLogin,
+                onClick: () => onClickLogin('email'),
               ),
             ),
             Padding(

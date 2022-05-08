@@ -15,6 +15,8 @@ class LoginProvider extends PreAuthenticationProvider<LoginModel, LoginView> {
   LoginView build(BuildContext context) => LoginView(
         formKey: model.formKey,
         validate: model.validate,
+        emailController: model.emailController,
+        passwordController: model.passwordController,
         validateEmail: validateEmail,
         onSaveEmail: (String? email) => model.email = email,
         validatePassword: validatePassword,
@@ -22,7 +24,7 @@ class LoginProvider extends PreAuthenticationProvider<LoginModel, LoginView> {
         onClickLogin: (String method) => showProgressUntil(
             context: context,
             message: 'Logging in, please wait...',
-            showUntil: () => login(method),
+            showUntil: () async => await login(method),
             onDone: (result) {
               if (result != null) {
                 showAlertDialog(context, 'Login Failed', result);
@@ -40,7 +42,6 @@ class LoginProvider extends PreAuthenticationProvider<LoginModel, LoginView> {
   Future<String?> login(String method) async {
     if (model.formKey.currentState?.validate() ?? false) {
       model.formKey.currentState!.save();
-
       switch (method) {
         case 'apple':
           try {
