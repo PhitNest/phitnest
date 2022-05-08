@@ -10,30 +10,24 @@ import 'base_view.dart';
 /// This class provides state in the form of a base model to UI views.
 abstract class BaseProvider<T extends BaseModel, K extends BaseView>
     extends StatefulWidget {
-  BaseProvider({Key? key}) : super(key: key);
+  const BaseProvider({Key? key}) : super(key: key);
 
-  /// This is the authentication service
-  final AuthenticationService authService = locator<AuthenticationService>();
+  /// Gets the authentication service
+  AuthenticationService get authService => locator<AuthenticationService>();
 
-  /// This is the database service
-  final DatabaseService databaseService = locator<DatabaseService>();
-
-  /// This is the most recently built model. Do not use this in a constructor.
-  late T model;
+  /// Gets the database service
+  DatabaseService get databaseService => locator<DatabaseService>();
 
   /// This is called in the initState method before building the view. Returns
-  /// true if the screen was properly initialized.
-  Future<bool> init(BuildContext context, T model) async {
-    this.model = model;
-    return true;
-  }
+  /// true if the screen should be displayed, or false if the screen should
+  /// remain loading.
+  Future<bool> init(BuildContext context, T model) async => true;
 
-  /// This is called on disposal of the screen. Returns true if the screen
-  /// was properly disposed.
-  onDispose() {}
+  /// This is called on disposal of the screen.
+  onDispose(T model) {}
 
   /// This will build and return the view given the model.
-  K build(BuildContext context);
+  K build(BuildContext context, T model);
 
   /// This builder will provide a loading widget until the loading flag in
   /// the model is set to false.
@@ -66,11 +60,11 @@ class _BaseProviderState<T extends BaseModel, K extends BaseView>
       builder: (context, child) => Consumer<T>(
           builder: (context, model, child) => model.loading
               ? widget.buildLoading(context, null)
-              : widget.build(context)));
+              : widget.build(context, model)));
 
   @override
   dispose() {
-    widget.onDispose();
+    widget.onDispose(model);
     super.dispose();
   }
 }

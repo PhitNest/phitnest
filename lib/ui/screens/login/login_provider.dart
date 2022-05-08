@@ -12,7 +12,7 @@ class LoginProvider extends PreAuthenticationProvider<LoginModel, LoginView> {
   LoginProvider({Key? key}) : super(key: key);
 
   @override
-  LoginView build(BuildContext context) => LoginView(
+  LoginView build(BuildContext context, LoginModel model) => LoginView(
         formKey: model.formKey,
         validate: model.validate,
         emailController: model.emailController,
@@ -24,7 +24,7 @@ class LoginProvider extends PreAuthenticationProvider<LoginModel, LoginView> {
         onClickLogin: (String method) => showProgressUntil(
             context: context,
             message: 'Logging in, please wait...',
-            showUntil: () async => await login(method),
+            showUntil: () async => await login(model, method),
             onDone: (result) {
               // Login failed, show error alert dialog
               if (result != null) {
@@ -40,7 +40,7 @@ class LoginProvider extends PreAuthenticationProvider<LoginModel, LoginView> {
         onClickMobile: () => Navigator.pushNamed(context, '/mobileAuth'),
       );
 
-  Future<String?> login(String method) async {
+  Future<String?> login(LoginModel model, String method) async {
     // Validate form
     if (model.formKey.currentState?.validate() ?? false) {
       // Saves state to all of the text controllers

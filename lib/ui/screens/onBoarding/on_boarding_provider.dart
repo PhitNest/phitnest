@@ -25,16 +25,19 @@ class OnBoardingProvider
   }
 
   @override
-  OnBoardingView build(BuildContext context) => OnBoardingView(
-      image: model.image,
-      title: model.title,
-      subtitle: model.subtitle,
-      pageController: model.pageController,
-      numPages: model.numPages,
-      isLastPage: model.isLastPage,
-      onPageChange: (int newPage) => model.currentIndex = newPage,
-      onClickContinue: () => SharedPreferences.getInstance().then((instance) {
-            instance.setBool(FINISHED_ON_BOARDING_SETTING, true);
-            Navigator.pushNamedAndRemoveUntil(context, '/auth', (_) => false);
-          }));
+  OnBoardingView build(BuildContext context, OnBoardingModel model) =>
+      OnBoardingView(
+          image: model.image,
+          title: model.title,
+          subtitle: model.subtitle,
+          pageController: model.pageController,
+          numPages: model.numPages,
+          isLastPage: model.isLastPage,
+          onPageChange: (int newPage) => model.currentIndex = newPage,
+          onClickContinue: () =>
+              SharedPreferences.getInstance().then((instance) {
+                instance.setBool(FINISHED_ON_BOARDING_SETTING, true);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/auth', (_) => false);
+              }));
 }
