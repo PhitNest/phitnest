@@ -22,7 +22,7 @@ class LoadingWidget extends StatefulWidget {
 class _LoadingWidgetState extends State<LoadingWidget>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller =
-      AnimationController(vsync: this, duration: Duration(seconds: 1))
+      AnimationController(vsync: this, duration: Duration(milliseconds: 1000))
         ..repeat();
 
   int numDots = 0;

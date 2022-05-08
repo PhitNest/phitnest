@@ -7,11 +7,11 @@ class LogoWidget extends StatelessWidget {
   final double scale;
   final Color? color;
   final bool showText;
-  final EdgeInsets? padding;
+  final EdgeInsets padding;
 
   const LogoWidget(
       {Key? key,
-      this.padding,
+      this.padding = EdgeInsets.zero,
       this.showText = false,
       this.scale = 1,
       this.color})
@@ -19,7 +19,7 @@ class LogoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-      padding: padding ?? EdgeInsets.zero,
+      padding: padding,
       child: Image.asset(
         showText ? LOGO_PATH_WITH_TEXT : LOGO_PATH,
         width: 216 * scale,

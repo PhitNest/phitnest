@@ -16,8 +16,7 @@ class SignupModel extends BaseModel {
   /// Form key
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  /// Form fields
-  String? firstName, lastName, email, mobile, password, confirmPassword;
+  String? mobile;
 
   /// Image file for profile picture
   File? _image;

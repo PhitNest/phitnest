@@ -9,13 +9,8 @@ class ProfileProvider extends AuthenticatedProvider<ProfileModel, ProfileView> {
   ProfileProvider({Key? key}) : super(key: key);
 
   @override
-  init(BuildContext context, ProfileModel model) async {
-    if (await super.init(context, model)) {
-      await loadUserData();
-      return true;
-    }
-    return false;
-  }
+  init(BuildContext context, ProfileModel model) async =>
+      await super.init(context, model) && await loadUserData();
 
   @override
   ProfileView build(BuildContext context) => ProfileView();

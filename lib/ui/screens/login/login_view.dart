@@ -13,9 +13,7 @@ class LoginView extends BaseView {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final String? Function(String? email) validateEmail;
-  final Function(String? email) onSaveEmail;
   final String? Function(String? password) validatePassword;
-  final Function(String? password) onSavePassword;
   final Function(String method) onClickLogin;
   final Function() onClickResetPassword;
   final Function() onClickMobile;
@@ -27,9 +25,7 @@ class LoginView extends BaseView {
       required this.passwordController,
       required this.validate,
       required this.validateEmail,
-      required this.onSaveEmail,
       required this.validatePassword,
-      required this.onSavePassword,
       required this.onClickLogin,
       required this.onClickResetPassword,
       required this.onClickMobile})
@@ -38,130 +34,112 @@ class LoginView extends BaseView {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BackButtonAppBar(),
-      body: Form(
-        key: formKey,
-        autovalidateMode: validate,
-        child: ListView(
-          children: <Widget>[
-            ConstrainedBox(
-              constraints: BoxConstraints(minWidth: double.infinity),
-              child: Padding(
-                padding:
-                    const EdgeInsets.only(top: 32.0, right: 16.0, left: 16.0),
-                child: Text(
-                  'Sign In',
-                  style: HeadingTextStyle(size: Size.LARGE),
+        appBar: BackButtonAppBar(),
+        body: Container(
+          margin: EdgeInsets.only(left: 16, right: 16, bottom: 24),
+          child: Form(
+            key: formKey,
+            autovalidateMode: validate,
+            child: ListView(
+              children: [
+                Container(
+                  constraints: BoxConstraints(minWidth: double.infinity),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text('Sign In',
+                      style: HeadingTextStyle(size: Size.LARGE)),
                 ),
-              ),
-            ),
-            ConstrainedBox(
-                constraints: BoxConstraints(minWidth: double.infinity),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(top: 32.0, right: 24.0, left: 24.0),
-                  child: TextInputFormField(
-                    hint: 'Email Address',
-                    onSaved: onSaveEmail,
-                    controller: emailController,
-                    inputType: TextInputType.emailAddress,
-                    validator: validateEmail,
-                  ),
-                )),
-            ConstrainedBox(
-              constraints: BoxConstraints(minWidth: double.infinity),
-              child: Padding(
-                  padding:
-                      const EdgeInsets.only(top: 32.0, right: 24.0, left: 24.0),
-                  child: TextInputFormField(
-                    hint: 'Password',
-                    validator: validatePassword,
-                    controller: passwordController,
-                    onSaved: onSavePassword,
-                    hide: true,
-                    onSubmit: () => onClickLogin('email'),
-                  )),
-            ),
+                TextInputFormField(
+                  hint: 'Email Address',
+                  controller: emailController,
+                  inputType: TextInputType.emailAddress,
+                  validator: validateEmail,
+                ),
+                TextInputFormField(
+                  hint: 'Password',
+                  validator: validatePassword,
+                  controller: passwordController,
+                  hide: true,
+                  onSubmit: () => onClickLogin('email'),
+                ),
 
-            /// Forgot password text, navigates user to ResetPasswordScreen
-            Padding(
-              padding: const EdgeInsets.only(top: 16, right: 24),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: GestureDetector(
-                  onTap: onClickResetPassword,
-                  child: Text(
-                    'Forgot password?',
-                    style: TextStyle(
-                        color: Colors.lightBlue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        letterSpacing: 1),
+                /// Forgot password text, navigates user to ResetPasswordScreen
+                Container(
+                  padding: const EdgeInsets.only(top: 16, right: 16),
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: onClickResetPassword,
+                    child: Text(
+                      'Forgot password?',
+                      style: BodyTextStyle(
+                          color: Colors.lightBlue,
+                          weight: FontWeight.bold,
+                          size: Size.MEDIUM,
+                          letterSpacing: 1),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 40.0, left: 40.0, top: 40),
-              child: StyledButton(
-                text: 'Login',
-                onClick: () => onClickLogin('email'),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Center(
-                child: Text(
-                  'OR',
-                  style: TextStyle(
-                      color: isDarkMode ? Colors.white : Colors.black),
-                ),
-              ),
-            ),
-            // Apple login UI
-            FutureBuilder<bool>(
-              future: apple.TheAppleSignIn.isAvailable(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator.adaptive();
-                }
-                if (!snapshot.hasData || (snapshot.data != true)) {
-                  return Container();
-                } else {
-                  return Padding(
-                    padding: const EdgeInsets.only(
-                        right: 40.0, left: 40.0, bottom: 20),
-                    child: apple.AppleSignInButton(
-                        cornerRadius: 25.0,
-                        type: apple.ButtonType.signIn,
-                        style: isDarkMode
-                            ? apple.ButtonStyle.white
-                            : apple.ButtonStyle.black,
-                        onPressed: () => onClickLogin('apple')),
-                  );
-                }
-              },
-            ),
-            // Mobile authentication
-            InkWell(
-              onTap: onClickMobile,
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    'Login with phone number',
-                    style: TextStyle(
-                        color: Colors.lightBlue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        letterSpacing: 1),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(right: 40.0, left: 40.0, top: 40),
+                  child: StyledButton(
+                    text: 'Login',
+                    onClick: () => onClickLogin('email'),
                   ),
                 ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+                Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Center(
+                    child: Text(
+                      'OR',
+                      style: TextStyle(
+                          color: isDarkMode ? Colors.white : Colors.black),
+                    ),
+                  ),
+                ),
+                // Apple login UI
+                FutureBuilder<bool>(
+                  future: apple.TheAppleSignIn.isAvailable(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator.adaptive();
+                    }
+                    if (!snapshot.hasData || (snapshot.data != true)) {
+                      return Container();
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                            right: 40.0, left: 40.0, bottom: 20),
+                        child: apple.AppleSignInButton(
+                            cornerRadius: 25.0,
+                            type: apple.ButtonType.signIn,
+                            style: isDarkMode
+                                ? apple.ButtonStyle.white
+                                : apple.ButtonStyle.black,
+                            onPressed: () => onClickLogin('apple')),
+                      );
+                    }
+                  },
+                ),
+                // Mobile authentication
+                InkWell(
+                  onTap: onClickMobile,
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Login with phone number',
+                        style: BodyTextStyle(
+                            color: Colors.lightBlue,
+                            weight: FontWeight.bold,
+                            size: Size.MEDIUM,
+                            letterSpacing: 1),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }

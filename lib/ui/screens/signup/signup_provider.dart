@@ -53,19 +53,13 @@ class SignupProvider
         validateFirstName: validateName,
         validateLastName: (String? lastName) =>
             lastName == '' ? null : validateName(lastName),
-        onSaveFirstName: (String? firstName) => model.firstName = firstName,
-        onSaveLastName: (String? lastName) => model.lastName = lastName,
         validateEmail: validateEmail,
-        onSaveEmail: (String? email) => model.email = email,
         validateMobile: validateMobile,
         onSaveMobile: (String? mobile) => model.mobile = mobile,
         validatePassword: validatePassword,
-        onSavePassword: (String? password) => model.password = password,
         validateConfirmPassword: (String? confirmPassword) =>
             validateConfirmPassword(
                 model.passwordController.text, confirmPassword),
-        onSaveConfirmPassword: (String? confirmPassword) =>
-            model.confirmPassword = confirmPassword,
       );
 
   /// Validate the form, request the user location, and make a registration
@@ -75,11 +69,11 @@ class SignupProvider
     if (model.formKey.currentState?.validate() ?? false) {
       model.formKey.currentState!.save();
       return await authService.signupWithEmailAndPassword(
-          model.email!.trim(),
-          model.password!.trim(),
+          model.emailController.text.trim(),
+          model.passwordController.text.trim(),
           model.image,
-          model.firstName!,
-          model.lastName!,
+          model.firstNameController.text.trim(),
+          model.lastNameController.text.trim(),
           await userIP,
           await getCurrentLocation(),
           model.mobile!);
