@@ -25,10 +25,6 @@ class OnBoardingProvider
   }
 
   @override
-  Widget buildLoading(BuildContext context, String? text) =>
-      super.buildLoading(context, 'Device Data');
-
-  @override
   OnBoardingView build(BuildContext context) => OnBoardingView(
       image: model.image,
       title: model.title,

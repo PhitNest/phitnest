@@ -21,10 +21,6 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
       await updateActivity();
 
   @override
-  Widget buildLoading(BuildContext context, String? text) =>
-      super.buildLoading(context, 'Account Details');
-
-  @override
   HomeView build(BuildContext context) => const HomeView();
 
   Future<bool> updateActivity() async {
