@@ -10,7 +10,8 @@ abstract class AuthenticationService {
   UserModel? userModel;
 
   /// Checks if the user is authenticated. If the user is authenticated but the
-  /// model is not yet initialized, get [userModel] from the database service.
+  /// [userModel] is not yet initialized, initialize [userModel] through the
+  /// database service.
   Future<bool> isAuthenticated();
 
   /// Requests login service from apple, and initializes [userModel] with the
