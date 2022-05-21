@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 
 import 'app.dart';
+import 'test_app.dart';
 import 'locator.dart';
 import 'constants/constants.dart';
 
+bool testMode = true;
 bool usePreview = false;
 
 void main() async {
@@ -25,7 +27,7 @@ void main() async {
       path: 'assets/translations',
       fallbackLocale: Locale('en'),
       useFallbackTranslations: true,
-      child: PhitnestApp(),
+      child: testMode ? TestApp() : PhitnestApp(),
     ),
   ));
 }
