@@ -1,5 +1,5 @@
+import 'package:device/storage/storage.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../constants/constants.dart';
 import '../providers.dart';
@@ -14,9 +14,7 @@ class OnBoardingProvider
   init(BuildContext context, OnBoardingModel model) async {
     if (!await super.init(context, model)) return false;
 
-    if ((await SharedPreferences.getInstance())
-            .getBool(FINISHED_ON_BOARDING_SETTING) ??
-        false) {
+    if (await deviceStorage.read(key: FINISHED_ON_BOARDING_SETTING) == 'true') {
       Navigator.pushNamedAndRemoveUntil(context, '/auth', ((_) => false));
       return false;
     } else {
@@ -34,10 +32,8 @@ class OnBoardingProvider
           numPages: model.numPages,
           isLastPage: model.isLastPage,
           onPageChange: (int newPage) => model.currentIndex = newPage,
-          onClickContinue: () =>
-              SharedPreferences.getInstance().then((instance) {
-                instance.setBool(FINISHED_ON_BOARDING_SETTING, true);
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/auth', (_) => false);
-              }));
+          onClickContinue: () => deviceStorage
+              .write(key: FINISHED_ON_BOARDING_SETTING, value: 'true')
+              .then((_) => Navigator.pushNamedAndRemoveUntil(
+                  context, '/auth', (_) => false)));
 }

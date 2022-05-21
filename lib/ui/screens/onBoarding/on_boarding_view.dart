@@ -1,7 +1,8 @@
-import 'package:display/display.dart';
+import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../common/textStyles/text_styles.dart';
 import '../views.dart';
 import 'widgets/on_boarding_page_widget.dart';
 
@@ -56,7 +57,7 @@ class OnBoardingView extends BaseView {
                 onPressed: onClickContinue,
                 child: Text('Continue',
                     style: BodyTextStyle(
-                        size: Size.SMALL,
+                        size: TextSize.SMALL,
                         color: Colors.white,
                         weight: FontWeight.bold)),
                 style: OutlinedButton.styleFrom(

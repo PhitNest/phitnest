@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-export 'textStyles/text_styles.dart';
-
 BorderRadius borderRadius = BorderRadius.circular(25.0);
 
 bool isDarkMode = false;

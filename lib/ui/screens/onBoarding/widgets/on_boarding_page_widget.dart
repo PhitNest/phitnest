@@ -1,6 +1,7 @@
-import 'package:display/display.dart';
 import 'package:flutter/material.dart';
-import 'package:phitnest/ui/widgets/logo/logo_widget.dart';
+
+import '../../../common/textStyles/text_styles.dart';
+import '../../../common/widgets/widgets.dart';
 
 /// This is the view for a single onBoarding page
 class OnBoardingPageWidget extends StatelessWidget {
@@ -34,14 +35,14 @@ class OnBoardingPageWidget extends StatelessWidget {
               ),
         Text(
           title.toUpperCase(),
-          style: HeadingTextStyle(size: Size.SMALL, color: Colors.white),
+          style: HeadingTextStyle(size: TextSize.SMALL, color: Colors.white),
           textAlign: TextAlign.center,
         ),
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
             subTitle,
-            style: BodyTextStyle(size: Size.SMALL, color: Colors.white),
+            style: BodyTextStyle(size: TextSize.SMALL, color: Colors.white),
             textAlign: TextAlign.center,
           ),
         ),

@@ -1,5 +1,7 @@
-import 'package:display/display.dart';
+import 'package:device/device.dart';
 import 'package:flutter/material.dart';
+
+import '../../textStyles/text_styles.dart';
 
 class StyledButton extends StatelessWidget {
   final double minWidth;
@@ -33,7 +35,7 @@ class StyledButton extends StatelessWidget {
           child: Text(
             text,
             style: HeadingTextStyle(
-                size: Size.SMALL, color: textColor ?? Colors.white),
+                size: TextSize.SMALL, color: textColor ?? Colors.white),
           ),
           onPressed: onClick,
         ),

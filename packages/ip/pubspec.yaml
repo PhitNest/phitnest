@@ -1,9 +1,0 @@
-name: ip
-description: IP Utils
-version: 1.0.0+1
-publish_to: 'none'
-environment:
-  sdk: ">=2.13.4 <3.0.0"
-
-dependencies:
-  get_ip_address: ^0.0.5

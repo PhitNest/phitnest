@@ -1,8 +1,9 @@
 import 'dart:math';
 
-import 'package:display/display.dart';
+import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 
+import '../../textStyles/text_styles.dart';
 import '../widgets.dart';
 
 const MAX_NUM_DOTS = 3;
@@ -65,7 +66,8 @@ class _LoadingWidgetState extends State<LoadingWidget>
               child: Text(
                 text,
                 textAlign: TextAlign.left,
-                style: HeadingTextStyle(size: Size.SMALL, color: Colors.white),
+                style:
+                    HeadingTextStyle(size: TextSize.SMALL, color: Colors.white),
               ))
         ])));
   }

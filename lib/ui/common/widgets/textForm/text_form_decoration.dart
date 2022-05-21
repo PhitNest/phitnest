@@ -1,4 +1,4 @@
-import 'package:display/display.dart';
+import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 
 final OutlineInputBorder errorBorder = OutlineInputBorder(

@@ -1,7 +1,8 @@
-import 'package:display/display.dart';
+import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 
-import '../../widgets/widgets.dart';
+import '../../common/textStyles/text_styles.dart';
+import '../../common/widgets/widgets.dart';
 import '../views.dart';
 
 /// This is the auth screen view
@@ -36,7 +37,7 @@ class AuthView extends BaseView {
                 child: Text(
                   'Connecting Communities',
                   textAlign: TextAlign.center,
-                  style: HeadingTextStyle(size: Size.MEDIUM),
+                  style: HeadingTextStyle(size: TextSize.MEDIUM),
                 )),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -47,7 +48,7 @@ class AuthView extends BaseView {
                       padding: EdgeInsets.symmetric(vertical: 16),
                       child: Text(
                         'Let\'s promote health and fitness together',
-                        style: BodyTextStyle(size: Size.LARGE),
+                        style: BodyTextStyle(size: TextSize.LARGE),
                         textAlign: TextAlign.center,
                       )),
                   StyledButton(
