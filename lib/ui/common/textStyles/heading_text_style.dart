@@ -1,6 +1,7 @@
+import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 
-import '../display.dart';
+import 'text_styles.dart';
 
 class HeadingTextStyle extends TextStyle {
   // Font sizes
@@ -8,13 +9,13 @@ class HeadingTextStyle extends TextStyle {
   static const MEDIUM = 24.0;
   static const SMALL = 20.0;
 
-  HeadingTextStyle({required Size size, Color? color})
+  HeadingTextStyle({required TextSize size, Color? color})
       : super(
             color: color ?? primaryColor,
             fontWeight: FontWeight.bold,
-            fontSize: size == Size.LARGE
+            fontSize: size == TextSize.LARGE
                 ? LARGE
-                : size == Size.MEDIUM
+                : size == TextSize.MEDIUM
                     ? MEDIUM
                     : SMALL);
 }

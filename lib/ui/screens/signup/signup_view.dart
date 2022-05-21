@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:display/display.dart';
 import 'package:flutter/material.dart';
 
-import '../../widgets/widgets.dart';
+import '../../common/textStyles/text_styles.dart';
+import '../../common/widgets/widgets.dart';
 import '../views.dart';
 
 /// This view contains a form allowing users to sign up.
@@ -62,7 +62,7 @@ class SignupView extends BaseView {
                       alignment: Alignment.topLeft,
                       child: Text(
                         'Create new account',
-                        style: HeadingTextStyle(size: Size.LARGE),
+                        style: HeadingTextStyle(size: TextSize.LARGE),
                       )),
                   Padding(
                       padding: const EdgeInsets.only(

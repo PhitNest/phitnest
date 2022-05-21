@@ -1,8 +1,9 @@
-import 'package:display/display.dart';
+import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
-import '../../widgets/widgets.dart';
+import '../../common/textStyles/text_styles.dart';
+import '../../common/widgets/widgets.dart';
 import '../views.dart';
 
 /// This view contains a form and makes login requests to authentication
@@ -46,7 +47,7 @@ class LoginView extends BaseView {
                   constraints: BoxConstraints(minWidth: double.infinity),
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text('Sign In',
-                      style: HeadingTextStyle(size: Size.LARGE)),
+                      style: HeadingTextStyle(size: TextSize.LARGE)),
                 ),
                 TextInputFormField(
                   hint: 'Email Address',
@@ -73,7 +74,7 @@ class LoginView extends BaseView {
                       style: BodyTextStyle(
                           color: Colors.lightBlue,
                           weight: FontWeight.bold,
-                          size: Size.MEDIUM,
+                          size: TextSize.MEDIUM,
                           letterSpacing: 1),
                     ),
                   ),
@@ -131,7 +132,7 @@ class LoginView extends BaseView {
                         style: BodyTextStyle(
                             color: Colors.lightBlue,
                             weight: FontWeight.bold,
-                            size: Size.MEDIUM,
+                            size: TextSize.MEDIUM,
                             letterSpacing: 1),
                       ),
                     ),

@@ -1,6 +1,7 @@
-import 'package:display/display.dart';
+import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 
+import '../../textStyles/text_styles.dart';
 import 'text_form_decoration.dart';
 
 /// This is a text form field widget
@@ -40,7 +41,7 @@ class TextInputFormField extends StatelessWidget {
           validator: validator,
           onSaved: onSaved,
           controller: controller ?? TextEditingController(),
-          style: BodyTextStyle(size: Size.LARGE),
+          style: BodyTextStyle(size: TextSize.LARGE),
           cursorColor: primaryColor,
           decoration: TextFormStyleDecoration(hint: hint)));
 }

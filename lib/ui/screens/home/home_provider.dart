@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:ip/ip.dart';
-import 'package:location/location.dart';
+import 'package:device/device.dart';
 
 import '../../../models/models.dart';
 import '../providers.dart';

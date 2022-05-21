@@ -1,5 +1,5 @@
-name: select_photo
-description: Selecting Photo Utils
+name: device
+description: Device Utils
 version: 1.0.0+1
 publish_to: 'none'
 environment:
@@ -8,4 +8,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_secure_storage: ^5.0.2
   image_picker: ^0.8.2
+  geolocator: ^8.2.0
+  get_ip_address: ^0.0.5

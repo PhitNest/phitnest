@@ -8,7 +8,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.0.6
   firebase_core: ^1.4.0
   firebase_auth: ^3.0.1
   cloud_firestore: ^3.1.13
@@ -24,14 +23,12 @@ dependencies:
   intl_phone_number_input: ^0.7.0+2
   the_apple_sign_in: ^1.1.1
   easy_localization: ^3.0.0
-  navigation:
-    path: ./packages/navigation
-  location:
-    path: ./packages/location
-  display:
-    path: ./packages/display
-  ip:
-    path: ./packages/ip
+  device:
+    path: ./packages/device
+  validation:
+    path: ./packages/validation
+  progress_widgets:
+    path: ./packages/progress_widgets
   get_it: ^7.2.0
   device_preview: ^1.0.0
 dev_dependencies:

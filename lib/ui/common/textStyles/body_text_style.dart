@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../display.dart';
+import 'text_styles.dart';
 
 class BodyTextStyle extends TextStyle {
   // Font sizes
@@ -9,7 +9,7 @@ class BodyTextStyle extends TextStyle {
   static const SMALL = 14.0;
 
   BodyTextStyle(
-      {required Size size,
+      {required TextSize size,
       Color? color,
       FontWeight? weight,
       double? letterSpacing})
@@ -17,9 +17,9 @@ class BodyTextStyle extends TextStyle {
             letterSpacing: letterSpacing,
             color: color,
             fontWeight: weight,
-            fontSize: size == Size.LARGE
+            fontSize: size == TextSize.LARGE
                 ? LARGE
-                : size == Size.MEDIUM
+                : size == TextSize.MEDIUM
                     ? MEDIUM
                     : SMALL);
 }

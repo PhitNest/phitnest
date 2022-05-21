@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../services/services.dart';
 import '../../../locator.dart';
-import '../../widgets/widgets.dart';
+import '../../common/widgets/widgets.dart';
 import 'base_model.dart';
 import 'base_view.dart';
 

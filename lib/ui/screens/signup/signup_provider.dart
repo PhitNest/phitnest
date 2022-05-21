@@ -1,10 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:ip/ip.dart';
-import 'package:location/location.dart';
 import 'package:progress_widgets/progress_widgets.dart';
-import 'package:select_photo/select_photo.dart';
+import 'package:device/device.dart';
 import 'package:validation/validation.dart';
 
 import '../providers.dart';
