@@ -7,13 +7,10 @@ Color primaryColor = Colors.blue;
 Color accentColor = Colors.blueAccent;
 Color errorColor = Colors.red;
 
-initialize(
-    {required bool darkMode,
-    required Color primary,
-    required Color accent,
-    required Color error}) {
-  isDarkMode = darkMode;
-  primaryColor = primary;
-  accentColor = accent;
-  errorColor = error;
+initializeDisplay(BuildContext context) {
+  ColorScheme colorScheme = Theme.of(context).colorScheme;
+  isDarkMode = colorScheme.brightness == Brightness.dark;
+  primaryColor = colorScheme.primary;
+  accentColor = colorScheme.secondary;
+  errorColor = colorScheme.error;
 }

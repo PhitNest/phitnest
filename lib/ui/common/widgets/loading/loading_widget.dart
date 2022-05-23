@@ -9,7 +9,7 @@ import '../widgets.dart';
 const MAX_NUM_DOTS = 3;
 
 // INCREASE THIS TO SHIFT THE LOADING TEXT LEFT, DECREASE TO SHIFT RIGHT
-const TEXT_OFFSET = 75;
+const TEXT_OFFSET = 68;
 
 class LoadingWidget extends StatefulWidget {
   final String? text;
