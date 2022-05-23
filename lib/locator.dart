@@ -27,5 +27,6 @@ void setupLocator() {
   // Register each test class
   locator.registerFactory(() => <BaseTester>[
         AuthTester(),
+        LoginTester(),
       ]);
 }

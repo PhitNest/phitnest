@@ -1,6 +1,6 @@
 import '../testers.dart';
 
-class AuthTester extends BaseTester {
+class LoginTester extends BaseTester {
   @override
   List<TestResult Function()> get testCases => [
         testView,

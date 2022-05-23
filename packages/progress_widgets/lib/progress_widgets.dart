@@ -58,6 +58,9 @@ hideProgress() async {
 
 //helper method to show alert dialog
 showAlertDialog(BuildContext context, String title, String content) {
+  Text titleText = Text(title);
+  Text contentText = Text(content);
+
   // set up the AlertDialog
   Widget okButton = TextButton(
     child: Text('OK'),
@@ -67,8 +70,8 @@ showAlertDialog(BuildContext context, String title, String content) {
   );
   if (Platform.isIOS) {
     CupertinoAlertDialog alert = CupertinoAlertDialog(
-      title: Text(title),
-      content: Text(content),
+      title: titleText,
+      content: contentText,
       actions: [
         okButton,
       ],
@@ -83,8 +86,8 @@ showAlertDialog(BuildContext context, String title, String content) {
     );
   } else {
     AlertDialog alert = AlertDialog(
-      title: Text(title),
-      content: Text(content),
+      title: titleText,
+      content: contentText,
       actions: [
         okButton,
       ],

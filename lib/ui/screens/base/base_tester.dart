@@ -1,9 +1,16 @@
 abstract class BaseTester {
-  List<TestResult Function()> get testCases;
+  List<Function> get testCases;
 
-  Stream<TestResult> runTests() async* {
-    for (TestResult Function() testCase in testCases) {
-      yield testCase();
+  Stream<MapEntry<String, TestResult>> runTests() async* {
+    for (Function testCase in testCases) {
+      yield MapEntry(
+          testCase
+              .toString()
+              .split(' ')
+              .last
+              .replaceAll('\'', '')
+              .replaceAll(':.', ''),
+          testCase());
     }
   }
 }
@@ -13,9 +20,4 @@ class TestResult {
   bool passed;
 
   TestResult(this.message, this.passed);
-
-  @override
-  String toString() {
-    return "${passed ? "Passed" : "Failed"}: $message";
-  }
 }

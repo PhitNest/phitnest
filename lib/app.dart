@@ -2,7 +2,6 @@ import 'package:device/device.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_widgets/progress_widgets.dart';
 
 import 'ui/screens/providers.dart';
 import 'constants/constants.dart';
@@ -40,7 +39,6 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
       locale: DevicePreview.locale(context),
       title: 'Phitnest',
       builder: (context, child) {
-        ProgressWidget.initialize(COLOR_PRIMARY);
         initializeDeviceUtils(context);
         return DevicePreview.appBuilder(context, child);
       },
