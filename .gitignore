@@ -2,6 +2,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/flutter,androidstudio
 # Edit at https://www.toptal.com/developers/gitignore?templates=flutter,androidstudio
 
+test_output/integration_test/*.dart.txt
+
 ### Flutter ###
 # Flutter/Dart/Pub related
 **/doc/api/
