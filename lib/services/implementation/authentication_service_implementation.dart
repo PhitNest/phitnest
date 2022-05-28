@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:geolocator_platform_interface/src/models/position.dart';
 
-import '../../models/models.dart';
 import '../services.dart';
 
 class AuthenticationServiceImpl extends AuthenticationService {
