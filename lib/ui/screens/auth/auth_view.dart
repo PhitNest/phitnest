@@ -11,10 +11,9 @@ class AuthView extends BaseView {
   final Function() onClickSignup;
 
   const AuthView({
-    Key? key,
     required this.onClickLogin,
     required this.onClickSignup,
-  }) : super(key: key);
+  }) : super();
 
   Widget build(BuildContext context) => Scaffold(
           // Center everything
@@ -52,10 +51,12 @@ class AuthView extends BaseView {
                         textAlign: TextAlign.center,
                       )),
                   StyledButton(
+                    key: Key("auth_login"),
                     text: 'Log In',
                     onClick: onClickLogin,
                   ),
                   StyledButton(
+                    key: Key("auth_signup"),
                     text: 'Sign Up',
                     onClick: onClickSignup,
                     buttonColor: Colors.white,

@@ -11,8 +11,8 @@ class ProfilePictureSelector extends StatelessWidget {
   final Function(File? selectedImage) onSelected;
 
   const ProfilePictureSelector(
-      {Key? key, required this.onSelected, this.initialImage})
-      : super(key: key);
+      {required Key key, required this.onSelected, this.initialImage})
+      : super();
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +42,7 @@ class ProfilePictureSelector extends StatelessWidget {
             left: 80,
             right: 0,
             child: FloatingActionButton(
+              key: key,
               backgroundColor: accentColor,
               child: Icon(
                 Icons.camera_alt,

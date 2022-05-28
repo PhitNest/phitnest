@@ -10,12 +10,11 @@ class LogoWidget extends StatelessWidget {
   final EdgeInsets padding;
 
   const LogoWidget(
-      {Key? key,
-      this.padding = EdgeInsets.zero,
+      {this.padding = EdgeInsets.zero,
       this.showText = false,
       this.scale = 1,
       this.color})
-      : super(key: key);
+      : super();
 
   @override
   Widget build(BuildContext context) => Container(

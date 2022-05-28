@@ -8,7 +8,7 @@ import '../views.dart';
 /// condition is met.
 abstract class RedirectedProvider<T extends BaseModel, K extends BaseView>
     extends BaseProvider<T, K> {
-  RedirectedProvider({Key? key}) : super(key: key);
+  const RedirectedProvider({required Key key}) : super(key: key);
 
   /// This is the route to redirect to.
   String get redirectRoute;

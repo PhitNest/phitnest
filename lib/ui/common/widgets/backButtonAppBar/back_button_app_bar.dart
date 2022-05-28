@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class BackButtonAppBar extends AppBar {
   BackButtonAppBar()
       : super(
+          key: Key("backButton"),
           elevation: 0.0,
           backgroundColor: Colors.transparent,
           iconTheme:

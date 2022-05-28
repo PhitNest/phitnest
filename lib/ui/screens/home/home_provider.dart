@@ -8,9 +8,7 @@ import 'home_model.dart';
 import 'home_view.dart';
 
 class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
-  HomeProvider({Key? key}) : super(key: key);
-
-  late UserModel? user = authService.userModel;
+  HomeProvider() : super(key: Key("provider_home"));
 
   @override
   init(BuildContext context, HomeModel model) async =>
@@ -23,22 +21,26 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
   HomeView build(BuildContext context, HomeModel model) => const HomeView();
 
   Future<bool> updateActivity() async {
+    UserModel? user = authService.userModel;
+
     if (user != null) {
-      user!.online = true;
-      return await databaseService.updateUserModel(user!) == null;
+      user.online = true;
+      return await databaseService.updateUserModel(user) == null;
     }
     return false;
   }
 
   Future<bool> updateLocation() async {
+    UserModel? user = authService.userModel;
+
     if (user != null) {
       {
         Position? position = await getCurrentLocation();
 
         if (position != null) {
-          user!.location = UserLocation(
+          user.location = UserLocation(
               latitude: position.latitude, longitude: position.longitude);
-          await databaseService.updateUserModel(user!);
+          await databaseService.updateUserModel(user);
           return true;
         }
       }
@@ -47,9 +49,11 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
   }
 
   Future<bool> updateIP() async {
+    UserModel? user = authService.userModel;
+
     if (user != null) {
-      user!.recentIP = await userIP;
-      return await databaseService.updateUserModel(user!) == null;
+      user.recentIP = await userIP;
+      return await databaseService.updateUserModel(user) == null;
     }
     return false;
   }

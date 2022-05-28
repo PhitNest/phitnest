@@ -11,7 +11,7 @@ import 'signup_model.dart';
 
 class SignupProvider
     extends PreAuthenticationProvider<SignupModel, SignupView> {
-  SignupProvider({Key? key}) : super(key: key);
+  SignupProvider() : super(key: Key("provider_signup"));
 
   @override
   init(BuildContext context, SignupModel model) async {

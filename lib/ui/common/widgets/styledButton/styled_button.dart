@@ -11,19 +11,22 @@ class StyledButton extends StatelessWidget {
   final Function() onClick;
   final EdgeInsets padding;
 
-  StyledButton(
-      {required this.text,
+  const StyledButton(
+      {required Key key,
+      required this.text,
       required this.onClick,
       this.textColor,
       this.buttonColor,
       this.padding = const EdgeInsets.all(5),
-      this.minWidth = double.infinity});
+      this.minWidth = double.infinity})
+      : super();
 
   @override
   Widget build(BuildContext context) => Container(
         padding: padding,
         constraints: BoxConstraints(minWidth: minWidth),
         child: ElevatedButton(
+          key: key,
           style: ElevatedButton.styleFrom(
               primary: buttonColor ?? primaryColor,
               padding: const EdgeInsets.symmetric(vertical: 12),
