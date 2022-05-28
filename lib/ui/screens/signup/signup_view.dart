@@ -27,7 +27,6 @@ class SignupView extends BaseView {
   final String? Function(String? confirmPassword) validateConfirmPassword;
 
   const SignupView({
-    Key? key,
     required this.formKey,
     required this.firstNameController,
     required this.lastNameController,
@@ -45,7 +44,7 @@ class SignupView extends BaseView {
     required this.onSaveMobile,
     required this.validatePassword,
     required this.validateConfirmPassword,
-  }) : super(key: key);
+  }) : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -68,34 +67,42 @@ class SignupView extends BaseView {
                       padding: const EdgeInsets.only(
                           left: 8, top: 32, right: 8, bottom: 8),
                       child: ProfilePictureSelector(
-                          initialImage: image, onSelected: onSaveImage)),
+                          key: Key("signup_photoSelect"),
+                          initialImage: image,
+                          onSelected: onSaveImage)),
                   TextInputFormField(
+                    key: Key("signup_firstName"),
                     hint: 'First Name',
                     controller: firstNameController,
                     inputType: TextInputType.name,
                     validator: validateFirstName,
                   ),
                   TextInputFormField(
+                      key: Key("signup_lastName"),
                       hint: 'Last Name',
                       inputType: TextInputType.name,
                       controller: lastNameController,
                       validator: validateLastName),
                   TextInputFormField(
+                      key: Key("signup_email"),
                       hint: 'Email Address',
                       inputType: TextInputType.emailAddress,
                       controller: emailController,
                       validator: validateEmail),
                   MobileInputFormField(
+                      key: Key("signup_mobile"),
                       controller: mobileController,
                       validator: validateMobile,
                       onChanged: onSaveMobile),
                   TextInputFormField(
+                    key: Key("signup_password"),
                     hint: 'Password',
                     hide: true,
                     controller: passwordController,
                     validator: validatePassword,
                   ),
                   TextInputFormField(
+                      key: Key("signup_confirmPassword"),
                       hint: 'Confirm Password',
                       onSubmit: onClickSignup,
                       validator: validateConfirmPassword,
@@ -104,6 +111,7 @@ class SignupView extends BaseView {
                     padding: const EdgeInsets.only(
                         right: 40.0, left: 40.0, top: 40.0),
                     child: StyledButton(
+                      key: Key("signup_submit"),
                       text: 'Sign Up',
                       onClick: onClickSignup,
                     ),

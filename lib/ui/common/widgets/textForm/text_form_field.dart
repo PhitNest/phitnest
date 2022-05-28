@@ -16,7 +16,7 @@ class TextInputFormField extends StatelessWidget {
   final TextInputType? inputType;
 
   const TextInputFormField({
-    Key? key,
+    required Key key,
     required this.hint,
     required this.validator,
     this.onSaved,
@@ -25,13 +25,14 @@ class TextInputFormField extends StatelessWidget {
     this.padding = const EdgeInsets.only(top: 16, left: 8, right: 8),
     this.hide = false,
     this.onSubmit,
-  }) : super(key: key);
+  }) : super();
 
   @override
   Widget build(BuildContext context) => Container(
       constraints: const BoxConstraints(minWidth: double.infinity),
       padding: padding,
       child: TextFormField(
+          key: key,
           textAlignVertical: TextAlignVertical.center,
           textInputAction:
               onSubmit == null ? TextInputAction.next : TextInputAction.done,

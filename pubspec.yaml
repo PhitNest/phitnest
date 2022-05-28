@@ -32,6 +32,8 @@ dependencies:
   device_preview: ^1.0.0
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1
+  integration_test:
+    sdk: flutter
 
 flutter_icons:
   android: false

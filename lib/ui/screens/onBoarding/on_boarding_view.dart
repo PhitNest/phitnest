@@ -19,7 +19,6 @@ class OnBoardingView extends BaseView {
   final Function() onClickContinue;
 
   const OnBoardingView({
-    Key? key,
     required this.image,
     required this.title,
     required this.subtitle,
@@ -28,7 +27,7 @@ class OnBoardingView extends BaseView {
     required this.isLastPage,
     required this.onPageChange,
     required this.onClickContinue,
-  }) : super(key: key);
+  }) : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(

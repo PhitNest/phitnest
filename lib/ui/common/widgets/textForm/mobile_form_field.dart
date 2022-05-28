@@ -11,20 +11,21 @@ class MobileInputFormField extends StatelessWidget {
   final Function(String? mobile) onChanged;
   final EdgeInsets padding;
 
-  MobileInputFormField(
-      {Key? key,
+  const MobileInputFormField(
+      {required Key key,
       required this.onChanged,
       this.padding = const EdgeInsets.only(top: 16, left: 8, right: 8),
       this.controller,
       this.validate = AutovalidateMode.disabled,
       this.validator})
-      : super(key: key);
+      : super();
 
   @override
   build(BuildContext context) => Container(
         constraints: const BoxConstraints(minWidth: double.infinity),
         padding: padding,
         child: InternationalPhoneNumberInput(
+            key: key,
             spaceBetweenSelectorAndTextField: 0,
             keyboardType: TextInputType.phone,
             textFieldController: controller,

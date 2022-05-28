@@ -29,3 +29,8 @@ void main() async {
     ),
   ));
 }
+
+void testMain() {
+  usePreview = false;
+  main();
+}

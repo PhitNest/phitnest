@@ -14,7 +14,7 @@ const TEXT_OFFSET = 75;
 class LoadingWidget extends StatefulWidget {
   final String? text;
 
-  const LoadingWidget({Key? key, this.text}) : super(key: key);
+  const LoadingWidget({required Key key, this.text}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoadingWidgetState();

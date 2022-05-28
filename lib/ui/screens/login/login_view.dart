@@ -20,8 +20,7 @@ class LoginView extends BaseView {
   final Function() onClickMobile;
 
   const LoginView(
-      {Key? key,
-      required this.formKey,
+      {required this.formKey,
       required this.emailController,
       required this.passwordController,
       required this.validate,
@@ -30,7 +29,7 @@ class LoginView extends BaseView {
       required this.onClickLogin,
       required this.onClickResetPassword,
       required this.onClickMobile})
-      : super(key: key);
+      : super();
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +49,14 @@ class LoginView extends BaseView {
                       style: HeadingTextStyle(size: TextSize.LARGE)),
                 ),
                 TextInputFormField(
+                  key: Key("login_email"),
                   hint: 'Email Address',
                   controller: emailController,
                   inputType: TextInputType.emailAddress,
                   validator: validateEmail,
                 ),
                 TextInputFormField(
+                  key: Key("login_password"),
                   hint: 'Password',
                   validator: validatePassword,
                   controller: passwordController,
@@ -83,6 +84,7 @@ class LoginView extends BaseView {
                   padding:
                       const EdgeInsets.only(right: 40.0, left: 40.0, top: 40),
                   child: StyledButton(
+                    key: Key("login_submit"),
                     text: 'Login',
                     onClick: () => onClickLogin('email'),
                   ),

@@ -10,7 +10,7 @@ import 'base_view.dart';
 /// This class provides state in the form of a base model to UI views.
 abstract class BaseProvider<T extends BaseModel, K extends BaseView>
     extends StatefulWidget {
-  const BaseProvider({Key? key}) : super(key: key);
+  const BaseProvider({required Key key}) : super(key: key);
 
   /// Gets the authentication service
   AuthenticationService get authService => locator<AuthenticationService>();
@@ -31,8 +31,8 @@ abstract class BaseProvider<T extends BaseModel, K extends BaseView>
 
   /// This builder will provide a loading widget until the loading flag in
   /// the model is set to false.
-  Widget buildLoading(BuildContext context, String? text) =>
-      LoadingWidget(text: text);
+  Widget buildLoading(BuildContext context, {Key? testingKey, String? text}) =>
+      LoadingWidget(key: testingKey ?? Key("loading"), text: text);
 
   @override
   _BaseProviderState<T, K> createState() => _BaseProviderState<T, K>();
@@ -59,7 +59,7 @@ class _BaseProviderState<T extends BaseModel, K extends BaseView>
       value: model,
       builder: (context, child) => Consumer<T>(
           builder: (context, model, child) => model.loading
-              ? widget.buildLoading(context, null)
+              ? widget.buildLoading(context)
               : widget.build(context, model)));
 
   @override
