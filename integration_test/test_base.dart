@@ -28,6 +28,8 @@ runTest(String testName, Future<void> Function(WidgetTester tester) test) {
   group(
       'Integration Test:',
       () => testWidgets(testName, (tester) async {
+            // Make sure we don't use device preview for integration tests
+            app.usePreview = false;
             await app.main();
             await tester.pumpAndSettle();
 
