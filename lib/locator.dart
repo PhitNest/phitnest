@@ -17,8 +17,8 @@ void setupLocator() {
 
   // Register each UI view model
   locator.registerFactory(() => OnBoardingModel());
-  locator.registerFactory(() => LoginModel());
-  locator.registerFactory(() => SignupModel());
+  locator.registerFactory(() => SignInModel());
+  locator.registerFactory(() => RegisterModel());
   locator.registerFactory(() => HomeModel());
   locator.registerFactory(() => ProfileModel());
   locator.registerFactory(() => AuthModel());

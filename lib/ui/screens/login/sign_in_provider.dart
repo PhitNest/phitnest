@@ -4,14 +4,15 @@ import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 
 import '../providers.dart';
-import 'login_model.dart';
-import 'login_view.dart';
+import 'sign_in_model.dart';
+import 'sign_in_view.dart';
 
-class LoginProvider extends PreAuthenticationProvider<LoginModel, LoginView> {
-  const LoginProvider({Key? key}) : super(key: key);
+class SignInProvider
+    extends PreAuthenticationProvider<SignInModel, SignInView> {
+  const SignInProvider({Key? key}) : super(key: key);
 
   @override
-  LoginView build(BuildContext context, LoginModel model) => LoginView(
+  SignInView build(BuildContext context, SignInModel model) => SignInView(
         formKey: model.formKey,
         validate: model.validate,
         emailController: model.emailController,
@@ -39,7 +40,7 @@ class LoginProvider extends PreAuthenticationProvider<LoginModel, LoginView> {
         onClickMobile: () => Navigator.pushNamed(context, '/mobileAuth'),
       );
 
-  Future<String?> login(LoginModel model, String method) async {
+  Future<String?> login(SignInModel model, String method) async {
     // Validate form
     if (model.formKey.currentState?.validate() ?? false) {
       // Saves state to all of the text controllers

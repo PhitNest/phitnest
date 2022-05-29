@@ -6,15 +6,15 @@ import 'package:device/device.dart';
 import 'package:validation/validation.dart';
 
 import '../providers.dart';
-import 'signup_view.dart';
-import 'signup_model.dart';
+import 'register_view.dart';
+import 'register_model.dart';
 
-class SignupProvider
-    extends PreAuthenticationProvider<SignupModel, SignupView> {
-  const SignupProvider({Key? key}) : super(key: key);
+class RegisterProvider
+    extends PreAuthenticationProvider<RegisterModel, RegisterView> {
+  const RegisterProvider({Key? key}) : super(key: key);
 
   @override
-  init(BuildContext context, SignupModel model) async {
+  init(BuildContext context, RegisterModel model) async {
     if (await super.init(context, model)) {
       // Android camera data
       if (Platform.isAndroid) {
@@ -26,7 +26,7 @@ class SignupProvider
   }
 
   @override
-  SignupView build(BuildContext context, SignupModel model) => SignupView(
+  RegisterView build(BuildContext context, RegisterModel model) => RegisterView(
         formKey: model.formKey,
         firstNameController: model.firstNameController,
         lastNameController: model.lastNameController,
@@ -63,7 +63,7 @@ class SignupProvider
   /// Validate the form, request the user location, and make a registration
   /// request to the authentication service. Return null if the registration
   /// is successful, and return an error message otherwise.
-  Future<String?> signUp(SignupModel model) async {
+  Future<String?> signUp(RegisterModel model) async {
     if (model.formKey.currentState?.validate() ?? false) {
       model.formKey.currentState!.save();
       return await authService.signupWithEmailAndPassword(

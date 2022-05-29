@@ -8,7 +8,7 @@ import '../views.dart';
 
 /// This view contains a form and makes login requests to authentication
 /// service.
-class LoginView extends BaseView {
+class SignInView extends BaseView {
   final GlobalKey<FormState> formKey;
   final AutovalidateMode validate;
   final TextEditingController emailController;
@@ -19,7 +19,7 @@ class LoginView extends BaseView {
   final Function() onClickResetPassword;
   final Function() onClickMobile;
 
-  const LoginView(
+  const SignInView(
       {required this.formKey,
       required this.emailController,
       required this.passwordController,
@@ -49,14 +49,14 @@ class LoginView extends BaseView {
                       style: HeadingTextStyle(size: TextSize.LARGE)),
                 ),
                 TextInputFormField(
-                  key: Key("login_email"),
+                  key: Key("signIn_email"),
                   hint: 'Email Address',
                   controller: emailController,
                   inputType: TextInputType.emailAddress,
                   validator: validateEmail,
                 ),
                 TextInputFormField(
-                  key: Key("login_password"),
+                  key: Key("signIn_password"),
                   hint: 'Password',
                   validator: validatePassword,
                   controller: passwordController,
@@ -84,8 +84,8 @@ class LoginView extends BaseView {
                   padding:
                       const EdgeInsets.only(right: 40.0, left: 40.0, top: 40),
                   child: StyledButton(
-                    key: Key("login_submit"),
-                    text: 'Login',
+                    key: Key("signIn_submit"),
+                    text: 'Sign In',
                     onClick: () => onClickLogin('email'),
                   ),
                 ),
@@ -130,7 +130,7 @@ class LoginView extends BaseView {
                     child: Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                        'Login with phone number',
+                        'Sign In with phone number',
                         style: BodyTextStyle(
                             color: Colors.lightBlue,
                             weight: FontWeight.bold,

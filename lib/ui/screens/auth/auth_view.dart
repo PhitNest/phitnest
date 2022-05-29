@@ -51,13 +51,13 @@ class AuthView extends BaseView {
                         textAlign: TextAlign.center,
                       )),
                   StyledButton(
-                    key: Key("auth_login"),
-                    text: 'Log In',
+                    key: Key("auth_signIn"),
+                    text: 'Sign In',
                     onClick: onClickLogin,
                   ),
                   StyledButton(
-                    key: Key("auth_signup"),
-                    text: 'Sign Up',
+                    key: Key("auth_register"),
+                    text: 'Register',
                     onClick: onClickSignup,
                     buttonColor: Colors.white,
                     textColor: primaryColor,
