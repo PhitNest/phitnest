@@ -9,7 +9,6 @@ import 'locator.dart';
 import 'constants/constants.dart';
 
 bool usePreview = false;
-bool initialized = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
