@@ -8,7 +8,7 @@ import 'login_model.dart';
 import 'login_view.dart';
 
 class LoginProvider extends PreAuthenticationProvider<LoginModel, LoginView> {
-  LoginProvider() : super(key: Key("provider_login"));
+  const LoginProvider({Key? key}) : super(key: key);
 
   @override
   LoginView build(BuildContext context, LoginModel model) => LoginView(

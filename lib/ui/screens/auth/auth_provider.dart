@@ -7,7 +7,7 @@ import 'auth_view.dart';
 /// This screen shows button directing the user to either login screen or signup
 /// screen.
 class AuthProvider extends PreAuthenticationProvider<AuthModel, AuthView> {
-  AuthProvider() : super(key: Key("provider_auth"));
+  const AuthProvider({Key? key}) : super(key: key);
 
   @override
   AuthView build(BuildContext context, AuthModel model) => AuthView(

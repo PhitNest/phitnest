@@ -5,7 +5,7 @@ import 'profile_model.dart';
 import 'profile_view.dart';
 
 class ProfileProvider extends AuthenticatedProvider<ProfileModel, ProfileView> {
-  ProfileProvider() : super(key: Key("provider_profile"));
+  const ProfileProvider({Key? key}) : super(key: key);
 
   @override
   ProfileView build(BuildContext context, ProfileModel model) => ProfileView();

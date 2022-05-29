@@ -7,7 +7,7 @@ import '../redirected_provider.dart';
 /// This is a provider that will redirect if the user is authenticated.
 abstract class PreAuthenticationProvider<T extends BaseModel,
     K extends BaseView> extends RedirectedProvider<T, K> {
-  const PreAuthenticationProvider({required Key key}) : super(key: key);
+  const PreAuthenticationProvider({Key? key}) : super(key: key);
 
   /// Redirected authenticated users to the home route.
   @override

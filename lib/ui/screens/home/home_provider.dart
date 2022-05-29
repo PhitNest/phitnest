@@ -8,7 +8,7 @@ import 'home_model.dart';
 import 'home_view.dart';
 
 class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
-  HomeProvider() : super(key: Key("provider_home"));
+  const HomeProvider({Key? key}) : super(key: key);
 
   @override
   init(BuildContext context, HomeModel model) async =>

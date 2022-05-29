@@ -9,7 +9,7 @@ import 'services/services.dart';
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
-  // Register each service
+  // Register each service (Only one instance of each)
   locator.registerLazySingleton<AuthenticationService>(
       () => FirebaseAuthenticationService());
   locator

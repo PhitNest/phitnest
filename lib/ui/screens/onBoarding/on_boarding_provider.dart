@@ -8,7 +8,7 @@ import 'on_boarding_view.dart';
 
 class OnBoardingProvider
     extends PreAuthenticationProvider<OnBoardingModel, OnBoardingView> {
-  OnBoardingProvider() : super(key: Key("provider_onboarding"));
+  const OnBoardingProvider({Key? key}) : super(key: key);
 
   @override
   init(BuildContext context, OnBoardingModel model) async {

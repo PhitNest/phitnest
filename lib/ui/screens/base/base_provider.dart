@@ -10,7 +10,7 @@ import 'base_view.dart';
 /// This class provides state in the form of a base model to UI views.
 abstract class BaseProvider<T extends BaseModel, K extends BaseView>
     extends StatefulWidget {
-  const BaseProvider({required Key key}) : super(key: key);
+  const BaseProvider({Key? key}) : super(key: key);
 
   /// Gets the authentication service
   AuthenticationService get authService => locator<AuthenticationService>();
