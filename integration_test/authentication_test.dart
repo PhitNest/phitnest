@@ -1,14 +1,13 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart' as testHarness;
 
 import 'package:phitnest/main.dart' as app;
 
+import 'on_boarding_test.dart';
+import 'test_base.dart';
+
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  group('Authentication Test:', () {
-    testWidgets('Set up test', (tester) async {
-      app.testMain();
-      await tester.pumpAndSettle();
-    });
+  runTest('Authentication Screen', (tester) async {
+    await tester.completeOnBoardingScreen();
   });
 }

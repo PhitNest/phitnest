@@ -30,6 +30,7 @@ dependencies:
     path: ./packages/progress_widgets
   get_it: ^7.2.0
   device_preview: ^1.0.0
+  flutter_phoenix: ^1.0.0
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1
   integration_test:

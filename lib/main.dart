@@ -9,28 +9,30 @@ import 'locator.dart';
 import 'constants/constants.dart';
 
 bool usePreview = false;
+bool initialized = false;
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
   ProgressWidget.initialize(COLOR_PRIMARY);
   setupLocator();
-  runApp(DevicePreview(
-    enabled: usePreview,
-    builder: (context) =>
-        // Set up easy localization
-        EasyLocalization(
-      supportedLocales: [Locale('en'), Locale('ar'), Locale('fr')],
-      path: 'assets/translations',
-      fallbackLocale: Locale('en'),
-      useFallbackTranslations: true,
-      child: PhitnestApp(),
-    ),
-  ));
+  _startApp();
 }
 
-void testMain() {
-  usePreview = false;
-  main();
-}
+/// Only call this from integration tests
+restartTestApp() => _startApp();
+
+_startApp() => runApp(DevicePreview(
+      key: UniqueKey(),
+      enabled: usePreview,
+      builder: (context) =>
+          // Set up easy localization
+          EasyLocalization(
+        supportedLocales: [Locale('en'), Locale('ar'), Locale('fr')],
+        path: 'assets/translations',
+        fallbackLocale: Locale('en'),
+        useFallbackTranslations: true,
+        child: PhitnestApp(),
+      ),
+    ));
