@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../models.dart';
 
-enum LoginMethod { email, apple }
-
 /// This is the view model for the login view.
-class LoginModel extends BaseModel {
+class SignInModel extends BaseModel {
   /// Form key
   final GlobalKey<FormState> formKey = GlobalKey();
 

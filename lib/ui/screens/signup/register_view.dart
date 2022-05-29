@@ -7,7 +7,7 @@ import '../../common/widgets/widgets.dart';
 import '../views.dart';
 
 /// This view contains a form allowing users to sign up.
-class SignupView extends BaseView {
+class RegisterView extends BaseView {
   final GlobalKey<FormState> formKey;
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
@@ -26,7 +26,7 @@ class SignupView extends BaseView {
   final String? Function(String? password) validatePassword;
   final String? Function(String? confirmPassword) validateConfirmPassword;
 
-  const SignupView({
+  const RegisterView({
     required this.formKey,
     required this.firstNameController,
     required this.lastNameController,
@@ -67,42 +67,42 @@ class SignupView extends BaseView {
                       padding: const EdgeInsets.only(
                           left: 8, top: 32, right: 8, bottom: 8),
                       child: ProfilePictureSelector(
-                          key: Key("signup_photoSelect"),
+                          key: Key("register_photoSelect"),
                           initialImage: image,
                           onSelected: onSaveImage)),
                   TextInputFormField(
-                    key: Key("signup_firstName"),
+                    key: Key("register_firstName"),
                     hint: 'First Name',
                     controller: firstNameController,
                     inputType: TextInputType.name,
                     validator: validateFirstName,
                   ),
                   TextInputFormField(
-                      key: Key("signup_lastName"),
+                      key: Key("register_lastName"),
                       hint: 'Last Name',
                       inputType: TextInputType.name,
                       controller: lastNameController,
                       validator: validateLastName),
                   TextInputFormField(
-                      key: Key("signup_email"),
+                      key: Key("register_email"),
                       hint: 'Email Address',
                       inputType: TextInputType.emailAddress,
                       controller: emailController,
                       validator: validateEmail),
                   MobileInputFormField(
-                      key: Key("signup_mobile"),
+                      key: Key("register_mobile"),
                       controller: mobileController,
                       validator: validateMobile,
                       onChanged: onSaveMobile),
                   TextInputFormField(
-                    key: Key("signup_password"),
+                    key: Key("register_password"),
                     hint: 'Password',
                     hide: true,
                     controller: passwordController,
                     validator: validatePassword,
                   ),
                   TextInputFormField(
-                      key: Key("signup_confirmPassword"),
+                      key: Key("register_confirmPassword"),
                       hint: 'Confirm Password',
                       onSubmit: onClickSignup,
                       validator: validateConfirmPassword,
@@ -111,8 +111,8 @@ class SignupView extends BaseView {
                     padding: const EdgeInsets.only(
                         right: 40.0, left: 40.0, top: 40.0),
                     child: StyledButton(
-                      key: Key("signup_submit"),
-                      text: 'Sign Up',
+                      key: Key("register_submit"),
+                      text: 'Register',
                       onClick: onClickSignup,
                     ),
                   ),

@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 
 import '../models.dart';
 
-/// View model for sign up view
-class SignupModel extends BaseModel {
+/// View model for register view
+class RegisterModel extends BaseModel {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();

@@ -11,6 +11,6 @@ class AuthProvider extends PreAuthenticationProvider<AuthModel, AuthView> {
 
   @override
   AuthView build(BuildContext context, AuthModel model) => AuthView(
-      onClickLogin: () => Navigator.pushNamed(context, '/login'),
-      onClickSignup: () => Navigator.pushNamed(context, '/signup'));
+      onClickLogin: () => Navigator.pushNamed(context, '/signIn'),
+      onClickSignup: () => Navigator.pushNamed(context, '/register'));
 }
