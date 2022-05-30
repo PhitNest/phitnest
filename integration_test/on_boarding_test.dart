@@ -24,7 +24,7 @@ extension OnBoardingTest on WidgetTester {
       await pumpAndSettle();
 
       // Look for the continue button
-      Finder continueButtonFinder = find.byKey(Key("onboarding_continue"));
+      Finder continueButtonFinder = find.byKey(Key("onBoarding_continue"));
 
       // Check if we are currently on the last page
       if (view().isLastPage) {

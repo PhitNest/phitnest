@@ -8,7 +8,7 @@ import '../widgets.dart';
 
 const MAX_NUM_DOTS = 3;
 
-// INCREASE THIS TO SHIFT THE LOADING TEXT LEFT, DECREASE TO SHIFT RIGHT
+// Increase this to shift the loading text left, decrease to shift right
 const TEXT_OFFSET = 75;
 
 class LoadingWidget extends StatefulWidget {
@@ -55,7 +55,6 @@ class _LoadingWidgetState extends State<LoadingWidget>
                     angle: _controller.value * 2 * pi,
                     child: LogoWidget(
                       padding: EdgeInsets.all(20),
-                      scale: 0.25,
                       color: Colors.white,
                     ),
                   )),

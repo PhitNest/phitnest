@@ -55,7 +55,7 @@ class OnBoardingView extends BaseView {
                 // Set on boarding finished to true and redirect to auth.
                 onPressed: onClickContinue,
                 child: Text('Continue',
-                    key: Key("onboarding_continue"),
+                    key: Key("onBoarding_continue"),
                     style: BodyTextStyle(
                         size: TextSize.SMALL,
                         color: Colors.white,

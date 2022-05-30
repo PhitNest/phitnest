@@ -32,6 +32,9 @@ dependencies:
   get_it: ^7.2.0
   device_preview: ^1.0.0
   flutter_phoenix: ^1.0.0
+  flutter_native_splash: ^2.1.6
+  introduction_screen: ^3.0.2
+  concentric_transition: ^1.0.2
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1
   integration_test:
