@@ -29,6 +29,7 @@ class AuthView extends BaseView {
           children: [
             LogoWidget(
               showText: true,
+              scale: 0.5,
               padding: EdgeInsets.symmetric(vertical: 30),
             ),
             Padding(
