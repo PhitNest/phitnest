@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:phitnest/ui/screens/models.dart';
 
 import 'package:phitnest/ui/screens/views.dart';
 import 'package:phitnest/ui/screens/providers.dart';
@@ -9,13 +10,13 @@ import 'test_base.dart';
 const Duration swipeLength = Duration(milliseconds: 400);
 
 extension OnBoardingTest on WidgetTester {
-  completeOnBoardingScreen() async {
-    // Function to get an updated reference to our screen view
-    OnBoardingView view() =>
-        widget<OnBoardingView>(find.byType(OnBoardingView));
+  // Function to get an updated reference to our screen view
+  OnBoardingView onBoardingView() =>
+      widget<OnBoardingView>(find.byType(OnBoardingView));
 
+  completeOnBoardingScreen() async {
     // Get the number of pages in the on boarding screen
-    int numPages = view().numPages;
+    int numPages = OnBoardingModel.pages.length;
 
     // Swipe through each page of the on boarding screen
     for (int swipeNum = 0; swipeNum < numPages - 1; swipeNum++) {
@@ -23,35 +24,33 @@ extension OnBoardingTest on WidgetTester {
       await swipe(Offset(200, 200), Offset(0, 200), swipeLength);
       await pumpAndSettle();
 
-      // Look for the continue button
-      Finder continueButtonFinder = find.byKey(Key("onBoarding_continue"));
-
       // Check if we are currently on the last page
-      if (view().isLastPage) {
-        // There should be a continue button on the last page
-        expect(continueButtonFinder, findsOneWidget,
-            reason: "The continue button should be visible on the last page.");
-
+      if (onBoardingView().controller.currentPage == numPages - 1) {
         // Make sure you can't navigate too far to the right
         await swipe(Offset(200, 200), Offset(0, 200), swipeLength);
         await pumpAndSettle();
 
         // If we are not still on the last page after an additional swipe, fail
-        if (!view().isLastPage) {
+        if (onBoardingView().controller.currentPage != numPages - 1) {
           fail("The screen should not scroll past the last page.");
         }
 
-        // Tap the continue button
-        await tap(continueButtonFinder);
-      } else {
-        // The continue button should not be visible if we are not on the last
-        // page
-        expect(continueButtonFinder, findsNothing,
-            reason:
-                "The continue button should not be visible until the final page.");
+        // Tap the continue button (this strange predicate function is just finding
+        // the first instance of our continue button, because liquid swipes does
+        // some weird multi instance stuff)
+        bool foundButton = false;
+        await tap(find.byWidgetPredicate((widget) {
+          if (!foundButton) {
+            if (widget.key == Key('onBoarding_continue')) {
+              foundButton = true;
+              return true;
+            }
+          }
+          return false;
+        }));
+        await pumpAndSettle();
       }
     }
-    await pumpAndSettle();
 
     // After completing the on boarding process you should be redirected to the
     // auth screen
@@ -74,6 +73,11 @@ void main() {
     // Make sure you can't navigate too far to the left
     await tester.swipe(Offset(100, 200), Offset(300, 200), swipeLength);
     await tester.pumpAndSettle();
+
+    // If we are not still on the first page after an additional swipe, fail
+    if (tester.onBoardingView().controller.currentPage != 0) {
+      fail("The screen should not scroll past the first page.");
+    }
 
     // Complete the on boarding process
     await tester.completeOnBoardingScreen();
