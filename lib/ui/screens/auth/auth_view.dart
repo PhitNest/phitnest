@@ -1,7 +1,6 @@
 import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 
-import '../../common/textStyles/text_styles.dart';
 import '../../common/widgets/widgets.dart';
 import '../views.dart';
 
@@ -15,60 +14,52 @@ class AuthView extends BaseView {
     required this.onClickSignup,
   }) : super();
 
-  Widget build(BuildContext context) => Scaffold(
-          // Center everything
-          body: Center(
-              // This scroll view blocks render overflows when the user has the
-              // keyboard open (popping back from login or signup with keyboard
-              // still open)
-              child: SingleChildScrollView(
-                  child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            LogoWidget(
-              showText: true,
-              scale: 0.5,
-              padding: EdgeInsets.symmetric(vertical: 30),
+  Widget build(BuildContext context) {
+    double vertPadding = MediaQuery.of(context).size.height / 20;
+    double buttonWidth = MediaQuery.of(context).size.width * 0.8;
+
+    return Scaffold(
+        // Center everything
+        body: Center(
+      // This scroll view blocks render overflows when the user has the
+      // keyboard open (popping back from login or signup with keyboard
+      // still open)
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          LogoWidget(
+            light: true,
+            showText: true,
+            scale: 0.75,
+            padding: EdgeInsets.only(top: vertPadding * 3),
+          ),
+          Expanded(child: Container()),
+          Padding(
+            padding: EdgeInsets.only(bottom: vertPadding * 2),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                StyledButton(
+                  key: Key("auth_signIn"),
+                  minWidth: buttonWidth,
+                  text: 'Sign In',
+                  textColor: Colors.black,
+                  onClick: onClickLogin,
+                ),
+                StyledButton(
+                  key: Key("auth_register"),
+                  minWidth: buttonWidth,
+                  text: 'Register',
+                  onClick: onClickSignup,
+                  textColor: Colors.black,
+                  buttonColor: Colors.white,
+                  buttonOutline: primaryColor,
+                )
+              ],
             ),
-            Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Text(
-                  'Connecting Communities',
-                  textAlign: TextAlign.center,
-                  style: HeadingTextStyle(size: TextSize.MEDIUM),
-                )),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      child: Text(
-                        'Let\'s promote health and fitness together',
-                        style: BodyTextStyle(size: TextSize.LARGE),
-                        textAlign: TextAlign.center,
-                      )),
-                  StyledButton(
-                    key: Key("auth_signIn"),
-                    minWidth: double.infinity,
-                    text: 'Sign In',
-                    onClick: onClickLogin,
-                  ),
-                  StyledButton(
-                    key: Key("auth_register"),
-                    minWidth: double.infinity,
-                    text: 'Register',
-                    onClick: onClickSignup,
-                    buttonColor: Colors.white,
-                    textColor: primaryColor,
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ))));
+          ),
+        ],
+      ),
+    ));
+  }
 }

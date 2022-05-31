@@ -36,6 +36,7 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
         darkMode: Theme.of(context).brightness == Brightness.dark,
         primary: Color(COLOR_PRIMARY),
         accent: Color(COLOR_ACCENT),
+        buttonColor: Color(COLOR_BUTTON),
         error: Theme.of(context).errorColor);
 
     return MaterialApp(
