@@ -49,19 +49,21 @@ class OnBoardingPage extends StatelessWidget {
               text: "Let's get phit!",
               onClick: onClickContinue,
             )),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: buildDots(vertPadding).toList(),
-        )
+        Padding(
+            padding: EdgeInsets.symmetric(vertical: vertPadding),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: buildDots().toList(),
+            )),
       ])
     ]));
   }
 
   /// Build the page indicator dots at the bottom of the screen
-  Iterable<Widget> buildDots(double vertPadding) sync* {
+  Iterable<Widget> buildDots() sync* {
     for (int i = 0; i < OnBoardingModel.pages.length; i++) {
       yield Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: vertPadding),
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
           child: Container(
             width: 8.0,
             height: 8.0,
