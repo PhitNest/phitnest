@@ -20,9 +20,13 @@ class App extends StatelessWidget with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    // Store theme setting for frequent use
-    DisplayUtils.initialize(context);
-    WidgetsBinding.instance?.addObserver(this);
+    // Initialize dark mode settings
+    DisplayUtils.initialize(
+        darkMode: Theme.of(context).brightness == Brightness.dark,
+        primary: Color(COLOR_PRIMARY),
+        accent: Color(COLOR_ACCENT),
+        buttonColor: Color(COLOR_BUTTON),
+        error: Theme.of(context).errorColor);
 
     return MaterialApp(
       navigatorKey: _navigatorKey,

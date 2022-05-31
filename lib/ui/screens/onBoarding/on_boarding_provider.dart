@@ -36,7 +36,6 @@ class OnBoardingProvider
       yield OnBoardingPage(
         path: pageData.path,
         text: pageData.text,
-        heightFactor: pageData.heightFactor,
         pageNum: i,
         onClickContinue: () async {
           await deviceStorage.write(

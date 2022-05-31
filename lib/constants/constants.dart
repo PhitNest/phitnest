@@ -14,6 +14,8 @@ const COLOR_ACCENT = 0xFFff8c9b;
 const COLOR_PRIMARY_DARK = 0xFFb42442;
 const COLOR_PRIMARY = LOGO_OUTER_RING;
 
+const COLOR_BUTTON = 0xFFD0E9EC;
+
 // Device preference key
 const FINISHED_ON_BOARDING_SETTING = 'finishedOnBoarding';
 

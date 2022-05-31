@@ -47,7 +47,7 @@ extension OnBoardingTest on WidgetTester {
             }
           }
           return false;
-        }));
+        }), warnIfMissed: false);
         await pumpAndSettle();
       }
     }
