@@ -1,4 +1,3 @@
-import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 
 class BackButtonAppBar extends AppBar {
@@ -9,7 +8,6 @@ class BackButtonAppBar extends AppBar {
           ),
           elevation: 0.0,
           backgroundColor: Colors.transparent,
-          iconTheme:
-              IconThemeData(color: isDarkMode ? Colors.white : Colors.black),
+          iconTheme: IconThemeData(color: Colors.black),
         );
 }

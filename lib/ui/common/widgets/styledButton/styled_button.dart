@@ -18,7 +18,7 @@ class StyledButton extends StatelessWidget {
       this.textColor,
       this.buttonColor,
       this.padding = const EdgeInsets.all(5),
-      this.minWidth = double.infinity})
+      this.minWidth = 0})
       : super(key: key);
 
   @override

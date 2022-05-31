@@ -1,21 +1,23 @@
-import 'package:device/storage/storage.dart';
+import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 
-import '../../../constants/constants.dart';
+import 'package:phitnest/constants/constants.dart';
+
+import '../models.dart';
 import '../providers.dart';
-import 'on_boarding_model.dart';
-import 'on_boarding_view.dart';
+import '../views.dart';
+import 'pages/on_boarding_page.dart';
 
 class OnBoardingProvider
     extends PreAuthenticationProvider<OnBoardingModel, OnBoardingView> {
-  const OnBoardingProvider({Key? key}) : super(key: key);
-
   @override
-  init(BuildContext context, OnBoardingModel model) async {
-    if (!await super.init(context, model)) return false;
+  Future<bool> init(BuildContext context, OnBoardingModel model) async {
+    if (!await super.init(context, model)) {
+      return false;
+    }
 
     if (await deviceStorage.read(key: FINISHED_ON_BOARDING_SETTING) == 'true') {
-      Navigator.pushNamedAndRemoveUntil(context, '/auth', ((_) => false));
+      Navigator.pushNamed(context, '/auth');
       return false;
     } else {
       return true;
@@ -25,15 +27,23 @@ class OnBoardingProvider
   @override
   OnBoardingView build(BuildContext context, OnBoardingModel model) =>
       OnBoardingView(
-          image: model.image,
-          title: model.title,
-          subtitle: model.subtitle,
-          pageController: model.pageController,
-          numPages: model.numPages,
-          isLastPage: model.isLastPage,
-          onPageChange: (int newPage) => model.currentIndex = newPage,
-          onClickContinue: () => deviceStorage
-              .write(key: FINISHED_ON_BOARDING_SETTING, value: 'true')
-              .then((_) => Navigator.pushNamedAndRemoveUntil(
-                  context, '/auth', (_) => false)));
+        pages: getPages(context).toList(),
+      );
+
+  static Iterable<OnBoardingPage> getPages(BuildContext context) sync* {
+    for (int i = 0; i < OnBoardingModel.pages.length; i++) {
+      OnBoardingPageData pageData = OnBoardingModel.pages[i];
+      yield OnBoardingPage(
+        path: pageData.path,
+        text: pageData.text,
+        heightFactor: pageData.heightFactor,
+        pageNum: i,
+        onClickContinue: () async {
+          await deviceStorage.write(
+              key: FINISHED_ON_BOARDING_SETTING, value: 'true');
+          Navigator.pushNamed(context, '/auth');
+        },
+      );
+    }
+  }
 }
