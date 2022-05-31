@@ -12,7 +12,6 @@ class OnBoardingPageData {
 
 class OnBoardingModel extends BaseModel {
   static const List<OnBoardingPageData> pages = [
-    /// Each page has a given height factor that is fine tuned to look pretty
     OnBoardingPageData(
       path: 'assets/images/onBoarding/on_boarding_one.png',
       text: "Welcome to phitnest",
