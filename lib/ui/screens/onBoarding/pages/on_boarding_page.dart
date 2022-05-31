@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:phitnest/ui/common/textStyles/text_styles.dart';
 import 'package:phitnest/ui/screens/models.dart';
 
+import '../../../../constants/constants.dart';
+import '../../../common/textStyles/text_styles.dart';
 import '../../../common/widgets/widgets.dart';
 
 class OnBoardingPage extends StatelessWidget {
@@ -9,6 +10,13 @@ class OnBoardingPage extends StatelessWidget {
   final String text;
   final Function() onClickContinue;
   final int pageNum;
+
+  static const List<Color> backgroundColors = [
+    Colors.white,
+    Color(LOGO_OUTER_RING)
+  ];
+
+  static List<Color> dotColors = [Colors.grey, Colors.grey.shade300];
 
   const OnBoardingPage({
     Key? key,
@@ -23,40 +31,42 @@ class OnBoardingPage extends StatelessWidget {
     double vertPadding = MediaQuery.of(context).size.height / 20;
 
     return Scaffold(
+        backgroundColor: backgroundColors[pageNum % 2],
         body: Stack(children: [
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ImageWidget(
-            path: path,
-            padding: EdgeInsets.only(top: vertPadding * 2, bottom: vertPadding),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ImageWidget(
+                path: path,
+                padding:
+                    EdgeInsets.only(top: vertPadding * 3, bottom: vertPadding),
+              ),
+              Text(text,
+                  style: HeadingTextStyle(
+                    size: TextSize.MEDIUM,
+                    color: Colors.black,
+                  )),
+            ],
           ),
-          Text(text,
-              style: HeadingTextStyle(
-                size: TextSize.MEDIUM,
-                color: Colors.black,
-              )),
-        ],
-      ),
-      Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-        // The button is only shown on the last page
-        Visibility(
-            visible: pageNum == OnBoardingModel.pages.length - 1,
-            child: StyledButton(
-              key: Key("onBoarding_continue"),
-              minWidth: 300,
-              textColor: Colors.black,
-              text: "Let's get phit!",
-              onClick: onClickContinue,
-            )),
-        Padding(
-            padding: EdgeInsets.symmetric(vertical: vertPadding),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: buildDots().toList(),
-            )),
-      ])
-    ]));
+          Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+            // The button is only shown on the last page
+            Visibility(
+                visible: pageNum == OnBoardingModel.pages.length - 1,
+                child: StyledButton(
+                  key: Key("onBoarding_continue"),
+                  minWidth: 300,
+                  textColor: Colors.black,
+                  text: "Let's get phit!",
+                  onClick: onClickContinue,
+                )),
+            Padding(
+                padding: EdgeInsets.symmetric(vertical: vertPadding),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: buildDots().toList(),
+                )),
+          ])
+        ]));
   }
 
   /// Build the page indicator dots at the bottom of the screen
@@ -65,12 +75,12 @@ class OnBoardingPage extends StatelessWidget {
       yield Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.0),
           child: Container(
-            width: 8.0,
-            height: 8.0,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                color: i == pageNum ? Colors.grey : Colors.grey.shade300),
-          ));
+              width: 8.0,
+              height: 8.0,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  color: dotColors[
+                      ((i == pageNum ? 0 : 1) + (pageNum % 2)) % 2])));
     }
   }
 }
