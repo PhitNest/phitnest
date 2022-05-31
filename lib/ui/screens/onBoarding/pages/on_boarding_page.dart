@@ -79,8 +79,15 @@ class OnBoardingPage extends StatelessWidget {
               height: 8.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
-                  color: dotColors[
-                      ((i == pageNum ? 0 : 1) + (pageNum % 2)) % 2])));
+                  // If this dot is for the current page, and the background is
+                  // light, the dot is dark.
+                  // If this dot is for the current page, and the background is
+                  // dark, the dot is light
+                  // If this dot is not for the current page, and the background
+                  // is light, the dot is light
+                  // If this dot is not for the current page, and the background
+                  // is dark, the dot is dark
+                  color: dotColors[(i == pageNum ? 0 : 1) ^ (pageNum % 2)])));
     }
   }
 }
