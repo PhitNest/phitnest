@@ -15,7 +15,7 @@ class AuthView extends BaseView {
   }) : super();
 
   Widget build(BuildContext context) {
-    double vertPadding = MediaQuery.of(context).size.height / 20;
+    double vertPadding = MediaQuery.of(context).size.height / 10;
     double buttonWidth = MediaQuery.of(context).size.width * 0.8;
 
     return Scaffold(
@@ -31,11 +31,11 @@ class AuthView extends BaseView {
             light: true,
             showText: true,
             scale: 0.75,
-            padding: EdgeInsets.only(top: vertPadding * 3),
+            padding: EdgeInsets.only(top: vertPadding * 2),
           ),
           Expanded(child: Container()),
           Padding(
-            padding: EdgeInsets.only(bottom: vertPadding * 2),
+            padding: EdgeInsets.only(bottom: vertPadding),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

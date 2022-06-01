@@ -6,10 +6,14 @@ import 'package:flutter/material.dart';
 import '../../textStyles/text_styles.dart';
 import '../widgets.dart';
 
-const MAX_NUM_DOTS = 3;
+const SPIN_DURATION = Duration(milliseconds: 1000);
+
+const MAX_NUM_DOTS = 4;
+
+const DOT_DURATION = Duration(milliseconds: 2000);
 
 // Increase this to shift the loading text left, decrease to shift right
-const TEXT_OFFSET = 75;
+const TEXT_OFFSET = 83;
 
 class LoadingWidget extends StatefulWidget {
   final String? text;
@@ -21,59 +25,52 @@ class LoadingWidget extends StatefulWidget {
 }
 
 class _LoadingWidgetState extends State<LoadingWidget>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller =
-      AnimationController(vsync: this, duration: Duration(milliseconds: 1000))
-        ..repeat();
-
-  int numDots = 0;
+    with TickerProviderStateMixin {
+  late final AnimationController _spinController =
+      AnimationController(vsync: this, duration: SPIN_DURATION)..repeat();
+  late final AnimationController _dotController =
+      AnimationController(vsync: this, duration: DOT_DURATION)..repeat();
 
   @override
   Widget build(BuildContext context) {
-    String text = widget.text ?? 'loading';
-
-    for (int i = 0; i < numDots; i++) {
-      text += '.';
-    }
-
-    numDots = (numDots + 1) % (MAX_NUM_DOTS + 1);
-
-    Future.delayed(Duration(milliseconds: 250), () {
-      try {
-        setState(() {});
-      } catch (ignored) {}
-    });
-
     return Scaffold(
-        backgroundColor: primaryColor,
         body: Center(
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          AnimatedBuilder(
-              animation: _controller,
-              builder: (_, child) => Transform.rotate(
-                    angle: _controller.value * 2 * pi,
-                    child: LogoWidget(
-                      padding: EdgeInsets.all(20),
-                      color: Colors.white,
-                    ),
-                  )),
-          Container(
-              padding: EdgeInsets.only(
-                  left: (MediaQuery.of(context).size.width - TEXT_OFFSET) / 2),
-              constraints: BoxConstraints(minWidth: double.infinity),
-              child: Text(
-                text,
-                textAlign: TextAlign.left,
-                style:
-                    HeadingTextStyle(size: TextSize.SMALL, color: Colors.white),
-              ))
-        ])));
+      AnimatedBuilder(
+          animation: _spinController,
+          builder: (_, child) => Transform.rotate(
+                angle: _spinController.value * 2 * pi,
+                child: LogoWidget(
+                  scale: 0.35,
+                  padding: EdgeInsets.all(20),
+                ),
+              )),
+      Container(
+          padding: EdgeInsets.only(
+              left: (MediaQuery.of(context).size.width - TEXT_OFFSET) / 2),
+          constraints: BoxConstraints(minWidth: double.infinity),
+          child: AnimatedBuilder(
+            animation: _dotController,
+            builder: (_, child) {
+              String displayText = widget.text ?? 'loading';
+              int numDots =
+                  (_dotController.value * MAX_NUM_DOTS).floor() % MAX_NUM_DOTS;
+              for (int i = 0; i < numDots; i++) {
+                displayText += '.';
+              }
+              return Text(displayText,
+                  textAlign: TextAlign.left,
+                  style: HeadingTextStyle(
+                      size: TextSize.MEDIUM, color: Colors.black));
+            },
+          ))
+    ])));
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _spinController.dispose();
     super.dispose();
   }
 }
