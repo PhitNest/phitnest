@@ -60,8 +60,6 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
       initialRoute: '/',
       onGenerateRoute: (settings) {
         switch (settings.name) {
-          case '/profile':
-            return generateRoute(ProfileProvider());
           case '/home':
             return generateRoute(HomeProvider());
           case '/resetPassword':

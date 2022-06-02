@@ -11,25 +11,31 @@ class AuthenticationServiceImpl extends AuthenticationService {
   }
 
   @override
-  Future<String?> loginWithApple(Position? locationData, String? ip) {
+  Future<String?> signInWithApple(Position? locationData, String ip) {
     throw UnimplementedError();
   }
 
   @override
-  Future<String?> loginWithEmailAndPassword(String email, String password) {
+  Future<String?> signInWithEmailAndPassword(
+      String email, String password, Position? locationData, String ip) {
     throw UnimplementedError();
   }
 
   @override
-  Future<String?> signupWithEmailAndPassword(
+  Future<String?> registerWithEmailAndPassword(
       String emailAddress,
       String password,
       File? profilePicture,
       String firstName,
       String lastName,
-      String ip,
       Position? locationData,
+      String ip,
       String mobile) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> signOut(String reason) {
     throw UnimplementedError();
   }
 }

@@ -21,5 +21,6 @@ void setupLocator() {
   locator.registerFactory(() => RegisterModel());
   locator.registerFactory(() => HomeModel());
   locator.registerFactory(() => ProfileModel());
+  locator.registerFactory(() => ChatHomeModel());
   locator.registerFactory(() => AuthModel());
 }

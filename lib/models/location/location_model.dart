@@ -1,11 +1,10 @@
-class UserLocation {
+class Location {
   double latitude;
   double longitude;
 
-  UserLocation({this.latitude = 00.1, this.longitude = 00.1});
+  Location({this.latitude = 00.1, this.longitude = 00.1});
 
-  factory UserLocation.fromJson(Map<dynamic, dynamic>? parsedJson) =>
-      UserLocation(
+  factory Location.fromJson(Map<dynamic, dynamic>? parsedJson) => Location(
         latitude: parsedJson?['latitude'],
         longitude: parsedJson?['longitude'],
       );

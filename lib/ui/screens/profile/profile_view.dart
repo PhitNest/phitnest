@@ -6,5 +6,5 @@ class ProfileView extends BaseView {
   const ProfileView() : super();
 
   @override
-  Widget build(BuildContext context) => Scaffold(body: Center());
+  Widget build(BuildContext context) => Scaffold(body: Text("PROFILE"));
 }

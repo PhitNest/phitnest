@@ -10,7 +10,9 @@ class OnBoardingPageData {
   });
 }
 
+/// Model for the on boarding screen
 class OnBoardingModel extends BaseModel {
+  /// These are used to generate on boarding pages
   static const List<OnBoardingPageData> pages = [
     OnBoardingPageData(
       path: 'assets/images/onBoarding/on_boarding_one.png',

@@ -13,6 +13,8 @@ class RegisterProvider
     extends PreAuthenticationProvider<RegisterModel, RegisterView> {
   const RegisterProvider({Key? key}) : super(key: key);
 
+  /// If this returns true, the loading widget is dropped. If it returns false,
+  /// the loading widget stays until we navigate away from the screen.
   @override
   init(BuildContext context, RegisterModel model) async {
     if (await super.init(context, model)) {
@@ -38,7 +40,7 @@ class RegisterProvider
         onClickSignup: () => showProgressUntil(
             context: context,
             message: 'Creating new account, Please wait...',
-            showUntil: () => signUp(model),
+            showUntil: () => register(model),
             onDone: (result) {
               if (result != null) {
                 showAlertDialog(context, 'Signup Failed', result);
@@ -63,17 +65,17 @@ class RegisterProvider
   /// Validate the form, request the user location, and make a registration
   /// request to the authentication service. Return null if the registration
   /// is successful, and return an error message otherwise.
-  Future<String?> signUp(RegisterModel model) async {
+  Future<String?> register(RegisterModel model) async {
     if (model.formKey.currentState?.validate() ?? false) {
       model.formKey.currentState!.save();
-      return await authService.signupWithEmailAndPassword(
+      return await authService.registerWithEmailAndPassword(
           model.emailController.text.trim(),
           model.passwordController.text.trim(),
           model.image,
           model.firstNameController.text.trim(),
           model.lastNameController.text.trim(),
-          await userIP,
           await getCurrentLocation(),
+          await userIP,
           model.mobile!);
     } else {
       model.validate = AutovalidateMode.onUserInteraction;

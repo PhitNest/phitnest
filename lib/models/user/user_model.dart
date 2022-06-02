@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'user_location_model.dart';
+import '../location/location_model.dart';
 import 'user_settings_model.dart';
 
 class UserModel {
@@ -13,8 +13,8 @@ class UserModel {
   UserSettings settings;
   int lastOnlineTimestamp;
   String recentPlatform = '${Platform.operatingSystem}';
-  UserLocation? location;
-  UserLocation? signupLocation;
+  Location? location;
+  Location? signupLocation;
   String? recentIP;
   String? signupIP;
   List photos;
@@ -51,10 +51,10 @@ class UserModel {
       lastOnlineTimestamp: parsedJson['lastOnlineTimestamp'],
       settings: UserSettings.fromJson(parsedJson['settings']),
       location: parsedJson.containsKey('location')
-          ? UserLocation.fromJson(parsedJson['location'])
+          ? Location.fromJson(parsedJson['location'])
           : null,
       signupLocation: parsedJson.containsKey('signupLocation')
-          ? UserLocation.fromJson(parsedJson['signupLocation'])
+          ? Location.fromJson(parsedJson['signupLocation'])
           : null,
       photos: parsedJson['photos']);
 

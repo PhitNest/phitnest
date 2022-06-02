@@ -17,7 +17,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
-  Future<String?> loginWithApple(Position? locationData, String? ip) async {
+  Future<String?> signInWithApple(Position? locationData, String ip) async {
     // Request authorization from apple
     apple.AuthorizationResult appleAuth =
         await apple.TheAppleSignIn.performRequests([
@@ -50,20 +50,31 @@ class FirebaseAuthenticationService extends AuthenticationService {
           userModel = await _database.getUserModel(firebaseUser.uid);
           if (userModel != null) {
             userModel!.online = true;
+            userModel!.lastOnlineTimestamp =
+                DateTime.now().millisecondsSinceEpoch;
+            userModel!.recentIP = ip;
+            if (locationData != null) {
+              userModel!.location = Location(
+                  latitude: locationData.latitude,
+                  longitude: locationData.longitude);
+            }
           } else {
+            Location? userLocation = locationData != null
+                ? Location(
+                    latitude: locationData.latitude,
+                    longitude: locationData.longitude)
+                : null;
+
             userModel = UserModel(
                 signupIP: ip,
                 email: appleIdCredential!.email ?? '',
                 firstName: appleIdCredential.fullName?.givenName ?? 'Deleted',
                 userID: firebaseUser.uid,
                 lastName: appleIdCredential.fullName?.familyName ?? 'User',
+                recentIP: ip,
+                signupLocation: userLocation,
+                location: userLocation,
                 online: true);
-            // If the location is not null, set it
-            if (locationData != null) {
-              userModel!.signupLocation = UserLocation(
-                  latitude: locationData.latitude,
-                  longitude: locationData.longitude);
-            }
           }
 
           // Update the database model
@@ -76,8 +87,8 @@ class FirebaseAuthenticationService extends AuthenticationService {
   }
 
   @override
-  Future<String?> loginWithEmailAndPassword(
-      String email, String password) async {
+  Future<String?> signInWithEmailAndPassword(
+      String email, String password, Position? locationData, String ip) async {
     try {
       // Get the user credentials from firebase auth
       UserCredential result = await _firebaseAuth.signInWithEmailAndPassword(
@@ -91,6 +102,16 @@ class FirebaseAuthenticationService extends AuthenticationService {
 
         // If the user returned is null, return an error message
         if (userModel != null) {
+          userModel!.online = true;
+          userModel!.lastOnlineTimestamp =
+              DateTime.now().millisecondsSinceEpoch;
+          userModel!.recentIP = ip;
+          if (locationData != null) {
+            userModel!.location = Location(
+                latitude: locationData.latitude,
+                longitude: locationData.longitude);
+          }
+
           // Update the user model in the database service
           return await _database.updateUserModel(userModel!);
         }
@@ -113,14 +134,14 @@ class FirebaseAuthenticationService extends AuthenticationService {
   }
 
   @override
-  Future<String?> signupWithEmailAndPassword(
+  Future<String?> registerWithEmailAndPassword(
       String emailAddress,
       String password,
       File? profilePicture,
       String firstName,
       String lastName,
-      String? ip,
       Position? locationData,
+      String ip,
       String mobile) async {
     try {
       // Create credenetials with a given email/pass
@@ -139,11 +160,12 @@ class FirebaseAuthenticationService extends AuthenticationService {
           firstName: firstName,
           userID: result.user?.uid ?? '',
           lastName: lastName,
-          signupIP: ip);
+          signupIP: ip,
+          recentIP: ip);
 
       // If the location is not null, set it
       if (locationData != null) {
-        userModel!.signupLocation = UserLocation(
+        userModel!.signupLocation = Location(
             latitude: locationData.latitude, longitude: locationData.longitude);
       }
 
@@ -178,9 +200,10 @@ class FirebaseAuthenticationService extends AuthenticationService {
 
   @override
   Future<bool> isAuthenticated() async {
-    if (userModel != null) {
+    if (await super.isAuthenticated()) {
       return true;
     }
+
     String? uid = _firebaseAuth.currentUser?.uid;
     if (uid != null) {
       userModel = await _database.getUserModel(uid);
@@ -189,5 +212,11 @@ class FirebaseAuthenticationService extends AuthenticationService {
       }
     }
     return false;
+  }
+
+  @override
+  Future<void> signOut(String reason) async {
+    await super.signOut(reason);
+    await _firebaseAuth.signOut();
   }
 }
