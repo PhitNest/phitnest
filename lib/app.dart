@@ -49,8 +49,6 @@ class App extends StatelessWidget with WidgetsBindingObserver {
       initialRoute: '/',
       onGenerateRoute: (settings) {
         switch (settings.name) {
-          case '/profile':
-            return generateRoute(ProfileProvider());
           case '/home':
             return generateRoute(HomeProvider());
           case '/resetPassword':

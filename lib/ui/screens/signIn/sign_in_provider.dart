@@ -52,16 +52,18 @@ class SignInProvider
             // Apple login requires current location and user ip in case this is
             // the users first sign up. IP and location are always collected on
             // signup.
-            return await authService.loginWithApple(
+            return await authService.signInWithApple(
                 await getCurrentLocation(), await userIP);
           } catch (e) {
             return 'Failed to login with Apple';
           }
         default:
           // Login with email/password
-          return await authService.loginWithEmailAndPassword(
+          return await authService.signInWithEmailAndPassword(
             model.emailController.text.trim(),
             model.passwordController.text.trim(),
+            await getCurrentLocation(),
+            await userIP,
           );
       }
     } else {

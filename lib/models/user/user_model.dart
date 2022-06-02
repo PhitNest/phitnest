@@ -1,24 +1,7 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:phitnest/services/backend_model.dart';
-import 'package:provider/provider.dart';
-
-class UserModel {
-  String email;
-
-  String firstName;
-
-  String lastName;
-
-  UserSettings settings;
-
-  String phoneNumber;
-
-  bool active;
-
-  Timestamp lastOnlineTimestamp;
+import '../location/location_model.dart';
+import 'user_settings_model.dart';
 
 class UserModel {
   String userID;
@@ -30,8 +13,8 @@ class UserModel {
   UserSettings settings;
   int lastOnlineTimestamp;
   String recentPlatform = '${Platform.operatingSystem}';
-  UserLocation? location;
-  UserLocation? signupLocation;
+  Location? location;
+  Location? signupLocation;
   String? recentIP;
   String? signupIP;
   List photos;
@@ -68,10 +51,10 @@ class UserModel {
       lastOnlineTimestamp: parsedJson['lastOnlineTimestamp'],
       settings: UserSettings.fromJson(parsedJson['settings']),
       location: parsedJson.containsKey('location')
-          ? UserLocation.fromJson(parsedJson['location'])
+          ? Location.fromJson(parsedJson['location'])
           : null,
       signupLocation: parsedJson.containsKey('signupLocation')
-          ? UserLocation.fromJson(parsedJson['signupLocation'])
+          ? Location.fromJson(parsedJson['signupLocation'])
           : null,
       photos: parsedJson['photos']);
 

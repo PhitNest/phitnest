@@ -1,11 +1,2 @@
-export 'blockUser/block_user_model.dart';
-export 'channelParticipation/channel_participation_model.dart';
-export 'chat/chat_model.dart';
-export 'chatVideoContainer/chat_video_container_model.dart';
-export 'contact/contact_model.dart';
-export 'conversation/conversation_model.dart';
-export 'homeConversation/home_conversation_model.dart';
-export 'messageData/message_data_model.dart';
-export 'purchase/purchase_model.dart';
-export 'swipe/swipe_model.dart';
-export 'user/user_model.dart';
+export 'user/user.dart';
+export 'location/location_model.dart';

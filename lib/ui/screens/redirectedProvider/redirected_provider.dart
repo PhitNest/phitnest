@@ -16,6 +16,10 @@ abstract class RedirectedProvider<T extends BaseModel, K extends BaseView>
   /// This is the condition to control whether or not to redirect.
   Future<bool> get shouldRedirect;
 
+  /// If this returns true, the loading widget is dropped. If it returns false,
+  /// the loading widget stays until we navigate away from the screen.
+  /// In this case, the loading screen is dropped if we aren't redirecting. It
+  /// stays up until we navigate away otherwise.
   @override
   init(BuildContext context, T model) async {
     if (!await super.init(context, model)) return false;

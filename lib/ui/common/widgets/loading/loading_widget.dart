@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 
 import '../../textStyles/text_styles.dart';
@@ -71,6 +70,7 @@ class _LoadingWidgetState extends State<LoadingWidget>
   @override
   void dispose() {
     _spinController.dispose();
+    _dotController.dispose();
     super.dispose();
   }
 }

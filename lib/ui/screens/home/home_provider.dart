@@ -8,14 +8,26 @@ import 'home_model.dart';
 import 'home_view.dart';
 
 class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
-  const HomeProvider({Key? key}) : super(key: key);
+  HomeProvider({Key? key}) : super(key: key);
 
+  /// If this returns true, the loading widget is dropped. If it returns false,
+  /// the loading widget stays until we navigate away from the screen.
+  /// If updating location, updating ip, and updating activity status all
+  /// succeed, drop the loading screen. Otherwise
   @override
   init(BuildContext context, HomeModel model) async =>
-      await super.init(context, model) &&
-      await updateLocation() &&
-      await updateIP() &&
-      await updateActivity();
+      await Future.value(await super.init(context, model) &&
+              await updateLocation() &&
+              await updateIP() &&
+              await updateActivity())
+          .then((success) async {
+        if (!success) {
+          await authService.signOut("You've been signed out");
+          Navigator.pushNamed(context, '/auth');
+          return false;
+        }
+        return true;
+      });
 
   @override
   HomeView build(BuildContext context, HomeModel model) => const HomeView();
@@ -25,6 +37,7 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
 
     if (user != null) {
       user.online = true;
+      user.lastOnlineTimestamp = DateTime.now().microsecondsSinceEpoch;
       return await databaseService.updateUserModel(user) == null;
     }
     return false;
@@ -38,7 +51,7 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
         Position? position = await getCurrentLocation();
 
         if (position != null) {
-          user.location = UserLocation(
+          user.location = Location(
               latitude: position.latitude, longitude: position.longitude);
           await databaseService.updateUserModel(user);
           return true;
