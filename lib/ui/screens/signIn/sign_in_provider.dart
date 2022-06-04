@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:device/device.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 
+import '../../../models/models.dart';
 import '../providers.dart';
 import 'sign_in_model.dart';
 import 'sign_in_view.dart';
@@ -21,10 +23,10 @@ class SignInProvider
         validatePassword: validatePassword,
         // Show loading dialog widget, validate input, send request to
         // auth service, and wait for response.
-        onClickLogin: (String method) => showProgressUntil(
+        onClickLogin: () => showProgressUntil(
             context: context,
             message: 'Logging in, please wait...',
-            showUntil: () async => await login(model, method),
+            showUntil: () async => await login(model),
             onDone: (result) {
               // Login failed, show error alert dialog
               if (result != null) {
@@ -40,32 +42,23 @@ class SignInProvider
         onClickMobile: () => Navigator.pushNamed(context, '/mobileAuth'),
       );
 
-  Future<String?> login(SignInModel model, String method) async {
+  Future<String?> login(SignInModel model) async {
     // Validate form
     if (model.formKey.currentState?.validate() ?? false) {
       // Saves state to all of the text controllers
       model.formKey.currentState!.save();
-      // Call proper authentication service method
-      switch (method) {
-        case 'apple':
-          try {
-            // Apple login requires current location and user ip in case this is
-            // the users first sign up. IP and location are always collected on
-            // signup.
-            return await authService.signInWithApple(
-                await getCurrentLocation(), await userIP);
-          } catch (e) {
-            return 'Failed to login with Apple';
-          }
-        default:
-          // Login with email/password
-          return await authService.signInWithEmailAndPassword(
-            model.emailController.text.trim(),
-            model.passwordController.text.trim(),
-            await getCurrentLocation(),
-            await userIP,
-          );
-      }
+      Position? position = await getCurrentLocation();
+      Location? location = position == null
+          ? null
+          : Location(
+              latitude: position.latitude, longitude: position.longitude);
+      // Login with email/password
+      return await authService.signInWithEmailAndPassword(
+        email: model.emailController.text.trim(),
+        password: model.passwordController.text.trim(),
+        locationData: location,
+        ip: await userIP,
+      );
     } else {
       model.validate = AutovalidateMode.onUserInteraction;
       return 'Invalid input';

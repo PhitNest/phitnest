@@ -1,36 +1,33 @@
 import 'dart:io';
 
-import 'package:geolocator_platform_interface/src/models/position.dart';
-
+import 'package:phitnest/models/models.dart';
 import '../services.dart';
 
 class AuthenticationServiceImpl extends AuthenticationService {
   @override
-  Future<bool> isAuthenticated() {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<String?> signInWithApple(Position? locationData, String ip) {
+  Future<bool> isAuthenticatedOrHasAuthCache() {
     throw UnimplementedError();
   }
 
   @override
   Future<String?> signInWithEmailAndPassword(
-      String email, String password, Position? locationData, String ip) {
+      {required String email,
+      required String password,
+      required String ip,
+      Location? locationData}) {
     throw UnimplementedError();
   }
 
   @override
   Future<String?> registerWithEmailAndPassword(
-      String emailAddress,
-      String password,
-      File? profilePicture,
-      String firstName,
-      String lastName,
-      Position? locationData,
-      String ip,
-      String mobile) {
+      {required String emailAddress,
+      required String password,
+      required String firstName,
+      required String lastName,
+      required String ip,
+      required String mobile,
+      Location? locationData,
+      File? profilePicture}) {
     throw UnimplementedError();
   }
 

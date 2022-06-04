@@ -15,7 +15,7 @@ class SignInView extends BaseView {
   final TextEditingController passwordController;
   final String? Function(String? email) validateEmail;
   final String? Function(String? password) validatePassword;
-  final Function(String method) onClickLogin;
+  final Function() onClickLogin;
   final Function() onClickResetPassword;
   final Function() onClickMobile;
 
@@ -61,7 +61,7 @@ class SignInView extends BaseView {
                   validator: validatePassword,
                   controller: passwordController,
                   hide: true,
-                  onSubmit: () => onClickLogin('email'),
+                  onSubmit: onClickLogin,
                 ),
 
                 /// Forgot password text, navigates user to ResetPasswordScreen
@@ -86,7 +86,7 @@ class SignInView extends BaseView {
                   child: StyledButton(
                     key: Key("signIn_submit"),
                     text: 'Sign In',
-                    onClick: () => onClickLogin('email'),
+                    onClick: onClickLogin,
                   ),
                 ),
                 Padding(
@@ -118,7 +118,7 @@ class SignInView extends BaseView {
                             style: isDarkMode
                                 ? apple.ButtonStyle.white
                                 : apple.ButtonStyle.black,
-                            onPressed: () => onClickLogin('apple')),
+                            onPressed: onClickLogin),
                       );
                     }
                   },

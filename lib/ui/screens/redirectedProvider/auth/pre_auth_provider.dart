@@ -15,5 +15,6 @@ abstract class PreAuthenticationProvider<T extends BaseModel,
 
   /// Redirect the user to the home route if they are authenticated.
   @override
-  Future<bool> get shouldRedirect => authService.isAuthenticated();
+  Future<bool> get shouldRedirect =>
+      authService.isAuthenticatedOrHasAuthCache();
 }

@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:device/device.dart';
 import 'package:validation/validation.dart';
 
+import '../../../models/models.dart';
 import '../providers.dart';
 import 'register_view.dart';
 import 'register_model.dart';
@@ -68,15 +70,20 @@ class RegisterProvider
   Future<String?> register(RegisterModel model) async {
     if (model.formKey.currentState?.validate() ?? false) {
       model.formKey.currentState!.save();
+      Position? position = await getCurrentLocation();
+      Location? location = position == null
+          ? null
+          : Location(
+              latitude: position.latitude, longitude: position.longitude);
       return await authService.registerWithEmailAndPassword(
-          model.emailController.text.trim(),
-          model.passwordController.text.trim(),
-          model.image,
-          model.firstNameController.text.trim(),
-          model.lastNameController.text.trim(),
-          await getCurrentLocation(),
-          await userIP,
-          model.mobile!);
+          emailAddress: model.emailController.text.trim(),
+          password: model.passwordController.text.trim(),
+          firstName: model.firstNameController.text.trim(),
+          lastName: model.lastNameController.text.trim(),
+          mobile: model.mobile ?? '',
+          ip: await userIP,
+          profilePicture: model.image,
+          locationData: location);
     } else {
       model.validate = AutovalidateMode.onUserInteraction;
       return 'Invalid input';
