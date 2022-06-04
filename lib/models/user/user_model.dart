@@ -10,11 +10,11 @@ class UserModel {
   UserSettings settings;
   int lastOnlineTimestamp;
   String recentPlatform;
+  String recentIP;
+  String signupIP;
   String? mobile;
   Location? recentLocation;
   Location? signupLocation;
-  String recentIP;
-  String signupIP;
 
   String get fullName => '$firstName${lastName == '' ? '' : ' '}$lastName';
 
