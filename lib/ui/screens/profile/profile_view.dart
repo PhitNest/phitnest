@@ -1,10 +1,41 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:phitnest/ui/common/textStyles/text_styles.dart';
+import 'package:phitnest/ui/common/widgets/profilePictureSelector/profile_picture_selector_widget.dart';
 
 import '../views.dart';
 
 class ProfileView extends BaseView {
-  const ProfileView() : super();
+  final Function(File? photo) onSelectPhoto;
+  final File? profilePicture;
+  final String firstName;
+  final String? lastName;
+
+  const ProfileView(
+      {Key? key,
+      required this.onSelectPhoto,
+      required this.profilePicture,
+      required this.firstName,
+      required this.lastName})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Scaffold(body: Text("PROFILE"));
+  Widget build(BuildContext context) => Scaffold(
+      body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'My Account',
+                style:
+                    HeadingTextStyle(size: TextSize.LARGE, color: Colors.black),
+              ),
+              ProfilePictureSelector(
+                  key: Key('profile_photoSelector'),
+                  initialImage: profilePicture,
+                  onSelected: onSelectPhoto)
+            ],
+          )));
 }

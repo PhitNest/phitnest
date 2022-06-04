@@ -51,7 +51,7 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
         Position? position = await getCurrentLocation();
 
         if (position != null) {
-          user.location = Location(
+          user.recentLocation = Location(
               latitude: position.latitude, longitude: position.longitude);
           await databaseService.updateUserModel(user);
           return true;

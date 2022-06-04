@@ -1,18 +1,21 @@
 import 'dart:io';
 
-import 'package:geolocator/geolocator.dart';
-
 import '../../models/models.dart';
+import '../locator.dart';
+import 'services.dart';
 
 /// Abstract representation of the authentication service.
 abstract class AuthenticationService {
+  /// Instance of database service
+  DatabaseService get database => locator<DatabaseService>();
+
   /// This is the current logged in user model.
   UserModel? userModel;
 
-  /// Checks if the user is authenticated. If the user is authenticated but the
-  /// [userModel] is not yet initialized, initialize [userModel] through the
-  /// database service. Return true if the user was authenticated.
-  Future<bool> isAuthenticated() async {
+  /// Checks if the user is currently authenticated, or if the device has
+  /// authentication credentials in its cache. If it does, sign in with those.
+  /// Return whether or not the user is authenticated at the end of this method.
+  Future<bool> isAuthenticatedOrHasAuthCache() async {
     return userModel != null;
   }
 
@@ -22,30 +25,29 @@ abstract class AuthenticationService {
     if (userModel != null) {
       userModel!.online = false;
       userModel!.lastOnlineTimestamp = DateTime.now().millisecondsSinceEpoch;
+      await database.updateUserModel(userModel!);
       userModel = null;
     }
   }
 
-  /// Requests login service from apple, and initializes [userModel] with the
-  /// result. Returns null if the login was successful, returns an error if the
-  /// login fails.
-  Future<String?> signInWithApple(Position? locationData, String ip);
-
   /// Sends a login request to authentication and initializes [userModel]. If
   /// the login is successful, return null. Otherwise, return an error message.
   Future<String?> signInWithEmailAndPassword(
-      String email, String password, Position? locationData, String ip);
+      {required String email,
+      required String password,
+      required String ip,
+      Location? locationData});
 
   /// Sends a sign up request to authentication and initializes [userModel]. If
   /// the registration is successful, return null. Otherwise, return an error
   /// message.
   Future<String?> registerWithEmailAndPassword(
-      String emailAddress,
-      String password,
-      File? profilePicture,
-      String firstName,
-      String lastName,
-      Position? locationData,
-      String ip,
-      String mobile);
+      {required String emailAddress,
+      required String password,
+      required String firstName,
+      required String lastName,
+      required String ip,
+      required String mobile,
+      Location? locationData,
+      File? profilePicture});
 }

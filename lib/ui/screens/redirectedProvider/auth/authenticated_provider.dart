@@ -15,5 +15,6 @@ abstract class AuthenticatedProvider<T extends BaseModel, K extends BaseView>
 
   /// Redirect the user to the base route if they are not authenticated.
   @override
-  Future<bool> get shouldRedirect async => !await authService.isAuthenticated();
+  Future<bool> get shouldRedirect async =>
+      !await authService.isAuthenticatedOrHasAuthCache();
 }
