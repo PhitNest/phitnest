@@ -24,8 +24,8 @@ class FirebaseAuthenticationService extends AuthenticationService {
       User? firebaseUser = result.user;
 
       if (firebaseUser != null) {
-        // Get the user model from the database service
-        userModel = await database.getUserModel(firebaseUser.uid);
+        // Get the user model from the databaseService service
+        userModel = await databaseService.getUserModel(firebaseUser.uid);
 
         // If the user returned is null, return an error message
         if (userModel != null) {
@@ -36,8 +36,8 @@ class FirebaseAuthenticationService extends AuthenticationService {
           userModel!.recentLocation = locationData;
           userModel!.recentPlatform = Platform.operatingSystem;
 
-          // Update the user model in the database service
-          return await database.updateUserModel(userModel!);
+          // Update the user model in the databaseService service
+          return await databaseService.updateUserModel(userModel!);
         }
       }
     } on FirebaseAuthException catch (exception) {
@@ -77,6 +77,8 @@ class FirebaseAuthenticationService extends AuthenticationService {
         userID: result.user!.uid,
         email: emailAddress,
         settings: UserSettings(
+          profilePictureURL: await storageService.uploadProfilePicture(
+              result.user!.uid, profilePicture),
           notificationsEnabled: false,
           public: true,
           bio: '',
@@ -93,8 +95,8 @@ class FirebaseAuthenticationService extends AuthenticationService {
         recentPlatform: Platform.operatingSystem,
       );
 
-      // Update user model in database service
-      return await database.updateUserModel(userModel!) == null
+      // Update user model in databaseService service
+      return await databaseService.updateUserModel(userModel!) == null
           ? null
           : 'Couldn\'t sign up for firebase, Please try again.';
     } on FirebaseAuthException catch (error) {
@@ -130,7 +132,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
 
     String? uid = _firebaseAuth.currentUser?.uid;
     if (uid != null) {
-      userModel = await database.getUserModel(uid);
+      userModel = await databaseService.getUserModel(uid);
       if (userModel != null) {
         return true;
       }
