@@ -2,7 +2,7 @@ import '../location/location_model.dart';
 import 'user_settings_model.dart';
 
 class UserModel {
-  String userID;
+  String userId;
   String email;
   String firstName;
   String lastName;
@@ -19,7 +19,7 @@ class UserModel {
   String get fullName => '$firstName${lastName == '' ? '' : ' '}$lastName';
 
   UserModel({
-    required this.userID,
+    required this.userId,
     required this.email,
     required this.firstName,
     required this.lastName,
@@ -35,7 +35,7 @@ class UserModel {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> parsedJson) => UserModel(
-      userID: parsedJson['userID'],
+      userId: parsedJson['userId'],
       email: parsedJson['email'],
       firstName: parsedJson['firstName'],
       lastName: parsedJson['lastName'],
@@ -53,7 +53,7 @@ class UserModel {
   Map<String, dynamic> toJson() {
     // Cover the requireds
     Map<String, dynamic> json = {
-      'userID': userID,
+      'userId': userId,
       'email': email,
       'firstName': firstName,
       'lastName': lastName,

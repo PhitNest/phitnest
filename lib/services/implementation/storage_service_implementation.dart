@@ -4,12 +4,12 @@ import '../services.dart';
 
 class StorageServiceImplementation extends StorageService {
   @override
-  Future<String?> uploadProfilePicture(String userId, File? profilePicture) {
+  Future<String?> uploadProfilePicture(String userId, File profilePicture) {
     throw UnimplementedError();
   }
 
   @override
-  Future<File?> getProfilePicture(String userId) {
+  Future<String?> getProfilePictureURL(String userId) {
     throw UnimplementedError();
   }
 }

@@ -51,7 +51,7 @@ class RegisterProvider
                     context, '/home', (_) => false);
               }
             }),
-        onSaveImage: (File? image) => model.image = image,
+        onSaveImage: (File? photo) => model.image = photo,
         validateFirstName: validateName,
         validateLastName: (String? lastName) =>
             lastName == '' ? null : validateName(lastName),

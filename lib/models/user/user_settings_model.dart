@@ -11,7 +11,6 @@ class UserSettings {
     required this.public,
     required this.bio,
     this.birthday,
-    this.profilePictureURL,
     this.gender,
   });
 
@@ -22,22 +21,17 @@ class UserSettings {
           bio: parsedJson['bio'],
           // nullables
           birthday: parsedJson['birthday'],
-          profilePictureURL: parsedJson['profilePictureURL'],
           gender: parsedJson['gender']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {
       'notificationsEnabled': notificationsEnabled,
-      'gender': gender,
-      'profilePictureURL': profilePictureURL,
+      'public': public,
+      'bio': bio,
     };
 
     if (birthday != null) {
       json['birthday'] = birthday;
-    }
-
-    if (profilePictureURL != null) {
-      json['profilePictureURL'] = profilePictureURL;
     }
 
     if (gender != null) {

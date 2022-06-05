@@ -68,7 +68,9 @@ class RegisterView extends BaseView {
                           left: 8, top: 32, right: 8, bottom: 8),
                       child: ProfilePictureSelector(
                           key: Key("register_photoSelect"),
-                          initialImage: image,
+                          initialImage: image == null
+                              ? null
+                              : Image.file(image!, fit: BoxFit.cover),
                           onSelected: onSaveImage)),
                   TextInputFormField(
                     key: Key("register_firstName"),
