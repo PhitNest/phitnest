@@ -14,6 +14,8 @@ void setupLocator() {
       () => FirebaseAuthenticationService());
   locator
       .registerLazySingleton<DatabaseService>(() => FirestoreDatabaseService());
+  locator.registerLazySingleton<StorageService>(() => FirebaseStorageService());
+  locator.registerLazySingleton<ChatService>(() => FirebaseChatService());
 
   // Register each UI view model
   locator.registerFactory(() => OnBoardingModel());

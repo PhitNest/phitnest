@@ -1,14 +1,10 @@
 import 'dart:io';
 
 import '../../models/models.dart';
-import '../locator.dart';
 import 'services.dart';
 
 /// Abstract representation of the authentication service.
 abstract class AuthenticationService {
-  /// Instance of database service
-  DatabaseService get database => locator<DatabaseService>();
-
   /// This is the current logged in user model.
   UserModel? userModel;
 
@@ -25,7 +21,7 @@ abstract class AuthenticationService {
     if (userModel != null) {
       userModel!.online = false;
       userModel!.lastOnlineTimestamp = DateTime.now().millisecondsSinceEpoch;
-      await database.updateUserModel(userModel!);
+      await databaseService.updateUserModel(userModel!);
       userModel = null;
     }
   }
