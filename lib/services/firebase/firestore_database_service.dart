@@ -11,7 +11,7 @@ class FirestoreDatabaseService extends DatabaseService {
   @override
   Future<String?> updateUserModel(UserModel user) async {
     try {
-      await firestore.collection(USERS).doc(user.userID).set(user.toJson());
+      await firestore.collection(USERS).doc(user.userId).set(user.toJson());
       return null;
     } catch (e) {
       return '$e';

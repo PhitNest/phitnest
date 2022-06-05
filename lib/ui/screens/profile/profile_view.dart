@@ -8,7 +8,7 @@ import '../views.dart';
 
 class ProfileView extends BaseView {
   final Function(File? photo) onSelectPhoto;
-  final File? profilePicture;
+  final Image? profilePicture;
   final String firstName;
   final String? lastName;
 
@@ -35,6 +35,8 @@ class ProfileView extends BaseView {
               ProfilePictureSelector(
                   key: Key('profile_photoSelector'),
                   initialImage: profilePicture,
+                  allowChange: false,
+                  tapImage: () {},
                   onSelected: onSelectPhoto)
             ],
           )));

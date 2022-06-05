@@ -68,37 +68,42 @@ class FirebaseAuthenticationService extends AuthenticationService {
       File? profilePicture}) async {
     try {
       // Create credenetials with a given email/pass
-      UserCredential result =
-          await _firebaseAuth.createUserWithEmailAndPassword(
-              email: emailAddress, password: password);
+      User? user = (await _firebaseAuth.createUserWithEmailAndPassword(
+              email: emailAddress, password: password))
+          .user;
 
-      // Create a new user model and initialize the current user
-      userModel = UserModel(
-        userID: result.user!.uid,
-        email: emailAddress,
-        settings: UserSettings(
-          profilePictureURL: await storageService.uploadProfilePicture(
-              result.user!.uid, profilePicture),
-          notificationsEnabled: false,
-          public: true,
-          bio: '',
-        ),
-        online: true,
-        mobile: mobile,
-        firstName: firstName,
-        lastName: lastName,
-        signupIP: ip,
-        recentIP: ip,
-        lastOnlineTimestamp: DateTime.now().millisecondsSinceEpoch,
-        signupLocation: locationData,
-        recentLocation: locationData,
-        recentPlatform: Platform.operatingSystem,
-      );
+      if (user != null) {
+        // Create a new user model and initialize the current user
+        userModel = UserModel(
+          userId: user.uid,
+          email: emailAddress,
+          settings: UserSettings(
+            notificationsEnabled: false,
+            public: true,
+            bio: '',
+          ),
+          online: true,
+          mobile: mobile,
+          firstName: firstName,
+          lastName: lastName,
+          signupIP: ip,
+          recentIP: ip,
+          lastOnlineTimestamp: DateTime.now().millisecondsSinceEpoch,
+          signupLocation: locationData,
+          recentLocation: locationData,
+          recentPlatform: Platform.operatingSystem,
+        );
 
-      // Update user model in databaseService service
-      return await databaseService.updateUserModel(userModel!) == null
-          ? null
-          : 'Couldn\'t sign up for firebase, Please try again.';
+        // Upload the profile picture
+        if (profilePicture != null) {
+          await storageService.uploadProfilePicture(user.uid, profilePicture);
+        }
+
+        // Update user model in databaseService service
+        return await databaseService.updateUserModel(userModel!) == null
+            ? null
+            : 'Couldn\'t sign up for firebase, Please try again.';
+      }
     } on FirebaseAuthException catch (error) {
       String message = 'Couldn\'t sign up';
       switch (error.code) {
@@ -122,6 +127,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
     } catch (e) {
       return 'Couldn\'t sign up';
     }
+    return 'Sign up failed';
   }
 
   @override

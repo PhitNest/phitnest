@@ -5,7 +5,7 @@ abstract class StorageService {
 
   /// Returns null if the photo could not be uploaded, otherwise returns the
   /// URL of the uploaded picture.
-  Future<String?> uploadProfilePicture(String userId, File? profilePicture);
+  Future<String?> uploadProfilePicture(String userId, File profilePicture);
 
-  Future<File?> getProfilePicture(String userId);
+  Future<String?> getProfilePictureURL(String userId);
 }

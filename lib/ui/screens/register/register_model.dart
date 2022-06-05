@@ -18,7 +18,7 @@ class RegisterModel extends BaseModel {
 
   String? mobile;
 
-  /// Image file for profile picture
+  /// Local images file for profile picture
   File? _image;
 
   /// Validation
