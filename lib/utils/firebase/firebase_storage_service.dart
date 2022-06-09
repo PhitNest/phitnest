@@ -22,6 +22,11 @@ class FirebaseStorageService extends StorageService {
   }
 
   @override
-  Future<String?> getProfilePictureURL(String userId) async =>
-      await storage.child('$profilePicturePath$userId').getDownloadURL();
+  Future<String?> getProfilePictureURL(String userId) async {
+    try {
+      return await storage.child('$profilePicturePath$userId').getDownloadURL();
+    } catch (exception) {
+      return null;
+    }
+  }
 }
