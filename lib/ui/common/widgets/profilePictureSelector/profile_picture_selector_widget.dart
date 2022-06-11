@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 class ProfilePictureSelector extends StatelessWidget {
   final Image? initialImage;
 
-  final bool allowChange;
+  /// Whether or not to show the selector button
+  final bool showButton;
 
   final double scale;
 
@@ -23,7 +24,7 @@ class ProfilePictureSelector extends StatelessWidget {
       this.scale = 1.0,
       this.tapImage,
       this.initialImage,
-      this.allowChange = true})
+      this.showButton = true})
       : super();
 
   @override
@@ -39,12 +40,11 @@ class ProfilePictureSelector extends StatelessWidget {
               child: SizedBox(
                   width: 170 * scale,
                   height: 170 * scale,
-                  child: initialImage == null
-                      ? Image.asset(
-                          'assets/images/placeholder.jpg',
-                          fit: BoxFit.cover,
-                        )
-                      : initialImage!),
+                  child: initialImage ??
+                      Image.asset(
+                        'assets/images/placeholder.jpg',
+                        fit: BoxFit.cover,
+                      )),
             ),
           ),
           onTap: () =>
@@ -52,7 +52,7 @@ class ProfilePictureSelector extends StatelessWidget {
               selectPhoto(context, 'Select Profile Picture', onSelected),
         ),
         Visibility(
-            visible: allowChange,
+            visible: showButton,
             child: Positioned(
                 left: 80,
                 right: 0,

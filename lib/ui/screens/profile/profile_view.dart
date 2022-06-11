@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:phitnest/ui/common/textStyles/text_styles.dart';
-import 'package:phitnest/ui/common/widgets/profilePictureSelector/profile_picture_selector_widget.dart';
+import 'package:phitnest/ui/common/widgets/widgets.dart';
 
 import '../views.dart';
 
@@ -35,7 +35,7 @@ class ProfileView extends BaseView {
               ProfilePictureSelector(
                   key: Key('profile_photoSelector'),
                   initialImage: profilePicture,
-                  allowChange: false,
+                  showButton: false,
                   tapImage: () {},
                   onSelected: onSelectPhoto)
             ],
