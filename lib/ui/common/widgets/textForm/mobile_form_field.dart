@@ -10,6 +10,7 @@ class MobileInputFormField extends StatelessWidget {
   final String? Function(String? input)? validator;
   final Function(String? mobile) onChanged;
   final EdgeInsets padding;
+  final TextStyle? hintStyle;
 
   const MobileInputFormField(
       {required Key key,
@@ -17,7 +18,8 @@ class MobileInputFormField extends StatelessWidget {
       this.padding = const EdgeInsets.only(top: 16, left: 8, right: 8),
       this.controller,
       this.validate = AutovalidateMode.disabled,
-      this.validator})
+      this.validator,
+      this.hintStyle})
       : super();
 
   @override
@@ -40,7 +42,8 @@ class MobileInputFormField extends StatelessWidget {
             searchBoxDecoration: InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 8, horizontal: 8)),
-            inputDecoration: TextFormStyleDecoration(hint: 'Mobile'),
+            inputDecoration:
+                TextFormStyleDecoration(hint: 'Mobile', hintStyle: hintStyle),
             textAlignVertical: TextAlignVertical.center,
             cursorColor: primaryColor,
             validator: validator,

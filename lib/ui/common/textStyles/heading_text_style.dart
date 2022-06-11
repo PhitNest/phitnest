@@ -5,6 +5,7 @@ import 'text_styles.dart';
 
 class HeadingTextStyle extends TextStyle {
   // Font sizes
+  static const HUGE = 32.0;
   static const LARGE = 25.0;
   static const MEDIUM = 24.0;
   static const SMALL = 20.0;
@@ -13,9 +14,11 @@ class HeadingTextStyle extends TextStyle {
       : super(
             color: color ?? primaryColor,
             fontWeight: FontWeight.bold,
-            fontSize: size == TextSize.LARGE
-                ? LARGE
-                : size == TextSize.MEDIUM
-                    ? MEDIUM
-                    : SMALL);
+            fontSize: size == TextSize.HUGE
+                ? HUGE
+                : size == TextSize.LARGE
+                    ? LARGE
+                    : size == TextSize.MEDIUM
+                        ? MEDIUM
+                        : SMALL);
 }

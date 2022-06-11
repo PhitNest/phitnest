@@ -33,114 +33,136 @@ class SignInView extends BaseView {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: BackButtonAppBar(),
-        body: Container(
-          margin: EdgeInsets.only(left: 16, right: 16, bottom: 24),
-          child: Form(
-            key: formKey,
-            autovalidateMode: validate,
-            child: ListView(
-              children: [
-                Container(
-                  constraints: BoxConstraints(minWidth: double.infinity),
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text('Sign In',
-                      style: HeadingTextStyle(size: TextSize.LARGE)),
-                ),
-                TextInputFormField(
-                  key: Key("signIn_email"),
-                  hint: 'Email Address',
-                  controller: emailController,
-                  inputType: TextInputType.emailAddress,
-                  validator: validateEmail,
-                ),
-                TextInputFormField(
-                  key: Key("signIn_password"),
-                  hint: 'Password',
-                  validator: validatePassword,
-                  controller: passwordController,
-                  hide: true,
-                  onSubmit: onClickLogin,
-                ),
+    return WillPopScope(
+        onWillPop: () async {
+          FocusManager.instance.primaryFocus?.unfocus();
 
-                /// Forgot password text, navigates user to ResetPasswordScreen
-                Container(
-                  padding: const EdgeInsets.only(top: 16, right: 16),
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: onClickResetPassword,
+          /// POTENTIAL BUG. Haven't reserached it but should resart app once time reaches a certain limit.
+          /// This is to prevent infinite loop. This is highly unlikely though possible.
+          do {
+            await Future.delayed(Duration(milliseconds: 100));
+          } while (WidgetsBinding.instance.window.viewInsets.bottom != 0.0);
+          return true;
+        },
+        child: Scaffold(
+          appBar: BackButtonAppBar(),
+          body: Container(
+            margin: EdgeInsets.only(left: 16, right: 16, bottom: 24),
+            child: Form(
+              key: formKey,
+              autovalidateMode: validate,
+              child: ListView(
+                children: [
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height * (1 / 150)),
+                  Container(
+                    constraints: BoxConstraints(minWidth: double.infinity),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
-                      'Forgot password?',
-                      style: BodyTextStyle(
-                          color: Colors.lightBlue,
-                          weight: FontWeight.bold,
-                          size: TextSize.MEDIUM,
-                          letterSpacing: 1),
+                      'Sign In',
+                      style: HeadingTextStyle(
+                          size: TextSize.HUGE, color: Colors.black),
                     ),
                   ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(right: 40.0, left: 40.0, top: 40),
-                  child: StyledButton(
-                    key: Key("signIn_submit"),
-                    text: 'Sign In',
-                    onClick: onClickLogin,
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height * (1 / 50)),
+                  TextInputFormField(
+                    key: Key("signIn_email"),
+                    hint: 'Email',
+                    hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
+                    controller: emailController,
+                    inputType: TextInputType.emailAddress,
+                    validator: validateEmail,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(32.0),
-                  child: Center(
-                    child: Text(
-                      'OR',
-                      style: TextStyle(
-                          color: isDarkMode ? Colors.white : Colors.black),
-                    ),
+                  TextInputFormField(
+                    key: Key("signIn_password"),
+                    hint: 'Password',
+                    hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
+                    validator: validatePassword,
+                    controller: passwordController,
+                    hide: true,
+                    onSubmit: onClickLogin,
                   ),
-                ),
-                // Apple login UI
-                FutureBuilder<bool>(
-                  future: apple.TheAppleSignIn.isAvailable(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator.adaptive();
-                    }
-                    if (!snapshot.hasData || (snapshot.data != true)) {
-                      return Container();
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                            right: 40.0, left: 40.0, bottom: 20),
-                        child: apple.AppleSignInButton(
-                            cornerRadius: 25.0,
-                            type: apple.ButtonType.signIn,
-                            style: isDarkMode
-                                ? apple.ButtonStyle.white
-                                : apple.ButtonStyle.black,
-                            onPressed: onClickLogin),
-                      );
-                    }
-                  },
-                ),
-                // Mobile authentication
-                InkWell(
-                  onTap: onClickMobile,
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
+
+                  /// Forgot password text, navigates user to ResetPasswordScreen
+                  Container(
+                    padding: const EdgeInsets.only(top: 16, right: 16),
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: onClickResetPassword,
                       child: Text(
-                        'Sign In with phone number',
+                        'Forgot password?',
                         style: BodyTextStyle(
-                            color: Colors.lightBlue,
+                            color: Color.fromARGB(255, 40, 157, 159),
                             weight: FontWeight.bold,
                             size: TextSize.MEDIUM,
                             letterSpacing: 1),
                       ),
                     ),
                   ),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: StyledButton(
+                      key: Key("logIn_submit"),
+                      text: 'Log In',
+                      onClick: onClickLogin,
+                      textColor: Colors.black,
+                      buttonColor: Color.fromARGB(255, 208, 233, 236),
+                    ),
+                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(32.0),
+                  //   child: Center(
+                  //     child: Text(
+                  //       'OR',
+                  //       style: TextStyle(
+                  //           color: isDarkMode ? Colors.white : Colors.black),
+                  //     ),
+                  //   ),
+                  // ),
+                  // Apple login UI
+                  FutureBuilder<bool>(
+                    future: apple.TheAppleSignIn.isAvailable(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator.adaptive();
+                      }
+                      if (!snapshot.hasData || (snapshot.data != true)) {
+                        return Container();
+                      } else {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              right: 40.0, left: 40.0, bottom: 20),
+                          child: apple.AppleSignInButton(
+                              cornerRadius: 25.0,
+                              type: apple.ButtonType.signIn,
+                              style: isDarkMode
+                                  ? apple.ButtonStyle.white
+                                  : apple.ButtonStyle.black,
+                              onPressed: onClickLogin),
+                        );
+                      }
+                    },
+                  ),
+                  // Mobile authentication
+                  InkWell(
+                    onTap: onClickMobile,
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          'Login with phone number',
+                          style: BodyTextStyle(
+                              color: Color.fromARGB(255, 40, 157, 159),
+                              weight: FontWeight.bold,
+                              size: TextSize.MEDIUM,
+                              letterSpacing: 1),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ));

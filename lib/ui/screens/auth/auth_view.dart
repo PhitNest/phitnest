@@ -44,6 +44,7 @@ class AuthView extends BaseView {
                   minWidth: buttonWidth,
                   text: 'Sign In',
                   textColor: Colors.black,
+                  buttonColor: Color.fromARGB(255, 208, 233, 236),
                   onClick: onClickLogin,
                 ),
                 StyledButton(

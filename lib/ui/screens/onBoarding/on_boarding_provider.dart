@@ -17,11 +17,13 @@ class OnBoardingProvider
     if (!await super.init(context, model)) {
       return false;
     }
-
     // Navigate away if we have already done on boarding. Otherwise, drop the
     // loading screen.
     if (await deviceStorage.read(key: FINISHED_ON_BOARDING_SETTING) == 'true') {
-      Navigator.pushNamed(context, '/auth');
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => AuthProvider()),
+          ModalRoute.withName('/'));
       return false;
     } else {
       return true;
@@ -45,7 +47,10 @@ class OnBoardingProvider
         onClickContinue: () async {
           await deviceStorage.write(
               key: FINISHED_ON_BOARDING_SETTING, value: 'true');
-          Navigator.pushNamed(context, '/auth');
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => AuthProvider()),
+              ModalRoute.withName('/'));
         },
       );
     }
