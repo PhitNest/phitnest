@@ -1,11 +1,16 @@
-import '../models/models.dart';
-
 abstract class ChatService {
+  Stream<dynamic> get foregroundMessageStream;
+
+  openForegroundMessageStream() =>
+      foregroundMessageStream.listen(receiveForegroundMessageCallback);
+
   Future<bool> requestNotificationPermissions();
 
   Future<bool> refreshConnection();
 
-  Future<bool> sendMessage(UserModel from, UserModel to);
+  Future<bool> sendMessage();
 
-  receiveMessageCallback(UserModel from, UserModel to);
+  receiveForegroundMessageCallback(dynamic message);
+
+  receiveBackgroundMessageCallback(dynamic message);
 }
