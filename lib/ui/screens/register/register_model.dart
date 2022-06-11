@@ -12,6 +12,7 @@ class RegisterModel extends BaseModel {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController mobileController = TextEditingController();
+  final TextEditingController dateOfBirthController = TextEditingController();
 
   /// Form key
   final GlobalKey<FormState> formKey = GlobalKey();
@@ -32,13 +33,13 @@ class RegisterModel extends BaseModel {
     notifyListeners();
   }
 
-  File? get image => _image;
+  // File? get image => _image;
 
-  /// This will rebuild the view.
-  set image(File? image) {
-    _image = image;
-    notifyListeners();
-  }
+  // /// This will rebuild the view.
+  // set image(File? image) {
+  //   _image = image;
+  //   notifyListeners();
+  // }
 
   @override
   void dispose() {

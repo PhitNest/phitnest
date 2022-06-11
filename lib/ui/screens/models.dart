@@ -6,3 +6,5 @@ export 'profile/profile_model.dart';
 export 'base/base_model.dart';
 export 'auth/auth_model.dart';
 export 'chatHome/chat_home_model.dart';
+export 'forgotPassword/forgotPassword_model.dart';
+export 'mobileAuthentication/mobileAuthentication_model.dart';

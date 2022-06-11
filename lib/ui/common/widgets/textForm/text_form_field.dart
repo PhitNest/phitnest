@@ -7,6 +7,7 @@ import 'text_form_decoration.dart';
 /// This is a text form field widget
 class TextInputFormField extends StatelessWidget {
   final String hint;
+  final TextStyle? hintStyle;
   final Function(String? text)? onSaved;
   final Function()? onSubmit;
   final String? Function(String? text) validator;
@@ -19,6 +20,7 @@ class TextInputFormField extends StatelessWidget {
     required Key key,
     required this.hint,
     required this.validator,
+    this.hintStyle,
     this.onSaved,
     this.controller,
     this.inputType,
@@ -44,5 +46,6 @@ class TextInputFormField extends StatelessWidget {
           controller: controller ?? TextEditingController(),
           style: BodyTextStyle(size: TextSize.LARGE),
           cursorColor: primaryColor,
-          decoration: TextFormStyleDecoration(hint: hint)));
+          decoration:
+              TextFormStyleDecoration(hint: hint, hintStyle: hintStyle)));
 }

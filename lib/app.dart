@@ -52,7 +52,9 @@ class App extends StatelessWidget with WidgetsBindingObserver {
           case '/home':
             return generateRoute(HomeProvider());
           case '/resetPassword':
+            return generateRoute(ForgotPasswordProvider());
           case '/mobileAuth':
+            return generateRoute(MobileAuthenticationProvider());
           case '/signIn':
             return generateRoute(SignInProvider());
           case '/register':

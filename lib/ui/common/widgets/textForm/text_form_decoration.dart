@@ -7,17 +7,24 @@ final OutlineInputBorder errorBorder = OutlineInputBorder(
 );
 
 class TextFormStyleDecoration extends InputDecoration {
-  TextFormStyleDecoration({String? hint})
+  TextFormStyleDecoration({String? hint, TextStyle? hintStyle})
       : super(
-            contentPadding: EdgeInsets.only(left: 16, right: 16),
+            contentPadding: EdgeInsets.only(
+              left: 12,
+              bottom: 12,
+              right: 12,
+            ),
             hintText: hint,
-            focusedBorder: OutlineInputBorder(
+            hintStyle: hintStyle,
+            focusedBorder: UnderlineInputBorder(
                 borderRadius: borderRadius,
                 borderSide: BorderSide(color: primaryColor, width: 2.0)),
             errorBorder: errorBorder,
             focusedErrorBorder: errorBorder,
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.shade200),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.grey,
+              ),
               borderRadius: borderRadius,
             ));
 }

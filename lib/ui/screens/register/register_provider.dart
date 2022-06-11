@@ -20,10 +20,10 @@ class RegisterProvider
   @override
   init(BuildContext context, RegisterModel model) async {
     if (await super.init(context, model)) {
-      // Android camera data
-      if (Platform.isAndroid) {
-        model.image = await retrieveLostData();
-      }
+      // // Android camera data
+      // if (Platform.isAndroid) {
+      //   model.image = await retrieveLostData();
+      // }
       return true;
     }
     return false;
@@ -36,9 +36,10 @@ class RegisterProvider
         lastNameController: model.lastNameController,
         emailController: model.emailController,
         mobileController: model.mobileController,
+        dateOfBirthController: model.dateOfBirthController,
         passwordController: model.passwordController,
         validate: model.validate,
-        image: model.image,
+        // image: model.image,
         onClickSignup: () => showProgressUntil(
             context: context,
             message: 'Creating new account, Please wait...',
@@ -51,18 +52,22 @@ class RegisterProvider
                     context, '/home', (_) => false);
               }
             }),
-        onSaveImage: (File? photo) => model.image = photo,
+        // onSaveImage: (File? photo) => model.image = photo,
         validateFirstName: validateName,
         validateLastName: (String? lastName) =>
             lastName == '' ? null : validateName(lastName),
         validateEmail: validateEmail,
         validateMobile: validateMobile,
         onSaveMobile: (String? mobile) => model.mobile = mobile,
+        validateDateOfBirth: validateDateOfBirth,
         validatePassword: validatePassword,
         validateConfirmPassword: (String? confirmPassword) =>
             validateConfirmPassword(
                 model.passwordController.text, confirmPassword),
       );
+  String? validateDateOfBirth(String? dateOfBirth) {
+    return "Method unimplemented";
+  }
 
   /// Validate the form, request the user location, and make a registration
   /// request to the authentication service. Return null if the registration
@@ -82,7 +87,7 @@ class RegisterProvider
           lastName: model.lastNameController.text.trim(),
           mobile: model.mobile ?? '',
           ip: await userIP,
-          profilePicture: model.image,
+          // profilePicture: model.image,
           locationData: location);
     } else {
       model.validate = AutovalidateMode.onUserInteraction;
