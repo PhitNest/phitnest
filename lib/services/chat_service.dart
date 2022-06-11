@@ -1,7 +1,13 @@
+import 'dart:async';
+
 abstract class ChatService {
+  StreamSubscription<dynamic>? foregroundMessageStreamSubscription;
   Stream<dynamic> get foregroundMessageStream;
 
-  openForegroundMessageStream() =>
+  Future<void> closeForegroundMessageStream() async =>
+      foregroundMessageStreamSubscription?.cancel();
+
+  void openForegroundMessageStream() => foregroundMessageStreamSubscription =
       foregroundMessageStream.listen(receiveForegroundMessageCallback);
 
   Future<bool> requestNotificationPermissions();
