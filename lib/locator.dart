@@ -25,4 +25,6 @@ void setupLocator() {
   locator.registerFactory(() => ProfileModel());
   locator.registerFactory(() => ChatHomeModel());
   locator.registerFactory(() => AuthModel());
+  locator.registerFactory(() => ForgotPasswordModel());
+  locator.registerFactory(() => MobileAuthenticationModel());
 }
