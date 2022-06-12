@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 /// This will allow you to select a photo from native camera for profile picture
 class ProfilePictureSelector extends StatelessWidget {
-  final Image? initialImage;
+  final Image initialImage;
 
   /// Whether or not to show the selector button
   final bool showButton;
@@ -21,9 +21,9 @@ class ProfilePictureSelector extends StatelessWidget {
   const ProfilePictureSelector(
       {required Key key,
       required this.onSelected,
+      required this.initialImage,
       this.scale = 1.0,
       this.tapImage,
-      this.initialImage,
       this.showButton = true})
       : super();
 
@@ -37,15 +37,10 @@ class ProfilePictureSelector extends StatelessWidget {
             radius: 65,
             backgroundColor: Colors.grey.shade400,
             child: ClipOval(
-              child: SizedBox(
-                  width: 170 * scale,
-                  height: 170 * scale,
-                  child: initialImage ??
-                      Image.asset(
-                        'assets/images/placeholder.jpg',
-                        fit: BoxFit.cover,
-                      )),
-            ),
+                child: SizedBox(
+                    width: 170 * scale,
+                    height: 170 * scale,
+                    child: initialImage)),
           ),
           onTap: () =>
               tapImage ??

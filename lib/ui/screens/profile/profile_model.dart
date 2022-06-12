@@ -3,7 +3,7 @@ import 'dart:io';
 import '../models.dart';
 
 class ProfileModel extends BaseModel {
-  String? profilePictureDownloadUrl;
+  String profilePictureDownloadUrl = '';
 
   File? _profilePicture;
 

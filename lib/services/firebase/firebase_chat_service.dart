@@ -1,10 +1,12 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-import '../../models/models.dart';
 import '../services.dart';
 
 class FirebaseChatService extends ChatService {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  Stream<RemoteMessage> get foregroundMessageStream =>
+      FirebaseMessaging.onMessage;
 
   Future<bool> requestNotificationPermissions() async =>
       (await messaging.requestPermission()).authorizationStatus ==
@@ -14,9 +16,11 @@ class FirebaseChatService extends ChatService {
     return false;
   }
 
-  Future<bool> sendMessage(UserModel from, UserModel to) async {
+  Future<bool> sendMessage() async {
     return false;
   }
 
-  receiveMessageCallback(UserModel from, UserModel to) {}
+  receiveForegroundMessageCallback(dynamic message) {}
+
+  receiveBackgroundMessageCallback(dynamic message) {}
 }

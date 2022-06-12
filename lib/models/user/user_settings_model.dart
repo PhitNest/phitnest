@@ -1,15 +1,16 @@
 class UserSettings {
   bool notificationsEnabled;
   bool public;
+  String profilePictureURL;
   String bio;
   String? birthday;
-  String? profilePictureURL;
   String? gender;
 
   UserSettings({
     required this.notificationsEnabled,
     required this.public,
     required this.bio,
+    required this.profilePictureURL,
     this.birthday,
     this.gender,
   });
@@ -19,6 +20,7 @@ class UserSettings {
           notificationsEnabled: parsedJson['notificationsEnabled'],
           public: parsedJson['public'],
           bio: parsedJson['bio'],
+          profilePictureURL: parsedJson['profilePictureURL'],
           // nullables
           birthday: parsedJson['birthday'],
           gender: parsedJson['gender']);
@@ -26,6 +28,7 @@ class UserSettings {
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {
       'notificationsEnabled': notificationsEnabled,
+      'profilePictureURL': profilePictureURL,
       'public': public,
       'bio': bio,
     };

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:device/device.dart';
+import 'package:phitnest/services/services.dart';
 
 import '../../../models/models.dart';
 import '../providers.dart';
@@ -26,6 +27,8 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
           Navigator.pushNamed(context, '/auth');
           return false;
         }
+        await chatService.requestNotificationPermissions();
+        chatService.openForegroundMessageStream();
         return true;
       });
 
@@ -69,5 +72,10 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
       return await databaseService.updateUserModel(user) == null;
     }
     return false;
+  }
+
+  @override
+  onDispose(HomeModel model) async {
+    await chatService.closeForegroundMessageStream();
   }
 }
