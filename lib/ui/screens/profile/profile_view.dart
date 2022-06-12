@@ -7,8 +7,8 @@ import 'package:phitnest/ui/common/widgets/widgets.dart';
 import '../views.dart';
 
 class ProfileView extends BaseView {
+  final Image profilePicture;
   final Function(File? photo) onSelectPhoto;
-  final Image? profilePicture;
   final String firstName;
   final String? lastName;
 

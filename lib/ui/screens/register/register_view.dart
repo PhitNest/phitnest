@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:phitnest/constants/constants.dart';
 
 import '../../common/textStyles/text_styles.dart';
 import '../../common/widgets/widgets.dart';
@@ -69,7 +70,7 @@ class RegisterView extends BaseView {
                       child: ProfilePictureSelector(
                           key: Key("register_photoSelect"),
                           initialImage: image == null
-                              ? null
+                              ? Image.network(DEFAULT_AVATAR_URL)
                               : Image.file(image!, fit: BoxFit.cover),
                           onSelected: onSaveImage)),
                   TextInputFormField(

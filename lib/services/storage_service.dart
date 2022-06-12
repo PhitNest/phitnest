@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import '../models/models.dart';
+
 abstract class StorageService {
-  File? profilePictureCache;
+  Future<void> uploadFile(String path, File file);
 
-  /// Returns null if the photo could not be uploaded, otherwise returns the
-  /// URL of the uploaded picture.
-  Future<String?> uploadProfilePicture(String userId, File profilePicture);
+  Future<String> getFileURL(String path);
 
-  Future<String?> getProfilePictureURL(String userId);
+  Future<void> uploadProfilePicture(UserModel user, File picture);
+
+  Future<String> getProfilePictureURL(UserModel user);
 }
