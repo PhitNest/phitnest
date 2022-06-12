@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:phitnest/models/user/user_model.dart';
 
 import '../services.dart';
 
@@ -10,23 +11,18 @@ class FirebaseStorageService extends StorageService {
   String profilePicturePath = 'profilePictures/';
 
   @override
-  Future<String?> uploadProfilePicture(
-      String userId, File profilePicture) async {
-    String filePath = '$profilePicturePath$userId';
-
-    await (await storage
-        .child(filePath)
-        .putFile(profilePicture)
-        .whenComplete(() {}));
-    return filePath;
-  }
+  Future<void> uploadFile(String path, File file) async =>
+      await (await storage.child(path).putFile(file).whenComplete(() {}));
 
   @override
-  Future<String?> getProfilePictureURL(String userId) async {
-    try {
-      return await storage.child('$profilePicturePath$userId').getDownloadURL();
-    } catch (exception) {
-      return null;
-    }
-  }
+  Future<String> getFileURL(String path) async =>
+      await storage.child(path).getDownloadURL();
+
+  @override
+  Future<String> getProfilePictureURL(UserModel user) async =>
+      await getFileURL('profilePictures/${user.userId}');
+
+  @override
+  Future<void> uploadProfilePicture(UserModel user, File picture) async =>
+      await uploadFile('profilePictures/${user.userId}', picture);
 }

@@ -15,8 +15,8 @@ class ProfileProvider extends AuthenticatedProvider<ProfileModel, ProfileView> {
     if (!await super.init(context, model)) {
       return false;
     }
-    model.profilePictureDownloadUrl = await storageService
-        .getProfilePictureURL(authService.userModel!.userId);
+    model.profilePictureDownloadUrl =
+        authService.userModel!.settings.profilePictureURL;
     return true;
   }
 
@@ -28,12 +28,10 @@ class ProfileProvider extends AuthenticatedProvider<ProfileModel, ProfileView> {
               model.profilePicture!,
               fit: BoxFit.cover,
             )
-          : model.profilePictureDownloadUrl != null
-              ? Image.network(
-                  model.profilePictureDownloadUrl!,
-                  fit: BoxFit.cover,
-                )
-              : null,
+          : Image.network(
+              model.profilePictureDownloadUrl,
+              fit: BoxFit.cover,
+            ),
       firstName: authService.userModel!.firstName,
       lastName: authService.userModel!.lastName);
 }

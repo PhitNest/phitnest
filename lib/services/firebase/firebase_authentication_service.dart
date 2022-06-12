@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:phitnest/constants/constants.dart';
 
 import '../../models/models.dart';
 import '../services.dart';
@@ -78,6 +79,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
           userId: user.uid,
           email: emailAddress,
           settings: UserSettings(
+            profilePictureURL: DEFAULT_AVATAR_URL,
             notificationsEnabled: false,
             public: true,
             bio: '',
@@ -96,7 +98,9 @@ class FirebaseAuthenticationService extends AuthenticationService {
 
         // Upload the profile picture
         if (profilePicture != null) {
-          await storageService.uploadProfilePicture(user.uid, profilePicture);
+          await storageService.uploadProfilePicture(userModel!, profilePicture);
+          userModel!.settings.profilePictureURL =
+              await storageService.getProfilePictureURL(userModel!);
         }
 
         // Update user model in databaseService service
