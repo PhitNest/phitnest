@@ -27,9 +27,10 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
           Navigator.pushNamed(context, '/auth');
           return false;
         }
-        await chatService.requestNotificationPermissions();
-        chatService.openForegroundMessageStream();
-        return true;
+        authService.userModel!.settings.notificationsEnabled =
+            await chatService.requestNotificationPermissions();
+        return await databaseService.updateUserModel(authService.userModel!) ==
+            null;
       });
 
   @override
@@ -56,8 +57,7 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
         if (position != null) {
           user.recentLocation = Location(
               latitude: position.latitude, longitude: position.longitude);
-          await databaseService.updateUserModel(user);
-          return true;
+          return await databaseService.updateUserModel(user) == null;
         }
       }
     }
@@ -72,10 +72,5 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
       return await databaseService.updateUserModel(user) == null;
     }
     return false;
-  }
-
-  @override
-  onDispose(HomeModel model) async {
-    await chatService.closeForegroundMessageStream();
   }
 }

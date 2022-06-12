@@ -9,6 +9,10 @@ abstract class AuthenticatedProvider<T extends BaseModel, K extends BaseView>
     extends RedirectedProvider<T, K> {
   const AuthenticatedProvider({Key? key}) : super(key: key);
 
+  @override
+  Future<bool> init(BuildContext context, T model) async =>
+      await super.init(context, model);
+
   /// Redirected unauthenticated users to the base route.
   @override
   String get redirectRoute => '/';
