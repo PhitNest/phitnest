@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:phitnest/constants/constants.dart';
 
 import '../../common/textStyles/text_styles.dart';
+import '../../common/widgetStyles/buttonStyles/button_styles.dart';
 import '../../common/widgets/widgets.dart';
 import '../views.dart';
 
@@ -54,13 +56,22 @@ class RegisterView extends BaseView {
   @override
   Widget build(BuildContext context) => WillPopScope(
         onWillPop: () async {
+          // If keyboard is open, this will unfocus the keyboard(thus the keyboard will close on the screen)
           FocusManager.instance.primaryFocus?.unfocus();
+          var val = Stopwatch();
+          val.start();
 
-          /// POTENTIAL BUG. Haven't reserached it but should resart app once time reaches a certain limit.
-          /// This is to prevent infinite loop. This is highly unlikely though possible.
-          do {
+          /// This ensures that there is no render overflow when the keyboard is open. Thus waiting for this value to be 0.
+          while (WidgetsBinding.instance.window.viewInsets.bottom != 0.0) {
             await Future.delayed(Duration(milliseconds: 100));
-          } while (WidgetsBinding.instance.window.viewInsets.bottom != 0.0);
+            // Prevents potential infinite loop after 30 seconds. Unlikely to occur.
+            if (val.elapsedMilliseconds >= 30000) {
+              break;
+            }
+            continue;
+          }
+          ;
+          val.stop();
           return true;
         },
         child: Scaffold(
@@ -157,7 +168,7 @@ class RegisterView extends BaseView {
                         text: 'Finish',
                         onClick: onClickSignup,
                         textColor: Colors.black,
-                        buttonColor: Color.fromARGB(255, 208, 233, 236),
+                        buttonColor: Button_Styles.LIGHTCYAN,
                       ),
                     )
                   ],

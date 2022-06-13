@@ -1,5 +1,3 @@
-import 'package:phitnest/ui/screens/mobileAuthentication/mobileAuthentication_model.dart';
-
 export 'register/register_provider.dart';
 export 'redirectedProvider/redirected.dart';
 export 'profile/profile_provider.dart';

@@ -20,7 +20,7 @@ class RegisterModel extends BaseModel {
   String? mobile;
 
   /// Local images file for profile picture
-  File? _image;
+  // File? _image;
 
   /// Validation
   AutovalidateMode _validate = AutovalidateMode.disabled;
