@@ -53,9 +53,10 @@ class RegisterProvider
               }
             }),
         // onSaveImage: (File? photo) => model.image = photo,
-        validateFirstName: validateName,
+        validateFirstName: (String? firstName) =>
+            "First " + validateName(firstName)!,
         validateLastName: (String? lastName) =>
-            lastName == '' ? null : validateName(lastName),
+            "Last " + validateName(lastName)!,
         validateEmail: validateEmail,
         validateMobile: validateMobile,
         onSaveMobile: (String? mobile) => model.mobile = mobile,
@@ -65,6 +66,8 @@ class RegisterProvider
             validateConfirmPassword(
                 model.passwordController.text, confirmPassword),
       );
+
+  // TODO: implment dateOfBirth checker in validation.dart
   String? validateDateOfBirth(String? dateOfBirth) {
     return "Method unimplemented";
   }
