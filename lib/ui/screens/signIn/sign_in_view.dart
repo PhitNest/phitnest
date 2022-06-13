@@ -1,5 +1,6 @@
 import 'package:device/device.dart';
 import 'package:flutter/material.dart';
+import 'package:phitnest/ui/common/widgetStyles/buttonStyles/button_styles.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
 import '../../common/textStyles/text_styles.dart';
@@ -17,31 +18,41 @@ class SignInView extends BaseView {
   final String? Function(String? password) validatePassword;
   final Function() onClickLogin;
   final Function() onClickResetPassword;
-  final Function() onClickMobile;
+  // final Function() onClickMobile;
 
-  const SignInView(
-      {required this.formKey,
-      required this.emailController,
-      required this.passwordController,
-      required this.validate,
-      required this.validateEmail,
-      required this.validatePassword,
-      required this.onClickLogin,
-      required this.onClickResetPassword,
-      required this.onClickMobile})
-      : super();
+  const SignInView({
+    required this.formKey,
+    required this.emailController,
+    required this.passwordController,
+    required this.validate,
+    required this.validateEmail,
+    required this.validatePassword,
+    required this.onClickLogin,
+    required this.onClickResetPassword,
+  }) : super();
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
+          // If keyboard is open, this will unfocus the keyboard(thus the keyboard will close on the screen)
           FocusManager.instance.primaryFocus?.unfocus();
+          var val = Stopwatch();
+          val.start();
 
-          /// POTENTIAL BUG. Haven't reserached it but should resart app once time reaches a certain limit.
-          /// This is to prevent infinite loop. This is highly unlikely though possible.
-          do {
+          /// This ensures that there is no render overflow when the keyboard is open.
+          /// Thus waiting for this value to be 0.
+          while (WidgetsBinding.instance.window.viewInsets.bottom != 0.0) {
             await Future.delayed(Duration(milliseconds: 100));
-          } while (WidgetsBinding.instance.window.viewInsets.bottom != 0.0);
+            // Prevents potential infinite loop after 30 seconds. Unlikely to occur. Would be an error from the devices end
+            // if this if-statement fired.
+            if (val.elapsedMilliseconds >= 30000) {
+              break;
+            }
+            continue;
+          }
+          ;
+          val.stop();
           return true;
         },
         child: Scaffold(
@@ -107,7 +118,7 @@ class SignInView extends BaseView {
                       text: 'Log In',
                       onClick: onClickLogin,
                       textColor: Colors.black,
-                      buttonColor: Color.fromARGB(255, 208, 233, 236),
+                      buttonColor: Button_Styles.LIGHTCYAN,
                     ),
                   ),
                   // Padding(
@@ -145,22 +156,22 @@ class SignInView extends BaseView {
                     },
                   ),
                   // Mobile authentication
-                  InkWell(
-                    onTap: onClickMobile,
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          'Login with phone number',
-                          style: BodyTextStyle(
-                              color: Color.fromARGB(255, 40, 157, 159),
-                              weight: FontWeight.bold,
-                              size: TextSize.MEDIUM,
-                              letterSpacing: 1),
-                        ),
-                      ),
-                    ),
-                  )
+                  // InkWell(
+                  //   onTap: onClickMobile,
+                  //   child: Center(
+                  //     child: Padding(
+                  //       padding: EdgeInsets.all(8.0),
+                  //       child: Text(
+                  //         'Login with phone number',
+                  //         style: BodyTextStyle(
+                  //             color: Color.fromARGB(255, 40, 157, 159),
+                  //             weight: FontWeight.bold,
+                  //             size: TextSize.MEDIUM,
+                  //             letterSpacing: 1),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // )
                 ],
               ),
             ),

@@ -39,7 +39,7 @@ class SignInProvider
             }),
         onClickResetPassword: () =>
             Navigator.pushNamed(context, '/resetPassword'),
-        onClickMobile: () => Navigator.pushNamed(context, '/mobileAuth'),
+        // onClickMobile: () => Navigator.pushNamed(context, '/mobileAuth'),
       );
 
   Future<String?> login(SignInModel model) async {
