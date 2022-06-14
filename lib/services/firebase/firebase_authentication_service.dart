@@ -58,6 +58,41 @@ class FirebaseAuthenticationService extends AuthenticationService {
     return 'Login failed';
   }
 
+  @override
+  Future<String?> sendResetPasswordEmail(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (except) {
+      /// There are many different codes(hover over sendPasswordResetEmail or look up documentation for methods)
+      // e.g. for auth/invalid-email the print statement will print: invalid-email
+      return except.code;
+    }
+
+    return null;
+  }
+
+  @override
+  Future<String?> sendMobileAuthRequest(String phoneNumber) async {
+    try {
+      // https://firebase.google.com/docs/auth/flutter/phone-auth
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: (PhoneAuthCredential credential) {},
+        verificationFailed: (FirebaseAuthException e) {},
+        codeSent: (String verificationId, int? resendToken) {},
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+    } on FirebaseAuthException catch (except) {
+      /// There are many different codes(hover over sendPasswordResetEmail or look up documentation for methods)
+      /// For now the code is printed to the console and returned false(back to screen to type in email for forgot password).
+      // e.g. for auth/invalid-email the print statement will print: invalid-email in debug console(VS-Code)
+      // print(except.code);
+      return except.code;
+    }
+    //If password sucessfully sent, a redirect should happen in OnDone
+    return null;
+  }
+
   Future<String?> registerWithEmailAndPassword(
       {required String emailAddress,
       required String password,
@@ -65,6 +100,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
       required String lastName,
       required String ip,
       required String mobile,
+      required String birthday,
       Location? locationData,
       File? profilePicture}) async {
     try {
@@ -82,6 +118,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
             profilePictureURL: DEFAULT_AVATAR_URL,
             notificationsEnabled: false,
             public: true,
+            birthday: birthday,
             bio: '',
           ),
           online: true,

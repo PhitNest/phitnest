@@ -20,7 +20,7 @@ class RegisterProvider
   @override
   init(BuildContext context, RegisterModel model) async {
     if (await super.init(context, model)) {
-      // Android camera data
+      // // Android camera data
       if (Platform.isAndroid) {
         model.image = await retrieveLostData();
       }
@@ -36,7 +36,9 @@ class RegisterProvider
         lastNameController: model.lastNameController,
         emailController: model.emailController,
         mobileController: model.mobileController,
+        dateOfBirthController: model.dateOfBirthController,
         passwordController: model.passwordController,
+        confirmPasswordController: model.confirmPasswordController,
         validate: model.validate,
         image: model.image,
         onClickSignup: () => showProgressUntil(
@@ -52,12 +54,11 @@ class RegisterProvider
               }
             }),
         onSaveImage: (File? photo) => model.image = photo,
-        validateFirstName: validateName,
-        validateLastName: (String? lastName) =>
-            lastName == '' ? null : validateName(lastName),
+        validateFirstName: validateFirstName,
+        validateLastName: validateLastName,
         validateEmail: validateEmail,
         validateMobile: validateMobile,
-        onSaveMobile: (String? mobile) => model.mobile = mobile,
+        validateDateOfBirth: validateDateOfBirth,
         validatePassword: validatePassword,
         validateConfirmPassword: (String? confirmPassword) =>
             validateConfirmPassword(
@@ -71,22 +72,21 @@ class RegisterProvider
     if (model.formKey.currentState?.validate() ?? false) {
       model.formKey.currentState!.save();
       Position? position = await getCurrentLocation();
-      Location? location = position == null
-          ? null
-          : Location(
-              latitude: position.latitude, longitude: position.longitude);
       return await authService.registerWithEmailAndPassword(
           emailAddress: model.emailController.text.trim(),
           password: model.passwordController.text.trim(),
           firstName: model.firstNameController.text.trim(),
           lastName: model.lastNameController.text.trim(),
-          mobile: model.mobile ?? '',
+          mobile: model.mobileController.text.trim(),
+          birthday: model.dateOfBirthController.text.trim(),
           ip: await userIP,
           profilePicture: model.image,
-          locationData: location);
-    } else {
-      model.validate = AutovalidateMode.onUserInteraction;
-      return 'Invalid input';
+          locationData: position == null
+              ? null
+              : Location(
+                  latitude: position.latitude, longitude: position.longitude));
     }
+    model.validate = AutovalidateMode.onUserInteraction;
+    return 'Invalid input';
   }
 }

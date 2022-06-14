@@ -1,11 +1,25 @@
-String? validateName(String? value) {
+String? validateFirstName(String? value) {
   String pattern = r'(^[a-zA-Z ]*$)';
   RegExp regExp = RegExp(pattern);
   if (value?.length == 0) {
-    return 'Name is Required';
+    return 'First name is Required';
   } else if (!regExp.hasMatch(value ?? '')) {
     return 'Name must be a-z and A-Z';
   }
+  return null;
+}
+
+String? validateLastName(String? value) {
+  String pattern = r'(^[a-zA-Z ]*$)';
+  RegExp regExp = RegExp(pattern);
+  if (!regExp.hasMatch(value ?? '')) {
+    return 'Name must be a-z and A-Z';
+  }
+  return null;
+}
+
+// TODO
+String? validateDateOfBirth(String? value) {
   return null;
 }
 
@@ -39,11 +53,10 @@ String? validateEmail(String? value) {
 }
 
 String? validateConfirmPassword(String? password, String? confirmPassword) {
-  if (password != confirmPassword) {
-    return 'Password doesn\'t match';
-  } else if (confirmPassword?.length == 0) {
+  if (confirmPassword?.length == 0) {
     return 'Confirm password is required';
-  } else {
-    return null;
+  } else if (password != confirmPassword) {
+    return 'Password doesn\'t match';
   }
+  return null;
 }

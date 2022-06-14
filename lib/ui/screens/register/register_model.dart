@@ -12,6 +12,9 @@ class RegisterModel extends BaseModel {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController mobileController = TextEditingController();
+  final TextEditingController dateOfBirthController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   /// Form key
   final GlobalKey<FormState> formKey = GlobalKey();
@@ -38,11 +41,5 @@ class RegisterModel extends BaseModel {
   set image(File? image) {
     _image = image;
     notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    passwordController.dispose();
-    super.dispose();
   }
 }

@@ -1,6 +1,5 @@
 import 'package:device/device.dart';
 import 'package:flutter/material.dart';
-import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
 import '../../common/textStyles/text_styles.dart';
 import '../../common/widgets/widgets.dart';
@@ -32,8 +31,7 @@ class SignInView extends BaseView {
       : super();
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
         appBar: BackButtonAppBar(),
         body: Container(
           margin: EdgeInsets.only(left: 16, right: 16, bottom: 24),
@@ -42,15 +40,22 @@ class SignInView extends BaseView {
             autovalidateMode: validate,
             child: ListView(
               children: [
+                SizedBox(
+                    height: MediaQuery.of(context).size.height * (1 / 150)),
                 Container(
                   constraints: BoxConstraints(minWidth: double.infinity),
                   padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text('Sign In',
-                      style: HeadingTextStyle(size: TextSize.LARGE)),
+                  child: Text(
+                    'Sign In',
+                    style: HeadingTextStyle(
+                        size: TextSize.HUGE, color: Colors.black),
+                  ),
                 ),
+                SizedBox(height: MediaQuery.of(context).size.height * (1 / 50)),
                 TextInputFormField(
                   key: Key("signIn_email"),
-                  hint: 'Email Address',
+                  hint: 'Email',
+                  hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                   controller: emailController,
                   inputType: TextInputType.emailAddress,
                   validator: validateEmail,
@@ -58,13 +63,13 @@ class SignInView extends BaseView {
                 TextInputFormField(
                   key: Key("signIn_password"),
                   hint: 'Password',
+                  hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                   validator: validatePassword,
                   controller: passwordController,
                   hide: true,
-                  onSubmit: onClickLogin,
+                  onSubmit: (_) => onClickLogin(),
                 ),
 
-                /// Forgot password text, navigates user to ResetPasswordScreen
                 Container(
                   padding: const EdgeInsets.only(top: 16, right: 16),
                   alignment: Alignment.centerRight,
@@ -73,7 +78,7 @@ class SignInView extends BaseView {
                     child: Text(
                       'Forgot password?',
                       style: BodyTextStyle(
-                          color: Colors.lightBlue,
+                          color: Color.fromARGB(255, 40, 157, 159),
                           weight: FontWeight.bold,
                           size: TextSize.MEDIUM,
                           letterSpacing: 1),
@@ -81,12 +86,12 @@ class SignInView extends BaseView {
                   ),
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.only(right: 40.0, left: 40.0, top: 40),
+                  padding: const EdgeInsets.only(top: 40),
                   child: StyledButton(
-                    key: Key("signIn_submit"),
-                    text: 'Sign In',
+                    key: Key("logIn_submit"),
+                    text: 'Log In',
                     onClick: onClickLogin,
+                    textColor: Colors.black,
                   ),
                 ),
                 Padding(
@@ -99,30 +104,7 @@ class SignInView extends BaseView {
                     ),
                   ),
                 ),
-                // Apple login UI
-                FutureBuilder<bool>(
-                  future: apple.TheAppleSignIn.isAvailable(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator.adaptive();
-                    }
-                    if (!snapshot.hasData || (snapshot.data != true)) {
-                      return Container();
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                            right: 40.0, left: 40.0, bottom: 20),
-                        child: apple.AppleSignInButton(
-                            cornerRadius: 25.0,
-                            type: apple.ButtonType.signIn,
-                            style: isDarkMode
-                                ? apple.ButtonStyle.white
-                                : apple.ButtonStyle.black,
-                            onPressed: onClickLogin),
-                      );
-                    }
-                  },
-                ),
+
                 // Mobile authentication
                 InkWell(
                   onTap: onClickMobile,
@@ -130,9 +112,9 @@ class SignInView extends BaseView {
                     child: Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                        'Sign In with phone number',
+                        'Login with phone number',
                         style: BodyTextStyle(
-                            color: Colors.lightBlue,
+                            color: Color.fromARGB(255, 40, 157, 159),
                             weight: FontWeight.bold,
                             size: TextSize.MEDIUM,
                             letterSpacing: 1),
@@ -143,6 +125,6 @@ class SignInView extends BaseView {
               ],
             ),
           ),
-        ));
-  }
+        ),
+      );
 }
