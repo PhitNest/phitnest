@@ -12,15 +12,9 @@ class FirebaseChatService extends ChatService {
       (await messaging.requestPermission()).authorizationStatus ==
       AuthorizationStatus.authorized;
 
-  Future<bool> refreshConnection() async {
-    return false;
-  }
-
   Future<bool> sendMessage() async {
     return false;
   }
-
-  receiveForegroundMessageCallback(dynamic message) {}
 
   receiveBackgroundMessageCallback(dynamic message) {}
 }
