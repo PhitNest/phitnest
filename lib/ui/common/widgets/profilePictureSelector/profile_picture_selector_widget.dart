@@ -31,7 +31,7 @@ class ProfilePictureSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.bottomCenter,
-      children: <Widget>[
+      children: [
         GestureDetector(
           child: CircleAvatar(
             radius: 65,

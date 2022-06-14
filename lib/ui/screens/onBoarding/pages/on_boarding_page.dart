@@ -56,7 +56,6 @@ class OnBoardingPage extends StatelessWidget {
                   key: Key("onBoarding_continue"),
                   minWidth: 300,
                   textColor: Colors.black,
-                  buttonColor: Color.fromARGB(255, 208, 233, 236),
                   text: "Let's get phit!",
                   onClick: onClickContinue,
                 )),

@@ -15,6 +15,7 @@ class SignInProvider
 
   @override
   SignInView build(BuildContext context, SignInModel model) => SignInView(
+        onClickMobile: () => Navigator.pushNamed(context, '/mobileAuth'),
         formKey: model.formKey,
         validate: model.validate,
         emailController: model.emailController,
@@ -59,9 +60,8 @@ class SignInProvider
         locationData: location,
         ip: await userIP,
       );
-    } else {
-      model.validate = AutovalidateMode.onUserInteraction;
-      return 'Invalid input';
     }
+    model.validate = AutovalidateMode.onUserInteraction;
+    return 'Invalid input';
   }
 }

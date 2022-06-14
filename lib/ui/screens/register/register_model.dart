@@ -13,6 +13,8 @@ class RegisterModel extends BaseModel {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController mobileController = TextEditingController();
   final TextEditingController dateOfBirthController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   /// Form key
   final GlobalKey<FormState> formKey = GlobalKey();
@@ -20,7 +22,7 @@ class RegisterModel extends BaseModel {
   String? mobile;
 
   /// Local images file for profile picture
-  // File? _image;
+  File? _image;
 
   /// Validation
   AutovalidateMode _validate = AutovalidateMode.disabled;
@@ -33,17 +35,11 @@ class RegisterModel extends BaseModel {
     notifyListeners();
   }
 
-  // File? get image => _image;
+  File? get image => _image;
 
-  // /// This will rebuild the view.
-  // set image(File? image) {
-  //   _image = image;
-  //   notifyListeners();
-  // }
-
-  @override
-  void dispose() {
-    passwordController.dispose();
-    super.dispose();
+  /// This will rebuild the view.
+  set image(File? image) {
+    _image = image;
+    notifyListeners();
   }
 }

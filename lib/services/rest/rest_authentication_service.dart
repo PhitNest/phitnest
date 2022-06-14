@@ -26,6 +26,7 @@ class AuthenticationServiceImpl extends AuthenticationService {
       required String lastName,
       required String ip,
       required String mobile,
+      required String birthday,
       Location? locationData,
       File? profilePicture}) {
     throw UnimplementedError();
@@ -33,6 +34,16 @@ class AuthenticationServiceImpl extends AuthenticationService {
 
   @override
   Future<String?> signOut(String reason) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> sendResetPasswordEmail(String email) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> sendMobileAuthRequest(String phoneNumber) {
     throw UnimplementedError();
   }
 }
