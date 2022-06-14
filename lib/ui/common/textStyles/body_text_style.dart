@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'text_styles.dart';
 
-class BodyTextStyle extends TextStyle {
-  // Font sizes
-  static const LARGE = 18.0;
-  static const MEDIUM = 15.0;
-  static const SMALL = 14.0;
-
+class BodyTextStyle extends BaseTextStyle {
   BodyTextStyle(
       {required TextSize size,
       Color? color,
@@ -16,10 +11,12 @@ class BodyTextStyle extends TextStyle {
       : super(
             letterSpacing: letterSpacing,
             color: color,
-            fontWeight: weight,
-            fontSize: size == TextSize.LARGE
-                ? LARGE
-                : size == TextSize.MEDIUM
-                    ? MEDIUM
-                    : SMALL);
+            weight: weight,
+            size: size,
+            fontSizeMap: {
+              TextSize.HUGE: 20.0,
+              TextSize.LARGE: 18.0,
+              TextSize.MEDIUM: 15.0,
+              TextSize.SMALL: 14.0
+            });
 }

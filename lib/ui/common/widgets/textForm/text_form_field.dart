@@ -9,7 +9,7 @@ class TextInputFormField extends StatelessWidget {
   final String hint;
   final TextStyle? hintStyle;
   final Function(String? text)? onSaved;
-  final Function()? onSubmit;
+  final Function(String text)? onSubmit;
   final String? Function(String? text) validator;
   final TextEditingController? controller;
   final bool hide;
@@ -38,7 +38,7 @@ class TextInputFormField extends StatelessWidget {
           textAlignVertical: TextAlignVertical.center,
           textInputAction:
               onSubmit == null ? TextInputAction.next : TextInputAction.done,
-          onFieldSubmitted: (_) => onSubmit == null ? {} : onSubmit!(),
+          onFieldSubmitted: onSubmit,
           obscureText: hide,
           keyboardType: inputType,
           validator: validator,

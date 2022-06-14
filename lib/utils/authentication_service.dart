@@ -15,6 +15,10 @@ abstract class AuthenticationService {
     return userModel != null;
   }
 
+  Future<String?> sendMobileAuthRequest(String phoneNumber);
+
+  Future<String?> sendResetPasswordEmail(String email);
+
   /// Signs the user out of their account. Returns an error message if there
   /// was an error, or null if it was successful.
   Future<void> signOut(String reason) async {
@@ -44,6 +48,7 @@ abstract class AuthenticationService {
       required String lastName,
       required String ip,
       required String mobile,
+      required String birthday,
       Location? locationData,
       File? profilePicture});
 }

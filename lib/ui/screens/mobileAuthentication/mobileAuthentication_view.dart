@@ -6,11 +6,15 @@ import '../../common/widgets/widgets.dart';
 class MobileAuthenticationView extends BaseView {
   final TextEditingController phoneNumberController;
   final String? Function(String? email) validatePhoneNumber;
-  final Function(String email) onClickTextVerficationCode;
+  final Function() onClickTextVerficationCode;
+  final GlobalKey<FormState> formKey;
+  final AutovalidateMode validate;
 
   const MobileAuthenticationView(
       {Key? key,
       required this.phoneNumberController,
+      required this.formKey,
+      required this.validate,
       required this.validatePhoneNumber,
       required this.onClickTextVerficationCode})
       : super(key: key);
@@ -19,24 +23,20 @@ class MobileAuthenticationView extends BaseView {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BackButtonAppBar(),
-      body: Center(
+      body: Form(
+        key: formKey,
+        autovalidateMode: validate,
         child: Column(
-          children: <Widget>[
-            TextFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter your Phone Number',
-              ),
-              validator: validatePhoneNumber,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            MobileInputFormField(
+              key: Key("mobileAuth_phoneNumber"),
+              onChanged: (phoneNumber) {},
               controller: phoneNumberController,
-              keyboardType: TextInputType.number,
-              maxLength: 10,
+              validator: validatePhoneNumber,
             ),
             ElevatedButton(
-                child: Text("Submit"),
-                // May be 'phoneNumber' instead of phoneNumberController.text
-                onPressed: () =>
-                    onClickTextVerficationCode(phoneNumberController.text)),
+                child: Text("Submit"), onPressed: onClickTextVerficationCode),
             Text("Standard rates apply for sending SMS messages")
           ],
         ),
