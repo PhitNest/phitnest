@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../constants/constants.dart';
@@ -25,5 +27,15 @@ class FirestoreDatabaseService extends DatabaseService {
     return userDocument.exists
         ? UserModel.fromJson(userDocument.data() ?? {})
         : null;
+  }
+
+  @override
+  Stream<UserModel?> getAllUsers() async* {
+    for (DocumentSnapshot<Map<String, dynamic>> userDocument
+        in (await firestore.collection(USERS).get()).docs) {
+      yield userDocument.exists
+          ? UserModel.fromJson(userDocument.data() ?? {})
+          : null;
+    }
   }
 }

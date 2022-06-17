@@ -11,4 +11,9 @@ class DatabaseServiceImpl extends DatabaseService {
   Future<String?> updateUserModel(UserModel user) {
     throw UnimplementedError();
   }
+
+  @override
+  Stream<UserModel?> getAllUsers() async* {
+    throw UnimplementedError();
+  }
 }

@@ -34,9 +34,7 @@ class ProfileView extends BaseView {
               ),
               ProfilePictureSelector(
                   key: Key('profile_photoSelector'),
-                  initialImage: profilePicture,
-                  showButton: false,
-                  tapImage: () {},
+                  image: profilePicture,
                   onSelected: onSelectPhoto)
             ],
           )));

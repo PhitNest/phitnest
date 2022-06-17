@@ -8,4 +8,7 @@ abstract class DatabaseService {
 
   /// Get the user model for the given uid
   Future<UserModel?> getUserModel(String uid);
+
+  /// Opens a stream with all users from the backend
+  Stream<UserModel?> getAllUsers();
 }
