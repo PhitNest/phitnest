@@ -56,31 +56,24 @@ class RegisterView extends BaseView {
         appBar: BackButtonAppBar(),
         body: SingleChildScrollView(
           child: Container(
-            margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+            margin: EdgeInsets.only(left: 24, right: 24, bottom: 16),
             child: Form(
               key: formKey,
               autovalidateMode: validate,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    constraints: BoxConstraints(minWidth: double.infinity),
-                    padding: EdgeInsets.only(
-                        left: 8,
-                        right: 8,
-                        top: MediaQuery.of(context).size.height * (1 / 150)),
-                    child: Text(
-                      'Register',
-                      style: HeadingTextStyle(
-                          size: TextSize.HUGE, color: Colors.black),
-                    ),
+                  Text(
+                    'Register',
+                    style: HeadingTextStyle(
+                        size: TextSize.HUGE, color: Colors.black),
                   ),
-                  Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8, top: 32, right: 8, bottom: 8),
+                  Align(
+                      alignment: Alignment.center,
                       child: ProfilePictureSelector(
                           key: Key("register_photoSelect"),
-                          initialImage: image == null
+                          padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
+                          image: image == null
                               ? Image.network(DEFAULT_AVATAR_URL)
                               : Image.file(image!, fit: BoxFit.cover),
                           onSelected: onSaveImage)),
@@ -134,15 +127,15 @@ class RegisterView extends BaseView {
                       controller: confirmPasswordController,
                       validator: validateConfirmPassword,
                       hide: true),
-                  Padding(
-                    padding: const EdgeInsets.all(0.0),
-                    child: StyledButton(
-                      key: Key("signUp_submit"),
-                      text: 'Finish',
-                      onClick: onClickSignup,
-                      textColor: Colors.black,
-                    ),
-                  )
+                  Align(
+                      alignment: Alignment.center,
+                      child: StyledButton(
+                        key: Key("signUp_submit"),
+                        text: 'Finish',
+                        onClick: onClickSignup,
+                        textColor: Colors.black,
+                        padding: EdgeInsets.all(16.0),
+                      )),
                 ],
               ),
             ),

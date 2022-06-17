@@ -24,7 +24,7 @@ class TextInputFormField extends StatelessWidget {
     this.onSaved,
     this.controller,
     this.inputType,
-    this.padding = const EdgeInsets.only(top: 16, left: 8, right: 8),
+    this.padding = const EdgeInsets.symmetric(vertical: 8),
     this.hide = false,
     this.onSubmit,
   }) : super();

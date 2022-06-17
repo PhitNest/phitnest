@@ -10,7 +10,7 @@ import '../../../views.dart';
 
 abstract class ChatListenerProvider<T extends BaseModel, K extends BaseView>
     extends AuthenticatedProvider<T, K> {
-  late final StreamSubscription<dynamic> chatStream;
+  StreamSubscription<dynamic>? chatStream;
 
   ChatListenerProvider({Key? key}) : super(key: key);
 
@@ -29,7 +29,7 @@ abstract class ChatListenerProvider<T extends BaseModel, K extends BaseView>
 
   @override
   onDispose(T model) {
-    chatStream.cancel();
+    chatStream?.cancel();
     return super.onDispose(model);
   }
 }
