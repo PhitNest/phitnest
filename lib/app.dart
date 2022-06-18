@@ -19,6 +19,15 @@ class App extends StatelessWidget with WidgetsBindingObserver {
       GlobalKey(debugLabel: 'Main Navigator');
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  /// Used to generate a material page route for a given view.
+  generateRoute(Widget view) => MaterialPageRoute(builder: (_) => view);
+
+  @override
   Widget build(BuildContext context) {
     // Initialize dark mode settings
     DisplayUtils.initialize(
@@ -69,7 +78,8 @@ class App extends StatelessWidget with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    backendModel.updateLifeCycleState(state);
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }

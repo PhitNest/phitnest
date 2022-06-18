@@ -8,3 +8,4 @@ export 'auth/auth_model.dart';
 export 'chatHome/chat_home_model.dart';
 export 'forgotPassword/forgotPassword_model.dart';
 export 'mobileAuthentication/mobileAuthentication_model.dart';
+export 'chatListener/chat_listener_model.dart';

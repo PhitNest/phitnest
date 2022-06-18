@@ -9,3 +9,4 @@ export 'auth/auth_provider.dart';
 export 'chatHome/chat_home_provider.dart';
 export 'forgotPassword/forgotPassword_provider.dart';
 export 'mobileAuthentication/mobileAuthentication_provider.dart';
+export 'chatListener/chat_listener_provider.dart';
