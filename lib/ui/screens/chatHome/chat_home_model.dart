@@ -4,7 +4,7 @@ import '../../../models/models.dart';
 import '../models.dart';
 import 'chatCard/chat_card.dart';
 
-class ChatHomeModel extends BaseModel {
+class ChatHomeModel extends ChatListenerModel {
   StreamSubscription<UserModel?>? userStream;
 
   List<ChatCard> _chatCards = [];

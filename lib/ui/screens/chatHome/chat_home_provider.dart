@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:phitnest/ui/screens/chatHome/chatCard/chat_card.dart';
-import 'package:phitnest/ui/screens/providers.dart';
 
 import '../models.dart';
+import '../providers.dart';
 import '../views.dart';
+import 'chatCard/chat_card.dart';
 
 class ChatHomeProvider
     extends ChatListenerProvider<ChatHomeModel, ChatHomeView> {
