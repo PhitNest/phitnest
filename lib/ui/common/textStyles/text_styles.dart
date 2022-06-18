@@ -9,7 +9,7 @@ abstract class BaseTextStyle extends TextStyle {
   BaseTextStyle(
       {required TextSize size,
       required Map<TextSize, double> fontSizeMap,
-      Color? color,
+      Color color = Colors.black,
       FontWeight? weight,
       double? letterSpacing})
       : super(

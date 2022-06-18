@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 late ProgressDialog _progressDialog;
-late int _color;
+late Color _color;
 
 class ProgressWidget {
-  static initialize(int primaryColor) {
+  static initialize(Color primaryColor) {
     _color = primaryColor;
   }
 }
@@ -33,11 +33,11 @@ showProgress(BuildContext context, String message, bool isDismissible) async {
   _progressDialog.style(
       message: message,
       borderRadius: 10.0,
-      backgroundColor: Color(_color),
+      backgroundColor: _color,
       progressWidget: Container(
           padding: EdgeInsets.all(8.0),
           child: CircularProgressIndicator.adaptive(
-            valueColor: AlwaysStoppedAnimation(Color(_color)),
+            valueColor: AlwaysStoppedAnimation(_color),
             backgroundColor: Colors.white,
           )),
       elevation: 10.0,

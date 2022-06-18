@@ -1,6 +1,6 @@
-import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:phitnest/constants/constants.dart';
 
 import 'text_form_decoration.dart';
 
@@ -44,7 +44,7 @@ class MobileInputFormField extends StatelessWidget {
           inputDecoration:
               TextFormStyleDecoration(hint: 'Mobile', hintStyle: hintStyle),
           textAlignVertical: TextAlignVertical.center,
-          cursorColor: primaryColor,
+          cursorColor: Colors.black,
           validator: validator,
           onInputChanged: onChanged));
 }

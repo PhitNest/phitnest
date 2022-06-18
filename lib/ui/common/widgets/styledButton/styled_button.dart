@@ -1,14 +1,15 @@
 import 'package:device/device.dart';
 import 'package:flutter/material.dart';
+import 'package:phitnest/constants/constants.dart';
 
 import '../../textStyles/text_styles.dart';
 
 class StyledButton extends StatelessWidget {
   final double minWidth;
   final String text;
-  final Color? buttonColor;
-  final Color? buttonOutline;
-  final Color? textColor;
+  final Color buttonColor;
+  final Color buttonOutline;
+  final Color textColor;
   final Function() onClick;
   final EdgeInsets padding;
 
@@ -16,9 +17,9 @@ class StyledButton extends StatelessWidget {
       {required Key key,
       required this.text,
       required this.onClick,
-      this.buttonOutline,
-      this.textColor,
-      this.buttonColor,
+      this.textColor = Colors.black,
+      this.buttonColor = COLOR_BUTTON,
+      this.buttonOutline = COLOR_BUTTON,
       this.padding = const EdgeInsets.all(5),
       this.minWidth = 0})
       : super(key: key);
@@ -29,19 +30,19 @@ class StyledButton extends StatelessWidget {
         constraints: BoxConstraints(minWidth: minWidth),
         child: RawMaterialButton(
           elevation: 0,
-          fillColor: buttonColor ?? colorButton,
+          fillColor: buttonColor,
           padding: const EdgeInsets.symmetric(vertical: 10),
           shape: RoundedRectangleBorder(
-              borderRadius: borderRadius,
+              borderRadius: BorderRadius.circular(24.0),
               side: BorderSide(
-                color: buttonOutline ?? colorButton,
+                color: buttonOutline,
               )),
           child: Text(
             text,
             style: BodyTextStyle(
                 weight: FontWeight.bold,
                 size: TextSize.LARGE,
-                color: textColor ?? Colors.white),
+                color: textColor),
           ),
           onPressed: onClick,
         ),

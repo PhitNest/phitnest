@@ -29,8 +29,7 @@ class ProfileView extends BaseView {
             children: [
               Text(
                 'My Account',
-                style:
-                    HeadingTextStyle(size: TextSize.LARGE, color: Colors.black),
+                style: HeadingTextStyle(size: TextSize.LARGE),
               ),
               ProfilePictureSelector(
                   key: Key('profile_photoSelector'),

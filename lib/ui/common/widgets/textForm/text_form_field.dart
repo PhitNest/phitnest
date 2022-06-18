@@ -1,4 +1,3 @@
-import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 
 import '../../textStyles/text_styles.dart';
@@ -45,7 +44,7 @@ class TextInputFormField extends StatelessWidget {
           onSaved: onSaved,
           controller: controller ?? TextEditingController(),
           style: BodyTextStyle(size: TextSize.LARGE),
-          cursorColor: primaryColor,
+          cursorColor: Colors.black,
           decoration:
               TextFormStyleDecoration(hint: hint, hintStyle: hintStyle)));
 }

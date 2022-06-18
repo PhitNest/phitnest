@@ -5,7 +5,7 @@ import 'text_styles.dart';
 class BodyTextStyle extends BaseTextStyle {
   BodyTextStyle(
       {required TextSize size,
-      Color? color,
+      Color color = Colors.black,
       FontWeight? weight,
       double? letterSpacing})
       : super(
