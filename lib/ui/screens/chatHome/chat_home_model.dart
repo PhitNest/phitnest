@@ -7,6 +7,8 @@ import 'chatCard/chat_card.dart';
 class ChatHomeModel extends ChatListenerModel {
   StreamSubscription<UserModel?>? userStream;
 
+  List<int> selectedCardIndices = [];
+
   List<ChatCard> _chatCards = [];
 
   List<ChatCard> get chatCards => _chatCards;

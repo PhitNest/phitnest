@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:phitnest/ui/screens/models.dart';
 
 import '../../../../constants/constants.dart';
 import '../../../common/textStyles/text_styles.dart';
 import '../../../common/widgets/widgets.dart';
+import '../../models.dart';
 
 class OnBoardingPage extends StatelessWidget {
   final String path;
@@ -11,10 +11,7 @@ class OnBoardingPage extends StatelessWidget {
   final Function() onClickContinue;
   final int pageNum;
 
-  static const List<Color> backgroundColors = [
-    Colors.white,
-    Color(LOGO_OUTER_RING)
-  ];
+  static const List<Color> backgroundColors = [Colors.white, COLOR_PRIMARY];
 
   static List<Color> dotColors = [Colors.grey, Colors.grey.shade300];
 
@@ -44,7 +41,6 @@ class OnBoardingPage extends StatelessWidget {
               Text(text,
                   style: HeadingTextStyle(
                     size: TextSize.MEDIUM,
-                    color: Colors.black,
                   )),
             ],
           ),
@@ -55,7 +51,6 @@ class OnBoardingPage extends StatelessWidget {
                 child: StyledButton(
                   key: Key("onBoarding_continue"),
                   minWidth: 300,
-                  textColor: Colors.black,
                   text: "Let's get phit!",
                   onClick: onClickContinue,
                 )),

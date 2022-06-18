@@ -10,7 +10,10 @@ class ChatHomeView extends BaseView {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: Column(
-        children: cards,
-      ));
+      body: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(vertical: 32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: cards,
+          )));
 }

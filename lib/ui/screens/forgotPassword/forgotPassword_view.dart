@@ -58,7 +58,6 @@ class ForgotPasswordView extends BaseView {
                               key: Key("signUp_submit"),
                               text: 'Submit',
                               onClick: onClickSendPasswordResetEmail,
-                              textColor: Colors.black,
                             ),
                           )
                         ],

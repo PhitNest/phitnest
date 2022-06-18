@@ -1,6 +1,6 @@
-import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/constants.dart';
 import '../../common/textStyles/text_styles.dart';
 import '../../common/widgets/widgets.dart';
 import '../views.dart';
@@ -47,8 +47,7 @@ class SignInView extends BaseView {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
                     'Sign In',
-                    style: HeadingTextStyle(
-                        size: TextSize.HUGE, color: Colors.black),
+                    style: HeadingTextStyle(size: TextSize.HUGE),
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * (1 / 50)),
@@ -78,7 +77,7 @@ class SignInView extends BaseView {
                     child: Text(
                       'Forgot password?',
                       style: BodyTextStyle(
-                          color: Color.fromARGB(255, 40, 157, 159),
+                          color: COLOR_ACCENT,
                           weight: FontWeight.bold,
                           size: TextSize.MEDIUM,
                           letterSpacing: 1),
@@ -91,7 +90,6 @@ class SignInView extends BaseView {
                     key: Key("logIn_submit"),
                     text: 'Log In',
                     onClick: onClickLogin,
-                    textColor: Colors.black,
                   ),
                 ),
                 Padding(
@@ -99,8 +97,7 @@ class SignInView extends BaseView {
                   child: Center(
                     child: Text(
                       'OR',
-                      style: TextStyle(
-                          color: isDarkMode ? Colors.white : Colors.black),
+                      style: BodyTextStyle(size: TextSize.LARGE),
                     ),
                   ),
                 ),
@@ -114,7 +111,7 @@ class SignInView extends BaseView {
                       child: Text(
                         'Login with phone number',
                         style: BodyTextStyle(
-                            color: Color.fromARGB(255, 40, 157, 159),
+                            color: COLOR_ACCENT,
                             weight: FontWeight.bold,
                             size: TextSize.MEDIUM,
                             letterSpacing: 1),

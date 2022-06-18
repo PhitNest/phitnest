@@ -1,4 +1,3 @@
-import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 
 import 'text_styles.dart';
@@ -6,11 +5,11 @@ import 'text_styles.dart';
 class HeadingTextStyle extends BaseTextStyle {
   HeadingTextStyle(
       {required TextSize size,
-      Color? color,
+      Color color = Colors.black,
       FontWeight? weight = FontWeight.bold,
       double? letterSpacing})
       : super(
-            color: color ?? primaryColor,
+            color: color,
             weight: weight,
             letterSpacing: letterSpacing,
             size: size,

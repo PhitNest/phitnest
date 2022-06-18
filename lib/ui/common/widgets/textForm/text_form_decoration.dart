@@ -1,9 +1,9 @@
-import 'package:device/device.dart';
 import 'package:flutter/material.dart';
+import 'package:phitnest/constants/constants.dart';
 
 final OutlineInputBorder errorBorder = OutlineInputBorder(
-  borderSide: BorderSide(color: errorColor),
-  borderRadius: borderRadius,
+  borderSide: BorderSide(color: Colors.red),
+  borderRadius: BorderRadius.circular(24.0),
 );
 
 class TextFormStyleDecoration extends InputDecoration {
@@ -17,14 +17,14 @@ class TextFormStyleDecoration extends InputDecoration {
             hintText: hint,
             hintStyle: hintStyle,
             focusedBorder: UnderlineInputBorder(
-                borderRadius: borderRadius,
-                borderSide: BorderSide(color: primaryColor, width: 2.0)),
+                borderRadius: BorderRadius.circular(24.0),
+                borderSide: BorderSide(color: COLOR_PRIMARY, width: 2.0)),
             errorBorder: errorBorder,
             focusedErrorBorder: errorBorder,
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(
                 color: Colors.grey,
               ),
-              borderRadius: borderRadius,
+              borderRadius: BorderRadius.circular(24.0),
             ));
 }

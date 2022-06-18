@@ -1,7 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:device/display/display.dart' as DisplayUtils;
 
 import 'package:provider/provider.dart';
 
@@ -28,54 +27,44 @@ class App extends StatelessWidget with WidgetsBindingObserver {
   generateRoute(Widget view) => MaterialPageRoute(builder: (_) => view);
 
   @override
-  Widget build(BuildContext context) {
-    // Initialize dark mode settings
-    DisplayUtils.initialize(
-        darkMode: Theme.of(context).brightness == Brightness.dark,
-        primary: Color(COLOR_PRIMARY),
-        accent: Color(COLOR_ACCENT),
-        buttonColor: Color(COLOR_BUTTON),
-        error: Theme.of(context).errorColor);
-
-    return MaterialApp(
-      navigatorKey: _navigatorKey,
-      useInheritedMediaQuery: true,
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: DevicePreview.locale(context),
-      title: 'Phitnest',
-      builder: DevicePreview.appBuilder,
-      theme: ThemeData(
-          bottomSheetTheme: BottomSheetThemeData(
-              backgroundColor: Colors.white.withOpacity(.9)),
-          brightness: Brightness.light),
-      darkTheme: ThemeData(
-          bottomSheetTheme: BottomSheetThemeData(
-              backgroundColor: Colors.black12.withOpacity(.3)),
-          brightness: Brightness.dark),
-      debugShowCheckedModeBanner: false,
-      color: Color(COLOR_PRIMARY),
-      initialRoute: '/',
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case '/home':
-            return generateRoute(HomeProvider());
-          case '/resetPassword':
-            return generateRoute(ForgotPasswordProvider());
-          case '/mobileAuth':
-            return generateRoute(MobileAuthenticationProvider());
-          case '/signIn':
-            return generateRoute(SignInProvider());
-          case '/register':
-            return generateRoute(RegisterProvider());
-          case '/auth':
-            return generateRoute(AuthProvider());
-          default:
-            return generateRoute(OnBoardingProvider());
-        }
-      },
-    );
-  }
+  Widget build(BuildContext context) => MaterialApp(
+        navigatorKey: _navigatorKey,
+        useInheritedMediaQuery: true,
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: DevicePreview.locale(context),
+        title: 'Phitnest',
+        builder: DevicePreview.appBuilder,
+        theme: ThemeData(
+            bottomSheetTheme: BottomSheetThemeData(
+                backgroundColor: Colors.white.withOpacity(.9)),
+            brightness: Brightness.light),
+        darkTheme: ThemeData(
+            bottomSheetTheme: BottomSheetThemeData(
+                backgroundColor: Colors.black12.withOpacity(.3)),
+            brightness: Brightness.dark),
+        debugShowCheckedModeBanner: false,
+        color: COLOR_PRIMARY,
+        initialRoute: '/',
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case '/home':
+              return generateRoute(HomeProvider());
+            case '/resetPassword':
+              return generateRoute(ForgotPasswordProvider());
+            case '/mobileAuth':
+              return generateRoute(MobileAuthenticationProvider());
+            case '/signIn':
+              return generateRoute(SignInProvider());
+            case '/register':
+              return generateRoute(RegisterProvider());
+            case '/auth':
+              return generateRoute(AuthProvider());
+            default:
+              return generateRoute(OnBoardingProvider());
+          }
+        },
+      );
 
   @override
   void dispose() {

@@ -60,8 +60,7 @@ class _LoadingWidgetState extends State<LoadingWidget>
               }
               return Text(displayText,
                   textAlign: TextAlign.left,
-                  style: HeadingTextStyle(
-                      size: TextSize.MEDIUM, color: Colors.black));
+                  style: HeadingTextStyle(size: TextSize.MEDIUM));
             },
           ))
     ])));

@@ -1,6 +1,6 @@
-import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/constants.dart';
 import '../../common/widgets/widgets.dart';
 import '../views.dart';
 
@@ -39,7 +39,6 @@ class AuthView extends BaseView {
                     key: Key("auth_signIn"),
                     minWidth: buttonWidth,
                     text: 'Sign In',
-                    textColor: Colors.black,
                     onClick: onClickLogin,
                   ),
                   StyledButton(
@@ -47,9 +46,8 @@ class AuthView extends BaseView {
                     minWidth: buttonWidth,
                     text: 'Register',
                     onClick: onClickSignup,
-                    textColor: Colors.black,
                     buttonColor: Colors.white,
-                    buttonOutline: primaryColor,
+                    buttonOutline: COLOR_PRIMARY,
                   )
                 ],
               ),

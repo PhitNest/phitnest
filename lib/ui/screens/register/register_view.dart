@@ -65,8 +65,7 @@ class RegisterView extends BaseView {
                 children: [
                   Text(
                     'Register',
-                    style: HeadingTextStyle(
-                        size: TextSize.HUGE, color: Colors.black),
+                    style: HeadingTextStyle(size: TextSize.HUGE),
                   ),
                   Align(
                       alignment: Alignment.center,
@@ -133,7 +132,6 @@ class RegisterView extends BaseView {
                         key: Key("signUp_submit"),
                         text: 'Finish',
                         onClick: onClickSignup,
-                        textColor: Colors.black,
                         padding: EdgeInsets.all(16.0),
                       )),
                 ],
