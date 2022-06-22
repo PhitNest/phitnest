@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:phitnest/constants/constants.dart';
 
 import 'text_form_decoration.dart';
 

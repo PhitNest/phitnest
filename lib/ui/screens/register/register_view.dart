@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:phitnest/constants/constants.dart';
 
 import '../../common/textStyles/text_styles.dart';
+import '../../common/widgets/textForm/date_of_birth_field.dart';
 import '../../common/widgets/widgets.dart';
 import '../views.dart';
 
@@ -104,12 +105,14 @@ class RegisterView extends BaseView {
                     validator: validateMobile,
                     hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                   ),
-                  TextInputFormField(
-                      key: Key("register_dateOfBirth"),
-                      hint: "Date of Birth",
-                      hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
-                      controller: dateOfBirthController,
-                      validator: validateDateOfBirth),
+                  DobInputFormField(
+                    key: Key("register_dateOfBirth"),
+                    hint: "Date of Birth",
+                    hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
+                    controller: dateOfBirthController,
+                    validator: validateDateOfBirth,
+                    child: true,
+                  ),
                   TextInputFormField(
                     key: Key("register_password"),
                     hint: 'Password',
