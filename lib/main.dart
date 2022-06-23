@@ -13,7 +13,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
-  ProgressWidget.initialize(COLOR_PRIMARY);
+  ProgressWidget.initialize(kColorPrimary);
   setupLocator();
   _startApp();
 }

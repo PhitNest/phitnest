@@ -2,11 +2,8 @@ import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
-
 import 'constants/constants.dart';
-import 'services/services.dart';
-import 'screens/screens.dart';
+import 'ui/screens/providers.dart';
 
 class App extends StatelessWidget with WidgetsBindingObserver {
   /// Holds all back end functionality and reference to current user
@@ -44,7 +41,7 @@ class App extends StatelessWidget with WidgetsBindingObserver {
                 backgroundColor: Colors.black12.withOpacity(.3)),
             brightness: Brightness.dark),
         debugShowCheckedModeBanner: false,
-        color: COLOR_PRIMARY,
+        color: kColorPrimary,
         initialRoute: '/',
         onGenerateRoute: (settings) {
           switch (settings.name) {
