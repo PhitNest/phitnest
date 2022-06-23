@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 // App colors
 const COLOR_PRIMARY = Color(0xFF4FB3AF);
 const COLOR_ACCENT = Color(0xFF206D81);

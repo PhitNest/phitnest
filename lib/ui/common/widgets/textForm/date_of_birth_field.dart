@@ -1,10 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:phitnest/constants/constants.dart';
 
 import '../../textStyles/text_styles.dart';
 import 'text_form_decoration.dart';
 
-/// This is a text form field widget
+/// This is a DOB form field widget
 class DobInputFormField extends StatefulWidget {
   final String hint;
   final TextStyle? hintStyle;
@@ -77,10 +78,16 @@ class _DobInputFormFieldState extends State<DobInputFormField> {
                                     : _dateTime!,
                                 firstDate: DateTime.now()
                                     .subtract(const Duration(days: 36500)),
-                                lastDate: DateTime.now())
-                            .then((date) => setState(() {
-                                  _dateTime = date!;
-                                }));
+                                lastDate: DateTime.now(),
+                                builder: (context, child) => Theme(
+                                    data: ThemeData().copyWith(
+                                      colorScheme: Theme.of(context)
+                                          .colorScheme
+                                          .copyWith(primary: COLOR_PRIMARY),
+                                      dialogBackgroundColor: Colors.white,
+                                    ),
+                                    child: child!))
+                            .then((date) => setState(() => _dateTime = date!));
                       },
                       icon: Icon(Icons.calendar_month),
                     ),
