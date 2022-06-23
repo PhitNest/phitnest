@@ -83,7 +83,7 @@ class _DobInputFormFieldState extends State<DobInputFormField> {
                                     data: ThemeData().copyWith(
                                       colorScheme: Theme.of(context)
                                           .colorScheme
-                                          .copyWith(primary: COLOR_PRIMARY),
+                                          .copyWith(primary: kColorPrimary),
                                       dialogBackgroundColor: Colors.white,
                                     ),
                                     child: child!))

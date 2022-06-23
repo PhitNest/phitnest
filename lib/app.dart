@@ -2,8 +2,8 @@ import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import 'ui/screens/providers.dart';
 import 'constants/constants.dart';
+import 'ui/screens/providers.dart';
 
 /// Base MaterialApp widget
 class PhitnestApp extends StatefulWidget {
@@ -46,7 +46,7 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
                 backgroundColor: Colors.black12.withOpacity(.3)),
             brightness: Brightness.dark),
         debugShowCheckedModeBanner: false,
-        color: COLOR_PRIMARY,
+        color: kColorPrimary,
         initialRoute: '/',
         onGenerateRoute: (settings) {
           switch (settings.name) {

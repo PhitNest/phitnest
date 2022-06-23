@@ -74,7 +74,7 @@ class RegisterView extends BaseView {
                           key: Key("register_photoSelect"),
                           padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
                           image: image == null
-                              ? Image.network(DEFAULT_AVATAR_URL)
+                              ? Image.network(kDefaultAvatarUrl)
                               : Image.file(image!, fit: BoxFit.cover),
                           onSelected: onSaveImage)),
                   TextInputFormField(

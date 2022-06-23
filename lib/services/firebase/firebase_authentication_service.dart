@@ -115,7 +115,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
           userId: user.uid,
           email: emailAddress,
           settings: UserSettings(
-            profilePictureURL: DEFAULT_AVATAR_URL,
+            profilePictureURL: kDefaultAvatarUrl,
             notificationsEnabled: false,
             public: true,
             birthday: birthday,

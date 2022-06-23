@@ -13,7 +13,7 @@ class FirestoreDatabaseService extends DatabaseService {
   @override
   Future<String?> updateUserModel(UserModel user) async {
     try {
-      await firestore.collection(USERS).doc(user.userId).set(user.toJson());
+      await firestore.collection(kUsers).doc(user.userId).set(user.toJson());
       return null;
     } catch (e) {
       return '$e';
@@ -23,7 +23,7 @@ class FirestoreDatabaseService extends DatabaseService {
   @override
   Future<UserModel?> getUserModel(String uid) async {
     DocumentSnapshot<Map<String, dynamic>> userDocument =
-        await firestore.collection(USERS).doc(uid).get();
+        await firestore.collection(kUsers).doc(uid).get();
     return userDocument.exists
         ? UserModel.fromJson(userDocument.data() ?? {})
         : null;
@@ -32,7 +32,7 @@ class FirestoreDatabaseService extends DatabaseService {
   @override
   Stream<UserModel?> getAllUsers() async* {
     for (DocumentSnapshot<Map<String, dynamic>> userDocument
-        in (await firestore.collection(USERS).get()).docs) {
+        in (await firestore.collection(kUsers).get()).docs) {
       yield userDocument.exists
           ? UserModel.fromJson(userDocument.data() ?? {})
           : null;

@@ -11,7 +11,7 @@ class OnBoardingPage extends StatelessWidget {
   final Function() onClickContinue;
   final int pageNum;
 
-  static const List<Color> backgroundColors = [Colors.white, COLOR_PRIMARY];
+  static const List<Color> backgroundColors = [Colors.white, kColorPrimary];
 
   static List<Color> dotColors = [Colors.grey, Colors.grey.shade300];
 

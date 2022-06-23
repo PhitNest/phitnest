@@ -1,6 +1,5 @@
 import 'package:device/device.dart';
 import 'package:flutter/material.dart';
-
 import 'package:phitnest/constants/constants.dart';
 
 import '../models.dart';
@@ -19,7 +18,7 @@ class OnBoardingProvider
     }
     // Navigate away if we have already done on boarding. Otherwise, drop the
     // loading screen.
-    if (await deviceStorage.read(key: FINISHED_ON_BOARDING_SETTING) == 'true') {
+    if (await deviceStorage.read(key: kFinishedOnBoardingSetting) == 'true') {
       Navigator.pushNamedAndRemoveUntil(context, '/auth', (_) => false);
       return false;
     } else {
@@ -43,7 +42,7 @@ class OnBoardingProvider
         pageNum: i,
         onClickContinue: () async {
           await deviceStorage.write(
-              key: FINISHED_ON_BOARDING_SETTING, value: 'true');
+              key: kFinishedOnBoardingSetting, value: 'true');
           Navigator.pushNamedAndRemoveUntil(context, '/auth', (_) => false);
         },
       );

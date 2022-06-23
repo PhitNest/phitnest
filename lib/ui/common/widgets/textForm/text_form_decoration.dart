@@ -18,7 +18,7 @@ class TextFormStyleDecoration extends InputDecoration {
             hintStyle: hintStyle,
             focusedBorder: UnderlineInputBorder(
                 borderRadius: BorderRadius.circular(24.0),
-                borderSide: BorderSide(color: COLOR_PRIMARY, width: 2.0)),
+                borderSide: BorderSide(color: kColorPrimary, width: 2.0)),
             errorBorder: errorBorder,
             focusedErrorBorder: errorBorder,
             enabledBorder: UnderlineInputBorder(

@@ -47,7 +47,7 @@ class AuthView extends BaseView {
                     text: 'Register',
                     onClick: onClickSignup,
                     buttonColor: Colors.white,
-                    buttonOutline: COLOR_PRIMARY,
+                    buttonOutline: kColorPrimary,
                   )
                 ],
               ),

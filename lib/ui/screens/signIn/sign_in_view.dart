@@ -77,7 +77,7 @@ class SignInView extends BaseView {
                     child: Text(
                       'Forgot password?',
                       style: BodyTextStyle(
-                          color: COLOR_ACCENT,
+                          color: kColorAccent,
                           weight: FontWeight.bold,
                           size: TextSize.MEDIUM,
                           letterSpacing: 1),
@@ -111,7 +111,7 @@ class SignInView extends BaseView {
                       child: Text(
                         'Login with phone number',
                         style: BodyTextStyle(
-                            color: COLOR_ACCENT,
+                            color: kColorAccent,
                             weight: FontWeight.bold,
                             size: TextSize.MEDIUM,
                             letterSpacing: 1),
