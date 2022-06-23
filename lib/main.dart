@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 
 import 'app.dart';
-import 'locator.dart';
 import 'constants/constants.dart';
+import 'locator.dart';
 
 bool usePreview = false;
 
@@ -22,16 +22,18 @@ Future<void> main() async {
 /// Only call this from integration tests
 restartTestApp() => _startApp();
 
-_startApp() => runApp(DevicePreview(
-      key: UniqueKey(),
-      enabled: usePreview,
-      builder: (context) =>
-          // Set up easy localization
-          EasyLocalization(
-        supportedLocales: [Locale('en'), Locale('ar'), Locale('fr')],
-        path: 'assets/translations',
-        fallbackLocale: Locale('en'),
-        useFallbackTranslations: true,
-        child: PhitnestApp(),
+_startApp() => runApp(
+      DevicePreview(
+        key: UniqueKey(),
+        enabled: usePreview,
+        builder: (context) =>
+            // Set up easy localization
+            EasyLocalization(
+          supportedLocales: [Locale('en'), Locale('ar'), Locale('fr')],
+          path: 'assets/translations',
+          fallbackLocale: Locale('en'),
+          useFallbackTranslations: true,
+          child: PhitnestApp(),
+        ),
       ),
-    ));
+    );
