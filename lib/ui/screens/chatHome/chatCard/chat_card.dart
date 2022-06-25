@@ -18,7 +18,7 @@ class ChatCard extends StatelessWidget {
         children: [
           ProfilePictureChatStatus(
             key: Key("profilePicture_${user.userId}"),
-            image: Image.network(user.settings.profilePictureURL,
+            image: Image.network(user.settings.profilePictureUrl,
                 fit: BoxFit.cover),
             online: user.online,
             scale: 0.4,
