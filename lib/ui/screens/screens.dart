@@ -1,4 +1,4 @@
-export 'base_provider.dart';
+export 'screen_provider.dart';
 export 'register/register_provider.dart';
 export 'redirectedProvider/redirected.dart';
 export 'profile/profile_provider.dart';

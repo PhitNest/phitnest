@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../services/services.dart';
-import '../providers.dart';
-import 'chatCard/chat_card.dart';
+import '../../common/widgets/widgets.dart';
+import '../screens.dart';
 import 'chat_home_model.dart';
 import 'chat_home_view.dart';
 
@@ -18,7 +18,11 @@ class ChatHomeProvider
 
     model.userStream = databaseService.getAllUsers().listen((user) {
       if (user != null) {
-        model.addCard(ChatCard(user));
+        model.addCard(ChatCard(
+            fullName: user.fullName,
+            profilePictureUrl: user.settings.profilePictureUrl,
+            online: user.online,
+            recentMessage: 'Most recent message'));
       }
     });
 

@@ -5,10 +5,10 @@ import 'package:phitnest/constants/constants.dart';
 
 import '../../common/textStyles/text_styles.dart';
 import '../../common/widgets/widgets.dart';
-import '../base_view.dart';
+import '../screen_view.dart';
 
 /// This view contains a form allowing users to sign up.
-class RegisterView extends BaseView {
+class RegisterView extends ScreenView {
   final GlobalKey<FormState> formKey;
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;

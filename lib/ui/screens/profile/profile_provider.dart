@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:phitnest/services/services.dart';
 
-import '../providers.dart';
+import '../screens.dart';
 import 'profile_model.dart';
 import 'profile_view.dart';
 

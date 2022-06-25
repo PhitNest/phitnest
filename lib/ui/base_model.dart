@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class BaseModel extends ChangeNotifier {
+abstract class BaseModel extends ChangeNotifier {
   bool _loading;
 
   /// Setting initiallyLoading to true will cause the loading widget to be

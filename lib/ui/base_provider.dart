@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../common/widgets/widgets.dart';
 import 'base_model.dart';
 import 'base_view.dart';
 
@@ -26,8 +25,8 @@ abstract class BaseProvider<T extends BaseModel, K extends BaseView>
 
   /// This builder will provide a loading widget until the loading flag in
   /// the model is set to false.
-  Widget buildLoading(BuildContext context, {Key? testingKey, String? text}) =>
-      LoadingWidget(key: testingKey ?? Key("loading"), text: text);
+  Widget buildLoading(BuildContext context,
+      {Key? testingKey, String? loadingText});
 
   @override
   _BaseProviderState<T, K> createState() =>

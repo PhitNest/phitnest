@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../common/widgets/widgets.dart';
-import '../base_view.dart';
+import '../screen_view.dart';
 
-class ForgotPasswordView extends BaseView {
+class ForgotPasswordView extends ScreenView {
   static const Duration transitionDuration = Duration(milliseconds: 500);
 
   final GlobalKey<FormState> formKey;

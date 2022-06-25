@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../base_model.dart';
+import '../screen_model.dart';
 
 /// View model for register view
-class RegisterModel extends BaseModel {
+class RegisterModel extends ScreenModel {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();

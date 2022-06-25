@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:phitnest/ui/common/textStyles/text_styles.dart';
 import 'package:phitnest/ui/common/widgets/widgets.dart';
 
-import '../base_view.dart';
+import '../screen_view.dart';
 
-class ProfileView extends BaseView {
+class ProfileView extends ScreenView {
   final Image profilePicture;
   final Function(File? photo) onSelectPhoto;
   final String firstName;

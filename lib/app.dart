@@ -3,7 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'constants/constants.dart';
-import 'ui/screens/providers.dart';
+import 'ui/screens/screens.dart';
 
 /// Base MaterialApp widget
 class PhitnestApp extends StatefulWidget {

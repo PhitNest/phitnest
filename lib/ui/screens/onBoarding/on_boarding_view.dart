@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 
-import '../base_view.dart';
+import '../screen_view.dart';
 
 /// View for the on boarding screen
-class OnBoardingView extends BaseView {
+class OnBoardingView extends ScreenView {
   /// The list of pages generated and given to us by the provider
   final List<Widget> pages;
 

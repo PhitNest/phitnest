@@ -3,7 +3,7 @@ import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 
 import '../../../services/services.dart';
-import '../providers.dart';
+import '../screens.dart';
 import 'forgotPassword_model.dart';
 import 'forgotPassword_view.dart';
 

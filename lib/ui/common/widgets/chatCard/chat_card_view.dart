@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 
-import '../../../../models/models.dart';
-import '../../../common/textStyles/text_styles.dart';
-import '../../../common/widgets/widgets.dart';
+import '../../../base_view.dart';
+import '../../textStyles/text_styles.dart';
+import '../widgets.dart';
 
-class ChatCard extends StatelessWidget {
-  final UserModel user;
+class ChatCardView extends BaseView {
+  final String fullName;
+  final String profilePictureUrl;
+  final String recentMessage;
+  final bool online;
 
-  const ChatCard(
-    this.user,
-  ) : super();
+  const ChatCardView(
+      {Key? key,
+      required this.fullName,
+      required this.profilePictureUrl,
+      required this.online,
+      required this.recentMessage})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -17,10 +24,9 @@ class ChatCard extends StatelessWidget {
       child: Row(
         children: [
           ProfilePictureChatStatus(
-            key: Key("profilePicture_${user.userId}"),
-            image: Image.network(user.settings.profilePictureUrl,
-                fit: BoxFit.cover),
-            online: user.online,
+            key: Key("profilePicture_$fullName"),
+            image: Image.network(profilePictureUrl, fit: BoxFit.cover),
+            online: online,
             scale: 0.4,
           ),
           Expanded(
@@ -30,7 +36,7 @@ class ChatCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        user.fullName,
+                        fullName,
                         style: HeadingTextStyle(size: TextSize.MEDIUM),
                       ),
                       Text(

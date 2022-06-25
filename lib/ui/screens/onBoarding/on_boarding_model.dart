@@ -1,4 +1,4 @@
-import '../base_model.dart';
+import '../screen_model.dart';
 
 class OnBoardingPageData {
   final String path;
@@ -11,7 +11,7 @@ class OnBoardingPageData {
 }
 
 /// Model for the on boarding screen
-class OnBoardingModel extends BaseModel {
+class OnBoardingModel extends ScreenModel {
   /// These are used to generate on boarding pages
   static const List<OnBoardingPageData> pages = [
     OnBoardingPageData(

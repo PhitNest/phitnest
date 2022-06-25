@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
-import '../base_model.dart';
+import '../screen_model.dart';
 
-class ForgotPasswordModel extends BaseModel {
+class ForgotPasswordModel extends ScreenModel {
   /// Controls the email field
   final emailController = TextEditingController();
 
