@@ -115,9 +115,9 @@ class FirebaseAuthenticationService extends AuthenticationService {
           userId: user.uid,
           email: emailAddress,
           settings: UserSettings(
-            profilePictureURL: kDefaultAvatarUrl,
+            profilePictureUrl: kDefaultAvatarUrl,
             notificationsEnabled: false,
-            public: true,
+            isPublic: true,
             birthday: birthday,
             bio: '',
           ),
@@ -136,7 +136,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
         // Upload the profile picture
         if (profilePicture != null) {
           await storageService.uploadProfilePicture(userModel!, profilePicture);
-          userModel!.settings.profilePictureURL =
+          userModel!.settings.profilePictureUrl =
               await storageService.getProfilePictureURL(userModel!);
         }
 
