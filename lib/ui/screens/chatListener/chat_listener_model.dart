@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import '../base_model.dart';
+import '../screen_model.dart';
 
-class ChatListenerModel extends BaseModel {
+class ChatListenerModel extends ScreenModel {
   StreamSubscription<dynamic>? chatStream;
 
   @override

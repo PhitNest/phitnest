@@ -2,7 +2,7 @@ import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 import 'package:phitnest/constants/constants.dart';
 
-import '../providers.dart';
+import '../screens.dart';
 import 'on_boarding_model.dart';
 import 'on_boarding_view.dart';
 import 'pages/on_boarding_page.dart';
