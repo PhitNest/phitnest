@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../views.dart';
 import '../../common/widgets/widgets.dart';
+import '../base_view.dart';
 
 class ForgotPasswordView extends BaseView {
   static const Duration transitionDuration = Duration(milliseconds: 500);

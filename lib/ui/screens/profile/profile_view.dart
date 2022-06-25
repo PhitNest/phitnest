@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:phitnest/ui/common/textStyles/text_styles.dart';
 import 'package:phitnest/ui/common/widgets/widgets.dart';
 
-import '../views.dart';
+import '../base_view.dart';
 
 class ProfileView extends BaseView {
   final Image profilePicture;

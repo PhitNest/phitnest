@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../../services/services.dart';
+import '../base_view.dart';
 import '../providers.dart';
-import '../views.dart';
 import 'chat_listener_model.dart';
 
 abstract class ChatListenerProvider<T extends ChatListenerModel,

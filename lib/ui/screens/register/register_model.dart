@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../models.dart';
+import '../base_model.dart';
 
 /// View model for register view
 class RegisterModel extends BaseModel {

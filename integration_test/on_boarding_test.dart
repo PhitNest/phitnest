@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:phitnest/ui/screens/models.dart';
 
-import 'package:phitnest/ui/screens/views.dart';
+import 'package:phitnest/ui/screens/onBoarding/on_boarding_model.dart';
+import 'package:phitnest/ui/screens/onBoarding/on_boarding_view.dart';
 import 'package:phitnest/ui/screens/providers.dart';
 
 import 'test_base.dart';
@@ -36,8 +36,9 @@ extension OnBoardingTest on WidgetTester {
         }
 
         // Tap the continue button (this strange predicate function is just finding
-        // the first instance of our continue button, because liquid swipes does
-        // some weird multi instance stuff)
+        // the first instance of our continue button, because liquid swipes stacks the
+        // individual pages ontop of each other so multiple instances of our continue
+        // button are found)
         bool foundButton = false;
         await tap(find.byWidgetPredicate((widget) {
           if (!foundButton) {

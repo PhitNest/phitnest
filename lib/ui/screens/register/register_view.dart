@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:phitnest/constants/constants.dart';
 
 import '../../common/textStyles/text_styles.dart';
-import '../../common/widgets/textForm/date_of_birth_field.dart';
 import '../../common/widgets/widgets.dart';
-import '../views.dart';
+import '../base_view.dart';
 
 /// This view contains a form allowing users to sign up.
 class RegisterView extends BaseView {

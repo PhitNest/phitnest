@@ -73,4 +73,7 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
     }
     return false;
   }
+
+  @override
+  HomeModel createModel() => HomeModel();
 }

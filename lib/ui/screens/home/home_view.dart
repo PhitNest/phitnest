@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../base_view.dart';
 import '../providers.dart';
-import '../views.dart';
 
 /// This is the view shown when users have been authenticated.
 class HomeView extends BaseView {

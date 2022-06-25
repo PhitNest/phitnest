@@ -6,7 +6,6 @@ import 'package:progress_widgets/progress_widgets.dart';
 
 import 'app.dart';
 import 'constants/constants.dart';
-import 'locator.dart';
 
 bool usePreview = false;
 
@@ -15,7 +14,6 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
   ProgressWidget.initialize(kColorPrimary);
-  setupLocator();
   _startApp();
 }
 

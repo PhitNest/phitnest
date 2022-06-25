@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../views.dart';
+import '../base_view.dart';
 import 'chatCard/chat_card.dart';
 
 class ChatHomeView extends BaseView {

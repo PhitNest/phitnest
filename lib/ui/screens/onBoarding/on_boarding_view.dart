@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 
-import '../views.dart';
+import '../base_view.dart';
 
 /// View for the on boarding screen
 class OnBoardingView extends BaseView {

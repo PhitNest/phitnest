@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../models.dart';
-import '../../views.dart';
+import '../../../../services/services.dart';
+import '../../base_model.dart';
+import '../../base_view.dart';
 import '../redirected_provider.dart';
 
 /// This is a provider that will redirect if the user is authenticated.

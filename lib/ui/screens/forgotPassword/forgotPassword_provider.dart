@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 
-import '../models.dart';
+import '../../../services/services.dart';
 import '../providers.dart';
-import '../views.dart';
+import 'forgotPassword_model.dart';
+import 'forgotPassword_view.dart';
 
 class ForgotPasswordProvider
     extends PreAuthenticationProvider<ForgotPasswordModel, ForgotPasswordView> {
@@ -41,4 +42,7 @@ class ForgotPasswordProvider
     model.validate = AutovalidateMode.onUserInteraction;
     return 'Invalid Input';
   }
+
+  @override
+  ForgotPasswordModel createModel() => ForgotPasswordModel();
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../constants/constants.dart';
 import '../../common/widgets/widgets.dart';
-import '../views.dart';
+import '../base_view.dart';
 
 /// This is the auth screen view
 class AuthView extends BaseView {

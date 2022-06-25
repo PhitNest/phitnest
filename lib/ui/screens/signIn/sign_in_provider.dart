@@ -5,6 +5,7 @@ import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 
 import '../../../models/models.dart';
+import '../../../services/services.dart';
 import '../providers.dart';
 import 'sign_in_model.dart';
 import 'sign_in_view.dart';
@@ -64,4 +65,7 @@ class SignInProvider
     model.validate = AutovalidateMode.onUserInteraction;
     return 'Invalid input';
   }
+
+  @override
+  SignInModel createModel() => SignInModel();
 }

@@ -7,7 +7,7 @@ import '../../models/models.dart';
 import '../database_service.dart';
 
 /// Firebase implementation of the database service.
-class FirestoreDatabaseService extends DatabaseService {
+class FirebaseDatabaseService extends DatabaseService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
