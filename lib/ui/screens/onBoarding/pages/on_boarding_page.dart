@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../constants/constants.dart';
 import '../../../common/textStyles/text_styles.dart';
 import '../../../common/widgets/widgets.dart';
-import '../../models.dart';
+import '../on_boarding_model.dart';
 
 class OnBoardingPage extends StatelessWidget {
   final String path;

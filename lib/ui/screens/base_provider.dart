@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/services.dart';
-import '../../../locator.dart';
-import '../../common/widgets/widgets.dart';
+import '../common/widgets/widgets.dart';
 import 'base_model.dart';
 import 'base_view.dart';
 
@@ -12,11 +10,8 @@ abstract class BaseProvider<T extends BaseModel, K extends BaseView>
     extends StatefulWidget {
   const BaseProvider({Key? key}) : super(key: key);
 
-  /// Gets the authentication service
-  AuthenticationService get authService => locator<AuthenticationService>();
-
-  /// Gets the database service
-  DatabaseService get databaseService => locator<DatabaseService>();
+  /// This is called each time the provider is built.
+  T createModel();
 
   /// This is called in the initState method before building the view. Returns
   /// true if the screen should be displayed, or false if the screen should
@@ -35,13 +30,16 @@ abstract class BaseProvider<T extends BaseModel, K extends BaseView>
       LoadingWidget(key: testingKey ?? Key("loading"), text: text);
 
   @override
-  _BaseProviderState<T, K> createState() => _BaseProviderState<T, K>();
+  _BaseProviderState<T, K> createState() =>
+      _BaseProviderState<T, K>(createModel());
 }
 
 class _BaseProviderState<T extends BaseModel, K extends BaseView>
     extends State<BaseProvider<T, K>> {
-  /// Create a model using the factory provided from locator
-  T model = locator<T>();
+  /// This model holds all of the state of the view
+  final T model;
+
+  _BaseProviderState(this.model);
 
   @override
   initState() {

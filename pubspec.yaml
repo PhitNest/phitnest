@@ -14,14 +14,11 @@ dependencies:
   firebase_storage: ^10.0.1
   provider: ^6.0.2
   intl: ^0.17.0
-  cached_network_image: ^3.1.0
   http: ^0.13.3
   geolocator: ^8.2.0
-  smooth_page_indicator: ^1.0.0+2
   firebase_messaging: ^11.2.15
   firebase_messaging: ^11.2.13
   intl_phone_number_input: ^0.7.0+2
-  the_apple_sign_in: ^1.1.1
   easy_localization: ^3.0.0
   device:
     path: ./packages/device
@@ -29,14 +26,9 @@ dependencies:
     path: ./packages/validation
   progress_widgets:
     path: ./packages/progress_widgets
-  get_it: ^7.2.0
   device_preview: ^1.0.0
-  flutter_phoenix: ^1.0.0
   flutter_native_splash: ^2.1.6
-  introduction_screen: ^3.0.2
-  concentric_transition: ^1.0.2
   liquid_swipe: ^2.1.1
-  page_transition: ^2.0.5
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1
   integration_test:

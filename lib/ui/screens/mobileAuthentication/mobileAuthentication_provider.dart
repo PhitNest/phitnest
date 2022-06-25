@@ -1,9 +1,11 @@
 import 'package:flutter/widgets.dart';
-import 'package:phitnest/ui/screens/mobileAuthentication/mobileAuthentication_model.dart';
-import 'package:phitnest/ui/screens/mobileAuthentication/mobileAuthentication_view.dart';
-import 'package:phitnest/ui/screens/providers.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
+
+import '../../../services/services.dart';
+import '../providers.dart';
+import 'mobileAuthentication_model.dart';
+import 'mobileAuthentication_view.dart';
 
 class MobileAuthenticationProvider extends PreAuthenticationProvider<
     MobileAuthenticationModel, MobileAuthenticationView> {
@@ -38,4 +40,7 @@ class MobileAuthenticationProvider extends PreAuthenticationProvider<
     model.validate = AutovalidateMode.onUserInteraction;
     return "Invalid Input";
   }
+
+  @override
+  MobileAuthenticationModel createModel() => MobileAuthenticationModel();
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../constants/constants.dart';
 import '../../common/textStyles/text_styles.dart';
 import '../../common/widgets/widgets.dart';
-import '../views.dart';
+import '../base_view.dart';
 
 /// This view contains a form and makes login requests to authentication
 /// service.

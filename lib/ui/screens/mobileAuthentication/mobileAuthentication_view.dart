@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:phitnest/ui/screens/base/base_view.dart';
 
 import '../../common/widgets/widgets.dart';
+import '../base_view.dart';
 
 class MobileAuthenticationView extends BaseView {
   final TextEditingController phoneNumberController;

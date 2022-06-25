@@ -34,4 +34,7 @@ class ProfileProvider extends AuthenticatedProvider<ProfileModel, ProfileView> {
             ),
       firstName: authService.userModel!.firstName,
       lastName: authService.userModel!.lastName);
+
+  @override
+  ProfileModel createModel() => ProfileModel();
 }

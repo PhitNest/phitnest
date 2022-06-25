@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:phitnest/ui/screens/base/base_model.dart';
+
+import '../base_model.dart';
 
 class ForgotPasswordModel extends BaseModel {
   /// Controls the email field

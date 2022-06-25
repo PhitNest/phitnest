@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models.dart';
+import '../base_model.dart';
 
 /// This is the view model for the login view.
 class SignInModel extends BaseModel {

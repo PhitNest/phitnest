@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../models.dart';
+import '../../../services/services.dart';
 import '../providers.dart';
-import '../views.dart';
 import 'chatCard/chat_card.dart';
+import 'chat_home_model.dart';
+import 'chat_home_view.dart';
 
 class ChatHomeProvider
     extends ChatListenerProvider<ChatHomeModel, ChatHomeView> {
@@ -31,4 +32,7 @@ class ChatHomeProvider
 
   @override
   receiveMessageCallback(message) {}
+
+  @override
+  ChatHomeModel createModel() => ChatHomeModel();
 }

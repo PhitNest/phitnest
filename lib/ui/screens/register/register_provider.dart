@@ -7,6 +7,7 @@ import 'package:device/device.dart';
 import 'package:validation/validation.dart';
 
 import '../../../models/models.dart';
+import '../../../services/services.dart';
 import '../providers.dart';
 import 'register_view.dart';
 import 'register_model.dart';
@@ -89,4 +90,7 @@ class RegisterProvider
     model.validate = AutovalidateMode.onUserInteraction;
     return 'Invalid input';
   }
+
+  @override
+  RegisterModel createModel() => RegisterModel();
 }

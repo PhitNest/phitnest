@@ -1,4 +1,4 @@
-import 'package:phitnest/ui/screens/models.dart';
+import '../base_model.dart';
 
 class OnBoardingPageData {
   final String path;

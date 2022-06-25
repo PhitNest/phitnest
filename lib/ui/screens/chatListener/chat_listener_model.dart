@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../models.dart';
+import '../base_model.dart';
 
 class ChatListenerModel extends BaseModel {
   StreamSubscription<dynamic>? chatStream;
