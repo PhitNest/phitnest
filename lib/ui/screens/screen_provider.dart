@@ -12,9 +12,8 @@ abstract class ScreenProvider<T extends ScreenModel, K extends ScreenView>
   /// This builder will provide a loading widget until the loading flag in
   /// the model is set to false.
   @override
-  Widget buildLoading(BuildContext context,
-          {Key? testingKey, String? loadingText}) =>
-      LoadingWidget(key: testingKey ?? Key("loading"), text: loadingText);
+  Widget buildLoading(BuildContext context, {Key? testingKey}) =>
+      LoadingWidget(key: testingKey ?? Key("loading"));
 
   @override
   K build(BuildContext context, T model);

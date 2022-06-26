@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'constants/constants.dart';
+import 'models/models.dart';
 import 'ui/screens/screens.dart';
 
 class App extends StatelessWidget with WidgetsBindingObserver {
@@ -57,6 +58,9 @@ class App extends StatelessWidget with WidgetsBindingObserver {
               return generateRoute(RegisterProvider());
             case '/auth':
               return generateRoute(AuthProvider());
+            case '/chat':
+              return generateRoute(
+                  ChatMessagingProvider(user: settings.arguments as UserModel));
             default:
               return generateRoute(OnBoardingProvider());
           }

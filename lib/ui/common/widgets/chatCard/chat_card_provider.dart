@@ -1,35 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:progress_widgets/progress_widgets.dart';
 
+import '../../../../models/models.dart';
 import '../../../base_provider.dart';
 import 'chat_card_model.dart';
 import 'chat_card_view.dart';
 
 class ChatCardProvider extends BaseProvider<ChatCardModel, ChatCardView> {
-  final String fullName;
-  final String profilePictureUrl;
-  final String recentMessage;
-  final bool online;
+  final UserModel user;
 
   ChatCardProvider({
     Key? key,
-    required this.fullName,
-    required this.profilePictureUrl,
-    required this.recentMessage,
-    required this.online,
+    required this.user,
   }) : super(key: key);
 
   @override
   ChatCardView build(BuildContext context, ChatCardModel model) => ChatCardView(
-        fullName: fullName,
-        profilePictureUrl: profilePictureUrl,
-        recentMessage: recentMessage,
-        online: online,
+        fullName: user.fullName,
+        profilePictureUrl: user.settings.profilePictureUrl,
+        recentMessage: 'Recent message :D',
+        online: user.online,
+        onTap: () => Navigator.pushNamed(context, '/chat', arguments: user),
+        onDismiss: (direction) {},
+        confirmDismiss: (_) => showConfirmWidget(context, 'Confirm Delete?',
+            'You will not be able to restore this conversation.'),
       );
-
-  @override
-  Widget buildLoading(BuildContext context,
-          {Key? testingKey, String? loadingText}) =>
-      Container();
 
   @override
   ChatCardModel createModel() => ChatCardModel();

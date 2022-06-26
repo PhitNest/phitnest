@@ -25,8 +25,8 @@ abstract class BaseProvider<T extends BaseModel, K extends BaseView>
 
   /// This builder will provide a loading widget until the loading flag in
   /// the model is set to false.
-  Widget buildLoading(BuildContext context,
-      {Key? testingKey, String? loadingText});
+  Widget buildLoading(BuildContext context, {Key? testingKey}) =>
+      Container(key: testingKey);
 
   @override
   _BaseProviderState<T, K> createState() =>
