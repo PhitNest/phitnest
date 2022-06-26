@@ -5,7 +5,7 @@ import '../../common/widgets/widgets.dart';
 import '../chatListener/chat_listener_model.dart';
 
 class ChatHomeModel extends ChatListenerModel {
-  StreamSubscription<UserModel?>? userStream;
+  StreamSubscription<UserPublicInfo?>? userStream;
 
   List<int> selectedCardIndices = [];
 

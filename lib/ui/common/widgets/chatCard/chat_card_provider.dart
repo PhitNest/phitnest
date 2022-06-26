@@ -7,20 +7,20 @@ import 'chat_card_model.dart';
 import 'chat_card_view.dart';
 
 class ChatCardProvider extends BaseProvider<ChatCardModel, ChatCardView> {
-  final UserModel user;
+  final UserPublicInfo userInfo;
 
   ChatCardProvider({
     Key? key,
-    required this.user,
+    required this.userInfo,
   }) : super(key: key);
 
   @override
   ChatCardView build(BuildContext context, ChatCardModel model) => ChatCardView(
-        fullName: user.fullName,
-        profilePictureUrl: user.settings.profilePictureUrl,
+        fullName: userInfo.fullName,
+        profilePictureUrl: userInfo.profilePictureUrl,
         recentMessage: 'Recent message :D',
-        online: user.online,
-        onTap: () => Navigator.pushNamed(context, '/chat', arguments: user),
+        online: userInfo.online,
+        onTap: () => Navigator.pushNamed(context, '/chat', arguments: userInfo),
         onDismiss: (direction) {},
         confirmDismiss: (_) => showConfirmWidget(context, 'Confirm Delete?',
             'You will not be able to restore this conversation.'),

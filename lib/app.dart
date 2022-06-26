@@ -59,8 +59,8 @@ class App extends StatelessWidget with WidgetsBindingObserver {
             case '/auth':
               return generateRoute(AuthProvider());
             case '/chat':
-              return generateRoute(
-                  ChatMessagingProvider(user: settings.arguments as UserModel));
+              return generateRoute(ChatMessagingProvider(
+                  user: settings.arguments as UserPublicInfo));
             default:
               return generateRoute(OnBoardingProvider());
           }

@@ -16,9 +16,9 @@ class ChatHomeProvider
       return false;
     }
 
-    model.userStream = databaseService.getAllUsers().listen((user) {
-      if (user != null) {
-        model.addCard(ChatCard(user: user));
+    model.userStream = databaseService.getAllUsers().listen((userInfo) {
+      if (userInfo != null) {
+        model.addCard(ChatCard(userInfo: userInfo));
       }
     });
 

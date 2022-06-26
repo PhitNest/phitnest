@@ -26,19 +26,19 @@ class FirebaseAuthenticationService extends AuthenticationService {
 
       if (firebaseUser != null) {
         // Get the user model from the databaseService service
-        userModel = await databaseService.getUserModel(firebaseUser.uid);
+        userModel = await databaseService.getFullUserModel(firebaseUser.uid);
 
         // If the user returned is null, return an error message
         if (userModel != null) {
           userModel!.online = true;
           userModel!.lastOnlineTimestamp =
               DateTime.now().millisecondsSinceEpoch;
-          userModel!.recentIP = ip;
+          userModel!.recentIp = ip;
           userModel!.recentLocation = locationData;
           userModel!.recentPlatform = Platform.operatingSystem;
 
           // Update the user model in the databaseService service
-          return await databaseService.updateUserModel(userModel!);
+          return await databaseService.updateFullUserModel(userModel!);
         }
       }
     } on FirebaseAuthException catch (exception) {
@@ -111,37 +111,36 @@ class FirebaseAuthenticationService extends AuthenticationService {
 
       if (user != null) {
         // Create a new user model and initialize the current user
-        userModel = UserModel(
-          userId: user.uid,
-          email: emailAddress,
-          settings: UserSettings(
+        UserPublicInfo publicInfo = UserPublicInfo(
+            userId: user.uid,
+            firstName: firstName,
+            lastName: lastName,
+            online: true,
             profilePictureUrl: kDefaultAvatarUrl,
-            notificationsEnabled: false,
-            isPublic: true,
-            birthday: birthday,
             bio: '',
-          ),
-          online: true,
-          mobile: mobile,
-          firstName: firstName,
-          lastName: lastName,
-          signupIP: ip,
-          recentIP: ip,
-          lastOnlineTimestamp: DateTime.now().millisecondsSinceEpoch,
-          signupLocation: locationData,
-          recentLocation: locationData,
-          recentPlatform: Platform.operatingSystem,
-        );
+            lastOnlineTimestamp: DateTime.now().millisecondsSinceEpoch);
+        UserPrivateInfo privateInfo = UserPrivateInfo(
+            email: emailAddress,
+            mobile: mobile,
+            birthday: birthday,
+            notificationsEnabled: false,
+            recentIp: ip,
+            signupIp: ip,
+            recentPlatform: Platform.operatingSystem,
+            signupLocation: locationData,
+            recentLocation: locationData);
+        userModel = UserModel.fromInfo(
+            publicInfo: publicInfo, privateInfo: privateInfo);
 
         // Upload the profile picture
         if (profilePicture != null) {
-          await storageService.uploadProfilePicture(userModel!, profilePicture);
-          userModel!.settings.profilePictureUrl =
-              await storageService.getProfilePictureURL(userModel!);
+          await storageService.uploadProfilePicture(profilePicture);
+          userModel!.profilePictureUrl =
+              await storageService.getProfilePictureURL();
         }
 
         // Update user model in databaseService service
-        return await databaseService.updateUserModel(userModel!) == null
+        return await databaseService.updateFullUserModel(userModel!) == null
             ? null
             : 'Couldn\'t sign up for firebase, Please try again.';
       }
@@ -179,7 +178,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
 
     String? uid = _firebaseAuth.currentUser?.uid;
     if (uid != null) {
-      userModel = await databaseService.getUserModel(uid);
+      userModel = await databaseService.getFullUserModel(uid);
       if (userModel != null) {
         return true;
       }
