@@ -4,7 +4,7 @@ import 'package:device/device.dart';
 import 'package:phitnest/services/services.dart';
 
 import '../../../models/models.dart';
-import '../providers.dart';
+import '../screens.dart';
 import 'home_model.dart';
 import 'home_view.dart';
 

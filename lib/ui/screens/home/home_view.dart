@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../base_view.dart';
-import '../providers.dart';
+import '../screen_view.dart';
+import '../screens.dart';
 
 /// This is the view shown when users have been authenticated.
-class HomeView extends BaseView {
+class HomeView extends ScreenView {
   const HomeView() : super();
 
   @override

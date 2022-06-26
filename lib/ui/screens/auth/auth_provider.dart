@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../providers.dart';
+import '../screens.dart';
 import 'auth_model.dart';
 import 'auth_view.dart';
 

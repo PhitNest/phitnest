@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:phitnest/ui/screens/onBoarding/on_boarding_model.dart';
 import 'package:phitnest/ui/screens/onBoarding/on_boarding_view.dart';
-import 'package:phitnest/ui/screens/providers.dart';
+import 'package:phitnest/ui/screens/screens.dart';
 
 import 'test_base.dart';
 

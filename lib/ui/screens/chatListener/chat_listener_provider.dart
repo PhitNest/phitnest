@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../../services/services.dart';
-import '../base_view.dart';
-import '../providers.dart';
+import '../screen_view.dart';
+import '../screens.dart';
 import 'chat_listener_model.dart';
 
 abstract class ChatListenerProvider<T extends ChatListenerModel,
-    K extends BaseView> extends AuthenticatedProvider<T, K> {
+    K extends ScreenView> extends AuthenticatedProvider<T, K> {
   ChatListenerProvider({Key? key}) : super(key: key);
 
   @override

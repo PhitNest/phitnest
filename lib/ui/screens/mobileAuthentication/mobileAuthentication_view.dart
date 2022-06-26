@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../common/widgets/widgets.dart';
-import '../base_view.dart';
+import '../screen_view.dart';
 
-class MobileAuthenticationView extends BaseView {
+class MobileAuthenticationView extends ScreenView {
   final TextEditingController phoneNumberController;
   final String? Function(String? email) validatePhoneNumber;
   final Function() onClickTextVerficationCode;

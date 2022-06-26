@@ -6,7 +6,7 @@ import 'package:validation/validation.dart';
 
 import '../../../models/models.dart';
 import '../../../services/services.dart';
-import '../providers.dart';
+import '../screens.dart';
 import 'sign_in_model.dart';
 import 'sign_in_view.dart';
 

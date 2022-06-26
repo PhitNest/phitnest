@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../base_view.dart';
-import 'chatCard/chat_card.dart';
+import '../../common/widgets/widgets.dart';
+import '../screen_view.dart';
 
-class ChatHomeView extends BaseView {
+class ChatHomeView extends ScreenView {
   final List<ChatCard> cards;
 
   ChatHomeView({required this.cards}) : super();

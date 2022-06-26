@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../constants/constants.dart';
 import '../../common/textStyles/text_styles.dart';
 import '../../common/widgets/widgets.dart';
-import '../base_view.dart';
+import '../screen_view.dart';
 
 /// This view contains a form and makes login requests to authentication
 /// service.
-class SignInView extends BaseView {
+class SignInView extends ScreenView {
   final GlobalKey<FormState> formKey;
   final AutovalidateMode validate;
   final TextEditingController emailController;

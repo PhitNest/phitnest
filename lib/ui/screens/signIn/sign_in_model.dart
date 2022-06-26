@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../base_model.dart';
+import '../screen_model.dart';
 
 /// This is the view model for the login view.
-class SignInModel extends BaseModel {
+class SignInModel extends ScreenModel {
   /// Form key
   final GlobalKey<FormState> formKey = GlobalKey();
 

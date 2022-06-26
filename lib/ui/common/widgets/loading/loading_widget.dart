@@ -15,9 +15,7 @@ const DOT_DURATION = Duration(milliseconds: 2000);
 const TEXT_OFFSET = 83;
 
 class LoadingWidget extends StatefulWidget {
-  final String? text;
-
-  const LoadingWidget({required Key key, this.text}) : super(key: key);
+  const LoadingWidget({required Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoadingWidgetState();
@@ -52,7 +50,7 @@ class _LoadingWidgetState extends State<LoadingWidget>
           child: AnimatedBuilder(
             animation: _dotController,
             builder: (_, child) {
-              String displayText = widget.text ?? 'loading';
+              String displayText = 'loading';
               int numDots =
                   (_dotController.value * MAX_NUM_DOTS).floor() % MAX_NUM_DOTS;
               for (int i = 0; i < numDots; i++) {

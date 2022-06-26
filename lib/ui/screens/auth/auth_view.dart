@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../constants/constants.dart';
 import '../../common/widgets/widgets.dart';
-import '../base_view.dart';
+import '../screen_view.dart';
 
 /// This is the auth screen view
-class AuthView extends BaseView {
+class AuthView extends ScreenView {
   final Function() onClickLogin;
   final Function() onClickSignup;
 
