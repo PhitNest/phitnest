@@ -4,6 +4,7 @@ import '../profile_picture.dart';
 
 /// This will allow you to select a photo from native camera for profile picture
 class ProfilePictureChatStatus extends ProfilePictureWidget {
+  /// Shows a profile picture with circle indicating activity status.
   ProfilePictureChatStatus({
     required Key key,
     required Image image,
