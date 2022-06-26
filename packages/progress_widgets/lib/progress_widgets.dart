@@ -27,6 +27,55 @@ showProgressUntil(
   return retVal;
 }
 
+/// Shows a confirmation message and returns true if the confirm button is pressed.
+Future<bool> showConfirmWidget(
+    BuildContext context, String title, String message) async {
+  Widget confirmButton = TextButton(
+    child: Text('Confirm'),
+    onPressed: () => Navigator.pop(context, true),
+  );
+  Widget cancelButton = TextButton(
+    child: Text('Cancel'),
+    onPressed: () => Navigator.pop(context, false),
+  );
+
+  if (Platform.isIOS) {
+    CupertinoAlertDialog alert = CupertinoAlertDialog(
+      title: Text(title),
+      content: Text(message),
+      actions: [
+        confirmButton,
+        cancelButton,
+      ],
+    );
+
+    // show the dialog
+    return await showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  } else {
+    AlertDialog alert = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+      actions: [
+        confirmButton,
+        cancelButton,
+      ],
+    );
+
+    // show the dialog
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+}
+
 showProgress(BuildContext context, String message, bool isDismissible) async {
   _progressDialog = ProgressDialog(context,
       type: ProgressDialogType.Normal, isDismissible: isDismissible);

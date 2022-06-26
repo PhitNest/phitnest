@@ -18,11 +18,7 @@ class ChatHomeProvider
 
     model.userStream = databaseService.getAllUsers().listen((user) {
       if (user != null) {
-        model.addCard(ChatCard(
-            fullName: user.fullName,
-            profilePictureUrl: user.settings.profilePictureUrl,
-            online: user.online,
-            recentMessage: 'Most recent message'));
+        model.addCard(ChatCard(user: user));
       }
     });
 
