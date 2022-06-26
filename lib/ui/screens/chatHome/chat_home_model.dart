@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import '../../../models/models.dart';
-import '../../common/widgets/widgets.dart';
 import '../chatListener/chat_listener_model.dart';
+import 'chatCard/chat_card.dart';
 
 class ChatHomeModel extends ChatListenerModel {
-  StreamSubscription<UserModel?>? userStream;
+  StreamSubscription<UserPublicInfo?>? userStream;
 
   List<int> selectedCardIndices = [];
 

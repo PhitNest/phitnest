@@ -2,13 +2,13 @@ import '../../models/models.dart';
 
 /// Abstract representation of the database service
 abstract class DatabaseService {
-  /// Update the given user model in the database. Returns null on success, or
-  /// error message.
-  Future<String?> updateUserModel(UserModel user);
+  /// Update the given public and private user model in the
+  /// database. Returns null on success, or error message.
+  Future<String?> updateFullUserModel(UserModel user);
 
-  /// Get the user model for the given uid
-  Future<UserModel?> getUserModel(String uid);
+  /// Get the public and private user models for the given uid
+  Future<UserModel?> getFullUserModel(String uid);
 
-  /// Opens a stream with all users from the backend
-  Stream<UserModel?> getAllUsers();
+  /// Opens a stream with all public user data from the backend
+  Stream<UserPublicInfo?> getAllUsers();
 }

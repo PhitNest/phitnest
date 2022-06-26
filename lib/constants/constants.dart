@@ -11,8 +11,9 @@ const kColorButton = Color(0xFFD0E9EC);
 // Device preference key
 const kFinishedOnBoardingSetting = 'finishedOnBoarding';
 
-// Database document collection index
-const kUsers = 'users';
+// Database document collection indices
+const kUsersPublic = 'users_public';
+const kUsersPrivate = 'users_private';
 
 const kDefaultAvatarUrl =
     'https://www.iosapptemplates.com/wp-content/uploads/2019/06/empty-avatar.jpg';

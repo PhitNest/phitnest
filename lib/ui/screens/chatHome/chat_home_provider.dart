@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../services/services.dart';
-import '../../common/widgets/widgets.dart';
 import '../screens.dart';
+import 'chatCard/chat_card.dart';
 import 'chat_home_model.dart';
 import 'chat_home_view.dart';
 
@@ -16,9 +16,9 @@ class ChatHomeProvider
       return false;
     }
 
-    model.userStream = databaseService.getAllUsers().listen((user) {
-      if (user != null) {
-        model.addCard(ChatCard(user: user));
+    model.userStream = databaseService.getAllUsers().listen((userInfo) {
+      if (userInfo != null) {
+        model.addCard(ChatCard(userInfo: userInfo));
       }
     });
 

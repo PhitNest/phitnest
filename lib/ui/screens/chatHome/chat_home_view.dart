@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../common/widgets/widgets.dart';
 import '../screen_view.dart';
+import 'chatCard/chat_card.dart';
 
 class ChatHomeView extends ScreenView {
   final List<ChatCard> cards;
