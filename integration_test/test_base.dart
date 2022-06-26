@@ -33,9 +33,6 @@ runTest(String testName, Future<void> Function(WidgetTester tester) test) {
             await app.main();
             await tester.pumpAndSettle();
 
-            expect(find.byType(OnBoardingProvider), findsOneWidget,
-                reason:
-                    "The on boarding screen should always be the first screen.");
             await test(tester);
           }));
 }
