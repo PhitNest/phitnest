@@ -1,6 +1,8 @@
 export 'profilePictureChatStatus/profile_picture_chat_status.dart';
 export 'profilePictureSelector/profile_picture_selector_widget.dart';
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 /// This will show a profile picture in a circle with a given icon in the corner.
@@ -25,6 +27,54 @@ class ProfilePictureWidget extends StatelessWidget {
   final Color? iconBackgroundColor;
 
   final EdgeInsets padding;
+
+  factory ProfilePictureWidget.fromNetwork(String url,
+          {required Key key,
+          required Function(BuildContext context) tapImage,
+          bool showIcon = true,
+          Widget? icon,
+          double scale = 1.0,
+          EdgeInsets padding = EdgeInsets.zero,
+          Function(BuildContext context)? tapIcon,
+          Color? iconBackgroundColor}) =>
+      ProfilePictureWidget(
+        key: key,
+        image: Image.network(
+          url,
+          fit: BoxFit.cover,
+        ),
+        tapImage: tapImage,
+        showIcon: showIcon,
+        icon: icon,
+        scale: scale,
+        padding: padding,
+        tapIcon: tapIcon,
+        iconBackgroundColor: iconBackgroundColor,
+      );
+
+  factory ProfilePictureWidget.fromFile(File file,
+          {required Key key,
+          required Function(BuildContext context) tapImage,
+          bool showIcon = true,
+          Widget? icon,
+          double scale = 1.0,
+          EdgeInsets padding = EdgeInsets.zero,
+          Function(BuildContext context)? tapIcon,
+          Color? iconBackgroundColor}) =>
+      ProfilePictureWidget(
+        key: key,
+        image: Image.file(
+          file,
+          fit: BoxFit.cover,
+        ),
+        tapImage: tapImage,
+        showIcon: showIcon,
+        icon: icon,
+        scale: scale,
+        padding: padding,
+        tapIcon: tapIcon,
+        iconBackgroundColor: iconBackgroundColor,
+      );
 
   const ProfilePictureWidget({
     required Key key,

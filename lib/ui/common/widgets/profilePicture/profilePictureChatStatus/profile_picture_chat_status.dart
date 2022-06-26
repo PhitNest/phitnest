@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../profile_picture.dart';
@@ -22,4 +24,48 @@ class ProfilePictureChatStatus extends ProfilePictureWidget {
           padding: padding,
           iconBackgroundColor: online ? Colors.green : Colors.grey,
         );
+
+  factory ProfilePictureChatStatus.fromNetwork(
+    String url, {
+    required Key key,
+    required bool online,
+    Function(BuildContext context)? tapImage,
+    Function(BuildContext context)? tapIcon,
+    EdgeInsets padding = EdgeInsets.zero,
+    double scale = 1.0,
+  }) =>
+      ProfilePictureChatStatus(
+        key: key,
+        image: Image.network(
+          url,
+          fit: BoxFit.cover,
+        ),
+        online: online,
+        tapIcon: tapIcon,
+        tapImage: tapImage,
+        padding: padding,
+        scale: scale,
+      );
+
+  factory ProfilePictureChatStatus.fromFile(
+    File file, {
+    required Key key,
+    required bool online,
+    Function(BuildContext context)? tapImage,
+    Function(BuildContext context)? tapIcon,
+    EdgeInsets padding = EdgeInsets.zero,
+    double scale = 1.0,
+  }) =>
+      ProfilePictureChatStatus(
+        key: key,
+        image: Image.file(
+          file,
+          fit: BoxFit.cover,
+        ),
+        online: online,
+        tapIcon: tapIcon,
+        tapImage: tapImage,
+        padding: padding,
+        scale: scale,
+      );
 }

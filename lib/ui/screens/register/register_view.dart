@@ -69,13 +69,16 @@ class RegisterView extends ScreenView {
                   ),
                   Align(
                       alignment: Alignment.center,
-                      child: ProfilePictureSelector(
-                          key: Key("register_photoSelect"),
-                          padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
-                          image: image == null
-                              ? Image.network(kDefaultAvatarUrl)
-                              : Image.file(image!, fit: BoxFit.cover),
-                          onSelected: onSaveImage)),
+                      child: image == null
+                          ? ProfilePictureSelector.fromNetwork(
+                              kDefaultAvatarUrl,
+                              key: Key("register_photoSelect"),
+                              padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
+                              onSelected: onSaveImage)
+                          : ProfilePictureSelector.fromFile(image!,
+                              key: Key("register_photoSelect"),
+                              padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
+                              onSelected: onSaveImage)),
                   TextInputFormField(
                     key: Key("register_firstName"),
                     hint: 'First Name',

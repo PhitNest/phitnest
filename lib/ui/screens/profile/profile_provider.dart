@@ -22,15 +22,8 @@ class ProfileProvider extends AuthenticatedProvider<ProfileModel, ProfileView> {
   @override
   ProfileView build(BuildContext context, ProfileModel model) => ProfileView(
       onSelectPhoto: (File? photo) => model.profilePicture = photo,
-      profilePicture: model.profilePicture != null
-          ? Image.file(
-              model.profilePicture!,
-              fit: BoxFit.cover,
-            )
-          : Image.network(
-              model.profilePictureDownloadUrl,
-              fit: BoxFit.cover,
-            ),
+      profilePictureUrlOrFile:
+          model.profilePicture ?? model.profilePictureDownloadUrl,
       firstName: authService.userModel!.firstName,
       lastName: authService.userModel!.lastName);
 
