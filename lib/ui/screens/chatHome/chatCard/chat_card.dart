@@ -1,35 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:progress_widgets/progress_widgets.dart';
 
-import '../../../base_view.dart';
-import '../../textStyles/text_styles.dart';
-import '../widgets.dart';
+import '../../../../models/models.dart';
+import '../../../common/textStyles/text_styles.dart';
+import '../../../common/widgets/widgets.dart';
 
-class ChatCardView extends BaseView {
-  const ChatCardView({
+class ChatCard extends StatelessWidget {
+  final UserPublicInfo userInfo;
+
+  ChatCard({
     Key? key,
-    required this.fullName,
-    required this.profilePictureUrl,
-    required this.online,
-    required this.recentMessage,
-    required this.onTap,
-    required this.onDismiss,
-    required this.confirmDismiss,
+    required this.userInfo,
   }) : super(key: key);
-
-  final Function() onTap;
-  final Function(DismissDirection direction) onDismiss;
-  final Future<bool> Function(DismissDirection direction) confirmDismiss;
-  final String fullName;
-  final bool online;
-  final String profilePictureUrl;
-  final String recentMessage;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-      onTap: onTap,
+      onTap: () => Navigator.pushNamed(context, '/chat', arguments: userInfo),
       child: Dismissible(
-          confirmDismiss: confirmDismiss,
-          onDismissed: onDismiss,
+          confirmDismiss: (_) => showConfirmWidget(context, 'Confirm Delete?',
+              'You will not be able to restore this conversation.'),
+          onDismissed: (direction) {},
           direction: DismissDirection.startToEnd,
           key: Key(''),
           background: Container(
@@ -47,9 +37,10 @@ class ChatCardView extends BaseView {
               child: Row(
                 children: [
                   ProfilePictureChatStatus(
-                    key: Key("profilePicture_$fullName"),
-                    image: Image.network(profilePictureUrl, fit: BoxFit.cover),
-                    online: online,
+                    key: Key("profilePicture_${userInfo.userId}"),
+                    image: Image.network(userInfo.profilePictureUrl,
+                        fit: BoxFit.cover),
+                    online: userInfo.online,
                     scale: 0.4,
                   ),
                   Expanded(
@@ -59,7 +50,7 @@ class ChatCardView extends BaseView {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                fullName,
+                                userInfo.fullName,
                                 style: HeadingTextStyle(size: TextSize.MEDIUM),
                               ),
                               Text(
