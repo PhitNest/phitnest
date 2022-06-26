@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import '../../../models/models.dart';
-import '../../common/widgets/widgets.dart';
 import '../chatListener/chat_listener_model.dart';
+import 'chatCard/chat_card.dart';
 
 class ChatHomeModel extends ChatListenerModel {
   StreamSubscription<UserPublicInfo?>? userStream;

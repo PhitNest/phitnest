@@ -5,7 +5,7 @@ abstract class BaseModel extends ChangeNotifier {
 
   /// Setting initiallyLoading to true will cause the loading widget to be
   /// built. Setting [loading] to false will rebuild the view.
-  BaseModel({bool initiallyLoading = true}) : _loading = initiallyLoading;
+  BaseModel({bool initiallyLoading = false}) : _loading = initiallyLoading;
 
   bool get loading => _loading;
 

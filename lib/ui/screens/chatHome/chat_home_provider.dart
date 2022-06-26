@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../services/services.dart';
-import '../../common/widgets/widgets.dart';
 import '../screens.dart';
+import 'chatCard/chat_card.dart';
 import 'chat_home_model.dart';
 import 'chat_home_view.dart';
 
