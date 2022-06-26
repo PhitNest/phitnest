@@ -52,15 +52,15 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
     UserModel? user = authService.userModel;
 
     if (user != null) {
-      {
-        Position? position = await getCurrentLocation();
+      Position? position = await getCurrentLocation();
+      if (position != null) {
+        user.recentLocation = Location(
+            latitude: position.latitude, longitude: position.longitude);
 
-        if (position != null) {
-          user.recentLocation = Location(
-              latitude: position.latitude, longitude: position.longitude);
-          return await databaseService.updateFullUserModel(user) == null;
-        }
+        return await databaseService.updateFullUserModel(user) == null;
       }
+
+      return true;
     }
     return false;
   }

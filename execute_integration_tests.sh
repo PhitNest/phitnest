@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
+
+./clear_emulator_data.sh
+
 if [ ${#1} -eq 0 ]
 then
     for filename in integration_test/*_test.dart; do

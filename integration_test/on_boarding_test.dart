@@ -63,6 +63,9 @@ extension OnBoardingTest on WidgetTester {
 
 void main() {
   runTest('On Boarding Screen', (tester) async {
+    expect(find.byType(OnBoardingProvider), findsOneWidget,
+        reason: "The on boarding screen should always be the first screen.");
+
     // Immeditately restart the app without completing the onboarding screen.
     // Since we did not complete the on boarding, it should show again when we
     // restart the app.

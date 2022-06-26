@@ -38,16 +38,19 @@ class UserModel {
   Location? get recentLocation => privateInfo.recentLocation;
   Location? get signupLocation => privateInfo.signupLocation;
 
-  set email(String email) => privateInfo.email;
-  set mobile(String mobile) => privateInfo.mobile;
-  set birthday(String birthday) => privateInfo.birthday;
+  set email(String email) => privateInfo.email = email;
+  set mobile(String mobile) => privateInfo.mobile = mobile;
+  set birthday(String birthday) => privateInfo.birthday = birthday;
   set notificationsEnabled(bool notificationsEnabled) =>
-      privateInfo.notificationsEnabled;
-  set recentIp(String recentIp) => privateInfo.recentIp;
-  set signupIp(String signupIp) => privateInfo.signupIp;
-  set recentPlatform(String recentPlatform) => privateInfo.recentPlatform;
-  set recentLocation(Location? recentLocation) => privateInfo.recentLocation;
-  set signupLocation(Location? signupLocation) => privateInfo.signupLocation;
+      privateInfo.notificationsEnabled = notificationsEnabled;
+  set recentIp(String recentIp) => privateInfo.recentIp = recentIp;
+  set signupIp(String signupIp) => privateInfo.signupIp = signupIp;
+  set recentPlatform(String recentPlatform) =>
+      privateInfo.recentPlatform = recentPlatform;
+  set recentLocation(Location? recentLocation) =>
+      privateInfo.recentLocation = recentLocation;
+  set signupLocation(Location? signupLocation) =>
+      privateInfo.signupLocation = signupLocation;
 
   UserModel.fromInfo({required this.publicInfo, required this.privateInfo});
 
