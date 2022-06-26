@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:phitnest/models/user/user_model.dart';
-
 import '../services.dart';
 
 class StorageServiceImplementation extends StorageService {
@@ -16,12 +14,12 @@ class StorageServiceImplementation extends StorageService {
   }
 
   @override
-  Future<String> getProfilePictureURL(UserModel user) {
+  Future<String> getProfilePictureURL() {
     throw UnimplementedError();
   }
 
   @override
-  Future<void> uploadProfilePicture(UserModel user, File picture) {
+  Future<void> uploadProfilePicture(File picture) {
     throw UnimplementedError();
   }
 }

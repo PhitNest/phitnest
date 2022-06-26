@@ -15,8 +15,7 @@ class ProfileProvider extends AuthenticatedProvider<ProfileModel, ProfileView> {
     if (!await super.init(context, model)) {
       return false;
     }
-    model.profilePictureDownloadUrl =
-        authService.userModel!.settings.profilePictureUrl;
+    model.profilePictureDownloadUrl = authService.userModel!.profilePictureUrl;
     return true;
   }
 

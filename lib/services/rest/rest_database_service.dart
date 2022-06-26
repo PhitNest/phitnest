@@ -3,17 +3,17 @@ import '../services.dart';
 
 class DatabaseServiceImpl extends DatabaseService {
   @override
-  Future<UserModel?> getUserModel(String uid) {
+  Stream<UserPublicInfo?> getAllUsers() async* {
     throw UnimplementedError();
   }
 
   @override
-  Future<String?> updateUserModel(UserModel user) {
+  Future<UserModel?> getFullUserModel(String uid) {
     throw UnimplementedError();
   }
 
   @override
-  Stream<UserModel?> getAllUsers() async* {
+  Future<String?> updateFullUserModel(UserModel user) {
     throw UnimplementedError();
   }
 }

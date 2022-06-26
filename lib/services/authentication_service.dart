@@ -25,7 +25,7 @@ abstract class AuthenticationService {
     if (userModel != null) {
       userModel!.online = false;
       userModel!.lastOnlineTimestamp = DateTime.now().millisecondsSinceEpoch;
-      await databaseService.updateUserModel(userModel!);
+      await databaseService.updateFullUserModel(userModel!);
       userModel = null;
     }
   }

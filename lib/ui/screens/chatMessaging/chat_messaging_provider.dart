@@ -9,7 +9,7 @@ import 'chat_messaging_view.dart';
 
 class ChatMessagingProvider
     extends ScreenProvider<ChatMessagingModel, ChatMessagingView> {
-  final UserModel? user;
+  final UserPublicInfo? user;
 
   ChatMessagingProvider({Key? key, required this.user}) : super(key: key);
 

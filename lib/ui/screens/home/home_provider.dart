@@ -27,9 +27,10 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
           Navigator.pushNamed(context, '/auth');
           return false;
         }
-        authService.userModel!.settings.notificationsEnabled =
+        authService.userModel!.notificationsEnabled =
             await chatService.requestNotificationPermissions();
-        return await databaseService.updateUserModel(authService.userModel!) ==
+        return await databaseService
+                .updateFullUserModel(authService.userModel!) ==
             null;
       });
 
@@ -42,7 +43,7 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
     if (user != null) {
       user.online = true;
       user.lastOnlineTimestamp = DateTime.now().microsecondsSinceEpoch;
-      return await databaseService.updateUserModel(user) == null;
+      return await databaseService.updateFullUserModel(user) == null;
     }
     return false;
   }
@@ -57,7 +58,7 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
         if (position != null) {
           user.recentLocation = Location(
               latitude: position.latitude, longitude: position.longitude);
-          return await databaseService.updateUserModel(user) == null;
+          return await databaseService.updateFullUserModel(user) == null;
         }
       }
     }
@@ -68,8 +69,8 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
     UserModel? user = authService.userModel;
 
     if (user != null) {
-      user.recentIP = await userIP;
-      return await databaseService.updateUserModel(user) == null;
+      user.recentIp = await userIP;
+      return await databaseService.updateFullUserModel(user) == null;
     }
     return false;
   }
