@@ -7,7 +7,7 @@ import 'package:phitnest/ui/common/widgets/widgets.dart';
 import '../screen_view.dart';
 
 class ProfileView extends ScreenView {
-  final Image profilePicture;
+  final dynamic profilePictureUrlOrFile;
   final Function(File? photo) onSelectPhoto;
   final String firstName;
   final String? lastName;
@@ -15,7 +15,7 @@ class ProfileView extends ScreenView {
   const ProfileView(
       {Key? key,
       required this.onSelectPhoto,
-      required this.profilePicture,
+      required this.profilePictureUrlOrFile,
       required this.firstName,
       required this.lastName})
       : super(key: key);
@@ -31,10 +31,13 @@ class ProfileView extends ScreenView {
                 'My Account',
                 style: HeadingTextStyle(size: TextSize.LARGE),
               ),
-              ProfilePictureSelector(
-                  key: Key('profile_photoSelector'),
-                  image: profilePicture,
-                  onSelected: onSelectPhoto)
+              profilePictureUrlOrFile is String
+                  ? ProfilePictureSelector.fromNetwork(profilePictureUrlOrFile,
+                      key: Key('profile_photoSelector'),
+                      onSelected: onSelectPhoto)
+                  : ProfilePictureSelector.fromFile(profilePictureUrlOrFile,
+                      key: Key('profile_photoSelector'),
+                      onSelected: onSelectPhoto)
             ],
           )));
 }
