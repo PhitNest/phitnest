@@ -55,6 +55,7 @@ class ChatCard extends StatelessWidget {
                               ),
                               Text(
                                 'Most recent message should be shown here',
+                                style: BodyTextStyle(size: TextSize.MEDIUM),
                                 overflow: TextOverflow.ellipsis,
                               )
                             ],
