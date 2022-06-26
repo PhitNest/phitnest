@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device/device.dart';
 import 'package:flutter/material.dart';
 
@@ -7,9 +8,9 @@ import '../profile_picture.dart';
 
 /// This will allow you to select a photo from native camera for profile picture
 class ProfilePictureSelector extends ProfilePictureWidget {
-  ProfilePictureSelector({
+  ProfilePictureSelector._({
     required Key key,
-    required Image image,
+    required Widget image,
     required Function(File? selectedImage) onSelected,
     EdgeInsets padding = EdgeInsets.zero,
     double scale = 1.0,
@@ -33,11 +34,14 @@ class ProfilePictureSelector extends ProfilePictureWidget {
     EdgeInsets padding = EdgeInsets.zero,
     double scale = 1.0,
   }) =>
-      ProfilePictureSelector(
+      ProfilePictureSelector._(
         key: key,
-        image: Image.network(
-          url,
-          fit: BoxFit.cover,
+        image: CachedNetworkImage(
+          imageUrl: url,
+          imageBuilder: (context, provider) => Image(
+            image: provider,
+            fit: BoxFit.cover,
+          ),
         ),
         onSelected: onSelected,
         padding: padding,
@@ -51,7 +55,7 @@ class ProfilePictureSelector extends ProfilePictureWidget {
     EdgeInsets padding = EdgeInsets.zero,
     double scale = 1.0,
   }) =>
-      ProfilePictureSelector(
+      ProfilePictureSelector._(
         key: key,
         image: Image.file(
           file,

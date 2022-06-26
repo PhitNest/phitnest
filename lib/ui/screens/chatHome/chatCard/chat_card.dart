@@ -36,10 +36,9 @@ class ChatCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
                 children: [
-                  ProfilePictureChatStatus(
+                  ProfilePictureChatStatus.fromNetwork(
+                    userInfo.profilePictureUrl,
                     key: Key("profilePicture_${userInfo.userId}"),
-                    image: Image.network(userInfo.profilePictureUrl,
-                        fit: BoxFit.cover),
                     online: userInfo.online,
                     scale: 0.4,
                   ),
