@@ -1,10 +1,11 @@
 import 'dart:async';
 
+import 'package:phitnest/ui/screens/screen_model.dart';
+
 import '../../../models/models.dart';
-import '../chatListener/chat_listener_model.dart';
 import 'chatCard/chat_card.dart';
 
-class ChatHomeModel extends ChatListenerModel {
+class ChatHomeModel extends ScreenModel {
   StreamSubscription<UserPublicInfo?>? userStream;
 
   List<int> selectedCardIndices = [];
@@ -14,7 +15,9 @@ class ChatHomeModel extends ChatListenerModel {
   List<ChatCard> get chatCards => _chatCards;
 
   void addCard(ChatCard card) {
-    _chatCards.add(card);
+    int insertIndex = _chatCards.indexWhere((element) => element < card);
+    _chatCards.insert(
+        insertIndex == -1 ? _chatCards.length : insertIndex, card);
     notifyListeners();
   }
 

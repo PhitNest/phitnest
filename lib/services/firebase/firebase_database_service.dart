@@ -52,7 +52,22 @@ class FirebaseDatabaseService extends DatabaseService {
   }
 
   @override
-  Stream<ChatMessage?> streamChatMessageDocuments(
+  Stream<ChatMessage?> getChatMessageUpdates(
+          String authorId, String recipientId) =>
+      firestore
+          .collection('$kMessages/$authorId/$recipientId')
+          .snapshots()
+          .asyncExpand((snapshot) async* {
+        for (DocumentChange<Map<String, dynamic>> update
+            in snapshot.docChanges) {
+          yield update.doc.exists
+              ? ChatMessage.fromJson(update.doc.data()!)
+              : null;
+        }
+      });
+
+  @override
+  Stream<ChatMessage?> getRecentChatMessages(
       String authorId, String recipientId,
       {int quantity = 1}) async* {
     for (DocumentSnapshot<Map<String, dynamic>> chatDocument in (await firestore

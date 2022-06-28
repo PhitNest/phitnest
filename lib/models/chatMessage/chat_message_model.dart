@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ChatMessage {
   String authorId;
   String messageId;
@@ -5,7 +7,7 @@ class ChatMessage {
 
   List<String> photoUrls;
 
-  /// Firestore Timestamp if using firestore, or DateTime if using REST
+  /// This can either be DateTime type or Timestamp (from firestore package) type
   dynamic timeStamp;
 
   ChatMessage(
@@ -29,4 +31,18 @@ class ChatMessage {
         'photoUrls': photoUrls,
         'timeStamp': timeStamp,
       };
+
+  operator <(ChatMessage other) {
+    if (timeStamp is DateTime) {
+      DateTime mine = timeStamp;
+      DateTime yours = other.timeStamp;
+      return mine.millisecondsSinceEpoch < yours.millisecondsSinceEpoch;
+    } else {
+      Timestamp mine = timeStamp;
+      Timestamp yours = other.timeStamp;
+      return mine.millisecondsSinceEpoch < yours.millisecondsSinceEpoch;
+    }
+  }
+
+  operator >(ChatMessage other) => !(this < other);
 }

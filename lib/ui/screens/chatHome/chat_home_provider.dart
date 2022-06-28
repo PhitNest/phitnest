@@ -6,8 +6,7 @@ import 'chatCard/chat_card.dart';
 import 'chat_home_model.dart';
 import 'chat_home_view.dart';
 
-class ChatHomeProvider
-    extends ChatListenerProvider<ChatHomeModel, ChatHomeView> {
+class ChatHomeProvider extends ScreenProvider<ChatHomeModel, ChatHomeView> {
   ChatHomeProvider({Key? key}) : super(key: key);
 
   @override
@@ -18,12 +17,17 @@ class ChatHomeProvider
 
     model.userStream = databaseService.getAllUsers().listen((userInfo) async {
       if (userInfo != null) {
-        model.addCard(ChatCard(
+        ChatCard from = ChatCard(
             userInfo: userInfo,
-            displayedMessage:
-                (await chatService.getMessagesFromUser(userInfo.userId).first)
-                        ?.text ??
-                    ''));
+            displayedMessage: await chatService
+                .getRecentChatMessagesFrom(userInfo.userId)
+                .first);
+        ChatCard to = ChatCard(
+            userInfo: userInfo,
+            displayedMessage: await chatService
+                .getRecentChatMessagesTo(userInfo.userId)
+                .first);
+        model.addCard(from < to ? from : to);
       }
     });
 
@@ -34,9 +38,6 @@ class ChatHomeProvider
   ChatHomeView build(BuildContext context, ChatHomeModel model) => ChatHomeView(
         cards: model.chatCards,
       );
-
-  @override
-  receiveMessageCallback(message) {}
 
   @override
   ChatHomeModel createModel() => ChatHomeModel();

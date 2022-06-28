@@ -27,8 +27,6 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
           Navigator.pushNamed(context, '/auth');
           return false;
         }
-        authService.userModel!.notificationsEnabled =
-            await chatService.requestNotificationPermissions();
         return await databaseService
                 .updateFullUserModel(authService.userModel!) ==
             null;

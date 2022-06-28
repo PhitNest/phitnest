@@ -1,22 +1,19 @@
-import 'dart:async';
-
 import '../models/models.dart';
+import 'services.dart';
 
 abstract class ChatService {
-  Stream<dynamic> get foregroundMessageStream;
+  String get currentUserId => authService.userModel!.userId;
 
-  StreamSubscription<dynamic> openForegroundMessageStream(
-          Function(dynamic message) receiveMessage) =>
-      foregroundMessageStream.listen(receiveMessage);
+  Stream<ChatMessage?> getIncomingMessages(String authorId) =>
+      databaseService.getChatMessageUpdates(authorId, currentUserId);
 
-  Stream<ChatMessage?> getMessagesToUser(String recipientId,
-      {int quantity = 1});
+  Stream<ChatMessage?> getRecentChatMessagesFrom(String authorId,
+          {int quantity = 1}) =>
+      databaseService.getRecentChatMessages(authorId, currentUserId,
+          quantity: quantity);
 
-  Stream<ChatMessage?> getMessagesFromUser(String authorId, {int quantity = 1});
-
-  Future<bool> requestNotificationPermissions();
-
-  Future<bool> sendMessage();
-
-  receiveBackgroundMessageCallback(dynamic message);
+  Stream<ChatMessage?> getRecentChatMessagesTo(String recipientId,
+          {int quantity = 1}) =>
+      databaseService.getRecentChatMessages(currentUserId, recipientId,
+          quantity: quantity);
 }
