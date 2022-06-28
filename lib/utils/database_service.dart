@@ -12,8 +12,12 @@ abstract class DatabaseService {
   /// Streams all public user data
   Stream<UserPublicInfo?> getAllUsers();
 
+  /// Listens for new chat messages between users
+  Stream<ChatMessage?> getChatMessageUpdates(
+      String authorId, String recipientId);
+
   /// Streams all chat messages from one user to another sorted by most recent
-  Stream<ChatMessage?> streamChatMessageDocuments(
+  Stream<ChatMessage?> getRecentChatMessages(
       String authorId, String recipientId,
       {int quantity = 1});
 }

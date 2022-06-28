@@ -18,9 +18,15 @@ class DatabaseServiceImpl extends DatabaseService {
   }
 
   @override
-  Stream<ChatMessage?> streamChatMessageDocuments(
+  Stream<ChatMessage?> getRecentChatMessages(
       String authorId, String recipientId,
       {int quantity = 1}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<ChatMessage?> getChatMessageUpdates(
+      String authorId, String recipientId) {
     throw UnimplementedError();
   }
 }
