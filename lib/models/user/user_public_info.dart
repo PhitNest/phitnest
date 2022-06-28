@@ -5,7 +5,7 @@ class UserPublicInfo {
   bool online;
   String profilePictureUrl;
   String bio;
-  int lastOnlineTimestamp;
+  dynamic lastOnlineTimestamp;
   String? gender;
 
   String get fullName => '$firstName${lastName == '' ? '' : ' '}$lastName';

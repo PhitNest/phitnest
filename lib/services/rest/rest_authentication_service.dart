@@ -26,7 +26,7 @@ class AuthenticationServiceImpl extends AuthenticationService {
       required String lastName,
       required String ip,
       required String mobile,
-      required String birthday,
+      required DateTime birthday,
       Location? locationData,
       File? profilePicture}) {
     throw UnimplementedError();

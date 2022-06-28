@@ -3,7 +3,7 @@ import '../models.dart';
 class UserPrivateInfo {
   String email;
   String mobile;
-  String birthday;
+  dynamic birthday;
   bool notificationsEnabled;
   String recentIp;
   String signupIp;

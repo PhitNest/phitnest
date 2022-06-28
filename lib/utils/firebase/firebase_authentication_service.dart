@@ -31,8 +31,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
         // If the user returned is null, return an error message
         if (userModel != null) {
           userModel!.online = true;
-          userModel!.lastOnlineTimestamp =
-              DateTime.now().millisecondsSinceEpoch;
+          userModel!.lastOnlineTimestamp = DateTime.now();
           userModel!.recentIp = ip;
           userModel!.recentLocation = locationData;
           userModel!.recentPlatform = Platform.operatingSystem;
@@ -100,7 +99,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
       required String lastName,
       required String ip,
       required String mobile,
-      required String birthday,
+      required DateTime birthday,
       Location? locationData,
       File? profilePicture}) async {
     try {
@@ -118,7 +117,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
             online: true,
             profilePictureUrl: kDefaultAvatarUrl,
             bio: '',
-            lastOnlineTimestamp: DateTime.now().millisecondsSinceEpoch);
+            lastOnlineTimestamp: DateTime.now());
         UserPrivateInfo privateInfo = UserPrivateInfo(
             email: emailAddress,
             mobile: mobile,
@@ -178,9 +177,13 @@ class FirebaseAuthenticationService extends AuthenticationService {
 
     String? uid = _firebaseAuth.currentUser?.uid;
     if (uid != null) {
-      userModel = await databaseService.getFullUserModel(uid);
-      if (userModel != null) {
-        return true;
+      try {
+        userModel = await databaseService.getFullUserModel(uid);
+        if (userModel != null) {
+          return true;
+        }
+      } catch (e) {
+        return false;
       }
     }
     return false;

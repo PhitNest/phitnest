@@ -42,7 +42,7 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
 
     if (user != null) {
       user.online = true;
-      user.lastOnlineTimestamp = DateTime.now().microsecondsSinceEpoch;
+      user.lastOnlineTimestamp = DateTime.now();
       return await databaseService.updateFullUserModel(user) == null;
     }
     return false;

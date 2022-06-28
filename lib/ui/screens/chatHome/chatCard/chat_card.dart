@@ -7,10 +7,12 @@ import '../../../common/widgets/widgets.dart';
 
 class ChatCard extends StatelessWidget {
   final UserPublicInfo userInfo;
+  final String displayedMessage;
 
   ChatCard({
     Key? key,
     required this.userInfo,
+    required this.displayedMessage,
   }) : super(key: key);
 
   @override
@@ -53,7 +55,7 @@ class ChatCard extends StatelessWidget {
                                 style: HeadingTextStyle(size: TextSize.MEDIUM),
                               ),
                               Text(
-                                'Most recent message should be shown here',
+                                displayedMessage,
                                 style: BodyTextStyle(size: TextSize.MEDIUM),
                                 overflow: TextOverflow.ellipsis,
                               )

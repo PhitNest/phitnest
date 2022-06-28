@@ -11,7 +11,7 @@ class UserModel {
   bool get online => publicInfo.online;
   String get profilePictureUrl => publicInfo.profilePictureUrl;
   String get bio => publicInfo.bio;
-  int get lastOnlineTimestamp => publicInfo.lastOnlineTimestamp;
+  dynamic get lastOnlineTimestamp => publicInfo.lastOnlineTimestamp;
   String? get gender => publicInfo.gender;
 
   String get fullName => publicInfo.fullName;
@@ -23,14 +23,14 @@ class UserModel {
   set profilePictureUrl(String profilePictureUrl) =>
       publicInfo.profilePictureUrl = profilePictureUrl;
   set bio(String bio) => publicInfo.bio = bio;
-  set lastOnlineTimestamp(int lastOnlineTimestamp) =>
+  set lastOnlineTimestamp(dynamic lastOnlineTimestamp) =>
       publicInfo.lastOnlineTimestamp = lastOnlineTimestamp;
   set gender(String? gender) => publicInfo.gender = gender;
 
   // Private
   String get email => privateInfo.email;
   String get mobile => privateInfo.mobile;
-  String get birthday => privateInfo.birthday;
+  DateTime get birthday => privateInfo.birthday;
   bool get notificationsEnabled => privateInfo.notificationsEnabled;
   String get recentIp => privateInfo.recentIp;
   String get signupIp => privateInfo.signupIp;
@@ -40,7 +40,7 @@ class UserModel {
 
   set email(String email) => privateInfo.email = email;
   set mobile(String mobile) => privateInfo.mobile = mobile;
-  set birthday(String birthday) => privateInfo.birthday = birthday;
+  set birthday(DateTime birthday) => privateInfo.birthday = birthday;
   set notificationsEnabled(bool notificationsEnabled) =>
       privateInfo.notificationsEnabled = notificationsEnabled;
   set recentIp(String recentIp) => privateInfo.recentIp = recentIp;

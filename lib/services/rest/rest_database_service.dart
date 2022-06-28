@@ -16,4 +16,11 @@ class DatabaseServiceImpl extends DatabaseService {
   Future<String?> updateFullUserModel(UserModel user) {
     throw UnimplementedError();
   }
+
+  @override
+  Stream<ChatMessage?> streamChatMessageDocuments(
+      String authorId, String recipientId,
+      {int quantity = 1}) {
+    throw UnimplementedError();
+  }
 }
