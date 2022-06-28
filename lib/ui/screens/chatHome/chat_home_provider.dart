@@ -16,9 +16,14 @@ class ChatHomeProvider
       return false;
     }
 
-    model.userStream = databaseService.getAllUsers().listen((userInfo) {
+    model.userStream = databaseService.getAllUsers().listen((userInfo) async {
       if (userInfo != null) {
-        model.addCard(ChatCard(userInfo: userInfo));
+        model.addCard(ChatCard(
+            userInfo: userInfo,
+            displayedMessage:
+                (await chatService.getMessagesFromUser(userInfo.userId).first)
+                        ?.text ??
+                    ''));
       }
     });
 

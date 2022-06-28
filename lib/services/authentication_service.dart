@@ -24,7 +24,7 @@ abstract class AuthenticationService {
   Future<void> signOut(String reason) async {
     if (userModel != null) {
       userModel!.online = false;
-      userModel!.lastOnlineTimestamp = DateTime.now().millisecondsSinceEpoch;
+      userModel!.lastOnlineTimestamp = DateTime.now();
       await databaseService.updateFullUserModel(userModel!);
       userModel = null;
     }
@@ -48,7 +48,7 @@ abstract class AuthenticationService {
       required String lastName,
       required String ip,
       required String mobile,
-      required String birthday,
+      required DateTime birthday,
       Location? locationData,
       File? profilePicture});
 }

@@ -3,7 +3,7 @@ String? validateFirstName(String? value) {
   RegExp regExp = RegExp(pattern);
   if (value?.length == 0) {
     return 'First name is Required';
-  } else if (!regExp.hasMatch(value ?? '')) {
+  } else if (!regExp.hasMatch(value?.trim() ?? '')) {
     return 'Name must be a-z and A-Z';
   }
   return null;
@@ -12,7 +12,7 @@ String? validateFirstName(String? value) {
 String? validateLastName(String? value) {
   String pattern = r'(^[a-zA-Z ]*$)';
   RegExp regExp = RegExp(pattern);
-  if (!regExp.hasMatch(value ?? '')) {
+  if (!regExp.hasMatch(value?.trim() ?? '')) {
     return 'Name must be a-z and A-Z';
   }
   return null;
@@ -29,7 +29,7 @@ String? validateMobile(String? value) {
   RegExp regExp = RegExp(pattern);
   if (value?.length == 0) {
     return 'Mobile is Required';
-  } else if (!regExp.hasMatch(value ?? '')) {
+  } else if (!regExp.hasMatch(value?.trim() ?? '')) {
     return 'Invalid format';
   }
   return null;
@@ -46,7 +46,7 @@ String? validateEmail(String? value) {
   String pattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
   RegExp regex = RegExp(pattern);
-  if (!regex.hasMatch(value ?? ''))
+  if (!regex.hasMatch(value?.trim() ?? ''))
     return 'Enter Valid Email';
   else
     return null;

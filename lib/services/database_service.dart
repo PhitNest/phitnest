@@ -9,6 +9,11 @@ abstract class DatabaseService {
   /// Get the public and private user models for the given uid
   Future<UserModel?> getFullUserModel(String uid);
 
-  /// Opens a stream with all public user data from the backend
+  /// Streams all public user data
   Stream<UserPublicInfo?> getAllUsers();
+
+  /// Streams all chat messages from one user to another sorted by most recent
+  Stream<ChatMessage?> streamChatMessageDocuments(
+      String authorId, String recipientId,
+      {int quantity = 1});
 }

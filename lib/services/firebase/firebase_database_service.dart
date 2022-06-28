@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:phitnest/services/services.dart';
 
 import '../../constants/constants.dart';
 import '../../models/models.dart';
@@ -48,5 +49,22 @@ class FirebaseDatabaseService extends DatabaseService {
           ? UserPublicInfo.fromJson(userDocument.data()!)
           : null;
     }
+  }
+
+  @override
+  Stream<ChatMessage?> streamChatMessageDocuments(
+      String authorId, String recipientId,
+      {int quantity = 1}) async* {
+    for (DocumentSnapshot<Map<String, dynamic>> chatDocument in (await firestore
+            .collection('$kMessages/$authorId/$recipientId')
+            .orderBy('timeStamp', descending: true)
+            .limit(quantity)
+            .get())
+        .docs) {
+      yield chatDocument.exists
+          ? ChatMessage.fromJson(chatDocument.data()!)
+          : null;
+    }
+    yield null;
   }
 }

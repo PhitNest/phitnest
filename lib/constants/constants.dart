@@ -14,6 +14,10 @@ const kFinishedOnBoardingSetting = 'finishedOnBoarding';
 // Database document collection indices
 const kUsersPublic = 'users_public';
 const kUsersPrivate = 'users_private';
+const kMessages = 'messages';
+
+// Storage bucket paths
+const kProfilePictureBucketPath = 'profilePictures';
 
 const kDefaultAvatarUrl =
     'https://www.iosapptemplates.com/wp-content/uploads/2019/06/empty-avatar.jpg';
