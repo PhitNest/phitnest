@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phitnest/ui/common/widgets/widgets.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 
@@ -23,6 +24,10 @@ class ForgotPasswordProvider
               context: context,
               message: 'Sending a password reset link to your email...',
               showUntil: () async => await sendEmail(model),
+              spinner: LoadingWheel(
+                scale: 0.5,
+                padding: EdgeInsets.zero,
+              ),
               onDone: (result) async {
                 if (result != null) {
                   showAlertDialog(context, 'Email Failed', result);

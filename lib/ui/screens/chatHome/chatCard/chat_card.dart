@@ -7,26 +7,17 @@ import '../../../common/widgets/widgets.dart';
 
 class ChatCard extends StatelessWidget {
   final UserPublicInfo userInfo;
-  final ChatMessage? displayedMessage;
-
-  operator <(ChatCard other) {
-    if (displayedMessage == null) {
-      if (other.displayedMessage != null) {
-        return false;
-      }
-    }
-    if (other.displayedMessage == null) {
-      return true;
-    }
-
-    return displayedMessage! < other.displayedMessage!;
-  }
+  final ChatMessage message;
 
   ChatCard({
     Key? key,
     required this.userInfo,
-    required this.displayedMessage,
+    required this.message,
   }) : super(key: key);
+
+  operator <(ChatCard other) {
+    return message <= other.message;
+  }
 
   @override
   Widget build(BuildContext context) => GestureDetector(
@@ -68,7 +59,7 @@ class ChatCard extends StatelessWidget {
                                 style: HeadingTextStyle(size: TextSize.MEDIUM),
                               ),
                               Text(
-                                displayedMessage?.text ?? '',
+                                message.text,
                                 style: BodyTextStyle(size: TextSize.MEDIUM),
                                 overflow: TextOverflow.ellipsis,
                               )

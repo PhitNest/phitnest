@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../models/models.dart';
 import '../../../services/services.dart';
 import '../screens.dart';
 import 'chatCard/chat_card.dart';
@@ -15,22 +16,7 @@ class ChatHomeProvider extends ScreenProvider<ChatHomeModel, ChatHomeView> {
       return false;
     }
 
-    model.userStream = databaseService.getAllUsers().listen((userInfo) async {
-      if (userInfo != null) {
-        ChatCard from = ChatCard(
-            userInfo: userInfo,
-            displayedMessage: await chatService
-                .getRecentChatMessagesFrom(userInfo.userId)
-                .first);
-        ChatCard to = ChatCard(
-            userInfo: userInfo,
-            displayedMessage: await chatService
-                .getRecentChatMessagesTo(userInfo.userId)
-                .first);
-        model.addCard(from < to ? from : to);
-      }
-    });
-
+    buildChatCards(model);
     return true;
   }
 
@@ -38,6 +24,34 @@ class ChatHomeProvider extends ScreenProvider<ChatHomeModel, ChatHomeView> {
   ChatHomeView build(BuildContext context, ChatHomeModel model) => ChatHomeView(
         cards: model.chatCards,
       );
+
+  void buildChatCards(ChatHomeModel model) {
+    model.userStream?.cancel();
+    model.userStream = databaseService.getAllUsers().listen((userInfo) async {
+      if (userInfo != null) {
+        ChatMessage? messageFrom =
+            await chatService.getRecentChatMessagesFrom(userInfo.userId).first;
+        ChatCard? from = messageFrom != null
+            ? ChatCard(userInfo: userInfo, message: messageFrom)
+            : null;
+
+        ChatMessage? messageTo =
+            await chatService.getRecentChatMessagesTo(userInfo.userId).first;
+        ChatCard? to = messageTo != null
+            ? ChatCard(userInfo: userInfo, message: messageTo)
+            : null;
+
+        if (from != null) {
+          if (to != null) {
+            model.addCard(from < to ? from : to);
+            return;
+          }
+
+          model.addCard(from);
+        }
+      }
+    });
+  }
 
   @override
   ChatHomeModel createModel() => ChatHomeModel();

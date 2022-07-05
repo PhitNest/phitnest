@@ -8,6 +8,7 @@ import 'package:validation/validation.dart';
 
 import '../../../models/models.dart';
 import '../../../services/services.dart';
+import '../../common/widgets/widgets.dart';
 import '../screens.dart';
 import 'register_view.dart';
 import 'register_model.dart';
@@ -45,6 +46,10 @@ class RegisterProvider
         onClickSignup: () => showProgressUntil(
             context: context,
             message: 'Creating new account, Please wait...',
+            spinner: LoadingWheel(
+              scale: 0.5,
+              padding: EdgeInsets.zero,
+            ),
             showUntil: () => register(model),
             onDone: (result) {
               if (result != null) {

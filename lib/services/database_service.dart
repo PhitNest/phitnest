@@ -17,7 +17,11 @@ abstract class DatabaseService {
       String authorId, String recipientId);
 
   /// Streams all chat messages from one user to another sorted by most recent
-  Stream<ChatMessage?> getRecentChatMessages(
+  Stream<ChatMessage?> getRecentChatMessagesFromAuthor(
       String authorId, String recipientId,
+      {int quantity = 1});
+
+  /// Gets all chat messages between two users
+  Stream<ChatMessage?> getRecentChatMessages(String userId, String otherUserId,
       {int quantity = 1});
 }

@@ -32,17 +32,26 @@ class ChatMessage {
         'timeStamp': timeStamp,
       };
 
-  operator <(ChatMessage other) {
+  /// Returns < 0 if [other] is older than this.
+  /// Returns 0 if [other] occurred at the same time.
+  /// Retuns > 0 if [other] occurred more recently than this.
+  int compareTimeStamps(ChatMessage other) {
     if (timeStamp is DateTime) {
       DateTime mine = timeStamp;
       DateTime yours = other.timeStamp;
-      return mine.millisecondsSinceEpoch < yours.millisecondsSinceEpoch;
+      return yours.millisecondsSinceEpoch - mine.millisecondsSinceEpoch;
     } else {
       Timestamp mine = timeStamp;
       Timestamp yours = other.timeStamp;
-      return mine.millisecondsSinceEpoch < yours.millisecondsSinceEpoch;
+      return yours.millisecondsSinceEpoch - mine.millisecondsSinceEpoch;
     }
   }
 
-  operator >(ChatMessage other) => !(this < other);
+  operator <(ChatMessage other) => compareTimeStamps(other) < 0;
+
+  operator <=(ChatMessage other) => compareTimeStamps(other) <= 0;
+
+  operator >(ChatMessage other) => compareTimeStamps(other) > 0;
+
+  operator >=(ChatMessage other) => compareTimeStamps(other) >= 0;
 }

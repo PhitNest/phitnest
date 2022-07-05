@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../models/models.dart';
 import 'services.dart';
 
@@ -15,5 +17,10 @@ abstract class ChatService {
   Stream<ChatMessage?> getRecentChatMessagesTo(String recipientId,
           {int quantity = 1}) =>
       databaseService.getRecentChatMessages(currentUserId, recipientId,
+          quantity: quantity);
+
+  Stream<ChatMessage?> getRecentChatMessagesToAndFrom(String otherUserId,
+          {int quantity = 1}) =>
+      databaseService.getRecentChatMessages(currentUserId, otherUserId,
           quantity: quantity);
 }

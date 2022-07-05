@@ -3,6 +3,7 @@ import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 
 import '../../../services/services.dart';
+import '../../common/widgets/widgets.dart';
 import '../screens.dart';
 import 'mobileAuthentication_model.dart';
 import 'mobileAuthentication_view.dart';
@@ -22,6 +23,10 @@ class MobileAuthenticationProvider extends PreAuthenticationProvider<
           onClickTextVerficationCode: () => showProgressUntil(
               context: context,
               message: 'Sending verification code...',
+              spinner: LoadingWheel(
+                scale: 0.5,
+                padding: EdgeInsets.zero,
+              ),
               showUntil: () async => await sendText(model),
               onDone: (result) {
                 if (result != null) {
