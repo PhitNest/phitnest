@@ -1,11 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:phitnest/ui/common/widgets/loading/loading_wheel.dart';
 
-import '../../textStyles/text_styles.dart';
-import '../widgets.dart';
-
-const SPIN_DURATION = Duration(milliseconds: 1000);
+import '../common/textStyles/text_styles.dart';
 
 const MAX_NUM_DOTS = 4;
 
@@ -14,17 +10,15 @@ const DOT_DURATION = Duration(milliseconds: 2000);
 // Increase this to shift the loading text left, decrease to shift right
 const TEXT_OFFSET = 83;
 
-class LoadingWidget extends StatefulWidget {
-  const LoadingWidget({required Key key}) : super(key: key);
+class LoadingScreen extends StatefulWidget {
+  const LoadingScreen({required Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _LoadingWidgetState();
+  State<StatefulWidget> createState() => _LoadingScreenState();
 }
 
-class _LoadingWidgetState extends State<LoadingWidget>
+class _LoadingScreenState extends State<LoadingScreen>
     with TickerProviderStateMixin {
-  late final AnimationController _spinController =
-      AnimationController(vsync: this, duration: SPIN_DURATION)..repeat();
   late final AnimationController _dotController =
       AnimationController(vsync: this, duration: DOT_DURATION)..repeat();
 
@@ -34,15 +28,7 @@ class _LoadingWidgetState extends State<LoadingWidget>
         body: Center(
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      AnimatedBuilder(
-          animation: _spinController,
-          builder: (_, child) => Transform.rotate(
-                angle: _spinController.value * 2 * pi,
-                child: LogoWidget(
-                  scale: 0.35,
-                  padding: EdgeInsets.all(20),
-                ),
-              )),
+      LoadingWheel(),
       Container(
           padding: EdgeInsets.only(
               left: (MediaQuery.of(context).size.width - TEXT_OFFSET) / 2),
@@ -66,7 +52,6 @@ class _LoadingWidgetState extends State<LoadingWidget>
 
   @override
   void dispose() {
-    _spinController.dispose();
     _dotController.dispose();
     super.dispose();
   }

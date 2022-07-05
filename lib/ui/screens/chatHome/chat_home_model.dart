@@ -8,14 +8,12 @@ import 'chatCard/chat_card.dart';
 class ChatHomeModel extends ScreenModel {
   StreamSubscription<UserPublicInfo?>? userStream;
 
-  List<int> selectedCardIndices = [];
-
   List<ChatCard> _chatCards = [];
 
   List<ChatCard> get chatCards => _chatCards;
 
   void addCard(ChatCard card) {
-    int insertIndex = _chatCards.indexWhere((element) => element < card);
+    int insertIndex = _chatCards.indexWhere((element) => card < element);
     _chatCards.insert(
         insertIndex == -1 ? _chatCards.length : insertIndex, card);
     notifyListeners();

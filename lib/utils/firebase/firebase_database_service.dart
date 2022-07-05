@@ -64,10 +64,11 @@ class FirebaseDatabaseService extends DatabaseService {
               ? ChatMessage.fromJson(update.doc.data()!)
               : null;
         }
+        yield null;
       });
 
   @override
-  Stream<ChatMessage?> getRecentChatMessages(
+  Stream<ChatMessage?> getRecentChatMessagesFromAuthor(
       String authorId, String recipientId,
       {int quantity = 1}) async* {
     for (DocumentSnapshot<Map<String, dynamic>> chatDocument in (await firestore
@@ -76,6 +77,30 @@ class FirebaseDatabaseService extends DatabaseService {
             .limit(quantity)
             .get())
         .docs) {
+      yield chatDocument.exists
+          ? ChatMessage.fromJson(chatDocument.data()!)
+          : null;
+    }
+    yield null;
+  }
+
+  @override
+  Stream<ChatMessage?> getRecentChatMessages(String userId, String otherUserId,
+      {int quantity = 1}) async* {
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> docSnapshots =
+        (await firestore
+                .collection('$kMessages/$userId/$otherUserId')
+                .orderBy('timeStamp', descending: true)
+                .limit(quantity)
+                .get())
+            .docs
+          ..addAll((await firestore
+                  .collection('$kMessages/$otherUserId/$userId')
+                  .orderBy('timeStamp', descending: true)
+                  .limit(quantity)
+                  .get())
+              .docs);
+    for (DocumentSnapshot<Map<String, dynamic>> chatDocument in docSnapshots) {
       yield chatDocument.exists
           ? ChatMessage.fromJson(chatDocument.data()!)
           : null;
