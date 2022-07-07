@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 
-import '../../../../models/models.dart';
-import '../../../common/textStyles/text_styles.dart';
-import '../../../common/widgets/widgets.dart';
+import '../../../../../models/models.dart';
+import '../../../../common/textStyles/text_styles.dart';
+import '../../../../common/widgets/widgets.dart';
 
 class ChatCard extends StatelessWidget {
   final UserPublicInfo userInfo;
   final ChatMessage message;
+  final bool read;
 
   ChatCard({
     Key? key,
     required this.userInfo,
     required this.message,
+    required this.read,
   }) : super(key: key);
-
-  operator <(ChatCard other) {
-    return message <= other.message;
-  }
 
   @override
   Widget build(BuildContext context) => GestureDetector(
@@ -54,10 +52,20 @@ class ChatCard extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                userInfo.fullName,
-                                style: HeadingTextStyle(size: TextSize.MEDIUM),
-                              ),
+                              Row(children: [
+                                Text(
+                                  userInfo.fullName,
+                                  style:
+                                      HeadingTextStyle(size: TextSize.MEDIUM),
+                                ),
+                                Expanded(child: Container()),
+                                Visibility(
+                                    visible: !read,
+                                    child: CircleAvatar(
+                                      radius: 4,
+                                      backgroundColor: Colors.blue,
+                                    ))
+                              ]),
                               Text(
                                 message.text,
                                 style: BodyTextStyle(size: TextSize.MEDIUM),

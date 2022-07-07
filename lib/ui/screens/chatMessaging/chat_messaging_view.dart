@@ -18,6 +18,7 @@ class ChatMessagingView extends ScreenView {
   Widget build(BuildContext context) => Scaffold(
       appBar: BackButtonAppBar(),
       body: Column(
-        children: messageBubbles,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: messageBubbles.reversed.toList(),
       ));
 }

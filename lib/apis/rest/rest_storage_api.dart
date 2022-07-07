@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import '../services.dart';
+import '../api.dart';
 
-class StorageServiceImplementation extends StorageService {
+class RestStorageApi extends StorageApi {
   @override
   Future<void> uploadFile(String path, File file) {
     throw UnimplementedError();
@@ -14,12 +14,12 @@ class StorageServiceImplementation extends StorageService {
   }
 
   @override
-  Future<String> getProfilePictureURL() {
+  Future<String> getProfilePictureURL(String uid) {
     throw UnimplementedError();
   }
 
   @override
-  Future<void> uploadProfilePicture(File picture) {
+  Future<void> uploadProfilePicture(String uid, File picture) {
     throw UnimplementedError();
   }
 }

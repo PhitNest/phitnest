@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:phitnest/ui/common/widgets/widgets.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 
-import '../../../services/services.dart';
+import '../../../apis/api.dart';
+import '../../common/widgets/widgets.dart';
 import '../screens.dart';
 import 'forgotPassword_model.dart';
 import 'forgotPassword_view.dart';
@@ -41,7 +41,7 @@ class ForgotPasswordProvider
   Future<String?> sendEmail(ForgotPasswordModel model) async {
     if (model.formKey.currentState?.validate() ?? false) {
       model.formKey.currentState!.save();
-      return await authService
+      return await api<AuthenticationApi>()
           .sendResetPasswordEmail(model.emailController.text.trim());
     }
     model.validate = AutovalidateMode.onUserInteraction;
