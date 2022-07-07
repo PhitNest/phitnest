@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../services/services.dart';
+import '../../../../apis/api.dart';
 import '../../screen_model.dart';
 import '../../screen_view.dart';
 import '../redirected_provider.dart';
@@ -21,5 +21,5 @@ abstract class AuthenticatedProvider<T extends ScreenModel,
   /// Redirect the user to the screen route if they are not authenticated.
   @override
   Future<bool> get shouldRedirect async =>
-      !await authService.isAuthenticatedOrHasAuthCache();
+      await api<AuthenticationApi>().getAuthenticatedUid() == null;
 }

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../constants/constants.dart';
-import '../services.dart';
+import '../api.dart';
 
-class FirebaseStorageService extends StorageService {
+class FirebaseStorageApi extends StorageApi {
   Reference storage = FirebaseStorage.instance.ref();
 
   @override
@@ -17,10 +17,10 @@ class FirebaseStorageService extends StorageService {
       await storage.child(path).getDownloadURL();
 
   @override
-  Future<String> getProfilePictureURL() async => await getFileURL(
-      '$kProfilePictureBucketPath/${authService.userModel?.userId}');
+  Future<String> getProfilePictureURL(String uid) async =>
+      await getFileURL('$kProfilePictureBucketPath/$uid');
 
   @override
-  Future<void> uploadProfilePicture(File picture) async => await uploadFile(
-      '$kProfilePictureBucketPath/${authService.userModel?.userId}', picture);
+  Future<void> uploadProfilePicture(String uid, File picture) async =>
+      await uploadFile('$kProfilePictureBucketPath/$uid', picture);
 }

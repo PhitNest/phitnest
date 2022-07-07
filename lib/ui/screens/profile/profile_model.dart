@@ -6,6 +6,8 @@ class ProfileModel extends ScreenModel {
   String profilePictureDownloadUrl = '';
 
   File? _profilePicture;
+  String firstName = "";
+  String lastName = "";
 
   File? get profilePicture => _profilePicture;
 

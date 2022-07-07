@@ -4,10 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:phitnest/constants/constants.dart';
 
 import '../../models/models.dart';
-import '../services.dart';
+import '../api.dart';
 
-/// Firebase implementation of the authentication service.
-class FirebaseAuthenticationService extends AuthenticationService {
+/// Firebase implementation of the authentication api.
+class FirebaseAuthenticationApi extends AuthenticationApi {
   /// Instance of firebase auth
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -25,19 +25,20 @@ class FirebaseAuthenticationService extends AuthenticationService {
       User? firebaseUser = result.user;
 
       if (firebaseUser != null) {
-        // Get the user model from the databaseService service
-        userModel = await databaseService.getFullUserModel(firebaseUser.uid);
+        // Get the user model from the social api
+        UserModel? userModel =
+            await api<SocialApi>().getFullUserModel(firebaseUser.uid);
 
         // If the user returned is null, return an error message
         if (userModel != null) {
-          userModel!.online = true;
-          userModel!.lastOnlineTimestamp = DateTime.now();
-          userModel!.recentIp = ip;
-          userModel!.recentLocation = locationData;
-          userModel!.recentPlatform = Platform.operatingSystem;
+          userModel.online = true;
+          userModel.lastOnlineTimestamp = DateTime.now();
+          userModel.recentIp = ip;
+          userModel.recentLocation = locationData;
+          userModel.recentPlatform = Platform.operatingSystem;
 
-          // Update the user model in the databaseService service
-          return await databaseService.updateFullUserModel(userModel!);
+          // Update the user model in the social api
+          return await api<SocialApi>().updateFullUserModel(userModel);
         }
       }
     } on FirebaseAuthException catch (exception) {
@@ -128,18 +129,19 @@ class FirebaseAuthenticationService extends AuthenticationService {
             recentPlatform: Platform.operatingSystem,
             signupLocation: locationData,
             recentLocation: locationData);
-        userModel = UserModel.fromInfo(
+        UserModel userModel = UserModel.fromInfo(
             publicInfo: publicInfo, privateInfo: privateInfo);
 
         // Upload the profile picture
         if (profilePicture != null) {
-          await storageService.uploadProfilePicture(profilePicture);
-          userModel!.profilePictureUrl =
-              await storageService.getProfilePictureURL();
+          await api<StorageApi>()
+              .uploadProfilePicture(userModel.userId, profilePicture);
+          userModel.profilePictureUrl =
+              await api<StorageApi>().getProfilePictureURL(userModel.userId);
         }
 
         // Update user model in databaseService service
-        return await databaseService.updateFullUserModel(userModel!) == null
+        return await api<SocialApi>().updateFullUserModel(userModel) == null
             ? null
             : 'Couldn\'t sign up for firebase, Please try again.';
       }
@@ -170,28 +172,20 @@ class FirebaseAuthenticationService extends AuthenticationService {
   }
 
   @override
-  Future<bool> isAuthenticatedOrHasAuthCache() async {
-    if (await super.isAuthenticatedOrHasAuthCache()) {
-      return true;
-    }
+  Future<String?> getAuthenticatedUid() async {
+    _firebaseAuth.currentUser?.reload();
 
     String? uid = _firebaseAuth.currentUser?.uid;
     if (uid != null) {
       try {
-        userModel = await databaseService.getFullUserModel(uid);
-        if (userModel != null) {
-          return true;
-        }
-      } catch (e) {
-        return false;
-      }
+        return (await api<SocialApi>().getFullUserModel(uid))?.userId;
+      } catch (e) {}
     }
-    return false;
+    return null;
   }
 
   @override
-  Future<void> signOut(String reason) async {
-    await super.signOut(reason);
+  Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }
 }

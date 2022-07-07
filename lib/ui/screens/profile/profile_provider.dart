@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:phitnest/services/services.dart';
 
+import '../../../apis/api.dart';
+import '../../../models/models.dart';
 import '../screens.dart';
 import 'profile_model.dart';
 import 'profile_view.dart';
@@ -15,7 +16,12 @@ class ProfileProvider extends AuthenticatedProvider<ProfileModel, ProfileView> {
     if (!await super.init(context, model)) {
       return false;
     }
-    model.profilePictureDownloadUrl = authService.userModel!.profilePictureUrl;
+    UserModel user = (await api<SocialApi>().getFullUserModel(
+        (await api<AuthenticationApi>().getAuthenticatedUid())!))!;
+
+    model.profilePictureDownloadUrl = user.profilePictureUrl;
+    model.firstName = user.firstName;
+    model.lastName = user.lastName;
     return true;
   }
 
@@ -24,8 +30,8 @@ class ProfileProvider extends AuthenticatedProvider<ProfileModel, ProfileView> {
       onSelectPhoto: (File? photo) => model.profilePicture = photo,
       profilePictureUrlOrFile:
           model.profilePicture ?? model.profilePictureDownloadUrl,
-      firstName: authService.userModel!.firstName,
-      lastName: authService.userModel!.lastName);
+      firstName: model.firstName,
+      lastName: model.lastName);
 
   @override
   ProfileModel createModel() => ProfileModel();

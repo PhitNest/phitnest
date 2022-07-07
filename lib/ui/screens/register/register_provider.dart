@@ -6,8 +6,8 @@ import 'package:progress_widgets/progress_widgets.dart';
 import 'package:device/device.dart';
 import 'package:validation/validation.dart';
 
+import '../../../apis/api.dart';
 import '../../../models/models.dart';
-import '../../../services/services.dart';
 import '../../common/widgets/widgets.dart';
 import '../screens.dart';
 import 'register_view.dart';
@@ -78,7 +78,7 @@ class RegisterProvider
     if (model.formKey.currentState?.validate() ?? false) {
       model.formKey.currentState!.save();
       Position? position = await getCurrentLocation();
-      return await authService.registerWithEmailAndPassword(
+      return await api<AuthenticationApi>().registerWithEmailAndPassword(
           emailAddress: model.emailController.text.trim(),
           password: model.passwordController.text.trim(),
           firstName: model.firstNameController.text.trim(),

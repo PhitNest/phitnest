@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:phitnest/models/models.dart';
-import '../services.dart';
+import '../api.dart';
 
-class AuthenticationServiceImpl extends AuthenticationService {
+class RestAuthenticationApi extends AuthenticationApi {
   @override
-  Future<bool> isAuthenticatedOrHasAuthCache() {
+  Future<String?> getAuthenticatedUid() {
     throw UnimplementedError();
   }
 
@@ -33,7 +33,7 @@ class AuthenticationServiceImpl extends AuthenticationService {
   }
 
   @override
-  Future<String?> signOut(String reason) {
+  Future<String?> signOut() {
     throw UnimplementedError();
   }
 
