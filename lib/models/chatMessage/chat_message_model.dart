@@ -1,6 +1,5 @@
 class ChatMessage {
   String messageId;
-  String conversationId;
   String authorId;
   String text;
   bool read;
@@ -10,7 +9,6 @@ class ChatMessage {
 
   ChatMessage(
       {required this.messageId,
-      required this.conversationId,
       required this.authorId,
       required this.text,
       required this.timestamp,
@@ -18,7 +16,6 @@ class ChatMessage {
 
   factory ChatMessage.fromJson(Map<String, dynamic> parsedJson) => ChatMessage(
       messageId: parsedJson['messageId'],
-      conversationId: parsedJson['conversationId'],
       authorId: parsedJson['authorId'],
       text: parsedJson['text'],
       timestamp: parsedJson['timestamp'],
@@ -26,7 +23,6 @@ class ChatMessage {
 
   Map<String, dynamic> toJson() => {
         'messageId': messageId,
-        'conversationId': conversationId,
         'authorId': authorId,
         'text': text,
         'timestamp': timestamp,
