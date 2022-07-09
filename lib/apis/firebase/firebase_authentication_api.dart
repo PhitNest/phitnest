@@ -6,6 +6,8 @@ import 'package:phitnest/constants/constants.dart';
 import '../../models/models.dart';
 import '../api.dart';
 
+class FirebaseAuthenticationApiState extends AuthenticationApiState {}
+
 /// Firebase implementation of the authentication api.
 class FirebaseAuthenticationApi extends AuthenticationApi {
   /// Instance of firebase auth
@@ -181,4 +183,8 @@ class FirebaseAuthenticationApi extends AuthenticationApi {
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }
+
+  @override
+  FirebaseAuthenticationApiState get initState =>
+      FirebaseAuthenticationApiState();
 }

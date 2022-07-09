@@ -3,8 +3,10 @@ import 'dart:io';
 import '../../models/models.dart';
 import 'api.dart';
 
+abstract class AuthenticationApiState extends ApiState {}
+
 /// Abstract representation of the authentication api.
-abstract class AuthenticationApi extends Api {
+abstract class AuthenticationApi extends Api<AuthenticationApiState> {
   /// Checks if the user is currently authenticated, If they are, return the
   /// authenticated uid.
   Future<String?> getAuthenticatedUid();

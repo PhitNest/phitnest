@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:phitnest/models/models.dart';
 import '../api.dart';
 
+class RestAuthenticationApiState extends AuthenticationApiState {}
+
 class RestAuthenticationApi extends AuthenticationApi {
   @override
   Future<String?> getAuthenticatedUid() {
@@ -46,4 +48,7 @@ class RestAuthenticationApi extends AuthenticationApi {
   Future<String?> sendMobileAuthRequest(String phoneNumber) {
     throw UnimplementedError();
   }
+
+  @override
+  RestAuthenticationApiState get initState => RestAuthenticationApiState();
 }

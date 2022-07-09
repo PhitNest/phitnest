@@ -5,6 +5,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import '../../constants/constants.dart';
 import '../api.dart';
 
+class FirebaseStorageApiState extends StorageApiState {}
+
 class FirebaseStorageApi extends StorageApi {
   Reference storage = FirebaseStorage.instance.ref();
 
@@ -23,4 +25,7 @@ class FirebaseStorageApi extends StorageApi {
   @override
   Future<void> uploadProfilePicture(String uid, File picture) =>
       uploadFile('$kProfilePictureBucketPath/$uid', picture);
+
+  @override
+  FirebaseStorageApiState get initState => FirebaseStorageApiState();
 }
