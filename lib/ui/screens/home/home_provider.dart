@@ -28,7 +28,7 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
         await updateIP(model.currentUser) &&
         await updateActivity(model.currentUser)) {
       model.conversationListener = api<SocialApi>()
-          .streamConversations()
+          .streamConversations(model.currentUser.userId)
           .map((conversations) => conversations
               .map((conversation) => ChatCard(
                     conversation: conversation,

@@ -10,7 +10,7 @@ class RestSocialApi extends SocialApi {
   }
 
   @override
-  Stream<List<UserPublicInfo>> streamFriends(
+  Stream<List<UserPublicInfo>> streamFriends(String userId,
       {int quantity = 1,
       String orderBy = 'timestamp',
       bool descending = true}) {
@@ -26,7 +26,7 @@ class RestSocialApi extends SocialApi {
   }
 
   @override
-  Stream<List<Conversation>> streamConversations(
+  Stream<List<Conversation>> streamConversations(String userId,
       {int quantity = 1,
       String orderBy = 'timestamp',
       bool descending = true}) {
@@ -34,7 +34,7 @@ class RestSocialApi extends SocialApi {
   }
 
   @override
-  Stream<List<ChatMessage>> streamMessages(String conversationId,
+  Stream<List<ChatMessage>> streamMessages(String userId, String conversationId,
       {int quantity = 1,
       String orderBy = 'timestamp',
       bool descending = true}) {
@@ -42,7 +42,7 @@ class RestSocialApi extends SocialApi {
   }
 
   @override
-  Future<AuthenticatedUser?> getSignedInUser() {
+  Future<AuthenticatedUser?> refreshSignedInUser() {
     throw UnimplementedError();
   }
 
@@ -52,7 +52,7 @@ class RestSocialApi extends SocialApi {
   }
 
   @override
-  Stream<List<Relation>> streamRelations(
+  Stream<List<Relation>> streamRelations(String userId,
       {int quantity = -1,
       String orderBy = 'timestamp',
       String? type,
