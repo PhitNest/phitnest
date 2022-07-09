@@ -1,6 +1,6 @@
 import '../models.dart';
 
-class UserModel {
+class AuthenticatedUser {
   UserPublicInfo publicInfo;
   UserPrivateInfo privateInfo;
 
@@ -52,7 +52,8 @@ class UserModel {
   set signupLocation(Location? signupLocation) =>
       privateInfo.signupLocation = signupLocation;
 
-  UserModel.fromInfo({required this.publicInfo, required this.privateInfo});
+  AuthenticatedUser.fromInfo(
+      {required this.publicInfo, required this.privateInfo});
 
   Map<String, dynamic> toPublicJson() => publicInfo.toJson();
 

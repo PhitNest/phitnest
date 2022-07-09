@@ -13,14 +13,14 @@ class FirebaseStorageApi extends StorageApi {
       await (await storage.child(path).putFile(file).whenComplete(() {}));
 
   @override
-  Future<String> getFileURL(String path) async =>
-      await storage.child(path).getDownloadURL();
+  Future<String> getFileURL(String path) =>
+      storage.child(path).getDownloadURL();
 
   @override
-  Future<String> getProfilePictureURL(String uid) async =>
-      await getFileURL('$kProfilePictureBucketPath/$uid');
+  Future<String> getProfilePictureURL(String uid) =>
+      getFileURL('$kProfilePictureBucketPath/$uid');
 
   @override
-  Future<void> uploadProfilePicture(String uid, File picture) async =>
-      await uploadFile('$kProfilePictureBucketPath/$uid', picture);
+  Future<void> uploadProfilePicture(String uid, File picture) =>
+      uploadFile('$kProfilePictureBucketPath/$uid', picture);
 }

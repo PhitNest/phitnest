@@ -24,27 +24,17 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
       return false;
     }
 
-    UserModel user = (await api<SocialApi>().getFullUserModel(
-        (await api<AuthenticationApi>().getAuthenticatedUid())!))!;
-
-    if (await updateLocation(user) &&
-        await updateIP(user) &&
-        await updateActivity(user)) {
+    if (await updateLocation(model.currentUser) &&
+        await updateIP(model.currentUser) &&
+        await updateActivity(model.currentUser)) {
       model.conversationListener = api<SocialApi>()
-          .streamRecentMessagesFromFriends(user.userId)
-          .listen((messageMap) {
-        List<ChatCard> cards = [];
-        for (MapEntry<UserPublicInfo, ChatMessage> entry
-            in messageMap.entries) {
-          cards.add(ChatCard(
-              userInfo: entry.key,
-              message: entry.value,
-              read: entry.value.read));
-        }
-
-        model.messageCards = cards;
-      });
-
+          .streamConversations()
+          .map((conversations) => conversations
+              .map((conversation) => ChatCard(
+                    conversation: conversation,
+                  ))
+              .toList())
+          .listen((cards) => model.messageCards = cards);
       return true;
     }
     await api<AuthenticationApi>().signOut();
@@ -56,27 +46,27 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
   HomeView build(BuildContext context, HomeModel model) =>
       HomeView(pageController: model.pageController, cards: model.messageCards);
 
-  Future<bool> updateActivity(UserModel user) async {
+  Future<bool> updateActivity(AuthenticatedUser user) async {
     user.online = true;
     user.lastOnlineTimestamp = DateTime.now();
-    return await api<SocialApi>().updateFullUserModel(user) == null;
+    return await api<SocialApi>().updateUserModel(user) == null;
   }
 
-  Future<bool> updateLocation(UserModel user) async {
+  Future<bool> updateLocation(AuthenticatedUser user) async {
     Position? position = await getCurrentLocation();
     if (position != null) {
       user.recentLocation =
           Location(latitude: position.latitude, longitude: position.longitude);
 
-      return await api<SocialApi>().updateFullUserModel(user) == null;
+      return await api<SocialApi>().updateUserModel(user) == null;
     }
 
     return true;
   }
 
-  Future<bool> updateIP(UserModel user) async {
+  Future<bool> updateIP(AuthenticatedUser user) async {
     user.recentIp = await userIP;
-    return await api<SocialApi>().updateFullUserModel(user) == null;
+    return await api<SocialApi>().updateUserModel(user) == null;
   }
 
   @override

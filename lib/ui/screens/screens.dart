@@ -1,6 +1,6 @@
 export 'screen_provider.dart';
 export 'register/register_provider.dart';
-export 'redirectedProvider/redirected.dart';
+export 'redirector/redirector.dart';
 export 'profile/profile_provider.dart';
 export 'onBoarding/on_boarding_provider.dart';
 export 'signIn/sign_in_provider.dart';

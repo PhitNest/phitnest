@@ -4,15 +4,16 @@ class Relation {
   String targetId;
   String type;
 
-  /// This can either be DateTime type or Timestamp (from firestore package) type
-  dynamic timeStamp;
+  /// This can either be DateTime type or Timestamp (from firestore package) type.
+  /// This is the timestamp that the relation was authored at
+  dynamic timestamp;
 
   Relation({
     required this.relationId,
     required this.userId,
     required this.targetId,
     required this.type,
-    required this.timeStamp,
+    required this.timestamp,
   });
 
   factory Relation.fromJson(Map<String, dynamic> parsedJson) => Relation(
@@ -20,7 +21,7 @@ class Relation {
         userId: parsedJson['userId'],
         targetId: parsedJson['targetId'],
         type: parsedJson['type'],
-        timeStamp: parsedJson['timeStamp'],
+        timestamp: parsedJson['timestamp'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -28,6 +29,6 @@ class Relation {
         'userId': userId,
         'targetId': targetId,
         'type': type,
-        'timeStamp': timeStamp,
+        'timestamp': timestamp,
       };
 }

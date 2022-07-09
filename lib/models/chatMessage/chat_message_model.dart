@@ -1,37 +1,35 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class ChatMessage {
   String messageId;
+  String conversationId;
   String authorId;
-  String recipientId;
   String text;
   bool read;
 
   /// This can either be DateTime type or Timestamp (from firestore package) type
-  dynamic timeStamp;
+  dynamic timestamp;
 
   ChatMessage(
       {required this.messageId,
+      required this.conversationId,
       required this.authorId,
-      required this.recipientId,
       required this.text,
-      required this.timeStamp,
+      required this.timestamp,
       required this.read});
 
   factory ChatMessage.fromJson(Map<String, dynamic> parsedJson) => ChatMessage(
       messageId: parsedJson['messageId'],
+      conversationId: parsedJson['conversationId'],
       authorId: parsedJson['authorId'],
-      recipientId: parsedJson['recipientId'],
       text: parsedJson['text'],
-      timeStamp: parsedJson['timeStamp'],
+      timestamp: parsedJson['timestamp'],
       read: parsedJson['read']);
 
   Map<String, dynamic> toJson() => {
         'messageId': messageId,
+        'conversationId': conversationId,
         'authorId': authorId,
-        'recipientId': recipientId,
         'text': text,
-        'timeStamp': timeStamp,
+        'timestamp': timestamp,
         'read': read,
       };
 
@@ -39,8 +37,8 @@ class ChatMessage {
   /// Returns 0 if [other] occurred at the same time.
   /// Retuns > 0 if [other] occurred more recently than this.
   int compareTimeStamps(ChatMessage other) {
-    return other.timeStamp.millisecondsSinceEpoch -
-        timeStamp.millisecondsSinceEpoch;
+    return other.timestamp.millisecondsSinceEpoch -
+        timestamp.millisecondsSinceEpoch;
   }
 
   operator <(ChatMessage other) => compareTimeStamps(other) < 0;

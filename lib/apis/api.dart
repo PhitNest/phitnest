@@ -15,4 +15,5 @@ Map<Type, Api> _apiMap = {
   AuthenticationApi: FirebaseAuthenticationApi(),
 };
 
+/// Get the api singleton instance
 T api<T extends Api>() => _apiMap[T]! as T;

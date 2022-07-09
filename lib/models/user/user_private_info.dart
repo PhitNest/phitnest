@@ -24,15 +24,20 @@ class UserPrivateInfo {
 
   factory UserPrivateInfo.fromJson(Map<String, dynamic> parsedJson) =>
       UserPrivateInfo(
-          email: parsedJson['email'],
-          mobile: parsedJson['mobile'],
-          birthday: parsedJson['birthday'],
-          notificationsEnabled: parsedJson['notificationsEnabled'],
-          recentIp: parsedJson['recentIp'],
-          signupIp: parsedJson['signupIp'],
-          recentPlatform: parsedJson['recentPlatform'],
-          recentLocation: Location.fromJson(parsedJson['recentLocation']),
-          signupLocation: Location.fromJson(parsedJson['signupLocation']));
+        email: parsedJson['email'],
+        mobile: parsedJson['mobile'],
+        birthday: parsedJson['birthday'],
+        notificationsEnabled: parsedJson['notificationsEnabled'],
+        recentIp: parsedJson['recentIp'],
+        signupIp: parsedJson['signupIp'],
+        recentPlatform: parsedJson['recentPlatform'],
+        recentLocation: parsedJson['recentLocation'] != null
+            ? Location.fromJson(parsedJson['recentLocation'])
+            : null,
+        signupLocation: parsedJson['signupLocation'] != null
+            ? Location.fromJson(parsedJson['signupLocation'])
+            : null,
+      );
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {

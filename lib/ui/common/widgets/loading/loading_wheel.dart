@@ -9,9 +9,13 @@ const SPIN_DURATION = Duration(milliseconds: 1000);
 class LoadingWheel extends StatefulWidget {
   final double scale;
   final EdgeInsets padding;
+  final Color? color;
 
   const LoadingWheel(
-      {Key? key, this.scale = 1, this.padding = const EdgeInsets.all(20.0)})
+      {Key? key,
+      this.color,
+      this.scale = 1,
+      this.padding = const EdgeInsets.all(20.0)})
       : super(key: key);
 
   @override
@@ -29,6 +33,7 @@ class _LoadingWheelState extends State<LoadingWheel>
       builder: (_, child) => Transform.rotate(
             angle: _animationController.value * 2 * pi,
             child: LogoWidget(
+              color: widget.color,
               scale: 0.35 * widget.scale,
               padding: widget.padding,
             ),

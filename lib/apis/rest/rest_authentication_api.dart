@@ -33,7 +33,7 @@ class RestAuthenticationApi extends AuthenticationApi {
   }
 
   @override
-  Future<String?> signOut() {
+  Future<void> signOut() {
     throw UnimplementedError();
   }
 

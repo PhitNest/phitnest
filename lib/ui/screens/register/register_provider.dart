@@ -47,7 +47,8 @@ class RegisterProvider
             context: context,
             message: 'Creating new account, Please wait...',
             spinner: LoadingWheel(
-              scale: 0.5,
+              color: Colors.white,
+              scale: 0.25,
               padding: EdgeInsets.zero,
             ),
             showUntil: () => register(model),
