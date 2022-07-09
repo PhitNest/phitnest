@@ -8,6 +8,9 @@ class UserPrivateInfo {
   String recentIp;
   String signupIp;
   String recentPlatform;
+
+  dynamic signupTimestamp;
+
   Location? recentLocation;
   Location? signupLocation;
 
@@ -19,6 +22,7 @@ class UserPrivateInfo {
       required this.recentIp,
       required this.signupIp,
       required this.recentPlatform,
+      required this.signupTimestamp,
       this.recentLocation,
       this.signupLocation});
 
@@ -30,6 +34,7 @@ class UserPrivateInfo {
         notificationsEnabled: parsedJson['notificationsEnabled'],
         recentIp: parsedJson['recentIp'],
         signupIp: parsedJson['signupIp'],
+        signupTimestamp: parsedJson['signupTimestamp'],
         recentPlatform: parsedJson['recentPlatform'],
         recentLocation: parsedJson['recentLocation'] != null
             ? Location.fromJson(parsedJson['recentLocation'])
@@ -48,6 +53,7 @@ class UserPrivateInfo {
       'recentIp': recentIp,
       'signupIp': signupIp,
       'recentPlatform': recentPlatform,
+      'signupTimestamp': signupTimestamp,
     };
 
     if (recentLocation != null) {
