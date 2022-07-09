@@ -2,6 +2,8 @@ import 'dart:io';
 
 import '../api.dart';
 
+class RestStorageApiState extends StorageApiState {}
+
 class RestStorageApi extends StorageApi {
   @override
   Future<void> uploadFile(String path, File file) {
@@ -22,4 +24,7 @@ class RestStorageApi extends StorageApi {
   Future<void> uploadProfilePicture(String uid, File picture) {
     throw UnimplementedError();
   }
+
+  @override
+  RestStorageApiState get initState => RestStorageApiState();
 }

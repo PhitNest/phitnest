@@ -1,8 +1,10 @@
 import '../../models/models.dart';
 import 'api.dart';
 
+abstract class SocialApiState extends ApiState {}
+
 /// Abstract representation of the social api
-abstract class SocialApi extends Api {
+abstract class SocialApi extends Api<SocialApiState> {
   /// Update the authenticated user model in the database. Return an error
   /// message on failure.
   Future<String?> updateUserModel(AuthenticatedUser user);

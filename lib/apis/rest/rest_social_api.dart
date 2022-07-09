@@ -1,6 +1,8 @@
 import '../../models/models.dart';
 import '../api.dart';
 
+class RestSocialApiState extends SocialApiState {}
+
 class RestSocialApi extends SocialApi {
   @override
   Stream<UserPublicInfo?> streamUserInfo(String uid) {
@@ -57,4 +59,7 @@ class RestSocialApi extends SocialApi {
       bool descending = true}) {
     throw UnimplementedError();
   }
+
+  @override
+  RestSocialApiState get initState => RestSocialApiState();
 }

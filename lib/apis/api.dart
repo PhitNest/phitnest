@@ -7,7 +7,17 @@ import 'authentication_api.dart';
 import 'social_api.dart';
 import 'storage_api.dart';
 
-abstract class Api {}
+abstract class ApiState {}
+
+abstract class Api<T extends ApiState> {
+  T get initState;
+
+  late final T state;
+
+  Api() {
+    state = initState;
+  }
+}
 
 Map<Type, Api> _apiMap = {
   SocialApi: FirebaseSocialApi(),

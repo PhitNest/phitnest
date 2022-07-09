@@ -6,6 +6,8 @@ import '../../constants/constants.dart';
 import '../../models/models.dart';
 import '../api.dart';
 
+class FirebaseSocialApiState extends SocialApiState {}
+
 /// Firebase implementation of the social api.
 class FirebaseSocialApi extends SocialApi {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -162,4 +164,7 @@ class FirebaseSocialApi extends SocialApi {
     }
     return null;
   }
+
+  @override
+  FirebaseSocialApiState get initState => FirebaseSocialApiState();
 }
