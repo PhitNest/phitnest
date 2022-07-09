@@ -35,6 +35,7 @@ class AuthenticatedUser {
   String get recentIp => privateInfo.recentIp;
   String get signupIp => privateInfo.signupIp;
   String get recentPlatform => privateInfo.recentPlatform;
+  dynamic get signupTimestamp => privateInfo.signupTimestamp;
   Location? get recentLocation => privateInfo.recentLocation;
   Location? get signupLocation => privateInfo.signupLocation;
 
@@ -47,6 +48,7 @@ class AuthenticatedUser {
   set signupIp(String signupIp) => privateInfo.signupIp = signupIp;
   set recentPlatform(String recentPlatform) =>
       privateInfo.recentPlatform = recentPlatform;
+  set signupTimestamp(dynamic signupTimestamp) => privateInfo.signupTimestamp;
   set recentLocation(Location? recentLocation) =>
       privateInfo.recentLocation = recentLocation;
   set signupLocation(Location? signupLocation) =>

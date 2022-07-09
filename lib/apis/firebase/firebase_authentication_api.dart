@@ -125,6 +125,7 @@ class FirebaseAuthenticationApi extends AuthenticationApi {
             notificationsEnabled: false,
             recentIp: ip,
             signupIp: ip,
+            signupTimestamp: DateTime.now(),
             recentPlatform: Platform.operatingSystem,
             signupLocation: locationData,
             recentLocation: locationData);
