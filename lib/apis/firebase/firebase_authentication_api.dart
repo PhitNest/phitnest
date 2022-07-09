@@ -26,19 +26,18 @@ class FirebaseAuthenticationApi extends AuthenticationApi {
 
       if (firebaseUser != null) {
         // Get the user model from the social api
-        UserModel? userModel =
-            await api<SocialApi>().getFullUserModel(firebaseUser.uid);
+        AuthenticatedUser? user = await api<SocialApi>().getSignedInUser();
 
         // If the user returned is null, return an error message
-        if (userModel != null) {
-          userModel.online = true;
-          userModel.lastOnlineTimestamp = DateTime.now();
-          userModel.recentIp = ip;
-          userModel.recentLocation = locationData;
-          userModel.recentPlatform = Platform.operatingSystem;
+        if (user != null) {
+          user.online = true;
+          user.lastOnlineTimestamp = DateTime.now();
+          user.recentIp = ip;
+          user.recentLocation = locationData;
+          user.recentPlatform = Platform.operatingSystem;
 
           // Update the user model in the social api
-          return await api<SocialApi>().updateFullUserModel(userModel);
+          return await api<SocialApi>().updateUserModel(user);
         }
       }
     } on FirebaseAuthException catch (exception) {
@@ -105,14 +104,14 @@ class FirebaseAuthenticationApi extends AuthenticationApi {
       File? profilePicture}) async {
     try {
       // Create credenetials with a given email/pass
-      User? user = (await _firebaseAuth.createUserWithEmailAndPassword(
+      User? firebaseUser = (await _firebaseAuth.createUserWithEmailAndPassword(
               email: emailAddress, password: password))
           .user;
 
-      if (user != null) {
+      if (firebaseUser != null) {
         // Create a new user model and initialize the current user
         UserPublicInfo publicInfo = UserPublicInfo(
-            userId: user.uid,
+            userId: firebaseUser.uid,
             firstName: firstName,
             lastName: lastName,
             online: true,
@@ -129,19 +128,18 @@ class FirebaseAuthenticationApi extends AuthenticationApi {
             recentPlatform: Platform.operatingSystem,
             signupLocation: locationData,
             recentLocation: locationData);
-        UserModel userModel = UserModel.fromInfo(
+        AuthenticatedUser user = AuthenticatedUser.fromInfo(
             publicInfo: publicInfo, privateInfo: privateInfo);
 
         // Upload the profile picture
         if (profilePicture != null) {
           await api<StorageApi>()
-              .uploadProfilePicture(userModel.userId, profilePicture);
-          userModel.profilePictureUrl =
-              await api<StorageApi>().getProfilePictureURL(userModel.userId);
+              .uploadProfilePicture(user.userId, profilePicture);
+          user.profilePictureUrl =
+              await api<StorageApi>().getProfilePictureURL(user.userId);
         }
-
         // Update user model in databaseService service
-        return await api<SocialApi>().updateFullUserModel(userModel) == null
+        return await api<SocialApi>().updateUserModel(user) == null
             ? null
             : 'Couldn\'t sign up for firebase, Please try again.';
       }
@@ -173,15 +171,9 @@ class FirebaseAuthenticationApi extends AuthenticationApi {
 
   @override
   Future<String?> getAuthenticatedUid() async {
-    _firebaseAuth.currentUser?.reload();
+    await _firebaseAuth.currentUser?.reload();
 
-    String? uid = _firebaseAuth.currentUser?.uid;
-    if (uid != null) {
-      try {
-        return (await api<SocialApi>().getFullUserModel(uid))?.userId;
-      } catch (e) {}
-    }
-    return null;
+    return _firebaseAuth.currentUser?.uid;
   }
 
   @override

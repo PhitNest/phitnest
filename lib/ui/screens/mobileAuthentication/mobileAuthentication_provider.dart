@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 
@@ -24,7 +24,8 @@ class MobileAuthenticationProvider extends PreAuthenticationProvider<
               context: context,
               message: 'Sending verification code...',
               spinner: LoadingWheel(
-                scale: 0.5,
+                color: Colors.white,
+                scale: 0.25,
                 padding: EdgeInsets.zero,
               ),
               showUntil: () async => await sendText(model),

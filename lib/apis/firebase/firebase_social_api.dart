@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -12,16 +11,16 @@ class FirebaseSocialApi extends SocialApi {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
-  Future<String?> updateFullUserModel(UserModel user) async {
+  Future<String?> updateUserModel(AuthenticatedUser user) async {
     try {
       await firestore
           .collection(kUsersPublic)
           .doc(user.userId)
-          .update(user.toPublicJson());
+          .set(user.toPublicJson());
       await firestore
           .collection(kUsersPrivate)
           .doc(user.userId)
-          .update(user.toPrivateJson());
+          .set(user.toPrivateJson());
       return null;
     } catch (e) {
       return '$e';
@@ -36,140 +35,131 @@ class FirebaseSocialApi extends SocialApi {
       .map((doc) => doc.exists ? UserPublicInfo.fromJson(doc.data()!) : null);
 
   @override
-  Future<UserModel?> getFullUserModel(String uid) async {
-    UserPublicInfo? userPublic;
-    UserPrivateInfo? userPrivate;
+  Stream<List<Conversation>> streamConversations(
+      {int quantity = -1,
+      String orderBy = 'timestamp',
+      bool descending = true}) async* {
+    var query = firestore
+        .collection(kConversations)
+        .where('participants',
+            arrayContains: await api<AuthenticationApi>().getAuthenticatedUid())
+        .orderBy(orderBy, descending: descending);
+    if (quantity != -1) {
+      query = query.limit(quantity);
+    }
 
-    await Future.wait([
-      streamUserInfo(uid).first.then((user) => userPublic = user),
-      firestore.collection(kUsersPrivate).doc(uid).get().then((json) =>
-          userPrivate =
-              json.exists ? UserPrivateInfo.fromJson(json.data()!) : null),
-    ]);
-
-    return userPublic != null && userPrivate != null
-        ? UserModel.fromInfo(publicInfo: userPublic!, privateInfo: userPrivate!)
-        : null;
+    yield* query.snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => Conversation.fromJson(doc.data())).toList());
   }
 
-  Stream<List<ChatMessage>> streamMessagesBetweenUsers(
-      String userId, String otherUserId,
-      {int quantity = 1, bool descending = true}) async* {
-    StreamController<List<ChatMessage>> streamController =
-        StreamController<List<ChatMessage>>();
-    List<ChatMessage> sent = [];
-    List<ChatMessage> received = [];
+  Stream<List<Relation>> streamRelations(
+      {int quantity = -1,
+      String orderBy = 'timestamp',
+      String? type,
+      bool descending = true}) async* {
+    var query = firestore
+        .collection(kRelations)
+        .where('userId',
+            isEqualTo: await api<AuthenticationApi>().getAuthenticatedUid())
+        .orderBy(orderBy, descending: descending);
+    if (type != null) {
+      query = query.where('type', isEqualTo: type);
+    }
 
-    List<ChatMessage> getSorted(
-            List<ChatMessage> sent, List<ChatMessage> received) =>
-        (sent + received)
-            .sublist(0, min(quantity, sent.length + received.length))
-          ..sort((a, b) => a.compareTimeStamps(b));
+    if (quantity != -1) {
+      query = query.limit(quantity);
+    }
 
-    firestore
-        .collection('direct_messages')
-        .where('authorId', isEqualTo: userId)
-        .where('recipientId', isEqualTo: otherUserId)
-        .orderBy('timeStamp', descending: descending)
-        .limit(quantity)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => ChatMessage.fromJson(doc.data()))
-            .toList())
-        .listen((messages) {
-      sent = messages;
-      streamController.sink.add(getSorted(sent, received));
-    });
+    yield* query.snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => Relation.fromJson(doc.data())).toList());
+  }
 
-    firestore
-        .collection('direct_messages')
-        .where('authorId', isEqualTo: otherUserId)
-        .where('recipientId', isEqualTo: userId)
-        .orderBy('timeStamp', descending: descending)
-        .limit(quantity)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => ChatMessage.fromJson(doc.data()))
-            .toList())
-        .listen((messages) {
-      received = messages;
-      streamController.sink.add(getSorted(sent, received));
+  @override
+  Stream<List<UserPublicInfo>> streamFriends(
+      {int quantity = -1,
+      String orderBy = 'timestamp',
+      bool descending = true}) async* {
+    Map<String, UserPublicInfo> userMap = {};
+    List<String> userIds = [];
+    List<StreamSubscription<UserPublicInfo>> userStream = [];
+
+    cancelStreams() => userStream.forEach((element) => element.cancel());
+
+    StreamController<List<UserPublicInfo>> streamController =
+        StreamController<List<UserPublicInfo>>(onCancel: cancelStreams);
+
+    streamRelations(
+            quantity: quantity,
+            orderBy: orderBy,
+            descending: descending,
+            type: 'friend')
+        .listen((friendRelations) async {
+      userMap.clear();
+      userIds.clear();
+      cancelStreams();
+      userStream.clear();
+      for (Relation relation in friendRelations) {
+        userIds.add(relation.targetId);
+        userStream.add(await api<SocialApi>()
+            .streamUserInfo(relation.targetId)
+            .where((user) => user != null)
+            .map((user) => user!)
+            .listen((user) {
+          userMap[user.userId] = user;
+          streamController.sink.add(userIds.map((id) => userMap[id]!).toList());
+        }));
+      }
     });
 
     yield* streamController.stream;
   }
 
-  Stream<List<UserPublicInfo>> streamFriends(String userId,
-          {int quantity = 1,
-          String orderBy = 'timeStamp',
-          bool descending = true}) =>
+  @override
+  Future<void> updateReadStatus(
+          {required String conversationId,
+          required String messageId,
+          bool read = true}) =>
       firestore
-          .collection('relations')
-          .where('userId', isEqualTo: userId)
-          .where('type', isEqualTo: 'friend')
-          .orderBy(orderBy, descending: descending)
-          .limit(quantity)
-          .snapshots()
-          .asyncMap((snapshot) => Future.wait(snapshot.docs.map((doc) =>
-              api<SocialApi>()
-                  .streamUserInfo(Relation.fromJson(doc.data()).targetId)
-                  .first
-                  .then((value) => value!))));
+          .collection('$kConversations/$conversationId/$kMessages')
+          .doc(messageId)
+          .update({'read': true});
 
-  Stream<Map<UserPublicInfo, ChatMessage>> streamRecentMessagesFromFriends(
-    String userId, {
-    int quantity = 1,
-    bool descending = true,
-  }) {
-    StreamController<Map<UserPublicInfo, ChatMessage>> streamController =
-        StreamController<Map<UserPublicInfo, ChatMessage>>();
+  @override
+  Stream<List<ChatMessage>> streamMessages(String conversationId,
+      {int quantity = -1,
+      String orderBy = 'timestamp',
+      bool descending = true}) async* {
+    var query = firestore
+        .collection('$kConversations/$conversationId/$kMessages')
+        .orderBy(orderBy, descending: descending);
 
-    Map<String, StreamSubscription<UserPublicInfo?>> userSubscriptionMap = {};
-    Map<String, StreamSubscription<ChatMessage>> messageSubscriptionMap = {};
-    Map<UserPublicInfo, ChatMessage> messageMap = {};
+    if (quantity != -1) {
+      query = query.limit(quantity);
+    }
 
-    streamFriends(userId, quantity: quantity, descending: descending)
-        .listen((friends) async {
-      userSubscriptionMap.forEach((key, value) => value.cancel());
-      messageSubscriptionMap.forEach((key, value) => value.cancel());
-      userSubscriptionMap.clear();
-      messageSubscriptionMap.clear();
-      messageMap.clear();
-      for (UserPublicInfo friend in friends) {
-        messageSubscriptionMap[friend.userId] = streamMessagesBetweenUsers(
-                userId, friend.userId,
-                descending: descending)
-            .asyncMap((messages) => messages.first)
-            .listen((message) {
-          messageMap[friend] = message;
-          streamController.sink.add(messageMap);
-        });
-
-        userSubscriptionMap[friend.userId] =
-            streamUserInfo(friend.userId).listen((newData) {
-          for (UserPublicInfo userInfo in messageMap.keys) {
-            if (userInfo.userId == friend.userId) {
-              if (newData != null) {
-                messageMap[newData] = messageMap[userInfo]!;
-              }
-              messageMap.remove(userInfo);
-              streamController.sink.add(messageMap);
-              return;
-            }
-          }
-        });
-      }
-
-      streamController.sink.add(messageMap);
-    });
-
-    return streamController.stream;
+    yield* query.snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => ChatMessage.fromJson(doc.data())).toList());
   }
 
   @override
-  Future<void> updateReadStatus(String messageId, {bool read = true}) async =>
-      firestore
-          .collection('direct_messages')
-          .doc(messageId)
-          .update({'read': true});
+  Future<AuthenticatedUser?> getSignedInUser() async {
+    String? uid = await api<AuthenticationApi>().getAuthenticatedUid();
+    if (uid != null) {
+      UserPublicInfo? userPublic;
+      UserPrivateInfo? userPrivate;
+
+      await Future.wait([
+        streamUserInfo(uid).first.then((user) => userPublic = user),
+        firestore.collection(kUsersPrivate).doc(uid).get().then((json) =>
+            userPrivate =
+                json.exists ? UserPrivateInfo.fromJson(json.data()!) : null),
+      ]);
+
+      if (userPublic != null && userPrivate != null) {
+        return AuthenticatedUser.fromInfo(
+            publicInfo: userPublic!, privateInfo: userPrivate!);
+      }
+    }
+    return null;
+  }
 }

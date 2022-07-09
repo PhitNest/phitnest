@@ -6,9 +6,9 @@ import '../screens.dart';
 
 /// This view will redirect a user to a given route on initialization if a given
 /// condition is met.
-abstract class RedirectedProvider<T extends ScreenModel, K extends ScreenView>
+abstract class RedirectorProvider<T extends ScreenModel, K extends ScreenView>
     extends ScreenProvider<T, K> {
-  const RedirectedProvider({Key? key}) : super(key: key);
+  const RedirectorProvider({Key? key}) : super(key: key);
 
   /// This is the route to redirect to.
   String get redirectRoute;

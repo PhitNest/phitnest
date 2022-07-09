@@ -11,9 +11,9 @@ import 'chat_messaging_view.dart';
 class ChatMessagingProvider
     extends AuthenticatedProvider<ChatMessagingModel, ChatMessagingView> {
   static const int kMessageBatchSize = 10;
-  final UserPublicInfo otherUser;
+  final Conversation conversation;
 
-  const ChatMessagingProvider({Key? key, required this.otherUser})
+  const ChatMessagingProvider({Key? key, required this.conversation})
       : super(key: key);
 
   @override
@@ -22,15 +22,21 @@ class ChatMessagingProvider
       return false;
     }
 
-    UserModel user = (await api<SocialApi>().getFullUserModel(
-        (await api<AuthenticationApi>().getAuthenticatedUid())!))!;
+    String otherUserId = conversation.participants
+        .firstWhere((userId) => userId != model.currentUser.userId);
 
-    model.messageListener = api<SocialApi>()
-        .streamMessagesBetweenUsers(user.userId, otherUser.userId,
+    model.userStream = await api<SocialApi>()
+        .streamUserInfo(otherUserId)
+        .listen((userInfo) => model.otherUser = userInfo);
+
+    model.messageStream = api<SocialApi>()
+        .streamMessages(conversation.conversationId,
             quantity: kMessageBatchSize)
         .map((messages) => messages.map((message) {
-              if (message.recipientId == user.userId) {
-                api<SocialApi>().updateReadStatus(message.messageId);
+              if (message.authorId == otherUserId) {
+                api<SocialApi>().updateReadStatus(
+                    conversationId: conversation.conversationId,
+                    messageId: message.messageId);
                 return ReceivedMessageBubble(
                   message: message.text,
                 );
@@ -48,7 +54,7 @@ class ChatMessagingProvider
   @override
   ChatMessagingView build(BuildContext context, ChatMessagingModel model) =>
       ChatMessagingView(
-        fullName: otherUser.fullName,
+        fullName: model.otherUser?.fullName ?? '',
         messageBubbles: model.messageBubbles,
       );
 

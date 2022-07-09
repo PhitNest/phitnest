@@ -62,6 +62,7 @@ class _BaseProviderState<T extends BaseModel, K extends BaseView>
   @override
   dispose() {
     widget.onDispose(model);
+    model.dispose();
     super.dispose();
   }
 }

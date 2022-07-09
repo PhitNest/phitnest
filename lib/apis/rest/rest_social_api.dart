@@ -3,53 +3,58 @@ import '../api.dart';
 
 class RestSocialApi extends SocialApi {
   @override
-  Future<UserModel?> getFullUserModel(String uid) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<String?> updateFullUserModel(UserModel user) {
-    throw UnimplementedError();
-  }
-
-  @override
   Stream<UserPublicInfo?> streamUserInfo(String uid) {
     throw UnimplementedError();
   }
 
   @override
-  Stream<List<ChatMessage>> streamMessagesBetweenUsers(
-    String userId,
-    String otherUserId, {
-    int quantity = 1,
-    bool descending = true,
-  }) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Stream<List<UserPublicInfo>> streamFriends(String userId,
+  Stream<List<UserPublicInfo>> streamFriends(
       {int quantity = 1,
-      String orderBy = 'timeStamp',
+      String orderBy = 'timestamp',
       bool descending = true}) {
     throw UnimplementedError();
   }
 
   @override
-  Stream<Map<UserPublicInfo, ChatMessage>> streamRecentMessagesFromFriends(
-      String userId,
+  Future<void> updateReadStatus(
+      {required String conversationId,
+      required String messageId,
+      bool read = true}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<List<Conversation>> streamConversations(
       {int quantity = 1,
+      String orderBy = 'timestamp',
       bool descending = true}) {
     throw UnimplementedError();
   }
 
   @override
-  Future<void> updateReadStatus(String messageId, {bool read = true}) {
+  Stream<List<ChatMessage>> streamMessages(String conversationId,
+      {int quantity = 1,
+      String orderBy = 'timestamp',
+      bool descending = true}) {
     throw UnimplementedError();
   }
 
   @override
-  Future<void> updateUserLocation(String uid, Location location) {
+  Future<AuthenticatedUser?> getSignedInUser() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> updateUserModel(AuthenticatedUser user) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<List<Relation>> streamRelations(
+      {int quantity = -1,
+      String orderBy = 'timestamp',
+      String? type,
+      bool descending = true}) {
     throw UnimplementedError();
   }
 }

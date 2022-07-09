@@ -25,7 +25,8 @@ class ForgotPasswordProvider
               message: 'Sending a password reset link to your email...',
               showUntil: () async => await sendEmail(model),
               spinner: LoadingWheel(
-                scale: 0.5,
+                color: Colors.white,
+                scale: 0.25,
                 padding: EdgeInsets.zero,
               ),
               onDone: (result) async {

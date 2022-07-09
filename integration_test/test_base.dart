@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:phitnest/ui/screens/screens.dart';
-
 import 'package:phitnest/main.dart' as app;
 
 extension Restart on WidgetTester {

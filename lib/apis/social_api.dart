@@ -3,32 +3,45 @@ import 'api.dart';
 
 /// Abstract representation of the social api
 abstract class SocialApi extends Api {
-  /// Update the given public and private user model in the
-  /// database. Returns null on success, or error message.
-  Future<String?> updateFullUserModel(UserModel user);
+  /// Update the authenticated user model in the database. Return an error
+  /// message on failure.
+  Future<String?> updateUserModel(AuthenticatedUser user);
 
-  /// Get the public and private user models for the given uid
-  Future<UserModel?> getFullUserModel(String uid);
+  /// Get the public and private user models for the signed in user. Returns
+  /// null if the user is not signed in or their model does not exist.
+  Future<AuthenticatedUser?> getSignedInUser();
 
-  /// Streams a users public data
+  /// Streams a users public data, or null if the user is deleted.
   Stream<UserPublicInfo?> streamUserInfo(String uid);
 
-  /// Stream updates in the conversation between the user and other person
-  Stream<List<ChatMessage>> streamMessagesBetweenUsers(
-      String userId, String otherUserId,
-      {int quantity = 1, bool descending = true});
+  /// Streams all messages in a conversation
+  Stream<List<ChatMessage>> streamMessages(String conversationId,
+      {int quantity = -1,
+      String orderBy = 'timestamp',
+      bool descending = true});
 
-  /// Stream public user info from the users friends
-  Stream<List<UserPublicInfo>> streamFriends(String userId,
-      {int quantity = 1, String orderBy = 'timeStamp', bool descending = true});
+  /// Streams all friends of the signed in user
+  Stream<List<UserPublicInfo>> streamFriends(
+      {int quantity = -1,
+      String orderBy = 'timestamp',
+      bool descending = true});
 
-  /// Stream recent messages from friends
-  Stream<Map<UserPublicInfo, ChatMessage>> streamRecentMessagesFromFriends(
-    String userId, {
-    int quantity = 1,
-    bool descending = true,
-  });
+  /// Streams all conversations for the signed in user
+  Stream<List<Conversation>> streamConversations(
+      {int quantity = -1,
+      String orderBy = 'timestamp',
+      bool descending = true});
 
   /// Updates the read status of a message
-  Future<void> updateReadStatus(String messageId, {bool read = true});
+  Future<void> updateReadStatus(
+      {required String conversationId,
+      required String messageId,
+      bool read = true});
+
+  /// Streams all user relations authored by the signed in user
+  Stream<List<Relation>> streamRelations(
+      {int quantity = -1,
+      String orderBy = 'timestamp',
+      String? type,
+      bool descending = true});
 }

@@ -4,14 +4,10 @@ class Location {
 
   Location({required this.latitude, required this.longitude});
 
-  static Location? fromJson(Map<dynamic, dynamic>? parsedJson) {
-    return parsedJson != null
-        ? Location(
-            latitude: parsedJson['latitude'],
-            longitude: parsedJson['longitude'],
-          )
-        : null;
-  }
+  factory Location.fromJson(Map<dynamic, dynamic> parsedJson) => Location(
+        latitude: parsedJson['latitude'],
+        longitude: parsedJson['longitude'],
+      );
 
   Map<String, dynamic> toJson() => {
         'latitude': this.latitude,
