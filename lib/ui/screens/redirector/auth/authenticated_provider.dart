@@ -18,7 +18,7 @@ abstract class AuthenticatedProvider<T extends AuthenticatedModel,
     if (!await super.init(context, model)) {
       return false;
     }
-    AuthenticatedUser? user = await api<SocialApi>().getSignedInUser();
+    AuthenticatedUser? user = await api<SocialApi>().refreshSignedInUser();
     if (user == null) {
       return false;
     }

@@ -28,7 +28,7 @@ class FirebaseAuthenticationApi extends AuthenticationApi {
 
       if (firebaseUser != null) {
         // Get the user model from the social api
-        AuthenticatedUser? user = await api<SocialApi>().getSignedInUser();
+        AuthenticatedUser? user = await api<SocialApi>().refreshSignedInUser();
 
         // If the user returned is null, return an error message
         if (user != null) {

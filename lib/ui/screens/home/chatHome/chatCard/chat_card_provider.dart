@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../apis/api.dart';
 import '../../../../../constants/constants.dart';
 import '../../../../../models/models.dart';
 import '../../../screens.dart';
+import '../../home_model.dart';
+import 'chat_card.dart';
 import 'chat_card_model.dart';
 import 'chat_card_view.dart';
 
@@ -23,9 +26,11 @@ class ChatCardProvider
     }
 
     model.messageStream = api<SocialApi>()
-        .streamMessages(conversation.conversationId, quantity: 1)
+        .streamMessages(model.currentUser.userId, conversation.conversationId,
+            quantity: 1)
         .map((messages) => messages.first)
         .listen((message) => model.message = message);
+
     if (!conversation.isGroup) {
       String userId = conversation.participants.firstWhere(
           (participantId) => participantId != model.currentUser.userId);

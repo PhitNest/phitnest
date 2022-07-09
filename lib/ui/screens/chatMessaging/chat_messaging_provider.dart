@@ -30,7 +30,7 @@ class ChatMessagingProvider
         .listen((userInfo) => model.otherUser = userInfo);
 
     model.messageStream = api<SocialApi>()
-        .streamMessages(conversation.conversationId,
+        .streamMessages(model.currentUser.userId, conversation.conversationId,
             quantity: kMessageBatchSize)
         .map((messages) => messages.map((message) {
               if (message.authorId == otherUserId) {
