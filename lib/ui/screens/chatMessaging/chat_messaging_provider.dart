@@ -11,7 +11,7 @@ import 'chat_messaging_view.dart';
 
 class ChatMessagingProvider
     extends AuthenticatedProvider<ChatMessagingModel, ChatMessagingView> {
-  static const int kMessageBatchSize = 10;
+  static const int kMessageBatchSize = -1;
   final Conversation conversation;
 
   const ChatMessagingProvider({Key? key, required this.conversation})
@@ -52,6 +52,16 @@ class ChatMessagingProvider
     return true;
   }
 
+  void onSendMessage(String? message, ChatMessagingModel model) {
+    model.messageFocus.unfocus();
+    if (validateChatMessage(message) == null) {
+      model.messageController.clear();
+      model.scrollController.jumpTo(0);
+      api<SocialApi>().sendMessage(
+          model.currentUser.userId, conversation.conversationId, message!);
+    }
+  }
+
   @override
   ChatMessagingView build(BuildContext context, ChatMessagingModel model) =>
       ChatMessagingView(
@@ -60,15 +70,7 @@ class ChatMessagingProvider
           messageBubbles: model.messageBubbles,
           focusNode: model.messageFocus,
           scrollController: model.scrollController,
-          onSendMessage: (message) {
-            model.messageFocus.unfocus();
-            if (validateChatMessage(message) == null) {
-              model.messageController.clear();
-              model.scrollController.jumpTo(0);
-              api<SocialApi>().sendMessage(model.currentUser.userId,
-                  conversation.conversationId, message!);
-            }
-          });
+          onSendMessage: (message) => onSendMessage(message, model));
 
   @override
   ChatMessagingModel createModel() => ChatMessagingModel();

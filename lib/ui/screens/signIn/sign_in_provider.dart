@@ -23,26 +23,28 @@ class SignInProvider
         passwordController: model.passwordController,
         validateEmail: validateEmail,
         validatePassword: validatePassword,
-        // Show loading dialog widget, validate input, send request to
-        // auth service, and wait for response.
-        onClickLogin: () => showProgressUntil(
-            context: context,
-            message: 'Logging in, please wait...',
-            showUntil: () async => await login(model),
-            onDone: (result) {
-              // Login failed, show error alert dialog
-              if (result != null) {
-                showAlertDialog(context, 'Login Failed', result);
-              } else {
-                // If login succeeded, pop navigation stack and navigate to home
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/home', (_) => false);
-              }
-            }),
+        onClickLogin: () => onClickLogin(context, model),
         onClickResetPassword: () =>
             Navigator.pushNamed(context, '/resetPassword'),
         // onClickMobile: () => Navigator.pushNamed(context, '/mobileAuth'),
       );
+
+  /// Show loading dialog widget, validate input, send request to
+  /// auth service, and wait for response.
+  void onClickLogin(BuildContext context, SignInModel model) =>
+      showProgressUntil(
+          context: context,
+          message: 'Logging in, please wait...',
+          showUntil: () async => await login(model),
+          onDone: (result) {
+            // Login failed, show error alert dialog
+            if (result != null) {
+              showAlertDialog(context, 'Login Failed', result);
+            } else {
+              // If login succeeded, pop navigation stack and navigate to home
+              Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+            }
+          });
 
   Future<String?> login(SignInModel model) async {
     // Validate form
