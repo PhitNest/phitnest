@@ -8,6 +8,9 @@ class UserPrivateInfo {
   String recentIp;
   String signupIp;
   String recentPlatform;
+
+  dynamic signupTimestamp;
+
   Location? recentLocation;
   Location? signupLocation;
 
@@ -19,20 +22,27 @@ class UserPrivateInfo {
       required this.recentIp,
       required this.signupIp,
       required this.recentPlatform,
+      required this.signupTimestamp,
       this.recentLocation,
       this.signupLocation});
 
   factory UserPrivateInfo.fromJson(Map<String, dynamic> parsedJson) =>
       UserPrivateInfo(
-          email: parsedJson['email'],
-          mobile: parsedJson['mobile'],
-          birthday: parsedJson['birthday'],
-          notificationsEnabled: parsedJson['notificationsEnabled'],
-          recentIp: parsedJson['recentIp'],
-          signupIp: parsedJson['signupIp'],
-          recentPlatform: parsedJson['recentPlatform'],
-          recentLocation: Location.fromJson(parsedJson['recentLocation']),
-          signupLocation: Location.fromJson(parsedJson['signupLocation']));
+        email: parsedJson['email'],
+        mobile: parsedJson['mobile'],
+        birthday: parsedJson['birthday'],
+        notificationsEnabled: parsedJson['notificationsEnabled'],
+        recentIp: parsedJson['recentIp'],
+        signupIp: parsedJson['signupIp'],
+        signupTimestamp: parsedJson['signupTimestamp'],
+        recentPlatform: parsedJson['recentPlatform'],
+        recentLocation: parsedJson['recentLocation'] != null
+            ? Location.fromJson(parsedJson['recentLocation'])
+            : null,
+        signupLocation: parsedJson['signupLocation'] != null
+            ? Location.fromJson(parsedJson['signupLocation'])
+            : null,
+      );
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {
@@ -43,6 +53,7 @@ class UserPrivateInfo {
       'recentIp': recentIp,
       'signupIp': signupIp,
       'recentPlatform': recentPlatform,
+      'signupTimestamp': signupTimestamp,
     };
 
     if (recentLocation != null) {

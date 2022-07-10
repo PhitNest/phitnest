@@ -17,8 +17,9 @@ showProgressUntil(
     {required BuildContext context,
     required String message,
     required Future? Function() showUntil,
+    Widget? spinner,
     Function(dynamic result)? onDone}) async {
-  await showProgress(context, message, false);
+  await showProgress(context, message, false, spinner: spinner);
   dynamic retVal = await showUntil();
   await hideProgress();
   if (onDone != null) {
@@ -52,6 +53,7 @@ Future<bool> showConfirmWidget(
     // show the dialog
     return await showCupertinoDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return alert;
       },
@@ -68,6 +70,7 @@ Future<bool> showConfirmWidget(
 
     // show the dialog
     return await showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return alert;
@@ -76,19 +79,21 @@ Future<bool> showConfirmWidget(
   }
 }
 
-showProgress(BuildContext context, String message, bool isDismissible) async {
+showProgress(BuildContext context, String message, bool isDismissible,
+    {Widget? spinner}) async {
   _progressDialog = ProgressDialog(context,
       type: ProgressDialogType.Normal, isDismissible: isDismissible);
   _progressDialog.style(
       message: message,
       borderRadius: 10.0,
       backgroundColor: _color,
-      progressWidget: Container(
-          padding: EdgeInsets.all(8.0),
-          child: CircularProgressIndicator.adaptive(
-            valueColor: AlwaysStoppedAnimation(_color),
-            backgroundColor: Colors.white,
-          )),
+      progressWidget: spinner ??
+          Container(
+              padding: EdgeInsets.all(8.0),
+              child: CircularProgressIndicator.adaptive(
+                valueColor: AlwaysStoppedAnimation(_color),
+                backgroundColor: Colors.white,
+              )),
       elevation: 10.0,
       insetAnimCurve: Curves.easeInOut,
       messageTextStyle: TextStyle(

@@ -65,7 +65,7 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
               return generateRoute(AuthProvider());
             case '/chat':
               return generateRoute(ChatMessagingProvider(
-                  user: settings.arguments as UserPublicInfo));
+                  conversation: settings.arguments as Conversation));
             default:
               return generateRoute(OnBoardingProvider());
           }

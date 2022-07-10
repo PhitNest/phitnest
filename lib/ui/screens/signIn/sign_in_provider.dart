@@ -4,8 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 
+import '../../../apis/api.dart';
 import '../../../models/models.dart';
-import '../../../services/services.dart';
 import '../screens.dart';
 import 'sign_in_model.dart';
 import 'sign_in_view.dart';
@@ -55,7 +55,7 @@ class SignInProvider
           : Location(
               latitude: position.latitude, longitude: position.longitude);
       // Login with email/password
-      return await authService.signInWithEmailAndPassword(
+      return await api<AuthenticationApi>().signInWithEmailAndPassword(
         email: model.emailController.text.trim(),
         password: model.passwordController.text.trim(),
         locationData: location,

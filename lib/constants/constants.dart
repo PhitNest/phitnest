@@ -14,7 +14,9 @@ const kFinishedOnBoardingSetting = 'finishedOnBoarding';
 // Database document collection indices
 const kUsersPublic = 'users_public';
 const kUsersPrivate = 'users_private';
+const kConversations = 'conversations';
 const kMessages = 'messages';
+const kRelations = 'relations';
 
 // Storage bucket paths
 const kProfilePictureBucketPath = 'profilePictures';

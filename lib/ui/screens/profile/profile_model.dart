@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import '../screen_model.dart';
+import '../screens.dart';
 
-class ProfileModel extends ScreenModel {
-  String profilePictureDownloadUrl = '';
-
+class ProfileModel extends AuthenticatedModel {
   File? _profilePicture;
 
   File? get profilePicture => _profilePicture;

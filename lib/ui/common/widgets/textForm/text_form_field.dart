@@ -13,7 +13,9 @@ class TextInputFormField extends StatelessWidget {
   final TextEditingController? controller;
   final bool hide;
   final EdgeInsets padding;
+  final TextInputAction? inputAction;
   final TextInputType? inputType;
+  final FocusNode? focusNode;
 
   const TextInputFormField({
     required Key key,
@@ -23,6 +25,8 @@ class TextInputFormField extends StatelessWidget {
     this.onSaved,
     this.controller,
     this.inputType,
+    this.inputAction,
+    this.focusNode,
     this.padding = const EdgeInsets.symmetric(vertical: 8),
     this.hide = false,
     this.onSubmit,
@@ -35,8 +39,9 @@ class TextInputFormField extends StatelessWidget {
       child: TextFormField(
           key: key,
           textAlignVertical: TextAlignVertical.center,
-          textInputAction:
-              onSubmit == null ? TextInputAction.next : TextInputAction.done,
+          focusNode: focusNode,
+          textInputAction: inputAction ??
+              (onSubmit == null ? TextInputAction.next : TextInputAction.done),
           onFieldSubmitted: onSubmit,
           obscureText: hide,
           keyboardType: inputType,

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 
-import '../../../services/services.dart';
+import '../../../apis/api.dart';
+import '../../common/widgets/widgets.dart';
 import '../screens.dart';
 import 'forgotPassword_model.dart';
 import 'forgotPassword_view.dart';
@@ -23,6 +24,11 @@ class ForgotPasswordProvider
               context: context,
               message: 'Sending a password reset link to your email...',
               showUntil: () async => await sendEmail(model),
+              spinner: LoadingWheel(
+                color: Colors.white,
+                scale: 0.25,
+                padding: EdgeInsets.zero,
+              ),
               onDone: (result) async {
                 if (result != null) {
                   showAlertDialog(context, 'Email Failed', result);
@@ -36,7 +42,7 @@ class ForgotPasswordProvider
   Future<String?> sendEmail(ForgotPasswordModel model) async {
     if (model.formKey.currentState?.validate() ?? false) {
       model.formKey.currentState!.save();
-      return await authService
+      return await api<AuthenticationApi>()
           .sendResetPasswordEmail(model.emailController.text.trim());
     }
     model.validate = AutovalidateMode.onUserInteraction;

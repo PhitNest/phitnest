@@ -1,8 +1,9 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 
-import '../../../services/services.dart';
+import '../../../apis/api.dart';
+import '../../common/widgets/widgets.dart';
 import '../screens.dart';
 import 'mobileAuthentication_model.dart';
 import 'mobileAuthentication_view.dart';
@@ -22,6 +23,11 @@ class MobileAuthenticationProvider extends PreAuthenticationProvider<
           onClickTextVerficationCode: () => showProgressUntil(
               context: context,
               message: 'Sending verification code...',
+              spinner: LoadingWheel(
+                color: Colors.white,
+                scale: 0.25,
+                padding: EdgeInsets.zero,
+              ),
               showUntil: () async => await sendText(model),
               onDone: (result) {
                 if (result != null) {
@@ -34,7 +40,7 @@ class MobileAuthenticationProvider extends PreAuthenticationProvider<
   Future<String?> sendText(MobileAuthenticationModel model) async {
     if (model.formKey.currentState?.validate() ?? false) {
       model.formKey.currentState!.save();
-      return await authService
+      return await api<AuthenticationApi>()
           .sendMobileAuthRequest(model.phoneNumberController.text.trim());
     }
     model.validate = AutovalidateMode.onUserInteraction;

@@ -12,6 +12,7 @@ class ProfilePictureChatStatus extends ProfilePictureWidget {
     required Key key,
     required Widget image,
     required bool online,
+    bool showStatus = true,
     Function(BuildContext context)? tapImage,
     Function(BuildContext context)? tapIcon,
     EdgeInsets padding = EdgeInsets.zero,
@@ -22,6 +23,7 @@ class ProfilePictureChatStatus extends ProfilePictureWidget {
           tapImage: tapImage,
           tapIcon: tapIcon,
           scale: scale,
+          showIcon: showStatus,
           padding: padding,
           iconBackgroundColor: online ? Colors.green : Colors.grey,
         );
@@ -30,6 +32,7 @@ class ProfilePictureChatStatus extends ProfilePictureWidget {
     String url, {
     required Key key,
     required bool online,
+    bool showStatus = true,
     Function(BuildContext context)? tapImage,
     Function(BuildContext context)? tapIcon,
     EdgeInsets padding = EdgeInsets.zero,
@@ -45,6 +48,7 @@ class ProfilePictureChatStatus extends ProfilePictureWidget {
           ),
         ),
         online: online,
+        showStatus: showStatus,
         tapIcon: tapIcon,
         tapImage: tapImage,
         padding: padding,
@@ -55,6 +59,7 @@ class ProfilePictureChatStatus extends ProfilePictureWidget {
     File file, {
     required Key key,
     required bool online,
+    bool showStatus = true,
     Function(BuildContext context)? tapImage,
     Function(BuildContext context)? tapIcon,
     EdgeInsets padding = EdgeInsets.zero,
@@ -68,6 +73,7 @@ class ProfilePictureChatStatus extends ProfilePictureWidget {
         ),
         online: online,
         tapIcon: tapIcon,
+        showStatus: showStatus,
         tapImage: tapImage,
         padding: padding,
         scale: scale,

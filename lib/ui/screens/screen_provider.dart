@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../base_provider.dart';
-import '../common/widgets/widgets.dart';
 import 'screen_model.dart';
 import 'screen_view.dart';
+import 'screens.dart';
 
 abstract class ScreenProvider<T extends ScreenModel, K extends ScreenView>
     extends BaseProvider<T, K> {
@@ -13,7 +13,7 @@ abstract class ScreenProvider<T extends ScreenModel, K extends ScreenView>
   /// the model is set to false.
   @override
   Widget buildLoading(BuildContext context, {Key? testingKey}) =>
-      LoadingWidget(key: testingKey ?? Key("loading"));
+      LoadingScreen(key: testingKey ?? Key("loading"));
 
   @override
   K build(BuildContext context, T model);
