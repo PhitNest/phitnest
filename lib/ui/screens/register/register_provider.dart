@@ -43,23 +43,7 @@ class RegisterProvider
         confirmPasswordController: model.confirmPasswordController,
         validate: model.validate,
         image: model.image,
-        onClickSignup: () => showProgressUntil(
-            context: context,
-            message: 'Creating new account, Please wait...',
-            spinner: LoadingWheel(
-              color: Colors.white,
-              scale: 0.25,
-              padding: EdgeInsets.zero,
-            ),
-            showUntil: () => register(model),
-            onDone: (result) {
-              if (result != null) {
-                showAlertDialog(context, 'Signup Failed', result);
-              } else {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/home', (_) => false);
-              }
-            }),
+        onClickSignup: () => onClickSignup(context, model),
         onSaveImage: (File? photo) => model.image = photo,
         validateFirstName: validateFirstName,
         validateLastName: validateLastName,
@@ -71,6 +55,24 @@ class RegisterProvider
             validateConfirmPassword(
                 model.passwordController.text, confirmPassword),
       );
+
+  void onClickSignup(BuildContext context, RegisterModel model) =>
+      showProgressUntil(
+          context: context,
+          message: 'Creating new account, Please wait...',
+          spinner: LoadingWheel(
+            color: Colors.white,
+            scale: 0.25,
+            padding: EdgeInsets.zero,
+          ),
+          showUntil: () => register(model),
+          onDone: (result) {
+            if (result != null) {
+              showAlertDialog(context, 'Signup Failed', result);
+            } else {
+              Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+            }
+          });
 
   /// Validate the form, request the user location, and make a registration
   /// request to the authentication service. Return null if the registration
