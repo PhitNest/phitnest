@@ -13,11 +13,23 @@ abstract class SocialApi extends Api<SocialApiState> {
   /// null if the user is not signed in or their model does not exist.
   Future<AuthenticatedUser?> refreshSignedInUser();
 
+  /// Delete a message from a conversation.
+  Future<void> deleteMessage(String conversationId, String messageId);
+
+  /// Deletes a conversation.
+  Future<void> deleteConversation(String conversationId);
+
+  /// Creates a new conversation between a list of users
+  Future<void> createConversation(List<String> userIds);
+
+  /// Sends a chat message to a conversation, and updates the timestamp of the conversation.
+  Future<void> sendMessage(String authorId, String conversationId, String text);
+
   /// Streams a users public data, or null if the user is deleted.
   Stream<UserPublicInfo?> streamUserInfo(String uid);
 
   /// Streams all messages in a conversation
-  Stream<List<ChatMessage>> streamMessages(String userId, String conversationId,
+  Stream<List<ChatMessage>> streamMessages(String conversationId,
       {int quantity = -1,
       String orderBy = 'timestamp',
       bool descending = true});

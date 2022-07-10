@@ -53,6 +53,7 @@ Future<bool> showConfirmWidget(
     // show the dialog
     return await showCupertinoDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return alert;
       },
@@ -69,6 +70,7 @@ Future<bool> showConfirmWidget(
 
     // show the dialog
     return await showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return alert;

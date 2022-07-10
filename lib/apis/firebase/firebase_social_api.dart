@@ -37,6 +37,66 @@ class FirebaseSocialApi extends SocialApi {
       .map((doc) => doc.exists ? UserPublicInfo.fromJson(doc.data()!) : null);
 
   @override
+  Future<void> deleteMessage(String conversationId, String messageId) async {
+    await firestore
+        .collection('$kConversations/$conversationId/messages')
+        .doc(messageId)
+        .delete();
+    try {
+      ChatMessage recentMessage =
+          (await streamMessages(conversationId, quantity: 1).first).first;
+      await firestore
+          .collection(kConversations)
+          .doc(conversationId)
+          .update({'timestamp': recentMessage.timestamp});
+    } catch (err) {
+      await deleteConversation(conversationId);
+    }
+  }
+
+  @override
+  Future<void> deleteConversation(String conversationId) async =>
+      await Future.wait((await firestore
+              .collection('$kConversations/$conversationId/messages')
+              .get())
+          .docs
+          .map((doc) => deleteMessage(conversationId, doc.id)));
+
+  @override
+  Future<void> createConversation(List<String> userIds) async {
+    var docReference = firestore.collection(kConversations).doc();
+
+    Conversation conversation = Conversation(
+        conversationId: docReference.id,
+        participants: userIds,
+        timestamp: DateTime.now());
+
+    await docReference.set(conversation.toJson());
+  }
+
+  @override
+  Future<void> sendMessage(
+      String authorId, String conversationId, String text) async {
+    var docReference =
+        firestore.collection('$kConversations/$conversationId/messages').doc();
+
+    ChatMessage message = ChatMessage(
+        messageId: docReference.id,
+        authorId: authorId,
+        text: text,
+        timestamp: DateTime.now(),
+        read: false);
+
+    await Future.wait([
+      firestore
+          .collection(kConversations)
+          .doc(conversationId)
+          .update({'timestamp': message.timestamp}),
+      docReference.set(message.toJson())
+    ]);
+  }
+
+  @override
   Stream<List<Conversation>> streamConversations(String userId,
       {int quantity = -1,
       String orderBy = 'timestamp',
@@ -79,11 +139,11 @@ class FirebaseSocialApi extends SocialApi {
       {int quantity = -1,
       String orderBy = 'timestamp',
       bool descending = true}) {
-    Map<String, UserPublicInfo> userMap = {};
     List<String> userIds = [];
-    List<StreamSubscription<UserPublicInfo>> userStream = [];
+    Map<String, StreamSubscription<UserPublicInfo>> userStream = {};
+    Map<String, UserPublicInfo> userMap = {};
 
-    cancelStreams() => userStream.forEach((element) => element.cancel());
+    cancelStreams() => userStream.forEach((key, value) => value.cancel());
 
     StreamController<List<UserPublicInfo>> streamController =
         StreamController<List<UserPublicInfo>>(onCancel: cancelStreams);
@@ -94,20 +154,20 @@ class FirebaseSocialApi extends SocialApi {
             descending: descending,
             type: 'friend')
         .listen((friendRelations) {
-      userMap.clear();
       userIds.clear();
-      cancelStreams();
-      userStream.clear();
       for (Relation relation in friendRelations) {
         userIds.add(relation.targetId);
-        userStream.add(api<SocialApi>()
-            .streamUserInfo(relation.targetId)
-            .where((user) => user != null)
-            .map((user) => user!)
-            .listen((user) {
-          userMap[user.userId] = user;
-          streamController.sink.add(userIds.map((id) => userMap[id]!).toList());
-        }));
+        if (!userStream.containsKey(relation.targetId)) {
+          userStream[relation.targetId] = api<SocialApi>()
+              .streamUserInfo(relation.targetId)
+              .where((user) => user != null)
+              .map((user) => user!)
+              .listen((user) {
+            userMap[user.userId] = user;
+            streamController.sink
+                .add(userIds.map((id) => userMap[id]!).toList());
+          });
+        }
       }
     });
 
@@ -125,7 +185,7 @@ class FirebaseSocialApi extends SocialApi {
           .update({'read': true});
 
   @override
-  Stream<List<ChatMessage>> streamMessages(String userId, String conversationId,
+  Stream<List<ChatMessage>> streamMessages(String conversationId,
       {int quantity = -1,
       String orderBy = 'timestamp',
       bool descending = true}) {

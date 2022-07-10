@@ -34,7 +34,7 @@ class RestSocialApi extends SocialApi {
   }
 
   @override
-  Stream<List<ChatMessage>> streamMessages(String userId, String conversationId,
+  Stream<List<ChatMessage>> streamMessages(String conversationId,
       {int quantity = 1,
       String orderBy = 'timestamp',
       bool descending = true}) {
@@ -62,4 +62,25 @@ class RestSocialApi extends SocialApi {
 
   @override
   RestSocialApiState get initState => RestSocialApiState();
+
+  @override
+  Future<void> sendMessage(
+      String authorId, String conversationId, String text) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> createConversation(List<String> userIds) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteMessage(String conversationId, String messageId) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteConversation(String conversationId) {
+    throw UnimplementedError();
+  }
 }
