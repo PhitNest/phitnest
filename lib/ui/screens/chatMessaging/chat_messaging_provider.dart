@@ -1,4 +1,5 @@
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:validation/validation.dart';
 
 import '../../../apis/api.dart';
 import '../../../models/models.dart';
@@ -30,7 +31,7 @@ class ChatMessagingProvider
         .listen((userInfo) => model.otherUser = userInfo);
 
     model.messageStream = api<SocialApi>()
-        .streamMessages(model.currentUser.userId, conversation.conversationId,
+        .streamMessages(conversation.conversationId,
             quantity: kMessageBatchSize)
         .map((messages) => messages.map((message) {
               if (message.authorId == otherUserId) {
@@ -54,9 +55,20 @@ class ChatMessagingProvider
   @override
   ChatMessagingView build(BuildContext context, ChatMessagingModel model) =>
       ChatMessagingView(
-        fullName: model.otherUser?.fullName ?? '',
-        messageBubbles: model.messageBubbles,
-      );
+          messageController: model.messageController,
+          fullName: model.otherUser?.fullName ?? '',
+          messageBubbles: model.messageBubbles,
+          focusNode: model.messageFocus,
+          scrollController: model.scrollController,
+          onSendMessage: (message) {
+            model.messageFocus.unfocus();
+            if (validateChatMessage(message) == null) {
+              model.messageController.clear();
+              model.scrollController.jumpTo(0);
+              api<SocialApi>().sendMessage(model.currentUser.userId,
+                  conversation.conversationId, message!);
+            }
+          });
 
   @override
   ChatMessagingModel createModel() => ChatMessagingModel();
