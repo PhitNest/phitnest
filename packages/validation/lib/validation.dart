@@ -18,9 +18,16 @@ String? validateLastName(String? value) {
   return null;
 }
 
-// TODO
-String? validateDateOfBirth(String? value) {
-  return null;
+String? validateDate(String? value) {
+  if (value == null) {
+    return 'Date cannot be null';
+  }
+  try {
+    DateTime.parse(value);
+    return null;
+  } catch (e) {
+    return e.toString();
+  }
 }
 
 String? validateMobile(String? value) {
