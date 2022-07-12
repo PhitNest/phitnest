@@ -1,43 +1,38 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:phitnest/constants/constants.dart';
 
+import '../../../../constants/constants.dart';
 import '../../textStyles/text_styles.dart';
 import 'text_form_decoration.dart';
 
 /// This is a DOB form field widget
-class DobInputFormField extends StatefulWidget {
+class DateInputFormField extends StatefulWidget {
   final String hint;
   final TextStyle? hintStyle;
   final Function(String? text)? onSaved;
   final Function(String text)? onSubmit;
   final String? Function(String? text) validator;
-  final TextEditingController? controller;
-  final bool hide;
+  final TextEditingController controller;
+  final TextInputAction? inputAction;
   final EdgeInsets padding;
-  final TextInputType? inputType;
-  final bool? child;
 
-  const DobInputFormField({
+  const DateInputFormField({
     required Key key,
     required this.hint,
     required this.validator,
+    required this.controller,
     this.hintStyle,
     this.onSaved,
-    this.controller,
-    this.inputType,
+    this.inputAction,
     this.padding = const EdgeInsets.symmetric(vertical: 8),
-    this.hide = false,
     this.onSubmit,
-    this.child = false,
   }) : super();
 
   @override
-  State<DobInputFormField> createState() => _DobInputFormFieldState();
+  State<DateInputFormField> createState() => _DateInputFormFieldState();
 }
 
-class _DobInputFormFieldState extends State<DobInputFormField> {
-  DateTime? _dateTime;
+class _DateInputFormFieldState extends State<DateInputFormField> {
   @override
   Widget build(BuildContext context) => Container(
         constraints: const BoxConstraints(minWidth: double.infinity),
@@ -47,53 +42,43 @@ class _DobInputFormFieldState extends State<DobInputFormField> {
             TextFormField(
               key: widget.key,
               textAlignVertical: TextAlignVertical.center,
-              textInputAction: widget.onSubmit == null
-                  ? TextInputAction.next
-                  : TextInputAction.done,
+              textInputAction: widget.inputAction ??
+                  (widget.onSubmit == null
+                      ? TextInputAction.next
+                      : TextInputAction.done),
               onFieldSubmitted: widget.onSubmit,
-              obscureText: widget.hide,
-              keyboardType: widget.inputType,
+              keyboardType: TextInputType.datetime,
+              onTap: () => openDatePicker(context),
               validator: widget.validator,
               onSaved: widget.onSaved,
-              controller: _dateTime == null
-                  ? widget.controller ?? TextEditingController()
-                  : TextEditingController(
-                      text: DateFormat('yyyy-MM-dd', 'en_US')
-                          .format(_dateTime!)
-                          .toString()),
+              controller: widget.controller,
               style: BodyTextStyle(size: TextSize.LARGE),
               cursorColor: Colors.black,
               decoration: TextFormStyleDecoration(
                   hint: widget.hint, hintStyle: widget.hintStyle),
             ),
-            this.widget.child == true
-                ? Positioned(
-                    right: 8.0,
-                    child: IconButton(
-                      onPressed: () {
-                        showDatePicker(
-                                context: context,
-                                initialDate: _dateTime == null
-                                    ? DateTime.now()
-                                    : _dateTime!,
-                                firstDate: DateTime.now()
-                                    .subtract(const Duration(days: 36500)),
-                                lastDate: DateTime.now(),
-                                builder: (context, child) => Theme(
-                                    data: ThemeData().copyWith(
-                                      colorScheme: Theme.of(context)
-                                          .colorScheme
-                                          .copyWith(primary: kColorPrimary),
-                                      dialogBackgroundColor: Colors.white,
-                                    ),
-                                    child: child!))
-                            .then((date) => setState(() => _dateTime = date!));
-                      },
-                      icon: Icon(Icons.calendar_month),
-                    ),
-                  )
-                : Container(),
+            Positioned(
+              right: 8.0,
+              child: IconButton(
+                onPressed: () => openDatePicker(context),
+                icon: Icon(Icons.calendar_month),
+              ),
+            )
           ],
         ),
       );
+
+  openDatePicker(BuildContext context) => showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now().subtract(const Duration(days: 73000)),
+      lastDate: DateTime.now(),
+      builder: (context, child) => Theme(
+          data: ThemeData().copyWith(
+            colorScheme:
+                Theme.of(context).colorScheme.copyWith(primary: kColorPrimary),
+            dialogBackgroundColor: Colors.white,
+          ),
+          child: child!)).then((date) => setState(() => widget.controller.text =
+      DateFormat('yyyy-MM-dd', 'en_US').format(date!).toString()));
 }

@@ -26,7 +26,6 @@ class SignInProvider
         onClickLogin: () => onClickLogin(context, model),
         onClickResetPassword: () =>
             Navigator.pushNamed(context, '/resetPassword'),
-        // onClickMobile: () => Navigator.pushNamed(context, '/mobileAuth'),
       );
 
   /// Show loading dialog widget, validate input, send request to

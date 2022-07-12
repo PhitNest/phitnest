@@ -107,13 +107,12 @@ class RegisterView extends ScreenView {
                     validator: validateMobile,
                     hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                   ),
-                  DobInputFormField(
+                  DateInputFormField(
                     key: Key("register_dateOfBirth"),
                     hint: "Date of Birth",
                     hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                     controller: dateOfBirthController,
                     validator: validateDateOfBirth,
-                    child: true,
                   ),
                   TextInputFormField(
                     key: Key("register_password"),
