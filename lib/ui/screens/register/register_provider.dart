@@ -49,7 +49,7 @@ class RegisterProvider
         validateLastName: validateLastName,
         validateEmail: validateEmail,
         validateMobile: validateMobile,
-        validateDateOfBirth: validateDateOfBirth,
+        validateDateOfBirth: validateDate,
         validatePassword: validatePassword,
         validateConfirmPassword: (String? confirmPassword) =>
             validateConfirmPassword(
