@@ -28,6 +28,10 @@ abstract class SocialApi extends Api<SocialApiState> {
   /// Streams a users public data, or null if the user is deleted.
   Stream<UserPublicInfo?> streamUserInfo(String uid);
 
+  /// Stream the currently signed in users model. This will throw an exception if the user is not
+  /// signed in with the uid provided.
+  Stream<AuthenticatedUser> streamSignedInUser(String uid);
+
   /// Streams all messages in a conversation
   Stream<List<ChatMessage>> streamMessages(String conversationId,
       {int quantity = -1,

@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../models/models.dart';
 import '../screens.dart';
 import 'chatHome/chatCard/chat_card.dart';
 
 /// This is the view model for the home view.
 class HomeModel extends AuthenticatedModel {
   final PageController pageController = PageController();
+
+  StreamSubscription<AuthenticatedUser>? userListener;
 
   StreamSubscription<List<ChatCard>>? conversationListener;
   List<ChatCard> _messageCards = [];

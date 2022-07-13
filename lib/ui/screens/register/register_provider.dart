@@ -87,7 +87,7 @@ class RegisterProvider
           firstName: model.firstNameController.text.trim(),
           lastName: model.lastNameController.text.trim(),
           mobile: model.mobileController.text.trim(),
-          birthday: DateTime.parse(model.dateOfBirthController.text.trim()),
+          birthday: model.dateOfBirthController.date,
           ip: await userIP,
           profilePicture: model.image,
           locationData: position == null

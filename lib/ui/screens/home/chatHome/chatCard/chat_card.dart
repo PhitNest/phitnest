@@ -47,7 +47,7 @@ class ChatCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
                 children: [
-                  ProfilePictureChatStatus.fromNetwork(
+                  ProfilePictureWithStatus.fromNetwork(
                     pictureUrl,
                     key: Key("profilePicture_$name"),
                     showStatus: online != null,

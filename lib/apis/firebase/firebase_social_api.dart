@@ -142,13 +142,17 @@ class FirebaseSocialApi extends SocialApi {
     List<String> userIds = [];
     Map<String, StreamSubscription<UserPublicInfo>> userStream = {};
     Map<String, UserPublicInfo> userMap = {};
+    late StreamSubscription<List<Relation>> relationListener;
 
     cancelStreams() => userStream.forEach((key, value) => value.cancel());
 
     StreamController<List<UserPublicInfo>> streamController =
-        StreamController<List<UserPublicInfo>>(onCancel: cancelStreams);
+        StreamController<List<UserPublicInfo>>(onCancel: () {
+      cancelStreams();
+      relationListener.cancel();
+    });
 
-    streamRelations(userId,
+    relationListener = streamRelations(userId,
             quantity: quantity,
             orderBy: orderBy,
             descending: descending,
@@ -205,22 +209,47 @@ class FirebaseSocialApi extends SocialApi {
   Future<AuthenticatedUser?> refreshSignedInUser() async {
     String? uid = await api<AuthenticationApi>().getAuthenticatedUid();
     if (uid != null) {
-      UserPublicInfo? userPublic;
-      UserPrivateInfo? userPrivate;
-
-      await Future.wait([
-        streamUserInfo(uid).first.then((user) => userPublic = user),
-        firestore.collection(kUsersPrivate).doc(uid).get().then((json) =>
-            userPrivate =
-                json.exists ? UserPrivateInfo.fromJson(json.data()!) : null),
-      ]);
-
-      if (userPublic != null && userPrivate != null) {
-        return AuthenticatedUser.fromInfo(
-            publicInfo: userPublic!, privateInfo: userPrivate!);
-      }
+      return await streamSignedInUser(uid).first;
     }
     return null;
+  }
+
+  @override
+  Stream<AuthenticatedUser> streamSignedInUser(String uid) {
+    UserPublicInfo? userPublic;
+    UserPrivateInfo? userPrivate;
+    late StreamSubscription<UserPublicInfo?> publicListener;
+    late StreamSubscription<UserPrivateInfo?> privateListener;
+
+    StreamController<AuthenticatedUser> streamController =
+        StreamController<AuthenticatedUser>(onCancel: () {
+      publicListener.cancel();
+      privateListener.cancel();
+    });
+
+    buildUserModel() {
+      if (userPublic != null && userPrivate != null) {
+        streamController.sink.add(AuthenticatedUser.fromInfo(
+            publicInfo: userPublic!, privateInfo: userPrivate!));
+      }
+    }
+
+    publicListener = streamUserInfo(uid).listen((publicInfo) {
+      userPublic = publicInfo;
+      buildUserModel();
+    });
+
+    privateListener = firestore
+        .collection(kUsersPrivate)
+        .doc(uid)
+        .snapshots()
+        .map((snapshot) => UserPrivateInfo.fromJson(snapshot.data()!))
+        .listen((privateInfo) {
+      userPrivate = privateInfo;
+      buildUserModel();
+    });
+
+    return streamController.stream;
   }
 
   @override

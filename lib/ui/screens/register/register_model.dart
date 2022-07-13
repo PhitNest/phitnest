@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../common/widgets/widgets.dart';
 import '../screen_model.dart';
 
 /// View model for register view
@@ -12,7 +13,7 @@ class RegisterModel extends ScreenModel {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController mobileController = TextEditingController();
-  final TextEditingController dateOfBirthController = TextEditingController();
+  final DateEditingController dateOfBirthController = DateEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
