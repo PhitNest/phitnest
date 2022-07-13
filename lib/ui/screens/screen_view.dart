@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../base_view.dart';
-
-abstract class ScreenView extends BaseView {
+abstract class ScreenView extends StatelessWidget {
   const ScreenView({Key? key}) : super(key: key);
 }
