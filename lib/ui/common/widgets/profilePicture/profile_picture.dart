@@ -1,4 +1,4 @@
-export 'profilePictureChatStatus/profile_picture_chat_status.dart';
+export 'profilePictureWithStatus/profile_picture_with_status.dart';
 export 'profilePictureSelector/profile_picture_selector_widget.dart';
 
 import 'package:flutter/material.dart';

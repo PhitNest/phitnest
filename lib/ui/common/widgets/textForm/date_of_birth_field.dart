@@ -1,22 +1,22 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../constants/constants.dart';
 import '../../textStyles/text_styles.dart';
+import 'controllers/date_editing_controller.dart';
 import 'text_form_decoration.dart';
 
-/// This is a DOB form field widget
+/// This is a date form field widget
 class DateInputFormField extends StatefulWidget {
   final String hint;
   final TextStyle? hintStyle;
   final Function(String? text)? onSaved;
   final Function(String text)? onSubmit;
   final String? Function(String? text) validator;
-  final TextEditingController controller;
   final TextInputAction? inputAction;
   final EdgeInsets padding;
+  final DateEditingController controller;
 
-  const DateInputFormField({
+  DateInputFormField({
     required Key key,
     required this.hint,
     required this.validator,
@@ -52,6 +52,7 @@ class _DateInputFormFieldState extends State<DateInputFormField> {
               validator: widget.validator,
               onSaved: widget.onSaved,
               controller: widget.controller,
+              readOnly: true,
               style: BodyTextStyle(size: TextSize.LARGE),
               cursorColor: Colors.black,
               decoration: TextFormStyleDecoration(
@@ -69,16 +70,17 @@ class _DateInputFormFieldState extends State<DateInputFormField> {
       );
 
   openDatePicker(BuildContext context) => showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 73000)),
-      lastDate: DateTime.now(),
-      builder: (context, child) => Theme(
-          data: ThemeData().copyWith(
-            colorScheme:
-                Theme.of(context).colorScheme.copyWith(primary: kColorPrimary),
-            dialogBackgroundColor: Colors.white,
-          ),
-          child: child!)).then((date) => setState(() => widget.controller.text =
-      DateFormat('yyyy-MM-dd', 'en_US').format(date!).toString()));
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime.now().subtract(const Duration(days: 73000)),
+          lastDate: DateTime.now(),
+          builder: (context, child) => Theme(
+              data: ThemeData().copyWith(
+                colorScheme: Theme.of(context)
+                    .colorScheme
+                    .copyWith(primary: kColorPrimary),
+                dialogBackgroundColor: Colors.white,
+              ),
+              child: child!))
+      .then((date) => setState(() => widget.controller.date = date!));
 }

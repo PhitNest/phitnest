@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserPublicInfo {
   String userId;
   String firstName;
@@ -5,7 +7,7 @@ class UserPublicInfo {
   bool online;
   String profilePictureUrl;
   String bio;
-  dynamic lastOnlineTimestamp;
+  DateTime lastOnlineTimestamp;
   String? gender;
 
   String get fullName => '$firstName${lastName == '' ? '' : ' '}$lastName';
@@ -29,7 +31,9 @@ class UserPublicInfo {
           online: parsedJson['online'],
           profilePictureUrl: parsedJson['profilePictureUrl'],
           bio: parsedJson['bio'],
-          lastOnlineTimestamp: parsedJson['lastOnlineTimestamp'],
+          lastOnlineTimestamp: parsedJson['lastOnlineTimestamp'] is Timestamp
+              ? (parsedJson['lastOnlineTimestamp'] as Timestamp).toDate()
+              : parsedJson['lastOnlineTimestamp'],
           gender: parsedJson['gender']);
 
   Map<String, dynamic> toJson() {

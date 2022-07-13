@@ -1,15 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../models.dart';
 
 class UserPrivateInfo {
   String email;
   String mobile;
-  dynamic birthday;
+  DateTime birthday;
   bool notificationsEnabled;
   String recentIp;
   String signupIp;
   String recentPlatform;
 
-  dynamic signupTimestamp;
+  DateTime signupTimestamp;
 
   Location? recentLocation;
   Location? signupLocation;
@@ -30,11 +32,15 @@ class UserPrivateInfo {
       UserPrivateInfo(
         email: parsedJson['email'],
         mobile: parsedJson['mobile'],
-        birthday: parsedJson['birthday'],
+        birthday: parsedJson['birthday'] is Timestamp
+            ? (parsedJson['birthday'] as Timestamp).toDate()
+            : parsedJson['birthday'],
         notificationsEnabled: parsedJson['notificationsEnabled'],
         recentIp: parsedJson['recentIp'],
         signupIp: parsedJson['signupIp'],
-        signupTimestamp: parsedJson['signupTimestamp'],
+        signupTimestamp: parsedJson['signupTimestamp'] is Timestamp
+            ? (parsedJson['signupTimestamp'] as Timestamp).toDate()
+            : parsedJson['signupTimestamp'],
         recentPlatform: parsedJson['recentPlatform'],
         recentLocation: parsedJson['recentLocation'] != null
             ? Location.fromJson(parsedJson['recentLocation'])

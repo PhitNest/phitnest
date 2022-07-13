@@ -14,7 +14,7 @@ class RegisterView extends ScreenView {
   final TextEditingController lastNameController;
   final TextEditingController emailController;
   final TextEditingController mobileController;
-  final TextEditingController dateOfBirthController;
+  final DateEditingController dateOfBirthController;
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
   final AutovalidateMode validate;

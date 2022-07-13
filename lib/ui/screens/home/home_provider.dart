@@ -27,6 +27,9 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
     if (await updateLocation(model.currentUser) &&
         await updateIP(model.currentUser) &&
         await updateActivity(model.currentUser)) {
+      model.userListener = api<SocialApi>()
+          .streamSignedInUser(model.currentUser.userId)
+          .listen((user) => model.currentUser = user);
       model.conversationListener = streamChatCards(context, model)
           .listen((cards) => model.messageCards = cards);
       return true;
@@ -66,10 +69,8 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
             pictureUrl: userInfo.profilePictureUrl,
             onTap: () =>
                 Navigator.pushNamed(context, '/chat', arguments: conversation),
-            onDismissConfirm: (direction) async {
-              await api<SocialApi>()
-                  .deleteConversation(conversation.conversationId);
-            },
+            onDismissConfirm: (direction) async => await api<SocialApi>()
+                .deleteConversation(conversation.conversationId),
             online: userInfo.online,
             name: userInfo.fullName,
           );
@@ -113,8 +114,11 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
   }
 
   @override
-  HomeView build(BuildContext context, HomeModel model) =>
-      HomeView(pageController: model.pageController, cards: model.messageCards);
+  HomeView build(BuildContext context, HomeModel model) => HomeView(
+        pageController: model.pageController,
+        cards: model.messageCards,
+        user: model.currentUser,
+      );
 
   Future<bool> updateActivity(AuthenticatedUser user) async {
     user.online = true;
