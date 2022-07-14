@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:device/device.dart';
 
-import '../../../apis/api.dart';
-import '../../../models/models.dart';
-import '../screens.dart';
-import 'chatHome/chatCard/chat_card.dart';
-import 'home_model.dart';
-import 'home_view.dart';
+import '../../../../apis/api.dart';
+import '../../../../models/models.dart';
+import '../../screens.dart';
+import '../models/home_model.dart';
+import '../views/home_view.dart';
+
+export 'chatHome/chat_home_provider.dart';
+export 'profile/profile_provider.dart';
 
 class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
   const HomeProvider({Key? key}) : super(key: key);
@@ -20,18 +22,19 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
   /// succeed, drop the loading screen. Otherwise
   @override
   init(BuildContext context, HomeModel model) async {
-    if (!(await super.init(context, model))) {
+    if (!await super.init(context, model)) {
       return false;
     }
 
     if (await updateLocation(model.currentUser) &&
         await updateIP(model.currentUser) &&
         await updateActivity(model.currentUser)) {
+      model.chatCardListener =
+          streamChatCards(context, model.currentUser.userId)
+              .listen((messageCards) => model.messageCards = messageCards);
       model.userListener = api<SocialApi>()
           .streamSignedInUser(model.currentUser.userId)
           .listen((user) => model.currentUser = user);
-      model.conversationListener = streamChatCards(context, model)
-          .listen((cards) => model.messageCards = cards);
       return true;
     }
     await api<AuthenticationApi>().signOut();
@@ -39,8 +42,38 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
     return false;
   }
 
+  @override
+  HomeView build(BuildContext context, HomeModel model) => HomeView(
+        pageController: model.pageController,
+        currentUser: model.currentUser,
+        messageCards: model.messageCards,
+      );
+
+  Future<bool> updateActivity(AuthenticatedUser user) async {
+    user.online = true;
+    user.lastOnlineTimestamp = DateTime.now();
+    return await api<SocialApi>().updateUserModel(user) == null;
+  }
+
+  Future<bool> updateLocation(AuthenticatedUser user) async {
+    Position? position = await getCurrentLocation();
+    if (position != null) {
+      user.recentLocation =
+          Location(latitude: position.latitude, longitude: position.longitude);
+
+      return await api<SocialApi>().updateUserModel(user) == null;
+    }
+
+    return true;
+  }
+
+  Future<bool> updateIP(AuthenticatedUser user) async {
+    user.recentIp = await userIP;
+    return await api<SocialApi>().updateUserModel(user) == null;
+  }
+
   Stream<List<ChatCard>> streamChatCards(
-      BuildContext context, HomeModel model) {
+      BuildContext context, String signedInUserId) {
     List<Conversation> conversationsSorted = [];
     Map<String, StreamSubscription<ChatMessage>>
         conversationIdToMessageListener = {};
@@ -65,7 +98,7 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
           }
           return ChatCard(
             message: message.text,
-            read: message.authorId == model.currentUser.userId || message.read,
+            read: message.authorId == signedInUserId || message.read,
             pictureUrl: userInfo.profilePictureUrl,
             onTap: () =>
                 Navigator.pushNamed(context, '/chat', arguments: conversation),
@@ -83,7 +116,7 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
         StreamController<List<ChatCard>>(onCancel: cancelListeners);
 
     api<SocialApi>()
-        .streamConversations(model.currentUser.userId)
+        .streamConversations(signedInUserId)
         .listen((conversations) {
       conversationsSorted = [];
       cancelListeners();
@@ -92,7 +125,7 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
         if (!conversation.isGroup) {
           conversationsSorted.add(conversation);
           String otherUserId = conversation.participants
-              .firstWhere((element) => element != model.currentUser.userId);
+              .firstWhere((element) => element != signedInUserId);
           conversationIdToUserListener[conversation.conversationId] =
               api<SocialApi>().streamUserInfo(otherUserId).listen((userInfo) {
             conversationIdToUser[conversation.conversationId] = userInfo!;
@@ -111,36 +144,6 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
     });
 
     return streamController.stream;
-  }
-
-  @override
-  HomeView build(BuildContext context, HomeModel model) => HomeView(
-        pageController: model.pageController,
-        cards: model.messageCards,
-        user: model.currentUser,
-      );
-
-  Future<bool> updateActivity(AuthenticatedUser user) async {
-    user.online = true;
-    user.lastOnlineTimestamp = DateTime.now();
-    return await api<SocialApi>().updateUserModel(user) == null;
-  }
-
-  Future<bool> updateLocation(AuthenticatedUser user) async {
-    Position? position = await getCurrentLocation();
-    if (position != null) {
-      user.recentLocation =
-          Location(latitude: position.latitude, longitude: position.longitude);
-
-      return await api<SocialApi>().updateUserModel(user) == null;
-    }
-
-    return true;
-  }
-
-  Future<bool> updateIP(AuthenticatedUser user) async {
-    user.recentIp = await userIP;
-    return await api<SocialApi>().updateUserModel(user) == null;
   }
 
   @override

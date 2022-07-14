@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 
-import '../../../../common/textStyles/text_styles.dart';
-import '../../../../common/widgets/widgets.dart';
+import '../../../../../common/textStyles/text_styles.dart';
+import '../../../../../common/widgets/widgets.dart';
 
 class ChatCard extends StatelessWidget {
   final String message;
