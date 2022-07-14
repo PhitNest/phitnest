@@ -1,33 +1,42 @@
 import 'package:flutter/material.dart';
 
-import '../../../../models/models.dart';
-import '../../../common/textStyles/text_styles.dart';
-import '../../../common/widgets/widgets.dart';
+import '../../../../common/textStyles/text_styles.dart';
+import '../../../../common/widgets/widgets.dart';
+import '../../../screen_view.dart';
 
-class ProfileView extends StatelessWidget {
-  final AuthenticatedUser user;
+class ProfileView extends ScreenView {
+  final String profilePictureUrl;
+  final String firstName;
+  final String lastName;
+  final String bio;
 
-  const ProfileView({Key? key, required this.user}) : super(key: key);
+  const ProfileView({
+    Key? key,
+    required this.profilePictureUrl,
+    required this.firstName,
+    required this.lastName,
+    required this.bio,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Column(children: [
           ProfilePictureWithStatus.fromNetwork(
-            user.profilePictureUrl,
+            profilePictureUrl,
             key: Key('profileView_profilePicture'),
             showStatus: false,
             online: true,
           ),
           Text(
-            user.firstName,
+            firstName,
             style: BodyTextStyle(size: TextSize.LARGE),
           ),
           Text(
-            user.lastName,
+            lastName,
             style: BodyTextStyle(size: TextSize.LARGE),
           ),
           Text(
-            user.bio,
+            bio,
             style: BodyTextStyle(size: TextSize.LARGE),
           ),
           StyledButton(
