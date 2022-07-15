@@ -26,12 +26,7 @@ class HomeView extends ScreenView {
         body: PageView(
           controller: pageController,
           children: [
-            ProfileProvider(
-              firstName: currentUser.firstName,
-              lastName: currentUser.lastName,
-              bio: currentUser.bio,
-              profilePictureUrl: currentUser.profilePictureUrl,
-            ),
+            ProfileProvider(user: currentUser),
             ChatHomeProvider(messageCards: messageCards),
           ],
         ),
