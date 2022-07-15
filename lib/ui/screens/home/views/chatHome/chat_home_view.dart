@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../screen_view.dart';
 import 'chatCard/chat_card.dart';
 
-class ChatHome extends StatelessWidget {
+export 'chatCard/chat_card.dart';
+
+class ChatHomeView extends ScreenView {
   final List<ChatCard> cards;
 
-  const ChatHome({Key? key, required this.cards}) : super(key: key);
+  const ChatHomeView({Key? key, required this.cards}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Scaffold(

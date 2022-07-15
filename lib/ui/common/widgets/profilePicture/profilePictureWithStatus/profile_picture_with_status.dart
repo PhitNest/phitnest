@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import '../profile_picture.dart';
 
 /// This will allow you to select a photo from native camera for profile picture
-class ProfilePictureChatStatus extends ProfilePictureWidget {
+class ProfilePictureWithStatus extends ProfilePictureWidget {
   /// Shows a profile picture with circle indicating activity status.
-  ProfilePictureChatStatus._({
+  ProfilePictureWithStatus._({
     required Key key,
     required Widget image,
     required bool online,
@@ -28,7 +28,7 @@ class ProfilePictureChatStatus extends ProfilePictureWidget {
           iconBackgroundColor: online ? Colors.green : Colors.grey,
         );
 
-  factory ProfilePictureChatStatus.fromNetwork(
+  factory ProfilePictureWithStatus.fromNetwork(
     String url, {
     required Key key,
     required bool online,
@@ -38,7 +38,7 @@ class ProfilePictureChatStatus extends ProfilePictureWidget {
     EdgeInsets padding = EdgeInsets.zero,
     double scale = 1.0,
   }) =>
-      ProfilePictureChatStatus._(
+      ProfilePictureWithStatus._(
         key: key,
         image: CachedNetworkImage(
           imageUrl: url,
@@ -55,7 +55,7 @@ class ProfilePictureChatStatus extends ProfilePictureWidget {
         scale: scale,
       );
 
-  factory ProfilePictureChatStatus.fromFile(
+  factory ProfilePictureWithStatus.fromFile(
     File file, {
     required Key key,
     required bool online,
@@ -65,7 +65,7 @@ class ProfilePictureChatStatus extends ProfilePictureWidget {
     EdgeInsets padding = EdgeInsets.zero,
     double scale = 1.0,
   }) =>
-      ProfilePictureChatStatus._(
+      ProfilePictureWithStatus._(
         key: key,
         image: Image.file(
           file,

@@ -11,7 +11,7 @@ class AuthenticatedUser {
   bool get online => publicInfo.online;
   String get profilePictureUrl => publicInfo.profilePictureUrl;
   String get bio => publicInfo.bio;
-  dynamic get lastOnlineTimestamp => publicInfo.lastOnlineTimestamp;
+  DateTime get lastOnlineTimestamp => publicInfo.lastOnlineTimestamp;
   String? get gender => publicInfo.gender;
 
   String get fullName => publicInfo.fullName;
@@ -35,7 +35,7 @@ class AuthenticatedUser {
   String get recentIp => privateInfo.recentIp;
   String get signupIp => privateInfo.signupIp;
   String get recentPlatform => privateInfo.recentPlatform;
-  dynamic get signupTimestamp => privateInfo.signupTimestamp;
+  DateTime get signupTimestamp => privateInfo.signupTimestamp;
   Location? get recentLocation => privateInfo.recentLocation;
   Location? get signupLocation => privateInfo.signupLocation;
 

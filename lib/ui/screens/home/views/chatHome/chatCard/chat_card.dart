@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 
-import '../../../../common/textStyles/text_styles.dart';
-import '../../../../common/widgets/widgets.dart';
+import '../../../../../common/textStyles/text_styles.dart';
+import '../../../../../common/widgets/widgets.dart';
 
 class ChatCard extends StatelessWidget {
   final String message;
@@ -47,7 +47,7 @@ class ChatCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
                 children: [
-                  ProfilePictureChatStatus.fromNetwork(
+                  ProfilePictureWithStatus.fromNetwork(
                     pictureUrl,
                     key: Key("profilePicture_$name"),
                     showStatus: online != null,

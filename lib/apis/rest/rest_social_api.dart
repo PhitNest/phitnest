@@ -83,4 +83,9 @@ class RestSocialApi extends SocialApi {
   Future<void> deleteConversation(String conversationId) {
     throw UnimplementedError();
   }
+
+  @override
+  Stream<AuthenticatedUser> streamSignedInUser(String uid) {
+    throw UnimplementedError();
+  }
 }

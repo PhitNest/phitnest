@@ -1,10 +1,10 @@
 export 'screen_provider.dart';
 export 'register/register_provider.dart';
 export 'redirector/redirector.dart';
-export 'profile/profile_provider.dart';
+export 'profileEdit/profile_edit_provider.dart';
 export 'onBoarding/on_boarding_provider.dart';
 export 'signIn/sign_in_provider.dart';
-export 'home/home_provider.dart';
+export 'home/providers/home_provider.dart';
 export 'auth/auth_provider.dart';
 export 'forgotPassword/forgotPassword_provider.dart';
 export 'mobileAuthentication/mobileAuthentication_provider.dart';
