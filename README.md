@@ -1,3 +1,5 @@
-phitnest-flutter -> front end
-
-phitnest-nodejs -> back end
+**phitnest-nodejs/.env**
+```
+JWT_SECRET=""
+DB="mongodb://localhost:27017"
+```
