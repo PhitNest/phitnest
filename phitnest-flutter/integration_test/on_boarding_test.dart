@@ -32,7 +32,7 @@ extension OnBoardingTest on WidgetTester {
 
         // If we are not still on the last page after an additional swipe, fail
         if (onBoardingView().controller.currentPage != numPages - 1) {
-          fail("The screen should not scroll past the last page.");
+          fail('The screen should not scroll past the last page.');
         }
 
         // Tap the continue button (this strange predicate function is just finding
@@ -57,7 +57,7 @@ extension OnBoardingTest on WidgetTester {
     // auth screen
     expect(find.byType(AuthProvider), findsOneWidget,
         reason:
-            "After completing the on boarding screen you should be directed to the auth screen.");
+            'After completing the on boarding screen you should be directed to the auth screen.');
   }
 }
 
@@ -69,7 +69,7 @@ void main() {
     await tester.restart();
     expect(find.byType(OnBoardingProvider), findsOneWidget,
         reason:
-            "When you restart the app without completing the on boarding screen, it should be shown again.");
+            'When you restart the app without completing the on boarding screen, it should be shown again.');
 
     // Make sure you can't navigate too far to the left
     await tester.swipe(Offset(100, 200), Offset(300, 200), swipeLength);
@@ -77,7 +77,7 @@ void main() {
 
     // If we are not still on the first page after an additional swipe, fail
     if (tester.onBoardingView().controller.currentPage != 0) {
-      fail("The screen should not scroll past the first page.");
+      fail('The screen should not scroll past the first page.');
     }
 
     // Complete the on boarding process
@@ -90,6 +90,6 @@ void main() {
     // We should be on the auth screen upon startup
     expect(find.byType(AuthProvider), findsOneWidget,
         reason:
-            "When you restart the app after completing the on boarding screen, the authentication screen should be shown.");
+            'When you restart the app after completing the on boarding screen, the authentication screen should be shown.');
   });
 }

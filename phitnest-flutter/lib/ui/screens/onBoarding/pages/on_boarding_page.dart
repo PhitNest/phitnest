@@ -49,9 +49,9 @@ class OnBoardingPage extends StatelessWidget {
             Visibility(
                 visible: pageNum == OnBoardingModel.pages.length - 1,
                 child: StyledButton(
-                  key: Key("onBoarding_continue"),
+                  key: Key('onBoarding_continue'),
                   minWidth: 300,
-                  text: "Let's get phit!",
+                  text: 'Let\'s get phit!',
                   onClick: onClickContinue,
                 )),
             Padding(

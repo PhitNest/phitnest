@@ -52,7 +52,7 @@ class SignInView extends ScreenView {
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * (1 / 50)),
                 TextInputFormField(
-                  key: Key("signIn_email"),
+                  key: Key('signIn_email'),
                   hint: 'Email',
                   hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                   controller: emailController,
@@ -60,7 +60,7 @@ class SignInView extends ScreenView {
                   validator: validateEmail,
                 ),
                 TextInputFormField(
-                  key: Key("signIn_password"),
+                  key: Key('signIn_password'),
                   hint: 'Password',
                   hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                   validator: validatePassword,
@@ -87,7 +87,7 @@ class SignInView extends ScreenView {
                 Padding(
                   padding: const EdgeInsets.only(top: 40),
                   child: StyledButton(
-                    key: Key("logIn_submit"),
+                    key: Key('logIn_submit'),
                     text: 'Log In',
                     onClick: onClickLogin,
                   ),

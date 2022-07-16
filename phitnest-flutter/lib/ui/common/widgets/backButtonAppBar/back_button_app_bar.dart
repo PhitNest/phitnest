@@ -7,7 +7,7 @@ class BackButtonAppBar extends AppBar {
   BackButtonAppBar({this.color, this.content})
       : super(
           leading: BackButton(
-            key: Key("backButton"),
+            key: Key('backButton'),
           ),
           title: content,
           elevation: 0.0,

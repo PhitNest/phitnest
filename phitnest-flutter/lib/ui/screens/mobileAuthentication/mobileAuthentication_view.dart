@@ -30,14 +30,14 @@ class MobileAuthenticationView extends ScreenView {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             MobileInputFormField(
-              key: Key("mobileAuth_phoneNumber"),
+              key: Key('mobileAuth_phoneNumber'),
               onChanged: (phoneNumber) {},
               controller: phoneNumberController,
               validator: validatePhoneNumber,
             ),
             ElevatedButton(
-                child: Text("Submit"), onPressed: onClickTextVerficationCode),
-            Text("Standard rates apply for sending SMS messages")
+                child: Text('Submit'), onPressed: onClickTextVerficationCode),
+            Text('Standard rates apply for sending SMS messages')
           ],
         ),
       ),

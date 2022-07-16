@@ -14,7 +14,7 @@ const db = () => {
             console.log('Mongodb Connected Successfully');
         })
         .catch(err => {
-            console.log("MongoDB Connection Error ==> " + err);
+            console.log('MongoDB Connection Error ==> ' + err);
         });
 
     mongoose.Promise = global.Promise;

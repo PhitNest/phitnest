@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
     if (hasEmail) {
         return res
             .status(409)
-            .json(errorJson("Duplicate Email", "An account with this email address already exists."));
+            .json(errorJson('Duplicate Email', 'An account with this email address already exists.'));
     }
 
     next();

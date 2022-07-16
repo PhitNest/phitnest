@@ -27,7 +27,7 @@ abstract class ScreenProvider<T extends ScreenModel, K extends ScreenView>
   /// This builder will provide a loading widget until the loading flag in
   /// the model is set to false.
   Widget buildLoading(BuildContext context, {Key? testingKey}) =>
-      LoadingScreen(key: testingKey ?? Key("loading"));
+      LoadingScreen(key: testingKey ?? Key('loading'));
 
   _ScreenProviderState<T, K> createState() =>
       _ScreenProviderState<T, K>(createModel());

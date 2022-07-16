@@ -34,7 +34,7 @@ class ForgotPasswordView extends ScreenView {
                   FadeTransition(opacity: animation, child: child),
               child: sent
                   ? Text(
-                      "A password reset email has been sent to ${emailController.text}")
+                      'A password reset email has been sent to ${emailController.text}')
                   : Form(
                       key: formKey,
                       autovalidateMode: validate,
@@ -42,8 +42,8 @@ class ForgotPasswordView extends ScreenView {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           TextInputFormField(
-                            key: Key("forgotPasswordEmail"),
-                            hint: "Enter your Email Address",
+                            key: Key('forgotPasswordEmail'),
+                            hint: 'Enter your Email Address',
                             validator: validateEmail,
                             controller: emailController,
                           ),
@@ -55,7 +55,7 @@ class ForgotPasswordView extends ScreenView {
                                       MediaQuery.of(context).size.width *
                                           1 /
                                           30),
-                              key: Key("signUp_submit"),
+                              key: Key('signUp_submit'),
                               text: 'Submit',
                               onClick: onClickSendPasswordResetEmail,
                             ),

@@ -16,6 +16,6 @@ module.exports = async (req, res) => {
 
     } catch (err) {
         res.status(401);
-        res.send("Bad Token");
+        res.send('Bad Token');
     }
 }

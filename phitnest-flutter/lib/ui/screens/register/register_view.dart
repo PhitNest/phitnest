@@ -72,15 +72,15 @@ class RegisterView extends ScreenView {
                       child: image == null
                           ? ProfilePictureSelector.fromNetwork(
                               kDefaultAvatarUrl,
-                              key: Key("register_photoSelect"),
+                              key: Key('register_photoSelect'),
                               padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
                               onSelected: onSaveImage)
                           : ProfilePictureSelector.fromFile(image!,
-                              key: Key("register_photoSelect"),
+                              key: Key('register_photoSelect'),
                               padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
                               onSelected: onSaveImage)),
                   TextInputFormField(
-                    key: Key("register_firstName"),
+                    key: Key('register_firstName'),
                     hint: 'First Name',
                     hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                     controller: firstNameController,
@@ -88,34 +88,34 @@ class RegisterView extends ScreenView {
                     validator: validateFirstName,
                   ),
                   TextInputFormField(
-                      key: Key("register_lastName"),
+                      key: Key('register_lastName'),
                       hint: 'Last Name',
                       hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                       inputType: TextInputType.name,
                       controller: lastNameController,
                       validator: validateLastName),
                   TextInputFormField(
-                      key: Key("register_email"),
+                      key: Key('register_email'),
                       hint: 'Email Address',
                       hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                       inputType: TextInputType.emailAddress,
                       controller: emailController,
                       validator: validateEmail),
                   MobileInputFormField(
-                    key: Key("register_mobile"),
+                    key: Key('register_mobile'),
                     controller: mobileController,
                     validator: validateMobile,
                     hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                   ),
                   DateInputFormField(
-                    key: Key("register_dateOfBirth"),
-                    hint: "Date of Birth",
+                    key: Key('register_dateOfBirth'),
+                    hint: 'Date of Birth',
                     hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                     controller: dateOfBirthController,
                     validator: validateDateOfBirth,
                   ),
                   TextInputFormField(
-                    key: Key("register_password"),
+                    key: Key('register_password'),
                     hint: 'Password',
                     hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                     hide: true,
@@ -123,7 +123,7 @@ class RegisterView extends ScreenView {
                     validator: validatePassword,
                   ),
                   TextInputFormField(
-                      key: Key("register_confirmPassword"),
+                      key: Key('register_confirmPassword'),
                       hint: 'Confirm Password',
                       hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                       onSubmit: (_) => onClickSignup(),
@@ -133,7 +133,7 @@ class RegisterView extends ScreenView {
                   Align(
                       alignment: Alignment.center,
                       child: StyledButton(
-                        key: Key("signUp_submit"),
+                        key: Key('signUp_submit'),
                         text: 'Finish',
                         onClick: onClickSignup,
                         padding: EdgeInsets.all(16.0),

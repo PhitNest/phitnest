@@ -19,7 +19,7 @@ extension Swiper on WidgetTester {
           .then((_) async => await gesture.up()));
 }
 
-Finder backButtonFinder = find.byKey(Key("backButton"));
+Finder backButtonFinder = find.byKey(Key('backButton'));
 
 runTest(String testName, Future<void> Function(WidgetTester tester) test) {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

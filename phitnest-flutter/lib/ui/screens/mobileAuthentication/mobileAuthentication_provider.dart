@@ -44,7 +44,7 @@ class MobileAuthenticationProvider extends PreAuthenticationProvider<
           .sendMobileAuthRequest(model.phoneNumberController.text.trim());
     }
     model.validate = AutovalidateMode.onUserInteraction;
-    return "Invalid Input";
+    return 'Invalid Input';
   }
 
   @override

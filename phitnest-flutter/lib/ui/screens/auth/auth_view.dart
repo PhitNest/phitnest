@@ -36,13 +36,13 @@ class AuthView extends ScreenView {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   StyledButton(
-                    key: Key("auth_signIn"),
+                    key: Key('auth_signIn'),
                     minWidth: buttonWidth,
                     text: 'Sign In',
                     onClick: onClickLogin,
                   ),
                   StyledButton(
-                    key: Key("auth_register"),
+                    key: Key('auth_register'),
                     minWidth: buttonWidth,
                     text: 'Register',
                     onClick: onClickSignup,
