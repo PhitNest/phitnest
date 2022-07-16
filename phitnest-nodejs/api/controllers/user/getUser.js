@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
             return res.status(500).json(errorJson(e, 'An error occurred while getting your information, please try again.'))
         });
 
-        res.status(200).send([{ email: user.email }]);
+        res.status(200).send([{ email: user.email, mobile: user.mobile, firstName: user.firstName, lastName: user.lastName, bio: user.bio }]);
 
     } catch (err) {
         res.status(401);
