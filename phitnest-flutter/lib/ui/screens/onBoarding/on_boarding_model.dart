@@ -16,7 +16,7 @@ class OnBoardingModel extends ScreenModel {
   static const List<OnBoardingPageData> pages = [
     OnBoardingPageData(
       path: 'assets/images/onBoarding/on_boarding_one.png',
-      text: "Welcome to phitnest",
+      text: 'Welcome to phitnest',
     ),
     OnBoardingPageData(
       path: 'assets/images/onBoarding/on_boarding_two.png',

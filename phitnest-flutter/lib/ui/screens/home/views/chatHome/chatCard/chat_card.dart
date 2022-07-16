@@ -49,7 +49,7 @@ class ChatCard extends StatelessWidget {
                 children: [
                   ProfilePictureWithStatus.fromNetwork(
                     pictureUrl,
-                    key: Key("profilePicture_$name"),
+                    key: Key('profilePicture_$name'),
                     showStatus: online != null,
                     online: online ?? false,
                     scale: 0.4,

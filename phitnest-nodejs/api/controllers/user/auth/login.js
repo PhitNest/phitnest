@@ -8,22 +8,22 @@ let errorObject = {}
 module.exports = async (req, res) => {
     const { error } = userValidate.login(req.body);
     if (error) {
-        if (error.details[0].message.includes("email")) errorObject = {
-            msg: "Please provide a valid email!"
+        if (error.details[0].message.includes('email')) errorObject = {
+            msg: 'Please provide a valid email!'
         }
-        else if (error.details[0].message.includes("password")) errorObject = {
+        else if (error.details[0].message.includes('password')) errorObject = {
             msg: `Please provide a password that longer than ${userValidate.minPasswordLength} letters and shorter than ${userValidate.maxPasswordLength} letters.`
         }
         else errorObject = {
-            msg: "Please provide all the required fields!"
+            msg: 'Please provide all the required fields!'
         }
 
         return res
             .status(400)
-            .json(errorJson(errorObject.msg, "Error while trying to login!"))
+            .json(errorJson(errorObject.msg, 'Error while trying to login!'))
     }
     const user = await userModel.findOne({ email: req.body.email.trim() })
-        .select("+password")
+        .select('+password')
         .catch((err) => {
             return res
                 .status(500)
@@ -32,13 +32,13 @@ module.exports = async (req, res) => {
     if (!user)
         return res
             .status(404)
-            .json(errorJson("404 Error", "An account with this email address was not found."))
+            .json(errorJson('404 Error', 'An account with this email address was not found.'))
 
     const match = await bcrypt.compare(req.body.password, user.password);
     if (!match)
         return res
             .status(400)
-            .json(errorJson("400 error", "You have entered an invalid email or password."))
+            .json(errorJson('400 error', 'You have entered an invalid email or password.'))
 
 
     const authorization = await jwt.signAccessToken(user._id);
@@ -53,7 +53,7 @@ module.exports = async (req, res) => {
                 .json(
                     errorJson(
                         err,
-                        "An internal server error occurred.")
+                        'An internal server error occurred.')
                 );
         });
 
