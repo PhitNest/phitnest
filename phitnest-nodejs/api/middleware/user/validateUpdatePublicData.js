@@ -1,5 +1,16 @@
 const errorJson = require('../../../utils/error');
-const { validateUpdatePublicData } = require('../validators');
+const { firstNameValidator, lastNameValidator, bioValidator, onlineValidator } = require('../validators');
+const joi = require('joi');
+
+function validateUpdatePublicData(req) {
+    const schema = joi.object({
+        firstName: firstNameValidator.optional(),
+        lastName: lastNameValidator.optional(),
+        bio: bioValidator.optional(),
+        online: onlineValidator.optional(),
+    });
+    return schema.validate(req);
+}
 
 module.exports = async (req, res, next) => {
     const { error } = validateUpdatePublicData(req.body);

@@ -1,5 +1,17 @@
 const errorJson = require('../../../utils/error');
-const { validateRegister } = require('../validators');
+const { emailValidator, passwordValidator, mobileValidator, firstNameValidator, lastNameValidator } = require('../validators');
+const joi = require('joi');
+
+function validateRegister(req) {
+    const schema = joi.object({
+        email: emailValidator,
+        password: passwordValidator,
+        mobile: mobileValidator,
+        firstName: firstNameValidator,
+        lastName: lastNameValidator.optional(),
+    })
+    return schema.validate(req);
+}
 
 module.exports = async (req, res, next) => {
     const { error } = validateRegister(req.body);

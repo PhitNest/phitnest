@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth');
-const duplicateEmail = require('../middleware/auth/checkEmail');
-const duplicateMobile = require('../middleware/auth/checkMobile');
-const invalidLoginRequest = require('../middleware/auth/validateLogin');
-const invalidRegisterRequest = require('../middleware/auth/validateRegister');
+const { checkEmail, checkMobile, validateLogin, validateRegister } = require('../middleware/auth');
 
-router.post('/register', [invalidRegisterRequest, duplicateEmail, duplicateMobile], authController.register);
-router.post('/login', [invalidLoginRequest], authController.login);
+router.post('/register', [validateRegister, checkEmail, checkMobile], authController.register);
+router.post('/login', [validateLogin], authController.login);
 module.exports = router;
