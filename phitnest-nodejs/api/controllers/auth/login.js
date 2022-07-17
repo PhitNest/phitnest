@@ -30,12 +30,7 @@ module.exports = async (req, res) => {
     const authorization = await jwt.signAccessToken(user._id);
 
     try {
-        await userModel.updateOne(
-            { email: req.body.email.trim() },
-            {
-                $set:
-                    { lastLogin: Date.now() },
-            });
+        await userModel.findById(user._id).updateOne({ lastSeen: Date.now() });
     } catch (error) {
         return res
             .status(500)
