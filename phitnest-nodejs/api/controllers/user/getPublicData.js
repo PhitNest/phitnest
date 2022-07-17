@@ -6,18 +6,12 @@ require('dotenv').config();
 module.exports = async (req, res) => {
     var str = req.get('authorization');
     try {
-        let data = JWT.verify(str, process.env.JWT_SECRET);
+        JWT.verify(str, process.env.JWT_SECRET);
         let user = null;
 
         try {
             user = await userModel.findById(req.query.id);
         } catch (error) { }
-
-        if (!user) {
-            try {
-                user = await userModel.findById(data._id);
-            } catch (error) { }
-        }
 
         if (!user) {
             return res.status(500).json(errorJson('Invalid ID', 'The query contained an invalid user id.'));
