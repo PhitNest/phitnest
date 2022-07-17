@@ -29,7 +29,7 @@ const userSchema = mongoose.Schema({
     online: {
         type: Boolean, default: true
     },
-    lastLogin: {
+    lastSeen: {
         type: Date, required: true
     },
 

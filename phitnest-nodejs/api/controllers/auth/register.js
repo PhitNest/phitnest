@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
         password: await bcrypt.hash(req.body.password, 10),
         mobile: req.body.mobile.trim(),
         firstName: req.body.firstName.trim(),
-        lastLogin: Date.now(),
+        lastSeen: Date.now(),
     });
 
     if (req.body.lastName != undefined) {

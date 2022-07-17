@@ -4,8 +4,7 @@
     "description": "Phitnest Backend API",
     "main": "server.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node server.js"
+        "server": "nodemon server.js"
     },
     "repository": {
         "type": "git",
@@ -21,11 +20,11 @@
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.0",
         "express": "^4.17.1",
-        "express-async-errors": "^3.1.1",
         "joi": "^17.4.0",
         "joi-objectid": "^3.0.1",
         "mongoose": "^5.12.4",
         "morgan": "^1.10.0",
+        "nodemon": "^2.0.19",
         "rate-limiter-flexible": "^2.2.1"
     },
     "devDependencies": {
