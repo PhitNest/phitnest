@@ -1,12 +1,6 @@
 const joi = require('joi');
 joi.objectId = require('joi-objectid')(joi);
 
-
-
-
-
-
-
 const minEmailLength = 3;
 const maxEmailLength = 30;
 const emailValidator = joi.string().trim().email().min(minEmailLength).max(maxEmailLength).required();
@@ -15,9 +9,10 @@ const minPasswordLength = 6;
 const maxPasswordLength = 20;
 const passwordValidator = joi.string().min(minPasswordLength).max(maxPasswordLength).required();
 
+const mobileRegex = /(^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$)/;
 const minPhoneNumberLength = 1;
 const maxPhoneNumberLength = 16;
-const mobileValidator = joi.string().trim().pattern(/(^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$)/).min(minPhoneNumberLength).max(maxPhoneNumberLength).required();
+const mobileValidator = joi.string().trim().pattern(mobileRegex).min(minPhoneNumberLength).max(maxPhoneNumberLength).required();
 
 const minFirstNameLength = 2;
 const maxFirstNameLength = 16;
