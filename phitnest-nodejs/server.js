@@ -48,11 +48,11 @@ app.use((error, req, res, next) => {
 	res.status(error.status || 500);
 	if (res.status === 500) {
 		res.json({
-			resultMessage: { msg: error.messagge }
+			resultMessage: { msg: error.message }
 		})
 	} else if (error.status === 404) {
 		res.json({
-			resultMessage: { msg: error.messagge }
+			resultMessage: { msg: error.message }
 		})
 	} else {
 		res.json(errorJson(error.message, 'External Error'));
