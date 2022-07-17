@@ -5,7 +5,7 @@ module.exports = async (req, res, next) => {
     const hasEmail = await userModel.findOne({ email: req.body.email }).catch((err) => {
         return res
             .status(500)
-            .json(errorJson(err.message, 'An interval server error while finding user with email.'))
+            .json(errorJson(err.message, 'An internal server error while finding user with email.'))
     });
 
     if (hasEmail) {
