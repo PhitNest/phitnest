@@ -6,5 +6,6 @@ const duplicateMobile = require('../middleware/auth/checkMobile');
 
 router.post('/register', [duplicateEmail, duplicateMobile], userController.register);
 router.post('/login', userController.login);
-router.get('/data', userController.getUser);
+router.get('/fullData', userController.getFullData);
+router.get('/publicData', userController.getPublicData);
 module.exports = router;

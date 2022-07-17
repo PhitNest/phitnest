@@ -22,7 +22,7 @@ const mobileValidator = joi.string().trim().min(minPhoneNumberLength).max(maxPho
 const firstNameValidator = joi.string().trim().min(minFirstNameLength).max(maxFirstNameLength).required();
 const lastNameValidator = joi.string().trim().min(minLastNameLength).max(maxLastNameLength).required();
 
-function validateRegister(user) {
+function validateRegister(req) {
     const schema = joi.object({
         email: emailValidator,
         password: passwordValidator,
@@ -30,18 +30,18 @@ function validateRegister(user) {
         firstName: firstNameValidator,
         lastName: lastNameValidator,
     })
-    return schema.validate(user);
+    return schema.validate(req);
 }
 
-function validateUserLogin(user) {
+function validateLogin(req) {
     const schema = joi.object({
         email: emailValidator,
         password: passwordValidator,
     });
-    return schema.validate(user);
+    return schema.validate(req);
 }
 
 module.exports = {
     validateRegister: validateRegister,
-    validateUserLogin: validateUserLogin,
+    validateLogin: validateLogin,
 }

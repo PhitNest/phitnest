@@ -16,13 +16,22 @@ const userSchema = mongoose.Schema({
         type: String, required: true, trim: true
     },
     lastName: {
-        type: String, required: true, trim: true
+        type: String, trim: true
     },
     bio: {
-        type: String, required: true, trim: true
+        type: String, trim: true, default: ''
+    },
+    friends: {
+        type: Array, of: String, required: true, default: []
+    },
+    conversations: {
+        type: Array, of: String, required: true, default: []
+    },
+    online: {
+        type: Boolean, required: true, default: true
     },
     lastLogin: {
-        type: Date,
+        type: Date, required: true
     },
 
 }, { timestamps: true });
