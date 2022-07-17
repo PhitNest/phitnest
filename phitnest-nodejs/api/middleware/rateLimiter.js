@@ -3,24 +3,24 @@ const mongoose = require('mongoose');
 const errorJson = require('../../utils/error');
 require('dotenv').config();
 
-const mongoOpts = {
+const mongoOptions = {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false
 };
 
-const mongoConn = mongoose.createConnection(process.env.DB, mongoOpts);
+const mongoConnection = mongoose.createConnection(process.env.DB, mongoOptions);
 
-const opts = {
-    storeClient: mongoConn,
+const options = {
+    storeClient: mongoConnection,
     tableName: 'rateLimits',
     points: 200,
     duration: 60
 }
 
 module.exports = (req, res, next) => {
-    const rateLimiterMongo = new RateLimiterMongo(opts);
+    const rateLimiterMongo = new RateLimiterMongo(options);
     rateLimiterMongo.consume(req.ip)
         .then(() => {
             next();
