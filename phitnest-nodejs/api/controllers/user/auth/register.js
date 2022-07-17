@@ -8,7 +8,6 @@ module.exports = async (req, res) => {
     let errorObject = {}
     const { error } = validateRegister(req.body);
     if (error) {
-        console.log(error.details[0].message);
         if (error.details[0].message.includes('email'))
             errorObject = { msg: 'Please provide a valid email.' };
         else if (error.details[0].message.includes('password'))
