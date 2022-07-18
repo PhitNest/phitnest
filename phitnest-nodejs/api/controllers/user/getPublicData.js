@@ -6,6 +6,7 @@ module.exports = async (req, res) => {
         const user = await userModel.findById(req.query.id);
         if (user) {
             res.status(200).send([{
+                id: user._id,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 bio: user.bio,
