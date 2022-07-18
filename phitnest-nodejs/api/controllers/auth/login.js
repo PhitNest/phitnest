@@ -17,14 +17,14 @@ module.exports = async (req, res) => {
     if (!user) {
         return res
             .status(404)
-            .json(errorJson('404 Error', 'An account with this email address was not found.'));
+            .json(errorJson('Error', 'An account with this email address was not found.'));
     }
 
     const match = await bcrypt.compare(req.body.password, user.password);
     if (!match) {
         return res
             .status(400)
-            .json(errorJson('400 error', 'You have entered an invalid email or password.'));
+            .json(errorJson('Error', 'You have entered an invalid email or password.'));
     }
 
     const authorization = await jwt.signAccessToken(user._id);

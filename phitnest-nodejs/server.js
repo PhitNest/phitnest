@@ -1,23 +1,26 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const dotenv = require('dotenv');
-const mongoose = require('./api/middleware/db');
+const JWT = require('jsonwebtoken');
 const errorJson = require('./utils/error');
+const mongoose = require('./api/middleware/db');
 const rateLimiter = require('./api/middleware/rateLimiter');
-const Routes = require('./api/routes');
-const app = express();
-dotenv.config();
+const routes = require('./api/routes');
+const { Server } = require("socket.io");
+const http = require('http');
+require('dotenv').config();
 
-process.on('uncaughtException', (error) => {
+process.on('uncaughtException', error => {
 	console.log(error);
 });
 
-process.on('unhandledRejection', (ex) => {
-	console.log(ex);
+process.on('unhandledRejection', error => {
+	console.log(error);
 });
 
 const PORT = process.env.port || 3000;
+
+const app = express();
 
 app.use(morgan('dev'));
 app.use(rateLimiter);
@@ -25,12 +28,11 @@ app.use(rateLimiter);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set('trust proxy', true);
-mongoose.db();
 
 app.get('/', (req, res) => {
 	res.status(200).json({ resultMessage: 'Requests are working successfully...' });
 });
-app.use('/', Routes);
+app.use('/', routes);
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Headers',
@@ -41,7 +43,6 @@ app.use((req, res, next) => {
 		return res.status(200).json({});
 	}
 	next();
-
 });
 
 app.use((error, req, res, next) => {
@@ -60,4 +61,23 @@ app.use((error, req, res, next) => {
 	}
 });
 
-app.listen(PORT, () => console.log(`Server is running on ${PORT}`));
+const server = http.createServer(app);
+const io = new Server(server);
+mongoose.db();
+
+io.use((socket, next) => {
+	try {
+		const data = JWT.verify(socket.handshake.headers.auth, process.env.JWT_SECRET);
+		socket.data.userId = data._id;
+		next();
+	} catch (error) {
+		next(error);
+	}
+});
+
+const { registerListeners, registerEmitters } = require('./api/sockets');
+
+registerEmitters(io);
+io.on('connection', registerListeners);
+
+server.listen(PORT, () => console.log(`Server is running on ${PORT}`));
