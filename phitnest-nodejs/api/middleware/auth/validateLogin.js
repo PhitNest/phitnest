@@ -1,4 +1,3 @@
-const errorJson = require('../../../utils/error');
 const { emailValidator, passwordValidator } = require('../validators');
 const joi = require('joi');
 
@@ -26,7 +25,7 @@ module.exports = async (req, res, next) => {
 
         return res
             .status(400)
-            .json(errorJson('Invalid Request', errorMessage));
+            .send(errorMessage);
     }
 
     next();

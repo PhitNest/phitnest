@@ -1,5 +1,4 @@
 const { userModel } = require('../../models/user');
-const errorJson = require('../../../utils/error');
 
 module.exports = async (req, res) => {
     try {
@@ -14,5 +13,5 @@ module.exports = async (req, res) => {
         }
     } catch (error) { }
 
-    return res.status(500).json(errorJson('Invalid ID', 'The query contained an invalid user id.'));
+    return res.status(500).send('The query contained an invalid user id.');
 }

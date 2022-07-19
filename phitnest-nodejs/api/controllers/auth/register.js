@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('../../../utils/jwtHelper');
 const { userModel } = require('../../models/user');
-const errorJson = require('../../../utils/error');
 
 module.exports = async (req, res) => {
     let user = new userModel({
@@ -20,7 +19,7 @@ module.exports = async (req, res) => {
         user = await user.save()
     } catch (error) {
         return res
-            .status(500).json(errorJson(err.message, 'An internal server error while registering.'))
+            .status(500).send('An internal server error occurred while registering.');
     }
 
     const authorization = await jwt.signAccessToken(user._id);

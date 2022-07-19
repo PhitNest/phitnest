@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const JWT = require('jsonwebtoken');
-const errorJson = require('./utils/error');
 const mongoose = require('./api/middleware/db');
 const rateLimiter = require('./api/middleware/rateLimiter');
 const routes = require('./api/routes');
@@ -33,33 +32,6 @@ app.get('/', (req, res) => {
 	res.status(200).json({ resultMessage: 'Requests are working successfully...' });
 });
 app.use('/', routes);
-app.use((req, res, next) => {
-	res.header('Access-Control-Allow-Origin', '*');
-	res.header('Access-Control-Allow-Headers',
-		'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-	res.header('Content-Security-Policy-Report-Only', 'default-src: https:');
-	if (req.method === 'OPTIONS') {
-		res.header('Access-Control-Allow-Methods', 'PUT POST PATCH DELETE, GET');
-		return res.status(200).json({});
-	}
-	next();
-});
-
-app.use((error, req, res, next) => {
-	res.status(error.status || 500);
-	if (res.status === 500) {
-		res.json({
-			resultMessage: { msg: error.message }
-		})
-	} else if (error.status === 404) {
-		res.json({
-			resultMessage: { msg: error.message }
-		})
-	} else {
-		res.json(errorJson(error.message, 'External Error'));
-
-	}
-});
 
 const server = http.createServer(app);
 const io = new Server(server);
