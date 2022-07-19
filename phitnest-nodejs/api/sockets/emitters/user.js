@@ -1,10 +1,12 @@
 const { userModel } = require('../../models/user');
 
 module.exports = (io) => {
-    userModel.watch().on('change', async (doc) => {
+    userModel.watch([], {
+        fullDocument: 'updateLookup'
+    }).on('change', async (doc) => {
         const updates = doc.updateDescription.updatedFields;
         if (updates.firstName || updates.lastName || updates.bio || updates.online) {
-            const user = await userModel.findById(doc.documentKey._id);
+            const user = doc.fullDocument;
             if (user) {
                 io.emit(`publicInfoStream:${user._id}`, {
                     firstName: user.firstName,
