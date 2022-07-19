@@ -19,12 +19,6 @@ const userSchema = mongoose.Schema({
     bio: {
         type: String, trim: true, default: ''
     },
-    friends: {
-        type: Array, of: String, default: []
-    },
-    conversations: {
-        type: Array, of: String, default: []
-    },
     online: {
         type: Boolean, default: true
     },

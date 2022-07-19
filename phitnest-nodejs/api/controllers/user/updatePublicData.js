@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
         if (req.body.online != undefined) {
             req.body.lastSeen = Date.now();
         }
-        await userModel.findById(res.locals.jwtData._id).updateOne(req.body);
+        await userModel.findById(res.locals.uid).updateOne(req.body);
     } catch (error) {
         return res
             .status(500)
