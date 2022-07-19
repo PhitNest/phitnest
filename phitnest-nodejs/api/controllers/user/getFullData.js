@@ -4,7 +4,7 @@ module.exports = async (req, res) => {
     try {
         const user = await userModel.findById(res.locals.uid)
         if (user) {
-            res.status(200).json({
+            return res.status(200).json({
                 email: user.email,
                 mobile: user.mobile,
                 firstName: user.firstName,

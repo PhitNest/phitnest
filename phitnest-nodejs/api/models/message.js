@@ -13,6 +13,9 @@ const messageSchema = mongoose.Schema({
     readBy: {
         type: Map, of: Boolean, default: {}
     },
+    archived: {
+        type: Boolean, default: false
+    }
 }, { timestamps: true });
 
 const messageModel = mongoose.model('Message', messageSchema);

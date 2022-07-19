@@ -3,8 +3,9 @@ const { conversationModel } = require('../../models/conversation');
 module.exports = async (req, res, next) => {
     try {
         const conversation = await conversationModel.findOne({
-            "participants": { "$size": 2, "$all": [req.body.otherUser, res.locals.uid] }
-        });
+            participants: { "$size": 2, "$all": [req.body.otherUser, res.locals.uid] }, archived: false
+        }
+        );
         if (!conversation) {
             return next();
         } else {
