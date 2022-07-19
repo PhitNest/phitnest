@@ -1,6 +1,5 @@
 const { RateLimiterMongo } = require('rate-limiter-flexible');
 const mongoose = require('mongoose');
-const errorJson = require('../../utils/error');
 require('dotenv').config();
 
 const mongoOptions = {
@@ -26,6 +25,6 @@ module.exports = (req, res, next) => {
             next();
         })
         .catch((err) => {
-            res.status(429).json(errorJson(err.message, 'Too many request.'));
+            res.status(429).send('Too many request.');
         });
 };

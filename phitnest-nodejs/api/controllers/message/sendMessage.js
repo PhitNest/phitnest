@@ -1,5 +1,4 @@
 const { messageModel } = require('../../models/message');
-const errorJson = require('../../../utils/error');
 
 module.exports = async (req, res) => {
     let message = new messageModel({
@@ -15,6 +14,6 @@ module.exports = async (req, res) => {
         });
     } catch (error) {
         return res
-            .status(500).json(errorJson(error, 'An internal server error while registering.'))
+            .status(500).send('An internal server error while sending message.');
     }
 };

@@ -1,5 +1,4 @@
 const { conversationModel } = require('../../models/conversation');
-const errorJson = require('../../../utils/error');
 const { messageValidator } = require('../validators');
 const joi = require('joi');
 
@@ -27,7 +26,7 @@ module.exports = async (req, res, next) => {
 
         return res
             .status(400)
-            .json(errorJson('Invalid Request', errorMessage));
+            .send(errorMessage);
     }
 
     try {
@@ -36,5 +35,5 @@ module.exports = async (req, res, next) => {
             return next();
         }
     } catch (error) { }
-    return res.status(500).json(errorJson('Invalid ID', 'The query contained an invalid conversation id.'));
+    return res.status(500).send('The query contained an invalid conversation id.');
 };

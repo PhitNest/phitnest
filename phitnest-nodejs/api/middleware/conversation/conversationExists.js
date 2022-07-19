@@ -1,5 +1,4 @@
 const { conversationModel } = require('../../models/conversation');
-const errorJson = require('../../../utils/error');
 
 module.exports = async (req, res, next) => {
     try {
@@ -14,5 +13,5 @@ module.exports = async (req, res, next) => {
             });
         }
     } catch (error) { }
-    return res.status(500).json(errorJson('Internal error', 'Error finding conversation'));
+    return res.status(500).send('Error finding conversation');
 };

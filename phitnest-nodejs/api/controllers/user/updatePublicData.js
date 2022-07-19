@@ -1,5 +1,4 @@
 const { userModel } = require('../../models/user');
-const errorJson = require('../../../utils/error');
 
 module.exports = async (req, res) => {
     try {
@@ -10,11 +9,7 @@ module.exports = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .json(
-                errorJson(
-                    err,
-                    'An internal server error occurred.')
-            );
+            .send('An internal server error occurred.');
     }
 
     res.status(200).send('Success');

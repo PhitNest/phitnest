@@ -1,5 +1,4 @@
 const { userModel } = require('../../models/user');
-const errorJson = require('../../../utils/error');
 
 module.exports = async (req, res) => {
     try {
@@ -15,5 +14,5 @@ module.exports = async (req, res) => {
             });
         }
     } catch (e) { }
-    return res.status(500).json(errorJson(e, 'An error occurred while getting your information, please try again.'))
+    return res.status(500).send('An error occurred while getting your information, please try again.');
 }
