@@ -8,10 +8,10 @@ module.exports = (io) => {
     }], {
         fullDocument: 'updateLookup'
     }).on('change', async (doc) => {
-        const message = doc.fullDocument;
-        io.emit(`conversationStream:${message.conversation}`, {
-            message: message.message,
-            sender: message.sender,
+        io.emit(`conversationStream:${doc.fullDocument.conversation}`, {
+            id: doc.documentKey._id,
+            message: doc.fullDocument.message,
+            sender: doc.fullDocument.sender,
         });
     });
 }
