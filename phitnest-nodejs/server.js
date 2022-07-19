@@ -49,7 +49,10 @@ io.use((socket, next) => {
 
 const { registerListeners, registerEmitters } = require('./api/sockets');
 
-registerEmitters(io);
-io.on('connection', registerListeners);
+registerEmitters.broadcasts(io);
+io.on('connection', socket => {
+	registerEmitters.socket(socket);
+	registerListeners(socket);
+});
 
 server.listen(PORT, () => console.log(`Server is running on ${PORT}`));
