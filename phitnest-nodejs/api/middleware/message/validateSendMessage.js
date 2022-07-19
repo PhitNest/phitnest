@@ -1,4 +1,3 @@
-const { conversationModel } = require('../../models/conversation');
 const { messageValidator } = require('../validators');
 const joi = require('joi');
 
@@ -28,12 +27,5 @@ module.exports = async (req, res, next) => {
             .status(400)
             .send(errorMessage);
     }
-
-    try {
-        const conversation = await conversationModel.findById(req.body.conversation);
-        if (conversation) {
-            return next();
-        }
-    } catch (error) { }
     return res.status(500).send('The query contained an invalid conversation id.');
 };
