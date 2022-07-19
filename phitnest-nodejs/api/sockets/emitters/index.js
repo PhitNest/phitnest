@@ -1,7 +1,7 @@
-const userEmitter = require('./user');
-const messageEmitter = require('./message');
+const sockets = require('./socket')
+const broadcasts = require('./broadcasts');
 
-module.exports = (io) => {
-    userEmitter(io);
-    messageEmitter(io);
+module.exports = {
+    broadcasts: broadcasts,
+    socket: sockets,
 }
