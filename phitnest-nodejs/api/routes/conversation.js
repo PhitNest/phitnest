@@ -5,5 +5,6 @@ const { validateCreateConversation, conversationExists } = require('../middlewar
 
 router.post('/create', [validateCreateConversation, conversationExists], conversationController.createConversation);
 router.get('/list', conversationController.listConversations);
+router.get('/recents', conversationController.listRecentMessages);
 router.delete('/delete', conversationController.deleteConversation);
 module.exports = router;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../apis/api.dart';
+import '../../../../apis/auth_api.dart';
 import '../../screen_model.dart';
 import '../../screen_view.dart';
 import '../redirector_provider.dart';
@@ -16,6 +16,5 @@ abstract class PreAuthenticationProvider<T extends ScreenModel,
 
   /// Redirect the user to the home route if they are authenticated.
   @override
-  Future<bool> get shouldRedirect async =>
-      await api<AuthenticationApi>().getAuthenticatedUid() != null;
+  Future<bool> get shouldRedirect => AuthApi.instance.isAuthenticated();
 }

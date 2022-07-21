@@ -4,12 +4,7 @@ module.exports = async (req, res) => {
     try {
         const user = await userModel.findById(req.query.id);
         if (user) {
-            return res.status(200).json({
-                firstName: user.firstName,
-                lastName: user.lastName,
-                bio: user.bio,
-                online: user.online,
-            });
+            return res.status(200).json(user);
         }
     } catch (error) { }
 

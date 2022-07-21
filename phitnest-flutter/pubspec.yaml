@@ -30,6 +30,7 @@ dependencies:
   flutter_native_splash: ^2.1.6
   liquid_swipe: ^2.1.1
   cached_network_image: ^3.2.1
+  jwt_decode: ^0.3.1
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1
   integration_test:

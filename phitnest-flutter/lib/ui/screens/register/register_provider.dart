@@ -1,13 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:device/device.dart';
 import 'package:validation/validation.dart';
 
-import '../../../apis/api.dart';
-import '../../../models/models.dart';
+import '../../../apis/apis.dart';
 import '../../common/widgets/widgets.dart';
 import '../screens.dart';
 import 'register_view.dart';
@@ -80,20 +78,12 @@ class RegisterProvider
   Future<String?> register(RegisterModel model) async {
     if (model.formKey.currentState?.validate() ?? false) {
       model.formKey.currentState!.save();
-      Position? position = await getCurrentLocation();
-      return await api<AuthenticationApi>().registerWithEmailAndPassword(
-          emailAddress: model.emailController.text.trim(),
-          password: model.passwordController.text.trim(),
-          firstName: model.firstNameController.text.trim(),
-          lastName: model.lastNameController.text.trim(),
-          mobile: model.mobileController.text.trim(),
-          birthday: model.dateOfBirthController.date,
-          ip: await userIP,
-          profilePicture: model.image,
-          locationData: position == null
-              ? null
-              : Location(
-                  latitude: position.latitude, longitude: position.longitude));
+      return await AuthApi.instance.register(
+          model.emailController.text.trim(),
+          model.passwordController.text.trim(),
+          model.mobileController.text.trim(),
+          model.firstNameController.text.trim(),
+          model.lastNameController.text.trim());
     }
     model.validate = AutovalidateMode.onUserInteraction;
     return 'Invalid input';

@@ -3,21 +3,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../models/models.dart';
-import '../../screens.dart';
+import '../../screen_model.dart';
 import '../views/home_view.dart';
 
 export 'chatHome/chat_home_model.dart';
 export 'profile/profile_model.dart';
 
 /// This is the view model for the home view.
-class HomeModel extends AuthenticatedModel {
+class HomeModel extends ScreenModel {
   final PageController pageController = PageController();
 
-  StreamSubscription<AuthenticatedUser>? userListener;
+  StreamSubscription<UserPublicInfo>? infoListener;
+  UserPublicInfo? currentUser;
 
-  StreamSubscription<List<ChatCard>>? chatCardListener;
   List<ChatCard> _messageCards = [];
-
   List<ChatCard> get messageCards => _messageCards;
 
   set messageCards(List<ChatCard> messageCards) {
@@ -27,8 +26,7 @@ class HomeModel extends AuthenticatedModel {
 
   @override
   void dispose() {
-    userListener?.cancel();
-    chatCardListener?.cancel();
+    infoListener?.cancel();
     super.dispose();
   }
 }

@@ -1,28 +1,14 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
-import '../../../models/models.dart';
-import '../screens.dart';
+import '../screen_model.dart';
 import 'chatBubble/message_bubble.dart';
 
-class ChatMessagingModel extends AuthenticatedModel {
+class ChatMessagingModel extends ScreenModel {
+  String? chatName;
   TextEditingController messageController = TextEditingController();
   FocusNode messageFocus = FocusNode();
 
   ScrollController scrollController = ScrollController();
-
-  StreamSubscription<UserPublicInfo?>? userStream;
-  UserPublicInfo? _otherUser;
-
-  UserPublicInfo? get otherUser => _otherUser;
-
-  set otherUser(UserPublicInfo? otherUser) {
-    _otherUser = otherUser;
-    notifyListeners();
-  }
-
-  StreamSubscription<List<MessageBubble>>? messageStream;
 
   List<MessageBubble> _messageBubbles = [];
   List<MessageBubble> get messageBubbles => _messageBubbles;
@@ -32,10 +18,8 @@ class ChatMessagingModel extends AuthenticatedModel {
     notifyListeners();
   }
 
-  @override
-  void dispose() {
-    messageStream?.cancel();
-    userStream?.cancel();
-    super.dispose();
+  addMessageBubble(MessageBubble messageBubble) {
+    _messageBubbles.insert(0, messageBubble);
+    notifyListeners();
   }
 }

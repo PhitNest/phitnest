@@ -12,7 +12,7 @@ export 'profileView/profile_view.dart';
 class HomeView extends ScreenView {
   final PageController pageController;
   final List<ChatCard> messageCards;
-  final AuthenticatedUser currentUser;
+  final UserPublicInfo? currentUser;
 
   const HomeView({
     Key? key,
@@ -26,7 +26,7 @@ class HomeView extends ScreenView {
         body: PageView(
           controller: pageController,
           children: [
-            ProfileProvider(user: currentUser),
+            ProfileProvider(user: currentUser!),
             ChatHomeProvider(messageCards: messageCards),
           ],
         ),

@@ -6,13 +6,7 @@ module.exports = async (req, res) => {
             { participants: res.locals.uid, archived: false }
         ).limit(parseInt(req.query.limit));
         if (conversations) {
-            return res.status(200).json(
-                conversations.map((conversation) => {
-                    return {
-                        id: conversation._id,
-                        participants: conversation.participants,
-                    }
-                }));
+            return res.status(200).json(conversations);
         }
     } catch (error) { }
 

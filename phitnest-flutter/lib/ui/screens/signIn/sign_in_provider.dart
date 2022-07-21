@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:device/device.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 
-import '../../../apis/api.dart';
-import '../../../models/models.dart';
+import '../../../apis/apis.dart';
 import '../screens.dart';
 import 'sign_in_model.dart';
 import 'sign_in_view.dart';
@@ -50,18 +47,8 @@ class SignInProvider
     if (model.formKey.currentState?.validate() ?? false) {
       // Saves state to all of the text controllers
       model.formKey.currentState!.save();
-      Position? position = await getCurrentLocation();
-      Location? location = position == null
-          ? null
-          : Location(
-              latitude: position.latitude, longitude: position.longitude);
-      // Login with email/password
-      return await api<AuthenticationApi>().signInWithEmailAndPassword(
-        email: model.emailController.text.trim(),
-        password: model.passwordController.text.trim(),
-        locationData: location,
-        ip: await userIP,
-      );
+      return await AuthApi.instance.login(model.emailController.text.trim(),
+          model.passwordController.text.trim());
     }
     model.validate = AutovalidateMode.onUserInteraction;
     return 'Invalid input';
