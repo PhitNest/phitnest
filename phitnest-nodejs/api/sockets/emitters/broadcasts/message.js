@@ -9,7 +9,7 @@ module.exports = (io) => {
         fullDocument: 'updateLookup'
     }).on('change', async (doc) => {
         io.to(doc.fullDocument.conversation).emit('receiveMessage', {
-            id: doc.documentKey._id,
+            _id: doc.documentKey._id,
             conversation: doc.fullDocument.conversation,
             message: doc.fullDocument.message,
             sender: doc.fullDocument.sender,

@@ -11,7 +11,7 @@ module.exports = (socket) => {
     }).on('change', async (doc) => {
         socket.join(doc.documentKey._id);
         socket.emit('addedToConversation', {
-            id: doc.documentKey._id,
+            _id: doc.documentKey._id,
         });
     });
 }

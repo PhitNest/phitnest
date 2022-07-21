@@ -19,6 +19,7 @@ module.exports = (io) => {
         fullDocument: 'updateLookup'
     }).on('change', async (doc) => {
         io.emit(`publicInfoStream:${doc.documentKey._id}`, {
+            _id: doc.documentKey._id,
             firstName: doc.fullDocument.firstName,
             lastName: doc.fullDocument.lastName,
             bio: doc.fullDocument.bio,

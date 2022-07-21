@@ -20,8 +20,6 @@ class RegisterModel extends ScreenModel {
   /// Form key
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  String? mobile;
-
   /// Local images file for profile picture
   File? _image;
 

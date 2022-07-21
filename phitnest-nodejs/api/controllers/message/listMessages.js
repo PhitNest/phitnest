@@ -6,16 +6,7 @@ module.exports = async (req, res) => {
             { conversation: req.query.conversation, archived: false })
             .sort({ createdAt: (req.query.descending ? -1 : 1) }).limit(parseInt(req.query.limit));
         if (messages) {
-            return res.status(200).json(
-                messages.map((message) => {
-                    return {
-                        id: message._id,
-                        sender: message.sender,
-                        message: message.message,
-                        sentAt: message.createdAt,
-                        readBy: message.readBy,
-                    }
-                }));
+            return res.status(200).json(messages);
         }
     } catch (error) { }
 
