@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('../../../utils/jwtHelper');
 const { userModel } = require('../../models/user');
-const errorJson = require('../../../utils/error');
 
 module.exports = async (req, res) => {
     let user = null;
@@ -11,20 +10,20 @@ module.exports = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .json(errorJson(err, 'An internal server error occurred, please try again.'));
+            .send('An internal server error occurred, please try again.');
     }
 
     if (!user) {
         return res
             .status(404)
-            .json(errorJson('404 Error', 'An account with this email address was not found.'));
+            .send('An account with this email address was not found.');
     }
 
     const match = await bcrypt.compare(req.body.password, user.password);
     if (!match) {
         return res
             .status(400)
-            .json(errorJson('400 error', 'You have entered an invalid email or password.'));
+            .send('You have entered an invalid email or password.');
     }
 
     const authorization = await jwt.signAccessToken(user._id);
@@ -34,11 +33,8 @@ module.exports = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .json(
-                errorJson(
-                    err,
-                    'An internal server error occurred.')
-            );
+            .send(
+                'An internal server error occurred.');
     };
 
     return res.status(200).send(authorization);

@@ -13,6 +13,8 @@ const minLastNameLength = 0;
 const maxLastNameLength = 16;
 const minBioLength = 0;
 const maxBioLength = 64;
+const minMessageLength = 1;
+const maxMessageLength = 64;
 
 module.exports = {
     emailValidator: joi.string().trim().email().min(minEmailLength).max(maxEmailLength).required(),
@@ -22,4 +24,5 @@ module.exports = {
     lastNameValidator: joi.string().trim().min(minLastNameLength).max(maxLastNameLength).required(),
     bioValidator: joi.string().trim().min(minBioLength).max(maxBioLength).required(),
     onlineValidator: joi.bool().required(),
+    messageValidator: joi.string().trim().min(minMessageLength).max(maxMessageLength).required(),
 }

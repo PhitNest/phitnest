@@ -6,6 +6,7 @@ module.exports = async (req, res, next) => {
     try {
         const data = JWT.verify(str, process.env.JWT_SECRET);
         res.locals.jwtData = data;
+        res.locals.uid = data._id;
         next();
     } catch (error) {
         res.status(401);

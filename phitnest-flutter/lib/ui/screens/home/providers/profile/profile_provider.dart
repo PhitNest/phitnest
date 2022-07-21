@@ -6,7 +6,7 @@ import '../../models/home_model.dart';
 import '../../views/home_view.dart';
 
 class ProfileProvider extends ScreenProvider<ProfileModel, ProfileView> {
-  final AuthenticatedUser user;
+  final UserPublicInfo? user;
 
   const ProfileProvider({
     Key? key,
@@ -15,10 +15,9 @@ class ProfileProvider extends ScreenProvider<ProfileModel, ProfileView> {
 
   @override
   ProfileView build(BuildContext context, ProfileModel model) => ProfileView(
-        firstName: user.firstName,
-        lastName: user.lastName,
-        bio: user.bio,
-        profilePictureUrl: user.profilePictureUrl,
+        firstName: user?.firstName ?? '',
+        lastName: user?.lastName ?? '',
+        bio: user?.bio ?? '',
       );
 
   @override

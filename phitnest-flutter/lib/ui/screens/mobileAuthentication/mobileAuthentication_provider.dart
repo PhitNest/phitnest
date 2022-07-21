@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:progress_widgets/progress_widgets.dart';
 import 'package:validation/validation.dart';
 
-import '../../../apis/api.dart';
 import '../../common/widgets/widgets.dart';
 import '../screens.dart';
 import 'mobileAuthentication_model.dart';
@@ -40,8 +39,7 @@ class MobileAuthenticationProvider extends PreAuthenticationProvider<
   Future<String?> sendText(MobileAuthenticationModel model) async {
     if (model.formKey.currentState?.validate() ?? false) {
       model.formKey.currentState!.save();
-      return await api<AuthenticationApi>()
-          .sendMobileAuthRequest(model.phoneNumberController.text.trim());
+      // Send mobile auth
     }
     model.validate = AutovalidateMode.onUserInteraction;
     return 'Invalid Input';

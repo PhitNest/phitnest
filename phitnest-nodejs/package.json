@@ -25,7 +25,8 @@
         "mongoose": "^5.12.4",
         "morgan": "^1.10.0",
         "nodemon": "^2.0.19",
-        "rate-limiter-flexible": "^2.2.1"
+        "rate-limiter-flexible": "^2.2.1",
+        "socket.io": "^4.5.1"
     },
     "devDependencies": {
         "axios": "^0.24.0",

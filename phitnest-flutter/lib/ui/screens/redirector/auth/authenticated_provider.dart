@@ -1,30 +1,14 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
-import 'package:phitnest/ui/screens/redirector/auth/authenticated_model.dart';
 
-import '../../../../apis/api.dart';
-import '../../../../models/models.dart';
+import '../../../../apis/apis.dart';
+import '../../screen_model.dart';
 import '../../screen_view.dart';
-import '../redirector_provider.dart';
+import '../redirector.dart';
 
 /// This is a provider that will redirect if the user is not authenticated.
-abstract class AuthenticatedProvider<T extends AuthenticatedModel,
+abstract class AuthenticatedProvider<T extends ScreenModel,
     K extends ScreenView> extends RedirectorProvider<T, K> {
   const AuthenticatedProvider({Key? key}) : super(key: key);
-
-  @override
-  Future<bool> init(BuildContext context, T model) async {
-    if (!await super.init(context, model)) {
-      return false;
-    }
-    AuthenticatedUser? user = await api<SocialApi>().refreshSignedInUser();
-    if (user == null) {
-      return false;
-    }
-    model.currentUser = user;
-    return true;
-  }
 
   /// Redirected unauthenticated users to the screen route.
   @override
@@ -33,5 +17,5 @@ abstract class AuthenticatedProvider<T extends AuthenticatedModel,
   /// Redirect the user to the screen route if they are not authenticated.
   @override
   Future<bool> get shouldRedirect async =>
-      await api<AuthenticationApi>().getAuthenticatedUid() == null;
+      !await AuthApi.instance.isAuthenticated();
 }

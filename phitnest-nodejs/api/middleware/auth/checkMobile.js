@@ -1,4 +1,3 @@
-const errorJson = require('../../../utils/error');
 const { userModel } = require('../../models/user');
 
 module.exports = async (req, res, next) => {
@@ -8,13 +7,13 @@ module.exports = async (req, res, next) => {
     } catch (err) {
         return res
             .status(500)
-            .json(errorJson(err.message, 'An internal server error while finding user with mobile.'))
+            .send('An internal server error while finding user with mobile.');
     };
 
     if (hasMobile) {
         return res
             .status(409)
-            .json(errorJson('Duplicate Mobile Number', 'An account with this mobile number already exists.'));
+            .send('An account with this mobile number already exists.');
     }
 
     next();
