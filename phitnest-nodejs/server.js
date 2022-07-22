@@ -39,7 +39,7 @@ mongoose.db();
 
 io.use((socket, next) => {
 	try {
-		const data = JWT.verify(socket.handshake.headers.auth, process.env.JWT_SECRET);
+		const data = JWT.verify(socket.handshake.headers.authorization, process.env.JWT_SECRET);
 		socket.data.userId = data._id;
 		next();
 	} catch (error) {

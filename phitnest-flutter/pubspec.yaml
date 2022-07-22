@@ -8,16 +8,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^1.4.0
-  firebase_auth: ^3.0.1
-  cloud_firestore: ^3.1.13
-  firebase_storage: ^10.0.1
   provider: ^6.0.2
   intl: ^0.17.0
   http: ^0.13.3
-  geolocator: ^8.2.0
-  firebase_messaging: ^11.2.15
-  firebase_messaging: ^11.2.13
   intl_phone_number_input: ^0.7.0+2
   easy_localization: ^3.0.0
   device:
@@ -31,6 +24,7 @@ dependencies:
   liquid_swipe: ^2.1.1
   cached_network_image: ^3.2.1
   jwt_decode: ^0.3.1
+  socket_io_client: ^2.0.0
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1
   integration_test:

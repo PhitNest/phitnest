@@ -27,5 +27,5 @@ module.exports = async (req, res, next) => {
             .status(400)
             .send(errorMessage);
     }
-    return res.status(500).send('The query contained an invalid conversation id.');
+    next();
 };
