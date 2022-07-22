@@ -13,7 +13,8 @@ module.exports = (io) => {
             conversation: doc.fullDocument.conversation,
             message: doc.fullDocument.message,
             sender: doc.fullDocument.sender,
-            sentAt: doc.fullDocument.createdAt,
+            readBy: doc.fullDocument.readBy,
+            createdAt: doc.fullDocument.createdAt,
         });
     });
 

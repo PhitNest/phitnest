@@ -6,7 +6,7 @@ class Conversation {
 
   factory Conversation.fromJson(Map<String, dynamic> json) => Conversation(
         json['_id'],
-        participants: json['participants'],
+        participants: (json['participants'] as List<dynamic>).cast<String>(),
       );
 
   bool get isGroup => participants.length > 2;

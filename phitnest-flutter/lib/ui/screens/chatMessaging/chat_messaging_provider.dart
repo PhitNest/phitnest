@@ -28,6 +28,12 @@ class ChatMessagingProvider
                 : ReceivedMessageBubble(message: message.message))
             .toList();
 
+    model.messageBubbleListener = await StreamApi.instance
+        .streamMessages(conversation.conversationId)
+        .where((message) => message.sender != AuthApi.instance.userId)
+        .map((message) => ReceivedMessageBubble(message: message.message))
+        .listen((messageBubble) => model.addMessageBubble(messageBubble));
+
     return true;
   }
 

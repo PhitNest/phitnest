@@ -8,8 +8,10 @@ module.exports = async (req, res) => {
             {
                 $lookup: {
                     from: "messages",
-                    localField: "_id",
-                    foreignField: "conversation",
+                    let: { conversationId: { $toObjectId: "$conversation" } },
+                    pipeline: [
+                        { $match: { $expr: [{ "_id": "$$conversationId" }] } },
+                    ],
                     as: "recentMessage"
                 }
             },
@@ -40,8 +42,7 @@ module.exports = async (req, res) => {
         if (messages) {
             return res.status(200).json(messages);
         }
-    } catch (error) {
-    }
+    } catch (error) { }
 
     return res.status(500).send('This query failed');
 }
