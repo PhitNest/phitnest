@@ -20,7 +20,24 @@ module.exports = (io) => {
 
     messageModel.watch([{
         $match: {
-            operationType: 'update',
+            operationType: 'delete',
+        }
+    }], {
+        fullDocument: 'updateLookup'
+    }).on('change', async (doc) => {
+        io.to(doc.fullDocument.conversation).emit(`deleteMessage:${doc.documentKey._id}`);
+    });
+
+    messageModel.watch([{
+        $match: {
+            $and: [{ operationType: 'update', },
+            {
+                $or: [
+                    { 'updateDescription.updatedFields.message': { $exists: true } },
+                    { 'updateDescription.updatedFields.archived': { $exists: true } },
+                    { 'updateDescription.updatedFields.readBy': { $exists: true } },
+                ]
+            }]
         }
     }], {
         fullDocument: 'updateLookup'

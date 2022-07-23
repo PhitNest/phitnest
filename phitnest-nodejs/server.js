@@ -37,6 +37,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 mongoose.db();
 
+
 io.use((socket, next) => {
 	try {
 		const data = JWT.verify(socket.handshake.headers.authorization, process.env.JWT_SECRET);
