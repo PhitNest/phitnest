@@ -21,6 +21,8 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
       return false;
     }
 
+    StreamApi.instance.refreshWebSocket();
+
     model.currentUser =
         await DatabaseApi.instance.getPublicInfo(AuthApi.instance.userId!);
 

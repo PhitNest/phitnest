@@ -28,6 +28,12 @@ class ChatMessagingProvider
                 : ReceivedMessageBubble(message: message.message))
             .toList();
 
+    model.messageBubbleListener = await StreamApi.instance
+        .streamMessages(conversation.conversationId)
+        .where((message) => message.sender != AuthApi.instance.userId)
+        .map((message) => ReceivedMessageBubble(message: message.message))
+        .listen((messageBubble) => model.addMessageBubble(messageBubble));
+
     return true;
   }
 
@@ -36,8 +42,7 @@ class ChatMessagingProvider
     if (validateChatMessage(message) == null) {
       model.messageController.clear();
       model.scrollController.jumpTo(0);
-      await DatabaseApi.instance
-          .sendMessage(conversation.conversationId, message!);
+      StreamApi.instance.sendMessage(conversation.conversationId, message!);
       model.addMessageBubble(SentMessageBubble(message: message));
     }
   }

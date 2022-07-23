@@ -13,13 +13,31 @@ module.exports = (io) => {
             conversation: doc.fullDocument.conversation,
             message: doc.fullDocument.message,
             sender: doc.fullDocument.sender,
-            sentAt: doc.fullDocument.createdAt,
+            readBy: doc.fullDocument.readBy,
+            createdAt: doc.fullDocument.createdAt,
         });
     });
 
     messageModel.watch([{
         $match: {
-            operationType: 'update',
+            operationType: 'delete',
+        }
+    }], {
+        fullDocument: 'updateLookup'
+    }).on('change', async (doc) => {
+        io.to(doc.fullDocument.conversation).emit(`deleteMessage:${doc.documentKey._id}`);
+    });
+
+    messageModel.watch([{
+        $match: {
+            $and: [{ operationType: 'update', },
+            {
+                $or: [
+                    { 'updateDescription.updatedFields.message': { $exists: true } },
+                    { 'updateDescription.updatedFields.archived': { $exists: true } },
+                    { 'updateDescription.updatedFields.readBy': { $exists: true } },
+                ]
+            }]
         }
     }], {
         fullDocument: 'updateLookup'

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../screen_model.dart';
@@ -10,6 +12,7 @@ class ChatMessagingModel extends ScreenModel {
 
   ScrollController scrollController = ScrollController();
 
+  StreamSubscription<MessageBubble>? messageBubbleListener;
   List<MessageBubble> _messageBubbles = [];
   List<MessageBubble> get messageBubbles => _messageBubbles;
 
@@ -21,5 +24,11 @@ class ChatMessagingModel extends ScreenModel {
   addMessageBubble(MessageBubble messageBubble) {
     _messageBubbles.insert(0, messageBubble);
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    messageBubbleListener?.cancel();
+    super.dispose();
   }
 }

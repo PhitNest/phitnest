@@ -11,12 +11,13 @@ class ChatMessage {
       required this.readBy,
       required this.sentAt});
 
-  factory ChatMessage.fromJson(Map<String, dynamic> parsedJson) =>
-      ChatMessage(parsedJson['_id'],
-          sender: parsedJson['sender'],
-          message: parsedJson['message'],
-          readBy: parsedJson['readBy'],
-          sentAt: parsedJson['sentAt']);
+  factory ChatMessage.fromJson(Map<String, dynamic> parsedJson) => ChatMessage(
+      parsedJson['_id'],
+      sender: parsedJson['sender'],
+      message: parsedJson['message'],
+      readBy:
+          (parsedJson['readBy'] as Map<String, dynamic>).cast<String, bool>(),
+      sentAt: DateTime.parse(parsedJson['createdAt']));
 
   /// Returns < 0 if this is newer
   /// Returns 0 if [other] occurred at the same time.

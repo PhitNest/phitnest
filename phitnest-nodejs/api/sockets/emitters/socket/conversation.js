@@ -9,7 +9,7 @@ module.exports = (socket) => {
     }], {
         fullDocument: 'updateLookup'
     }).on('change', async (doc) => {
-        socket.join(doc.documentKey._id);
+        socket.join(doc.documentKey._id.toString());
         socket.emit('addedToConversation', {
             _id: doc.documentKey._id,
         });
