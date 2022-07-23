@@ -42,8 +42,7 @@ class ChatMessagingProvider
     if (validateChatMessage(message) == null) {
       model.messageController.clear();
       model.scrollController.jumpTo(0);
-      await DatabaseApi.instance
-          .sendMessage(conversation.conversationId, message!);
+      StreamApi.instance.sendMessage(conversation.conversationId, message!);
       model.addMessageBubble(SentMessageBubble(message: message));
     }
   }
