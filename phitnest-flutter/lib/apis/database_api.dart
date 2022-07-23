@@ -114,19 +114,4 @@ class DatabaseApi {
           throw HttpException(res.body);
         }
       });
-
-  /// Send a chat message to a conversation
-  Future<String> sendMessage(String conversationId, String message) =>
-      http.post(Uri.parse('$kBackEndUrl/message/send'),
-          headers: AuthApi.instance.requestHeaders,
-          body: {
-            'conversation': conversationId,
-            'message': message,
-          }).then((res) {
-        if (res.statusCode == 200) {
-          return jsonDecode(res.body)['id'];
-        } else {
-          throw HttpException(res.body);
-        }
-      });
 }

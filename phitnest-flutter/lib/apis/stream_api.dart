@@ -42,4 +42,16 @@ class StreamApi {
     }
     return broadcastIncomingMessages!;
   }
+
+  /// Send a chat message to a conversation
+  void sendMessage(String conversationId, String message) {
+    if (socket?.connected ?? false) {
+      socket!.emit('sendMessage', {
+        "conversation": conversationId,
+        "message": message,
+      });
+    } else {
+      throw WebSocketException('Web socket is not yet open');
+    }
+  }
 }
