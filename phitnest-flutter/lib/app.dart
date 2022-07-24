@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'constants/constants.dart';
 import 'models/models.dart';
+import 'ui/screens/profileView/profile_view_provider.dart';
 import 'ui/screens/screens.dart';
 
 class App extends StatelessWidget with WidgetsBindingObserver {
@@ -63,6 +64,8 @@ class App extends StatelessWidget with WidgetsBindingObserver {
                   conversation: settings.arguments as Conversation));
             case '/editProfile':
               return generateRoute(ProfileEditProvider());
+            case '/viewProfile':
+              return generateRoute(ProfileViewProvider());
             default:
               return generateRoute(OnBoardingProvider());
           }

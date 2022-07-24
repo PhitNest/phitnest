@@ -4,13 +4,15 @@ import '../../../../common/textStyles/text_styles.dart';
 import '../../../../common/widgets/widgets.dart';
 import '../../../screen_view.dart';
 
-class ProfileView extends ScreenView {
+class ProfileEdit extends ScreenView {
+  final String profilePictureUrl;
   final String firstName;
   final String lastName;
   final String bio;
 
-  const ProfileView({
+  const ProfileEdit({
     Key? key,
+    required this.profilePictureUrl,
     required this.firstName,
     required this.lastName,
     required this.bio,
@@ -19,6 +21,12 @@ class ProfileView extends ScreenView {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Column(children: [
+          ProfilePictureWithStatus.fromNetwork(
+            profilePictureUrl,
+            key: Key('profileView_profilePicture'),
+            showStatus: false,
+            online: true,
+          ),
           Text(
             firstName,
             style: BodyTextStyle(size: TextSize.LARGE),
@@ -32,9 +40,9 @@ class ProfileView extends ScreenView {
             style: BodyTextStyle(size: TextSize.LARGE),
           ),
           StyledButton(
-              key: Key('profileView_button'),
-              text: 'View Profile',
-              onClick: () => Navigator.pushNamed(context, '/viewProfile')),
+              key: Key('profileEdit_button'),
+              text: 'Edit Profile',
+              onClick: () => Navigator.pushNamed(context, '/editProfile')),
         ]),
       );
 }
