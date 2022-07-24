@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../../models/models.dart';
 import '../../screen_view.dart';
 import '../../screens.dart';
+import '../providers/profile/profileView/profile_provider_view.dart';
 import 'home_view.dart';
 
 export 'chatHome/chat_home_view.dart';
-export 'profileView/profile_view.dart';
+export 'profileEdit/profile_edit.dart';
 
 /// This is the view shown when users have been authenticated.
 class HomeView extends ScreenView {
@@ -25,8 +26,12 @@ class HomeView extends ScreenView {
   Widget build(BuildContext context) => Scaffold(
         body: PageView(
           controller: pageController,
+          // Swipe right to see each individual childs
           children: [
-            ProfileProvider(user: currentUser),
+            ProfileProviderEdit(
+              user: currentUser,
+            ),
+            ProfileProviderView(user: currentUser),
             ChatHomeProvider(messageCards: messageCards),
           ],
         ),

@@ -11,7 +11,7 @@ import '../models/home_model.dart';
 import '../views/home_view.dart';
 
 export 'chatHome/chat_home_provider.dart';
-export 'profile/profile_provider.dart';
+export 'profile/profileEdit/profile_provider_edit.dart';
 
 class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
   const HomeProvider({Key? key}) : super(key: key);

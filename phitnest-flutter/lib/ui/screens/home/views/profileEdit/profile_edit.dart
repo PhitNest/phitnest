@@ -4,13 +4,13 @@ import '../../../../common/textStyles/text_styles.dart';
 import '../../../../common/widgets/widgets.dart';
 import '../../../screen_view.dart';
 
-class ProfileView extends ScreenView {
+class ProfileEdit extends ScreenView {
   final String profilePictureUrl;
   final String firstName;
   final String lastName;
   final String bio;
 
-  const ProfileView({
+  const ProfileEdit({
     Key? key,
     required this.profilePictureUrl,
     required this.firstName,
@@ -40,9 +40,9 @@ class ProfileView extends ScreenView {
             style: BodyTextStyle(size: TextSize.LARGE),
           ),
           StyledButton(
-              key: Key('profileView_button'),
-              text: 'View Profile',
-              onClick: () => Navigator.pushNamed(context, '/viewProfile')),
+              key: Key('profileEdit_button'),
+              text: 'Edit Profile',
+              onClick: () => Navigator.pushNamed(context, '/editProfile')),
         ]),
       );
 }

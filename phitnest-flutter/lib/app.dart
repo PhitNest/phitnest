@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'constants/constants.dart';
 import 'models/models.dart';
+import 'ui/screens/profileView/profile_view_provider.dart';
 import 'ui/screens/screens.dart';
 
 /// Base MaterialApp widget
@@ -68,6 +69,8 @@ class _PhitnestAppState extends State<PhitnestApp> with WidgetsBindingObserver {
                   conversation: settings.arguments as Conversation));
             case '/editProfile':
               return generateRoute(ProfileEditProvider());
+            case '/viewProfile':
+              return generateRoute(ProfileViewProvider());
             default:
               return generateRoute(OnBoardingProvider());
           }
