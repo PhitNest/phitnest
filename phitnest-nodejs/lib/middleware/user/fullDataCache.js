@@ -1,10 +1,9 @@
-const CACHE_HOURS = 0.05;
+const { userCacheHours, userCachePrefix } = require('../../constants');
 
 module.exports = async (req, res, next) => {
     const userInfo = await res.locals.redis.get(`userData/${res.locals.uid}`);
     if (userInfo) {
-        console.log('used cache');
-        res.locals.redis.expire(`userData/${res.locals.uid}`, 60 * 60 * CACHE_HOURS);
+        res.locals.redis.expire(`${userCachePrefix}/${res.locals.uid}`, 60 * 60 * userCacheHours);
         return res.status(200).json(JSON.parse(userInfo));
     } else {
         next();

@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
                 .send('You have entered an invalid email or password.');
         }
         const authorization = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
-        await user.update({ lastSeen: Date.now() });
+        await user.updateOne({ lastSeen: Date.now() });
         return res.status(200).send(authorization);
     } catch (error) { }
     return res

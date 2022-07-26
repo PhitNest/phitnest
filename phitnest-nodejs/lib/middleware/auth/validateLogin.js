@@ -1,4 +1,4 @@
-const { minPasswordLength, maxPasswordLength, minEmailLength, maxEmailLength } = require('./constants');
+const { minPasswordLength, maxPasswordLength, minEmailLength, maxEmailLength } = require('../../constants');
 const joi = require('joi');
 
 function validateLogin(req) {
