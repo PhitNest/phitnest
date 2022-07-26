@@ -11,4 +11,10 @@ module.exports = {
     minLastNameLength: 0,
     maxLastNameLength: 16,
     minAge: 13,
+    minMessageLength: 1,
+    maxMessageLength: 64,
+    conversationCacheHours: 24,
+    conversationCachePrefix: 'conversationData',
+    userCacheHours: 2,
+    userCachePrefix: 'userData',
 }

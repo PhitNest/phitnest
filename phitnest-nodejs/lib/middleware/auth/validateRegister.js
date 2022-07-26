@@ -1,4 +1,4 @@
-const { minAge, minLastNameLength, maxLastNameLength, minFirstNameLength, maxFirstNameLength, minPhoneNumberLength, maxPhoneNumberLength, mobileRegex, minPasswordLength, maxPasswordLength, minEmailLength, maxEmailLength } = require('./constants');
+const { minAge, minLastNameLength, maxLastNameLength, minFirstNameLength, maxFirstNameLength, minPhoneNumberLength, maxPhoneNumberLength, mobileRegex, minPasswordLength, maxPasswordLength, minEmailLength, maxEmailLength } = require('../../constants');
 const joi = require('joi');
 
 const MILLIS_PER_YEAR = 1000 * 60 * 60 * 24 * 365;

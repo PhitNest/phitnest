@@ -1,13 +1,13 @@
 const { userModel } = require('../../models');
-
-const CACHE_HOURS = 0.05;
+const { userCacheHours, userCachePrefix } = require('../../constants');
 
 module.exports = async (req, res) => {
     try {
         const user = await userModel.findById(res.locals.uid)
         if (user) {
-            res.locals.redis.set(`userData/${res.locals.uid}`, JSON.stringify(user));
-            res.locals.redis.expire(`userData/${res.locals.uid}`, 60 * 60 * CACHE_HOURS);
+            const userCacheKey = `${userCachePrefix}/${res.locals.uid}`;
+            res.locals.redis.set(userCacheKey, JSON.stringify(user));
+            res.locals.redis.expire(userCacheKey, 60 * 60 * CACHE_HOURS);
             return res.status(200).json(user);
         }
     } catch (error) { }
