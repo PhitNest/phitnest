@@ -6,7 +6,7 @@ module.exports = async (messageId, socket) => {
     const messageCache = await socket.data.redis.get(messageCacheKey);
     let message = null;
     if (messageCache) {
-        message = JSON.parse(messageCache);
+        message = messageModel.hydrate(JSON.parse(messageCache));
     } else {
         message = await messageModel.findById(messageId);
     }

@@ -1,4 +1,5 @@
 module.exports = {
+    millisPerYear: 1000 * 60 * 60 * 24 * 365,
     minEmailLength: 3,
     maxEmailLength: 30,
     minPasswordLength: 6,
@@ -13,6 +14,8 @@ module.exports = {
     minAge: 13,
     minMessageLength: 1,
     maxMessageLength: 64,
+    minBioLength: 0,
+    maxBioLength: 64,
     conversationCacheHours: 24,
     conversationCachePrefix: 'conversationData',
     userCacheHours: 2,
