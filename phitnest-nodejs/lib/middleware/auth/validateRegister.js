@@ -1,7 +1,5 @@
-const { minAge, minLastNameLength, maxLastNameLength, minFirstNameLength, maxFirstNameLength, minPhoneNumberLength, maxPhoneNumberLength, mobileRegex, minPasswordLength, maxPasswordLength, minEmailLength, maxEmailLength } = require('../../constants');
+const { millisPerYear, minAge, minLastNameLength, maxLastNameLength, minFirstNameLength, maxFirstNameLength, minPhoneNumberLength, maxPhoneNumberLength, mobileRegex, minPasswordLength, maxPasswordLength, minEmailLength, maxEmailLength } = require('../../constants');
 const joi = require('joi');
-
-const MILLIS_PER_YEAR = 1000 * 60 * 60 * 24 * 365;
 
 function validateRegister(req) {
     const schema = joi.object({
@@ -10,7 +8,7 @@ function validateRegister(req) {
         mobile: joi.string().trim().pattern(mobileRegex).min(minPhoneNumberLength).max(maxPhoneNumberLength).required(),
         firstName: joi.string().trim().min(minFirstNameLength).max(maxFirstNameLength).required(),
         lastName: joi.string().trim().min(minLastNameLength).max(maxLastNameLength).optional(),
-        birthday: joi.date().max(Date.now() - MILLIS_PER_YEAR * minAge).required(),
+        birthday: joi.date().max(Date.now() - millisPerYear * minAge).required(),
     })
     return schema.validate(req);
 }

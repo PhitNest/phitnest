@@ -1,3 +1,4 @@
+const { conversationModel } = require('../../../models');
 const { conversationCacheHours, conversationCachePrefix } = require('../../../constants');
 
 module.exports = async (conversationId, socket) => {
@@ -5,7 +6,7 @@ module.exports = async (conversationId, socket) => {
     const conversationCache = await socket.data.redis.get(conversationCacheKey);
     let conversation = null;
     if (conversationCache) {
-        conversation = JSON.parse(conversationCache);
+        conversation = conversationModel.hydrate(JSON.parse(conversationCache));
         if (!(conversation.participants.includes(socket.data.userId.toString()))) {
             conversation = null;
         }

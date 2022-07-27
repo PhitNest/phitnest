@@ -23,7 +23,8 @@ module.exports = socket => {
                 if (message) {
                     const conversation = await getConversation(message.conversation, socket);
                     if (conversation) {
-                        message.message = await messageModel.updateOne({ _id: message._id }, { message: data.text });
+                        message.message = data.text;
+                        await message.save();
                         const messageCacheKey = `${messageCachePrefix}/${message._id}`
                         socket.data.redis.set(messageCacheKey, JSON.stringify(message));
                         socket.data.redis.expire(messageCacheKey, 60 * 60 * messageCacheHours);
