@@ -1,5 +1,7 @@
-const registerChat = require('./chat');
+const registerMessage = require('./message');
+const registerConversation = require('./conversation');
 
 module.exports = socket => {
-    registerChat(socket);
+    registerMessage(socket);
+    registerConversation(socket);
 }
