@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
         if (user) {
             const userCacheKey = `${userCachePrefix}/${res.locals.uid}`;
             res.locals.redis.set(userCacheKey, JSON.stringify(user));
-            res.locals.redis.expire(userCacheKey, 60 * 60 * CACHE_HOURS);
+            res.locals.redis.expire(userCacheKey, 60 * 60 * userCacheHours);
             return res.status(200).json(user);
         }
     } catch (error) { }
