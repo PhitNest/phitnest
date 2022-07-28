@@ -8,7 +8,7 @@ const { createAdapter } = require("@socket.io/redis-adapter");
 const { createClient } = require("redis");
 const routes = require('./lib/routes');
 const jwt = require('jsonwebtoken');
-const registerListeners = require('./lib/socket/listeners');
+const registerListeners = require('./lib/socket');
 require('dotenv').config();
 
 const PORT = process.env.port || 3000;

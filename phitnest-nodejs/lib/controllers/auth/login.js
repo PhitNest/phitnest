@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { userCachePrefix, userCacheHours } = require('../../constants');
 const { userModel } = require('../../models');
 
 module.exports = async (req, res) => {
@@ -20,6 +21,9 @@ module.exports = async (req, res) => {
         }
         const authorization = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
         await user.updateOne({ lastSeen: Date.now() });
+        const userCacheKey = `${userCachePrefix}/${user._id}`;
+        res.locals.redis.set(userCacheKey, JSON.stringify(user));
+        res.locals.redis.expire(userCacheKey, 60 * 60 * userCacheHours);
         return res.status(200).send(authorization);
     } catch (error) { }
     return res

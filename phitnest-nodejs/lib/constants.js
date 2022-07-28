@@ -22,4 +22,6 @@ module.exports = {
     userCachePrefix: 'userData',
     messageCacheHours: 2,
     messageCachePrefix: 'messageData',
+    conversationRecentMessagesCacheHours: 48,
+    conversationRecentMessagesCachePrefix: 'conversationRecentMessages',
 }

@@ -18,6 +18,9 @@ module.exports = async (req, res) => {
 
     try {
         user = await user.save()
+        const userCacheKey = `${userCachePrefix}/${user._id}`;
+        res.locals.redis.set(userCacheKey, JSON.stringify(user));
+        res.locals.redis.expire(userCacheKey, 60 * 60 * userCacheHours);
     } catch (error) {
         if (error.code == 11000) {
             if ('mobile' in error.keyValue) {

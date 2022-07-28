@@ -1,4 +1,4 @@
-const { userModel } = require('../../../models');
+const { userModel } = require('../../models');
 
 module.exports = socket => {
     userModel.findById(socket.data.userId).then(user => {
