@@ -1,7 +1,7 @@
 const { minPasswordLength, maxPasswordLength, minEmailLength, maxEmailLength } = require('../../constants');
 const joi = require('joi');
 
-function validateLogin(req) {
+function validate(req) {
     const schema = joi.object({
         email: joi.string().trim().email().min(minEmailLength).max(maxEmailLength).required(),
         password: joi.string().min(minPasswordLength).max(maxPasswordLength).required(),
@@ -10,7 +10,7 @@ function validateLogin(req) {
 }
 
 module.exports = async (req, res, next) => {
-    const { error } = validateLogin(req.body);
+    const { error } = validate(req.body);
     if (error) {
         return res
             .status(400)

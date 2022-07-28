@@ -1,7 +1,7 @@
 const { millisPerYear, minAge, minLastNameLength, maxLastNameLength, minFirstNameLength, maxFirstNameLength, minPhoneNumberLength, maxPhoneNumberLength, mobileRegex, minPasswordLength, maxPasswordLength, minEmailLength, maxEmailLength } = require('../../constants');
 const joi = require('joi');
 
-function validateRegister(req) {
+function validate(req) {
     const schema = joi.object({
         email: joi.string().trim().email().min(minEmailLength).max(maxEmailLength).required(),
         password: joi.string().min(minPasswordLength).max(maxPasswordLength).required(),
@@ -14,7 +14,7 @@ function validateRegister(req) {
 }
 
 module.exports = async (req, res, next) => {
-    const { error } = validateRegister(req.body);
+    const { error } = validate(req.body);
     if (error) {
         return res
             .status(400)
