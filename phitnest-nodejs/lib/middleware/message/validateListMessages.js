@@ -4,7 +4,7 @@ const objectId = require('joi-objectid')(joi);
 function validate(req) {
     const schema = joi.object({
         conversation: objectId().required(),
-        quantity: joi.number().required(),
+        limit: joi.number().required(),
     });
     return schema.validate(req);
 }
