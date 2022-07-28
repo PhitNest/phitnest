@@ -33,7 +33,7 @@ module.exports = socket => {
                     if (conversationMessageCache) {
                         socket.data.redis.lpush(conversationMessageCacheKey, JSON.stringify(message));
                     } else {
-                        socket.data.redis.set(conversationMessageCacheKey, [JSON.stringify(message)]);
+                        socket.data.redis.set(conversationMessageCacheKey, JSON.stringify([message]));
                     }
                     socket.data.redis.expire(conversationMessageCacheKey, 60 * 60 * conversationRecentMessagesCacheHours);
                     socket.data.redis.set(messageCacheKey, JSON.stringify(message));

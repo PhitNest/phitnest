@@ -1,23 +1,23 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { userModel } = require('../../models');
+const { userCachePrefix, userCacheHours } = require('../../constants');
 
 module.exports = async (req, res) => {
     let user = new userModel({
-        email: req.body.email.trim(),
+        email: req.body.email,
         password: await bcrypt.hash(req.body.password, 10),
-        mobile: req.body.mobile.trim(),
+        mobile: req.body.mobile,
         birthday: req.body.birthday,
-        firstName: req.body.firstName.trim(),
+        firstName: req.body.firstName,
         lastSeen: Date.now(),
     });
 
     if (req.body.lastName != undefined) {
-        user.lastName = req.body.lastName.trim();
+        user.lastName = req.body.lastName;
     }
-
     try {
-        user = await user.save()
+        await user.save();
         const userCacheKey = `${userCachePrefix}/${user._id}`;
         res.locals.redis.set(userCacheKey, JSON.stringify(user));
         res.locals.redis.expire(userCacheKey, 60 * 60 * userCacheHours);
@@ -36,6 +36,5 @@ module.exports = async (req, res) => {
     }
 
     const authorization = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
-
     return res.status(200).send(authorization);
 };

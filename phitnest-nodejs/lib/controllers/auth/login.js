@@ -4,9 +4,8 @@ const { userCachePrefix, userCacheHours } = require('../../constants');
 const { userModel } = require('../../models');
 
 module.exports = async (req, res) => {
-    let user = null;
     try {
-        user = await userModel.findOne({ email: req.body.email.trim() })
+        const user = await userModel.findOne({ email: req.body.email.trim() })
             .select('+password');
         if (!user) {
             return res
@@ -20,7 +19,8 @@ module.exports = async (req, res) => {
                 .send('You have entered an invalid email or password.');
         }
         const authorization = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
-        await user.updateOne({ lastSeen: Date.now() });
+        user.lastSeen = Date.now();
+        user.save();
         const userCacheKey = `${userCachePrefix}/${user._id}`;
         res.locals.redis.set(userCacheKey, JSON.stringify(user));
         res.locals.redis.expire(userCacheKey, 60 * 60 * userCacheHours);

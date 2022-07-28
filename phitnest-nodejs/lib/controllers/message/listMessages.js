@@ -4,15 +4,28 @@ const { conversationRecentMessagesCachePrefix, conversationRecentMessagesCacheHo
 module.exports = async (req, res) => {
     try {
         const conversationRecentMessagesCacheKey = `${conversationRecentMessagesCachePrefix}/${req.query.conversation}`;
-        const conversationRecentMessagesCache = await res.locals.redis.lrange(conversationRecentMessagesCacheKey, 0, req.query.limit);
+        const conversationRecentMessagesCache = await res.locals.redis.get(conversationRecentMessagesCacheKey);
         let messages = [];
         if (conversationRecentMessagesCache) {
+            const conversationRecentMessagesCacheList = await res.locals.redis.lrange(conversationRecentMessagesCacheKey, 0, req.query.limit);
             res.locals.redis.expire(conversationRecentMessagesCacheKey, 60 * 60 * conversationRecentMessagesCacheHours);
-            JSON.parse(conversationRecentMessagesCache).forEach(messageJson => messages.push(messageModel.hydrate(messageJson)));
+            JSON.parse(conversationRecentMessagesCacheList).forEach(messageJson => messages.push(messageModel.hydrate(messageJson)));
         }
-        messages.push(await messageModel.find({ conversation: req.query.conversation }).sort({ createdAt: -1 }).slice(messages.length, req.query.limit));
+        if (messages.length < req.query.limit) {
+            (await messageModel.aggregate([{
+                $match:
+                    { conversation: res.locals.conversation._id }
+            },
+            { $sort: { createdAt: -1 } },
+            { $limit: parseInt(req.query.limit) },
+            { $skip: messages.length }
+            ])).forEach(message => {
+                messages.push(message);
+            });
+        }
         res.status(200).json(messages);
     } catch (error) {
+        console.log(error);
         res.status(500).send(error);
     }
 }
