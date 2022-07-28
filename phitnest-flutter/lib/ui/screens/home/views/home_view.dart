@@ -6,7 +6,7 @@ import '../../screens.dart';
 import 'home_view.dart';
 
 export 'chatHome/chat_home_view.dart';
-export 'profileView/profile_view.dart';
+export 'profile/profile_view.dart';
 
 /// This is the view shown when users have been authenticated.
 class HomeView extends ScreenView {
@@ -25,8 +25,9 @@ class HomeView extends ScreenView {
   Widget build(BuildContext context) => Scaffold(
         body: PageView(
           controller: pageController,
+          // Swipe right to see each individual childs
           children: [
-            ProfileProvider(user: currentUser!),
+            ProfileProvider(user: currentUser),
             ChatHomeProvider(messageCards: messageCards),
           ],
         ),

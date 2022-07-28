@@ -14,7 +14,16 @@ class HomeModel extends ScreenModel {
   final PageController pageController = PageController();
 
   StreamSubscription<UserPublicInfo>? infoListener;
-  UserPublicInfo? currentUser;
+  UserPublicInfo? _currentUser;
+
+  UserPublicInfo? get currentUser => _currentUser;
+
+  set currentUser(UserPublicInfo? currentUser) {
+    _currentUser = currentUser;
+    notifyListeners();
+  }
+
+  StreamSubscription<List<ChatCard>>? chatCardListener;
 
   List<ChatCard> _messageCards = [];
   List<ChatCard> get messageCards => _messageCards;

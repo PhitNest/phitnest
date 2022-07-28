@@ -5,6 +5,7 @@ class AuthenticatedUser {
   String mobile;
   String email;
   bool online;
+  DateTime birthday;
   String bio;
 
   String get fullName => '$firstName${lastName == '' ? '' : ' '}$lastName';
@@ -16,6 +17,7 @@ class AuthenticatedUser {
     required this.mobile,
     required this.email,
     required this.online,
+    required this.birthday,
     required this.bio,
   });
 
@@ -28,5 +30,6 @@ class AuthenticatedUser {
         lastName: parsedJson['lastName'],
         online: parsedJson['online'],
         bio: parsedJson['bio'],
+        birthday: parsedJson['birthday'],
       );
 }

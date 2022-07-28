@@ -18,6 +18,7 @@ class ProfileProvider extends ScreenProvider<ProfileModel, ProfileView> {
         firstName: user?.firstName ?? '',
         lastName: user?.lastName ?? '',
         bio: user?.bio ?? '',
+        onClickEditButton: () => Navigator.pushNamed(context, '/editProfile'),
       );
 
   @override

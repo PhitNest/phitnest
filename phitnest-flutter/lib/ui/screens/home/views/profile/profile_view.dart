@@ -8,12 +8,14 @@ class ProfileView extends ScreenView {
   final String firstName;
   final String lastName;
   final String bio;
+  final Function() onClickEditButton;
 
   const ProfileView({
     Key? key,
     required this.firstName,
     required this.lastName,
     required this.bio,
+    required this.onClickEditButton,
   }) : super(key: key);
 
   @override
@@ -34,7 +36,7 @@ class ProfileView extends ScreenView {
           StyledButton(
               key: Key('profileEdit_button'),
               text: 'Edit Profile',
-              onClick: () => Navigator.pushNamed(context, '/editProfile')),
+              onClick: onClickEditButton),
         ]),
       );
 }

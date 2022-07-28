@@ -58,7 +58,7 @@ class ProfileEditView extends ScreenView {
                           controller: bioController,
                           hintStyle: BodyTextStyle(size: TextSize.MEDIUM),
                           inputType: TextInputType.multiline,
-                          validator: validateChatMessage),
+                          validator: validateBio),
                       StyledButton(
                           key: Key('profileEdit_button'),
                           text: 'Submit',

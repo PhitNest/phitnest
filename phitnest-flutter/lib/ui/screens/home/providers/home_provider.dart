@@ -26,17 +26,16 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
     model.currentUser =
         await DatabaseApi.instance.getPublicInfo(AuthApi.instance.userId!);
 
-    model.messageCards =
-        (await DatabaseApi.instance.getRecentConversations()).map((entry) {
-      return ChatCard(
-          message: entry.value.message,
-          read: entry.value.readBy.length > 0,
-          online: true,
-          name: 'test',
-          onDismissConfirm: (direction) {},
-          onTap: () =>
-              Navigator.pushNamed(context, '/chat', arguments: entry.key));
-    }).toList();
+    model.messageCards = (await DatabaseApi.instance.getRecentConversations())
+        .map((entry) => ChatCard(
+            message: entry.value.message,
+            read: entry.value.readBy.length > 0,
+            online: true,
+            name: 'test',
+            onDismissConfirm: (direction) {},
+            onTap: () =>
+                Navigator.pushNamed(context, '/chat', arguments: entry.key)))
+        .toList();
 
     return true;
   }

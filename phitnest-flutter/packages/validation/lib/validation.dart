@@ -57,6 +57,14 @@ String? validateChatMessage(String? value) {
   return '';
 }
 
+String? validateBio(String? value) {
+  if (value?.isNotEmpty ?? false) {
+    return null;
+  }
+
+  return '';
+}
+
 String? validateEmail(String? value) {
   String pattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
