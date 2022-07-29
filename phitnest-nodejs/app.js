@@ -28,9 +28,7 @@ module.exports = {
     app.use("/", routes);
     return app;
   },
-  createSocketIO: (pubClient, server) => {
-    const subClient = pubClient.duplicate();
-    subClient.connect();
+  createSocketIO: (pubClient, subClient, server) => {
     const io = new Server(server);
 
     io.use((socket, next) => {
