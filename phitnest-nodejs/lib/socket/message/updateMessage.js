@@ -54,21 +54,20 @@ module.exports = (socket) => {
           ) {
             const oldMessageStringified = JSON.stringify(message);
             message.message = data.text;
-            await Promise.all([
-              message.save(),
-              socket.data.redis.socket.data.redis.zRem(
-                `${conversationRecentMessagesCachePrefix}/${conversation._id}`,
-                oldMessageStringified,
-                { EX: 60 * 60 * conversationRecentMessagesCacheHours }
-              ),
-              socket.data.redis.socket.data.redis.set(
+            const conversationRecentMessagesCacheKey = `${conversationRecentMessagesCachePrefix}/${conversation._id}`;
+            const multi = socket.data.redis
+              .multi()
+              .zrem(conversationRecentMessagesCacheKey, oldMessageStringified)
+              .expire(
+                conversationRecentMessagesCacheKey,
+                60 * 60 * conversationRecentMessagesCacheHours
+              )
+              .setex(
                 `${messageCachePrefix}/${message._id}`,
-                JSON.stringify(message),
-                {
-                  EX: 60 * 60 * messageCacheHours,
-                }
-              ),
-            ]);
+                60 * 60 * messageCacheHours,
+                JSON.stringify(message)
+              );
+            await Promise.all([message.save(), multi.exec()]);
             socket.broadcast
               .to(message.conversation)
               .emit(`messageUpdated:${message._id}`, message);

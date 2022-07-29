@@ -24,15 +24,15 @@ module.exports = (socket) => {
         await Promise.all([
           user.delete(),
           messageModel.find({ sender: user._id }).forEach(async (message) => {
-            await Promise.all([
-              message.delete(),
-              socket.data.redis.del(`${messageCachePrefix}/${message._id}`),
-              socket.data.redis.zRem(
-                `${conversationRecentMessagesCachePrefix}/${message.conversation}`,
-                JSON.stringify(message),
-                { EX: 60 * 60 * conversationRecentMessagesCacheHours }
-              ),
-            ]);
+            const conversationRecentMessagesCacheKey = `${conversationRecentMessagesCachePrefix}/${message.conversation}`;
+            const multi = socket.data.redis
+              .del(`${messageCachePrefix}/${message._id}`)
+              .zrem(conversationRecentMessagesCacheKey, JSON.stringify(message))
+              .expire(
+                conversationRecentMessagesCacheKey,
+                60 * 60 * conversationRecentMessagesCacheHours
+              );
+            await Promise.all([message.delete(), multi.exec()]);
             socket.broadcast
               .to(message.conversation.toString())
               .emit(`messageDeleted:${message._id}`);
@@ -46,10 +46,10 @@ module.exports = (socket) => {
               conversation.participants.splice(index, 1);
               await Promise.all([
                 conversation.save(),
-                socket.data.redis.set(
+                socket.data.redis.setex(
                   `${conversationCachePrefix}/${conversation._id}`,
-                  JSON.stringify(conversation),
-                  { EX: 60 * 60 * conversationCacheHours }
+                  60 * 60 * conversationCacheHours,
+                  JSON.stringify(conversation)
                 ),
               ]);
               socket.broadcast

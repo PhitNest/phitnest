@@ -6,42 +6,49 @@ module.exports = () => {
   const validUser = globalThis.data.createdUser;
   const validUserRedisKey = `${userCachePrefix}/${validUser._id}`;
 
-  it("Invalid request", async () => {
-    await supertest(globalThis.app)
+  test("Missing password", () =>
+    supertest(globalThis.app)
+      .post("/auth/login")
+      .send({
+        email: "a@b.com",
+        notPassword: "aaaaaa",
+      })
+      .expect(400));
+
+  test("Missing email", () =>
+    supertest(globalThis.app)
       .post("/auth/login")
       .send({
         notEmail: "a@b.com",
-        notPassword: "aaaaaa",
+        password: "aaaaaa",
       })
-      .expect(400);
-  });
+      .expect(400));
 
-  it("Non-existing user", async () => {
-    await supertest(globalThis.app)
+  test("Non-existing user", () =>
+    supertest(globalThis.app)
       .post("/auth/login")
       .send({
         email: "a@a.com",
         password: "aaaaaa",
       })
-      .expect(404);
-  });
+      .expect(404));
 
-  it("Incorrect password", async () => {
-    await supertest(globalThis.app)
+  test("Incorrect password", () =>
+    supertest(globalThis.app)
       .post("/auth/login")
       .send({
         email: "a@b.com",
         password: "bbbbbb",
       })
-      .expect(400);
-  });
+      .expect(400));
 
-  it("User should not be cached", async () => {
-    expect(await globalThis.redis.get(validUserRedisKey)).toBe(null);
-  });
+  test("User should not be cached", () =>
+    globalThis.redis
+      .get(validUserRedisKey)
+      .then((value) => expect(value).toBe(null)));
 
-  it("Correct password", async () => {
-    await supertest(globalThis.app)
+  test("Correct password", () =>
+    supertest(globalThis.app)
       .post("/auth/login")
       .send({
         email: "a@b.com",
@@ -52,12 +59,12 @@ module.exports = () => {
           validUser._id.toString()
         )
       )
-      .expect(200);
-  });
+      .expect(200));
 
-  it("User should be cached", async () => {
-    expect(JSON.parse(await globalThis.redis.get(validUserRedisKey))._id).toBe(
-      validUser._id.toString()
-    );
-  });
+  test("User should be cached", () =>
+    globalThis.redis
+      .get(validUserRedisKey)
+      .then((value) =>
+        expect(JSON.parse(value)._id).toBe(validUser._id.toString())
+      ));
 };

@@ -43,15 +43,16 @@ module.exports = (socket) => {
             conversation &&
             conversation.participants.includes(socket.data.userId)
           ) {
-            await Promise.all([
-              message.delete(),
-              socket.data.redis.zRem(
-                `${conversationRecentMessagesCachePrefix}/${conversation._id}`,
-                JSON.stringify(message),
-                { EX: 60 * 60 * conversationRecentMessagesCacheHours }
-              ),
-              socket.data.redis.del(`${messageCachePrefix}/${message._id}`),
-            ]);
+            const conversationRecentMessagesCacheKey = `${conversationRecentMessagesCachePrefix}/${conversation._id}`;
+            const multi = socket.data.redis
+              .multi()
+              .zrem(conversationRecentMessagesCacheKey, JSON.stringify(message))
+              .expire(
+                conversationRecentMessagesCacheKey,
+                60 * 60 * conversationRecentMessagesCacheHours
+              )
+              .del(`${messageCachePrefix}/${message._id}`);
+            await Promise.all([message.delete(), multi.exec()]);
             socket.broadcast
               .to(message.conversation)
               .emit(`messageDeleted:${message._id}`);

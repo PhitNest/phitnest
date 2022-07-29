@@ -18,10 +18,10 @@ module.exports = async (req, res) => {
   }
   try {
     await user.save();
-    await res.locals.redis.set(
+    await res.locals.redis.setex(
       `${userCachePrefix}/${user._id}`,
-      JSON.stringify(user),
-      { EX: 60 * 60 * userCacheHours }
+      60 * 60 * userCacheHours,
+      JSON.stringify(user)
     );
   } catch (error) {
     if (error.code == 11000) {

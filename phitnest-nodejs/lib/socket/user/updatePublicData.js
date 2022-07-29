@@ -58,10 +58,10 @@ module.exports = (socket) => {
           user.birthday = data.birthday ?? user.birthday;
           await Promise.all([
             userModel.updateOne({ _id: user._id }, user),
-            socket.data.redis.set(
+            socket.data.redis.setex(
               `${userCachePrefix}/${user._id}`,
-              JSON.stringify(user),
-              { EX: 60 * 60 * userCacheHours }
+              60 * 60 * userCacheHours,
+              JSON.stringify(user)
             ),
           ]);
           socket.broadcast

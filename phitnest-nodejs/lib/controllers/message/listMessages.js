@@ -7,14 +7,17 @@ const {
 module.exports = async (req, res) => {
   try {
     const conversationRecentMessagesCacheKey = `${conversationRecentMessagesCachePrefix}/${req.query.conversation}`;
-    const conversationRecentMessagesCache = await res.locals.redis.zRange(
+    const conversationRecentMessagesCache = await res.locals.redis.zrange(
       conversationRecentMessagesCacheKey,
       0,
-      req.query.limit,
-      { EX: 60 * 60 * conversationRecentMessagesCacheHours }
+      req.query.limit
     );
     let messages = [];
     if (conversationRecentMessagesCache.length) {
+      await res.locals.redis.expire(
+        conversationRecentMessagesCacheKey,
+        60 * 60 * conversationRecentMessagesCacheHours
+      );
       JSON.parse(conversationRecentMessagesCache).forEach((messageJson) =>
         messages.push(messageModel.hydrate(messageJson))
       );
@@ -31,7 +34,7 @@ module.exports = async (req, res) => {
           { $skip: messages.length },
         ])
       ).forEach((message) => {
-        multi.zAdd(conversationRecentMessagesCacheKey, {
+        multi.zadd(conversationRecentMessagesCacheKey, {
           score: Number(message.createdAt),
           value: JSON.stringify(message),
         });

@@ -49,21 +49,23 @@ module.exports = (socket) => {
             message: data.message,
             sender: socket.data.userId,
           });
-          await Promise.all([
-            message.save(),
-            socket.data.redis.zAdd(
-              `${conversationRecentMessagesCachePrefix}/${conversation._id}`,
-              { score: message.createdAt, value: JSON.stringify(message) },
-              { EX: 60 * 60 * conversationRecentMessagesCacheHours }
-            ),
-            socket.data.redis.set(
+          const conversationRecentMessagesCacheKey = `${conversationRecentMessagesCachePrefix}/${conversation._id}`;
+          const multi = socket.data.redis
+            .multi()
+            .zadd(conversationRecentMessagesCacheKey, {
+              score: message.createdAt,
+              value: JSON.stringify(message),
+            })
+            .expire(
+              conversationRecentMessagesCacheKey,
+              60 * 60 * conversationRecentMessagesCacheHours
+            )
+            .setex(
               `${messageCachePrefix}/${message._id}`,
-              JSON.stringify(message),
-              {
-                EX: 60 * 60 * messageCacheHours,
-              }
-            ),
-          ]);
+              60 * 60 * messageCacheHours,
+              JSON.stringify(message)
+            );
+          await Promise.all([message.save(), multi.exec()]);
           socket.broadcast
             .to(data.conversation)
             .emit("receiveMessage", message);
