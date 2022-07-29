@@ -1,7 +1,7 @@
-const inConversation = require('./inConversation');
-const validateListMessages = require('./validateListMessages');
+const inConversation = require("./inConversation");
+const validateListMessages = require("./validateListMessages");
 
 module.exports = {
-    inConversation: inConversation,
-    validateListMessages: validateListMessages,
-}
+  inConversation: inConversation,
+  validateListMessages: validateListMessages,
+};

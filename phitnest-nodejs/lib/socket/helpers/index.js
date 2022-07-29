@@ -1,7 +1,5 @@
-const checkCacheOrQuery = require('./checkCacheOrQuery');
-const getConversationMessageCache = require('./getConversationMessageCache');
+const checkCacheOrQuery = require("./checkCacheOrQuery");
 
 module.exports = {
-    checkCacheOrQuery: checkCacheOrQuery,
-    getConversationMessageCache: getConversationMessageCache,
-}
+  checkCacheOrQuery: checkCacheOrQuery,
+};
