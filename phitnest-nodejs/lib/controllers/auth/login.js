@@ -32,7 +32,9 @@ module.exports = async (req, res) => {
       ),
     ]);
     return res.status(200).send(authorization);
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
   return res
     .status(500)
     .send("An internal server error occurred, please try again.");
