@@ -24,4 +24,12 @@ const userRelationshipSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("UserRelationship", userRelationshipSchema);
+const userRelationshipModel = mongoose.model(
+  "UserRelationship",
+  userRelationshipSchema
+);
+
+module.exports = {
+  userRelationshipModel: userRelationshipModel,
+  createUserRelationship: (input) => userRelationshipModel.create(input),
+};

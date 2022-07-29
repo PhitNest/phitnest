@@ -1,58 +1,25 @@
-const express = require('express');
-const http = require('http');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const { Server } = require('socket.io')
-const { createAdapter } = require("@socket.io/redis-adapter");
+const registerListeners = require("./lib/socket");
+const { createApp, createSocketIO } = require("./app");
 const { createClient } = require("redis");
-const routes = require('./lib/routes');
-const jwt = require('jsonwebtoken');
-const registerListeners = require('./lib/socket');
-require('dotenv').config();
+const { createServer } = require("http");
+const mongoose = require("mongoose");
+require("dotenv").config();
+const PORT = process.env.PORT || 3000;
+const REDIS_PORT = process.env.REDIS_PORT || 6379;
+const REDIS_HOST = process.env.REDIS_HOST || "127.0.0.1";
+const DB = process.env.DB || "mongodb://localhost:27017/";
 
-const PORT = process.env.port || 3000;
-const app = express();
+const redisClient = createClient(REDIS_HOST, REDIS_PORT);
+redisClient.connect();
 
-mongoose.connect(process.env.DB);
+mongoose.connect(DB);
 
-const pubClient = createClient(process.env.REDIS_PORT, process.env.REDIS_HOST);
-const subClient = pubClient.duplicate();
-pubClient.connect();
-subClient.connect();
+const app = createApp(redisClient);
+const server = createServer(app);
+const io = createSocketIO(redisClient, server);
 
-app.use((req, res, next) => {
-    res.locals.redis = pubClient;
-    next();
-});
-
-app.use(morgan('dev'));
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-
-app.get('/', (req, res) => {
-    res.status(200).json({ resultMessage: 'Requests are working successfully...' });
-});
-app.use('/', routes);
-
-const server = http.createServer(app);
-const io = new Server(server);
-io.adapter(createAdapter(pubClient, subClient));
-
-io.use((socket, next) => {
-    try {
-        const data = jwt.verify(socket.handshake.headers.authorization, process.env.JWT_SECRET);
-        socket.data.userId = data._id;
-        socket.data.redis = pubClient;
-        next();
-    } catch (error) {
-        next(error);
-    }
-});
-
-io.on('connection', socket => {
-    registerListeners(socket);
+io.on("connection", (socket) => {
+  registerListeners(socket);
 });
 
 server.listen(PORT, () => console.log(`Server is running on ${PORT}`));

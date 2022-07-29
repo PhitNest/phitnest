@@ -7,7 +7,7 @@ const {
 module.exports = async (req, res, next) => {
   try {
     const conversationCacheKey = `${conversationCachePrefix}/${req.query.conversation}`;
-    let conversation = null;
+    let conversation;
     const conversationCache = await res.locals.redis.get(conversationCacheKey);
     if (conversationCache) {
       conversation = conversationModel.hydrate(JSON.parse(conversationCache));
