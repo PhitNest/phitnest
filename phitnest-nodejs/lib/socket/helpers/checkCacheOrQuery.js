@@ -8,7 +8,7 @@ module.exports = async (redis, cachePrefix, cacheHours, model, modelId) => {
     result = await model.findById(modelId);
   }
   if (result) {
-    await redis.set(key, JSON.stringify(result), { EX: 60 * 60 * cacheHours });
+    await redis.setex(key, 60 * 60 * cacheHours, JSON.stringify(result));
   }
   return result;
 };

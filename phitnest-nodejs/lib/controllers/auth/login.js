@@ -25,10 +25,10 @@ module.exports = async (req, res) => {
     user.lastSeen = Date.now();
     await Promise.all([
       user.save(),
-      res.locals.redis.set(
+      res.locals.redis.setex(
         `${userCachePrefix}/${user._id}`,
-        JSON.stringify(user),
-        { EX: 60 * 60 * userCacheHours }
+        60 * 60 * userCacheHours,
+        JSON.stringify(user)
       ),
     ]);
     return res.status(200).send(authorization);

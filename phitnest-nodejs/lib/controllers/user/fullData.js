@@ -5,10 +5,10 @@ module.exports = async (req, res) => {
   try {
     const user = await userModel.findById(res.locals.userId);
     if (user) {
-      res.locals.redis.set(
+      await res.locals.redis.setex(
         `${userCachePrefix}/${res.locals.userId}`,
-        JSON.stringify(user),
-        { EX: 60 * 60 * userCacheHours }
+        60 * 60 * userCacheHours,
+        JSON.stringify(user)
       );
       return res.status(200).json(user);
     }

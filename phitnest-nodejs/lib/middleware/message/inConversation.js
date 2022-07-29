@@ -15,10 +15,10 @@ module.exports = async (req, res, next) => {
       conversation = await conversationModel.findById(req.query.conversation);
     }
     if (conversation && conversation.participants.includes(res.locals.userId)) {
-      await res.locals.redis.set(
+      await res.locals.redis.setex(
         conversationCacheKey,
-        JSON.stringify(conversation),
-        { EX: 60 * 60 * conversationCacheHours }
+        60 * 60 * conversationCacheHours,
+        JSON.stringify(conversation)
       );
       res.locals.conversation = conversation;
       next();
