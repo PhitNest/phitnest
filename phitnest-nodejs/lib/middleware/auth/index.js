@@ -1,9 +1,9 @@
-const isAuthenticated = require('./isAuthenticated');
-const validateLogin = require('./validateLogin');
-const validateRegister = require('./validateRegister');
+const isAuthenticated = require("./isAuthenticated");
+const validateLogin = require("./validateLogin");
+const validateRegister = require("./validateRegister");
 
 module.exports = {
-    isAuthenticated: isAuthenticated,
-    validateLogin: validateLogin,
-    validateRegister: validateRegister,
-}
+  isAuthenticated: isAuthenticated,
+  validateLogin: validateLogin,
+  validateRegister: validateRegister,
+};

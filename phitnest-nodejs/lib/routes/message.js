@@ -1,7 +1,14 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const messageController = require('../controllers/message');
-const { validateListMessages, inConversation } = require('../middleware/message');
+const messageController = require("../controllers/message");
+const {
+  validateListMessages,
+  inConversation,
+} = require("../middleware/message");
 
-router.get('/list', [validateListMessages, inConversation], messageController.listMessages);
+router.get(
+  "/list",
+  [validateListMessages, inConversation],
+  messageController.listMessages
+);
 module.exports = router;

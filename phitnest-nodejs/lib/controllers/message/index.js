@@ -1,5 +1,5 @@
-const listMessages = require('./listMessages');
+const listMessages = require("./listMessages");
 
 module.exports = {
-    listMessages: listMessages,
-}
+  listMessages: listMessages,
+};

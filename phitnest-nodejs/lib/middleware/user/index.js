@@ -1,5 +1,5 @@
-const fullDataCache = require('./fullDataCache');
+const fullDataCache = require("./fullDataCache");
 
 module.exports = {
-    fullDataCache: fullDataCache,
-}
+  fullDataCache: fullDataCache,
+};

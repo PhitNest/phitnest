@@ -1,31 +1,51 @@
-const { messageModel } = require('../../models');
-const { conversationRecentMessagesCachePrefix, conversationRecentMessagesCacheHours } = require('../../constants');
+const { messageModel } = require("../../models");
+const {
+  conversationRecentMessagesCachePrefix,
+  conversationRecentMessagesCacheHours,
+} = require("../../constants");
 
 module.exports = async (req, res) => {
-    try {
-        const conversationRecentMessagesCacheKey = `${conversationRecentMessagesCachePrefix}/${req.query.conversation}`;
-        const conversationRecentMessagesCache = await res.locals.redis.get(conversationRecentMessagesCacheKey);
-        let messages = [];
-        if (conversationRecentMessagesCache) {
-            const conversationRecentMessagesCacheList = await res.locals.redis.lrange(conversationRecentMessagesCacheKey, 0, req.query.limit);
-            res.locals.redis.expire(conversationRecentMessagesCacheKey, 60 * 60 * conversationRecentMessagesCacheHours);
-            JSON.parse(conversationRecentMessagesCacheList).forEach(messageJson => messages.push(messageModel.hydrate(messageJson)));
-        }
-        if (messages.length < req.query.limit) {
-            (await messageModel.aggregate([{
-                $match:
-                    { conversation: res.locals.conversation._id }
-            },
-            { $sort: { createdAt: -1 } },
-            { $limit: parseInt(req.query.limit) },
-            { $skip: messages.length }
-            ])).forEach(message => {
-                messages.push(message);
-            });
-        }
-        res.status(200).json(messages);
-    } catch (error) {
-        console.log(error);
-        res.status(500).send(error);
+  try {
+    const conversationRecentMessagesCacheKey = `${conversationRecentMessagesCachePrefix}/${req.query.conversation}`;
+    const conversationRecentMessagesCache = await res.locals.redis.zRange(
+      conversationRecentMessagesCacheKey,
+      0,
+      req.query.limit,
+      { EX: 60 * 60 * conversationRecentMessagesCacheHours }
+    );
+    let messages = [];
+    if (conversationRecentMessagesCache.length) {
+      JSON.parse(conversationRecentMessagesCache).forEach((messageJson) =>
+        messages.push(messageModel.hydrate(messageJson))
+      );
     }
-}
+    if (messages.length < req.query.limit) {
+      const multi = res.locals.redis.multi();
+      (
+        await messageModel.aggregate([
+          {
+            $match: { conversation: res.locals.conversation._id },
+          },
+          { $sort: { createdAt: -1 } },
+          { $limit: parseInt(req.query.limit) },
+          { $skip: messages.length },
+        ])
+      ).forEach((message) => {
+        multi.zAdd(conversationRecentMessagesCacheKey, {
+          score: Number(message.createdAt),
+          value: JSON.stringify(message),
+        });
+        messages.push(message);
+      });
+      multi.expire(
+        conversationRecentMessagesCacheKey,
+        60 * 60 * conversationRecentMessagesCacheHours
+      );
+      await multi.exec();
+    }
+    res.status(200).json(messages);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
