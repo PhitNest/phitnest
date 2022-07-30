@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
     );
     let messages = [];
     if (conversationRecentMessagesCache.length) {
-      await res.locals.redis.expire(
+      res.locals.redis.expire(
         conversationRecentMessagesCacheKey,
         60 * 60 * conversationRecentMessagesCacheHours
       );
@@ -34,21 +34,21 @@ module.exports = async (req, res) => {
           { $skip: messages.length },
         ])
       ).forEach((message) => {
-        multi.zadd(conversationRecentMessagesCacheKey, {
-          score: Number(message.createdAt),
-          value: JSON.stringify(message),
-        });
+        multi.zadd(
+          conversationRecentMessagesCacheKey,
+          Number(message.createdAt),
+          JSON.stringify(message)
+        );
         messages.push(message);
       });
       multi.expire(
         conversationRecentMessagesCacheKey,
         60 * 60 * conversationRecentMessagesCacheHours
       );
-      await multi.exec();
+      multi.exec();
     }
     res.status(200).json(messages);
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
+    res.status(500).send(error.message);
   }
 };

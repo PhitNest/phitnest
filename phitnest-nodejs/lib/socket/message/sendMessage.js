@@ -26,7 +26,7 @@ function validate(data) {
   return schema.validate(data);
 }
 
-module.exports = (socket) => {
+module.exports = (socket) =>
   socket.on("sendMessage", async (data) => {
     const { error } = validate(data);
     if (error) {
@@ -50,12 +50,13 @@ module.exports = (socket) => {
             sender: socket.data.userId,
           });
           const conversationRecentMessagesCacheKey = `${conversationRecentMessagesCachePrefix}/${conversation._id}`;
-          const multi = socket.data.redis
+          socket.data.redis
             .multi()
-            .zadd(conversationRecentMessagesCacheKey, {
-              score: message.createdAt,
-              value: JSON.stringify(message),
-            })
+            .zadd(
+              conversationRecentMessagesCacheKey,
+              message.createdAt,
+              JSON.stringify(message)
+            )
             .expire(
               conversationRecentMessagesCacheKey,
               60 * 60 * conversationRecentMessagesCacheHours
@@ -64,8 +65,9 @@ module.exports = (socket) => {
               `${messageCachePrefix}/${message._id}`,
               60 * 60 * messageCacheHours,
               JSON.stringify(message)
-            );
-          await Promise.all([message.save(), multi.exec()]);
+            )
+            .exec();
+          await message.save();
           socket.broadcast
             .to(data.conversation)
             .emit("receiveMessage", message);
@@ -77,4 +79,3 @@ module.exports = (socket) => {
       }
     }
   });
-};
