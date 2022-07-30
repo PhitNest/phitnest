@@ -1,6 +1,6 @@
 const NodeEnvironment = require("jest-environment-node").default;
 const { MongoMemoryServer } = require("mongodb-memory-server");
-const Redis = require("ioredis");
+const Redis = require("ioredis-mock");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
@@ -19,7 +19,6 @@ class BaseEnvironment extends NodeEnvironment {
     }
     if (this.global.redis) {
       await this.global.redis.flushall();
-      await this.global.redis.disconnect();
     }
     await super.teardown();
   }
