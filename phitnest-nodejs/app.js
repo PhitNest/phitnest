@@ -4,6 +4,7 @@ const { Server } = require("socket.io");
 const { createAdapter } = require("@socket.io/redis-adapter");
 const morgan = require("morgan");
 const routes = require("./lib/routes");
+const rateLimiter = require("./lib/middleware/rateLimiter");
 require("dotenv").config();
 
 module.exports = {
@@ -16,6 +17,7 @@ module.exports = {
     });
 
     app.use(morgan("dev"));
+    app.use(rateLimiter);
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));

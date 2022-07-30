@@ -17,7 +17,7 @@ function validate(data) {
   return schema.validate(data);
 }
 
-module.exports = (socket) => {
+module.exports = (socket) =>
   socket.on("deleteMessage", async (data) => {
     const { error } = validate(data);
     if (error) {
@@ -44,15 +44,16 @@ module.exports = (socket) => {
             conversation.participants.includes(socket.data.userId)
           ) {
             const conversationRecentMessagesCacheKey = `${conversationRecentMessagesCachePrefix}/${conversation._id}`;
-            const multi = socket.data.redis
+            socket.data.redis
               .multi()
               .zrem(conversationRecentMessagesCacheKey, JSON.stringify(message))
               .expire(
                 conversationRecentMessagesCacheKey,
                 60 * 60 * conversationRecentMessagesCacheHours
               )
-              .del(`${messageCachePrefix}/${message._id}`);
-            await Promise.all([message.delete(), multi.exec()]);
+              .del(`${messageCachePrefix}/${message._id}`)
+              .exec();
+            await message.delete();
             socket.broadcast
               .to(message.conversation)
               .emit(`messageDeleted:${message._id}`);
@@ -67,4 +68,3 @@ module.exports = (socket) => {
       }
     }
   });
-};

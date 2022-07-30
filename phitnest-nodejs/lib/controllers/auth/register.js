@@ -31,9 +31,7 @@ module.exports = async (req, res) => {
         return res.status(500).send("A user already exists with this email.");
       }
     }
-    return res
-      .status(500)
-      .send("An internal server error occurred while registering.");
+    return res.status(500).send(error.message);
   }
 
   const authorization = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {

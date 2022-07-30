@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
       conversation = await conversationModel.findById(req.query.conversation);
     }
     if (conversation && conversation.participants.includes(res.locals.userId)) {
-      await res.locals.redis.setex(
+      res.locals.redis.setex(
         conversationCacheKey,
         60 * 60 * conversationCacheHours,
         JSON.stringify(conversation)
