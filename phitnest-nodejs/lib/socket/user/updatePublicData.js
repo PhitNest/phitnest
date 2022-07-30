@@ -56,14 +56,12 @@ module.exports = (socket) => {
           user.lastName = data.lastName ?? user.lastName;
           user.bio = data.bio ?? user.bio;
           user.birthday = data.birthday ?? user.birthday;
-          await Promise.all([
-            userModel.updateOne({ _id: user._id }, user),
-            socket.data.redis.setex(
-              `${userCachePrefix}/${user._id}`,
-              60 * 60 * userCacheHours,
-              JSON.stringify(user)
-            ),
-          ]);
+          socket.data.redis.setex(
+            `${userCachePrefix}/${user._id}`,
+            60 * 60 * userCacheHours,
+            JSON.stringify(user)
+          );
+          await userModel.updateOne({ _id: user._id }, user);
           socket.broadcast
             .to(`userListener:${user._id}`)
             .emit("userUpdated", data);
