@@ -1,58 +1,24 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const JWT = require('jsonwebtoken');
-const mongoose = require('./api/middleware/db');
-const rateLimiter = require('./api/middleware/rateLimiter');
-const routes = require('./api/routes');
-const { Server } = require("socket.io");
-const http = require('http');
-require('dotenv').config();
+const registerListeners = require("./lib/socket");
+const { createApp, createSocketIO } = require("./app");
+const Redis = require("ioredis");
+const { createServer } = require("http");
+const mongoose = require("mongoose");
+require("dotenv").config();
+const PORT = process.env.PORT || 3000;
+const REDIS_PORT = process.env.REDIS_PORT || 6379;
+const REDIS_HOST = process.env.REDIS_HOST || "127.0.0.1";
+const DB = process.env.DB || "mongodb://localhost:27017/";
 
-process.on('uncaughtException', error => {
-	console.log(error);
-});
+mongoose.connect(DB);
 
-process.on('unhandledRejection', error => {
-	console.log(error);
-});
+const redisClient = new Redis(REDIS_PORT, REDIS_HOST);
+const subClient = redisClient.duplicate();
+const app = createApp(redisClient);
+const server = createServer(app);
+const io = createSocketIO(redisClient, subClient, server);
 
-const PORT = process.env.port || 3000;
-
-const app = express();
-
-app.use(morgan('dev'));
-app.use(rateLimiter);
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.set('trust proxy', true);
-
-app.get('/', (req, res) => {
-	res.status(200).json({ resultMessage: 'Requests are working successfully...' });
-});
-app.use('/', routes);
-
-const server = http.createServer(app);
-const io = new Server(server);
-mongoose.db();
-
-io.use((socket, next) => {
-	try {
-		const data = JWT.verify(socket.handshake.headers.authorization, process.env.JWT_SECRET);
-		socket.data.userId = data._id;
-		next();
-	} catch (error) {
-		next(error);
-	}
-});
-
-const { registerListeners, registerEmitters } = require('./api/sockets');
-
-registerEmitters.broadcasts(io);
-io.on('connection', socket => {
-	registerEmitters.socket(socket);
-	registerListeners(socket);
+io.on("connection", (socket) => {
+  registerListeners(socket);
 });
 
 server.listen(PORT, () => console.log(`Server is running on ${PORT}`));
