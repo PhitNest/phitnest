@@ -17,6 +17,7 @@ module.exports = async (req, res) => {
     user.lastName = req.body.lastName;
   }
   try {
+    // mongodb will throw errors for duplicate email/mobile
     await user.save();
     await res.locals.redis.setex(
       `${userCachePrefix}/${user._id}`,

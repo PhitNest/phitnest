@@ -45,9 +45,11 @@ class AuthApi {
       http.post(Uri.parse('$kBackEndUrl/auth/login'),
           body: {"email": email, "password": password}).then((res) async {
         if (res.statusCode == 200) {
-          await deviceStorage.write(key: kRefreshTokenCache, value: res.body);
-          await deviceStorage.write(key: kEmailCache, value: email);
-          await deviceStorage.write(key: kPasswordCache, value: password);
+          await Future.wait([
+            deviceStorage.write(key: kRefreshTokenCache, value: res.body),
+            deviceStorage.write(key: kEmailCache, value: email),
+            deviceStorage.write(key: kPasswordCache, value: password),
+          ]);
           _refreshToken = res.body;
           return null;
         } else {
@@ -57,18 +59,21 @@ class AuthApi {
 
   /// Retun an error if unsuccessful
   Future<String?> register(String email, String password, String mobile,
-          String firstName, String? lastName) =>
+          DateTime birthday, String firstName, String? lastName) =>
       http.post(Uri.parse('$kBackEndUrl/auth/register'), body: {
         "email": email,
         "password": password,
         "mobile": mobile,
         "firstName": firstName,
+        "birthday": birthday,
         ...(lastName != null ? {"lastName": lastName} : {}),
       }).then((res) async {
         if (res.statusCode == 200) {
-          await deviceStorage.write(key: kRefreshTokenCache, value: res.body);
-          await deviceStorage.write(key: kEmailCache, value: email);
-          await deviceStorage.write(key: kPasswordCache, value: password);
+          await Future.wait([
+            deviceStorage.write(key: kRefreshTokenCache, value: res.body),
+            deviceStorage.write(key: kEmailCache, value: email),
+            deviceStorage.write(key: kPasswordCache, value: password),
+          ]);
           _refreshToken = res.body;
           return null;
         } else {

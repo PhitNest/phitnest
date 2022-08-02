@@ -82,6 +82,7 @@ class RegisterProvider
           model.emailController.text.trim(),
           model.passwordController.text.trim(),
           model.mobileController.text.trim(),
+          model.dateOfBirthController.date,
           model.firstNameController.text.trim(),
           model.lastNameController.text.trim());
     }

@@ -5,7 +5,7 @@ module.exports = async (req, res) => {
   try {
     const user = await userModel.findById(res.locals.userId);
     if (user) {
-      res.locals.redis.setex(
+      await res.locals.redis.setex(
         `${userCachePrefix}/${res.locals.userId}`,
         60 * 60 * userCacheHours,
         JSON.stringify(user)

@@ -23,15 +23,12 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
 
     StreamApi.instance.refreshWebSocket();
 
-    model.currentUser =
-        await DatabaseApi.instance.getPublicInfo(AuthApi.instance.userId!);
-
     model.messageCards = (await DatabaseApi.instance.getRecentConversations())
         .map((entry) => ChatCard(
             message: entry.value.message,
-            read: entry.value.readBy.length > 0,
+            read: false,
             online: true,
-            name: 'test',
+            name: entry.key.name,
             onDismissConfirm: (direction) {},
             onTap: () =>
                 Navigator.pushNamed(context, '/chat', arguments: entry.key)))
@@ -44,7 +41,6 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
   HomeView build(BuildContext context, HomeModel model) => HomeView(
         pageController: model.pageController,
         messageCards: model.messageCards,
-        currentUser: model.currentUser,
       );
 
   @override
