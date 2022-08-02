@@ -17,15 +17,5 @@ const kRefreshTokenCache = 'refreshToken';
 const kEmailCache = 'email';
 const kPasswordCache = 'password';
 
-// Database document collection indices
-const kUsersPublic = 'users_public';
-const kUsersPrivate = 'users_private';
-const kConversations = 'conversations';
-const kMessages = 'messages';
-const kRelations = 'relations';
-
-// Storage bucket paths
-const kProfilePictureBucketPath = 'profilePictures';
-
 const kDefaultAvatarUrl =
     'https://www.iosapptemplates.com/wp-content/uploads/2019/06/empty-avatar.jpg';

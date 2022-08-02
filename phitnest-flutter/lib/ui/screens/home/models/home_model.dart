@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../../models/models.dart';
 import '../../screen_model.dart';
 import '../views/home_view.dart';
 
@@ -13,8 +12,7 @@ export 'profile/profile_model.dart';
 class HomeModel extends ScreenModel {
   final PageController pageController = PageController();
 
-  StreamSubscription<UserPublicInfo>? infoListener;
-  UserPublicInfo? currentUser;
+  StreamSubscription<List<ChatCard>>? chatCardListener;
 
   List<ChatCard> _messageCards = [];
   List<ChatCard> get messageCards => _messageCards;
@@ -26,7 +24,6 @@ class HomeModel extends ScreenModel {
 
   @override
   void dispose() {
-    infoListener?.cancel();
     super.dispose();
   }
 }

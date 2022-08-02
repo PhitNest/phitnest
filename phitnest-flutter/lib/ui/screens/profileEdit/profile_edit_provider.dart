@@ -10,15 +10,6 @@ class ProfileEditProvider
   ProfileEditProvider({Key? key}) : super(key: key);
 
   @override
-  Future<bool> init(BuildContext context, ProfileEditModel model) async {
-    if (!await super.init(context, model)) {
-      return false;
-    }
-
-    return true;
-  }
-
-  @override
   ProfileEditView build(BuildContext context, ProfileEditModel model) =>
       ProfileEditView(
           firstNameController: model.firstNameController,
@@ -31,8 +22,8 @@ class ProfileEditProvider
       showProgressUntil(
           context: context,
           message: 'Updating profile...',
-          showUntil: () async {
-            // Update profile
+          showUntil: () {
+            return;
           });
 
   @override

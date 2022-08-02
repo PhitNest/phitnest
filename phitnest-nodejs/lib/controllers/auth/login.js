@@ -19,12 +19,14 @@ module.exports = async (req, res) => {
           }
         );
         user.lastSeen = Date.now();
-        res.locals.redis.setex(
-          `${userCachePrefix}/${user._id}`,
-          60 * 60 * userCacheHours,
-          JSON.stringify(user)
-        );
-        await user.save();
+        await Promise.all([
+          res.locals.redis.setex(
+            `${userCachePrefix}/${user._id}`,
+            60 * 60 * userCacheHours,
+            JSON.stringify(user)
+          ),
+          user.save(),
+        ]);
         return res.status(200).send(authorization);
       }
       return res
