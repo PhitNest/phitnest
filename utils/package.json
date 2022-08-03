@@ -1,0 +1,12 @@
+{
+  "name": "phitnest-app-utils",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon model_conversions.js"
+  },
+  "type": "module",
+  "author": "",
+  "license": "ISC"
+}
