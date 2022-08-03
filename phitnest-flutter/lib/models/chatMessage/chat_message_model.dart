@@ -13,7 +13,7 @@ class ChatMessage {
 
   factory ChatMessage.fromJson(Map<String, dynamic> parsedJson) =>
       ChatMessage(parsedJson['_id'],
-          conversationId: parsedJson['conversationId'],
+          conversationId: parsedJson['conversation'],
           sender: parsedJson['sender'],
           message: parsedJson['message'],
           createdAt: DateTime.parse(parsedJson['createdAt']));

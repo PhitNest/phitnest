@@ -4,6 +4,8 @@ const { Server } = require("socket.io");
 const { createAdapter } = require("@socket.io/redis-adapter");
 const morgan = require("morgan");
 const routes = require("./lib/routes");
+const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 require("dotenv").config();
 
 module.exports = {
@@ -35,9 +37,9 @@ module.exports = {
       try {
         const data = jwt.verify(
           socket.handshake.headers.authorization,
-          JWT_SECRET
+          process.env.JWT_SECRET
         );
-        socket.data.userId = data._id;
+        socket.data.userId = mongoose.Types.ObjectId(data._id);
         socket.data.redis = pubClient;
         next();
       } catch (error) {

@@ -1,29 +1,16 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../screen_model.dart';
 import '../views/home_view.dart';
 
 export 'chatHome/chat_home_model.dart';
 export 'profile/profile_model.dart';
+export 'heatmap/heatmap_model.dart';
 
 /// This is the view model for the home view.
 class HomeModel extends ScreenModel {
   final PageController pageController = PageController();
-
-  StreamSubscription<List<ChatCard>>? chatCardListener;
-
-  List<ChatCard> _messageCards = [];
-  List<ChatCard> get messageCards => _messageCards;
-
-  set messageCards(List<ChatCard> messageCards) {
-    _messageCards = messageCards;
-    notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  late final List<ChatCard> initialMessageCards;
+  late final Stream<LatLng?> userLocationStream;
 }

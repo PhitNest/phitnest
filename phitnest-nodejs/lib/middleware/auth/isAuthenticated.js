@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 require("dotenv").config();
 
 module.exports = async (req, res, next) => {
@@ -6,7 +7,7 @@ module.exports = async (req, res, next) => {
   try {
     const data = jwt.verify(str, process.env.JWT_SECRET);
     res.locals.jwtData = data;
-    res.locals.userId = data._id;
+    res.locals.userId = mongoose.Types.ObjectId(data._id);
     next();
   } catch (error) {
     res.status(401);

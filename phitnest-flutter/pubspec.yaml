@@ -25,6 +25,9 @@ dependencies:
   cached_network_image: ^3.2.1
   jwt_decode: ^0.3.1
   socket_io_client: ^2.0.0
+  flutter_map: ^2.2.0
+  latlong2: ^0.8.1
+  location: ^4.4.0
 dev_dependencies:
   flutter_launcher_icons: ^0.9.1
   integration_test:
