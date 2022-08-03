@@ -6,19 +6,8 @@ import '../../common/widgets/widgets.dart';
 import '../screen_model.dart';
 
 class ProfileEditModel extends ScreenModel {
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  File? _profilePicture;
-
-  File? get profilePicture => _profilePicture;
-
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
-  TextEditingController bioController = TextEditingController();
-  DateEditingController birthdayController = DateEditingController();
-
-  set profilePicture(File? profilePicture) {
-    _profilePicture = profilePicture;
-    notifyListeners();
-  }
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController bioController = TextEditingController();
 }

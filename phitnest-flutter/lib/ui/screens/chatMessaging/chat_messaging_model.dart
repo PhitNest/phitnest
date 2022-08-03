@@ -6,12 +6,11 @@ import '../screen_model.dart';
 import 'chatBubble/message_bubble.dart';
 
 class ChatMessagingModel extends ScreenModel {
+  final TextEditingController messageController = TextEditingController();
+  final FocusNode messageFocus = FocusNode();
+  final ScrollController scrollController = ScrollController();
+
   String? chatName;
-  TextEditingController messageController = TextEditingController();
-  FocusNode messageFocus = FocusNode();
-
-  ScrollController scrollController = ScrollController();
-
   StreamSubscription<MessageBubble>? messageBubbleListener;
   List<MessageBubble> _messageBubbles = [];
   List<MessageBubble> get messageBubbles => _messageBubbles;

@@ -3,7 +3,11 @@ const { conversationModel } = require("../../models");
 module.exports = async (req, res) => {
   try {
     const messages = await conversationModel.aggregate([
-      { $match: { participants: res.locals.userId } },
+      {
+        $match: {
+          participants: res.locals.userId,
+        },
+      },
       {
         $lookup: {
           from: "messages",
@@ -19,6 +23,7 @@ module.exports = async (req, res) => {
           conversation: {
             _id: "$_id",
             participants: "$participants",
+            name: "$name",
           },
           message: "$recentMessage",
         },

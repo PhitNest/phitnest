@@ -7,7 +7,7 @@ const {
 module.exports = async (req, res) => {
   try {
     const conversationRecentMessagesCacheKey = `${conversationRecentMessagesCachePrefix}/${req.query.conversation}`;
-    const conversationRecentMessagesCache = await res.locals.redis.zrange(
+    const conversationRecentMessagesCache = await res.locals.redis.zrevrange(
       conversationRecentMessagesCacheKey,
       0,
       req.query.limit
@@ -18,8 +18,8 @@ module.exports = async (req, res) => {
         conversationRecentMessagesCacheKey,
         60 * 60 * conversationRecentMessagesCacheHours
       );
-      JSON.parse(conversationRecentMessagesCache).forEach((messageJson) =>
-        messages.push(messageModel.hydrate(messageJson))
+      conversationRecentMessagesCache.forEach((messageJson) =>
+        messages.push(messageModel.hydrate(JSON.parse(messageJson)))
       );
     }
     if (messages.length < req.query.limit) {

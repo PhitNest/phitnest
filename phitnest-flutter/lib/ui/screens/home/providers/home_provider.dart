@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 
 import '../../../../apis/apis.dart';
 import '../../screens.dart';
@@ -6,7 +8,8 @@ import '../models/home_model.dart';
 import '../views/home_view.dart';
 
 export 'chatHome/chat_home_provider.dart';
-export 'profile/profileEdit/profile_provider_edit.dart';
+export 'profile/profile_provider.dart';
+export 'heatmap/heatmap_provider.dart';
 
 class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
   const HomeProvider({Key? key}) : super(key: key);
@@ -20,10 +23,10 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
     if (!await super.init(context, model)) {
       return false;
     }
-
     StreamApi.instance.refreshWebSocket();
 
-    model.messageCards = (await DatabaseApi.instance.getRecentConversations())
+    model.initialMessageCards = (await DatabaseApi.instance
+            .getRecentConversations())
         .map((entry) => ChatCard(
             message: entry.value.message,
             read: false,
@@ -34,13 +37,19 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
                 Navigator.pushNamed(context, '/chat', arguments: entry.key)))
         .toList();
 
+    if ([PermissionStatus.grantedLimited, PermissionStatus.granted]
+        .contains(await Location.instance.requestPermission())) {
+      model.userLocationStream = Location.instance.onLocationChanged.map(
+          (location) => LatLng(
+              location.latitude ?? 51.509364, location.longitude ?? -0.128928));
+    }
+
     return true;
   }
 
   @override
   HomeView build(BuildContext context, HomeModel model) => HomeView(
         pageController: model.pageController,
-        messageCards: model.messageCards,
       );
 
   @override

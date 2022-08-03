@@ -5,11 +5,10 @@ import '../screen_model.dart';
 class MobileAuthenticationModel extends ScreenModel {
   /// Controls the phone number field
   final phoneNumberController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey();
 
   /// Validation mode
   AutovalidateMode _validate = AutovalidateMode.disabled;
-
-  GlobalKey<FormState> formKey = GlobalKey();
 
   AutovalidateMode get validate => _validate;
 

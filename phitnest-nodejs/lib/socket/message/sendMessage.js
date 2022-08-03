@@ -50,11 +50,12 @@ module.exports = (socket) =>
             sender: socket.data.userId,
           });
           const conversationRecentMessagesCacheKey = `${conversationRecentMessagesCachePrefix}/${conversation._id}`;
-          socket.data.redis
+          await message.save();
+          await socket.data.redis
             .multi()
             .zadd(
               conversationRecentMessagesCacheKey,
-              message.createdAt,
+              Number(Date.now()),
               JSON.stringify(message)
             )
             .expire(
@@ -67,7 +68,6 @@ module.exports = (socket) =>
               JSON.stringify(message)
             )
             .exec();
-          await message.save();
           socket.broadcast
             .to(data.conversation)
             .emit("receiveMessage", message);
