@@ -32,7 +32,8 @@ const models = [
   {
     node: "user.js",
     dart: "user/user_.dart",
-    customMethods: ``,
+    customMethods: `  String get fullName => '$firstName\${lastName == '' ? '' : ' '}$lastName';
+`,
   },
 
   // {
@@ -40,31 +41,6 @@ const models = [
   //   dart: "userRelationship/userRelationship.dart"
   // },
 ];
-
-const buildTemplate = ({
-  className,
-  typeDeclarations,
-  constructorParameters,
-  factoryParameters,
-  customMethods,
-}) => `
-
-class ${className} {
-  ${typeDeclarations}
-
-  ${className}({
-    ${constructorParameters}
-  })
-
-  factory ${className}.fromJson(Map<String, dynamic> parsedJson) =>
-    ${className}(
-      parsedJson['_id'],
-      ${factoryParameters}
-    )
-
-  ${customMethods}
-}
-`;
 
 /**
  * Splits the code by brackets and returns an array of smaller code blocks
@@ -97,6 +73,10 @@ async function main() {
     let sourceContents = await fs.readFile(path.join(sourceUrl, model.node));
     sourceContents = sourceContents.toString();
 
+    // Find class name (e.g. Message or Conversation)
+    let className =
+      model.classNameOverride || sourceContents.match(/model\("(\w+)"/im)[1];
+
     // Find outerFields in nodejs file
     let blocks = splitCodeByBrackets(sourceContents);
     let firstBlock = blocks[0].trim();
@@ -108,7 +88,7 @@ async function main() {
     let labels = both.filter((v, i) => i % 2 === 0);
     labels = labels.map((l) => l.match(/[a-z]+/gim)?.[0]);
     labels = labels.filter((v) => v);
-    let typeData = labels.map((l) => {
+    let allProps = labels.map((l) => {
       return { field: l };
     });
 
@@ -120,27 +100,58 @@ async function main() {
         let [fieldName, valueName] = field.split(":");
         fieldName = fieldName.trim();
         if (fieldName.trim() === "type") {
-          typeData[labelIndex]["value"] = valueName.match(/[a-z]+/gim)[0];
+          allProps[labelIndex]["value"] = valueName.match(/[a-z]+/gim)[0];
         }
       }
       labelIndex++;
     }
-    console.log(typeData);
+    // console.log(allProps);
 
-    let outputStr = buildTemplate({
-      className: "User",
-      typeDeclarations:
-        typeData
-          .map((type) => {
-            return `${type.value} ${type.field}`;
-          })
-          .join(";\n  ") + ";",
-      customMethods: model.customMethods,
-    });
+    // Add [className]Id prop (e.g. conversationId)
+    const classIdProp = {
+      field: className.toLowerCase() + "Id",
+      value: "String",
+    };
 
-    await fs.writeFile(path.join("./test.txt"), outputStr);
+    // Type declarations
+    const typeDeclarations = [classIdProp, ...allProps]
+      .map((prop) => {
+        return `${prop.value} ${prop.field};`;
+      })
+      .join("\n  ");
 
-    return;
+    const constructorParameters = allProps
+      .map((prop) => {
+        return `required this.${prop.field},`;
+      })
+      .join("\n    ");
+
+    const factoryBody = allProps
+      .map((prop) => {
+        return `${prop.field}: json['${prop.field}'],`;
+      })
+      .join("\n      ");
+
+    let outputStr = `
+
+class ${className} {
+  ${typeDeclarations}
+
+  ${className}(this.${classIdProp.field}, {
+    ${constructorParameters}
+  });
+
+  factory ${className}.fromJson(Map<String, dynamic> json) =>
+    ${className}(
+      json['_id'],
+      ${factoryBody}
+    );
+
+  ${model.customMethods}
+}`;
+
+    await fs.writeFile(path.join("./test", className + ".dart"), outputStr);
+
     // await fs.writeFile(path.join(destUrl, model.dart), outputCode);
   }
 }
