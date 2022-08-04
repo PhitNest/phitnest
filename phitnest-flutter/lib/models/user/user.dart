@@ -30,6 +30,6 @@ class AuthenticatedUser {
         lastName: parsedJson['lastName'],
         online: parsedJson['online'],
         bio: parsedJson['bio'],
-        birthday: parsedJson['birthday'],
+        birthday: DateTime.parse(parsedJson['birthday']),
       );
 }

@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 
-import '../../../../apis/apis.dart';
-import '../../screens.dart';
-import '../models/home_model.dart';
-import '../views/home_view.dart';
-
-export 'chatHome/chat_home_provider.dart';
-export 'profile/profile_provider.dart';
-export 'heatmap/heatmap_provider.dart';
+import '../../../apis/apis.dart';
+import '../screens.dart';
+import 'home_model.dart';
+import 'home_view.dart';
+import 'views/views.dart';
 
 class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
   const HomeProvider({Key? key}) : super(key: key);
@@ -25,8 +22,9 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
     }
     StreamApi.instance.refreshWebSocket();
 
-    model.initialMessageCards = (await DatabaseApi.instance
-            .getRecentConversations())
+    model.user = await DatabaseApi.instance.getUserInfo();
+
+    model.messageCards = (await DatabaseApi.instance.getRecentConversations())
         .map((entry) => ChatCard(
             message: entry.value.message,
             read: false,
@@ -39,17 +37,25 @@ class HomeProvider extends AuthenticatedProvider<HomeModel, HomeView> {
 
     if ([PermissionStatus.grantedLimited, PermissionStatus.granted]
         .contains(await Location.instance.requestPermission())) {
-      model.userLocationStream = Location.instance.onLocationChanged.map(
-          (location) => LatLng(
-              location.latitude ?? 51.509364, location.longitude ?? -0.128928));
+      model.userLocationListener = Location.instance.onLocationChanged
+          .map((location) => LatLng(
+              location.latitude ?? 51.509364, location.longitude ?? -0.128928))
+          .listen((latlong) {
+        model.userLocation = latlong;
+      });
     }
-
     return true;
   }
 
   @override
   HomeView build(BuildContext context, HomeModel model) => HomeView(
         pageController: model.pageController,
+        user: model.user,
+        chatCards: model.messageCards,
+        userLocation: model.userLocation,
+        mapController: model.mapController,
+        onClickEditProfileButton: () =>
+            Navigator.pushNamed(context, '/editProfile'),
       );
 
   @override
