@@ -1,3 +1,5 @@
+# Wait-up! Don't run this code! It contains bugs as of this commit.
+
 # Phitnest Code Nodejs-to-Dart Converter
 
 Convert between node.js and dart code by running this script. Generates dart code from phitnest-nodejs/lib/models.
@@ -50,3 +52,5 @@ const messageSchema = mongoose.Schema(
 
 const messageModel = mongoose.model("Message", messageSchema); // the code `mongoose.model("SomeModelName"` must exist to set the model name in dart.
 ```
+
+\*Array of dates is not yet supported.

@@ -178,6 +178,9 @@ async function main() {
 
     const factoryBody = allProps
       .map((prop) => {
+        if (prop.value === "DateTime") {
+          return `${prop.field}: DateTime.parse(parsedJson['${prop.field}']),`;
+        }
         if (prop.isArray) {
           return `${prop.field}: (parsedJson['${prop.field}'] as List<dynamic>).cast<${prop.value}>(),`;
         }
