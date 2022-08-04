@@ -13,11 +13,11 @@ class HomeModel extends ScreenModel {
   final PageController pageController = PageController();
   final MapController mapController = MapController();
 
-  late AuthenticatedUser _user;
+  late User _user;
 
-  AuthenticatedUser get user => _user;
+  User get user => _user;
 
-  set user(AuthenticatedUser user) {
+  set user(User user) {
     _user = user;
     notifyListeners();
   }

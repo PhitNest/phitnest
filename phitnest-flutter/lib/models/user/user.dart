@@ -1,35 +1,47 @@
-class AuthenticatedUser {
+// THIS FILE IS AUTO GENERATED FROM ../phitnest-nodejs/lib/models/user.js
+// To edit this model - follow instructions in ../utils/README.md
+
+class User {
   String userId;
+  DateTime createdAt;
+  String email;
+  String password;
+  String mobile;
   String firstName;
   String lastName;
-  String mobile;
-  String email;
+  String bio;
   bool online;
   DateTime birthday;
-  String bio;
+  DateTime lastSeen;
 
-  String get fullName => '$firstName${lastName == '' ? '' : ' '}$lastName';
-
-  AuthenticatedUser(
-    this.userId, {
+  User(this.userId, {
+    required this.createdAt,
+    required this.email,
+    required this.password,
+    required this.mobile,
     required this.firstName,
     required this.lastName,
-    required this.mobile,
-    required this.email,
+    required this.bio,
     required this.online,
     required this.birthday,
-    required this.bio,
+    required this.lastSeen,
   });
 
-  factory AuthenticatedUser.fromJson(Map<String, dynamic> parsedJson) =>
-      AuthenticatedUser(
-        parsedJson['_id'],
-        firstName: parsedJson['firstName'],
-        email: parsedJson['email'],
-        mobile: parsedJson['mobile'],
-        lastName: parsedJson['lastName'],
-        online: parsedJson['online'],
-        bio: parsedJson['bio'],
-        birthday: DateTime.parse(parsedJson['birthday']),
-      );
+  factory User.fromJson(Map<String, dynamic> parsedJson) =>
+    User(
+      parsedJson['_id'],
+      createdAt: parsedJson['createdAt'],
+      email: parsedJson['email'],
+      password: parsedJson['password'],
+      mobile: parsedJson['mobile'],
+      firstName: parsedJson['firstName'],
+      lastName: parsedJson['lastName'],
+      bio: parsedJson['bio'],
+      online: parsedJson['online'],
+      birthday: parsedJson['birthday'],
+      lastSeen: parsedJson['lastSeen'],
+    );
+
+    String get fullName => '$firstName${lastName == '' ? '' : ' '}$lastName';
+
 }

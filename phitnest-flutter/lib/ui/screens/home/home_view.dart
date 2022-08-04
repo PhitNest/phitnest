@@ -9,7 +9,7 @@ import 'views/views.dart';
 /// This is the view shown when users have been authenticated.
 class HomeView extends ScreenView {
   final PageController pageController;
-  final AuthenticatedUser user;
+  final User user;
   final Function() onClickEditProfileButton;
   final List<ChatCard> chatCards;
   final LatLng? userLocation;
