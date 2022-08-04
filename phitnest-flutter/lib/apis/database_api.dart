@@ -11,19 +11,18 @@ class DatabaseApi {
   static DatabaseApi instance = DatabaseApi();
 
   /// Get the signed in users full info from the database
-  Future<AuthenticatedUser> getUserInfo() => http
+  Future<User> getUserInfo() => http
           .get(Uri.parse('$kBackEndUrl/user/fullData'),
               headers: AuthApi.instance.requestHeaders)
           .then((res) {
         if (res.statusCode == 200) {
-          return AuthenticatedUser.fromJson(jsonDecode(res.body));
+          return User.fromJson(jsonDecode(res.body));
         } else {
           throw HttpException(res.body);
         }
       });
 
-  Future<List<MapEntry<Conversation, ChatMessage>>> getRecentConversations() =>
-      http
+  Future<List<MapEntry<Conversation, Message>>> getRecentConversations() => http
           .get(Uri.parse('$kBackEndUrl/conversation/listRecents'),
               headers: AuthApi.instance.requestHeaders)
           .then((res) {
@@ -32,7 +31,7 @@ class DatabaseApi {
           return json
               .map((convoMessage) => MapEntry(
                   Conversation.fromJson(convoMessage['conversation']!),
-                  ChatMessage.fromJson(convoMessage['message']!)))
+                  Message.fromJson(convoMessage['message']!)))
               .toList();
         } else {
           throw HttpException(res.body);
@@ -40,7 +39,7 @@ class DatabaseApi {
       });
 
   /// Gets messages from a conversation
-  Future<List<ChatMessage>> getMessages(
+  Future<List<Message>> getMessages(
     String conversationId, {
     int limit = 10,
   }) =>
@@ -53,7 +52,7 @@ class DatabaseApi {
           .then((res) {
         if (res.statusCode == 200) {
           List<dynamic> json = jsonDecode(res.body);
-          return json.map((message) => ChatMessage.fromJson(message)).toList();
+          return json.map((message) => Message.fromJson(message)).toList();
         } else {
           throw HttpException(res.body);
         }

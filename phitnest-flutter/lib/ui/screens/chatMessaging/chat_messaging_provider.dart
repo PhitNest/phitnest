@@ -39,7 +39,7 @@ class ChatMessagingProvider
 
   Future<void> onSendMessage(String? message, ChatMessagingModel model) async {
     model.messageFocus.unfocus();
-    if (validateChatMessage(message) == null) {
+    if (validateMessage(message) == null) {
       model.messageController.clear();
       model.scrollController.jumpTo(0);
       StreamApi.instance.sendMessage(conversation.conversationId, message!);

@@ -13,7 +13,7 @@ class StreamApi {
   bool connected = false;
   Socket? socket;
 
-  Stream<ChatMessage>? broadcastIncomingMessages;
+  Stream<Message>? broadcastIncomingMessages;
 
   refreshWebSocket() {
     socket?.dispose();
@@ -26,17 +26,15 @@ class StreamApi {
             .build());
     socket!.onConnect((data) => connected = true);
     socket!.onDisconnect((data) => connected = false);
-    StreamController<ChatMessage> incomingMessageController =
-        StreamController<ChatMessage>();
-    socket!.on(
-        'receiveMessage',
-        (data) =>
-            incomingMessageController.sink.add(ChatMessage.fromJson(data)));
+    StreamController<Message> incomingMessageController =
+        StreamController<Message>();
+    socket!.on('receiveMessage',
+        (data) => incomingMessageController.sink.add(Message.fromJson(data)));
     broadcastIncomingMessages =
         incomingMessageController.stream.asBroadcastStream();
   }
 
-  Stream<ChatMessage> streamMessages(String conversationId) {
+  Stream<Message> streamMessages(String conversationId) {
     if (broadcastIncomingMessages == null) {
       throw WebSocketException('Web socket is not yet open');
     }

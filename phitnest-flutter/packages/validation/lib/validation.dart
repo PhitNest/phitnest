@@ -49,7 +49,7 @@ String? validatePassword(String? value) {
     return null;
 }
 
-String? validateChatMessage(String? value) {
+String? validateMessage(String? value) {
   if (value?.isNotEmpty ?? false) {
     return null;
   }

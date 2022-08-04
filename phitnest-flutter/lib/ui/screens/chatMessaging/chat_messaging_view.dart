@@ -50,7 +50,7 @@ class ChatMessagingView extends ScreenView {
             key: Key('textInput'),
             focusNode: focusNode,
             hint: 'Send message...',
-            validator: validateChatMessage,
+            validator: validateMessage,
             inputType: TextInputType.text,
             controller: messageController,
             onSubmit: onSendMessage,

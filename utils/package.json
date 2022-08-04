@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon model_conversions.js"
+    "start": "nodemon --watch model_conversions.js --watch '../phitnest-nodejs/lib/models/**/*' -e js,jsx,ts,tsx model_conversions.js"
   },
   "type": "module",
   "author": "",
