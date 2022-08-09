@@ -6,12 +6,12 @@ const {
   messageCachePrefix,
   conversationRecentMessagesCacheHours,
   conversationRecentMessagesCachePrefix,
-} = require("../../constants");
-const { userModel, conversationModel, messageModel } = require("../../models");
-const { checkCacheOrQuery } = require("../helpers");
+} = require('../../constants');
+const { userModel, conversationModel, messageModel } = require('../../models');
+const { checkCacheOrQuery } = require('../helpers');
 
 module.exports = (socket) =>
-  socket.on("deleteUser", async (data) => {
+  socket.on('deleteUser', async (data) => {
     try {
       const user = await checkCacheOrQuery(
         socket.data.redis,
@@ -58,17 +58,17 @@ module.exports = (socket) =>
                 await conversation.save();
                 socket.broadcast
                   .to(conversation._id.toString())
-                  .emit("userDeleted", { id: user._id });
+                  .emit('userDeleted', { id: user._id });
               })
             ),
           async () => socket.data.redis.del(`${userCachePrefix}/${user._id}`),
           user.delete(),
         ]);
-        socket.broadcast.to(`userListener:${user._id}`).emit("userDeleted", {});
+        socket.broadcast.to(`userListener:${user._id}`).emit('userDeleted', {});
       } else {
-        socket.emit("error", "You are not authenticated.");
+        socket.emit('error', 'You are not authenticated.');
       }
     } catch (error) {
-      socket.emit("error", error);
+      socket.emit('error', error);
     }
   });

@@ -1,10 +1,10 @@
 module.exports = {
   clearMocks: true,
-  collectCoverage: true,
-  coverageDirectory: "coverage",
-  coverageProvider: "v8",
+  coverageDirectory: 'coverage',
+  coverageProvider: 'v8',
   globals: {
     app: null,
+    io: null,
     redis: null,
     data: {},
   },

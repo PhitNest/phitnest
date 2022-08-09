@@ -1,4 +1,4 @@
-const checkCacheOrQuery = require("./checkCacheOrQuery");
+const checkCacheOrQuery = require('./checkCacheOrQuery');
 
 module.exports = {
   checkCacheOrQuery: checkCacheOrQuery,

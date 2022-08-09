@@ -3,8 +3,8 @@ const {
   maxPasswordLength,
   minEmailLength,
   maxEmailLength,
-} = require("../../constants");
-const joi = require("joi");
+} = require('../../constants');
+const joi = require('joi');
 
 function validate(req) {
   const schema = joi.object({

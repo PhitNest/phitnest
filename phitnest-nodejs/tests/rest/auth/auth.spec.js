@@ -1,9 +1,11 @@
 /**
- * @jest-environment ./tests/rest/auth/environment
+ * @jest-environment ./tests/environment
  */
 
-const testLogin = require("./login");
+const testLogin = require('./login');
+const testRegister = require('./register');
 
-describe("Auth Test Suit", () => {
-  describe("Login", testLogin);
+describe('Auth Test Suit', () => {
+  describe('Login', testLogin);
+  describe('Register', testRegister);
 });

@@ -1,13 +1,13 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const messageController = require("../controllers/message");
+const messageController = require('../controllers/message');
 const {
   validateListMessages,
   inConversation,
-} = require("../middleware/message");
+} = require('../middleware/message');
 
 router.get(
-  "/list",
+  '/list',
   [validateListMessages, inConversation],
   messageController.listMessages
 );

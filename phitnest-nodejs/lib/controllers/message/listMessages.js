@@ -1,8 +1,8 @@
-const { messageModel } = require("../../models");
+const { messageModel } = require('../../models');
 const {
   conversationRecentMessagesCachePrefix,
   conversationRecentMessagesCacheHours,
-} = require("../../constants");
+} = require('../../constants');
 
 module.exports = async (req, res) => {
   try {

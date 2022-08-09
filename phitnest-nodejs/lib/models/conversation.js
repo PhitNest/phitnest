@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const conversationSchema = mongoose.Schema(
   {
@@ -8,13 +8,13 @@ const conversationSchema = mongoose.Schema(
       required: true,
     },
     participants: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+      { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     ],
   },
   { timestamps: true }
 );
 
-const conversationModel = mongoose.model("Conversation", conversationSchema);
+const conversationModel = mongoose.model('Conversation', conversationSchema);
 
 module.exports = {
   conversationModel: conversationModel,

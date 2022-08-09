@@ -1,9 +1,9 @@
-const { userCacheHours, userCachePrefix } = require("../../constants");
+const { userCacheHours, userCachePrefix } = require('../../constants');
 
 module.exports = async (req, res, next) => {
   const userInfo = await res.locals.redis.getex(
     `${userCachePrefix}/${res.locals.userId}`,
-    "EX",
+    'EX',
     60 * 60 * userCacheHours
   );
   if (userInfo) {

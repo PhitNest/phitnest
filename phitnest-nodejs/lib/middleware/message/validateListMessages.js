@@ -1,5 +1,5 @@
-const joi = require("joi");
-const objectId = require("joi-objectid")(joi);
+const joi = require('joi');
+const objectId = require('joi-objectid')(joi);
 
 function validate(req) {
   const schema = joi.object({

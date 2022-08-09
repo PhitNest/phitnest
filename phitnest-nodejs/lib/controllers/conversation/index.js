@@ -1,4 +1,4 @@
-const listRecents = require("./listRecents");
+const listRecents = require('./listRecents');
 
 module.exports = {
   listRecents: listRecents,

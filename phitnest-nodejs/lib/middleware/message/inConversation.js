@@ -1,8 +1,8 @@
-const { conversationModel } = require("../../models");
+const { conversationModel } = require('../../models');
 const {
   conversationCacheHours,
   conversationCachePrefix,
-} = require("../../constants");
+} = require('../../constants');
 
 module.exports = async (req, res, next) => {
   try {
@@ -23,7 +23,7 @@ module.exports = async (req, res, next) => {
       res.locals.conversation = conversation;
       next();
     } else {
-      res.status(404).send("No conversation found.");
+      res.status(404).send('No conversation found.');
     }
   } catch (error) {
     res.status(500).send(error);

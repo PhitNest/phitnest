@@ -1,14 +1,14 @@
-const joi = require("joi");
-const objectId = require("joi-objectid")(joi);
+const joi = require('joi');
+const objectId = require('joi-objectid')(joi);
 const {
   messageCachePrefix,
   conversationCachePrefix,
   conversationCacheHours,
   conversationRecentMessagesCacheHours,
   conversationRecentMessagesCachePrefix,
-} = require("../../constants");
-const { conversationModel, messageModel } = require("../../models");
-const { checkCacheOrQuery } = require("../helpers");
+} = require('../../constants');
+const { conversationModel, messageModel } = require('../../models');
+const { checkCacheOrQuery } = require('../helpers');
 
 function validate(data) {
   const schema = joi.object({
@@ -18,10 +18,10 @@ function validate(data) {
 }
 
 module.exports = (socket) =>
-  socket.on("deleteMessage", async (data) => {
+  socket.on('deleteMessage', async (data) => {
     const { error } = validate(data);
     if (error) {
-      socket.emit("error", error);
+      socket.emit('error', error);
     } else {
       try {
         const message = await checkCacheOrQuery(
@@ -58,13 +58,13 @@ module.exports = (socket) =>
               .to(message.conversation)
               .emit(`messageDeleted:${message._id}`);
           } else {
-            socket.emit("error", "No conversation found");
+            socket.emit('error', 'No conversation found');
           }
         } else {
-          socket.emit("error", "No message found");
+          socket.emit('error', 'No message found');
         }
       } catch (error) {
-        socket.emit("error", error);
+        socket.emit('error', error);
       }
     }
   });
