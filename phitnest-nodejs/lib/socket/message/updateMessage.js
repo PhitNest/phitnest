@@ -1,6 +1,6 @@
-const joi = require("joi");
-const objectId = require("joi-objectid")(joi);
-const { messageModel, conversationModel } = require("../../models");
+const joi = require('joi');
+const objectId = require('joi-objectid')(joi);
+const { messageModel, conversationModel } = require('../../models');
 const {
   minMessageLength,
   maxMessageLength,
@@ -10,8 +10,8 @@ const {
   conversationCacheHours,
   conversationRecentMessagesCachePrefix,
   conversationRecentMessagesCacheHours,
-} = require("../../constants");
-const { checkCacheOrQuery } = require("../helpers");
+} = require('../../constants');
+const { checkCacheOrQuery } = require('../helpers');
 
 function validate(data) {
   const schema = joi.object({
@@ -27,10 +27,10 @@ function validate(data) {
 }
 
 module.exports = (socket) => {
-  socket.on("updateMessage", async (data) => {
+  socket.on('updateMessage', async (data) => {
     const { error } = validate(data);
     if (error) {
-      socket.emit("error", error);
+      socket.emit('error', error);
     } else {
       try {
         const message = await checkCacheOrQuery(
@@ -79,13 +79,13 @@ module.exports = (socket) => {
               .to(message.conversation)
               .emit(`messageUpdated:${message._id}`, message);
           } else {
-            socket.emit("error", "No conversation found");
+            socket.emit('error', 'No conversation found');
           }
         } else {
-          socket.emit("error", "No message found");
+          socket.emit('error', 'No message found');
         }
       } catch (error) {
-        socket.emit("error", error);
+        socket.emit('error', error);
       }
     }
   });

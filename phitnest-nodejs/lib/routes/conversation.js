@@ -1,6 +1,6 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const conversationController = require("../controllers/conversation");
+const conversationController = require('../controllers/conversation');
 
-router.get("/listRecents", conversationController.listRecents);
+router.get('/listRecents', conversationController.listRecents);
 module.exports = router;

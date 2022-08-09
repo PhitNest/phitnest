@@ -1,15 +1,15 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const userRelationshipSchema = mongoose.Schema(
   {
     sender: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     target: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     block: {
@@ -25,7 +25,7 @@ const userRelationshipSchema = mongoose.Schema(
 );
 
 const userRelationshipModel = mongoose.model(
-  "UserRelationship",
+  'UserRelationship',
   userRelationshipSchema
 );
 

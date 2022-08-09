@@ -1,12 +1,11 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const { Server } = require("socket.io");
-const { createAdapter } = require("@socket.io/redis-adapter");
-const morgan = require("morgan");
-const routes = require("./lib/routes");
-const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
-require("dotenv").config();
+const express = require('express');
+const bodyParser = require('body-parser');
+const { Server } = require('socket.io');
+const morgan = require('morgan');
+const routes = require('./lib/routes');
+const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
 module.exports = {
   createApp: (redisClient) => {
@@ -17,20 +16,20 @@ module.exports = {
       next();
     });
 
-    app.use(morgan("dev"));
+    app.use(morgan('dev'));
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
 
-    app.get("/", (req, res) => {
+    app.get('/', (req, res) => {
       res
         .status(200)
-        .json({ resultMessage: "Requests are working successfully..." });
+        .json({ resultMessage: 'Requests are working successfully...' });
     });
-    app.use("/", routes);
+    app.use('/', routes);
     return app;
   },
-  createSocketIO: (pubClient, subClient, server) => {
+  createSocketIO: (server) => {
     const io = new Server(server);
 
     io.use((socket, next) => {
@@ -40,14 +39,12 @@ module.exports = {
           process.env.JWT_SECRET
         );
         socket.data.userId = mongoose.Types.ObjectId(data._id);
-        socket.data.redis = pubClient;
         next();
       } catch (error) {
         next(error);
       }
     });
 
-    io.adapter(createAdapter(pubClient, subClient));
     return io;
   },
 };

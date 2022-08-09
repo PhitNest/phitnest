@@ -1,4 +1,4 @@
-const { conversationModel } = require("../../models");
+const { conversationModel } = require('../../models');
 
 module.exports = (socket) =>
   conversationModel

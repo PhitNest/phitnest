@@ -1,5 +1,5 @@
-const { userModel } = require("../../models");
-const { userCacheHours, userCachePrefix } = require("../../constants");
+const { userModel } = require('../../models');
+const { userCacheHours, userCachePrefix } = require('../../constants');
 
 module.exports = async (req, res) => {
   try {

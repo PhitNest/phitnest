@@ -1,4 +1,4 @@
-const fullData = require("./fullData");
+const fullData = require('./fullData');
 
 module.exports = {
   fullData: fullData,

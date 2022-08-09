@@ -1,4 +1,4 @@
-const joi = require("joi");
+const joi = require('joi');
 const {
   millisPerYear,
   minAge,
@@ -10,9 +10,9 @@ const {
   maxBioLength,
   userCachePrefix,
   userCacheHours,
-} = require("../../constants");
-const { userModel } = require("../../models");
-const { checkCacheOrQuery } = require("../helpers");
+} = require('../../constants');
+const { userModel } = require('../../models');
+const { checkCacheOrQuery } = require('../helpers');
 
 function validate(data) {
   const schema = joi.object({
@@ -38,10 +38,10 @@ function validate(data) {
 }
 
 module.exports = (socket) => {
-  socket.on("updatePublicData", async (data) => {
+  socket.on('updatePublicData', async (data) => {
     const { error } = validate(data);
     if (error) {
-      socket.emit("error", error);
+      socket.emit('error', error);
     } else {
       try {
         const user = await checkCacheOrQuery(
@@ -64,12 +64,12 @@ module.exports = (socket) => {
           await userModel.updateOne({ _id: user._id }, user);
           socket.broadcast
             .to(`userListener:${user._id}`)
-            .emit("userUpdated", data);
+            .emit('userUpdated', data);
         } else {
-          socket.emit("error", "You are not authenticated.");
+          socket.emit('error', 'You are not authenticated.');
         }
       } catch (error) {
-        socket.emit("error", error);
+        socket.emit('error', error);
       }
     }
   });

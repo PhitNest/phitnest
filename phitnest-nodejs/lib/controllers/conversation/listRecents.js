@@ -1,4 +1,4 @@
-const { conversationModel } = require("../../models");
+const { conversationModel } = require('../../models');
 
 module.exports = async (req, res) => {
   try {
@@ -10,32 +10,32 @@ module.exports = async (req, res) => {
       },
       {
         $lookup: {
-          from: "messages",
-          let: { conversationId: "$conversation" },
-          pipeline: [{ $match: { $expr: [{ _id: "$$conversationId" }] } }],
-          as: "recentMessage",
+          from: 'messages',
+          let: { conversationId: '$conversation' },
+          pipeline: [{ $match: { $expr: [{ _id: '$$conversationId' }] } }],
+          as: 'recentMessage',
         },
       },
-      { $unwind: "$recentMessage" },
-      { $sort: { "recentMessage.createdAt": -1 } },
+      { $unwind: '$recentMessage' },
+      { $sort: { 'recentMessage.createdAt': -1 } },
       {
         $project: {
           conversation: {
-            _id: "$_id",
-            participants: "$participants",
-            name: "$name",
+            _id: '$_id',
+            participants: '$participants',
+            name: '$name',
           },
-          message: "$recentMessage",
+          message: '$recentMessage',
         },
       },
       {
         $group: {
-          _id: "$conversation._id",
+          _id: '$conversation._id',
           conversation: {
-            $first: "$conversation",
+            $first: '$conversation',
           },
           message: {
-            $first: "$message",
+            $first: '$message',
           },
         },
       },
@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
     if (messages) {
       res.status(200).send(messages);
     } else {
-      res.status(404).send("No messages found");
+      res.status(404).send('No messages found');
     }
   } catch (error) {
     res.status(500).send(error.message);
