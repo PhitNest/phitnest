@@ -16,6 +16,7 @@ module.exports = () => {
         .get('/user/fullData')
         .set('Authorization', users[i].jwt)
         .expect(200).then((data) => {
+          expect(data.header.usedcache).toBe("false");
           expect(data.body.email).toBe(users[i].email);
           expect(data.body.mobile).toBe(users[i].mobile);
           expect(data.body.firstName).toBe(users[i].firstName);
@@ -41,4 +42,23 @@ module.exports = () => {
       expect(Date.parse(user.lastSeen)).toBe(users[i].lastSeen.getTime());
     }
   });
-};
+
+  test('Route should use cache', async () => {
+    for (let i = 0; i < users.length; i++) {
+      await supertest(globalThis.app)
+        .get('/user/fullData')
+        .set('Authorization', users[i].jwt)
+        .expect(200).then((data) => {
+          expect(data.header.usedcache).toBe("true");
+          expect(data.body.email).toBe(users[i].email);
+          expect(data.body.mobile).toBe(users[i].mobile);
+          expect(data.body.firstName).toBe(users[i].firstName);
+          expect(data.body.lastName).toBe(users[i].lastName);
+          expect(data.body.password).toBe(undefined);
+          expect(Date.parse(data.body.birthday)).toBe(users[i].birthday.getTime());
+          expect(data.body.bio).toBe(users[i].bio);
+          expect(Date.parse(data.body.lastSeen)).toBe(users[i].lastSeen.getTime());
+        });
+    }
+  });
+}

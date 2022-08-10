@@ -1,5 +1,6 @@
 module.exports = {
   millisPerYear: 1000 * 60 * 60 * 24 * 365,
+  maxListMessageLimit: 20,
   minEmailLength: 3,
   maxEmailLength: 30,
   minPasswordLength: 6,
