@@ -40,7 +40,7 @@ module.exports = async (req, res) => {
         },
       },
     ]);
-
+    
     if (messages) {
       res.status(200).send(messages);
     } else {

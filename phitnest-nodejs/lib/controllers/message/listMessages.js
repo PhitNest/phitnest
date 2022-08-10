@@ -47,7 +47,8 @@ module.exports = async (req, res) => {
       );
       multi.exec();
     }
-    res.status(200).json(messages);
+
+    res.status(200).append('usedcache', !!conversationRecentMessagesCache.length).json(messages);
   } catch (error) {
     res.status(500).send(error.message);
   }
