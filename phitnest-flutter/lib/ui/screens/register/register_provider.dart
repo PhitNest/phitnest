@@ -15,6 +15,8 @@ class RegisterProvider
     extends PreAuthenticationProvider<RegisterModel, RegisterView> {
   const RegisterProvider({Key? key}) : super(key: key);
 
+  static const String routeName = "/register";
+
   /// If this returns true, the loading widget is dropped. If it returns false,
   /// the loading widget stays until we navigate away from the screen.
   @override

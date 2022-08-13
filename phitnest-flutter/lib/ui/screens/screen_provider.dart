@@ -29,6 +29,7 @@ abstract class ScreenProvider<T extends ScreenModel, K extends ScreenView>
   Widget buildLoading(BuildContext context, {Key? testingKey}) =>
       LoadingScreen(key: testingKey ?? Key('loading'));
 
+  @override
   _ScreenProviderState<T, K> createState() =>
       _ScreenProviderState<T, K>(createModel());
 }

@@ -55,7 +55,7 @@ class App extends StatelessWidget with WidgetsBindingObserver {
               return generateRoute(MobileAuthenticationProvider());
             case '/signIn':
               return generateRoute(SignInProvider());
-            case '/register':
+            case RegisterProvider.routeName:
               return generateRoute(RegisterProvider());
             case '/auth':
               return generateRoute(AuthProvider());
