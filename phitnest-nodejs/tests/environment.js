@@ -9,6 +9,7 @@ require('dotenv').config();
 
 const users = [
   {
+    _id: new mongoose.Types.ObjectId(),
     email: 'a@a.com',
     password: '$2a$10$V603PA18aLlRnD1gzdM9mOfekYyK9D/fvlAFIQEASdKDmGdHFE2ne',
     firstName: 'John',
@@ -17,6 +18,7 @@ const users = [
     lastSeen: Date.now(),
   },
   {
+    _id: new mongoose.Types.ObjectId(),
     email: 'a@b.com',
     password: '$2a$10$V603PA18aLlRnD1gzdM9mOfekYyK9D/fvlAFIQEASdKDmGdHFE2ne',
     firstName: 'Joe',
@@ -25,6 +27,7 @@ const users = [
     lastSeen: Date.now(),
   },
   {
+    _id: new mongoose.Types.ObjectId(),
     email: 'a@c.com',
     password: '$2a$10$V603PA18aLlRnD1gzdM9mOfekYyK9D/fvlAFIQEASdKDmGdHFE2ne',
     firstName: 'Jack',
@@ -37,15 +40,15 @@ const users = [
 const conversations = [
   {
     name: 'testConvo',
-    participants: [],
+    participants: [users[0]._id, users[1]._id],
   },
   {
     name: 'testConvo2',
-    participants: [],
+    participants: [users[1]._id, users[2]._id],
   },
   {
     name: 'testGroupChat',
-    participants: [],
+    participants: users.map((user) => user._id),
   },
 ];
 
@@ -73,10 +76,6 @@ class BaseEnvironment extends NodeEnvironment {
         )
       )
     );
-
-    conversations[0].participants = [this.users[0]._id, this.users[1]._id];
-    conversations[1].participants = [this.users[1]._id, this.users[2]._id];
-    conversations[2].participants = this.users.map((user) => user._id);
 
     this.conversations = await Promise.all(
       conversations.map((conversation) => createConversation(conversation))
