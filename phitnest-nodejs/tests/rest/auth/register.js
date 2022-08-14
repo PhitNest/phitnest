@@ -36,6 +36,30 @@ module.exports = () => {
       })
       .expect(400));
 
+  test('Invalid mobile', () =>
+    supertest(globalThis.app)
+      .post('/auth/register')
+      .send({
+        email: 'b@c.com',
+        mobile: '7575939A85',
+        password: 'aaaaaa',
+        firstName: 'Joe',
+        birthday: Date.UTC(2000, 1, 1),
+      })
+      .expect(400));
+
+  test('Password length too short', () =>
+    supertest(globalThis.app)
+      .post('/auth/register')
+      .send({
+        email: 'b@c.com',
+        mobile: '7575939485',
+        password: 'aaaaa',
+        firstName: 'Joe',
+        birthday: Date.UTC(2000, 1, 1),
+      })
+      .expect(400));
+
   test('Missing first name', () =>
     supertest(globalThis.app)
       .post('/auth/register')
