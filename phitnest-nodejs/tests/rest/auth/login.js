@@ -11,7 +11,6 @@ module.exports = () => {
       .post('/auth/login')
       .send({
         email: 'a@b.com',
-        notPassword: 'aaaaaa',
       })
       .expect(400));
 
@@ -19,7 +18,6 @@ module.exports = () => {
     supertest(globalThis.app)
       .post('/auth/login')
       .send({
-        notEmail: 'a@b.com',
         password: 'aaaaaa',
       })
       .expect(400));

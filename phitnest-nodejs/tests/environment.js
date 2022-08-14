@@ -1,6 +1,6 @@
 const NodeEnvironment = require('jest-environment-node').default;
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const { createUser, createConversation } = require('../lib/models');
+const { createUser, createConversation, createMessage } = require('../lib/models');
 const Redis = require('ioredis-mock');
 const jwt = require('jsonwebtoken');
 const { createApp } = require('../app');
@@ -39,18 +39,42 @@ const users = [
 
 const conversations = [
   {
+    _id: new mongoose.Types.ObjectId(),
     name: 'testConvo',
     participants: [users[0]._id, users[1]._id],
   },
   {
+    _id: new mongoose.Types.ObjectId(),
     name: 'testConvo2',
     participants: [users[1]._id, users[2]._id],
   },
   {
+    _id: new mongoose.Types.ObjectId(),
     name: 'testGroupChat',
     participants: users.map((user) => user._id),
   },
 ];
+
+const messages = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    conversation: conversations[0]._id,
+    message: 'Hello world!',
+    sender: users[0]._id
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    conversation: conversations[1]._id,
+    message: 'Hello friend!',
+    sender: users[1]._id
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    conversation: conversations[2]._id,
+    message: 'Hello group chat!',
+    sender: users[0]._id
+  }
+]
 
 class BaseEnvironment extends NodeEnvironment {
   async setup() {
@@ -81,9 +105,12 @@ class BaseEnvironment extends NodeEnvironment {
       conversations.map((conversation) => createConversation(conversation))
     );
 
+    this.messages = await Promise.all(messages.map((message) => createMessage(message)));
+
     this.global.data = {
       users: this.users,
       conversations: this.conversations,
+      messages: this.messages,
     };
   }
 
