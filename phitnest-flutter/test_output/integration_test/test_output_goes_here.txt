@@ -1,1 +1,0 @@
-Integration test output goes in this directory. This file is here so git will pull the directory for you, to simplify my shell script >:D
