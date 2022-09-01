@@ -20,7 +20,7 @@ class OnBoardingView extends ScreenView {
             title: 'Nest = fitness club',
             subtitle:
                 'This is a positive space for you to\nexplore your health & wellness\ngoals through genuine\nconnections in your community.'),
-        PageThree(
+        FinalPage(
           onPressedYes: onPressedYes,
           onPressedNo: onPressedNo,
         )

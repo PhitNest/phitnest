@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'state.dart';
 import 'view.dart';
@@ -38,9 +39,12 @@ class _ScreenWidgetState<T extends ScreenState, K extends ScreenView>
   }
 
   @override
-  Widget build(BuildContext context) => state.initialized
-      ? widget.build(context, state)
-      : widget.buildLoading(context, state);
+  Widget build(BuildContext context) => ChangeNotifierProvider.value(
+      value: state,
+      builder: (context, _) => Consumer<T>(
+          builder: (context, value, child) => state.initialized
+              ? widget.build(context, value)
+              : widget.buildLoading(context, value)));
 
   @override
   void dispose() {

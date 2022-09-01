@@ -6,7 +6,7 @@ const kApology = '/apology';
 
 var kRouteMap = {
   'default': (settings) => OnBoardingScreen(),
-  '${kOnBoarding}': (settings) => OnBoardingScreen(),
-  '${kRequestLocation}': (settings) => RequestLocationScreen(),
-  '${kApology}': (settings) => ApologyScreen()
+  kOnBoarding: (settings) => OnBoardingScreen(),
+  kRequestLocation: (settings) => RequestLocationScreen(),
+  kApology: (settings) => ApologyScreen()
 };
