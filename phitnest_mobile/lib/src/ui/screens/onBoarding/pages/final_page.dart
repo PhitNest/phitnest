@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../common/widgets.dart';
 
-class PageThree extends StatelessWidget {
+class FinalPage extends StatelessWidget {
   final Function() onPressedYes;
   final Function() onPressedNo;
 
-  const PageThree({required this.onPressedYes, required this.onPressedNo})
+  const FinalPage({required this.onPressedYes, required this.onPressedNo})
       : super();
 
   @override

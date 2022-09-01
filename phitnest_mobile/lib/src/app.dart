@@ -14,7 +14,7 @@ class App extends StatelessWidget {
         title: 'Phitnest',
         theme: theme,
         debugShowCheckedModeBanner: false,
-        initialRoute: '/onBoarding',
+        initialRoute: kOnBoarding,
         onGenerateRoute: generateRoute,
       );
 }
