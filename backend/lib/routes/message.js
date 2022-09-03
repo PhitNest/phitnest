@@ -6,8 +6,5 @@ const {
   inConversation,
 } = require('../middleware/message');
 
-router.get(
-  [validateListMessages, inConversation],
-  messageController.listMessages
-);
+router.get([validateListMessages], messageController.listMessages);
 module.exports = router;
