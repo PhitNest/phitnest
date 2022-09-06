@@ -23,14 +23,16 @@ abstract class Screen<T extends ScreenState, K extends ScreenView>
   dispose(BuildContext context, T state) {}
 
   @override
-  State<StatefulWidget> createState() => _ScreenWidgetState(buildState());
+  State<StatefulWidget> createState() => _ScreenWidgetState();
 }
 
 class _ScreenWidgetState<T extends ScreenState, K extends ScreenView>
     extends State<Screen<T, K>> {
-  final T state;
+  late final T state;
 
-  _ScreenWidgetState(this.state);
+  _ScreenWidgetState() {
+    this.state = widget.buildState();
+  }
 
   @override
   initState() {
