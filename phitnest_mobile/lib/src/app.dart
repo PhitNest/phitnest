@@ -11,7 +11,7 @@ Route<dynamic> generateRoute(RouteSettings settings) => MaterialPageRoute(
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'Phitnest',
+        title: 'PhitNest',
         theme: theme,
         debugShowCheckedModeBanner: false,
         initialRoute: kOnBoarding,
