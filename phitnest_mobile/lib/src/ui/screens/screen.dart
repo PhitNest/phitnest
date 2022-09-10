@@ -30,13 +30,10 @@ class _ScreenWidgetState<T extends ScreenState, K extends ScreenView>
     extends State<Screen<T, K>> {
   late final T state;
 
-  _ScreenWidgetState() {
-    this.state = widget.buildState();
-  }
-
   @override
   initState() {
     super.initState();
+    this.state = widget.buildState();
     widget.init(context, state).then((_) => state.initialized = true);
   }
 
