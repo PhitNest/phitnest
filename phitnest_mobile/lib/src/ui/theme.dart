@@ -30,5 +30,6 @@ var theme = ThemeData(
       bodySmall: TextStyle(
         fontSize: 12,
         fontFamily: 'Metropolis',
+        letterSpacing: 0.02,
       )),
 );

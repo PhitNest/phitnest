@@ -6,7 +6,7 @@ class ArrowPainter extends CustomPainter {
     Paint paint = Paint()
       ..color = Color.fromARGB(255, 193, 28, 28)
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = 1
+      ..strokeWidth = 1.5
       ..style = PaintingStyle.stroke;
 
     Path path = Path();
