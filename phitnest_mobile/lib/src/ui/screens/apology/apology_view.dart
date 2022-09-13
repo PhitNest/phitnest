@@ -12,7 +12,8 @@ class ApologyView extends ScreenView {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: Container(
+      resizeToAvoidBottomInset: false,
+      body: Container(
         margin: margin(context),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Text(
@@ -26,6 +27,25 @@ class ApologyView extends ScreenView {
             style: Theme.of(context).textTheme.labelLarge,
             textAlign: TextAlign.center,
           ),
+          SizedBox(height: 40),
+          Container(
+              width: 271,
+              child: Form(
+                child: Column(children: [
+                  TextField(
+                      style: Theme.of(context).textTheme.labelMedium,
+                      decoration: InputDecoration(
+                          hintText: 'Name',
+                          border: MaterialStateUnderlineInputBorder.resolveWith(
+                              (state) => state.contains(MaterialState.focused)
+                                  ? UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Color(0xFF999999)))
+                                  : UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color(0xFFDADADA)))))),
+                ]),
+              )),
           Expanded(child: Container()),
           TextButton(
               onPressed: onPressedContactUs,
@@ -33,7 +53,7 @@ class ApologyView extends ScreenView {
                   backgroundColor:
                       MaterialStateProperty.all(Colors.transparent)),
               child: Text('CONTACT US',
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Colors.black,
                       fontStyle: FontStyle.italic,
                       decoration: TextDecoration.underline))),

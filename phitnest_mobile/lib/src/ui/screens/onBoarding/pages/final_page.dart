@@ -36,7 +36,7 @@ class FinalPage extends StatelessWidget {
                   backgroundColor:
                       MaterialStateProperty.all(Colors.transparent)),
               child: Text('NO, I DON\'T',
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Colors.black,
                       fontStyle: FontStyle.italic,
                       decoration: TextDecoration.underline)))
