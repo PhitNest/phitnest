@@ -19,17 +19,18 @@ var theme = ThemeData(
   textTheme: TextTheme(
       // Headline
       headlineLarge: GoogleFonts.baskervville(
-          fontSize: 32, letterSpacing: -0.02, color: Colors.black),
+        fontSize: 32,
+        letterSpacing: -0.02,
+        color: Colors.black,
+      ),
       // Label
       labelLarge: TextStyle(
         fontSize: 18,
-        height: 1.56,
         fontFamily: 'Metropolis',
       ),
       labelMedium: TextStyle(
         fontSize: 16,
         fontFamily: 'Metropolis',
-        height: 1.56,
       ),
       // Body
       bodyMedium: TextStyle(

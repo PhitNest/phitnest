@@ -24,7 +24,8 @@ class FinalPage extends StatelessWidget {
           SizedBox(height: 40),
           Text(
             'Do you belong to a fitness club?',
-            style: Theme.of(context).textTheme.labelLarge,
+            style:
+                Theme.of(context).textTheme.labelLarge!.copyWith(height: 1.56),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 40),
