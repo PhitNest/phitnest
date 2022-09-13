@@ -26,7 +26,17 @@ var theme = ThemeData(
         height: 1.56,
         fontFamily: 'Metropolis',
       ),
+      labelMedium: TextStyle(
+        fontSize: 16,
+        fontFamily: 'Metropolis',
+        height: 1.56,
+      ),
       // Body
+      bodyMedium: TextStyle(
+        fontSize: 14,
+        fontFamily: 'Metropolis',
+        letterSpacing: 0.02,
+      ),
       bodySmall: TextStyle(
         fontSize: 12,
         fontFamily: 'Metropolis',

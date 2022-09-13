@@ -34,7 +34,7 @@ class RequestLocationView extends ScreenView {
                   backgroundColor:
                       MaterialStateProperty.all(Colors.transparent)),
               child: Text('EXIT',
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Colors.black,
                       fontStyle: FontStyle.italic,
                       decoration: TextDecoration.underline)))
