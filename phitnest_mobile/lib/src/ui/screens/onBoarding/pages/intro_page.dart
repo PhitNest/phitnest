@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import '../../../common/widgets.dart';
 
 class IntroPage extends StatelessWidget {
+  EdgeInsets margin(BuildContext context) => EdgeInsets.only(
+      top: MediaQuery.of(context).size.height * 0.3, bottom: 51);
+
   final String title;
   final String subtitle;
 
   const IntroPage({required this.title, required this.subtitle}) : super();
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.3),
+  Widget build(BuildContext context) => Container(
+        margin: margin(context),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Text(
             title,
@@ -24,9 +27,7 @@ class IntroPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           Expanded(child: Container()),
-          Padding(
-              padding: EdgeInsets.only(bottom: 51),
-              child: Arrow(width: 71, height: 10))
+          Arrow(width: 71, height: 10)
         ]),
       );
 }
