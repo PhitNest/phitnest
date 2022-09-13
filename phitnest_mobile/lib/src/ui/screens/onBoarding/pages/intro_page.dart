@@ -23,7 +23,8 @@ class IntroPage extends StatelessWidget {
           SizedBox(height: 40),
           Text(
             subtitle,
-            style: Theme.of(context).textTheme.labelLarge,
+            style:
+                Theme.of(context).textTheme.labelLarge!.copyWith(height: 1.56),
             textAlign: TextAlign.center,
           ),
           Expanded(child: Container()),

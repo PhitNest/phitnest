@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
 
+import '../../common/widgets.dart';
 import '../view.dart';
 
 class ApologyView extends ScreenView {
   EdgeInsets margin(BuildContext context) => EdgeInsets.only(
       top: MediaQuery.of(context).size.height * 0.18, bottom: 41);
 
-  final Function() onPressedContactUs;
+  Widget createTextField(BuildContext context, String hint) => Container(
+      height: 40,
+      child: TextField(
+          style: Theme.of(context).textTheme.labelMedium,
+          decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(horizontal: 6),
+              hintText: hint,
+              hintStyle: Theme.of(context)
+                  .textTheme
+                  .labelMedium!
+                  .copyWith(color: Color(0xFF999999)),
+              border: MaterialStateUnderlineInputBorder.resolveWith((state) =>
+                  UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFDADADA)))))));
 
-  const ApologyView({required this.onPressedContactUs});
+  final Function() onPressedContactUs;
+  final Function() onPressedSubmit;
+
+  const ApologyView(
+      {required this.onPressedContactUs, required this.onPressedSubmit});
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -23,29 +41,26 @@ class ApologyView extends ScreenView {
           ),
           SizedBox(height: 40),
           Text(
-            "PhitNest is currently available to\nselect fitness club locations only.\n\nMay we contact you when this\nchanges?",
+            "PhitNest is currently available to\nselect fitness club locations only.\n\n\nMay we contact you when this\nchanges?",
             style: Theme.of(context).textTheme.labelLarge,
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 40),
           Container(
-              width: 271,
+              width: 291,
               child: Form(
                 child: Column(children: [
-                  TextField(
-                      style: Theme.of(context).textTheme.labelMedium,
-                      decoration: InputDecoration(
-                          hintText: 'Name',
-                          border: MaterialStateUnderlineInputBorder.resolveWith(
-                              (state) => state.contains(MaterialState.focused)
-                                  ? UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Color(0xFF999999)))
-                                  : UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Color(0xFFDADADA)))))),
+                  createTextField(context, 'Name'),
+                  SizedBox(height: 10),
+                  createTextField(context, 'Email')
                 ]),
               )),
+          SizedBox(height: 42),
+          StyledButton(
+            context,
+            child: Text('SUBMIT'),
+            onPressed: onPressedSubmit,
+          ),
           Expanded(child: Container()),
           TextButton(
               onPressed: onPressedContactUs,

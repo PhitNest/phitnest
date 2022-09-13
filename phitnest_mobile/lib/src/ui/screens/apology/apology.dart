@@ -8,6 +8,7 @@ class ApologyScreen extends Screen<ApologyState, ApologyView> {
   @override
   ApologyView build(BuildContext context, ApologyState state) => ApologyView(
         onPressedContactUs: () {},
+        onPressedSubmit: () {},
       );
 
   @override
