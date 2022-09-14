@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../common/widgets.dart';
 
 class FinalPage extends StatelessWidget {
-  EdgeInsets margin(BuildContext context) => EdgeInsets.only(
-      top: MediaQuery.of(context).size.height * 0.3, bottom: 41);
-
   final Function() onPressedYes;
   final Function() onPressedNo;
 
@@ -14,21 +11,23 @@ class FinalPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        margin: margin(context),
+        margin: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height * 0.3,
+            bottom: MediaQuery.of(context).size.height * 0.061),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Text(
             'Let\'s get started',
             style: Theme.of(context).textTheme.headlineLarge,
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 40),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.06),
           Text(
             'Do you belong to a fitness club?',
             style:
                 Theme.of(context).textTheme.labelLarge!.copyWith(height: 1.56),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 40),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.06),
           StyledButton(context, child: Text('YES'), onPressed: onPressedYes),
           Expanded(child: Container()),
           TextButton(

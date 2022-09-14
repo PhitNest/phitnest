@@ -10,9 +10,6 @@ class RequestLocationScreen
   const RequestLocationScreen() : super();
 
   @override
-  Future<void> init(BuildContext context, RequestLocationState state) async {}
-
-  @override
   RequestLocationView build(BuildContext context, RequestLocationState state) =>
       RequestLocationView(
         onPressedExit: () =>
