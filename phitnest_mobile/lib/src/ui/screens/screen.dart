@@ -7,6 +7,7 @@ import 'view.dart';
 export 'onBoarding/on_boarding.dart';
 export 'requestLocation/request_location.dart';
 export 'apology/apology.dart';
+export 'contactUs/contact_us.dart';
 
 abstract class Screen<T extends ScreenState, K extends ScreenView>
     extends StatefulWidget {

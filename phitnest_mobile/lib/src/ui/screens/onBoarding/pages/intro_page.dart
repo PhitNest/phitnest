@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../common/widgets.dart';
 
 class IntroPage extends StatelessWidget {
-  EdgeInsets margin(BuildContext context) => EdgeInsets.only(
-      top: MediaQuery.of(context).size.height * 0.3, bottom: 51);
-
   final String title;
   final String subtitle;
 
@@ -13,14 +10,16 @@ class IntroPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        margin: margin(context),
+        margin: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height * 0.3,
+            bottom: MediaQuery.of(context).size.height * 0.076),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Text(
             title,
             style: Theme.of(context).textTheme.headlineLarge,
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 40),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.06),
           Text(
             subtitle,
             style:
@@ -28,7 +27,9 @@ class IntroPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           Expanded(child: Container()),
-          Arrow(width: 71, height: 10)
+          Arrow(
+              width: MediaQuery.of(context).size.width * 0.19,
+              height: MediaQuery.of(context).size.height * 0.015)
         ]),
       );
 }
