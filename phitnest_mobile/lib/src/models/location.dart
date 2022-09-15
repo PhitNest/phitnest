@@ -6,7 +6,7 @@ class Location extends Equatable {
   Location({required this.lat, required this.long});
 
   factory Location.fromJson(Map<String, dynamic> json) =>
-      Location(lat: json['lat'] ?? 0, long: json['long'] ?? 0);
+      Location(lat: json['lat'], long: json['long']);
 
   Map<String, dynamic> toJson() => {'lat': lat, 'long': long};
 

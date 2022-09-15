@@ -4,26 +4,34 @@ import '../../common/widgets.dart';
 import '../view.dart';
 
 class ApologyView extends ScreenView {
-  Widget createTextField(BuildContext context, String hint) => Container(
-      height: MediaQuery.of(context).size.height * 0.06,
-      child: TextField(
-          style: Theme.of(context).textTheme.labelMedium,
-          decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(horizontal: 6),
-              hintText: hint,
-              hintStyle: Theme.of(context)
-                  .textTheme
-                  .labelMedium!
-                  .copyWith(color: Color(0xFF999999)),
-              border: MaterialStateUnderlineInputBorder.resolveWith((state) =>
-                  UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFDADADA)))))));
+  Widget createTextField(BuildContext context, String hint,
+          TextEditingController controller) =>
+      Container(
+          height: MediaQuery.of(context).size.height * 0.06,
+          child: TextField(
+              controller: controller,
+              style: Theme.of(context).textTheme.labelMedium,
+              decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 6),
+                  hintText: hint,
+                  hintStyle: Theme.of(context)
+                      .textTheme
+                      .labelMedium!
+                      .copyWith(color: Color(0xFF999999)),
+                  border: MaterialStateUnderlineInputBorder.resolveWith(
+                      (state) => UnderlineInputBorder(
+                          borderSide: BorderSide(color: Color(0xFFDADADA)))))));
 
   final Function() onPressedContactUs;
   final Function() onPressedSubmit;
+  final TextEditingController nameController;
+  final TextEditingController emailController;
 
   const ApologyView(
-      {required this.onPressedContactUs, required this.onPressedSubmit});
+      {required this.onPressedContactUs,
+      required this.onPressedSubmit,
+      required this.nameController,
+      required this.emailController});
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -50,9 +58,9 @@ class ApologyView extends ScreenView {
                   width: MediaQuery.of(context).size.width * 0.776,
                   child: Form(
                     child: Column(children: [
-                      createTextField(context, 'Name'),
+                      createTextField(context, 'Name', nameController),
                       SizedBox(height: 10),
-                      createTextField(context, 'Email')
+                      createTextField(context, 'Email', emailController)
                     ]),
                   )),
               SizedBox(height: MediaQuery.of(context).size.height * 0.063),
