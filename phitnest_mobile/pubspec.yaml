@@ -1,0 +1,32 @@
+name: phitnest_mobile
+description: A new Flutter project.
+publish_to: 'none'
+version: 1.0.0+1
+environment:
+  sdk: '>=2.17.6 <3.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  http: ^0.13.5
+  provider: ^6.0.3
+  google_fonts: ^3.0.1
+  geolocator: ^9.0.1
+  equatable: ^2.0.5
+  get_it: ^7.2.0
+  dartz: ^0.10.1
+  flutter_secure_storage: ^6.0.0
+  flutter_svg: ^1.1.4
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/logo.svg
+  fonts:
+    - family: Metropolis
+      fonts:
+        - asset: fonts/Metropolis-Regular.otf
+        - asset: fonts/Metropolis-Bold.otf
