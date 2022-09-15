@@ -13,7 +13,7 @@ function userEmailKey(email) {
 }
 
 function userConversationsKey(userId) {
-  return `${usersDomain}:${userId}:conversations`;
+  return `${userKey(userId)}:conversations`;
 }
 
 export default (redis) => ({
