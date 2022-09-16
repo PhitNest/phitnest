@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { StatusOK } = require('../../constants');
+const { StatusOK, StatusBadRequest } = require('../../constants');
 
 module.exports = async (req, res) => {
   const { getIdAndPasswordFromEmail } = require('../../schema/user')(
@@ -16,5 +16,7 @@ module.exports = async (req, res) => {
       );
     }
   }
-  res.status(400).send('You have entered an invalid email or password.');
+  res
+    .status(StatusBadRequest)
+    .send('You have entered an invalid email or password.');
 };

@@ -1,3 +1,5 @@
+const { StatusOK } = require('../../constants');
+
 module.exports = async (req, res) => {
   const { getConversationIds } = require('../../schema/user')(res.locals.redis);
   const { getFirstMessageIdsFromEachConversation } =
@@ -6,7 +8,7 @@ module.exports = async (req, res) => {
     res.locals.redis
   );
   res
-    .status(200)
+    .status(StatusOK)
     .json(
       await getMessagesByIds(
         await getFirstMessageIdsFromEachConversation(

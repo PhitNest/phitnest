@@ -1,6 +1,6 @@
 const usersDomain = 'users';
 
-const usersCount = `${usersDomain}:count`;
+const usersCountKey = `${usersDomain}:count`;
 
 function userKey(userId) {
   return `${usersDomain}:${userId}`;
@@ -19,7 +19,7 @@ function userConversationsKey(userId) {
 export default (redis) => ({
   getConversationIds: (userId) =>
     redis.zrevrange(userConversationsKey(userId), 0, -1),
-  getUserCount: () => redis.get(usersCount),
+  getUserCount: () => redis.get(usersCountKey),
   getIdAndPasswordFromEmail: async (email) => {
     let [password, id] = await redis
       .multi()
@@ -44,6 +44,6 @@ export default (redis) => ({
         id: id,
         password: hashedPassword,
       })
-      .incr('users:count')
+      .incr(usersCountKey)
       .exec(),
 });

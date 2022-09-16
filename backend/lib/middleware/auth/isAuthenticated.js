@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { StatusUnauthorized } = require('../../constants');
 require('dotenv').config();
 
 module.exports = async (req, res, next) => {
@@ -9,7 +10,7 @@ module.exports = async (req, res, next) => {
     res.locals.userId = data._id;
     next();
   } catch (error) {
-    res.status(401);
+    res.status(StatusUnauthorized);
     res.send('Bad Token');
   }
 };
