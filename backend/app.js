@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const routes = require('./lib/routes');
 const jwt = require('jsonwebtoken');
 const registerSocket = require('./lib/socket');
+const { StatusOK } = require('./lib/constants/httpCodes');
 require('dotenv').config();
 
 module.exports = {
@@ -17,13 +18,13 @@ module.exports = {
     });
 
     app.use(morgan('dev'));
-    
+
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
 
     app.get('/', (req, res) => {
       res
-        .status(200)
+        .status(StatusOK)
         .json({ resultMessage: 'Requests are working successfully...' });
     });
     app.use('/', routes);

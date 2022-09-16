@@ -1,12 +1,15 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { StatusOK, StatusConflict } = require('../../constants');
 
 module.exports = async (req, res) => {
   const { getIdAndPasswordFromEmail, getUserCount, createUser } =
     require('../../schema/user')(res.locals.redis);
   const { id } = await getIdAndPasswordFromEmail(req.body.email);
   if (id) {
-    return res.status(500).send('A user with this email already exists.');
+    return res
+      .status(StatusConflict)
+      .send('A user with this email already exists.');
   } else {
     let userId = await getUserCount();
     if (userId == undefined) {
@@ -22,6 +25,6 @@ module.exports = async (req, res) => {
     const authorization = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
       expiresIn: '2h',
     });
-    return res.status(200).send(authorization);
+    return res.status(StatusOK).send(authorization);
   }
 };
