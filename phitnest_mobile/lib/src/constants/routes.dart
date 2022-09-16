@@ -1,5 +1,3 @@
-import 'package:phitnest_mobile/src/ui/screens/thankYou/thank_you.dart';
-
 import '../ui/screens/screen.dart';
 
 const kOnBoarding = '/onBoarding';
