@@ -2,6 +2,6 @@
 
 Go to a specific component's README.
 
-- [phitnest-flutter](./phitnest-app/README.md) (no readme)
-- [phitnest-nodejs](./phitnest-nodejs/README.md) (no readme)
+- [backend](./backend/README.md) (no readme)
+- [phitnest_mobile](./phitnest_mobile/README.md) (no readme)
 - [utils](./utils/README.md)
