@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { StatusOK, StatusConflict } = require('../../constants');
 
 module.exports = async (req, res) => {
-  const { getIdAndPasswordFromEmail, getUserCount, createUser } =
+  const { getIdAndPasswordFromEmail, createUser } =
     require('../../schema/user')(res.locals.redis);
   const { id } = await getIdAndPasswordFromEmail(req.body.email);
   if (id) {
@@ -11,12 +11,7 @@ module.exports = async (req, res) => {
       .status(StatusConflict)
       .send('A user with this email already exists.');
   } else {
-    let userId = await getUserCount();
-    if (userId == undefined) {
-      userId = 0;
-    }
-    await createUser(
-      userId,
+    const userId = await createUser(
       req.body.email,
       await bcrypt.hash(req.body.password, 10),
       req.body.firstName,

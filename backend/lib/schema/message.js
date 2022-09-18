@@ -1,10 +1,12 @@
 const messagesDomain = 'messages';
 
+const messagesCountKey = `${messagesDomain}:count`;
+
 function getMessageKey(messageId) {
   return `${messagesDomain}${messageId}`;
 }
 
-export default (redis) => ({
+module.exports = (redis) => ({
   getMessagesByIds: (ids) =>
     Promise.all(
       ids.map(async (id, index) => {
@@ -17,9 +19,9 @@ export default (redis) => ({
           .exec();
         return {
           id: id,
-          conversation: conversation,
-          sender: sender,
-          text: text,
+          conversation: conversation[1],
+          sender: sender[1],
+          text: text[1],
         };
       })
     ),
