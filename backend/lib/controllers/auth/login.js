@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
       );
     }
   }
-  res
+  return res
     .status(StatusBadRequest)
     .send('You have entered an invalid email or password.');
 };

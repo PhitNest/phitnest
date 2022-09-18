@@ -1,6 +1,12 @@
+const axios = require('axios');
+
 const gymsDomain = 'gyms';
 
 const gymsCountKey = `${gymsDomain}:count`;
+
+async function getCount(redis) {
+  return (await redis.get(gymsCountKey)) ?? 0;
+}
 
 function gymKey(gymId) {
   return `${gymsDomain}:${gymId}`;
@@ -8,24 +14,19 @@ function gymKey(gymId) {
 
 module.exports = (redis) => ({
   getGym: async (id) => {
-    const [name, city, state, streetAddress, zipCode, latitude, longitude] =
-      await redis
-        .multi()
-        .hget(gymKey(id), 'name')
-        .hget(gymKey(id), 'city')
-        .hget(gymKey(id), 'streetAddress')
-        .hget(gymKey(id), 'zipCode')
-        .hget(gymKey(id), 'latitude')
-        .hget(gymKey(id), 'longitude')
-        .exec();
+    const [name, city, state, streetAddress, zipCode] = await redis
+      .multi()
+      .hget(gymKey(id), 'name')
+      .hget(gymKey(id), 'city')
+      .hget(gymKey(id), 'streetAddress')
+      .hget(gymKey(id), 'zipCode')
+      .exec();
     return {
-      name: name,
-      city: city,
-      state: state,
-      streetAddress: streetAddress,
-      zipCode: zipCode,
-      latitude: latitude,
-      longitude: longitude,
+      name: name[1],
+      city: city[1],
+      state: state[1],
+      streetAddress: streetAddress[1],
+      zipCode: zipCode[1],
     };
   },
   findNearestGym: async (longitude, latitude, rangeInKM) =>
@@ -54,28 +55,34 @@ module.exports = (redis) => ({
       'km',
       'ASC'
     ),
-  createGym: (
-    id,
-    name,
-    city,
-    streetAddress,
-    state,
-    zipCode,
-    latitude,
-    longitude
-  ) =>
-    redis
-      .multi()
-      .geoadd(gymsDomain, latitude, longitude, id)
-      .hset(gymKey(id), {
-        name: name,
-        city: city,
-        streetAddress: streetAddress,
-        state: state,
-        zipCode: zipCode,
-        longitude: longitude,
-        latitude: latitude,
+  createGym: (name, city, streetAddress, state, zipCode) => {
+    axios
+      .get('https://nominatim.openstreetmap.org/search', {
+        params: {
+          q: `${streetAddress}, ${city}, ${state} ${zipCode}`,
+          format: 'json',
+          polygon: 1,
+          addressdetails: 1,
+        },
       })
-      .incr(gymsCountKey)
-      .exec(),
+      .then((response) =>
+        redis
+          .multi()
+          .geoadd(
+            gymsDomain,
+            response[0].longitude,
+            response[0].latitude,
+            getCount()
+          )
+          .hset(gymKey(getCount()), {
+            name: name,
+            city: city,
+            streetAddress: streetAddress,
+            state: state,
+            zipCode: zipCode,
+          })
+          .incr(gymsCountKey)
+          .exec()
+      );
+  },
 });

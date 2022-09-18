@@ -19,9 +19,9 @@ module.exports = (redis) => ({
           .exec();
         return {
           id: id,
-          conversation: conversation,
-          sender: sender,
-          text: text,
+          conversation: conversation[1],
+          sender: sender[1],
+          text: text[1],
         };
       })
     ),
