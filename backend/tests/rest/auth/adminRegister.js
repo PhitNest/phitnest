@@ -45,6 +45,13 @@ module.exports = () => {
     globalThis.redis
   );
 
+  test('Using no body', () =>
+    supertest(globalThis.app)
+      .post('/auth/admin/register')
+      .send()
+      .set('Authorization', signedAdminJwt)
+      .expect(StatusBadRequest));
+
   test('Create admins', async () => {
     for (let i = 0; i < users.length; i++) {
       await createAdmin(
@@ -97,7 +104,6 @@ module.exports = () => {
         lastName: 'Shmoe',
       })
       .set('Authorization', signedAdminJwt)
-
       .expect(StatusBadRequest));
 
   test('Password length too short', () =>
@@ -110,7 +116,6 @@ module.exports = () => {
         lastName: 'Shmoe',
       })
       .set('Authorization', signedAdminJwt)
-
       .expect(StatusBadRequest));
 
   test('Missing first name', () =>
@@ -122,7 +127,6 @@ module.exports = () => {
         lastName: 'Shmoe',
       })
       .set('Authorization', signedAdminJwt)
-
       .expect(StatusBadRequest));
 
   test('Duplicate email', () =>
@@ -135,7 +139,6 @@ module.exports = () => {
         lastName: 'Shmoe',
       })
       .set('Authorization', signedAdminJwt)
-
       .expect(StatusConflict));
 
   let id;
@@ -149,7 +152,6 @@ module.exports = () => {
         lastName: 'Shmoe',
       })
       .set('Authorization', signedAdminJwt)
-
       .expect(StatusOK)
       .then((res) => (id = jwt.verify(res.text, globalThis.jwtSecret).id)));
 };
