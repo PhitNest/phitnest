@@ -13,7 +13,10 @@ class FoundLocationScreen
 
   @override
   FoundLocationView build(BuildContext context, FoundLocationState state) =>
-      FoundLocationView();
+      FoundLocationView(
+        onPressedNo: () {},
+        address: gym.address,
+      );
 
   @override
   FoundLocationState buildState() => FoundLocationState();

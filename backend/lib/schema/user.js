@@ -16,7 +16,7 @@ function userConversationsKey(userId) {
   return `${userKey(userId)}:conversations`;
 }
 
-export default (redis) => ({
+module.exports = (redis) => ({
   getConversationIds: (userId) =>
     redis.zrevrange(userConversationsKey(userId), 0, -1),
   getUserCount: () => redis.get(usersCountKey),
