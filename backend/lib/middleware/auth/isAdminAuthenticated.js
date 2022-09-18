@@ -8,9 +8,11 @@ module.exports = async (req, res, next) => {
     const data = jwt.verify(str, process.env.JWT_SECRET);
     res.locals.jwtData = data;
     res.locals.userId = data.id;
-    next();
+    if (data.admin == true) {
+      return next();
+    }
   } catch (error) {
-    res.status(StatusUnauthorized);
-    res.send('Bad Token');
+    return res.status(StatusUnauthorized).send('Bad Token');
   }
+  res.status(StatusUnauthorized).send('Bad Token');
 };

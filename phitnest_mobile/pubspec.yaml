@@ -28,5 +28,5 @@ flutter:
   fonts:
     - family: Metropolis
       fonts:
-        - asset: fonts/Metropolis-Regular.otf
-        - asset: fonts/Metropolis-Bold.otf
+        - asset: assets/fonts/Metropolis-Regular.otf
+        - asset: assets/fonts/Metropolis-Bold.otf

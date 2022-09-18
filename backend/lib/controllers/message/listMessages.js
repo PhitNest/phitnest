@@ -1,34 +1,23 @@
-module.exports = async (req, res) => {
-  if (
-    await res.locals.redis.sismember(
-      `conversations:${req.query.conversation}:participants`,
-      res.locals.userId
-    )
-  ) {
-    const messageIds = await res.locals.redis.zrevrange(
-      `conversations:${req.query.conversation}:messages`,
-      0,
-      req.query.limit
-    );
+const { StatusUnauthorized, StatusOK } = require('../../constants');
 
-    res.status(200).json(
-      await Promise.all(
-        messageIds.map(async (id) => {
-          const key = `messages:${id}`;
-          const [sender, text] = await res.locals.redis
-            .multi()
-            .hget(key, 'sender')
-            .hget(key, 'text')
-            .exec();
-          return {
-            id: id,
-            sender: sender,
-            text: text,
-          };
-        })
-      )
-    );
+module.exports = async (req, res) => {
+  const { isMember, getMessageIds } = require('../../schema/conversation')(
+    res.locals.redis
+  );
+  const { getMessagesByIds } = require('../../schema/message')(
+    res.locals.redis
+  );
+  if (await isMember(req.query.conversation, res.locals.userId)) {
+    res
+      .status(StatusOK)
+      .json(
+        await getMessagesByIds(
+          getMessageIds(req.query.conversation, 0, req.query.limit)
+        )
+      );
   } else {
-    res.status(500).send('You are not a memebr of this conversation.');
+    res
+      .status(StatusUnauthorized)
+      .send('You are not a memebr of this conversation.');
   }
 };

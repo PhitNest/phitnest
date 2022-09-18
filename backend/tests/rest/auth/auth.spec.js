@@ -1,5 +1,5 @@
 /**
- * @jest-environment ./tests/rest/auth/environment
+ * @jest-environment ./tests/environment
  */
 
 const testLogin = require('./login');

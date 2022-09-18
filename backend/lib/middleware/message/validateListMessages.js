@@ -1,5 +1,5 @@
 const joi = require('joi');
-const { maxListMessageLimit } = require('../../constants');
+const { maxListMessageLimit, StatusBadRequest } = require('../../constants');
 
 function validate(req) {
   const schema = joi.object({
@@ -12,7 +12,7 @@ function validate(req) {
 module.exports = async (req, res, next) => {
   const { error } = validate(req.query);
   if (error) {
-    return res.status(400).send(error.details[0].message);
+    return res.status(StatusBadRequest).send(error.details[0].message);
   }
   next();
 };

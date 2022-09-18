@@ -1,5 +1,1 @@
-const privateInfo = require('./privateInfo');
-
-module.exports = {
-  privateInfo: privateInfo,
-};
+module.exports = {};

@@ -7,6 +7,7 @@ const {
   maxPasswordLength,
   minEmailLength,
   maxEmailLength,
+  StatusBadRequest,
 } = require('../../constants');
 const joi = require('joi');
 
@@ -43,7 +44,7 @@ function validate(req) {
 module.exports = async (req, res, next) => {
   const { error } = validate(req.body);
   if (error) {
-    return res.status(400).send(error.details[0].message);
+    return res.status(StatusBadRequest).send(error.details[0].message);
   }
   next();
 };
