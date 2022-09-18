@@ -39,6 +39,12 @@ module.exports = () => {
     }
   });
 
+  test('Using no body', () =>
+    supertest(globalThis.app)
+      .post('/auth/admin/login')
+      .send()
+      .expect(StatusBadRequest));
+
   test('Missing password', () =>
     supertest(globalThis.app)
       .post('/auth/admin/login')

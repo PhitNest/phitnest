@@ -26,6 +26,12 @@ const users = [
 module.exports = () => {
   const { createUser } = require('../../../lib/schema/user')(globalThis.redis);
 
+  test('Using no body', () =>
+    supertest(globalThis.app)
+      .post('/auth/login')
+      .send()
+      .expect(StatusBadRequest));
+
   test('Create users', async () => {
     for (let i = 0; i < users.length; i++) {
       await createUser(
