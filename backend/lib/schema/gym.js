@@ -5,7 +5,7 @@ const gymsDomain = 'gyms';
 const gymsCountKey = `${gymsDomain}:count`;
 
 async function getCount(redis) {
-  return (await redis.get(gymsCountKey)) ?? 0;
+  return (await redis.get(gymsCountKey)) ?? '0';
 }
 
 function gymKey(gymId) {
@@ -18,6 +18,7 @@ module.exports = (redis) => ({
       .multi()
       .hget(gymKey(id), 'name')
       .hget(gymKey(id), 'city')
+      .hget(gymKey(id), 'state')
       .hget(gymKey(id), 'streetAddress')
       .hget(gymKey(id), 'zipCode')
       .exec();
@@ -55,34 +56,31 @@ module.exports = (redis) => ({
       'km',
       'ASC'
     ),
-  createGym: (name, city, streetAddress, state, zipCode) => {
-    axios
-      .get('https://nominatim.openstreetmap.org/search', {
+  createGym: async (name, streetAddress, city, state, zipCode) => {
+    const mapResponse = await axios.get(
+      'https://nominatim.openstreetmap.org/search',
+      {
         params: {
           q: `${streetAddress}, ${city}, ${state} ${zipCode}`,
           format: 'json',
           polygon: 1,
           addressdetails: 1,
         },
+      }
+    );
+    const id = await getCount(redis);
+    await redis
+      .multi()
+      .geoadd(gymsDomain, mapResponse.lon, mapResponse.lat, id)
+      .hset(gymKey(id), {
+        name: name,
+        city: city,
+        streetAddress: streetAddress,
+        state: state,
+        zipCode: zipCode,
       })
-      .then((response) =>
-        redis
-          .multi()
-          .geoadd(
-            gymsDomain,
-            response[0].longitude,
-            response[0].latitude,
-            getCount()
-          )
-          .hset(gymKey(getCount()), {
-            name: name,
-            city: city,
-            streetAddress: streetAddress,
-            state: state,
-            zipCode: zipCode,
-          })
-          .incr(gymsCountKey)
-          .exec()
-      );
+      .incr(gymsCountKey)
+      .exec();
+    return id;
   },
 });
