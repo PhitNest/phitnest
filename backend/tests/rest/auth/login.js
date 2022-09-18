@@ -1,14 +1,47 @@
 const supertest = require('supertest');
 const jwt = require('jsonwebtoken');
+const { StatusBadRequest, StatusOK } = require('../../../lib/constants');
+
+const users = [
+  {
+    email: 'a@a.com',
+    firstName: 'Joe',
+    lastName: 'A',
+    password: '$2a$10$V603PA18aLlRnD1gzdM9mOfekYyK9D/fvlAFIQEASdKDmGdHFE2ne',
+  },
+  {
+    email: 'a@b.com',
+    firstName: 'Joe',
+    lastName: 'B',
+    password: '$2a$10$V603PA18aLlRnD1gzdM9mOfekYyK9D/fvlAFIQEASdKDmGdHFE2ne',
+  },
+  {
+    email: 'a@c.com',
+    firstName: 'Joe',
+    lastName: 'C',
+    password: '$2a$10$V603PA18aLlRnD1gzdM9mOfekYyK9D/fvlAFIQEASdKDmGdHFE2ne',
+  },
+];
 
 module.exports = () => {
+  const { createUser } = require('../../../lib/schema/user')(globalThis.redis);
+
+  for (let i = 0; i < users.length; i++) {
+    createUser(
+      users[i].email,
+      users[i].password,
+      users[i].firstName,
+      users[i].lastName
+    );
+  }
+
   test('Missing password', () =>
     supertest(globalThis.app)
       .post('/auth/login')
       .send({
         email: 'a@b.com',
       })
-      .expect(400));
+      .expect(StatusBadRequest));
 
   test('Missing email', () =>
     supertest(globalThis.app)
@@ -16,7 +49,7 @@ module.exports = () => {
       .send({
         password: 'aaaaaa',
       })
-      .expect(400));
+      .expect(StatusBadRequest));
 
   test('Non-existing user', () =>
     supertest(globalThis.app)
@@ -25,7 +58,7 @@ module.exports = () => {
         email: 'b@a.com',
         password: 'aaaaaa',
       })
-      .expect(400));
+      .expect(StatusBadRequest));
 
   test('Incorrect password', () =>
     supertest(globalThis.app)
@@ -34,7 +67,7 @@ module.exports = () => {
         email: 'a@a.com',
         password: 'bbbbbb',
       })
-      .expect(400));
+      .expect(StatusBadRequest));
 
   test('Correct password', () =>
     supertest(globalThis.app)
@@ -43,8 +76,8 @@ module.exports = () => {
         email: 'a@a.com',
         password: 'aaaaaa',
       })
+      .expect(StatusOK)
       .expect((res) =>
         expect(jwt.verify(res.text, globalThis.jwtSecret).id).toBe('0')
-      )
-      .expect(200));
+      ));
 };

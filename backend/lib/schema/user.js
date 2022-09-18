@@ -9,30 +9,34 @@ function userKey(userId) {
 const userEmailsDomain = `${usersDomain}:emails`;
 
 function userEmailKey(email) {
-  return `${userEmailsDomain}:${email};`;
+  return `${userEmailsDomain}:${email}`;
 }
 
 function userConversationsKey(userId) {
   return `${userKey(userId)}:conversations`;
 }
 
+async function getUserCount(redis) {
+  return (await redis.get(usersCountKey)) ?? 0;
+}
+
 module.exports = (redis) => ({
   getConversationIds: (userId) =>
     redis.zrevrange(userConversationsKey(userId), 0, -1),
-  getUserCount: () => redis.get(usersCountKey),
   getIdAndPasswordFromEmail: async (email) => {
-    let [password, id] = await redis
+    const [password, id] = await redis
       .multi()
       .hget(userEmailKey(email), 'password')
       .hget(userEmailKey(email), 'id')
       .exec();
     return {
-      password: password,
-      id: id,
+      password: password[1],
+      id: id[1],
     };
   },
-  createUser: (id, email, hashedPassword, firstName, lastName) =>
-    redis
+  createUser: async (email, hashedPassword, firstName, lastName) => {
+    const id = await getUserCount(redis);
+    await redis
       .multi()
       .hset(userKey(id), {
         email: email,
@@ -45,5 +49,7 @@ module.exports = (redis) => ({
         password: hashedPassword,
       })
       .incr(usersCountKey)
-      .exec(),
+      .exec();
+    return id;
+  },
 });
