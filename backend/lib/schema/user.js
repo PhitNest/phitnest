@@ -17,7 +17,7 @@ function userConversationsKey(userId) {
 }
 
 async function getUserCount(redis) {
-  return (await redis.get(usersCountKey)) ?? 0;
+  return (await redis.get(usersCountKey)) ?? '0';
 }
 
 module.exports = (redis) => ({
