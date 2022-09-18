@@ -4,6 +4,7 @@ const {
   StatusConflict,
   StatusBadRequest,
   StatusOK,
+  StatusUnauthorized,
 } = require('../../../lib/constants');
 
 const users = [
@@ -28,11 +29,25 @@ const users = [
 ];
 
 module.exports = () => {
-  const { createUser } = require('../../../lib/schema/user')(globalThis.redis);
+  const signedAdminJwt = jwt.sign(
+    { id: '0', admin: true },
+    globalThis.jwtSecret,
+    {
+      expiresIn: '2h',
+    }
+  );
 
-  test('Create users', async () => {
+  const signedJwt = jwt.sign({ id: '0' }, globalThis.jwtSecret, {
+    expiresIn: '2h',
+  });
+
+  const { createAdmin } = require('../../../lib/schema/admin')(
+    globalThis.redis
+  );
+
+  test('Create admins', async () => {
     for (let i = 0; i < users.length; i++) {
-      await createUser(
+      await createAdmin(
         users[i].email,
         users[i].password,
         users[i].firstName,
@@ -41,68 +56,100 @@ module.exports = () => {
     }
   });
 
-  test('Missing email', () =>
+  test('No authorization', () =>
     supertest(globalThis.app)
-      .post('/auth/register')
+      .post('/auth/admin/register')
       .send({
         password: 'aaaaaa',
         firstName: 'Joe',
         lastName: 'Shmoe',
       })
+      .expect(StatusUnauthorized));
+
+  test('Only using basic user authentication', () =>
+    supertest(globalThis.app)
+      .post('/auth/admin/register')
+      .send({
+        password: 'aaaaaa',
+        firstName: 'Joe',
+        lastName: 'Shmoe',
+      })
+      .set('Authorization', signedJwt)
+      .expect(StatusUnauthorized));
+
+  test('Missing email', () =>
+    supertest(globalThis.app)
+      .post('/auth/admin/register')
+      .send({
+        password: 'aaaaaa',
+        firstName: 'Joe',
+        lastName: 'Shmoe',
+      })
+      .set('Authorization', signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('Missing password', () =>
     supertest(globalThis.app)
-      .post('/auth/register')
+      .post('/auth/admin/register')
       .send({
         email: 'b@c.com',
         firstName: 'Joe',
         lastName: 'Shmoe',
       })
+      .set('Authorization', signedAdminJwt)
+
       .expect(StatusBadRequest));
 
   test('Password length too short', () =>
     supertest(globalThis.app)
-      .post('/auth/register')
+      .post('/auth/admin/register')
       .send({
         email: 'b@c.com',
         password: 'aaaaa',
         firstName: 'Joe',
         lastName: 'Shmoe',
       })
+      .set('Authorization', signedAdminJwt)
+
       .expect(StatusBadRequest));
 
   test('Missing first name', () =>
     supertest(globalThis.app)
-      .post('/auth/register')
+      .post('/auth/admin/register')
       .send({
         email: 'b@c.com',
         password: 'aaaaaa',
         lastName: 'Shmoe',
       })
+      .set('Authorization', signedAdminJwt)
+
       .expect(StatusBadRequest));
 
   test('Duplicate email', () =>
     supertest(globalThis.app)
-      .post('/auth/register')
+      .post('/auth/admin/register')
       .send({
         email: 'a@b.com',
         password: 'aaaaaa',
         firstName: 'Joe',
         lastName: 'Shmoe',
       })
+      .set('Authorization', signedAdminJwt)
+
       .expect(StatusConflict));
 
   let id;
   test('Valid register', () =>
     supertest(globalThis.app)
-      .post('/auth/register')
+      .post('/auth/admin/register')
       .send({
         email: 'b@c.com',
         password: 'aaaaaa',
         firstName: 'Joe',
         lastName: 'Shmoe',
       })
+      .set('Authorization', signedAdminJwt)
+
       .expect(StatusOK)
       .then((res) => (id = jwt.verify(res.text, globalThis.jwtSecret).id)));
 };

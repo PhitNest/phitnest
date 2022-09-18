@@ -24,11 +24,13 @@ const users = [
 ];
 
 module.exports = () => {
-  const { createUser } = require('../../../lib/schema/user')(globalThis.redis);
+  const { createAdmin } = require('../../../lib/schema/admin')(
+    globalThis.redis
+  );
 
-  test('Create users', async () => {
+  test('Create admins', async () => {
     for (let i = 0; i < users.length; i++) {
-      await createUser(
+      await createAdmin(
         users[i].email,
         users[i].password,
         users[i].firstName,
@@ -39,7 +41,7 @@ module.exports = () => {
 
   test('Missing password', () =>
     supertest(globalThis.app)
-      .post('/auth/login')
+      .post('/auth/admin/login')
       .send({
         email: 'a@b.com',
       })
@@ -47,7 +49,7 @@ module.exports = () => {
 
   test('Missing email', () =>
     supertest(globalThis.app)
-      .post('/auth/login')
+      .post('/auth/admin/login')
       .send({
         password: 'aaaaaa',
       })
@@ -55,7 +57,7 @@ module.exports = () => {
 
   test('Non-existing user', () =>
     supertest(globalThis.app)
-      .post('/auth/login')
+      .post('/auth/admin/login')
       .send({
         email: 'b@a.com',
         password: 'aaaaaa',
@@ -64,7 +66,7 @@ module.exports = () => {
 
   test('Incorrect password', () =>
     supertest(globalThis.app)
-      .post('/auth/login')
+      .post('/auth/admin/login')
       .send({
         email: 'a@a.com',
         password: 'bbbbbb',
@@ -73,13 +75,14 @@ module.exports = () => {
 
   test('Correct password', () =>
     supertest(globalThis.app)
-      .post('/auth/login')
+      .post('/auth/admin/login')
       .send({
         email: 'a@a.com',
         password: 'aaaaaa',
       })
       .expect(StatusOK)
-      .expect((res) =>
-        expect(jwt.verify(res.text, globalThis.jwtSecret).id).toBe('0')
-      ));
+      .expect((res) => {
+        expect(jwt.verify(res.text, globalThis.jwtSecret).admin).toBe(true);
+        expect(jwt.verify(res.text, globalThis.jwtSecret).id).toBe('0');
+      }));
 };
