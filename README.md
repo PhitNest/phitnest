@@ -1,7 +1,18 @@
-# phitnest-app
+# PhitNest
 
-Go to a specific component's README.
+Here is the official PhitNest development documentation.
 
-- [backend](./backend/README.md) (no readme)
-- [phitnest_mobile](./phitnest_mobile/README.md) (no readme)
-- [utils](./utils/README.md)
+# Using Git
+
+_coming soon..._
+
+# System Architecture
+
+_coming soon..._
+
+# Applications
+
+Go to a specific application's README.
+
+- [backend](./backend/README.md)
+- [phitnest_mobile](./phitnest_mobile/README.md)
