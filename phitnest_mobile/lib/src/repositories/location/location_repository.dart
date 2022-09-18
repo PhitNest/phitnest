@@ -5,8 +5,19 @@ import '../../models/models.dart';
 import '../repository.dart';
 
 class LocationRepository extends Repository {
+  Future<Gym> getNearestGym(Location location) async {
+    throw UnimplementedError('This needs to be implemented.');
+  }
+
+  Future<List<Gym>> getNearestGyms(Location location) async {
+    throw UnimplementedError('This needs to be implemented.');
+  }
+
+  Stream<ServiceStatus> streamServiceStatus() =>
+      Geolocator.getServiceStatusStream();
+
   Location _positionToLocation(Position position) =>
-      Location(lat: position.latitude, long: position.longitude);
+      Location(longitude: position.longitude, latitude: position.latitude);
 
   /// Will either return a valid user location as a [Location], or
   /// return a [String] if there is an error.

@@ -1,5 +1,7 @@
 const conversationsDomain = 'conversations';
 
+const conversationsCountKey = `${conversationsDomain}:count`;
+
 function conversationsKey(conversationId) {
   return `${conversationsDomain}:${conversationId}`;
 }
@@ -12,7 +14,7 @@ function conversationParticipantsKey(conversationId) {
   return `${conversationsKey(conversationId)}:participants`;
 }
 
-export default (redis) => ({
+module.exports = (redis) => ({
   getFirstMessageIdsFromEachConversation: (conversationIds) =>
     Promise.all(
       conversationIds.map(

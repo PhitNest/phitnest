@@ -1,10 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const messageController = require('../controllers/message');
-const {
-  validateListMessages,
-  inConversation,
-} = require('../middleware/message');
+const { validateListMessages } = require('../middleware/message');
 
-router.get([validateListMessages], messageController.listMessages);
+router.get('/recents', [validateListMessages], messageController.listMessages);
 module.exports = router;
