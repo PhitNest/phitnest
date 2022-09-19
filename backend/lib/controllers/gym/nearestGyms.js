@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
 
   const gyms = await Promise.all(
     (
-      await findNearestGyms(req.query.longitude, req.query.latitude, 1000)
+      await findNearestGyms(req.query.longitude, req.query.latitude, 100)
     ).map((id) => getGym(id))
   );
 
