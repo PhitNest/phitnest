@@ -4,8 +4,11 @@ import '../view.dart';
 
 class RequestLocationView extends ScreenView {
   final Function() onPressedExit;
+  final String errorMessage;
 
-  const RequestLocationView({required this.onPressedExit}) : super();
+  const RequestLocationView(
+      {required this.onPressedExit, required this.errorMessage})
+      : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -23,6 +26,15 @@ class RequestLocationView extends ScreenView {
           Text(
             'Please allow location permissions\nin your phone settings:',
             style: Theme.of(context).textTheme.labelLarge,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+          Text(
+            errorMessage,
+            style: Theme.of(context)
+                .textTheme
+                .labelLarge!
+                .copyWith(color: Colors.red),
             textAlign: TextAlign.center,
           ),
           Expanded(child: Container()),
