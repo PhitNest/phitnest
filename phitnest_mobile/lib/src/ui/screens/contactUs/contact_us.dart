@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants/routes.dart';
+import '../../../routes.dart';
 import '../screen.dart';
 import 'contact_us_state.dart';
 import 'contact_us_view.dart';

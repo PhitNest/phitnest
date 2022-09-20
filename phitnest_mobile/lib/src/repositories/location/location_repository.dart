@@ -1,17 +1,31 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 
+import '../../constants/constants.dart';
 import '../../models/models.dart';
-import '../repository.dart';
+import '../repositories.dart';
 
 class LocationRepository extends Repository {
-  Future<Gym> getNearestGym(Location location) async {
-    throw UnimplementedError('This needs to be implemented.');
-  }
+  Future<Gym?> getNearestGym(Location location) => http
+      .get(
+        repositories<EnvironmentRepository>()
+            .getBackendAddress(kNearestGymRoute, params: location.toJson()),
+      )
+      .then((response) => response.statusCode == kStatusOK
+          ? Gym.fromJson(jsonDecode(response.body))
+          : null);
 
-  Future<List<Gym>> getNearestGyms(Location location) async {
-    throw UnimplementedError('This needs to be implemented.');
-  }
+  Future<List<Gym>> getNearestGyms(Location location) => http
+      .get(
+        repositories<EnvironmentRepository>()
+            .getBackendAddress(kListGymsRoute, params: location.toJson()),
+      )
+      .then((response) => response.statusCode == kStatusOK
+          ? jsonDecode(response.body).map((gym) => Gym.fromJson(gym))
+          : []);
 
   Stream<ServiceStatus> streamServiceStatus() =>
       Geolocator.getServiceStatusStream();

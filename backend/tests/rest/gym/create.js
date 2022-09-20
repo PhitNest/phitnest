@@ -4,29 +4,36 @@ const {
   StatusBadRequest,
   StatusOK,
   StatusUnauthorized,
+  HeaderAuthorization,
 } = require('../../../lib/constants');
 
 const gyms = [
   {
     name: 'Planet Fitness',
-    streetAddress: '44 Maine St',
-    city: 'Ashland',
-    state: 'Ohio',
-    zipCode: '44805',
+    address: {
+      streetAddress: '44 Maine St',
+      city: 'Ashland',
+      state: 'Ohio',
+      zipCode: '44805',
+    },
   },
   {
     name: 'Planet Fitness',
-    streetAddress: '131 Iroquois St',
-    city: 'Struthers',
-    state: 'Ohio',
-    zipCode: '44471',
+    address: {
+      streetAddress: '131 Iroquois St',
+      city: 'Struthers',
+      state: 'Ohio',
+      zipCode: '44471',
+    },
   },
   {
     name: '24 Hour Fitness',
-    streetAddress: '811 Ercama St',
-    city: 'Linden',
-    state: 'New Jersey',
-    zipCode: '07036',
+    address: {
+      streetAddress: '811 Ercama St',
+      city: 'Linden',
+      state: 'New Jersey',
+      zipCode: '07036',
+    },
   },
 ];
 
@@ -55,19 +62,16 @@ module.exports = () => {
     supertest(globalThis.app)
       .post('/gym/create')
       .send(gyms[0])
-      .set('Authorization', signedJwt)
+      .set(HeaderAuthorization, signedJwt)
       .expect(StatusUnauthorized));
 
   test('User request with admin credentials but missing name', () =>
     supertest(globalThis.app)
       .post('/gym/create')
       .send({
-        streetAddress: gyms[0].streetAddress,
-        city: gyms[0].city,
-        state: gyms[0].state,
-        zipCode: gyms[0].zipCode,
+        address: gyms[0].address,
       })
-      .set('Authorization', signedAdminJwt)
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('User request with admin credentials but missing street', () =>
@@ -75,11 +79,13 @@ module.exports = () => {
       .post('/gym/create')
       .send({
         name: gyms[0].name,
-        city: gyms[0].city,
-        state: gyms[0].state,
-        zipCode: gyms[0].zipCode,
+        address: {
+          city: gyms[0].address.city,
+          state: gyms[0].address.state,
+          zipCode: gyms[0].address.zipCode,
+        },
       })
-      .set('Authorization', signedAdminJwt)
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('User request with admin credentials but missing city', () =>
@@ -87,11 +93,13 @@ module.exports = () => {
       .post('/gym/create')
       .send({
         name: gyms[0].name,
-        streetAddress: gyms[0].streetAddress,
-        state: gyms[0].state,
-        zipCode: gyms[0].zipCode,
+        address: {
+          streetAddress: gyms[0].address.streetAddress,
+          state: gyms[0].address.state,
+          zipCode: gyms[0].address.zipCode,
+        },
       })
-      .set('Authorization', signedAdminJwt)
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('User request with admin credentials but missing state', () =>
@@ -99,11 +107,13 @@ module.exports = () => {
       .post('/gym/create')
       .send({
         name: gyms[0].name,
-        streetAddress: gyms[0].streetAddress,
-        city: gyms[0].city,
-        zipCode: gyms[0].zipCode,
+        address: {
+          streetAddress: gyms[0].address.streetAddress,
+          city: gyms[0].address.city,
+          zipCode: gyms[0].address.zipCode,
+        },
       })
-      .set('Authorization', signedAdminJwt)
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('User request with admin credentials but missing zipcode', () =>
@@ -111,24 +121,38 @@ module.exports = () => {
       .post('/gym/create')
       .send({
         name: gyms[0].name,
-        streetAddress: gyms[0].streetAddress,
-        city: gyms[0].city,
-        state: gyms[0].state,
+        address: {
+          streetAddress: gyms[0].address.streetAddress,
+          city: gyms[0].address.city,
+          state: gyms[0].address.state,
+        },
       })
-      .set('Authorization', signedAdminJwt)
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
-  test('User request with admin credentials but invalid zipcode', () =>
+  test('User request with admin credentials but invalid format', () =>
     supertest(globalThis.app)
       .post('/gym/create')
       .send({
         name: gyms[0].name,
-        streetAddress: gyms[0].streetAddress,
-        city: gyms[0].city,
-        state: gyms[0].state,
-        zipCode: 233433,
+        ...gyms[0].address,
       })
-      .set('Authorization', signedAdminJwt)
+      .set(HeaderAuthorization, signedAdminJwt)
+      .expect(StatusBadRequest));
+
+  test('Fake address', () =>
+    supertest(globalThis.app)
+      .post('/gym/create')
+      .send({
+        name: 'Test',
+        address: {
+          streetAddress: '123 Sesame St',
+          city: 'Dakota',
+          State: 'Ireland',
+          zipCode: '123',
+        },
+      })
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('Valid gym creation', async () => {
@@ -136,7 +160,7 @@ module.exports = () => {
       supertest(globalThis.app)
         .post('/gym/create')
         .send(gyms[i])
-        .set('Authorization', signedAdminJwt)
+        .set(HeaderAuthorization, signedAdminJwt)
         .expect(StatusOK)
         .expect((res) => expect(JSON.parse(res.text).id).toBe(i.toString()));
     }

@@ -17,6 +17,7 @@ dependencies:
   dartz: ^0.10.1
   flutter_secure_storage: ^6.0.0
   flutter_svg: ^1.1.4
+  flutter_dotenv: ^5.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -24,6 +25,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - .env
     - assets/images/logo.svg
   fonts:
     - family: Metropolis

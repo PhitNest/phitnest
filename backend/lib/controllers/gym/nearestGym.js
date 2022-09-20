@@ -1,4 +1,4 @@
-const { StatusOK } = require('../../constants');
+const { StatusOK, StatusNoContent } = require('../../constants');
 
 module.exports = async (req, res) => {
   const { getGym, findNearestGym } = require('../../schema/gym')(
@@ -10,5 +10,5 @@ module.exports = async (req, res) => {
     const gym = await getGym(id);
     return res.status(StatusOK).json(gym);
   }
-  return res.status(StatusNoContent).send('You have no nearby gyms');
+  return res.status(StatusNoContent).send();
 };

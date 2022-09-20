@@ -5,6 +5,7 @@ const {
   StatusBadRequest,
   StatusOK,
   StatusUnauthorized,
+  HeaderAuthorization,
 } = require('../../../lib/constants');
 
 const users = [
@@ -49,7 +50,7 @@ module.exports = () => {
     supertest(globalThis.app)
       .post('/auth/admin/register')
       .send()
-      .set('Authorization', signedAdminJwt)
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('Create admins', async () => {
@@ -81,7 +82,7 @@ module.exports = () => {
         firstName: 'Joe',
         lastName: 'Shmoe',
       })
-      .set('Authorization', signedJwt)
+      .set(HeaderAuthorization, signedJwt)
       .expect(StatusUnauthorized));
 
   test('Missing email', () =>
@@ -92,7 +93,7 @@ module.exports = () => {
         firstName: 'Joe',
         lastName: 'Shmoe',
       })
-      .set('Authorization', signedAdminJwt)
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('Missing password', () =>
@@ -103,7 +104,7 @@ module.exports = () => {
         firstName: 'Joe',
         lastName: 'Shmoe',
       })
-      .set('Authorization', signedAdminJwt)
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('Password length too short', () =>
@@ -115,7 +116,7 @@ module.exports = () => {
         firstName: 'Joe',
         lastName: 'Shmoe',
       })
-      .set('Authorization', signedAdminJwt)
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('Missing first name', () =>
@@ -126,7 +127,7 @@ module.exports = () => {
         password: 'aaaaaa',
         lastName: 'Shmoe',
       })
-      .set('Authorization', signedAdminJwt)
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('Duplicate email', () =>
@@ -138,7 +139,7 @@ module.exports = () => {
         firstName: 'Joe',
         lastName: 'Shmoe',
       })
-      .set('Authorization', signedAdminJwt)
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusConflict));
 
   let id;
@@ -151,7 +152,7 @@ module.exports = () => {
         firstName: 'Joe',
         lastName: 'Shmoe',
       })
-      .set('Authorization', signedAdminJwt)
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusOK)
       .then((res) => (id = jwt.verify(res.text, globalThis.jwtSecret).id)));
 };
