@@ -7,7 +7,7 @@ npm install
 npm run dev
 ```
 
-Replace the contents of `phitnest_mobile/.env` with the following:
+Then, replace the contents of `phitnest_mobile/.env` with the following:
 
 For android emulators:
 
