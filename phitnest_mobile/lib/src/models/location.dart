@@ -9,7 +9,7 @@ class Location extends Equatable {
       Location(longitude: json['longitude'], latitude: json['latitude']);
 
   Map<String, dynamic> toJson() =>
-      {'longitude': longitude, 'latitude': latitude};
+      {'longitude': longitude.toString(), 'latitude': latitude.toString()};
 
   @override
   List<Object?> get props => [longitude, latitude];

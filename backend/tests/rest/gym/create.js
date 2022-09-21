@@ -4,7 +4,10 @@ const {
   StatusBadRequest,
   StatusOK,
   StatusUnauthorized,
+  HeaderAuthorization,
 } = require('../../../lib/constants');
+
+const _ = require('lodash');
 
 const gyms = [
   {
@@ -45,6 +48,13 @@ module.exports = () => {
 
   const { getGym } = require('../../../lib/schema/gym')(globalThis.redis);
 
+  test('Missing body', () =>
+    supertest(globalThis.app)
+      .post('/gym/create')
+      .send()
+      .set(HeaderAuthorization, signedAdminJwt)
+      .expect(StatusBadRequest));
+
   test('Unauthenticated request', () =>
     supertest(globalThis.app)
       .post('/gym/create')
@@ -55,80 +65,55 @@ module.exports = () => {
     supertest(globalThis.app)
       .post('/gym/create')
       .send(gyms[0])
-      .set('Authorization', signedJwt)
+      .set(HeaderAuthorization, signedJwt)
       .expect(StatusUnauthorized));
 
-  test('User request with admin credentials but missing name', () =>
+  test('Missing name', () =>
     supertest(globalThis.app)
       .post('/gym/create')
-      .send({
-        streetAddress: gyms[0].streetAddress,
-        city: gyms[0].city,
-        state: gyms[0].state,
-        zipCode: gyms[0].zipCode,
-      })
-      .set('Authorization', signedAdminJwt)
+      .send(_.omit(gyms[0], 'name'))
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
-  test('User request with admin credentials but missing street', () =>
+  test('Missing street', () =>
     supertest(globalThis.app)
       .post('/gym/create')
-      .send({
-        name: gyms[0].name,
-        city: gyms[0].city,
-        state: gyms[0].state,
-        zipCode: gyms[0].zipCode,
-      })
-      .set('Authorization', signedAdminJwt)
+      .send(_.omit(gyms[0], 'streetAddress'))
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
-  test('User request with admin credentials but missing city', () =>
+  test('Missing city', () =>
     supertest(globalThis.app)
       .post('/gym/create')
-      .send({
-        name: gyms[0].name,
-        streetAddress: gyms[0].streetAddress,
-        state: gyms[0].state,
-        zipCode: gyms[0].zipCode,
-      })
-      .set('Authorization', signedAdminJwt)
+      .send(_.omit(gyms[0], 'city'))
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
-  test('User request with admin credentials but missing state', () =>
+  test('Missing state', () =>
     supertest(globalThis.app)
       .post('/gym/create')
-      .send({
-        name: gyms[0].name,
-        streetAddress: gyms[0].streetAddress,
-        city: gyms[0].city,
-        zipCode: gyms[0].zipCode,
-      })
-      .set('Authorization', signedAdminJwt)
+      .send(_.omit(gyms[0], 'state'))
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
-  test('User request with admin credentials but missing zipcode', () =>
+  test('Missing zipcode', () =>
     supertest(globalThis.app)
       .post('/gym/create')
-      .send({
-        name: gyms[0].name,
-        streetAddress: gyms[0].streetAddress,
-        city: gyms[0].city,
-        state: gyms[0].state,
-      })
-      .set('Authorization', signedAdminJwt)
+      .send(_.omit(gyms[0], 'zipCode'))
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
-  test('User request with admin credentials but invalid zipcode', () =>
+  test('Fake address', () =>
     supertest(globalThis.app)
       .post('/gym/create')
       .send({
-        name: gyms[0].name,
-        streetAddress: gyms[0].streetAddress,
-        city: gyms[0].city,
-        state: gyms[0].state,
-        zipCode: 233433,
+        name: 'Test',
+        streetAddress: '123 Sesame St',
+        city: 'Dakota',
+        State: 'Ireland',
+        zipCode: '123',
       })
-      .set('Authorization', signedAdminJwt)
+      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('Valid gym creation', async () => {
@@ -136,7 +121,7 @@ module.exports = () => {
       supertest(globalThis.app)
         .post('/gym/create')
         .send(gyms[i])
-        .set('Authorization', signedAdminJwt)
+        .set(HeaderAuthorization, signedAdminJwt)
         .expect(StatusOK)
         .expect((res) => expect(JSON.parse(res.text).id).toBe(i.toString()));
     }

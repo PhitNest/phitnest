@@ -36,13 +36,16 @@ function validate(req) {
       .trim()
       .min(minLastNameLength)
       .max(maxLastNameLength)
-      .optional(),
+      .required(),
   });
   return schema.validate(req);
 }
 
 module.exports = async (req, res, next) => {
   const { error } = validate(req.body);
+  if (req.body == undefined) {
+    return res.status(StatusBadRequest).send('Please provide a body');
+  }
   if (error) {
     return res.status(StatusBadRequest).send(error.details[0].message);
   }

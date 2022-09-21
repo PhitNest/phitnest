@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants/routes.dart';
-import '../../../models/models.dart';
+import '../../../routes.dart';
 import '../../../repositories/repositories.dart';
 import '../screen.dart';
 import 'request_location_state.dart';
@@ -12,25 +11,22 @@ class RequestLocationScreen
   const RequestLocationScreen() : super();
 
   @override
-  Future<void> init(BuildContext context, RequestLocationState state) async {
-    state.serviceStatusListener = repositories<LocationRepository>()
-        .streamServiceStatus()
-        .listen((permissionsUpdate) => repositories<LocationRepository>()
-                .getLocation()
-                .then((response) async {
-              if (response.isLeft()) {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, kFoundLocation, (_) => false, arguments: [
-                  await repositories<LocationRepository>()
-                      .getNearestGym(response as Location)
-                ]);
-              }
-            }));
-  }
+  init(BuildContext context, RequestLocationState state) =>
+      repositories<LocationRepository>().getLocation().then((response) =>
+          response.fold(
+              (location) => repositories<LocationRepository>()
+                  .getNearestGym(location)
+                  .then((gym) => gym != null
+                      ? Navigator.pushNamedAndRemoveUntil(
+                          context, kFoundLocation, (_) => false,
+                          arguments: [gym])
+                      : state.errorMessage = 'No nearby gyms could be found.'),
+              (error) => state.errorMessage = error));
 
   @override
   RequestLocationView build(BuildContext context, RequestLocationState state) =>
       RequestLocationView(
+        errorMessage: state.errorMessage ?? '',
         onPressedExit: () =>
             Navigator.pushNamedAndRemoveUntil(context, kApology, (_) => false),
       );

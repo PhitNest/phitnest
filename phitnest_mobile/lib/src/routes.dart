@@ -1,4 +1,4 @@
-import '../ui/screens/screen.dart';
+import 'ui/screens/screen.dart';
 
 const kOnBoarding = '/onBoarding';
 const kRequestLocation = '/requestLocation';

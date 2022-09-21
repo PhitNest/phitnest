@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'constants/routes.dart';
+import 'routes.dart';
 import 'ui/theme.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) => MaterialPageRoute(

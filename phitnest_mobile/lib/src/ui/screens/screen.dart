@@ -17,7 +17,7 @@ abstract class Screen<T extends ScreenState, K extends ScreenView>
 
   T buildState();
 
-  Future<void> init(BuildContext context, T state) async {}
+  Future init(BuildContext context, T state) async {}
 
   Widget buildLoading(BuildContext context, T state) => build(context, state);
 

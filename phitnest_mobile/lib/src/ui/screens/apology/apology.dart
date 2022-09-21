@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants/routes.dart';
+import '../../../routes.dart';
 import '../screen.dart';
 import 'apology_state.dart';
 import 'apology_view.dart';
