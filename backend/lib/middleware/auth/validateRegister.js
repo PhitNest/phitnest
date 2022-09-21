@@ -36,7 +36,7 @@ function validate(req) {
       .trim()
       .min(minLastNameLength)
       .max(maxLastNameLength)
-      .optional(),
+      .required(),
   });
   return schema.validate(req);
 }

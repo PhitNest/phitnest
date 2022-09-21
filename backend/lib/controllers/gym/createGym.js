@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
     'https://nominatim.openstreetmap.org/search',
     {
       params: {
-        q: `${req.body.address.streetAddress}, ${req.body.address.city}, ${req.body.address.state} ${req.body.address.zipCode}`.replace(
+        q: `${req.body.streetAddress}, ${req.body.city}, ${req.body.state} ${req.body.zipCode}`.replace(
           /%20/g,
           '+'
         ),

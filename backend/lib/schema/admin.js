@@ -28,19 +28,19 @@ module.exports = (redis) => ({
       id: id[1],
     };
   },
-  createAdmin: async (email, hashedPassword, firstName, lastName) => {
+  createAdmin: async ({ email, password, firstName, lastName }) => {
     const id = await getAdminCount(redis);
     await redis
       .multi()
       .hset(adminKey(id), {
         email: email,
-        password: hashedPassword,
+        password: password,
         firstName: firstName,
         lastName: lastName,
       })
       .hset(adminEmailKey(email), {
         id: id,
-        password: hashedPassword,
+        password: password,
       })
       .incr(adminsCountKey)
       .exec();
