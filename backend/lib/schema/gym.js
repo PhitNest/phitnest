@@ -24,12 +24,10 @@ module.exports = (redis) => ({
       .exec();
     return {
       name: name[1],
-      address: {
-        streetAddress: streetAddress[1],
-        city: city[1],
-        state: state[1],
-        zipCode: zipCode[1],
-      },
+      streetAddress: streetAddress[1],
+      city: city[1],
+      state: state[1],
+      zipCode: zipCode[1],
     };
   },
   findNearestGym: async (longitude, latitude, rangeInKM) =>

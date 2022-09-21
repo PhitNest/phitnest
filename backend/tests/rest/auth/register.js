@@ -5,110 +5,68 @@ const {
   StatusBadRequest,
   StatusOK,
 } = require('../../../lib/constants');
+const _ = require('lodash');
+const users = require('./userData');
 
-const users = [
-  {
-    email: 'a@a.com',
-    firstName: 'Joe',
-    lastName: 'A',
-    password: '$2a$10$V603PA18aLlRnD1gzdM9mOfekYyK9D/fvlAFIQEASdKDmGdHFE2ne',
-  },
-  {
-    email: 'a@b.com',
-    firstName: 'Joe',
-    lastName: 'B',
-    password: '$2a$10$V603PA18aLlRnD1gzdM9mOfekYyK9D/fvlAFIQEASdKDmGdHFE2ne',
-  },
-  {
-    email: 'a@c.com',
-    firstName: 'Joe',
-    lastName: 'C',
-    password: '$2a$10$V603PA18aLlRnD1gzdM9mOfekYyK9D/fvlAFIQEASdKDmGdHFE2ne',
-  },
-];
+const registree = {
+  email: 'b@c.com',
+  password: 'aaaaaa',
+  firstName: 'Joe',
+  lastName: 'Shmoe',
+};
 
 module.exports = () => {
-  const { createUser } = require('../../../lib/schema/user')(globalThis.redis);
-
   test('Using no body', () =>
     supertest(globalThis.app)
       .post('/auth/register')
       .send()
       .expect(StatusBadRequest));
 
-  test('Create users', async () => {
-    for (let i = 0; i < users.length; i++) {
-      await createUser(
-        users[i].email,
-        users[i].password,
-        users[i].firstName,
-        users[i].lastName
-      );
-    }
-  });
-
   test('Missing email', () =>
     supertest(globalThis.app)
       .post('/auth/register')
-      .send({
-        password: 'aaaaaa',
-        firstName: 'Joe',
-        lastName: 'Shmoe',
-      })
+      .send(_.omit(registree, 'email'))
       .expect(StatusBadRequest));
 
   test('Missing password', () =>
     supertest(globalThis.app)
       .post('/auth/register')
-      .send({
-        email: 'b@c.com',
-        firstName: 'Joe',
-        lastName: 'Shmoe',
-      })
+      .send(_.omit(registree, 'password'))
       .expect(StatusBadRequest));
 
   test('Password length too short', () =>
     supertest(globalThis.app)
       .post('/auth/register')
       .send({
-        email: 'b@c.com',
+        ..._.omit(registree, 'password'),
         password: 'aaaaa',
-        firstName: 'Joe',
-        lastName: 'Shmoe',
       })
       .expect(StatusBadRequest));
 
   test('Missing first name', () =>
     supertest(globalThis.app)
       .post('/auth/register')
-      .send({
-        email: 'b@c.com',
-        password: 'aaaaaa',
-        lastName: 'Shmoe',
-      })
+      .send(_.omit(registree, 'firstName'))
+      .expect(StatusBadRequest));
+
+  test('Missing last name', () =>
+    supertest(globalThis.app)
+      .post('/auth/register')
+      .send(_.omit(registree, 'lastName'))
       .expect(StatusBadRequest));
 
   test('Duplicate email', () =>
     supertest(globalThis.app)
       .post('/auth/register')
-      .send({
-        email: 'a@b.com',
-        password: 'aaaaaa',
-        firstName: 'Joe',
-        lastName: 'Shmoe',
-      })
+      .send({ ..._.omit(users[0], 'password'), password: 'aaaaaa' })
       .expect(StatusConflict));
 
-  let id;
   test('Valid register', () =>
     supertest(globalThis.app)
       .post('/auth/register')
-      .send({
-        email: 'b@c.com',
-        password: 'aaaaaa',
-        firstName: 'Joe',
-        lastName: 'Shmoe',
-      })
+      .send(registree)
       .expect(StatusOK)
-      .then((res) => (id = jwt.verify(res.text, globalThis.jwtSecret).id)));
+      .then((res) =>
+        expect(jwt.verify(res.text, globalThis.jwtSecret).id).toBe('3')
+      ));
 };

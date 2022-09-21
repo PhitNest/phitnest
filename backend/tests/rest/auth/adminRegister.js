@@ -7,27 +7,15 @@ const {
   StatusUnauthorized,
   HeaderAuthorization,
 } = require('../../../lib/constants');
+const _ = require('lodash');
+const users = require('./userData');
 
-const users = [
-  {
-    email: 'a@a.com',
-    firstName: 'Joe',
-    lastName: 'A',
-    password: '$2a$10$V603PA18aLlRnD1gzdM9mOfekYyK9D/fvlAFIQEASdKDmGdHFE2ne',
-  },
-  {
-    email: 'a@b.com',
-    firstName: 'Joe',
-    lastName: 'B',
-    password: '$2a$10$V603PA18aLlRnD1gzdM9mOfekYyK9D/fvlAFIQEASdKDmGdHFE2ne',
-  },
-  {
-    email: 'a@c.com',
-    firstName: 'Joe',
-    lastName: 'C',
-    password: '$2a$10$V603PA18aLlRnD1gzdM9mOfekYyK9D/fvlAFIQEASdKDmGdHFE2ne',
-  },
-];
+const registree = {
+  email: 'b@c.com',
+  password: 'aaaaaa',
+  firstName: 'Joe',
+  lastName: 'Shmoe',
+};
 
 module.exports = () => {
   const signedAdminJwt = jwt.sign(
@@ -42,10 +30,6 @@ module.exports = () => {
     expiresIn: '2h',
   });
 
-  const { createAdmin } = require('../../../lib/schema/admin')(
-    globalThis.redis
-  );
-
   test('Using no body', () =>
     supertest(globalThis.app)
       .post('/auth/admin/register')
@@ -53,57 +37,30 @@ module.exports = () => {
       .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
-  test('Create admins', async () => {
-    for (let i = 0; i < users.length; i++) {
-      await createAdmin(
-        users[i].email,
-        users[i].password,
-        users[i].firstName,
-        users[i].lastName
-      );
-    }
-  });
-
   test('No authorization', () =>
     supertest(globalThis.app)
       .post('/auth/admin/register')
-      .send({
-        password: 'aaaaaa',
-        firstName: 'Joe',
-        lastName: 'Shmoe',
-      })
+      .send(registree)
       .expect(StatusUnauthorized));
 
   test('Only using basic user authentication', () =>
     supertest(globalThis.app)
       .post('/auth/admin/register')
-      .send({
-        password: 'aaaaaa',
-        firstName: 'Joe',
-        lastName: 'Shmoe',
-      })
+      .send(registree)
       .set(HeaderAuthorization, signedJwt)
       .expect(StatusUnauthorized));
 
   test('Missing email', () =>
     supertest(globalThis.app)
       .post('/auth/admin/register')
-      .send({
-        password: 'aaaaaa',
-        firstName: 'Joe',
-        lastName: 'Shmoe',
-      })
+      .send(_.omit(registree, 'email'))
       .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('Missing password', () =>
     supertest(globalThis.app)
       .post('/auth/admin/register')
-      .send({
-        email: 'b@c.com',
-        firstName: 'Joe',
-        lastName: 'Shmoe',
-      })
+      .send(_.omit(registree, 'password'))
       .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
@@ -111,10 +68,8 @@ module.exports = () => {
     supertest(globalThis.app)
       .post('/auth/admin/register')
       .send({
-        email: 'b@c.com',
+        ..._.omit(registree, 'password'),
         password: 'aaaaa',
-        firstName: 'Joe',
-        lastName: 'Shmoe',
       })
       .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
@@ -122,37 +77,31 @@ module.exports = () => {
   test('Missing first name', () =>
     supertest(globalThis.app)
       .post('/auth/admin/register')
-      .send({
-        email: 'b@c.com',
-        password: 'aaaaaa',
-        lastName: 'Shmoe',
-      })
+      .send(_.omit(registree, 'firstName'))
+      .set(HeaderAuthorization, signedAdminJwt)
+      .expect(StatusBadRequest));
+
+  test('Missing last name', () =>
+    supertest(globalThis.app)
+      .post('/auth/admin/register')
+      .send(_.omit(registree, 'lastName'))
       .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('Duplicate email', () =>
     supertest(globalThis.app)
       .post('/auth/admin/register')
-      .send({
-        email: 'a@b.com',
-        password: 'aaaaaa',
-        firstName: 'Joe',
-        lastName: 'Shmoe',
-      })
+      .send({ ..._.omit(users[0], 'password'), password: 'aaaaaa' })
       .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusConflict));
 
-  let id;
   test('Valid register', () =>
     supertest(globalThis.app)
       .post('/auth/admin/register')
-      .send({
-        email: 'b@c.com',
-        password: 'aaaaaa',
-        firstName: 'Joe',
-        lastName: 'Shmoe',
-      })
+      .send(registree)
       .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusOK)
-      .then((res) => (id = jwt.verify(res.text, globalThis.jwtSecret).id)));
+      .then((res) =>
+        expect(jwt.verify(res.text, globalThis.jwtSecret).id).toBe('3')
+      ));
 };

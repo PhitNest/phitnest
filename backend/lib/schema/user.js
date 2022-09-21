@@ -34,19 +34,19 @@ module.exports = (redis) => ({
       id: id[1],
     };
   },
-  createUser: async (email, hashedPassword, firstName, lastName) => {
+  createUser: async ({ email, password, firstName, lastName }) => {
     const id = await getUserCount(redis);
     await redis
       .multi()
       .hset(userKey(id), {
         email: email,
-        password: hashedPassword,
+        password: password,
         firstName: firstName,
         lastName: lastName,
       })
       .hset(userEmailKey(email), {
         id: id,
-        password: hashedPassword,
+        password: password,
       })
       .incr(usersCountKey)
       .exec();

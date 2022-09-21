@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { StatusOK, StatusConflict } = require('../../constants');
+const _ = require('lodash');
 
 module.exports = async (req, res) => {
   const { getAdminIdAndPasswordFromEmail, createAdmin } =
@@ -11,12 +12,10 @@ module.exports = async (req, res) => {
       .status(StatusConflict)
       .send('An admin with this email already exists.');
   } else {
-    const adminId = await createAdmin(
-      req.body.email,
-      await bcrypt.hash(req.body.password, 10),
-      req.body.firstName,
-      req.body.lastName
-    );
+    const adminId = await createAdmin({
+      ..._.omit(req.body, 'password'),
+      password: await bcrypt.hash(req.body.password, 10),
+    });
     const authorization = jwt.sign(
       { id: adminId, admin: true },
       process.env.JWT_SECRET,
