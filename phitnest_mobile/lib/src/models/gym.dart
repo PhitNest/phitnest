@@ -10,7 +10,7 @@ class Gym extends Equatable {
 
   factory Gym.fromJson(Map<String, dynamic> json) => Gym(
         name: json['name'],
-        address: Address.fromJson(json['address']),
+        address: Address.fromJson(json),
       );
 
   Map<String, dynamic> toJson() => {

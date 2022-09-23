@@ -10,6 +10,7 @@ export 'apology/apology.dart';
 export 'contactUs/contact_us.dart';
 export 'foundLocation/found_location.dart';
 export 'thankYou/thank_you.dart';
+export 'gymSearch/gym_search.dart';
 
 abstract class Screen<T extends ScreenState, K extends ScreenView>
     extends StatefulWidget {

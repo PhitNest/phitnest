@@ -28,6 +28,7 @@ class IntroPage extends StatelessWidget {
           ),
           Expanded(child: Container()),
           Arrow(
+              color: Color.fromARGB(255, 193, 28, 28),
               width: MediaQuery.of(context).size.width * 0.19,
               height: MediaQuery.of(context).size.height * 0.015)
         ]),
