@@ -6,6 +6,7 @@ const kApology = '/apology';
 const kContactUs = '/contactUs';
 const kThankYou = '/thankYou';
 const kFoundLocation = '/foundLocation';
+const kGymSearch = '/gymSearch';
 
 var kRouteMap = {
   'default': (settings) => OnBoardingScreen(),
@@ -14,5 +15,6 @@ var kRouteMap = {
   kApology: (settings) => ApologyScreen(),
   kContactUs: (settings) => ContactUsScreen(),
   kThankYou: (settings) => ThankYouScreen(name: settings.arguments[0]),
-  kFoundLocation: (settings) => FoundLocationScreen(gym: settings.arguments[0])
+  kFoundLocation: (settings) => FoundLocationScreen(gym: settings.arguments[0]),
+  kGymSearch: (settings) => GymSearchScreen()
 };

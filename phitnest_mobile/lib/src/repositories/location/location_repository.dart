@@ -24,7 +24,8 @@ class LocationRepository extends Repository {
             .getBackendAddress(kListGymsRoute, params: location.toJson()),
       )
       .then((response) => response.statusCode == kStatusOK
-          ? jsonDecode(response.body).map((gym) => Gym.fromJson(gym))
+          ? List<Gym>.from(
+              jsonDecode(response.body).map((gym) => Gym.fromJson(gym)))
           : []);
 
   Stream<ServiceStatus> streamServiceStatus() =>
