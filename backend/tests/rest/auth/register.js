@@ -6,7 +6,6 @@ const {
   StatusOK,
 } = require('../../../lib/constants');
 const _ = require('lodash');
-const users = require('./userData');
 
 const registree = {
   email: 'b@c.com',
@@ -58,7 +57,7 @@ module.exports = () => {
   test('Duplicate email', () =>
     supertest(globalThis.app)
       .post('/auth/register')
-      .send({ ..._.omit(users[0], 'password'), password: 'aaaaaa' })
+      .send({ ..._.omit(registree, 'email'), email: 'a@a.com' })
       .expect(StatusConflict));
 
   test('Valid register', () =>
@@ -67,6 +66,6 @@ module.exports = () => {
       .send(registree)
       .expect(StatusOK)
       .then((res) =>
-        expect(jwt.verify(res.text, globalThis.jwtSecret).id).toBe('3')
+        expect(jwt.verify(res.text, globalThis.jwtSecret).id.length).toBe(24)
       ));
 };

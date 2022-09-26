@@ -1,10 +1,12 @@
 const joi = require('joi');
-const { maxListMessageLimit, StatusBadRequest } = require('../../constants');
+const { StatusBadRequest } = require('../../constants');
+joi.objectId = require('joi-objectid')(joi);
 
 function validate(req) {
   const schema = joi.object({
-    conversation: joi.string().required(),
-    limit: joi.number().min(1).max(maxListMessageLimit).required(),
+    conversation: joi.objectId().required(),
+    start: joi.number().integer().min(-1).optional(),
+    limit: joi.number().integer().min(-1).optional(),
   });
   return schema.validate(req);
 }

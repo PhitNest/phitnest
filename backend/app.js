@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { Server } = require('socket.io');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 const routes = require('./lib/routes');
 const jwt = require('jsonwebtoken');
 const registerSocket = require('./lib/socket');
@@ -39,7 +40,7 @@ module.exports = {
           socket.handshake.headers.authorization,
           process.env.JWT_SECRET
         );
-        socket.data.userId = mongoose.Types.ObjectId(data._id);
+        socket.data.userId = mongoose.Types.ObjectId(data.id);
         socket.data.redis = redisClient;
         registerSocket(socket);
         next();

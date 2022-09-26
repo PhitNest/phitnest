@@ -4,10 +4,12 @@ const { StatusBadRequest } = require('../../constants');
 function validate(req) {
   const schema = joi.object({
     name: joi.string().required(),
-    streetAddress: joi.string().required(),
-    city: joi.string().required(),
-    state: joi.string().required(),
-    zipCode: joi.string().required(),
+    address: {
+      street: joi.string().required(),
+      city: joi.string().required(),
+      state: joi.string().required(),
+      zipCode: joi.string().required(),
+    },
   });
   return schema.validate(req);
 }

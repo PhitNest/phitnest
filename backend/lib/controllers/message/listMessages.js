@@ -1,23 +1,20 @@
 const { StatusUnauthorized, StatusOK } = require('../../constants');
+const { getMessages, isInConversation } = require('../../models');
 
 module.exports = async (req, res) => {
-  const { isMember, getMessageIds } = require('../../schema/conversation')(
-    res.locals.redis
-  );
-  const { getMessagesByIds } = require('../../schema/message')(
-    res.locals.redis
-  );
-  if (await isMember(req.query.conversation, res.locals.userId)) {
-    res
-      .status(StatusOK)
-      .json(
-        await getMessagesByIds(
-          getMessageIds(req.query.conversation, 0, req.query.limit)
+  return (await getConversation(req.query.conversation)).participants.contains(
+    res.locals.userId
+  )
+    ? res
+        .status(StatusOK)
+        .json(
+          await getMessages(
+            req.query.conversation,
+            req.query.start ?? -1,
+            req.query.limit ?? -1
+          )
         )
-      );
-  } else {
-    res
-      .status(StatusUnauthorized)
-      .send('You are not a memebr of this conversation.');
-  }
+    : res
+        .status(StatusUnauthorized)
+        .send('You are not a memebr of this conversation.');
 };

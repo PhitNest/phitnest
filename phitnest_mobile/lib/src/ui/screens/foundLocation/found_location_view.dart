@@ -23,7 +23,7 @@ class FoundLocationView extends ScreenView {
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.06),
           Text(
-            '${address.streetAddress}\n${address.city}, ${address.state} ${address.zipCode}',
+            '${address.street}\n${address.city}, ${address.state} ${address.zipCode}',
             style: Theme.of(context).textTheme.labelLarge,
             textAlign: TextAlign.center,
           ),

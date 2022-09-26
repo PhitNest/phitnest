@@ -5,6 +5,7 @@ function validate(req) {
   const schema = joi.object({
     longitude: joi.number().min(-180).max(180).required(),
     latitude: joi.number().min(-90).max(90).required(),
+    limit: joi.number().integer().min(-1).optional(),
   });
   return schema.validate(req);
 }

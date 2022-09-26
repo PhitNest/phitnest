@@ -1,32 +1,32 @@
 import 'package:equatable/equatable.dart';
 
 class Address extends Equatable {
-  final String streetAddress;
+  final String street;
   final String city;
   final String state;
   final String zipCode;
 
   Address({
-    required this.streetAddress,
+    required this.street,
     required this.city,
     required this.state,
     required this.zipCode,
   });
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
-        streetAddress: json['streetAddress'],
+        street: json['street'],
         city: json['city'],
         state: json['state'],
         zipCode: json['zipCode'],
       );
 
   Map<String, dynamic> toJson() => {
-        'streetAddress': streetAddress,
+        'street': street,
         'city': city,
         'state': state,
         'zipCode': zipCode,
       };
 
   @override
-  List<Object?> get props => [streetAddress, city, state, zipCode];
+  List<Object?> get props => [street, city, state, zipCode];
 }
