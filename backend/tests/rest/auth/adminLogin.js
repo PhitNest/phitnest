@@ -1,6 +1,11 @@
 const supertest = require('supertest');
 const jwt = require('jsonwebtoken');
-const { StatusBadRequest, StatusOK } = require('../../../lib/constants');
+const {
+  StatusBadRequest,
+  StatusOK,
+  HeaderAuthorization,
+} = require('../../../lib/constants');
+const { default: mongoose } = require('mongoose');
 
 module.exports = () => {
   test('Using no body', () =>
@@ -30,6 +35,31 @@ module.exports = () => {
       })
       .expect(StatusBadRequest));
 
+  let id;
+  test('Create account', () =>
+    supertest(globalThis.app)
+      .post('/auth/admin/register')
+      .send({
+        email: 'a@a.com',
+        password: 'aaaaaa',
+        firstName: 'Joe',
+        lastName: 'Shmoe',
+      })
+      .set(
+        HeaderAuthorization,
+        jwt.sign(
+          { id: mongoose.Types.ObjectId(), admin: true },
+          globalThis.jwtSecret,
+          {
+            expiresIn: '2h',
+          }
+        )
+      )
+      .expect(StatusOK)
+      .expect((res) => {
+        id = jwt.verify(res.text, globalThis.jwtSecret).id;
+      }));
+
   test('Incorrect password', () =>
     supertest(globalThis.app)
       .post('/auth/admin/login')
@@ -49,6 +79,6 @@ module.exports = () => {
       .expect(StatusOK)
       .expect((res) => {
         expect(jwt.verify(res.text, globalThis.jwtSecret).admin).toBe(true);
-        expect(jwt.verify(res.text, globalThis.jwtSecret).id).toBe('0');
+        expect(jwt.verify(res.text, globalThis.jwtSecret).id).toBe(id);
       }));
 };

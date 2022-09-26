@@ -8,7 +8,7 @@ const {
   HeaderAuthorization,
 } = require('../../../lib/constants');
 const _ = require('lodash');
-const users = require('./userData');
+const { default: mongoose } = require('mongoose');
 
 const registree = {
   email: 'b@c.com',
@@ -19,16 +19,20 @@ const registree = {
 
 module.exports = () => {
   const signedAdminJwt = jwt.sign(
-    { id: '0', admin: true },
+    { id: mongoose.Types.ObjectId(), admin: true },
     globalThis.jwtSecret,
     {
       expiresIn: '2h',
     }
   );
 
-  const signedJwt = jwt.sign({ id: '0' }, globalThis.jwtSecret, {
-    expiresIn: '2h',
-  });
+  const signedJwt = jwt.sign(
+    { id: mongoose.Types.ObjectId() },
+    globalThis.jwtSecret,
+    {
+      expiresIn: '2h',
+    }
+  );
 
   test('Using no body', () =>
     supertest(globalThis.app)
@@ -91,7 +95,7 @@ module.exports = () => {
   test('Duplicate email', () =>
     supertest(globalThis.app)
       .post('/auth/admin/register')
-      .send({ ..._.omit(users[0], 'password'), password: 'aaaaaa' })
+      .send({ ..._.omit(registree, 'email'), email: 'a@a.com' })
       .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusConflict));
 
@@ -102,6 +106,6 @@ module.exports = () => {
       .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusOK)
       .then((res) =>
-        expect(jwt.verify(res.text, globalThis.jwtSecret).id).toBe('3')
+        expect(jwt.verify(res.text, globalThis.jwtSecret).id.length).toBe(24)
       ));
 };

@@ -8,34 +8,41 @@ const {
 } = require('../../../lib/constants');
 
 const _ = require('lodash');
+const { default: mongoose } = require('mongoose');
 
 const gyms = [
   {
     name: 'Planet Fitness',
-    streetAddress: '44 Maine St',
-    city: 'Ashland',
-    state: 'Ohio',
-    zipCode: '44805',
+    address: {
+      street: '44 Maine St',
+      city: 'Ashland',
+      state: 'Ohio',
+      zipCode: '44805',
+    },
   },
   {
     name: 'Planet Fitness',
-    streetAddress: '131 Iroquois St',
-    city: 'Struthers',
-    state: 'Ohio',
-    zipCode: '44471',
+    address: {
+      street: '131 Iroquois St',
+      city: 'Struthers',
+      state: 'Ohio',
+      zipCode: '44471',
+    },
   },
   {
     name: '24 Hour Fitness',
-    streetAddress: '811 Ercama St',
-    city: 'Linden',
-    state: 'New Jersey',
-    zipCode: '07036',
+    address: {
+      street: '811 Ercama St',
+      city: 'Linden',
+      state: 'New Jersey',
+      zipCode: '07036',
+    },
   },
 ];
 
 module.exports = () => {
   const signedAdminJwt = jwt.sign(
-    { id: '0', admin: true },
+    { id: new mongoose.Types.ObjectId(), admin: true },
     globalThis.jwtSecret,
     {
       expiresIn: '2h',
@@ -45,8 +52,6 @@ module.exports = () => {
   const signedJwt = jwt.sign({ id: '0' }, globalThis.jwtSecret, {
     expiresIn: '2h',
   });
-
-  const { getGym } = require('../../../lib/schema/gym')(globalThis.redis);
 
   test('Missing body', () =>
     supertest(globalThis.app)
@@ -78,28 +83,28 @@ module.exports = () => {
   test('Missing street', () =>
     supertest(globalThis.app)
       .post('/gym/create')
-      .send(_.omit(gyms[0], 'streetAddress'))
+      .send(_.omit(gyms[0], 'address.street'))
       .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('Missing city', () =>
     supertest(globalThis.app)
       .post('/gym/create')
-      .send(_.omit(gyms[0], 'city'))
+      .send(_.omit(gyms[0], 'address.city'))
       .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('Missing state', () =>
     supertest(globalThis.app)
       .post('/gym/create')
-      .send(_.omit(gyms[0], 'state'))
+      .send(_.omit(gyms[0], 'address.state'))
       .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test('Missing zipcode', () =>
     supertest(globalThis.app)
       .post('/gym/create')
-      .send(_.omit(gyms[0], 'zipCode'))
+      .send(_.omit(gyms[0], 'address.zipCode'))
       .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
@@ -108,10 +113,12 @@ module.exports = () => {
       .post('/gym/create')
       .send({
         name: 'Test',
-        streetAddress: '123 Sesame St',
-        city: 'Dakota',
-        State: 'Ireland',
-        zipCode: '123',
+        address: {
+          street: '123 Sesame St',
+          city: 'Dakota',
+          State: 'Ireland',
+          zipCode: '123',
+        },
       })
       .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
@@ -124,10 +131,6 @@ module.exports = () => {
         .set(HeaderAuthorization, signedAdminJwt)
         .expect(StatusOK)
         .expect((res) => expect(JSON.parse(res.text).id).toBe(i.toString()));
-    }
-    for (let i = 0; i < gyms.length; i++) {
-      const gym = await getGym(i);
-      expect(gym == gyms[i]);
     }
   });
 };

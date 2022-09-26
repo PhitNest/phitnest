@@ -30,14 +30,30 @@ module.exports = () => {
       })
       .expect(StatusBadRequest));
 
-  test('Incorrect password', () =>
+  let id;
+  test('Create account', () =>
+    supertest(globalThis.app)
+      .post('/auth/register')
+      .send({
+        email: 'a@a.com',
+        password: 'aaaaaa',
+        firstName: 'Joe',
+        lastName: 'Shmoe',
+      })
+      .expect(StatusOK)
+      .expect((res) => {
+        id = jwt.verify(res.text, globalThis.jwtSecret).id;
+      }));
+
+  test('Incorrect password', () => {
     supertest(globalThis.app)
       .post('/auth/login')
       .send({
         email: 'a@a.com',
         password: 'bbbbbb',
       })
-      .expect(StatusBadRequest));
+      .expect(StatusBadRequest);
+  });
 
   test('Correct password', () =>
     supertest(globalThis.app)
@@ -48,6 +64,6 @@ module.exports = () => {
       })
       .expect(StatusOK)
       .expect((res) =>
-        expect(jwt.verify(res.text, globalThis.jwtSecret).id).toBe('0')
+        expect(jwt.verify(res.text, globalThis.jwtSecret).id).toBe(id)
       ));
 };
