@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:geolocator/geolocator.dart';
 
 class Location extends Equatable {
   final double longitude, latitude;
@@ -10,6 +11,11 @@ class Location extends Equatable {
 
   Map<String, dynamic> toJson() =>
       {'longitude': longitude.toString(), 'latitude': latitude.toString()};
+
+  double distanceTo(Location other) =>
+      Geolocator.distanceBetween(
+          latitude, longitude, other.latitude, other.longitude) /
+      1600;
 
   @override
   List<Object?> get props => [longitude, latitude];

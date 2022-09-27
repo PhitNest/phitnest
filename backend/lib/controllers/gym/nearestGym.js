@@ -5,7 +5,7 @@ module.exports = async (req, res) => {
   const gym = await findNearestGym(
     req.query.longitude,
     req.query.latitude,
-    100
+    160000
   );
   return gym
     ? res.status(StatusOK).json(gym)

@@ -7,6 +7,8 @@ abstract class ScreenState extends ChangeNotifier {
 
   set initialized(bool initialized) {
     _initialized = initialized;
-    notifyListeners();
+    rebuildView();
   }
+
+  rebuildView() => notifyListeners();
 }

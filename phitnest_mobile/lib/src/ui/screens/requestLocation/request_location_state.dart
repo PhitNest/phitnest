@@ -7,6 +7,6 @@ class RequestLocationState extends ScreenState {
 
   set errorMessage(String? errorMessage) {
     _errorMessage = errorMessage;
-    notifyListeners();
+    rebuildView();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../view.dart';
 
@@ -12,29 +13,30 @@ class RequestLocationView extends ScreenView {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: Container(
-        margin: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.3,
-            bottom: MediaQuery.of(context).size.height * 0.061),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text(
-            'Where is your\nfitness club?',
-            style: Theme.of(context).textTheme.headlineLarge,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.06),
-          Text(
-            'Please allow location permissions\nin your phone settings:',
-            style: Theme.of(context).textTheme.labelLarge,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+        body: Column(mainAxisSize: MainAxisSize.min, children: [
+          200.verticalSpace,
+          SizedBox(
+              width: 291.w,
+              child: Text(
+                'Where is your\nfitness club?',
+                style: Theme.of(context).textTheme.headlineLarge,
+                textAlign: TextAlign.center,
+              )),
+          40.verticalSpace,
+          SizedBox(
+              width: 291.w,
+              child: Text(
+                'Please allow location permissions in your phone settings:',
+                style: Theme.of(context).textTheme.labelLarge,
+                textAlign: TextAlign.center,
+              )),
+          40.verticalSpace,
           Text(
             errorMessage,
             style: Theme.of(context)
                 .textTheme
                 .labelLarge!
-                .copyWith(color: Colors.red),
+                .copyWith(color: Theme.of(context).colorScheme.error),
             textAlign: TextAlign.center,
           ),
           Expanded(child: Container()),
@@ -44,10 +46,11 @@ class RequestLocationView extends ScreenView {
                   backgroundColor:
                       MaterialStateProperty.all(Colors.transparent)),
               child: Text('EXIT',
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
                       color: Colors.black,
                       fontStyle: FontStyle.italic,
-                      decoration: TextDecoration.underline)))
+                      decoration: TextDecoration.underline))),
+          41.verticalSpace
         ]),
-      ));
+      );
 }
