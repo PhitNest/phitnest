@@ -5,11 +5,12 @@ import '../../common/widgets.dart';
 import '../view.dart';
 
 class ApologyView extends ScreenView {
-  Widget createTextField(BuildContext context, String hint,
+  Widget createTextField(BuildContext context, String hint, String? Function (String?) validator,
           TextEditingController controller) =>
       SizedBox(
           height: 34.h,
-          child: TextField(
+          child: TextFormField(
+            validator: validator,
               controller: controller,
               style: Theme.of(context).textTheme.labelMedium,
               decoration: InputDecoration(
@@ -28,13 +29,19 @@ class ApologyView extends ScreenView {
   final TextEditingController nameController;
   final TextEditingController emailController;
   final AutovalidateMode autovalidateMode;
+  final String? Function(String?) validateFirstName;
+  final String? Function(String?) validateEmail;
+  final GlobalKey <FormState> formKey;
 
   const ApologyView(
       {required this.onPressedContactUs,
       required this.onPressedSubmit,
       required this.nameController,
       required this.emailController,
-      required this.autovalidateMode}
+      required this.autovalidateMode,
+      required this.validateFirstName,
+      required this.validateEmail,
+      required this.formKey}
       );
 
   @override
@@ -64,11 +71,12 @@ class ApologyView extends ScreenView {
           SizedBox(
               width: 291.w,
               child: Form(
+                key: formKey,
                 autovalidateMode: autovalidateMode,
                 child: Column(children: [
-                  createTextField(context, 'Name', nameController),
+                  createTextField(context, 'Name', validateFirstName, nameController,),
                   16.verticalSpace,
-                  createTextField(context, 'Email', emailController)
+                  createTextField(context, 'Email', validateEmail, emailController)
                 ]),
               )),
           42.verticalSpace,
