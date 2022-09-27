@@ -42,17 +42,18 @@ gymSchema.index({ location: '2dsphere' });
 const gymModel = mongoose.model('Gym', gymSchema);
 
 function findNearestGyms(longitude, latitude, maxDistance, limit) {
-  return gymModel
-    .find({
-      location: {
-        $near: {
-          $maxDistance: maxDistance,
-          $geometry: { type: 'Point', coordinates: [longitude, latitude] },
-        },
+  const query = gymModel.find({
+    location: {
+      $near: {
+        $maxDistance: maxDistance,
+        $geometry: { type: 'Point', coordinates: [longitude, latitude] },
       },
-    })
-    .limit(limit)
-    .exec();
+    },
+  });
+  if (limit > 0) {
+    query.limit(limit);
+  }
+  return query.exec();
 }
 
 module.exports = {

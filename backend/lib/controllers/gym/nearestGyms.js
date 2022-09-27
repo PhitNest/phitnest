@@ -8,7 +8,7 @@ module.exports = async (req, res) =>
       await findNearestGyms(
         req.query.longitude,
         req.query.latitude,
-        100,
+        160000,
         req.query.limit ?? -1
       )
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/widgets.dart';
 import '../view.dart';
@@ -12,28 +13,27 @@ class ThankYouView extends ScreenView {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: Container(
-        width: double.infinity,
-        margin: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.3, bottom: 0),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text(
-            'Thank you,\n${this.name}.',
-            style: Theme.of(context).textTheme.headlineLarge,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+        body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          200.verticalSpace,
+          1.sw.horizontalSpace,
+          SizedBox(
+              width: 301.w,
+              child: Text(
+                'Thank you,\n${this.name}.',
+                style: Theme.of(context).textTheme.headlineLarge,
+                textAlign: TextAlign.center,
+              )),
+          42.verticalSpace,
           Text(
             'We\'ll be in touch, my friend.',
             style: Theme.of(context).textTheme.labelLarge,
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+          40.verticalSpace,
           StyledButton(
-            context,
-            child: Text('BYE FOR NOW!'),
+            child: Text('BYE FOR NOW'),
             onPressed: onPressedBye,
           ),
         ]),
-      ));
+      );
 }

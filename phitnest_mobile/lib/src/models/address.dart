@@ -27,6 +27,16 @@ class Address extends Equatable {
         'zipCode': zipCode,
       };
 
+  bool contains(String query) {
+    return street.toLowerCase().contains(query) ||
+        city.toLowerCase().contains(query) ||
+        state.toLowerCase().contains(query) ||
+        zipCode.toLowerCase().contains(query);
+  }
+
   @override
   List<Object?> get props => [street, city, state, zipCode];
+
+  @override
+  String toString() => '$street, $city, $state $zipCode';
 }
