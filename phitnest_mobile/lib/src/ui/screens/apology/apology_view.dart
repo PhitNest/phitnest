@@ -27,12 +27,15 @@ class ApologyView extends ScreenView {
   final Function() onPressedSubmit;
   final TextEditingController nameController;
   final TextEditingController emailController;
+  final AutovalidateMode autovalidateMode;
 
   const ApologyView(
       {required this.onPressedContactUs,
       required this.onPressedSubmit,
       required this.nameController,
-      required this.emailController});
+      required this.emailController,
+      required this.autovalidateMode}
+      );
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -61,6 +64,7 @@ class ApologyView extends ScreenView {
           SizedBox(
               width: 291.w,
               child: Form(
+                autovalidateMode: autovalidateMode,
                 child: Column(children: [
                   createTextField(context, 'Name', nameController),
                   16.verticalSpace,

@@ -7,7 +7,7 @@ import 'apology_view.dart';
 
 class ApologyScreen extends Screen<ApologyState, ApologyView> {
   @override
-  ApologyView build(BuildContext context, ApologyState state) => ApologyView(
+  ApologyView build(BuildContext context, ApologyState state) => ApologyView(autovalidateMode: state.validateMode,
       onPressedContactUs: () =>
           Navigator.pushNamedAndRemoveUntil(context, kContactUs, (_) => false),
       onPressedSubmit: () => Navigator.pushNamedAndRemoveUntil(
