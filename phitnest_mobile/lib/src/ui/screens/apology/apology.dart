@@ -12,7 +12,7 @@ class ApologyScreen extends Screen<ApologyState, ApologyView> {
           Navigator.pushNamedAndRemoveUntil(context, kContactUs, (_) => false),
       onPressedSubmit: () => Navigator.pushNamedAndRemoveUntil(
           context, kThankYou, (_) => false,
-          arguments: [state.nameController.text]),
+          arguments: state.nameController.text),
       nameController: state.nameController,
       emailController: state.emailController);
 

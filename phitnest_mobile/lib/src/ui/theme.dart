@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-var theme = ThemeData(
+/**
+ * Holds colors and text themes.
+ */
+ThemeData theme = ThemeData(
   // Color scheme
   colorScheme: ColorScheme(
       brightness: Brightness.light,

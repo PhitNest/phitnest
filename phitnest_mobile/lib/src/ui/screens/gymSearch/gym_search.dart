@@ -35,7 +35,7 @@ class GymSearchScreen extends Screen<GymSearchState, GymSearchView> {
           onPressedConfirm: () {
             Navigator.of(context).pushNamedAndRemoveUntil(
                 kFoundLocation, (_) => false,
-                arguments: [state.currentlySelectedGym]);
+                arguments: state.currentlySelectedGym);
           },
           cards: state.gymsAndDistances
               .map((gymAndDistance) => state.searchController.text.length ==

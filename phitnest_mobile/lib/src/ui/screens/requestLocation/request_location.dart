@@ -19,7 +19,7 @@ class RequestLocationScreen
                   .then((gym) => gym != null
                       ? Navigator.pushNamedAndRemoveUntil(
                           context, kFoundLocation, (_) => false,
-                          arguments: [gym])
+                          arguments: gym)
                       : state.errorMessage = 'No nearby gyms could be found.'),
               (error) => state.errorMessage = error));
 
