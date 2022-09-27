@@ -18,7 +18,7 @@ class ContactUsScreen extends Screen<ContactUsState, ContactUsView> {
         onPressedExit: () {},
         onPressedSubmit: () => Navigator.pushNamedAndRemoveUntil(
             context, kThankYou, (_) => false,
-            arguments: [state.nameController.text]),
+            arguments: state.nameController.text),
       );
 
   @override
