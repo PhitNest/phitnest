@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/widgets.dart';
 import '../view.dart';
@@ -6,13 +7,13 @@ import '../view.dart';
 class ApologyView extends ScreenView {
   Widget createTextField(BuildContext context, String hint,
           TextEditingController controller) =>
-      Container(
-          height: MediaQuery.of(context).size.height * 0.06,
+      SizedBox(
+          height: 34.h,
           child: TextField(
               controller: controller,
               style: Theme.of(context).textTheme.labelMedium,
               decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 6),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 8.w),
                   hintText: hint,
                   hintStyle: Theme.of(context)
                       .textTheme
@@ -35,60 +36,58 @@ class ApologyView extends ScreenView {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: Container(
-          width: double.infinity,
-          child: SingleChildScrollView(
-              child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: Container(
-                    margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.18,
-                        bottom: MediaQuery.of(context).size.height * 0.061),
-                    child: Column(mainAxisSize: MainAxisSize.max, children: [
-                      Text(
+      body: SingleChildScrollView(
+          child: Container(
+              height: 1.sh,
+              width: 1.sw,
+              child: Padding(
+                padding: EdgeInsets.only(top: 120.h, bottom: 41.h),
+                child: Column(children: [
+                  SizedBox(
+                      width: 301.w,
+                      child: Text(
                         "We apologize",
                         style: Theme.of(context).textTheme.headlineLarge,
                         textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.06),
-                      Text(
-                        "PhitNest is currently available to\nselect fitness club locations only.\n\n\nMay we contact you when this\nchanges?",
+                      )),
+                  40.verticalSpace,
+                  SizedBox(
+                      width: 301.w,
+                      child: Text(
+                        "PhitNest is currently available to select fitness club locations only.\n\n\nMay we contact you when this changes?",
                         style: Theme.of(context).textTheme.labelLarge,
                         textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.06),
-                      Container(
-                          width: MediaQuery.of(context).size.width * 0.776,
-                          child: Form(
-                            child: Column(children: [
-                              createTextField(context, 'Name', nameController),
-                              SizedBox(height: 10),
-                              createTextField(context, 'Email', emailController)
-                            ]),
-                          )),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.063),
-                      StyledButton(
-                        context,
-                        child: Text('SUBMIT'),
-                        onPressed: onPressedSubmit,
-                      ),
-                      Expanded(child: Container()),
-                      TextButton(
-                          onPressed: onPressedContactUs,
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Colors.transparent)),
-                          child: Text('CONTACT US',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                      color: Colors.black,
-                                      fontStyle: FontStyle.italic,
-                                      decoration: TextDecoration.underline))),
-                    ]),
-                  )))));
+                      )),
+                  40.verticalSpace,
+                  SizedBox(
+                      width: 291.w,
+                      child: Form(
+                        child: Column(children: [
+                          createTextField(context, 'Name', nameController),
+                          16.verticalSpace,
+                          createTextField(context, 'Email', emailController)
+                        ]),
+                      )),
+                  42.verticalSpace,
+                  StyledButton(
+                    context,
+                    child: Text('SUBMIT'),
+                    onPressed: onPressedSubmit,
+                  ),
+                  Expanded(child: Container()),
+                  TextButton(
+                      onPressed: onPressedContactUs,
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.transparent)),
+                      child: Text('CONTACT US',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(
+                                  color: Colors.black,
+                                  fontStyle: FontStyle.italic,
+                                  decoration: TextDecoration.underline))),
+                ]),
+              ))));
 }
