@@ -1,3 +1,5 @@
+export 'validators.dart';
+
 extension FormatQuantity on double {
   /**
    * This will return a rounded string version of this [double] with [unit] 
