@@ -12,5 +12,13 @@ class GymSearchView extends ScreenView {
       : super();
 
   @override
-  Widget build(BuildContext context) => BackButtonScaffold(body: Text('Hi'));
+  Widget build(BuildContext context) => Scaffold(
+      body: Container(
+          margin: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * 0.12,
+              bottom: MediaQuery.of(context).size.height * 0.085),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [BackArrowButton()],
+          )));
 }

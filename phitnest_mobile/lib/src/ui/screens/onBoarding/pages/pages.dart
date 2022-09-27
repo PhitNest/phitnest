@@ -1,2 +1,3 @@
-export 'final_page.dart';
-export 'intro_page.dart';
+export 'first_page.dart';
+export 'second_page.dart';
+export 'third_page.dart';
