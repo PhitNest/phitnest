@@ -5,16 +5,20 @@ import '../../common/widgets.dart';
 import '../view.dart';
 
 class ApologyView extends ScreenView {
-  Widget createTextField(BuildContext context, String hint, String? Function (String?) validator,
+  Widget createTextField(
+          BuildContext context,
+          String hint,
+          String? Function(String?) validator,
           TextEditingController controller) =>
       SizedBox(
           height: 34.h,
           child: TextFormField(
-            validator: validator,
+              validator: validator,
               controller: controller,
               style: Theme.of(context).textTheme.labelMedium,
               decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 8.w),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
                   hintText: hint,
                   hintStyle: Theme.of(context)
                       .textTheme
@@ -31,7 +35,7 @@ class ApologyView extends ScreenView {
   final AutovalidateMode autovalidateMode;
   final String? Function(String?) validateFirstName;
   final String? Function(String?) validateEmail;
-  final GlobalKey <FormState> formKey;
+  final GlobalKey<FormState> formKey;
 
   const ApologyView(
       {required this.onPressedContactUs,
@@ -41,8 +45,7 @@ class ApologyView extends ScreenView {
       required this.autovalidateMode,
       required this.validateFirstName,
       required this.validateEmail,
-      required this.formKey}
-      );
+      required this.formKey});
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -74,9 +77,15 @@ class ApologyView extends ScreenView {
                 key: formKey,
                 autovalidateMode: autovalidateMode,
                 child: Column(children: [
-                  createTextField(context, 'Name', validateFirstName, nameController,),
+                  createTextField(
+                    context,
+                    'Name',
+                    validateFirstName,
+                    nameController,
+                  ),
                   16.verticalSpace,
-                  createTextField(context, 'Email', validateEmail, emailController)
+                  createTextField(
+                      context, 'Email', validateEmail, emailController)
                 ]),
               )),
           42.verticalSpace,
