@@ -18,7 +18,7 @@ class ApologyView extends ScreenView {
               style: Theme.of(context).textTheme.labelMedium,
               decoration: InputDecoration(
                   contentPadding:
-                      EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+                      EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
                   hintText: hint,
                   hintStyle: Theme.of(context)
                       .textTheme
@@ -49,11 +49,7 @@ class ApologyView extends ScreenView {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: SingleChildScrollView(
-              child: SizedBox(
-        height: 1.sh,
-        width: 1.sw,
-        child: Column(children: [
+        body: Column(children: [
           120.verticalSpace,
           SizedBox(
               width: 301.w,
@@ -104,7 +100,7 @@ class ApologyView extends ScreenView {
                       color: Colors.black,
                       fontStyle: FontStyle.italic,
                       decoration: TextDecoration.underline))),
-          41.verticalSpace,
+          37.verticalSpace,
         ]),
-      )));
+      );
 }

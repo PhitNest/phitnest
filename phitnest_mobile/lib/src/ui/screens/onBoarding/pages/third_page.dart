@@ -14,7 +14,7 @@ class ThirdPage extends StatelessWidget {
   Widget build(BuildContext context) => Column(children: [
         200.verticalSpace,
         SizedBox(
-            width: 213.w,
+            width: 301.w,
             child: Text(
               'Let\'s get started',
               style: Theme.of(context).textTheme.headlineLarge,
@@ -43,6 +43,6 @@ class ThirdPage extends StatelessWidget {
                     color: Colors.black,
                     fontStyle: FontStyle.italic,
                     decoration: TextDecoration.underline))),
-        41.verticalSpace,
+        37.verticalSpace,
       ]);
 }

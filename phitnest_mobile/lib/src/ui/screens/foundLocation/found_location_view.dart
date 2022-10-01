@@ -40,7 +40,7 @@ class FoundLocationView extends ScreenView {
                       color: Colors.black,
                       fontStyle: FontStyle.italic,
                       decoration: TextDecoration.underline))),
-          41.verticalSpace,
+          37.verticalSpace,
         ]),
       );
 }
