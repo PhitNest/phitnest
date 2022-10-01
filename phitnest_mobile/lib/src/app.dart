@@ -3,22 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'ui/screens/screen.dart';
-import 'routes.dart';
 import 'ui/theme.dart';
 
 /**
  * Use flutter run --dart-define="usePreview=true" to use device preview.
  */
 const usePreview = bool.fromEnvironment("usePreview", defaultValue: false);
-
-/**
- * Calls the function for an entry in the [kRouteMap] static lookup
- * table and returns a route to the returned [Screen].
- */
-Route<dynamic> generateRoute(RouteSettings settings) => MaterialPageRoute(
-    builder: (_) =>
-        (kRouteMap[settings.name] ?? kRouteMap['default']!)(settings),
-    settings: settings);
 
 /**
  * This is the base Flutter [MaterialApp] instance. 
@@ -36,7 +26,6 @@ class App extends StatelessWidget {
                 theme: theme,
                 debugShowCheckedModeBanner: false,
                 // The app always enters at the on boarding screen.
-                initialRoute: kOnBoarding,
-                onGenerateRoute: generateRoute,
+                home: OnBoardingScreen(),
               )));
 }

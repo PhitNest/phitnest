@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../routes.dart';
 import '../../../repositories/repositories.dart';
 import '../screen.dart';
 import 'on_boarding_state.dart';
@@ -16,10 +15,12 @@ class OnBoardingScreen extends Screen<OnBoardingState, OnBoardingView> {
   @override
   OnBoardingView build(BuildContext context, OnBoardingState state) =>
       OnBoardingView(
-        onPressedYes: () => Navigator.pushNamedAndRemoveUntil(
-            context, kRequestLocation, (_) => false),
-        onPressedNo: () =>
-            Navigator.pushNamedAndRemoveUntil(context, kApology, (_) => false),
+        onPressedYes: () => Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => RequestLocationScreen()),
+            (_) => false),
+        onPressedNo: () => Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (_) => ApologyScreen()), (_) => false),
       );
 
   @override

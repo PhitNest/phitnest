@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:phitnest_mobile/src/utils/utils.dart';
 
-import '../../../routes.dart';
 import '../screen.dart';
 import 'apology_state.dart';
 import 'apology_view.dart';
 
 class ApologyScreen extends Screen<ApologyState, ApologyView> {
   @override
-  ApologyView build(BuildContext context, ApologyState state) => ApologyView(autovalidateMode: state.validateMode,
-      onPressedContactUs: () =>
-          Navigator.pushNamedAndRemoveUntil(context, kContactUs, (_) => false),
-      onPressedSubmit: () =>validateForm(context, state),
+  ApologyView build(BuildContext context, ApologyState state) => ApologyView(
+      autovalidateMode: state.validateMode,
+      onPressedContactUs: () => Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (_) => ContactUsScreen()), (_) => false),
+      onPressedSubmit: () => validateForm(context, state),
       nameController: state.nameController,
       emailController: state.emailController,
       validateFirstName: validateFirstName,
       validateEmail: validateEmail,
-      formKey: state.formKey
-      );
+      formKey: state.formKey);
 
   @override
   ApologyState buildState() => ApologyState();
@@ -25,11 +24,12 @@ class ApologyScreen extends Screen<ApologyState, ApologyView> {
   validateForm(BuildContext context, ApologyState state) {
     if (!state.formKey.currentState!.validate()) {
       state.validateMode = AutovalidateMode.always;
-    }
-    else {
-      Navigator.pushNamedAndRemoveUntil(
-          context, kThankYou, (_) => false,
-          arguments: state.nameController.text);
+    } else {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (_) => ThankYouScreen(name: state.nameController.text)),
+          (_) => false);
     }
   }
 }

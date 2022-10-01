@@ -4,6 +4,13 @@ import 'package:flutter/material.dart';
 import '../../../models/models.dart';
 import '../state.dart';
 
+import 'gym_search_screen.dart';
+import 'gym_search_view.dart';
+
+/**
+ * Holds the dynamic content of [GymSearchScreen]. Calls to [rebuildView] will rebuild 
+ * the [GymSearchView].
+ */
 class GymSearchState extends ScreenState {
   final TextEditingController searchController = TextEditingController();
 
