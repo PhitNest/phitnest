@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/widgets.dart';
 import '../view.dart';
 
 class ApologyView extends ScreenView {
-  Widget createTextField(BuildContext context, String hint,
+  Widget createTextField(
+          BuildContext context,
+          String hint,
+          String? Function(String?) validator,
           TextEditingController controller) =>
-      Container(
-          height: MediaQuery.of(context).size.height * 0.06,
-          child: TextField(
+      SizedBox(
+          height: 34.h,
+          child: TextFormField(
+              validator: validator,
               controller: controller,
               style: Theme.of(context).textTheme.labelMedium,
               decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 6),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
                   hintText: hint,
                   hintStyle: Theme.of(context)
                       .textTheme
@@ -26,69 +32,79 @@ class ApologyView extends ScreenView {
   final Function() onPressedSubmit;
   final TextEditingController nameController;
   final TextEditingController emailController;
+  final AutovalidateMode autovalidateMode;
+  final String? Function(String?) validateFirstName;
+  final String? Function(String?) validateEmail;
+  final GlobalKey<FormState> formKey;
 
   const ApologyView(
       {required this.onPressedContactUs,
       required this.onPressedSubmit,
       required this.nameController,
-      required this.emailController});
+      required this.emailController,
+      required this.autovalidateMode,
+      required this.validateFirstName,
+      required this.validateEmail,
+      required this.formKey});
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: Container(
-          width: double.infinity,
-          child: SingleChildScrollView(
+          body: SingleChildScrollView(
               child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: Container(
-                    margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.18,
-                        bottom: MediaQuery.of(context).size.height * 0.061),
-                    child: Column(mainAxisSize: MainAxisSize.max, children: [
-                      Text(
-                        "We apologize",
-                        style: Theme.of(context).textTheme.headlineLarge,
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.06),
-                      Text(
-                        "PhitNest is currently available to\nselect fitness club locations only.\n\n\nMay we contact you when this\nchanges?",
-                        style: Theme.of(context).textTheme.labelLarge,
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.06),
-                      Container(
-                          width: MediaQuery.of(context).size.width * 0.776,
-                          child: Form(
-                            child: Column(children: [
-                              createTextField(context, 'Name', nameController),
-                              SizedBox(height: 10),
-                              createTextField(context, 'Email', emailController)
-                            ]),
-                          )),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.063),
-                      StyledButton(
-                        context,
-                        child: Text('SUBMIT'),
-                        onPressed: onPressedSubmit,
-                      ),
-                      Expanded(child: Container()),
-                      TextButton(
-                          onPressed: onPressedContactUs,
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Colors.transparent)),
-                          child: Text('CONTACT US',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                      color: Colors.black,
-                                      fontStyle: FontStyle.italic,
-                                      decoration: TextDecoration.underline))),
-                    ]),
-                  )))));
+        height: 1.sh,
+        width: 1.sw,
+        child: Column(children: [
+          120.verticalSpace,
+          SizedBox(
+              width: 301.w,
+              child: Text(
+                "We apologize",
+                style: Theme.of(context).textTheme.headlineLarge,
+                textAlign: TextAlign.center,
+              )),
+          40.verticalSpace,
+          SizedBox(
+              width: 301.w,
+              child: Text(
+                "PhitNest is currently available to select fitness club locations only.\n\n\nMay we contact you when this changes?",
+                style: Theme.of(context).textTheme.labelLarge,
+                textAlign: TextAlign.center,
+              )),
+          40.verticalSpace,
+          SizedBox(
+              width: 291.w,
+              child: Form(
+                key: formKey,
+                autovalidateMode: autovalidateMode,
+                child: Column(children: [
+                  createTextField(
+                    context,
+                    'Name',
+                    validateFirstName,
+                    nameController,
+                  ),
+                  16.verticalSpace,
+                  createTextField(
+                      context, 'Email', validateEmail, emailController)
+                ]),
+              )),
+          42.verticalSpace,
+          StyledButton(
+            child: Text('SUBMIT'),
+            onPressed: onPressedSubmit,
+          ),
+          Expanded(child: Container()),
+          TextButton(
+              onPressed: onPressedContactUs,
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Colors.transparent)),
+              child: Text('CONTACT US',
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: Colors.black,
+                      fontStyle: FontStyle.italic,
+                      decoration: TextDecoration.underline))),
+          41.verticalSpace,
+        ]),
+      )));
 }

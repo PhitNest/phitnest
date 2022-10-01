@@ -1,15 +1,14 @@
 const { StatusOK } = require('../../constants');
+const { findNearestGyms } = require('../../models');
 
-module.exports = async (req, res) => {
-  const { getGym, findNearestGyms } = require('../../schema/gym')(
-    res.locals.redis
-  );
-
-  const gyms = await Promise.all(
-    (
-      await findNearestGyms(req.query.longitude, req.query.latitude, 100)
-    ).map((id) => getGym(id))
-  );
-
-  return res.status(StatusOK).json(gyms);
-};
+module.exports = async (req, res) =>
+  res
+    .status(StatusOK)
+    .json(
+      await findNearestGyms(
+        req.query.longitude,
+        req.query.latitude,
+        160000,
+        req.query.limit ?? -1
+      )
+    );

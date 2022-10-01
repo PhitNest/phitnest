@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../models/models.dart';
 import '../view.dart';
@@ -11,22 +12,23 @@ class FoundLocationView extends ScreenView {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: Container(
-        margin: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.3,
-            bottom: MediaQuery.of(context).size.height * 0.061),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text(
-            'Is this your\nfitness club?',
-            style: Theme.of(context).textTheme.headlineLarge,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.06),
-          Text(
-            '${address.streetAddress}\n${address.city}, ${address.state} ${address.zipCode}',
-            style: Theme.of(context).textTheme.labelLarge,
-            textAlign: TextAlign.center,
-          ),
+        body: Column(children: [
+          200.verticalSpace,
+          SizedBox(
+              width: 321.w,
+              child: Text(
+                'Is this your fitness club?',
+                style: Theme.of(context).textTheme.headlineLarge,
+                textAlign: TextAlign.center,
+              )),
+          42.verticalSpace,
+          SizedBox(
+              width: 291.w,
+              child: Text(
+                address.toString(),
+                style: Theme.of(context).textTheme.labelLarge,
+                textAlign: TextAlign.center,
+              )),
           Expanded(child: Container()),
           TextButton(
               onPressed: onPressedNo,
@@ -37,7 +39,8 @@ class FoundLocationView extends ScreenView {
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Colors.black,
                       fontStyle: FontStyle.italic,
-                      decoration: TextDecoration.underline)))
+                      decoration: TextDecoration.underline))),
+          41.verticalSpace,
         ]),
-      ));
+      );
 }
