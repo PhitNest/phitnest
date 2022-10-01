@@ -13,7 +13,8 @@ class ContactUsView extends ScreenView {
               controller: controller,
               style: Theme.of(context).textTheme.labelMedium,
               decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 8.w),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
                   hintText: hint,
                   hintStyle: Theme.of(context)
                       .textTheme
@@ -40,11 +41,7 @@ class ContactUsView extends ScreenView {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: SingleChildScrollView(
-              child: SizedBox(
-        height: 1.sh,
-        width: 1.sw,
-        child: Column(children: [
+        body: Column(children: [
           80.verticalSpace,
           SizedBox(
               width: 301.w,
@@ -108,7 +105,7 @@ class ContactUsView extends ScreenView {
                       color: Colors.black,
                       fontStyle: FontStyle.italic,
                       decoration: TextDecoration.underline))),
-          41.verticalSpace,
+          37.verticalSpace,
         ]),
-      )));
+      );
 }
