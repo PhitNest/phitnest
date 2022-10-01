@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../routes.dart';
 import '../screen.dart';
 import 'contact_us_state.dart';
 import 'contact_us_view.dart';
@@ -16,9 +15,12 @@ class ContactUsScreen extends Screen<ContactUsState, ContactUsView> {
         feedbackController: state.feedbackController,
         maxFeedbackLength: kMaxFeedbackLength,
         onPressedExit: () {},
-        onPressedSubmit: () => Navigator.pushNamedAndRemoveUntil(
-            context, kThankYou, (_) => false,
-            arguments: state.nameController.text),
+        onPressedSubmit: () => Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (_) =>
+                    ThankYouScreen(name: state.nameController.text)),
+            (_) => false),
       );
 
   @override

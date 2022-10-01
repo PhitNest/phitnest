@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 import '../../../repositories/repositories.dart';
-import '../../../routes.dart';
 import '../screen.dart';
 import 'gymCard/gym_card.dart';
 import 'gym_search_state.dart';
@@ -33,9 +32,11 @@ class GymSearchScreen extends Screen<GymSearchState, GymSearchView> {
           errorMessage: state.errorMessage ?? '',
           onEditSearch: () => state.rebuildView(),
           onPressedConfirm: () {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                kFoundLocation, (_) => false,
-                arguments: state.currentlySelectedGym);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (_) =>
+                        FoundLocationScreen(gym: state.currentlySelectedGym)),
+                (_) => false);
           },
           cards: state.gymsAndDistances
               .map((gymAndDistance) => state.searchController.text.length ==
