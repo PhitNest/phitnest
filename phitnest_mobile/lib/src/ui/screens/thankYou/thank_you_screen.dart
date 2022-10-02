@@ -5,7 +5,7 @@ import 'thank_you_state.dart';
 import 'thank_you_view.dart';
 
 class ThankYouScreen extends Screen<ThankYouState, ThankYouView> {
-  late final String name;
+  final String name;
 
   ThankYouScreen({required this.name}) : super();
 
