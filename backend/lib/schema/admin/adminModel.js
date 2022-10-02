@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const adminSchema = mongoose.Schema(
   {
@@ -27,11 +27,4 @@ const adminSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-const adminModel = mongoose.model('Admin', adminSchema);
-
-module.exports = {
-  adminModel: adminModel,
-  searchAdminPasswordByEmail: (email) =>
-    adminModel.findOne({ email: email }).select('+password'),
-  createAdmin: (input) => adminModel.create(input),
-};
+module.exports = mongoose.model("Admin", adminSchema);

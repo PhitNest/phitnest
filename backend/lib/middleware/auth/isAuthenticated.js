@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
-const { StatusUnauthorized, HeaderAuthorization } = require('../../constants');
-const mongoose = require('mongoose');
-require('dotenv').config();
+const jwt = require("jsonwebtoken");
+const { StatusUnauthorized, HeaderAuthorization } = require("../../constants");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
 module.exports = async (req, res, next) => {
   var str = req.get(HeaderAuthorization);
@@ -12,6 +12,6 @@ module.exports = async (req, res, next) => {
     next();
   } catch (error) {
     res.status(StatusUnauthorized);
-    res.send('Bad Token');
+    res.send("Bad Token");
   }
 };

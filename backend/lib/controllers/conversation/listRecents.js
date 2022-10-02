@@ -1,8 +1,10 @@
-const { StatusOK } = require('../../constants');
-const { listRecentMessagesForUser } = require('../../models');
+const { StatusOK } = require("../../constants");
+const { conversation } = require("../../schema");
 
 module.exports = async (req, res) => {
   return res
     .status(StatusOK)
-    .json(await listRecentMessagesForUser(res.locals.userId));
+    .json(
+      await conversation.queries.listRecentMessagesForUser(res.locals.userId)
+    );
 };

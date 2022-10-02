@@ -14,15 +14,20 @@ class RequestLocationScreen
       repositories<LocationRepository>().getLocation().then((response) =>
           response.fold(
               (location) => repositories<LocationRepository>()
-                  .getNearestGym(location)
-                  .then((gym) => gym != null
-                      ? Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  FoundLocationScreen(gym: gym)),
-                          (_) => false)
-                      : state.errorMessage = 'No nearby gyms could be found.'),
+                      .getNearestGym(location)
+                      .then((gym) {
+                    try {
+                      return gym != null
+                          ? Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      FoundLocationScreen(gym: gym)),
+                              (_) => false)
+                          : state.errorMessage =
+                              'No nearby gyms could be found.';
+                    } catch (ignore) {}
+                  }),
               (error) => state.errorMessage = error));
 
   @override
