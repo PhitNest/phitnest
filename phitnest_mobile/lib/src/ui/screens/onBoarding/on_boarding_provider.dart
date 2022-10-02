@@ -6,7 +6,8 @@ import '../provider.dart';
 import 'on_boarding_state.dart';
 import 'on_boarding_view.dart';
 
-class OnBoardingProvider extends Provider<OnBoardingState, OnBoardingView> {
+class OnBoardingProvider
+    extends ScreenProvider<OnBoardingState, OnBoardingView> {
   const OnBoardingProvider() : super();
 
   @override

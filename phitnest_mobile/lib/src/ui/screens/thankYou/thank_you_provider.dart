@@ -5,7 +5,7 @@ import '../provider.dart';
 import 'thank_you_state.dart';
 import 'thank_you_view.dart';
 
-class ThankYouProvider extends Provider<ThankYouState, ThankYouView> {
+class ThankYouProvider extends ScreenProvider<ThankYouState, ThankYouView> {
   final String name;
 
   ThankYouProvider({required this.name}) : super();

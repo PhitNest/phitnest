@@ -37,7 +37,8 @@ class ContactUsView extends ScreenView {
       required this.nameController,
       required this.emailController,
       required this.feedbackController,
-      required this.maxFeedbackLength});
+      required this.maxFeedbackLength})
+      : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(
