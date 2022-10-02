@@ -5,25 +5,14 @@ import 'state.dart';
 import 'view.dart';
 
 /**
- * Export every screen here to make imports shorter elsewhere please.
- */
-export 'onBoarding/on_boarding_screen.dart';
-export 'requestLocation/request_location_screen.dart';
-export 'apology/apology_screen.dart';
-export 'contactUs/contact_us_screen.dart';
-export 'foundLocation/found_location_screen.dart';
-export 'thankYou/thank_you_screen.dart';
-export 'gymSearch/gym_search_screen.dart';
-
-/**
  * The base class for all screens on the app. The type parameters, [T] and [K],
  * should be of type [ScreenState] and [ScreenView] respectively. When you
- * create a new child of [Screen], you should create a new child of [ScreenState]
- * and [ScreenView] as well. Then you should add a route to the map in [kRouteMap].
+ * create a new child of [Provider], you should create a new child of [ScreenState]
+ * and [ScreenView] as well.
  */
-abstract class Screen<T extends ScreenState, K extends ScreenView>
+abstract class Provider<T extends ScreenState, K extends ScreenView>
     extends StatefulWidget {
-  const Screen() : super();
+  const Provider() : super();
 
   /**
    * This should create and return an instance of [T]. This will be called once
@@ -56,14 +45,14 @@ abstract class Screen<T extends ScreenState, K extends ScreenView>
   dispose(BuildContext context, T state) {}
 
   @override
-  State<StatefulWidget> createState() => _ScreenWidgetState();
+  State<StatefulWidget> createState() => _ProviderWidgetState();
 }
 
 /**
- * Implementation of our [Screen] class
+ * Implementation of our [Provider] class
  */
-class _ScreenWidgetState<T extends ScreenState, K extends ScreenView>
-    extends State<Screen<T, K>> {
+class _ProviderWidgetState<T extends ScreenState, K extends ScreenView>
+    extends State<Provider<T, K>> {
   late final T state;
 
   @override

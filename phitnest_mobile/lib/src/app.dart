@@ -2,7 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'ui/screens/screen.dart';
+import 'ui/screens/screens.dart';
 import 'ui/theme.dart';
 
 /**
@@ -26,6 +26,6 @@ class App extends StatelessWidget {
                 theme: theme,
                 debugShowCheckedModeBanner: false,
                 // The app always enters at the on boarding screen.
-                home: OnBoardingScreen(),
+                home: OnBoardingProvider(),
               )));
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'state.dart';
-import 'screen.dart';
+import 'screens.dart';
 
 /**
  * Holds the UI elements of a screen. All variables should be defined in the 

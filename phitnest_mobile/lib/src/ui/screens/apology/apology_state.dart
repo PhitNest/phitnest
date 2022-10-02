@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../state.dart';
 
-import 'apology_screen.dart';
+import 'apology_provider.dart';
 import 'apology_view.dart';
 
 /**
- * Holds the dynamic content of [ApologyScreen]. Calls to [rebuildView] will rebuild 
+ * Holds the dynamic content of [ApologyProvider]. Calls to [rebuildView] will rebuild 
  * the [ApologyView].
  */
 class ApologyState extends ScreenState {

@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 
-import '../screen.dart';
+import '../screens.dart';
+import '../provider.dart';
 import 'thank_you_state.dart';
 import 'thank_you_view.dart';
 
-class ThankYouScreen extends Screen<ThankYouState, ThankYouView> {
+class ThankYouProvider extends Provider<ThankYouState, ThankYouView> {
   final String name;
 
-  ThankYouScreen({required this.name}) : super();
+  ThankYouProvider({required this.name}) : super();
 
   @override
   ThankYouView build(BuildContext context, ThankYouState state) => ThankYouView(
         onPressedBye: () => Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => OnBoardingScreen()),
+            MaterialPageRoute(builder: (context) => OnBoardingProvider()),
             (_) => false),
         name: name,
       );

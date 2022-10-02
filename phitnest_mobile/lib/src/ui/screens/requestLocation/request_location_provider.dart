@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../../repositories/repositories.dart';
-import '../screen.dart';
+import '../screens.dart';
+import '../provider.dart';
 import 'request_location_state.dart';
 import 'request_location_view.dart';
 
-class RequestLocationScreen
-    extends Screen<RequestLocationState, RequestLocationView> {
-  const RequestLocationScreen() : super();
+class RequestLocationProvider
+    extends Provider<RequestLocationState, RequestLocationView> {
+  const RequestLocationProvider() : super();
 
   @override
   init(BuildContext context, RequestLocationState state) =>
@@ -22,7 +23,7 @@ class RequestLocationScreen
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      FoundLocationScreen(gym: gym)),
+                                      FoundLocationProvider(gym: gym)),
                               (_) => false)
                           : state.errorMessage =
                               'No nearby gyms could be found.';
@@ -36,7 +37,7 @@ class RequestLocationScreen
         errorMessage: state.errorMessage ?? '',
         onPressedExit: () => Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => ApologyScreen()),
+            MaterialPageRoute(builder: (context) => ApologyProvider()),
             (_) => false),
       );
 
