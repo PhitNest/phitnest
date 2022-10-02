@@ -5,7 +5,7 @@ import '../provider.dart';
 import 'contact_us_state.dart';
 import 'contact_us_view.dart';
 
-class ContactUsProvider extends Provider<ContactUsState, ContactUsView> {
+class ContactUsProvider extends ScreenProvider<ContactUsState, ContactUsView> {
   static const int kMaxFeedbackLength = 120;
 
   @override

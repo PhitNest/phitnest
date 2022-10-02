@@ -7,7 +7,7 @@ import 'request_location_state.dart';
 import 'request_location_view.dart';
 
 class RequestLocationProvider
-    extends Provider<RequestLocationState, RequestLocationView> {
+    extends ScreenProvider<RequestLocationState, RequestLocationView> {
   const RequestLocationProvider() : super();
 
   @override

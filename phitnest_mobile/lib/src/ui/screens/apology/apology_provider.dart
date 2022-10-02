@@ -6,7 +6,7 @@ import '../provider.dart';
 import 'apology_state.dart';
 import 'apology_view.dart';
 
-class ApologyProvider extends Provider<ApologyState, ApologyView> {
+class ApologyProvider extends ScreenProvider<ApologyState, ApologyView> {
   @override
   ApologyView build(BuildContext context, ApologyState state) => ApologyView(
       autovalidateMode: state.validateMode,
