@@ -7,7 +7,7 @@ import 'found_location_state.dart';
 import 'found_location_view.dart';
 
 class FoundLocationProvider
-    extends Provider<FoundLocationState, FoundLocationView> {
+    extends ScreenProvider<FoundLocationState, FoundLocationView> {
   final Gym gym;
 
   const FoundLocationProvider({required this.gym}) : super();

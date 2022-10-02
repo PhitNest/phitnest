@@ -8,7 +8,7 @@ import 'gymCard/gym_card.dart';
 import 'gym_search_state.dart';
 import 'gym_search_view.dart';
 
-class GymSearchProvider extends Provider<GymSearchState, GymSearchView> {
+class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
   const GymSearchProvider() : super();
 
   @override

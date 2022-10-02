@@ -10,9 +10,9 @@ import 'view.dart';
  * create a new child of [Provider], you should create a new child of [ScreenState]
  * and [ScreenView] as well.
  */
-abstract class Provider<T extends ScreenState, K extends ScreenView>
+abstract class ScreenProvider<T extends ScreenState, K extends ScreenView>
     extends StatefulWidget {
-  const Provider() : super();
+  const ScreenProvider() : super();
 
   /**
    * This should create and return an instance of [T]. This will be called once
@@ -52,7 +52,7 @@ abstract class Provider<T extends ScreenState, K extends ScreenView>
  * Implementation of our [Provider] class
  */
 class _ProviderWidgetState<T extends ScreenState, K extends ScreenView>
-    extends State<Provider<T, K>> {
+    extends State<ScreenProvider<T, K>> {
   late final T state;
 
   @override

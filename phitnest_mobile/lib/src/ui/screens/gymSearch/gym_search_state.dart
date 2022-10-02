@@ -13,7 +13,6 @@ import 'gym_search_view.dart';
  */
 class GymSearchState extends ScreenState {
   final TextEditingController searchController = TextEditingController();
-
   String? _errorMessage;
 
   String? get errorMessage => _errorMessage;
