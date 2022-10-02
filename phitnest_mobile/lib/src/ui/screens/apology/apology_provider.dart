@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:phitnest_mobile/src/utils/utils.dart';
 
-import '../screen.dart';
+import '../screens.dart';
+import '../provider.dart';
 import 'apology_state.dart';
 import 'apology_view.dart';
 
-class ApologyScreen extends Screen<ApologyState, ApologyView> {
+class ApologyProvider extends Provider<ApologyState, ApologyView> {
   @override
   ApologyView build(BuildContext context, ApologyState state) => ApologyView(
       autovalidateMode: state.validateMode,
       onPressedContactUs: () => Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (_) => ContactUsScreen()), (_) => false),
+          MaterialPageRoute(builder: (_) => ContactUsProvider()), (_) => false),
       onPressedSubmit: () => validateForm(context, state),
       nameController: state.nameController,
       emailController: state.emailController,
@@ -28,7 +29,8 @@ class ApologyScreen extends Screen<ApologyState, ApologyView> {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-              builder: (_) => ThankYouScreen(name: state.nameController.text)),
+              builder: (_) =>
+                  ThankYouProvider(name: state.nameController.text)),
           (_) => false);
     }
   }

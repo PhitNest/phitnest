@@ -2,13 +2,14 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 import '../../../repositories/repositories.dart';
-import '../screen.dart';
+import '../screens.dart';
+import '../provider.dart';
 import 'gymCard/gym_card.dart';
 import 'gym_search_state.dart';
 import 'gym_search_view.dart';
 
-class GymSearchScreen extends Screen<GymSearchState, GymSearchView> {
-  const GymSearchScreen() : super();
+class GymSearchProvider extends Provider<GymSearchState, GymSearchView> {
+  const GymSearchProvider() : super();
 
   @override
   init(BuildContext context, GymSearchState state) =>
@@ -35,7 +36,7 @@ class GymSearchScreen extends Screen<GymSearchState, GymSearchView> {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
                     builder: (_) =>
-                        FoundLocationScreen(gym: state.currentlySelectedGym)),
+                        FoundLocationProvider(gym: state.currentlySelectedGym)),
                 (_) => false);
           },
           cards: state.gymsAndDistances

@@ -1,10 +1,10 @@
 import '../state.dart';
 
-import 'request_location_screen.dart';
+import 'request_location_provider.dart';
 import 'request_location_view.dart';
 
 /**
- * Holds the dynamic content of [RequestLocationScreen]. Calls to [rebuildView] will rebuild 
+ * Holds the dynamic content of [RequestLocationProvider]. Calls to [rebuildView] will rebuild 
  * the [RequestLocationView].
  */
 class RequestLocationState extends ScreenState {

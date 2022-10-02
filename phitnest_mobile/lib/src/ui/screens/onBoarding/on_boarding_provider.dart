@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../repositories/repositories.dart';
-import '../screen.dart';
+import '../screens.dart';
+import '../provider.dart';
 import 'on_boarding_state.dart';
 import 'on_boarding_view.dart';
 
-class OnBoardingScreen extends Screen<OnBoardingState, OnBoardingView> {
-  const OnBoardingScreen() : super();
+class OnBoardingProvider extends Provider<OnBoardingState, OnBoardingView> {
+  const OnBoardingProvider() : super();
 
   @override
   Future init(BuildContext context, OnBoardingState state) =>
@@ -17,10 +18,10 @@ class OnBoardingScreen extends Screen<OnBoardingState, OnBoardingView> {
       OnBoardingView(
         onPressedYes: () => Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (_) => RequestLocationScreen()),
+            MaterialPageRoute(builder: (_) => RequestLocationProvider()),
             (_) => false),
         onPressedNo: () => Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (_) => ApologyScreen()), (_) => false),
+            MaterialPageRoute(builder: (_) => ApologyProvider()), (_) => false),
       );
 
   @override

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../screen.dart';
+import '../screens.dart';
+import '../provider.dart';
 import 'contact_us_state.dart';
 import 'contact_us_view.dart';
 
-class ContactUsScreen extends Screen<ContactUsState, ContactUsView> {
+class ContactUsProvider extends Provider<ContactUsState, ContactUsView> {
   static const int kMaxFeedbackLength = 120;
 
   @override
@@ -19,7 +20,7 @@ class ContactUsScreen extends Screen<ContactUsState, ContactUsView> {
             context,
             MaterialPageRoute(
                 builder: (_) =>
-                    ThankYouScreen(name: state.nameController.text)),
+                    ThankYouProvider(name: state.nameController.text)),
             (_) => false),
       );
 
