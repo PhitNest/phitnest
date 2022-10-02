@@ -32,5 +32,9 @@ abstract class ScreenState extends ChangeNotifier {
    * Rebuilds the [ScreenView] associated with the [Screen] corresponding to
    * this class.
    */
-  rebuildView() => notifyListeners();
+  rebuildView() {
+    try {
+      notifyListeners();
+    } catch (ignore) {}
+  }
 }

@@ -60,5 +60,8 @@ class GymSearchScreen extends Screen<GymSearchState, GymSearchView> {
               .toList());
 
   @override
+  dispose(BuildContext context, GymSearchState state) {}
+
+  @override
   GymSearchState buildState() => GymSearchState();
 }

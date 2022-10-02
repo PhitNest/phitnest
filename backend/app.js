@@ -1,13 +1,13 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const { Server } = require('socket.io');
-const morgan = require('morgan');
-const mongoose = require('mongoose');
-const routes = require('./lib/routes');
-const jwt = require('jsonwebtoken');
-const registerSocket = require('./lib/socket');
-const { StatusOK } = require('./lib/constants/httpCodes');
-require('dotenv').config();
+const express = require("express");
+const bodyParser = require("body-parser");
+const { Server } = require("socket.io");
+const morgan = require("morgan");
+const mongoose = require("mongoose");
+const routes = require("./lib/routes");
+const jwt = require("jsonwebtoken");
+const registerSocket = require("./lib/socket");
+const { StatusOK } = require("./lib/constants/httpCodes");
+require("dotenv").config();
 
 module.exports = {
   createExpressApp: (redisClient) => {
@@ -18,17 +18,17 @@ module.exports = {
       next();
     });
 
-    app.use(morgan('dev'));
+    app.use(morgan("dev"));
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
 
-    app.get('/', (req, res) => {
+    app.get("/", (req, res) => {
       res
         .status(StatusOK)
-        .json({ resultMessage: 'Requests are working successfully...' });
+        .json({ resultMessage: "Requests are working successfully..." });
     });
-    app.use('/', routes);
+    app.use("/", routes);
     return app;
   },
   createSocketIO: (server, redisClient) => {

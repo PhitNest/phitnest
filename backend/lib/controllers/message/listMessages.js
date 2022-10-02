@@ -1,14 +1,14 @@
-const { StatusUnauthorized, StatusOK } = require('../../constants');
-const { getMessages, isInConversation } = require('../../models');
+const { StatusUnauthorized, StatusOK } = require("../../constants");
+const { message, conversation } = require("../../schema");
 
 module.exports = async (req, res) => {
-  return (await getConversation(req.query.conversation)).participants.contains(
-    res.locals.userId
-  )
+  return (
+    await conversation.queries.getConversation(req.query.conversation)
+  ).participants.contains(res.locals.userId)
     ? res
         .status(StatusOK)
         .json(
-          await getMessages(
+          await message.queries.getMessages(
             req.query.conversation,
             req.query.start ?? -1,
             req.query.limit ?? -1
@@ -16,5 +16,5 @@ module.exports = async (req, res) => {
         )
     : res
         .status(StatusUnauthorized)
-        .send('You are not a memebr of this conversation.');
+        .send("You are not a memebr of this conversation.");
 };

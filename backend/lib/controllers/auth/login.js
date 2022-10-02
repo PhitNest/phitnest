@@ -1,20 +1,22 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { StatusOK, StatusBadRequest } = require('../../constants');
-const { searchUserPasswordByEmail } = require('../../models');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { StatusOK, StatusBadRequest } = require("../../constants");
+const { user } = require("../../schema");
 
 module.exports = async (req, res) => {
-  const user = await searchUserPasswordByEmail(req.body.email);
-  if (user) {
-    if (await bcrypt.compare(req.body.password, user.password)) {
+  const userResult = await user.queries.searchUserPasswordByEmail(
+    req.body.email
+  );
+  if (userResult) {
+    if (await bcrypt.compare(req.body.password, userResult.password)) {
       return res.status(StatusOK).send(
-        jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-          expiresIn: '2h',
+        jwt.sign({ id: userResult._id }, process.env.JWT_SECRET, {
+          expiresIn: "2h",
         })
       );
     }
   }
   return res
     .status(StatusBadRequest)
-    .send('You have entered an invalid email or password.');
+    .send("You have entered an invalid email or password.");
 };
