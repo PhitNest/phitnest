@@ -4,9 +4,15 @@ import 'package:flutter/material.dart';
 import '../../../models/models.dart';
 import '../state.dart';
 
+import 'gym_search_provider.dart';
+import 'gym_search_view.dart';
+
+/**
+ * Holds the dynamic content of [GymSearchProvider]. Calls to [rebuildView] will rebuild 
+ * the [GymSearchView].
+ */
 class GymSearchState extends ScreenState {
   final TextEditingController searchController = TextEditingController();
-
   String? _errorMessage;
 
   String? get errorMessage => _errorMessage;

@@ -5,29 +5,6 @@ import '../../common/widgets.dart';
 import '../view.dart';
 
 class ApologyView extends ScreenView {
-  Widget createTextField(
-          BuildContext context,
-          String hint,
-          String? Function(String?) validator,
-          TextEditingController controller) =>
-      SizedBox(
-          height: 34.h,
-          child: TextFormField(
-              validator: validator,
-              controller: controller,
-              style: Theme.of(context).textTheme.labelMedium,
-              decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-                  hintText: hint,
-                  hintStyle: Theme.of(context)
-                      .textTheme
-                      .labelMedium!
-                      .copyWith(color: Color(0xFF999999)),
-                  border: MaterialStateUnderlineInputBorder.resolveWith(
-                      (state) => UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFFDADADA)))))));
-
   final Function() onPressedContactUs;
   final Function() onPressedSubmit;
   final TextEditingController nameController;
@@ -49,11 +26,7 @@ class ApologyView extends ScreenView {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: SingleChildScrollView(
-              child: SizedBox(
-        height: 1.sh,
-        width: 1.sw,
-        child: Column(children: [
+        body: Column(children: [
           120.verticalSpace,
           SizedBox(
               width: 301.w,
@@ -77,15 +50,19 @@ class ApologyView extends ScreenView {
                 key: formKey,
                 autovalidateMode: autovalidateMode,
                 child: Column(children: [
-                  createTextField(
-                    context,
-                    'Name',
-                    validateFirstName,
-                    nameController,
-                  ),
+                  SizedBox(
+                      height: 34.h,
+                      child: TextInputField(
+                          controller: nameController,
+                          hint: 'Name',
+                          validator: validateFirstName)),
                   16.verticalSpace,
-                  createTextField(
-                      context, 'Email', validateEmail, emailController)
+                  SizedBox(
+                      height: 34.h,
+                      child: TextInputField(
+                          controller: emailController,
+                          hint: 'Email',
+                          validator: validateEmail)),
                 ]),
               )),
           42.verticalSpace,
@@ -104,7 +81,7 @@ class ApologyView extends ScreenView {
                       color: Colors.black,
                       fontStyle: FontStyle.italic,
                       decoration: TextDecoration.underline))),
-          41.verticalSpace,
+          37.verticalSpace,
         ]),
-      )));
+      );
 }

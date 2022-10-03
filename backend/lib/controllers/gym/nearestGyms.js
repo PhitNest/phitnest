@@ -1,11 +1,11 @@
-const { StatusOK } = require('../../constants');
-const { findNearestGyms } = require('../../models');
+const { StatusOK } = require("../../constants");
+const { gym } = require("../../schema");
 
 module.exports = async (req, res) =>
   res
     .status(StatusOK)
     .json(
-      await findNearestGyms(
+      await gym.queries.findNearestGyms(
         req.query.longitude,
         req.query.latitude,
         160000,

@@ -5,24 +5,6 @@ import '../../common/widgets.dart';
 import '../view.dart';
 
 class ContactUsView extends ScreenView {
-  Widget createTextField(BuildContext context, String hint,
-          TextEditingController controller) =>
-      SizedBox(
-          height: 34.h,
-          child: TextField(
-              controller: controller,
-              style: Theme.of(context).textTheme.labelMedium,
-              decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 8.w),
-                  hintText: hint,
-                  hintStyle: Theme.of(context)
-                      .textTheme
-                      .labelMedium!
-                      .copyWith(color: Color(0xFF999999)),
-                  border: MaterialStateUnderlineInputBorder.resolveWith(
-                      (state) => UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFFDADADA)))))));
-
   final Function() onPressedExit;
   final Function() onPressedSubmit;
   final TextEditingController nameController;
@@ -36,15 +18,12 @@ class ContactUsView extends ScreenView {
       required this.nameController,
       required this.emailController,
       required this.feedbackController,
-      required this.maxFeedbackLength});
+      required this.maxFeedbackLength})
+      : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: SingleChildScrollView(
-              child: SizedBox(
-        height: 1.sh,
-        width: 1.sw,
-        child: Column(children: [
+        body: Column(children: [
           80.verticalSpace,
           SizedBox(
               width: 301.w,
@@ -66,9 +45,15 @@ class ContactUsView extends ScreenView {
               width: 291.w,
               child: Form(
                 child: Column(children: [
-                  createTextField(context, 'Name', nameController),
+                  SizedBox(
+                      height: 34.h,
+                      child: TextInputField(
+                          hint: 'Name', controller: nameController)),
                   16.verticalSpace,
-                  createTextField(context, 'Email', emailController),
+                  SizedBox(
+                      height: 34.h,
+                      child: TextInputField(
+                          hint: 'Email', controller: emailController)),
                   42.verticalSpace,
                   SizedBox(
                     height: 106.h,
@@ -108,7 +93,7 @@ class ContactUsView extends ScreenView {
                       color: Colors.black,
                       fontStyle: FontStyle.italic,
                       decoration: TextDecoration.underline))),
-          41.verticalSpace,
+          37.verticalSpace,
         ]),
-      )));
+      );
 }

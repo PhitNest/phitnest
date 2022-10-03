@@ -14,8 +14,8 @@ class ThankYouView extends ScreenView {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          double.infinity.horizontalSpace,
           200.verticalSpace,
-          1.sw.horizontalSpace,
           SizedBox(
               width: 301.w,
               child: Text(
