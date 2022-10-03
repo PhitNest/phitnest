@@ -5,6 +5,7 @@ const messageSchema = mongoose.Schema(
     conversation: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Conversation",
+      index: true,
       required: true,
     },
     sender: {
