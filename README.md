@@ -21,7 +21,7 @@ The ‘dev’ branch is a working branch. You may make commits that have under 2
 
 ### **Experimental branches:**
 
-Any commits containing more than 20 lines of diffs must be made to an experimental branch prior to being merged into ‘dev’. Before merging large branches into ‘dev’, get at least one other person to review your pull request.
+Any commits that modify more than 5-10 lines of code must be made to an experimental branch prior to being merged into ‘dev’. Before merging large branches into ‘dev’, get at least one other person to review your pull request.
 
 ### **Branch naming:**
 
