@@ -22,33 +22,40 @@ ThemeData theme = ThemeData(
       onSurface: Colors.black),
   // Text themes
   textTheme: TextTheme(
-      // Headline
-      headlineLarge: GoogleFonts.baskervville(
-        fontSize: 32.sp,
-        letterSpacing: -0.02,
-        height: 1.1,
-        color: Colors.black,
-      ),
-      // Label
-      labelLarge: TextStyle(
-        fontSize: 18.sp,
-        height: 1.1,
-        fontFamily: 'Metropolis',
-      ),
-      labelMedium: TextStyle(
-        fontSize: 16.sp,
-        height: 1.1,
-        fontFamily: 'Metropolis',
-      ),
-      // Body
-      bodyMedium: TextStyle(
-        fontSize: 14.sp,
-        fontFamily: 'Metropolis',
-        letterSpacing: 0.02,
-      ),
-      bodySmall: TextStyle(
-        fontSize: 12.sp,
-        fontFamily: 'Metropolis',
-        letterSpacing: 0.02,
-      )),
+    // Headline
+    headlineLarge: GoogleFonts.baskervville(
+      fontSize: 32.sp,
+      letterSpacing: -0.02,
+      height: 1.1,
+      color: Colors.black,
+    ),
+    headlineMedium: GoogleFonts.baskervville(
+      fontSize: 24.sp,
+      letterSpacing: -0.02,
+      height: 1.1,
+      color: Colors.black,
+    ),
+    // Label
+    labelLarge: TextStyle(
+      fontSize: 18.sp,
+      height: 1.1,
+      fontFamily: 'Metropolis',
+    ),
+    labelMedium: TextStyle(
+      fontSize: 16.sp,
+      height: 1.1,
+      fontFamily: 'Metropolis',
+    ),
+    // Body
+    bodyMedium: TextStyle(
+      fontSize: 14.sp,
+      fontFamily: 'Metropolis',
+      letterSpacing: 0.02,
+    ),
+    bodySmall: TextStyle(
+      fontSize: 12.sp,
+      fontFamily: 'Metropolis',
+      letterSpacing: 0.02,
+    ),
+  ),
 );
