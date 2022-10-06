@@ -12,12 +12,15 @@ class OnBoardingView extends ScreenView {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: PageView(children: [
-        FirstPage(),
-        SecondPage(),
-        ThirdPage(
-          onPressedYes: onPressedYes,
-          onPressedNo: onPressedNo,
-        )
-      ]));
+        body: PageView(
+          children: [
+            FirstPage(),
+            SecondPage(),
+            ThirdPage(
+              onPressedYes: onPressedYes,
+              onPressedNo: onPressedNo,
+            )
+          ],
+        ),
+      );
 }

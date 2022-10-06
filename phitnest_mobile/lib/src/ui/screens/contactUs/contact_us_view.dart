@@ -23,7 +23,7 @@ class ContactUsView extends ScreenView {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: SizedBox(
+        body: SizedBox(
           width: 1.sw,
           height: 1.sh,
           child: SingleChildScrollView(
@@ -40,50 +40,53 @@ class ContactUsView extends ScreenView {
                       )),
                   40.verticalSpace,
                   SizedBox(
-                      width: 301.w,
-                      child: Text(
-                        "Your input is invaluable in building stronger and healthier\ncommunities together.",
-                        style: Theme.of(context).textTheme.labelLarge,
-                        textAlign: TextAlign.center,
-                      )),
+                    width: 301.w,
+                    child: Text(
+                      "Your input is invaluable in building stronger and healthier\ncommunities together.",
+                      style: Theme.of(context).textTheme.labelLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                   30.verticalSpace,
                   SizedBox(
-                      width: 291.w,
-                      child: Form(
-                        child: Column(children: [
-                          SizedBox(
-                              height: 34.h,
-                              child: TextInputField(
-                                  hint: 'Name', controller: nameController)),
-                          16.verticalSpace,
-                          SizedBox(
-                              height: 34.h,
-                              child: TextInputField(
-                                  hint: 'Email', controller: emailController)),
-                          42.verticalSpace,
-                          SizedBox(
-                            height: 106.h,
-                            child: TextField(
-                                controller: feedbackController,
-                                textAlignVertical: TextAlignVertical.top,
-                                textAlign: TextAlign.left,
-                                expands: true,
-                                maxLines: null,
-                                decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.all(16),
-                                    hintText: 'Your feedback',
-                                    hintStyle: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium!
-                                        .copyWith(color: Color(0xFF999999)),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color(0xFF999999)),
-                                        borderRadius:
-                                            BorderRadius.circular(8)))),
-                          )
-                        ]),
-                      )),
+                    width: 291.w,
+                    child: Form(
+                      child: Column(children: [
+                        SizedBox(
+                          height: 34.h,
+                          child: TextInputField(
+                              hint: 'Name', controller: nameController),
+                        ),
+                        16.verticalSpace,
+                        SizedBox(
+                          height: 34.h,
+                          child: TextInputField(
+                              hint: 'Email', controller: emailController),
+                        ),
+                        42.verticalSpace,
+                        SizedBox(
+                          height: 106.h,
+                          child: TextField(
+                              controller: feedbackController,
+                              textAlignVertical: TextAlignVertical.top,
+                              textAlign: TextAlign.left,
+                              expands: true,
+                              maxLines: null,
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.all(16),
+                                  hintText: 'Your feedback',
+                                  hintStyle: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(color: Color(0xFF999999)),
+                                  border: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Color(0xFF999999)),
+                                      borderRadius: BorderRadius.circular(8)))),
+                        )
+                      ]),
+                    ),
+                  ),
                   39.verticalSpace,
                   StyledButton(
                     child: Text('SUBMIT'),
@@ -91,19 +94,21 @@ class ContactUsView extends ScreenView {
                   ),
                   42.verticalSpace,
                   TextButton(
-                      onPressed: onPressedExit,
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.transparent)),
-                      child: Text('EXIT',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .copyWith(
-                                  color: Colors.black,
-                                  fontStyle: FontStyle.italic,
-                                  decoration: TextDecoration.underline))),
+                    onPressed: onPressedExit,
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.transparent)),
+                    child: Text(
+                      'EXIT',
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: Colors.black,
+                          fontStyle: FontStyle.italic,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
                   37.verticalSpace,
                 ]),
-          )));
+          ),
+        ),
+      );
 }
