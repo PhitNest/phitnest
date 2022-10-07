@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
-import 'screens.dart';
+import 'provider.dart';
 import 'view.dart';
 
 /**
- * This class holds the dynamic components of the [Screen]
+ * This class holds the dynamic components of the [ScreenProvider]
  */
 abstract class ScreenState extends ChangeNotifier {
   /**
    * This is private to this file because we do not want other files to modify
-   * it directly. When this is false, [Screen.buildLoading] is rendered. This 
-   * field will be set to true when the [Screen.init] method has completed, and 
+   * it directly. When this is false, [ScreenProvider.buildLoading] is rendered. This 
+   * field will be set to true when the [ScreenProvider.init] method has completed, and 
    * then the [ScreenView] will be rendered.
    */
   bool _initialized = false;
 
   /**
-   * Whether or not [Screen.init] has completed.
+   * Whether or not [ScreenProvider.init] has completed.
    */
   bool get initialized => _initialized;
 
   /**
-   * Set to true when [Screen.init] has completed. Results in a change from
-   * rendering [Screen.buildLoading] to [ScreenView].
+   * Set to true when [ScreenProvider.init] has completed. Results in a change from
+   * rendering [ScreenProvider.buildLoading] to [ScreenView].
    */
   set initialized(bool initialized) {
     _initialized = initialized;
@@ -29,7 +29,7 @@ abstract class ScreenState extends ChangeNotifier {
   }
 
   /**
-   * Rebuilds the [ScreenView] associated with the [Screen] corresponding to
+   * Rebuilds the [ScreenView] associated with the [ScreenProvider] corresponding to
    * this class.
    */
   rebuildView() {

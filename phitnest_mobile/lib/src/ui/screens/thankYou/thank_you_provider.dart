@@ -8,7 +8,7 @@ import 'thank_you_view.dart';
 class ThankYouProvider extends ScreenProvider<ThankYouState, ThankYouView> {
   final String name;
 
-  ThankYouProvider({required this.name}) : super();
+  const ThankYouProvider({required this.name}) : super();
 
   @override
   ThankYouView build(BuildContext context, ThankYouState state) => ThankYouView(
