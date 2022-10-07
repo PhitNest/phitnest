@@ -7,16 +7,16 @@ import '../view.dart';
 class LoginView extends ScreenView {
   final TextEditingController emailController;
   final TextEditingController passwordController;
-  final Function() onSignIn;
-  final Function() onForgotPassword;
-  final Function() onRegister;
+  final Function() onPressedSignIn;
+  final Function() onPressedForgotPassword;
+  final Function() onPressedRegister;
 
   LoginView({
     required this.emailController,
     required this.passwordController,
-    required this.onSignIn,
-    required this.onForgotPassword,
-    required this.onRegister,
+    required this.onPressedSignIn,
+    required this.onPressedForgotPassword,
+    required this.onPressedRegister,
   }) : super();
 
   @override
@@ -60,12 +60,12 @@ class LoginView extends ScreenView {
               ),
               40.verticalSpace,
               StyledButton(
-                onPressed: onSignIn,
+                onPressed: onPressedSignIn,
                 child: Text('SIGN IN'),
               ),
               93.verticalSpace,
               TextButton(
-                onPressed: onForgotPassword,
+                onPressed: onPressedForgotPassword,
                 child: Text(
                   'FORGOT PASSWORD?',
                   style: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -77,7 +77,7 @@ class LoginView extends ScreenView {
               ),
               22.verticalSpace,
               TextButton(
-                onPressed: onRegister,
+                onPressed: onPressedRegister,
                 child: Text(
                   'REGISTER',
                   style: Theme.of(context).textTheme.bodySmall!.copyWith(

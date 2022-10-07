@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:phitnest_mobile/src/ui/screens/login/login_provider.dart';
 
+import '../login/login_provider.dart';
 import '../provider.dart';
 import 'thank_you_state.dart';
 import 'thank_you_view.dart';
