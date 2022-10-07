@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../screens.dart';
+import '../login/login_provider.dart';
 import '../provider.dart';
 import 'thank_you_state.dart';
 import 'thank_you_view.dart';
@@ -14,7 +14,7 @@ class ThankYouProvider extends ScreenProvider<ThankYouState, ThankYouView> {
   ThankYouView build(BuildContext context, ThankYouState state) => ThankYouView(
         onPressedBye: () => Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => OnBoardingProvider()),
+            MaterialPageRoute(builder: (context) => LoginProvider()),
             (_) => false),
         name: name,
       );
