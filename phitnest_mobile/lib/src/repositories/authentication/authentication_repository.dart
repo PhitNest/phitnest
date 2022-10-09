@@ -36,7 +36,8 @@ class AuthenticationRepository extends Repository {
                   .cachePassword(password)));
 
   Future<String?> login(String email, String password) => http
-          .post(repositories<EnvironmentRepository>().getBackendAddress(kLogin))
+          .post(repositories<EnvironmentRepository>().getBackendAddress(kLogin,
+              params: {'email': email, 'password': password}))
           .then((response) {
         if (response.statusCode == kStatusOK) {
           try {
