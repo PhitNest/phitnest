@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../login/login_provider.dart';
 import '../provider.dart';
+import '../screens.dart';
 import 'thank_you_state.dart';
 import 'thank_you_view.dart';
 

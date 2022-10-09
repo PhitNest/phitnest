@@ -8,3 +8,4 @@ export 'contactUs/contact_us_provider.dart';
 export 'foundLocation/found_location_provider.dart';
 export 'thankYou/thank_you_provider.dart';
 export 'gymSearch/gym_search_provider.dart';
+export 'login/login_provider.dart';
