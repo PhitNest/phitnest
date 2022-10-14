@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/models.dart';
-import '../screens.dart';
 import '../provider.dart';
+import '../screens.dart';
 import 'found_location_state.dart';
 import 'found_location_view.dart';
 
@@ -17,6 +17,7 @@ class FoundLocationProvider
       FoundLocationView(
         onPressedNo: () => Navigator.push(
             context, MaterialPageRoute(builder: (_) => GymSearchProvider())),
+        onPressedYes: () {},
         address: gym.address,
       );
 
