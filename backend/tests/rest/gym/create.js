@@ -1,14 +1,7 @@
 const supertest = require("supertest");
-const jwt = require("jsonwebtoken");
-const {
-  StatusBadRequest,
-  StatusOK,
-  StatusUnauthorized,
-  HeaderAuthorization,
-} = require("../../../lib/constants");
+const { StatusBadRequest, StatusOK } = require("../../../lib/constants");
 
 const _ = require("lodash");
-const { default: mongoose } = require("mongoose");
 
 const gyms = [
   {
@@ -41,71 +34,37 @@ const gyms = [
 ];
 
 module.exports = () => {
-  const signedAdminJwt = jwt.sign(
-    { id: new mongoose.Types.ObjectId(), admin: true },
-    globalThis.jwtSecret,
-    {
-      expiresIn: "2h",
-    }
-  );
-
-  const signedJwt = jwt.sign({ id: "0" }, globalThis.jwtSecret, {
-    expiresIn: "2h",
-  });
-
   test("Missing body", () =>
-    supertest(globalThis.app)
-      .post("/gym")
-      .send()
-      .set(HeaderAuthorization, signedAdminJwt)
-      .expect(StatusBadRequest));
-
-  test("Unauthenticated request", () =>
-    supertest(globalThis.app)
-      .post("/gym")
-      .send(gyms[0])
-      .expect(StatusUnauthorized));
-
-  test("User request without admin credentials", () =>
-    supertest(globalThis.app)
-      .post("/gym")
-      .send(gyms[0])
-      .set(HeaderAuthorization, signedJwt)
-      .expect(StatusUnauthorized));
+    supertest(globalThis.app).post("/gym").send().expect(StatusBadRequest));
 
   test("Missing name", () =>
     supertest(globalThis.app)
       .post("/gym")
       .send(_.omit(gyms[0], "name"))
-      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test("Missing street", () =>
     supertest(globalThis.app)
       .post("/gym")
       .send(_.omit(gyms[0], "address.street"))
-      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test("Missing city", () =>
     supertest(globalThis.app)
       .post("/gym")
       .send(_.omit(gyms[0], "address.city"))
-      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test("Missing state", () =>
     supertest(globalThis.app)
       .post("/gym")
       .send(_.omit(gyms[0], "address.state"))
-      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test("Missing zipcode", () =>
     supertest(globalThis.app)
       .post("/gym")
       .send(_.omit(gyms[0], "address.zipCode"))
-      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test("Fake address", () =>
@@ -120,7 +79,6 @@ module.exports = () => {
           zipCode: "123",
         },
       })
-      .set(HeaderAuthorization, signedAdminJwt)
       .expect(StatusBadRequest));
 
   test("Valid gym creation", async () => {
@@ -128,7 +86,6 @@ module.exports = () => {
       supertest(globalThis.app)
         .post("/gym")
         .send(gyms[i])
-        .set(HeaderAuthorization, signedAdminJwt)
         .expect(StatusOK)
         .expect((res) => expect(JSON.parse(res.text).id).toBe(i.toString()));
     }
