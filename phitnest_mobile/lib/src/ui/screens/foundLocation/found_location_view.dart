@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_mobile/src/ui/common/styled_button.dart';
 
 import '../../../models/models.dart';
+import '../../common/widgets.dart';
 import '../view.dart';
 
 class FoundLocationView extends ScreenView {
@@ -10,10 +10,11 @@ class FoundLocationView extends ScreenView {
   final Function() onPressedYes;
   final Address address;
 
-  const FoundLocationView(
-      {required this.onPressedNo,
-      required this.address,
-      required this.onPressedYes});
+  const FoundLocationView({
+    required this.onPressedNo,
+    required this.address,
+    required this.onPressedYes,
+  });
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -23,20 +24,22 @@ class FoundLocationView extends ScreenView {
             children: [
               200.verticalSpace,
               SizedBox(
-                  width: 321.w,
-                  child: Text(
-                    'Is this your fitness club?',
-                    style: Theme.of(context).textTheme.headlineLarge,
-                    textAlign: TextAlign.center,
-                  )),
+                width: 321.w,
+                child: Text(
+                  'Is this your fitness club?',
+                  style: Theme.of(context).textTheme.headlineLarge,
+                  textAlign: TextAlign.center,
+                ),
+              ),
               42.verticalSpace,
               SizedBox(
-                  width: 291.w,
-                  child: Text(
-                    address.toString(),
-                    style: Theme.of(context).textTheme.labelLarge,
-                    textAlign: TextAlign.center,
-                  )),
+                width: 291.w,
+                child: Text(
+                  address.toString(),
+                  style: Theme.of(context).textTheme.labelLarge,
+                  textAlign: TextAlign.center,
+                ),
+              ),
               40.verticalSpace,
               StyledButton(
                 onPressed: onPressedYes,
@@ -44,15 +47,19 @@ class FoundLocationView extends ScreenView {
               ),
               163.verticalSpace,
               TextButton(
-                  onPressed: onPressedNo,
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.transparent)),
-                  child: Text('NO, IT\'S NOT',
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Colors.black,
-                          fontStyle: FontStyle.italic,
-                          decoration: TextDecoration.underline))),
+                onPressed: onPressedNo,
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Colors.transparent),
+                ),
+                child: Text(
+                  'NO, IT\'S NOT',
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: Colors.black,
+                      fontStyle: FontStyle.italic,
+                      decoration: TextDecoration.underline),
+                ),
+              ),
               37.verticalSpace,
             ],
           ),
