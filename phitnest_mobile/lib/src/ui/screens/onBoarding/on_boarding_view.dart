@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../view.dart';
-import 'pages/pages.dart';
+import 'widgets/pages.dart';
 
 class OnBoardingView extends ScreenView {
   final Function() onPressedYes;

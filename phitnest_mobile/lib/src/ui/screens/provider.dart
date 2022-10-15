@@ -7,7 +7,7 @@ import 'view.dart';
 /**
  * The base class for all screens on the app. The type parameters, [T] and [K],
  * should be of type [ScreenState] and [ScreenView] respectively. When you
- * create a new child of [Provider], you should create a new child of [ScreenState]
+ * create a new child of [ScreenProvider], you should create a new child of [ScreenState]
  * and [ScreenView] as well.
  */
 abstract class ScreenProvider<T extends ScreenState, K extends ScreenView>
@@ -45,13 +45,13 @@ abstract class ScreenProvider<T extends ScreenState, K extends ScreenView>
   dispose(BuildContext context, T state) {}
 
   @override
-  State<StatefulWidget> createState() => _ProviderWidgetState();
+  State<StatefulWidget> createState() => _WidgetProviderState();
 }
 
 /**
- * Implementation of our [Provider] class
+ * Implementation of our [ScreenProvider] class
  */
-class _ProviderWidgetState<T extends ScreenState, K extends ScreenView>
+class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
     extends State<ScreenProvider<T, K>> {
   late final T state;
 

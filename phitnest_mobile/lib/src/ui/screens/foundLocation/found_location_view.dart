@@ -45,7 +45,7 @@ class FoundLocationView extends ScreenView {
                 onPressed: onPressedYes,
                 child: Text('YES'),
               ),
-              163.verticalSpace,
+              Expanded(child: Container()),
               TextButton(
                 onPressed: onPressedNo,
                 style: ButtonStyle(

@@ -11,9 +11,14 @@ class ExploreTutorialProvider
   @override
   ExploreTutorialView build(BuildContext context, ExploreTutorialState state) =>
       ExploreTutorialView(
-        navIndex: state.navIndex,
-        onLongPressLogo: () => state.setScreenIndex = 1,
-        screenIndex: state.screenIndex,
+        onTapDownLogo: (details) {
+          state.holding = true;
+        },
+        onTapUpLogo: (details) {
+          state.holding = false;
+        },
+        countdown: state.countdown,
+        holding: state.holding,
       );
 
   @override
