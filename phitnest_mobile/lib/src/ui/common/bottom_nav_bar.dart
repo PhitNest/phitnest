@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class StyledNavBar extends StatelessWidget {
   final int pageIndex;
@@ -16,7 +15,7 @@ class StyledNavBar extends StatelessWidget {
             fontWeight: FontWeight.bold,
           );
 
-  static const String kColoredLogoPath = 'assets/images/logo_color.svg';
+  static const String kColoredLogoPath = 'assets/images/logo_color.png';
 
   const StyledNavBar(
       {Key? key,
@@ -47,19 +46,31 @@ class StyledNavBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text('NEWS', style: getTextStyle(context, 0)),
-            Text('EXPLORE', style: getTextStyle(context, 1)),
+            Text(
+              'NEWS',
+              style: getTextStyle(context, 0),
+            ),
+            Text(
+              'EXPLORE',
+              style: getTextStyle(context, 1),
+            ),
             GestureDetector(
               onTapDown: onTapDownLogo,
               onTapUp: onTapUpLogo,
-              child: SvgPicture.asset(
+              child: Image.asset(
                 kColoredLogoPath,
                 width: 50.0.w,
                 height: 38.62.h,
               ),
             ),
-            Text('CHAT', style: getTextStyle(context, 2)),
-            Text('OPTIONS', style: getTextStyle(context, 3)),
+            Text(
+              'CHAT',
+              style: getTextStyle(context, 2),
+            ),
+            Text(
+              'OPTIONS',
+              style: getTextStyle(context, 3),
+            ),
           ],
         ),
       ),

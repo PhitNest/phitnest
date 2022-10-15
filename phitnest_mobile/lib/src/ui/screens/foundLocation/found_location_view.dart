@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../models/models.dart';
 import '../../common/widgets.dart';
+import '../explore/explore_provider.dart';
 import '../view.dart';
 
 class FoundLocationView extends ScreenView {
@@ -63,6 +64,17 @@ class FoundLocationView extends ScreenView {
               37.verticalSpace,
             ],
           ),
+        ),
+
+        /// This floating action button is for debugging purpose only
+        floatingActionButton: StyledButton(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ExploreProvider(),
+            ),
+          ),
+          child: Text('SKIP TUTORIAL'),
         ),
       );
 }
