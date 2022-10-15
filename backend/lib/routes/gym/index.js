@@ -5,13 +5,8 @@ const {
   validateCreateGym,
   validateNearestGym,
 } = require("../../middleware/gym");
-const { isAdminAuthenticated } = require("../../middleware/auth");
 
-router.post(
-  "/gym",
-  [isAdminAuthenticated, validateCreateGym],
-  gymController.createGym
-);
+router.post("/gym", [validateCreateGym], gymController.createGym);
 router.get("/gym/nearest", [validateNearestGym], gymController.nearestGym);
 router.get("/gym/list", [validateNearestGym], gymController.nearestGyms);
 

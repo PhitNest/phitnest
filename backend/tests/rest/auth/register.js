@@ -1,68 +1,68 @@
-const supertest = require('supertest');
-const jwt = require('jsonwebtoken');
+const supertest = require("supertest");
+const jwt = require("jsonwebtoken");
 const {
   StatusConflict,
   StatusBadRequest,
   StatusOK,
-} = require('../../../lib/constants');
-const _ = require('lodash');
+} = require("../../../lib/constants");
+const _ = require("lodash");
 
 const registree = {
-  email: 'b@c.com',
-  password: 'aaaaaa',
-  firstName: 'Joe',
-  lastName: 'Shmoe',
+  email: "b@c.com",
+  password: "aaaaaa",
+  firstName: "Joe",
+  lastName: "Shmoe",
 };
 
 module.exports = () => {
-  test('Using no body', () =>
+  test("Using no body", () =>
     supertest(globalThis.app)
-      .post('/auth/register')
+      .post("/auth/register")
       .send()
       .expect(StatusBadRequest));
 
-  test('Missing email', () =>
+  test("Missing email", () =>
     supertest(globalThis.app)
-      .post('/auth/register')
-      .send(_.omit(registree, 'email'))
+      .post("/auth/register")
+      .send(_.omit(registree, "email"))
       .expect(StatusBadRequest));
 
-  test('Missing password', () =>
+  test("Missing password", () =>
     supertest(globalThis.app)
-      .post('/auth/register')
-      .send(_.omit(registree, 'password'))
+      .post("/auth/register")
+      .send(_.omit(registree, "password"))
       .expect(StatusBadRequest));
 
-  test('Password length too short', () =>
+  test("Password length too short", () =>
     supertest(globalThis.app)
-      .post('/auth/register')
+      .post("/auth/register")
       .send({
-        ..._.omit(registree, 'password'),
-        password: 'aaaaa',
+        ..._.omit(registree, "password"),
+        password: "aaaaa",
       })
       .expect(StatusBadRequest));
 
-  test('Missing first name', () =>
+  test("Missing first name", () =>
     supertest(globalThis.app)
-      .post('/auth/register')
-      .send(_.omit(registree, 'firstName'))
+      .post("/auth/register")
+      .send(_.omit(registree, "firstName"))
       .expect(StatusBadRequest));
 
-  test('Missing last name', () =>
+  test("Missing last name", () =>
     supertest(globalThis.app)
-      .post('/auth/register')
-      .send(_.omit(registree, 'lastName'))
+      .post("/auth/register")
+      .send(_.omit(registree, "lastName"))
       .expect(StatusBadRequest));
 
-  test('Duplicate email', () =>
+  test("Duplicate email", () =>
     supertest(globalThis.app)
-      .post('/auth/register')
-      .send({ ..._.omit(registree, 'email'), email: 'a@a.com' })
+      .post("/auth/register")
+      .send({ ..._.omit(registree, "email"), email: "a@a.com" })
       .expect(StatusConflict));
 
-  test('Valid register', () =>
+  test("Valid register", () =>
     supertest(globalThis.app)
-      .post('/auth/register')
+      .post("/auth/register")
       .send(registree)
       .expect(StatusOK)
       .then((res) =>
