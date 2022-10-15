@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phitnest_mobile/src/ui/screens/exploreTutorial/explore_tutorial_provider.dart';
 
 import '../../../models/models.dart';
 import '../provider.dart';
@@ -16,8 +17,17 @@ class FoundLocationProvider
   FoundLocationView build(BuildContext context, FoundLocationState state) =>
       FoundLocationView(
         onPressedNo: () => Navigator.push(
-            context, MaterialPageRoute(builder: (_) => GymSearchProvider())),
-        onPressedYes: () {},
+          context,
+          MaterialPageRoute(
+            builder: (_) => GymSearchProvider(),
+          ),
+        ),
+        onPressedYes: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ExploreTutorialProvider(),
+          ),
+        ),
         address: gym.address,
       );
 

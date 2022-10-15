@@ -29,6 +29,7 @@ flutter:
   uses-material-design: true
   assets:
     - .env
+    - assets/images/logo_color.svg
     - assets/images/logo.svg
   fonts:
     - family: Metropolis
