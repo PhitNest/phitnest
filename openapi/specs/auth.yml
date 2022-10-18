@@ -1,0 +1,242 @@
+tags:
+  - name: Auth
+    description: Authentication endpoint
+
+paths:
+  login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+                - password
+              type: object
+              properties:
+                email:
+                  $ref: "#/components/schemas/Email"
+                password:
+                  $ref: "#/components/schemas/Password"
+      responses:
+        200:
+          description: The user is successfully authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tokens"
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
+  register:
+    post:
+      tags:
+        - Auth
+      summary: Registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+                - password
+                - firstName
+                - lastName
+              type: object
+              properties:
+                email:
+                  $ref: "#/components/schemas/Email"
+                password:
+                  $ref: "#/components/schemas/Password"
+                firstName:
+                  type: string
+                  example: john
+                lastName:
+                  type: string
+                  example: jones
+      responses:
+        200:
+          description: The registration was successful and a confirmation email was sent
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
+  refresh:
+    post:
+      tags:
+        - Auth
+      summary: Refresh session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+                - refreshToken
+              type: object
+              properties:
+                email:
+                  $ref: "#/components/schemas/Email"
+                refreshToken:
+                  type: string
+                  example: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
+      responses:
+        200:
+          description: The session was successfully refreshed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tokens"
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
+  confirmRegister:
+    post:
+      tags:
+        - Auth
+      summary: Confirm Registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+                - code
+              type: object
+              properties:
+                email:
+                  $ref: "#/components/schemas/Email"
+                code:
+                  type: string
+                  example: "012345"
+      responses:
+        200:
+          description: The user registration was successfully confirmed
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
+  resendConfirmation:
+    post:
+      tags:
+        - Auth
+      summary: Resend confirmation code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Email"
+      responses:
+        200:
+          description: The confirmation code was resent
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
+  signOut:
+    post:
+      tags:
+        - Auth
+      summary: Signs out a user and revokes their refresh token(s)
+      security:
+        - AccessToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - allDevices
+              type: object
+              properties:
+                allDevices:
+                  type: boolean
+                  example: true
+      responses:
+        200:
+          description: The user was signed out
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
+  authenticated:
+    get:
+      tags:
+        - Auth
+      summary: Check if you are authenticated
+      security:
+        - AccessToken: []
+      responses:
+        200:
+          description: The user is authenticated
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
+components:
+  schemas:
+    Email:
+      title: email
+      type: string
+      example: jp@phitnest.com
+
+    Password:
+      title: password
+      type: string
+      example: H3llOW0RLD$$
+
+    Tokens:
+      title: tokens
+      required:
+        - accessToken
+        - refreshToken
+        - idToken
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: abcdefghijklmnopqrstuv
+        refreshToken:
+          type: string
+          example: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
+        idToken:
+          type: string
+          example: ABCDEFGHIJKLMNOP

@@ -1,0 +1,22 @@
+components:
+  schemas:
+    User:
+      title: user
+      required:
+        - id
+        - email
+        - firstName
+        - lastName
+      type: object
+      properties:
+        id:
+          type: string
+          example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh
+        email:
+          $ref: "auth.yml#/components/schemas/Email"
+        firstName:
+          type: string
+          example: Jp
+        lastName:
+          type: string
+          example: Siegel

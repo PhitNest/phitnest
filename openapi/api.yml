@@ -1,0 +1,40 @@
+##############################################################################
+###                ======================================                  ###
+###                | PhitNest Backend API Specification |                  ###
+###                ======================================                  ###
+##############################################################################
+openapi: 3.0.1
+info:
+  title: phitnest-api
+  description: API for PhitNest backend
+  version: 1.0.0
+servers:
+  - url: /
+
+paths:
+  /auth/login:
+    $ref: "specs/auth.yml#/paths/login"
+  /auth/register:
+    $ref: "specs/auth.yml#/paths/register"
+  /auth/confirmRegister:
+    $ref: "specs/auth.yml#/paths/confirmRegister"
+  /auth/refresh:
+    $ref: "specs/auth.yml#/paths/refresh"
+  /auth/resendConfirmation:
+    $ref: "specs/auth.yml#/paths/resendConfirmation"
+  /auth/signOut:
+    $ref: "specs/auth.yml#/paths/signOut"
+  /auth/authenticated:
+    $ref: "specs/auth.yml#/paths/authenticated"
+
+  /gym:
+    $ref: "specs/gym.yml#/paths/create"
+  /gym/list:
+    $ref: "specs/gym.yml#/paths/list"
+
+components:
+  securitySchemes:
+    AccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

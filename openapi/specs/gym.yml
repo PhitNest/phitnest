@@ -1,0 +1,147 @@
+tags:
+  - name: Gym
+    description: Gym database endpoint
+
+paths:
+  create:
+    post:
+      tags:
+        - Gym
+      summary: Create a new gym
+      security:
+        - AccessToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - address
+              properties:
+                name:
+                  type: string
+                  example: Planet Fitness
+                address:
+                  $ref: "#/components/schemas/Address"
+      responses:
+        200:
+          description: The gym was created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gym"
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
+  list:
+    get:
+      tags:
+        - Gym
+      summary: Search for gyms in a given distance (miles)
+      parameters:
+        - in: query
+          name: longitude
+          schema:
+            type: number
+            example: -80.2
+          required: true
+        - in: query
+          name: latitude
+          schema:
+            type: number
+            example: 37.4
+          required: true
+        - in: query
+          name: distance
+          schema:
+            type: number
+            example: 5.2
+          description: A distance in units of miles
+          required: true
+        - in: query
+          name: amount
+          schema:
+            type: integer
+            example: 5
+          description: The amount of gyms to find. If undefined, all gyms within distance will be found.
+
+      responses:
+        200:
+          description: Found nearby gyms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Gym"
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
+components:
+  schemas:
+    Address:
+      title: address
+      required:
+        - street
+        - city
+        - state
+        - zipCode
+      type: object
+      properties:
+        street:
+          type: string
+          example: 413 E Roanoke st
+        city:
+          type: string
+          example: Blacksburg
+        state:
+          type: string
+          example: VA
+        zipCode:
+          type: string
+          example: "24060"
+
+    Location:
+      title: location
+      required:
+        - longitude
+        - latitude
+      properties:
+        longitude:
+          type: number
+          example: 80.5
+        latitude:
+          type: number
+          example: -37.2
+
+    Gym:
+      title: gym
+      required:
+        - id
+        - name
+        - address
+        - location
+      type: object
+      properties:
+        id:
+          type: number
+          example: 52
+        name:
+          type: string
+          example: Planet Fitness
+        address:
+          $ref: "#/components/schemas/Address"
+        location:
+          $ref: "#/components/schemas/Location"
