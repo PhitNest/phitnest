@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../provider.dart';
+import '../screens.dart';
 import 'login_state.dart';
 import 'login_view.dart';
 
@@ -11,7 +12,8 @@ class LoginProvider extends ScreenProvider<LoginState, LoginView> {
         passwordController: state.passwordController,
         onPressedSignIn: () {},
         onPressedForgotPassword: () {},
-        onPressedRegister: () {},
+        onPressedRegister: () => Navigator.push(context,
+            MaterialPageRoute(builder: (context) => RegisterPageOneProvider())),
       );
 
   @override

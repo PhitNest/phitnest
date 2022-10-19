@@ -24,11 +24,7 @@ class GymSearchView extends ScreenView {
   Widget build(BuildContext context) => Scaffold(
           body: Column(children: [
         53.verticalSpace,
-        Container(
-            alignment: Alignment.centerLeft,
-            width: 1.sw,
-            margin: EdgeInsets.only(left: 16.w),
-            child: BackArrowButton()),
+        BackArrowButton(),
         15.verticalSpace,
         SizedBox(
             width: 343.w,
@@ -54,10 +50,7 @@ class GymSearchView extends ScreenView {
                       .copyWith(color: Color(0xFF999999)),
                 ))),
         20.verticalSpace,
-        SizedBox(
-            height: 390.h,
-            child: SingleChildScrollView(child: Column(children: cards))),
-        Expanded(child: Container()),
+        Expanded(child: SingleChildScrollView(child: Column(children: cards))),
         StyledButton(
           child: Text('CONFIRM'),
           onPressed: onPressedConfirm,

@@ -75,7 +75,6 @@ class LoginView extends ScreenView {
                       ),
                 ),
               ),
-              22.verticalSpace,
               TextButton(
                 onPressed: onPressedRegister,
                 child: Text(
