@@ -11,8 +11,9 @@ import '../repositories.dart';
 class LocationRepository extends Repository {
   Future<Gym?> getNearestGym(Location location) => http
       .get(
-        repositories<EnvironmentRepository>()
-            .getBackendAddress(kNearestGymRoute, params: location.toJson()),
+        repositories<EnvironmentRepository>().getBackendAddress(
+            kNearestGymRoute,
+            params: {...location.toJson(), "distance": "100"}),
       )
       .then((response) => response.statusCode == kStatusOK
           ? Gym.fromJson(jsonDecode(response.body))
@@ -20,8 +21,8 @@ class LocationRepository extends Repository {
 
   Future<List<Gym>> getNearestGyms(Location location) => http
       .get(
-        repositories<EnvironmentRepository>()
-            .getBackendAddress(kListGymsRoute, params: location.toJson()),
+        repositories<EnvironmentRepository>().getBackendAddress(kListGymsRoute,
+            params: {...location.toJson(), "distance": "100"}),
       )
       .then((response) => response.statusCode == kStatusOK
           ? List<Gym>.from(
