@@ -12,4 +12,6 @@ router.post(
 
 router.get("/list", [], controller.nearestGyms);
 
+router.get("/nearest", [], controller.nearestGym);
+
 export default router;

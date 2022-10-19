@@ -32,6 +32,8 @@ paths:
     $ref: "specs/gym.yml#/paths/create"
   /gym/list:
     $ref: "specs/gym.yml#/paths/list"
+  /gym/nearest:
+    $ref: "specs/gym.yml#/paths/nearest"
 
 components:
   securitySchemes:

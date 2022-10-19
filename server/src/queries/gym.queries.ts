@@ -34,6 +34,14 @@ class GymQueries {
     }
     return query.exec();
   }
+
+  async nearestGym(
+    lon: number,
+    lat: number,
+    distance: number
+  ): Promise<IGymModel> {
+    return (await this.nearestGyms(lon, lat, distance, 1))[0];
+  }
 }
 
 export default new GymQueries();
