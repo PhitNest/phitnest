@@ -12,12 +12,7 @@ import {
 import l from "../../common/logger";
 
 const userPool = new CognitoUserPool({
-  UserPoolId:
-  process.env.NODE_ENV === "production"
-  ? process.env.COGNITO_POOL_ID
-  : process.env.NODE_ENV === "test"
-  ? process.env.COGNITO_POOL_ID_TEST
-  : process.env.COGNITO_POOL_ID_DEV,
+  UserPoolId: process.env.COGNITO_POOL_ID,
   ClientId: process.env.COGNITO_APP_CLIENT_ID,
 });
 
