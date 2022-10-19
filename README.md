@@ -1,40 +1,21 @@
-# PhitNest
+# PhitNest Mobile
 
-Here is the official PhitNest development documentation.
+Here is the official PhitNest Mobile development documentation.
 
-# Applications
+### Documentation Videos
 
-Go to a specific application's README.
+<a href="https://drive.google.com/file/d/1nAqiDd6KK6wRXIsCiL_kyeRbILgp5uyr/view?usp=sharing">1. Creating a Screen</a>
 
-- [backend](./backend/README.md)
-- [phitnest_mobile](./phitnest_mobile/README.md)
+### Backend
 
-# Using Git
+In order for the app to function properly, you need to connect to the backend.
 
-### **‘master’ branch:**
+If you have not already, clone the backend repo: [PhitNest-API](https://github.com/PhitNest/phitnest-api)
 
-The ‘master’ branch is reserved for stable code. All code on the master branch has been thoroughly reviewed. Do not commit directly to master ever.
+follow the instructions in the `README.md` to run the backend.
 
-### **‘dev’ branch:**
+### .env
 
-The ‘dev’ branch is a working branch. You may make commits that have under 20 lines of diffs directly to this branch. Any larger commits must be made to an experimental branch, and when that branch is considered working you may open a pull request to merge it into the dev branch.
+In order for the app to function properly, you need to configure the environment variables.
 
-### **Experimental branches:**
-
-Any commits that modify more than 5-10 lines of code must be made to an experimental branch prior to being merged into ‘dev’. Before merging large branches into ‘dev’, get at least one other person to review your pull request.
-
-### **Branch naming:**
-
-All experimental branches must begin with a prefix to denote their purpose. Following the prefix, you can specify a title for your branch and separate it from the prefix with a ‘/’.
-
-Example branch name: feature/prefer-lowercase-titles-with-dashes
-
-### **Branch prefixes:**
-
-- **feature:** this is a branch intended to create or expand upon functionality. This includes creating new test cases (to cover bugs that do not yet exist)
-- **bug:** this is a branch intended to fix existing functionality. You may also create new test cases related to the bug fix on this branch.
-- **enhancement:** this is a branch intended to improve existing functionality. This includes providing comments for clarifying existing code or refactoring.
-
-# System Architecture
-
-_coming soon..._
+Copy either `.env.example.android` or `.env.example.ios` according to your current device and rename it to `.env`
