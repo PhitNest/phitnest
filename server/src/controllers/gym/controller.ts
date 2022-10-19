@@ -29,7 +29,7 @@ class GymController {
       parseFloat(req.query.longitude.toString()),
       parseFloat(req.query.latitude.toString()),
       parseFloat(req.query.distance.toString()) * 1600,
-      parseInt(req.query.amount.toString())
+      req.query.amount ? parseInt(req.query.amount.toString()) : null
     );
     return res.status(200).json(gyms.map((gym) => gymResponse(gym)));
   }
