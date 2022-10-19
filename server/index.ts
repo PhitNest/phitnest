@@ -1,4 +1,6 @@
-import "./common/env";
+import checkEnv from "./common/env";
+checkEnv();
+
 import Database from "./common/database";
 import Server from "./common/server";
 import routes from "./routes";

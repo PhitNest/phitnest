@@ -3,6 +3,7 @@ tags:
     description: Gym database endpoint
 
 paths:
+  # /gym
   create:
     post:
       tags:
@@ -40,11 +41,12 @@ paths:
                 type: string
                 example: Validation error has occurred.
 
+  # /gym/list
   list:
     get:
       tags:
         - Gym
-      summary: Search for gyms in a given distance (miles)
+      summary: Search for gyms in a given radius (miles)
       parameters:
         - in: query
           name: longitude
@@ -62,7 +64,7 @@ paths:
           name: distance
           schema:
             type: number
-            example: 5.2
+            example: 110.5
           description: A distance in units of miles
           required: true
         - in: query
@@ -71,7 +73,6 @@ paths:
             type: integer
             example: 5
           description: The amount of gyms to find. If undefined, all gyms within distance will be found.
-
       responses:
         200:
           description: Found nearby gyms
@@ -81,6 +82,50 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Gym"
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
+  # /gym/nearest
+  nearest:
+    get:
+      tags:
+        - Gym
+      summary: Search for the nearest gym in a given radius
+      parameters:
+        - in: query
+          name: longitude
+          schema:
+            type: number
+            example: -80.2
+          required: true
+        - in: query
+          name: latitude
+          schema:
+            type: number
+            example: 37.4
+          required: true
+        - in: query
+          name: distance
+          schema:
+            type: number
+            example: 110.5
+          description: A distance in units of miles
+          required: true
+      responses:
+        200:
+          description: Found nearby gym
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gym"
+        204:
+          description: Could not find any gyms within the given radius
+          content: {}
         500:
           description: An internal error occurred
           content:

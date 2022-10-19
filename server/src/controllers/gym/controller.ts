@@ -33,6 +33,17 @@ class GymController {
     );
     return res.status(200).json(gyms.map((gym) => gymResponse(gym)));
   }
+
+  async nearestGym(req: Request, res: Response) {
+    const gym = await GymQueries.nearestGym(
+      parseFloat(req.query.longitude.toString()),
+      parseFloat(req.query.latitude.toString()),
+      parseFloat(req.query.distance.toString()) * 1600
+    );
+    return gym
+      ? res.status(200).json(gymResponse(gym))
+      : res.status(204).send();
+  }
 }
 
 export default new GymController();
