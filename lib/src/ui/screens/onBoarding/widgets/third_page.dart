@@ -20,7 +20,7 @@ class ThirdPage extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineLarge,
               textAlign: TextAlign.center,
             )),
-        40.verticalSpace,
+        35.verticalSpace,
         SizedBox(
             width: 291.w,
             child: Text(
@@ -31,7 +31,7 @@ class ThirdPage extends StatelessWidget {
                   .copyWith(height: 1.56),
               textAlign: TextAlign.center,
             )),
-        40.verticalSpace,
+        35.verticalSpace,
         StyledButton(child: Text('YES'), onPressed: onPressedYes),
         Expanded(child: Container()),
         TextButton(

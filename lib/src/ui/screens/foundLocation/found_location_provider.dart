@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:phitnest_mobile/src/ui/screens/exploreTutorial/explore_tutorial_provider.dart';
 
 import '../../../models/models.dart';
 import '../provider.dart';
@@ -22,11 +21,12 @@ class FoundLocationProvider
             builder: (_) => GymSearchProvider(),
           ),
         ),
-        onPressedYes: () => Navigator.push(
+        onPressedYes: () => Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (_) => ExploreTutorialProvider(),
           ),
+          (_) => false,
         ),
         address: gym.address,
       );

@@ -24,16 +24,15 @@ class LoginView extends ScreenView {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.only(bottom: 23.62.h, top: 76.h),
-                child: LogoWidget(width: 63.w),
-              ),
+              112.verticalSpace,
+              LogoWidget(width: 72.w),
+              26.verticalSpace,
               Text(
                 'Phitnest is Better Together',
                 style: Theme.of(context).textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
-              64.verticalSpace,
+              54.verticalSpace,
               SizedBox(
                 width: 291.w,
                 child: Form(
@@ -58,12 +57,12 @@ class LoginView extends ScreenView {
                   ),
                 ),
               ),
-              40.verticalSpace,
+              34.verticalSpace,
               StyledButton(
                 onPressed: onPressedSignIn,
                 child: Text('SIGN IN'),
               ),
-              93.verticalSpace,
+              90.verticalSpace,
               TextButton(
                 onPressed: onPressedForgotPassword,
                 child: Text(
@@ -86,6 +85,7 @@ class LoginView extends ScreenView {
                       ),
                 ),
               ),
+              37.verticalSpace
             ],
           ),
         ),

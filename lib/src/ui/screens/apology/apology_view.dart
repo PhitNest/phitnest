@@ -25,73 +25,70 @@ class ApologyView extends ScreenView {
       required this.formKey});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Column(
-          children: [
-            120.verticalSpace,
-            SizedBox(
-              width: 301.w,
-              child: Text(
-                "We apologize",
-                style: Theme.of(context).textTheme.headlineLarge,
-                textAlign: TextAlign.center,
-              ),
+  Widget build(BuildContext context) => Column(
+        children: [
+          110.verticalSpace,
+          SizedBox(
+            width: 301.w,
+            child: Text(
+              "We apologize",
+              style: Theme.of(context).textTheme.headlineLarge,
+              textAlign: TextAlign.center,
             ),
-            40.verticalSpace,
-            SizedBox(
-              width: 301.w,
-              child: Text(
-                "PhitNest is currently available to select fitness club locations only.\n\n\nMay we contact you when this changes?",
-                style: Theme.of(context).textTheme.labelLarge,
-                textAlign: TextAlign.center,
-              ),
+          ),
+          40.verticalSpace,
+          SizedBox(
+            width: 301.w,
+            child: Text(
+              "PhitNest is currently available to select fitness club locations only.\n\n\nMay we contact you when this changes?",
+              style: Theme.of(context).textTheme.labelLarge,
+              textAlign: TextAlign.center,
             ),
-            40.verticalSpace,
-            SizedBox(
-              width: 291.w,
-              child: Form(
-                key: formKey,
-                autovalidateMode: autovalidateMode,
-                child: Column(children: [
-                  SizedBox(
-                    height: 34.h,
-                    child: TextInputField(
-                        controller: nameController,
-                        hint: 'Name',
-                        validator: validateFirstName),
-                  ),
-                  16.verticalSpace,
-                  SizedBox(
-                    height: 34.h,
-                    child: TextInputField(
-                        controller: emailController,
-                        hint: 'Email',
-                        validator: validateEmail),
-                  ),
-                ]),
-              ),
+          ),
+          40.verticalSpace,
+          SizedBox(
+            width: 291.w,
+            child: Form(
+              key: formKey,
+              autovalidateMode: autovalidateMode,
+              child: Column(children: [
+                SizedBox(
+                  height: 34.h,
+                  child: TextInputField(
+                      controller: nameController,
+                      hint: 'Name',
+                      validator: validateFirstName),
+                ),
+                16.verticalSpace,
+                SizedBox(
+                  height: 34.h,
+                  child: TextInputField(
+                      controller: emailController,
+                      hint: 'Email',
+                      validator: validateEmail),
+                ),
+              ]),
             ),
-            42.verticalSpace,
-            StyledButton(
-              child: Text('SUBMIT'),
-              onPressed: onPressedSubmit,
+          ),
+          40.verticalSpace,
+          StyledButton(
+            child: Text('SUBMIT'),
+            onPressed: onPressedSubmit,
+          ),
+          Expanded(child: Container()),
+          TextButton(
+            onPressed: onPressedContactUs,
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.transparent)),
+            child: Text(
+              'CONTACT US',
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: Colors.black,
+                  fontStyle: FontStyle.italic,
+                  decoration: TextDecoration.underline),
             ),
-            Expanded(child: Container()),
-            TextButton(
-              onPressed: onPressedContactUs,
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(Colors.transparent)),
-              child: Text(
-                'CONTACT US',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    color: Colors.black,
-                    fontStyle: FontStyle.italic,
-                    decoration: TextDecoration.underline),
-              ),
-            ),
-            37.verticalSpace,
-          ],
-        ),
+          ),
+          37.verticalSpace,
+        ],
       );
 }

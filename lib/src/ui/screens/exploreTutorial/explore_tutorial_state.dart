@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import '../state.dart';
 
 class ExploreTutorialState extends ScreenState {
   int _countdown = 3;
   bool _holding = false;
+  Timer? counter;
 
   int get countdown => _countdown;
   bool get holding => _holding;

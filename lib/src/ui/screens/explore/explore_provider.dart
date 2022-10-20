@@ -6,10 +6,10 @@ import 'explore_view.dart';
 
 class ExploreProvider extends ScreenProvider<ExploreState, ExploreView> {
   @override
-  ExploreView build(BuildContext context, ExploreState state) => ExploreView(
-        onTapDownLogo: (details) {},
-        onTapUpLogo: (details) {},
-      );
+  bool get showNavbar => true;
+
+  @override
+  ExploreView build(BuildContext context, ExploreState state) => ExploreView();
 
   @override
   ExploreState buildState() => ExploreState();
