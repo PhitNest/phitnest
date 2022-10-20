@@ -31,7 +31,7 @@ class GymSearchView extends ScreenView {
                 style: Theme.of(context).textTheme.labelMedium,
                 controller: searchController,
                 keyboardType: TextInputType.streetAddress,
-                onEditingComplete: onEditSearch,
+                onChanged: (_) => onEditSearch,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(left: 16.w),
                   hintText: 'Search',
