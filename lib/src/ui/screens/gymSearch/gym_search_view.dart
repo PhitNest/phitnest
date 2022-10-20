@@ -21,10 +21,7 @@ class GymSearchView extends ScreenView {
   }) : super();
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-          body: Column(children: [
-        53.verticalSpace,
-        BackArrowButton(),
+  Widget build(BuildContext context) => Column(children: [
         15.verticalSpace,
         SizedBox(
             width: 343.w,
@@ -36,7 +33,7 @@ class GymSearchView extends ScreenView {
                 keyboardType: TextInputType.streetAddress,
                 onEditingComplete: onEditSearch,
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 8.w),
+                  contentPadding: EdgeInsets.only(left: 16.w),
                   hintText: 'Search',
                   focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black),
@@ -55,6 +52,6 @@ class GymSearchView extends ScreenView {
           child: Text('CONFIRM'),
           onPressed: onPressedConfirm,
         ),
-        56.verticalSpace,
-      ]));
+        54.verticalSpace,
+      ]);
 }

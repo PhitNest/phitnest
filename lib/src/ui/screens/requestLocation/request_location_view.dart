@@ -22,7 +22,7 @@ class RequestLocationView extends ScreenView {
                 style: Theme.of(context).textTheme.headlineLarge,
                 textAlign: TextAlign.center,
               )),
-          40.verticalSpace,
+          42.verticalSpace,
           SizedBox(
               width: 291.w,
               child: Text(

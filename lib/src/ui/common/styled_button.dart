@@ -23,6 +23,8 @@ class StyledButton extends StatelessWidget {
         style: ButtonStyle(
             shape: MaterialStateProperty.all(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            minimumSize: MaterialStateProperty.all(Size.zero),
             padding: MaterialStateProperty.all(interiorPadding ??
                 EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h)),
             backgroundColor: MaterialStateProperty.all(backgroundColor),

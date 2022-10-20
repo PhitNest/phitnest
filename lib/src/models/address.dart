@@ -38,5 +38,5 @@ class Address extends Equatable {
   List<Object?> get props => [street, city, state, zipCode];
 
   @override
-  String toString() => '$street, $city, $state $zipCode';
+  String toString() => '$street,\n$city, $state $zipCode';
 }

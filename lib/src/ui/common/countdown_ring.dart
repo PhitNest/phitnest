@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CountdownRing extends StatelessWidget {
   final int countdownNum;
 
-  const CountdownRing({Key? key, this.countdownNum = 3}) : super(key: key);
+  const CountdownRing({Key? key, required this.countdownNum}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -5,14 +5,10 @@ import '../../common/widgets.dart';
 import '../view.dart';
 
 class ExploreTutorialView extends ScreenView {
-  final Function(TapDownDetails? details) onTapDownLogo;
-  final Function(TapUpDetails? details) onTapUpLogo;
   final bool holding;
   final int countdown;
 
   ExploreTutorialView({
-    required this.onTapDownLogo,
-    required this.onTapUpLogo,
     required this.holding,
     required this.countdown,
   }) : super();
@@ -25,28 +21,25 @@ class ExploreTutorialView extends ScreenView {
                 child: Column(
                   children: [
                     144.verticalSpace,
-                    CountdownRing(
-                      countdownNum: countdown,
-                    ),
+                    CountdownRing(countdownNum: countdown),
                     149.verticalSpace,
                     Text(
-                      countdown == 3
-                          ? 'Keep Holding...'
-                          : countdown == 2
-                              ? 'Almost there...'
-                              : 'Have fun :)',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall!
-                          .copyWith(color: Color(0xFF707070)),
-                    ),
+                        countdown == 3
+                            ? 'Keep Holding...'
+                            : countdown == 2
+                                ? 'Almost there...'
+                                : 'Have fun :)',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(color: Color(0xFF707070))),
                   ],
                 ))
             : SizedBox(
                 width: double.infinity,
                 child: Column(
                   children: [
-                    156.verticalSpace,
+                    186.verticalSpace,
                     Text(
                       'Great!',
                       style: Theme.of(context).textTheme.headlineLarge,
@@ -59,10 +52,5 @@ class ExploreTutorialView extends ScreenView {
                   ],
                 ),
               ),
-        bottomNavigationBar: StyledNavBar(
-          pageIndex: 1,
-          onTapDownLogo: onTapDownLogo,
-          onTapUpLogo: onTapUpLogo,
-        ),
       );
 }

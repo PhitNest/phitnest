@@ -14,7 +14,7 @@ class FirstPage extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineLarge,
               textAlign: TextAlign.center,
             )),
-        40.verticalSpace,
+        35.verticalSpace,
         SizedBox(
             width: 205.w,
             child: Text(
