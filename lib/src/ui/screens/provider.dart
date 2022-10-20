@@ -19,6 +19,7 @@ abstract class ScreenProvider<T extends ScreenState, K extends ScreenView>
   /// This will display in the AppBar
   String? get appBarText => null;
 
+  /// Controls whether or not to show the navbar
   bool get showNavbar => false;
 
   /// What to do when the logo button on the nav bar is pressed
@@ -91,7 +92,8 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                     constraints: BoxConstraints(
                       minWidth: 1.sw,
                       minHeight: 1.sh -
-                          (showAppBar(context) ? toolbarHeight * 1.5 : 0),
+                          (showAppBar(context) ? toolbarHeight * 1.5 : 0) -
+                          (widget.showNavbar ? StyledNavBar.kHeight : 0),
                     ),
                     child: IntrinsicHeight(child: widget.build(context, state)),
                   ),

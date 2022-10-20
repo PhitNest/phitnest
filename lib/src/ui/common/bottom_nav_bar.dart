@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StyledNavBar extends StatelessWidget {
+  static const double kHeight = 80;
+
   final int pageIndex;
   final Function(TapDownDetails? details) onTapDownLogo;
   final Function(TapUpDetails? details) onTapUpLogo;
@@ -27,7 +29,7 @@ class StyledNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 66,
+      height: kHeight,
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
