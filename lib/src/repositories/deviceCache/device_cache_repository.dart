@@ -1,34 +1,26 @@
-import 'dart:async';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import '../repository.dart';
+import '../repositories.dart';
 
 class DeviceCacheRepository extends Repository {
-  final _storage = new FlutterSecureStorage();
-
   static const String _kCompletedOnBoarding = 'completedOnBoarding';
   static const String _kRefreshToken = 'refreshToken';
   static const String _kEmail = 'email';
   static const String _kPassword = 'password';
 
-  Future<bool> get completedOnBoarding =>
-      _storage.read(key: _kCompletedOnBoarding).then((res) => res != null);
+  bool get completedOnBoarding => storage!.containsKey(_kCompletedOnBoarding);
 
-  completeOnBoarding() =>
-      _storage.write(key: _kCompletedOnBoarding, value: 'true');
+  completeOnBoarding() => storage!.setString(_kCompletedOnBoarding, 'true');
 
-  Future<String?> get refreshToken => _storage.read(key: _kRefreshToken);
+  String? get refreshToken => storage!.getString(_kRefreshToken);
 
   cacheRefreshToken(String? newRefreshToken) =>
-      _storage.write(key: _kRefreshToken, value: newRefreshToken);
+      storage!.setString(_kRefreshToken, newRefreshToken!);
 
-  Future<String?> get email => _storage.read(key: _kEmail);
+  String? get email => storage!.getString(_kEmail);
 
-  cacheEmail(String? newEmail) => _storage.write(key: _kEmail, value: newEmail);
+  cacheEmail(String? newEmail) => storage!.setString(_kEmail, newEmail!);
 
-  Future<String?> get password => _storage.read(key: _kPassword);
+  String? get password => storage!.getString(_kPassword);
 
   cachePassword(String? newPassword) =>
-      _storage.write(key: _kPassword, value: newPassword);
+      storage!.setString(_kPassword, newPassword!);
 }
