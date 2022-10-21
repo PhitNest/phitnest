@@ -54,8 +54,7 @@ class AuthenticationRepository extends Repository {
       });
 
   Future<String?> loginWithCache() async {
-    String? refreshToken =
-        await repositories<DeviceCacheRepository>().refreshToken;
+    String? refreshToken = repositories<DeviceCacheRepository>().refreshToken;
     if (refreshToken != null) {
       DateTime? exp = Jwt.getExpiryDate(refreshToken);
       if (exp != null && exp.isAfter(DateTime.now())) {
@@ -65,7 +64,7 @@ class AuthenticationRepository extends Repository {
         return null;
       }
     }
-    List<String?> credentials = await Future.wait([
+    List<String?> credentials = ([
       repositories<DeviceCacheRepository>().email,
       repositories<DeviceCacheRepository>().password
     ]);
