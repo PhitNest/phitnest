@@ -1,9 +1,11 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'ui/screens/screens.dart';
 import 'ui/theme.dart';
+
+/*Only for testing purposes for PhotoInstruction Screen*/
+// import './ui/screens/photoInstruction/photo_instruction_provider.dart';
 
 /**
  * Use flutter run --dart-define="usePreview=true" or add usePreview=true to .env 
@@ -28,6 +30,7 @@ class App extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             // The app always enters at the on boarding screen.
             home: OnBoardingProvider(),
+            //home: PhotoInstructionProvider(),
           ),
         ),
       );
