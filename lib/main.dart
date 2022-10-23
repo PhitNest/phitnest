@@ -6,8 +6,8 @@ import 'src/repositories/repositories.dart' as repositories;
 /// This is the driver function for the flutter application, [App].
 /// This calls [repositories.setup], which must not be called again.
 /// Data repositories should not be accessed before calling [repositories.setup]
-main() {
+main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  repositories.setup();
+  await repositories.setup();
   runApp(App());
 }

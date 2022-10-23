@@ -2,8 +2,10 @@ name: phitnest_mobile
 description: A new Flutter project.
 publish_to: "none"
 version: 1.0.0+1
+
 environment:
   sdk: ">=2.17.6 <=3.3.3"
+
 dependencies:
   flutter:
     sdk: flutter
@@ -15,16 +17,18 @@ dependencies:
   equatable: ^2.0.5
   get_it: ^7.2.0
   dartz: ^0.10.1
-  flutter_secure_storage: ^6.0.0
   flutter_svg: ^1.1.4
   flutter_dotenv: ^5.0.2
   flutter_screenutil: ^5.5.4
   device_preview: ^1.1.0
   jwt_decode: ^0.3.1
+  shared_preferences: ^2.0.15
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+
 flutter:
   uses-material-design: true
   assets:
