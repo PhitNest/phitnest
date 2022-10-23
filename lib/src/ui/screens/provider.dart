@@ -85,19 +85,19 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
               body: view.scrollable
                   ? SingleChildScrollView(
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minWidth: 1.sw,
-                          minHeight: 1.sh -
-                              (showAppBar(view, context)
-                                  ? toolbarHeight * 1.5
-                                  : 0) -
-                              (view.showNavbar ? StyledNavBar.kHeight : 0),
-                        ),
-                        child: IntrinsicHeight(
-                            child: widget.build(context, state)),
-                      ),
+                          constraints: BoxConstraints(
+                            minWidth: 1.sw,
+                            minHeight: 1.sh -
+                                (showAppBar(view, context)
+                                    ? toolbarHeight * 1.5
+                                    : 0) -
+                                (view.showNavbar ? StyledNavBar.kHeight : 0),
+                          ),
+                          child: IntrinsicHeight(
+                            child: view,
+                          )),
                     )
-                  : widget.build(context, state),
+                  : view,
               bottomNavigationBar: view.showNavbar
                   ? StyledNavBar(
                       pageIndex: 1,
