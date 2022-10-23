@@ -8,6 +8,9 @@ class ExploreView extends ScreenView {
   const ExploreView() : super();
 
   @override
+  bool get showNavbar => true;
+
+  @override
   Widget build(BuildContext context) => Column(
         children: [
           Image.asset(

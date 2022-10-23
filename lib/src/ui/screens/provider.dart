@@ -16,12 +16,6 @@ abstract class ScreenProvider<T extends ScreenState, K extends ScreenView>
     extends StatefulWidget {
   const ScreenProvider() : super();
 
-  /// This will display in the AppBar
-  String? get appBarText => null;
-
-  /// Controls whether or not to show the navbar
-  bool get showNavbar => false;
-
   /// What to do when the logo button on the nav bar is pressed
   onTapDownLogo(BuildContext context, T state) => Navigator.pushAndRemoveUntil(
       context,
@@ -57,8 +51,8 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
 
   double get toolbarHeight => 60.h;
 
-  bool showAppBar(BuildContext context) =>
-      widget.appBarText != null || Navigator.canPop(context);
+  bool showAppBar(K view, BuildContext context) =>
+      view.appBarText != null || Navigator.canPop(context);
 
   @override
   initState() {
@@ -70,43 +64,50 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider.value(
       value: state,
-      builder: (context, _) => Consumer<T>(
-          builder: (context, value, child) => Scaffold(
-                appBar: showAppBar(context)
-                    ? AppBar(
-                        toolbarHeight: toolbarHeight,
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        title: Text(widget.appBarText ?? "",
-                            style: Theme.of(context).textTheme.headlineMedium),
-                        leading: Navigator.of(context).canPop()
-                            ? Container(
-                                alignment: AlignmentDirectional.bottomCenter,
-                                height: double.infinity,
-                                child: BackArrowButton())
-                            : null,
-                      )
-                    : null,
-                body: SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minWidth: 1.sw,
-                      minHeight: 1.sh -
-                          (showAppBar(context) ? toolbarHeight * 1.5 : 0) -
-                          (widget.showNavbar ? StyledNavBar.kHeight : 0),
-                    ),
-                    child: IntrinsicHeight(child: widget.build(context, state)),
-                  ),
-                ),
-                bottomNavigationBar: widget.showNavbar
-                    ? StyledNavBar(
-                        pageIndex: 1,
-                        onTapDownLogo: (_) =>
-                            widget.onTapDownLogo(context, state),
-                        onTapUpLogo: (_) => widget.onTapUpLogo(context, state),
-                      )
-                    : null,
-              )));
+      builder: (context, _) => Consumer<T>(builder: (context, value, child) {
+            K view = widget.build(context, state);
+            return Scaffold(
+              appBar: showAppBar(view, context)
+                  ? AppBar(
+                      toolbarHeight: toolbarHeight,
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      title: Text(view.appBarText ?? "",
+                          style: Theme.of(context).textTheme.headlineMedium),
+                      leading: Navigator.of(context).canPop()
+                          ? Container(
+                              alignment: AlignmentDirectional.bottomCenter,
+                              height: double.infinity,
+                              child: BackArrowButton())
+                          : null,
+                    )
+                  : null,
+              body: view.scrollable
+                  ? SingleChildScrollView(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: 1.sw,
+                          minHeight: 1.sh -
+                              (showAppBar(view, context)
+                                  ? toolbarHeight * 1.5
+                                  : 0) -
+                              (view.showNavbar ? StyledNavBar.kHeight : 0),
+                        ),
+                        child: IntrinsicHeight(
+                            child: widget.build(context, state)),
+                      ),
+                    )
+                  : widget.build(context, state),
+              bottomNavigationBar: view.showNavbar
+                  ? StyledNavBar(
+                      pageIndex: 1,
+                      onTapDownLogo: (_) =>
+                          widget.onTapDownLogo(context, state),
+                      onTapUpLogo: (_) => widget.onTapUpLogo(context, state),
+                    )
+                  : null,
+            );
+          }));
 
   @override
   void dispose() {

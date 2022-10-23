@@ -11,6 +11,9 @@ class LoginView extends ScreenView {
   final Function() onPressedForgotPassword;
   final Function() onPressedRegister;
 
+  @override
+  bool get scrollable => true;
+
   LoginView({
     required this.emailController,
     required this.passwordController,
