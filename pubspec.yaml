@@ -23,6 +23,7 @@ dependencies:
   device_preview: ^1.1.0
   jwt_decode: ^0.3.1
   shared_preferences: ^2.0.15
+  flutter_launcher_icons: ^0.10.0
 
 dev_dependencies:
   flutter_test:
@@ -39,3 +40,9 @@ flutter:
       fonts:
         - asset: assets/fonts/Metropolis-Regular.otf
         - asset: assets/fonts/Metropolis-Bold.otf
+
+flutter_icons:
+  image_path: "assets/icon/icon.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
