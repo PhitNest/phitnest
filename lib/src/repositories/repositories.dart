@@ -1,5 +1,4 @@
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'repositories.dart';
 
@@ -10,12 +9,10 @@ export 'location/location_repository.dart';
 export 'repository.dart';
 
 GetIt repositories = GetIt.instance;
-Future<SharedPreferences> _storage = SharedPreferences.getInstance();
-SharedPreferences? storage;
 
 setup() async {
-  storage = await _storage;
-
+  await DeviceCacheRepository.init();
+  await EnvironmentRepository.init();
   repositories.registerSingleton(LocationRepository());
   repositories.registerSingleton(DeviceCacheRepository());
   repositories.registerSingleton(EnvironmentRepository());
