@@ -1,0 +1,65 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../common/widgets.dart';
+import '../view.dart';
+
+class PhotoInstructionView extends ScreenView {
+  const PhotoInstructionView() : super();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            53.verticalSpace,
+            BackArrowButton(),
+            SizedBox(
+              width: 278.w,
+              child: Text(
+                'Please take or upload a \npassport-style profile photo. \n\nPhotos must clearly show your face. \n\nNo body pictures are allowed.',
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
+            ),
+            24.verticalSpace,
+            Container(
+              child: Text(
+                'EXAMPLE',
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w700),
+              ),
+            ),
+            12.verticalSpace,
+            Container(
+              width: 160.w,
+              height: 207.62.h,
+              child: Image.asset(
+                'assets/images/photoInstructions_img.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+            40.38.verticalSpace,
+            StyledButton(
+                onPressed: () {},
+                child: Text(
+                  'TAKE PHOTO',
+                )),
+            30.verticalSpace,
+            TextButton(
+                onPressed: () {},
+                child: Text(
+                  'UPLOAD FROM ALBUMS',
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: Colors.black,
+                      fontStyle: FontStyle.italic,
+                      decoration: TextDecoration.underline),
+                ))
+          ],
+        ),
+      ),
+    );
+  }
+}
