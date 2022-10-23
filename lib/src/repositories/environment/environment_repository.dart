@@ -6,7 +6,7 @@ class EnvironmentRepository extends Repository {
   static const String kBackendHost = 'BACKEND_HOST';
   static const String kBackendPort = 'BACKEND_PORT';
 
-  loadEnvironmentVariables() => dotenv.load();
+  static Future<void> init() => dotenv.load();
 
   String get(String key) => dotenv.get(key);
 

@@ -1,26 +1,34 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../repositories.dart';
 
 class DeviceCacheRepository extends Repository {
+  static late SharedPreferences _storage;
+
+  static init() async {
+    _storage = await SharedPreferences.getInstance();
+  }
+
   static const String _kCompletedOnBoarding = 'completedOnBoarding';
   static const String _kRefreshToken = 'refreshToken';
   static const String _kEmail = 'email';
   static const String _kPassword = 'password';
 
-  bool get completedOnBoarding => storage!.containsKey(_kCompletedOnBoarding);
+  bool get completedOnBoarding => _storage.containsKey(_kCompletedOnBoarding);
 
-  completeOnBoarding() => storage!.setString(_kCompletedOnBoarding, 'true');
+  completeOnBoarding() => _storage.setString(_kCompletedOnBoarding, 'true');
 
-  String? get refreshToken => storage!.getString(_kRefreshToken);
+  String? get refreshToken => _storage.getString(_kRefreshToken);
 
   cacheRefreshToken(String? newRefreshToken) =>
-      storage!.setString(_kRefreshToken, newRefreshToken!);
+      _storage.setString(_kRefreshToken, newRefreshToken!);
 
-  String? get email => storage!.getString(_kEmail);
+  String? get email => _storage.getString(_kEmail);
 
-  cacheEmail(String? newEmail) => storage!.setString(_kEmail, newEmail!);
+  cacheEmail(String? newEmail) => _storage.setString(_kEmail, newEmail!);
 
-  String? get password => storage!.getString(_kPassword);
+  String? get password => _storage.getString(_kPassword);
 
   cachePassword(String? newPassword) =>
-      storage!.setString(_kPassword, newPassword!);
+      _storage.setString(_kPassword, newPassword!);
 }
