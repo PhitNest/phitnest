@@ -46,12 +46,13 @@ class GymSearchView extends ScreenView {
                       .labelMedium!
                       .copyWith(color: Color(0xFF999999)),
                 ))),
-        20.verticalSpace,
-        Expanded(child: SingleChildScrollView(child: Column(children: cards))),
+        15.verticalSpace,
+        Expanded(child: ListView(children: cards)),
+        10.verticalSpace,
         StyledButton(
           child: Text('CONFIRM'),
           onPressed: onPressedConfirm,
         ),
-        54.verticalSpace,
+        44.verticalSpace,
       ]);
 }

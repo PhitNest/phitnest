@@ -10,9 +10,6 @@ import 'explore_tutorial_view.dart';
 class ExploreTutorialProvider
     extends ScreenProvider<ExploreTutorialState, ExploreTutorialView> {
   @override
-  bool get showNavbar => true;
-
-  @override
   onTapDownLogo(BuildContext context, ExploreTutorialState state) {
     state.holding = true;
     state.countdown = 3;

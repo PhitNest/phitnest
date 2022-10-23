@@ -13,4 +13,13 @@ import 'provider.dart';
 /// time [build] will be called.
 abstract class ScreenView extends StatelessWidget {
   const ScreenView() : super();
+
+  /// This will display in the AppBar
+  String? get appBarText => null;
+
+  /// Controls whether or not to show the navbar
+  bool get showNavbar => false;
+
+  /// Controls whether this screen is scrollable.
+  bool get scrollable => false;
 }
