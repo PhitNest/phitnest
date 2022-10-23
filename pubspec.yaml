@@ -32,7 +32,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - .env.example.android
+    - .env
     - assets/images/
   fonts:
     - family: Metropolis

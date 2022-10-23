@@ -5,8 +5,6 @@ import '../../common/widgets.dart';
 import '../view.dart';
 
 class PhotoInstructionView extends ScreenView {
-  // final Function() onPressedUploadFromAlbums;
-  // final Function() onPressedTakePhoto;
   const PhotoInstructionView() : super();
 
   @override
