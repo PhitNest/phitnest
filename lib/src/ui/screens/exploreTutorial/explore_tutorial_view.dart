@@ -17,6 +17,9 @@ class ExploreTutorialView extends ScreenView {
   bool get showNavbar => true;
 
   @override
+  bool get navigationEnabled => false;
+
+  @override
   Widget build(BuildContext context) => Scaffold(
         body: holding
             ? SizedBox(
