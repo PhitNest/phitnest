@@ -22,4 +22,7 @@ abstract class ScreenView extends StatelessWidget {
 
   /// Controls whether this screen is scrollable.
   bool get scrollable => false;
+
+  /// Controls whether navigation from the nav bar is enabled
+  bool get navigationEnabled => true;
 }

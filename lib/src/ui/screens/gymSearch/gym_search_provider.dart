@@ -53,7 +53,7 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
                       gym: gymAndDistance.head,
                       distance: gymAndDistance.tail,
                       selected:
-                          false //(gymAndDistance.head == state.currentlySelectedGym),
+                          gymAndDistance.head == state.currentlySelectedGym,
                       )
                   : null)
               .where((val) => val != null)

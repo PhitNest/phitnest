@@ -100,6 +100,7 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                   : view,
               bottomNavigationBar: view.showNavbar
                   ? StyledNavBar(
+                      navigationEnabled: view.navigationEnabled,
                       pageIndex: 1,
                       onTapDownLogo: (_) =>
                           widget.onTapDownLogo(context, state),

@@ -7,24 +7,28 @@ class StyledNavBar extends StatelessWidget {
   final int pageIndex;
   final Function(TapDownDetails? details) onTapDownLogo;
   final Function(TapUpDetails? details) onTapUpLogo;
+  final bool navigationEnabled;
 
-  TextStyle getTextStyle(BuildContext context, int index) => index == pageIndex
-      ? Theme.of(context).textTheme.bodySmall!.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          )
-      : Theme.of(context).textTheme.bodySmall!.copyWith(
-            fontWeight: FontWeight.bold,
-          );
 
   static const String kColoredLogoPath = 'assets/images/logo_color.png';
 
   const StyledNavBar(
       {Key? key,
+      required this.navigationEnabled,
       required this.pageIndex,
       required this.onTapDownLogo,
       required this.onTapUpLogo})
       : super(key: key);
+
+  Widget createButton(BuildContext context, String text, Function() onPressed, int index) =>
+    TextButton(style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.transparent)), child: Text(text, style: index == pageIndex
+      ? Theme.of(context).textTheme.bodySmall!.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          )
+      : Theme.of(context).textTheme.bodySmall!.copyWith(
+            fontWeight: FontWeight.bold,)), onPressed: navigationEnabled ? onPressed : null);
+  
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +52,12 @@ class StyledNavBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text(
-              'NEWS',
-              style: getTextStyle(context, 0),
-            ),
-            Text(
-              'EXPLORE',
-              style: getTextStyle(context, 1),
-            ),
+            createButton(context, 'NEWS', (){
+              print('NEWS');
+            }, 0),
+            createButton(context, 'EXPLORE', (){
+              print('EXPLORE');
+            }, 1),
             GestureDetector(
               onTapDown: onTapDownLogo,
               onTapUp: onTapUpLogo,
@@ -65,14 +67,12 @@ class StyledNavBar extends StatelessWidget {
                 height: 38.62.h,
               ),
             ),
-            Text(
-              'CHAT',
-              style: getTextStyle(context, 2),
-            ),
-            Text(
-              'OPTIONS',
-              style: getTextStyle(context, 3),
-            ),
+            createButton(context, 'CHAT', (){
+              print('CHAT');
+            }, 2),
+            createButton(context, 'OPTIONS', (){
+              print('OPTIONS');
+            }, 3),
           ],
         ),
       ),
