@@ -13,4 +13,12 @@ class ContactUsState extends ScreenState {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController feedbackController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    feedbackController.dispose();
+    super.dispose();
+  }
 }

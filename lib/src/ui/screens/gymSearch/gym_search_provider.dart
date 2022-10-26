@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../repositories/repositories.dart';
 import '../screens.dart';
 import '../provider.dart';
-import 'gymCard/gym_card.dart';
+import 'widgets/gym_card.dart';
 import 'gym_search_state.dart';
 import 'gym_search_view.dart';
 
@@ -54,7 +54,7 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
                       distance: gymAndDistance.tail,
                       selected:
                           gymAndDistance.head == state.currentlySelectedGym,
-                      )
+                    )
                   : null)
               .where((val) => val != null)
               .cast<GymCard>()

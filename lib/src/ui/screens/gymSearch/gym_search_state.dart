@@ -13,6 +13,7 @@ import 'gym_search_view.dart';
  */
 class GymSearchState extends ScreenState {
   final TextEditingController searchController = TextEditingController();
+
   String? _errorMessage;
 
   String? get errorMessage => _errorMessage;
@@ -38,5 +39,11 @@ class GymSearchState extends ScreenState {
   set gymsAndDistances(List<Tuple2<Gym, double>> gymsAndDistances) {
     _gymsAndDistances = gymsAndDistances;
     rebuildView();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 }
