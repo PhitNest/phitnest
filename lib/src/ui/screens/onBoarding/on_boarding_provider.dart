@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../common/widgets.dart';
 import '../screens.dart';
 import '../provider.dart';
 import 'on_boarding_state.dart';
@@ -14,10 +15,13 @@ class OnBoardingProvider
       OnBoardingView(
         onPressedYes: () => Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (_) => RequestLocationProvider()),
+            NoAnimationMaterialPageRoute(
+                builder: (_) => RequestLocationProvider()),
             (_) => false),
-        onPressedNo: () => Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (_) => ApologyProvider()), (_) => false),
+        onPressedNo: () => Navigator.pushAndRemoveUntil(
+            context,
+            NoAnimationMaterialPageRoute(builder: (_) => ApologyProvider()),
+            (_) => false),
       );
 
   @override

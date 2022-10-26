@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../common/widgets.dart';
 import '../screens.dart';
 import '../provider.dart';
 import 'contact_us_state.dart';
@@ -18,7 +19,7 @@ class ContactUsProvider extends ScreenProvider<ContactUsState, ContactUsView> {
         onPressedExit: () {},
         onPressedSubmit: () => Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(
+            NoAnimationMaterialPageRoute(
                 builder: (_) =>
                     ThankYouProvider(name: state.nameController.text)),
             (_) => false),

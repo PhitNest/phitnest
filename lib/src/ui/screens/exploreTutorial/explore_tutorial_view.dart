@@ -14,7 +14,7 @@ class ExploreTutorialView extends ScreenView {
   }) : super();
 
   @override
-  bool get showNavbar => true;
+  int? get navbarIndex => 1;
 
   @override
   bool get navigationEnabled => false;

@@ -8,7 +8,7 @@ class ExploreView extends ScreenView {
   const ExploreView() : super();
 
   @override
-  bool get showNavbar => true;
+  int? get navbarIndex => 1;
 
   @override
   Widget build(BuildContext context) => Column(

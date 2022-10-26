@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../common/widgets.dart';
 import '../provider.dart';
 import '../screens.dart';
 import 'explore_tutorial_state.dart';
@@ -18,7 +19,8 @@ class ExploreTutorialProvider
       if (state.countdown == 0) {
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => ExploreProvider()),
+            NoAnimationMaterialPageRoute(
+                builder: (context) => ExploreProvider()),
             (_) => false);
       }
     });

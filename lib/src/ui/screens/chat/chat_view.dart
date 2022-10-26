@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../view.dart';
 
-class NewsView extends ScreenView {
+class ChatView extends ScreenView {
   @override
   Widget build(BuildContext context) => Container();
 
   @override
-  int? get navbarIndex => 0;
+  int? get navbarIndex => 2;
 }
