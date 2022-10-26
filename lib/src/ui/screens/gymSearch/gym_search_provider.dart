@@ -29,6 +29,7 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
   @override
   GymSearchView build(BuildContext context, GymSearchState state) =>
       GymSearchView(
+          keyboardFocus: state.keyboardFocus,
           searchController: state.searchController,
           errorMessage: state.errorMessage ?? '',
           onEditSearch: () => state.rebuildView(),
