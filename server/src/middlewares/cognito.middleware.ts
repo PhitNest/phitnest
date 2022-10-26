@@ -95,7 +95,7 @@ class CognitoMiddleware {
 
   confirmRegister(req: Request, res: Response, next: NextFunction) {
     const user = new CognitoUser({ Username: req.body.email, Pool: userPool });
-    user.confirmRegistration(req.body.code, true, (err, result) => {
+    user.confirmRegistration(req.body.code, true, (err) => {
       if (err) {
         l.error(
           `Could not confirm registration for user with email: ${req.body.email}`
@@ -112,7 +112,7 @@ class CognitoMiddleware {
     new CognitoUser({
       Username: req.body.email,
       Pool: userPool,
-    }).resendConfirmationCode((err, result) => {
+    }).resendConfirmationCode((err) => {
       if (err) {
         l.error(
           `Could not resend confirmation code for user with email: ${req.body.email}`
@@ -158,7 +158,7 @@ class CognitoMiddleware {
     const cognitoUser: CognitoUser = res.locals.cognitoUser;
     if (req.body.allDevices) {
       cognitoUser.globalSignOut({
-        onSuccess: (res) => {
+        onSuccess: () => {
           l.info(`User ${cognitoUser.getUsername()} signed out on all devices`);
           next();
         },
