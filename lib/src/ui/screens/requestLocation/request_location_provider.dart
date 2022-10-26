@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../repositories/repositories.dart';
+import '../../common/widgets.dart';
 import '../screens.dart';
 import '../provider.dart';
 import 'request_location_state.dart';
@@ -21,7 +22,7 @@ class RequestLocationProvider
                       return gym != null
                           ? Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(
+                              NoAnimationMaterialPageRoute(
                                   builder: (context) =>
                                       FoundLocationProvider(gym: gym)),
                               (_) => false)
@@ -37,7 +38,8 @@ class RequestLocationProvider
         errorMessage: state.errorMessage ?? '',
         onPressedExit: () => Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => ApologyProvider()),
+            NoAnimationMaterialPageRoute(
+                builder: (context) => ApologyProvider()),
             (_) => false),
       );
 

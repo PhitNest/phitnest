@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/models.dart';
+import '../../common/widgets.dart';
 import '../provider.dart';
 import '../screens.dart';
 import 'found_location_state.dart';
@@ -17,13 +18,13 @@ class FoundLocationProvider
       FoundLocationView(
         onPressedNo: () => Navigator.push(
           context,
-          MaterialPageRoute(
+          NoAnimationMaterialPageRoute(
             builder: (_) => GymSearchProvider(),
           ),
         ),
         onPressedYes: () => Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(
+          NoAnimationMaterialPageRoute(
             builder: (_) => ExploreTutorialProvider(),
           ),
           (_) => false,

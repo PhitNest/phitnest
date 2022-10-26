@@ -19,7 +19,7 @@ abstract class ScreenProvider<T extends ScreenState, K extends ScreenView>
   /// What to do when the logo button on the nav bar is pressed
   onTapDownLogo(BuildContext context, T state) => Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => ExploreProvider()),
+      NoAnimationMaterialPageRoute(builder: (context) => ExploreProvider()),
       (_) => false);
 
   /// What to do when the logo button on the nav bar is released
@@ -93,17 +93,19 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                                 (showAppBar(view, context)
                                     ? toolbarHeight * 1.5
                                     : 0) -
-                                (view.showNavbar ? StyledNavBar.kHeight : 0),
+                                (view.navbarIndex != null
+                                    ? StyledNavBar.kHeight
+                                    : 0),
                           ),
                           child: IntrinsicHeight(
                             child: view,
                           )),
                     )
                   : view,
-              bottomNavigationBar: view.showNavbar
+              bottomNavigationBar: view.navbarIndex != null
                   ? StyledNavBar(
                       navigationEnabled: view.navigationEnabled,
-                      pageIndex: 1,
+                      pageIndex: view.navbarIndex!,
                       onTapDownLogo: (_) =>
                           widget.onTapDownLogo(context, state),
                       onTapUpLogo: (_) => widget.onTapUpLogo(context, state),

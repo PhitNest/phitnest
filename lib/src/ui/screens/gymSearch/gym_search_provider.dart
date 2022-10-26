@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 import '../../../repositories/repositories.dart';
+import '../../common/widgets.dart';
 import '../screens.dart';
 import '../provider.dart';
 import 'widgets/gym_card.dart';
@@ -35,7 +36,7 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
           onEditSearch: () => state.rebuildView(),
           onPressedConfirm: () {
             Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
+                NoAnimationMaterialPageRoute(
                     builder: (_) =>
                         FoundLocationProvider(gym: state.currentlySelectedGym)),
                 (_) => false);

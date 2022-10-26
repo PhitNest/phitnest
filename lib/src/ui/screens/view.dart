@@ -17,8 +17,8 @@ abstract class ScreenView extends StatelessWidget {
   /// This will display in the AppBar
   String? get appBarText => null;
 
-  /// Controls whether or not to show the navbar
-  bool get showNavbar => false;
+  /// The current navbar page index. Set to null to hide nav bar.
+  int? get navbarIndex => null;
 
   /// Controls whether this screen is scrollable.
   bool get scrollable => false;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../common/widgets.dart';
 import '../provider.dart';
 import '../screens.dart';
 import 'thank_you_state.dart';
@@ -14,7 +15,7 @@ class ThankYouProvider extends ScreenProvider<ThankYouState, ThankYouView> {
   ThankYouView build(BuildContext context, ThankYouState state) => ThankYouView(
         onPressedBye: () => Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => LoginProvider()),
+            NoAnimationMaterialPageRoute(builder: (context) => LoginProvider()),
             (_) => false),
         name: name,
       );
