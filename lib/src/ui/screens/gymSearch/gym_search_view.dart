@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/widgets.dart';
 import '../view.dart';
-import 'gymCard/gym_card.dart';
+import 'widgets/gym_card.dart';
 
 class GymSearchView extends ScreenView {
   final Function() onPressedConfirm;
@@ -49,10 +49,12 @@ class GymSearchView extends ScreenView {
         15.verticalSpace,
         Expanded(child: ListView(children: cards)),
         10.verticalSpace,
-        StyledButton(
-          child: Text('CONFIRM'),
-          onPressed: onPressedConfirm,
-        ),
-        44.verticalSpace,
+        Visibility(
+            child: Padding(
+                padding: EdgeInsets.only(bottom: 44.h),
+                child: StyledButton(
+                  child: Text('CONFIRM'),
+                  onPressed: onPressedConfirm,
+                ))),
       ]);
 }

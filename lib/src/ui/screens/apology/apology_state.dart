@@ -21,4 +21,11 @@ class ApologyState extends ScreenState {
     _validateMode = validateMode;
     rebuildView();
   }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    super.dispose();
+  }
 }
