@@ -74,8 +74,10 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                       shadowColor: Colors.transparent,
                       title: Text(view.appBarText ?? "",
                           style: Theme.of(context).textTheme.headlineMedium),
+                      leadingWidth: 64,
                       leading: Navigator.of(context).canPop()
                           ? Container(
+                              padding: EdgeInsets.only(left: 8.w),
                               alignment: AlignmentDirectional.bottomCenter,
                               height: double.infinity,
                               child: BackArrowButton())

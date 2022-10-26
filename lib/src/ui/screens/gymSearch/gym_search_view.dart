@@ -11,10 +11,12 @@ class GymSearchView extends ScreenView {
   final TextEditingController searchController;
   final List<GymCard> cards;
   final Function() onEditSearch;
+  final FocusNode keyboardFocus;
 
   const GymSearchView({
     required this.onPressedConfirm,
     required this.errorMessage,
+    required this.keyboardFocus,
     required this.searchController,
     required this.onEditSearch,
     required this.cards,
@@ -30,6 +32,7 @@ class GymSearchView extends ScreenView {
                 textAlignVertical: TextAlignVertical.center,
                 style: Theme.of(context).textTheme.labelMedium,
                 controller: searchController,
+                focusNode: keyboardFocus,
                 keyboardType: TextInputType.streetAddress,
                 onChanged: (_) => onEditSearch(),
                 decoration: InputDecoration(
@@ -47,14 +50,18 @@ class GymSearchView extends ScreenView {
                       .copyWith(color: Color(0xFF999999)),
                 ))),
         15.verticalSpace,
-        Expanded(child: ListView(children: cards)),
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: ListView(children: cards))),
         10.verticalSpace,
         Visibility(
+            visible: !keyboardFocus.hasFocus,
             child: Padding(
                 padding: EdgeInsets.only(bottom: 44.h),
                 child: StyledButton(
                   child: Text('CONFIRM'),
                   onPressed: onPressedConfirm,
-                ))),
+                )))
       ]);
 }
