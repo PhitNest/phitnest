@@ -8,7 +8,7 @@ class UserQueries {
     lastName: string
   ): Promise<IUserModel> {
     return User.create({
-      id: id,
+      _id: id,
       email: email,
       firstName: firstName,
       lastName: lastName,
