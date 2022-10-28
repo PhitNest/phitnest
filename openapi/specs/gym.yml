@@ -182,7 +182,7 @@ components:
       properties:
         id:
           type: number
-          example: 52
+          example: 63509a3fab99f3c02d07c1f9
         name:
           type: string
           example: Planet Fitness

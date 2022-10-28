@@ -7,7 +7,7 @@ import l from "./logger";
 import fs from "fs";
 import morgan from "morgan";
 import { IDatabase } from "./database";
-
+import { registerSocketIO } from "./socket";
 import errorHandler from "../src/middlewares/error.middleware";
 import * as OpenApiValidator from "express-openapi-validator";
 
@@ -69,9 +69,7 @@ export default class ExpressServer {
           process.env.NODE_ENV || "development"
         } @: ${os.hostname()} on port: ${p}}`
       );
-
-    http.createServer(app).listen(port, welcome(port));
-
+    registerSocketIO(http.createServer(app).listen(port, welcome(port)));
     return app;
   }
 }

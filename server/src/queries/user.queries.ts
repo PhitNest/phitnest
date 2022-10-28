@@ -1,19 +1,17 @@
 import { IUserModel, User } from "../models/user.model";
 
-class UserQueries {
-  createUser(
+export class UserQueries {
+  static createUser(
     id: string,
     email: string,
     firstName: string,
     lastName: string
   ): Promise<IUserModel> {
     return User.create({
-      _id: id,
+      cognitoId: id,
       email: email,
       firstName: firstName,
       lastName: lastName,
     });
   }
 }
-
-export default new UserQueries();
