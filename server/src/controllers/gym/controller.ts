@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import GymQueries from "../../queries/gym.queries";
+import { GymQueries } from "../../queries/gym.queries";
 import { IGymModel } from "../../models/gym.model";
 
 function gymResponse(gym: IGymModel) {
   return {
-    id: gym.id,
+    id: gym._id,
     name: gym.name,
     address: gym.address,
     location: {

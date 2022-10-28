@@ -17,10 +17,7 @@ export default class Database implements IDatabase {
     mongoose.Promise = bluebird;
 
     mongoose
-      .connect(this.connectionString, {
-        user: process.env.DB_USER,
-        pass: process.env.DB_PASS,
-      })
+      .connect(this.connectionString)
       .then(() => {
         l.info("Database connected.");
       })

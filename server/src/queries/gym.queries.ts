@@ -2,8 +2,8 @@ import { IGymModel, Gym } from "../models/gym.model";
 import { IAddressModel } from "../models/address.model";
 import { ILocationModel } from "../models/location.model";
 
-class GymQueries {
-  createGym(
+export class GymQueries {
+  static createGym(
     name: string,
     address: IAddressModel,
     location: ILocationModel
@@ -15,7 +15,7 @@ class GymQueries {
     });
   }
 
-  nearestGyms(
+  static nearestGyms(
     lon: number,
     lat: number,
     distance: number,
@@ -29,19 +29,18 @@ class GymQueries {
         },
       },
     });
+
     if (amount > 0) {
       query.limit(amount);
     }
     return query.exec();
   }
 
-  async nearestGym(
+  static async nearestGym(
     lon: number,
     lat: number,
     distance: number
   ): Promise<IGymModel> {
-    return (await this.nearestGyms(lon, lat, distance, 1))[0];
+    return (await GymQueries.nearestGyms(lon, lat, distance, 1))[0];
   }
 }
-
-export default new GymQueries();

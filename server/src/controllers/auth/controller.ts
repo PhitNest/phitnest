@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import UserQueries from "../../queries/user.queries";
+import { UserQueries } from "../../queries/user.queries";
 
 function respondWithTokens(req: Request, res: Response) {
   return res.status(200).json({
