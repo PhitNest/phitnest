@@ -1,4 +1,4 @@
-package com.example.phitnest_mobile
+package com.phitnest.android
 
 import io.flutter.embedding.android.FlutterActivity
 
