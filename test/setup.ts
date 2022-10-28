@@ -1,6 +1,7 @@
 import "mocha";
 import {testUser} from "./constants"
 import mongoose from "mongoose";
+import l from "../server/common/logger";
 
 // clear database after connected
 before(function (done) {
@@ -10,6 +11,6 @@ before(function (done) {
     await db.dropDatabase();
     // Create a test user manually, this user should already exist within cognito
     await testUser.save();
-    setTimeout(done, 3000);
+    done();
   });
 });
