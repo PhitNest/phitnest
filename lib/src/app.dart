@@ -5,10 +5,10 @@ import 'ui/screens/screens.dart';
 import 'ui/theme.dart';
 
 /**
- * Use flutter run --dart-define="usePreview=true" or add usePreview=true to .env 
+ * Use flutter run --dart-define="USE_PREVIEW=true" or add USE_PREVIEW=true to .env 
  * to use device preview.
  */
-const usePreview = bool.fromEnvironment("usePreview", defaultValue: false);
+const usePreview = bool.fromEnvironment("USE_PREVIEW", defaultValue: false);
 
 /**
  * This is the base Flutter [MaterialApp] instance. 
