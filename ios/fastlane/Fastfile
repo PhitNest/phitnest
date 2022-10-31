@@ -19,7 +19,7 @@ APPSTORECONNECT_ISSUER_ID = '54ac82fd-b7be-454a-b467-d3408ef595fb'
 APPSTORECONNECT_KEY_ID = '8J2XZUQ4SZ'
 
 # Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
+update_fastlane
 
 default_platform(:ios)
 
