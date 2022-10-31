@@ -1,0 +1,8 @@
+app_identifier("com.phitnest.ios") # The bundle identifier of your app
+apple_id("umaar.ehsan@me.com") # Your Apple Developer Portal username
+
+itc_team_id("125621588") # App Store Connect Team ID
+team_id("BG25JS88W9") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
