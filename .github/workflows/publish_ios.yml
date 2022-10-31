@@ -38,9 +38,12 @@ jobs:
       - name: Setup SSH key
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+          echo 'echo $MATCH_PASSWORD' > ~/.ssh_askpass && chmod +x ~/.ssh_askpass
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None SSH_ASKPASS=~/.ssh_askpass ssh-add - >/dev/null
       - name: Download dependencies
         run: flutter pub get
       - name: Build & Publish to TestFlight with Fastlane
