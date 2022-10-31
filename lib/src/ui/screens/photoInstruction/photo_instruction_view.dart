@@ -5,7 +5,8 @@ import '../../common/widgets.dart';
 import '../view.dart';
 
 class PhotoInstructionView extends ScreenView {
-  const PhotoInstructionView() : super();
+  final Function onPressedTakePhoto;
+  const PhotoInstructionView({required this.onPressedTakePhoto}) : super();
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +14,7 @@ class PhotoInstructionView extends ScreenView {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            53.verticalSpace,
-            BackArrowButton(),
+            32.verticalSpace,
             SizedBox(
               width: 278.w,
               child: Text(
@@ -34,16 +34,16 @@ class PhotoInstructionView extends ScreenView {
             ),
             12.verticalSpace,
             Container(
-              width: 160.w,
+              width: double.infinity,
               height: 207.62.h,
               child: Image.asset(
                 'assets/images/photoInstructions_img.png',
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
               ),
             ),
             40.38.verticalSpace,
             StyledButton(
-                onPressed: () {},
+                onPressed: () => onPressedTakePhoto,
                 child: Text(
                   'TAKE PHOTO',
                 )),

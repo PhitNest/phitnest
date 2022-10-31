@@ -8,7 +8,9 @@ class PhotoInstructionProvider
   @override
   PhotoInstructionView build(
           BuildContext context, PhotoInstructionState state) =>
-      PhotoInstructionView();
+      PhotoInstructionView(
+        onPressedTakePhoto: () {},
+      );
 
   @override
   PhotoInstructionState buildState() => PhotoInstructionState();
