@@ -1,4 +1,4 @@
-git_url("https://github.com/PhitNest/apple_certificates.git")
+git_url("git@github.com:PhitNest/apple_certificates.git")
 
 storage_mode("git")
 
