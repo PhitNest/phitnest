@@ -5,9 +5,8 @@ import 'view.dart';
 /// This class holds the dynamic components of the [ScreenProvider]
 abstract class ScreenState extends ChangeNotifier {
   /// This is private to this file because we do not want other files to modify
-  /// it directly. When this is false, [ScreenProvider.buildLoading] is rendered. This
-  /// field will be set to true when the [ScreenProvider.init] method has completed, and
-  /// then the [ScreenView] will be rendered.
+  /// it directly. This field will be set to true when the [ScreenProvider.init] 
+  /// method has completed, and then the [ScreenView] will be rendered.
   bool _initialized = false;
 
   /// Whether or not [ScreenProvider.init] has completed.

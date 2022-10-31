@@ -11,7 +11,6 @@ import 'view.dart';
 /// should be of type [ScreenState] and [ScreenView] respectively. When you
 /// create a new child of [ScreenProvider], you should create a new child of [ScreenState]
 /// and [ScreenView] as well.
-// ignore: must_be_immutable
 abstract class ScreenProvider<T extends ScreenState, K extends ScreenView>
     extends StatefulWidget {
   const ScreenProvider() : super();
@@ -47,13 +46,19 @@ abstract class ScreenProvider<T extends ScreenState, K extends ScreenView>
 /// Implementation of our [ScreenProvider] class
 class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
     extends State<ScreenProvider<T, K>> {
+  /// This is the current state of the screen
   late final T state;
 
-  double get toolbarHeight => 60.h;
+  /// This is the height of the app bar
+  /// The app bar contains the backbutton and optional text
+  double get appBarHeight => 60.h;
 
+  /// This determines whether the app bar should be shown based on the view
   bool showAppBar(K view, BuildContext context) =>
       view.appBarText != null || Navigator.canPop(context);
 
+  /// Builds the state with [ScreenProvider.buildState] and calls [ScreenProvider.init]
+  /// After [ScreenProvider.init] is finished, the view is built with [ScreenProvider.build]
   @override
   initState() {
     super.initState();
@@ -61,15 +66,17 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
     widget.init(context, state).then((_) => state.initialized = true);
   }
 
+  /// This is called whenever [ScreenState.rebuildView] is called
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider.value(
       value: state,
       builder: (context, _) => Consumer<T>(builder: (context, value, child) {
             K view = widget.build(context, state);
             return Scaffold(
+              // Shows app bar if the view has app bar text or the back button should be shown
               appBar: showAppBar(view, context)
                   ? AppBar(
-                      toolbarHeight: toolbarHeight,
+                      toolbarHeight: appBarHeight,
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
                       title: Text(view.appBarText ?? "",
@@ -84,6 +91,7 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                           : null,
                     )
                   : null,
+              // The view determines whether the screen should be scrollable when the keyboard is open
               body: view.scrollable
                   ? SingleChildScrollView(
                       child: ConstrainedBox(
@@ -91,7 +99,7 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                             minWidth: 1.sw,
                             minHeight: 1.sh -
                                 (showAppBar(view, context)
-                                    ? toolbarHeight * 1.5
+                                    ? appBarHeight * 1.5
                                     : 0) -
                                 (view.navbarIndex != null
                                     ? StyledNavBar.kHeight
@@ -102,6 +110,7 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                           )),
                     )
                   : view,
+              // The view determines whether the nav bar is shown and the current index of the nav bar
               bottomNavigationBar: view.navbarIndex != null
                   ? StyledNavBar(
                       navigationEnabled: view.navigationEnabled,
@@ -114,6 +123,7 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
             );
           }));
 
+  /// Called when we leave the screen
   @override
   void dispose() {
     super.dispose();
