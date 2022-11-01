@@ -71,8 +71,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
           aws_secret_key: ${{ secrets.AWS_ACCESS_SECRET_KEY }}
-          application_name: Phitnest-API
-          environment_name: Phitnestapi-env
+          application_name: Phitnest-rest-api
+          environment_name: Phitnest-rest-api-env
           version_label: "docker-app-${{ steps.format-time.outputs.replaced }}"
           region: us-east-1
           deployment_package: deploy.zip
