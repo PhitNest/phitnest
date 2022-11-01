@@ -4,8 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'ui/screens/screens.dart';
 import 'ui/theme.dart';
 
-import 'ui/screens/news/news_provider.dart';
-
 /**
  * Use flutter run --dart-define="USE_PREVIEW=true" or add USE_PREVIEW=true to .env 
  * to use device preview.
@@ -28,8 +26,7 @@ class App extends StatelessWidget {
             theme: theme,
             debugShowCheckedModeBanner: false,
             // The app always enters at the on boarding screen.
-            //home: OnBoardingProvider(),
-            home: NewsProvider(),
+            home: OnBoardingProvider(),
           ),
         ),
       );
