@@ -1,4 +1,4 @@
-// HTTP Headers
+/// The HTTP Headers
 const String kHeaderAuthorization = 'Authorization';
 const String kHeaderProxyAuthenticate = 'Proxy-Authenticate';
 const String kHeaderProxyAuthorization = 'Proxy-Authorization';

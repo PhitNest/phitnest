@@ -1,4 +1,4 @@
-// HTTP Status code
+/// HTTP Status Code
 const int kStatusContinue = 100; // RFC 7231; 6.2.1
 const int kStatusSwitchingProtocols = 101; // RFC 7231; 6.2.2
 const int kStatusProcessing = 102; // RFC 2518; 10.1
