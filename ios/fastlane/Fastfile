@@ -37,7 +37,6 @@ platform :ios do
 
     # Download code signing certificates using `match` (and the `MATCH_PASSWORD` secret)
     sync_code_signing(
-      git_basic_authorization: ENV["GIT_AUTHORIZATION"],
       type: "appstore",
       app_identifier: APP_IDENTIFIER,
       readonly: true
