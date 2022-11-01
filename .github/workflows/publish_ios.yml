@@ -1,10 +1,8 @@
 name: Publish (iOS)
 
 on:
-  workflow_dispatch: {}
-  push:
-    branches:
-      - '!*'
+  release:
+    types: [published]
     tags:
       - 'v*'
 
@@ -18,15 +16,18 @@ jobs:
     steps:
       - name: Check out from git
         uses: actions/checkout@v2
+
       - name: Setup ruby & Bundler
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
       - name: Setup flutter
         uses: subosito/flutter-action@v2
         with:
           cache: true
           flutter-version: 3.3.2
+
       - name: Setup SSH key
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
@@ -36,10 +37,13 @@ jobs:
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
           echo 'echo $MATCH_PASSWORD' > ~/.ssh_askpass && chmod +x ~/.ssh_askpass
           echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None SSH_ASKPASS=~/.ssh_askpass ssh-add - >/dev/null
+
       - name: Setup .env
         run: cp "./.env.example.ios" "./.env"
+
       - name: Download dependencies
         run: flutter pub get
+
       - name: Build & Publish to TestFlight with Fastlane
         env:
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
