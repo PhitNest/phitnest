@@ -7,4 +7,4 @@ RUN yarn install
 COPY . /app 
 RUN yarn compile
 CMD ["yarn", "start"]
-EXPOSE 443
+EXPOSE 3000
