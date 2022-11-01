@@ -5,7 +5,6 @@ on:
     types: [published]
     tags:
       - "v*"
-
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
