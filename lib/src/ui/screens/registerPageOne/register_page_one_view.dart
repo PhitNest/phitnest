@@ -16,9 +16,6 @@ class RegisterPageOneView extends ScreenView {
       : super();
 
   @override
-  bool get scrollable => true;
-
-  @override
   Widget build(BuildContext context) => Column(
         children: [
           28.verticalSpace,

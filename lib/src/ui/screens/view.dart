@@ -20,9 +20,6 @@ abstract class ScreenView extends StatelessWidget {
   /// The current navbar page index. Set to null to hide nav bar.
   int? get navbarIndex => null;
 
-  /// Controls whether this screen is scrollable.
-  bool get scrollable => false;
-
   /// Controls whether navigation from the nav bar is enabled
   bool get navigationEnabled => true;
 }
