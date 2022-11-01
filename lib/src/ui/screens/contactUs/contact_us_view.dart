@@ -12,9 +12,6 @@ class ContactUsView extends ScreenView {
   final TextEditingController feedbackController;
   final int maxFeedbackLength;
 
-  @override
-  bool get scrollable => true;
-
   const ContactUsView(
       {required this.onPressedExit,
       required this.onPressedSubmit,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_mobile/src/ui/screens/explore/explore_provider.dart';
 import 'package:provider/provider.dart';
@@ -91,25 +92,25 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                           : null,
                     )
                   : null,
-              // The view determines whether the screen should be scrollable when the keyboard is open
-              body: view.scrollable
-                  ? SingleChildScrollView(
-                      child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minWidth: 1.sw,
-                            minHeight: 1.sh -
-                                (showAppBar(view, context)
-                                    ? appBarHeight * 1.5
-                                    : 0) -
-                                (view.navbarIndex != null
-                                    ? StyledNavBar.kHeight
-                                    : 0),
-                          ),
-                          child: IntrinsicHeight(
-                            child: view,
-                          )),
-                    )
-                  : view,
+              // The screen will be scrollable when the keyboard is open
+              body: KeyboardVisibilityBuilder(
+                builder: (context, visible) => SingleChildScrollView(
+                    physics: visible ? null : NeverScrollableScrollPhysics(),
+                    child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: 1.sw,
+                          minHeight: 1.sh -
+                              (showAppBar(view, context)
+                                  ? appBarHeight * 1.5
+                                  : 0) -
+                              (view.navbarIndex != null
+                                  ? StyledNavBar.kHeight
+                                  : 0),
+                        ),
+                        child: IntrinsicHeight(
+                          child: view,
+                        ))),
+              ),
               // The view determines whether the nav bar is shown and the current index of the nav bar
               bottomNavigationBar: view.navbarIndex != null
                   ? StyledNavBar(

@@ -14,9 +14,6 @@ class ApologyView extends ScreenView {
   final String? Function(String?) validateEmail;
   final GlobalKey<FormState> formKey;
 
-  @override
-  bool get scrollable => true;
-
   const ApologyView(
       {required this.onPressedContactUs,
       required this.onPressedSubmit,
