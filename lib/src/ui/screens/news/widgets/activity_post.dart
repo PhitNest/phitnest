@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 
-import './favourite_icon_function.dart';
+import '../models/activity_post.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ActivityPost extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final int status;
+import 'like_button.dart';
 
-  const ActivityPost(
-      {required this.title, required this.subtitle, required this.status})
+class ActivityPost extends StatelessWidget {
+  final ActivityPostModel model;
+  final Function() onPressedLike;
+
+  const ActivityPost({required this.model, required this.onPressedLike})
       : super();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 32),
+      margin: EdgeInsets.symmetric(horizontal: 32.w),
       child: Column(
         children: [
           Container(
             width: double.infinity,
             child: Text(
-              title,
+              model.title,
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
                   color: Color(0xff858585), fontWeight: FontWeight.w400),
             ),
@@ -32,19 +32,21 @@ class ActivityPost extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  width: 254,
+                  width: 254.w,
                   child: Text(
-                    subtitle,
+                    model.subtitle,
                     style: Theme.of(context)
                         .textTheme
                         .labelMedium!
                         .copyWith(fontWeight: FontWeight.w400),
                   ),
                 ),
-                FavouriteIconFunction(
-                  onPressedLiked: () {},
-                  status: status,
-                ),
+                model.liked != null
+                    ? LikeButton(
+                        onPressedLiked: onPressedLike,
+                        liked: model.liked!,
+                      )
+                    : Container()
               ],
             ),
           ),
