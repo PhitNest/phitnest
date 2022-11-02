@@ -102,6 +102,14 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                         : NeverScrollableScrollPhysics(),
                     child: ConstrainedBox(
                         constraints: BoxConstraints(
+                          maxWidth: 1.sw,
+                          maxHeight: 1.sh -
+                              (showAppBar(view, context)
+                                  ? appBarHeight * 1.5
+                                  : 0) -
+                              (view.navbarIndex != null
+                                  ? StyledNavBar.kHeight.h
+                                  : 0),
                           minWidth: 1.sw,
                           minHeight: 1.sh -
                               (showAppBar(view, context)
