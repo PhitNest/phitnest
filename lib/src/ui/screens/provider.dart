@@ -74,6 +74,9 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
       value: state,
       builder: (context, _) => Consumer<T>(builder: (context, value, child) {
             K view = widget.build(context, state);
+            double height = 1.sh -
+                (showAppBar(view, context) ? appBarHeight * 1.5 : 0) -
+                (view.navbarIndex != null ? StyledNavBar.kHeight : 0);
             return Scaffold(
               // Shows app bar if the view has app bar text or the back button should be shown
               appBar: showAppBar(view, context)
@@ -102,22 +105,10 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                         : NeverScrollableScrollPhysics(),
                     child: ConstrainedBox(
                         constraints: BoxConstraints(
-                          maxWidth: 1.sw,
-                          maxHeight: 1.sh -
-                              (showAppBar(view, context)
-                                  ? appBarHeight * 1.5
-                                  : 0) -
-                              (view.navbarIndex != null
-                                  ? StyledNavBar.kHeight.h
-                                  : 0),
                           minWidth: 1.sw,
-                          minHeight: 1.sh -
-                              (showAppBar(view, context)
-                                  ? appBarHeight * 1.5
-                                  : 0) -
-                              (view.navbarIndex != null
-                                  ? StyledNavBar.kHeight.h
-                                  : 0),
+                          maxWidth: 1.sw,
+                          minHeight: height,
+                          maxHeight: height,
                         ),
                         child: IntrinsicHeight(
                           child: view,
