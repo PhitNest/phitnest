@@ -25,5 +25,8 @@ class TextInputField extends StatelessWidget {
               .copyWith(color: Color(0xFF999999)),
           border: MaterialStateUnderlineInputBorder.resolveWith((state) =>
               UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFDADADA))))));
+                  borderSide: BorderSide(
+                      color: state.contains(MaterialState.focused)
+                          ? Colors.black
+                          : Color(0xFFDADADA))))));
 }

@@ -12,7 +12,6 @@ class ContactUsView extends ScreenView {
   final TextEditingController emailController;
   final TextEditingController feedbackController;
   final int maxFeedbackLength;
-  final FocusNode feedbackFocus;
 
   const ContactUsView(
       {required this.onPressedExit,
@@ -21,9 +20,11 @@ class ContactUsView extends ScreenView {
       required this.emailController,
       required this.onPressedDoneEditing,
       required this.feedbackController,
-      required this.feedbackFocus,
       required this.maxFeedbackLength})
       : super();
+
+  @override
+  bool get scrollEnabled => true;
 
   @override
   Widget build(BuildContext context) =>
@@ -37,56 +38,39 @@ class ContactUsView extends ScreenView {
               textAlign: TextAlign.center,
             )),
         40.verticalSpace,
-        AnimatedCrossFade(
-          firstChild: Container(
+        Container(
             width: 301.w,
             child: Text(
               "Your input is invaluable in building\nstronger and healthier\ncommunities together.",
               style: Theme.of(context).textTheme.labelLarge,
               textAlign: TextAlign.center,
-            ),
-          ),
-          secondChild: Container(),
-          duration: Duration(milliseconds: 500),
-          crossFadeState: feedbackFocus.hasFocus
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
-        ),
+            )),
         30.verticalSpace,
         SizedBox(
           width: 291.w,
           child: Form(
             child: Column(children: [
-              AnimatedCrossFade(
-                  firstChild: Column(children: [
-                    SizedBox(
-                      height: 34.h,
-                      child: TextInputField(
-                        hint: 'Name',
-                        controller: nameController,
-                        inputAction: TextInputAction.next,
-                      ),
-                    ),
-                    16.verticalSpace,
-                    SizedBox(
-                      height: 34.h,
-                      child: TextInputField(
-                          hint: 'Email',
-                          controller: emailController,
-                          inputAction: TextInputAction.next),
-                    ),
-                    42.verticalSpace,
-                  ]),
-                  secondChild: Container(),
-                  duration: Duration(milliseconds: 500),
-                  crossFadeState: feedbackFocus.hasPrimaryFocus
-                      ? CrossFadeState.showSecond
-                      : CrossFadeState.showFirst),
+              SizedBox(
+                height: 34.h,
+                child: TextInputField(
+                  hint: 'Name',
+                  controller: nameController,
+                  inputAction: TextInputAction.next,
+                ),
+              ),
+              16.verticalSpace,
+              SizedBox(
+                height: 34.h,
+                child: TextInputField(
+                    hint: 'Email',
+                    controller: emailController,
+                    inputAction: TextInputAction.next),
+              ),
+              42.verticalSpace,
               SizedBox(
                 height: 106.h,
                 child: TextField(
                     controller: feedbackController,
-                    focusNode: feedbackFocus,
                     textAlignVertical: TextAlignVertical.top,
                     textAlign: TextAlign.left,
                     expands: true,
@@ -106,18 +90,14 @@ class ContactUsView extends ScreenView {
             ]),
           ),
         ),
-        feedbackFocus.hasFocus ? 30.verticalSpace : 39.verticalSpace,
+        39.verticalSpace,
         StyledButton(
-          child: Text(feedbackFocus.hasFocus ? 'DONE' : 'SUBMIT'),
-          onPressed:
-              feedbackFocus.hasFocus ? onPressedDoneEditing : onPressedSubmit,
+          child: Text('SUBMIT'),
+          onPressed: onPressedSubmit,
         ),
-        feedbackFocus.hasFocus
-            ? 10.verticalSpace
-            : Expanded(child: Container()),
+        Expanded(child: Container()),
         TextButton(
-          onPressed:
-              feedbackFocus.hasFocus ? onPressedDoneEditing : onPressedExit,
+          onPressed: onPressedExit,
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.transparent)),
           child: Text(

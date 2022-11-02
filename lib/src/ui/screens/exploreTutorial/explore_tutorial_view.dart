@@ -55,6 +55,11 @@ class ExploreTutorialView extends ScreenView {
                       'Let’s meet friends in your Nest',
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
+                    Expanded(
+                      child: Container(),
+                    ),
+                    Text('Hold the button below to complete the tutorial'),
+                    32.verticalSpace,
                   ],
                 ),
               ),
