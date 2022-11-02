@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_mobile/src/ui/screens/explore/explore_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../common/widgets.dart';
+import 'screens.dart';
 import 'state.dart';
 import 'view.dart';
 
@@ -51,10 +50,6 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
   /// This is the current state of the screen
   late final T state;
 
-  /// This is the height of the app bar
-  /// The app bar contains the backbutton and optional text
-  double get appBarHeight => 60.h;
-
   /// This determines whether the app bar should be shown based on the view
   bool showAppBar(K view, BuildContext context) =>
       view.appBarText != null || Navigator.canPop(context);
@@ -74,46 +69,36 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
       value: state,
       builder: (context, _) => Consumer<T>(builder: (context, value, child) {
             K view = widget.build(context, state);
+            // Calculate screen height based on whether the appbar or navbar are shown
             double height = 1.sh -
-                (showAppBar(view, context) ? appBarHeight * 1.5 : 0) -
+                (showAppBar(view, context) ? view.appBarHeight * 1.5 : 0) -
                 (view.navbarIndex != null ? StyledNavBar.kHeight : 0);
-            return Scaffold(
+            Scaffold screen = Scaffold(
               // Shows app bar if the view has app bar text or the back button should be shown
               appBar: showAppBar(view, context)
                   ? AppBar(
                       systemOverlayStyle: SystemUiOverlayStyle.dark,
-                      toolbarHeight: appBarHeight,
+                      toolbarHeight: view.appBarHeight,
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
                       title: Text(view.appBarText ?? "",
                           style: Theme.of(context).textTheme.headlineMedium),
-                      leadingWidth: 64,
-                      leading: Navigator.of(context).canPop()
-                          ? Container(
-                              padding: EdgeInsets.only(left: 8.w),
-                              alignment: AlignmentDirectional.bottomCenter,
-                              height: double.infinity,
-                              child: BackArrowButton())
-                          : null,
-                    )
+                      leadingWidth: 64.w,
+                      leading: view.backButton)
                   : null,
-              // The screen will be scrollable when the keyboard is open
-              body: KeyboardVisibilityBuilder(
-                builder: (context, visible) => SingleChildScrollView(
-                    physics: visible && !view.disableKeyboardScroll
-                        ? null
-                        : NeverScrollableScrollPhysics(),
-                    child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minWidth: 1.sw,
-                          maxWidth: 1.sw,
-                          minHeight: height,
-                          maxHeight: height,
-                        ),
-                        child: IntrinsicHeight(
-                          child: view,
-                        ))),
-              ),
+              // To prevent overflows
+              body: SingleChildScrollView(
+                  physics: NeverScrollableScrollPhysics(),
+                  child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: 1.sw,
+                        maxWidth: 1.sw,
+                        minHeight: height,
+                        maxHeight: height,
+                      ),
+                      child: IntrinsicHeight(
+                        child: view,
+                      ))),
               // The view determines whether the nav bar is shown and the current index of the nav bar
               bottomNavigationBar: view.navbarIndex != null
                   ? StyledNavBar(
@@ -125,6 +110,10 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                     )
                   : null,
             );
+            return showAppBar(view, context)
+                ? screen
+                : AnnotatedRegion<SystemUiOverlayStyle>(
+                    child: screen, value: SystemUiOverlayStyle.dark);
           }));
 
   /// Called when we leave the screen

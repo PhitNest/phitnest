@@ -12,6 +12,7 @@ class LoginProvider extends ScreenProvider<LoginState, LoginView> {
         emailController: state.emailController,
         passwordController: state.passwordController,
         onPressedSignIn: () {},
+        keyboardVisible: state.keyboardVisible,
         onPressedForgotPassword: () {},
         onPressedRegister: () => Navigator.push(
             context,

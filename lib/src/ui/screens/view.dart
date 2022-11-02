@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../common/widgets.dart';
 import 'state.dart';
 import 'provider.dart';
 
@@ -17,12 +19,19 @@ abstract class ScreenView extends StatelessWidget {
   /// This will display in the AppBar
   String? get appBarText => null;
 
+  /// This is the height of the app bar
+  /// The app bar contains the backbutton and optional text
+  double get appBarHeight => 60.h;
+
   /// The current navbar page index. Set to null to hide nav bar.
   int? get navbarIndex => null;
 
   /// Controls whether navigation from the nav bar is enabled
   bool get navigationEnabled => true;
 
-  /// Disables intrinsic scrolling when the keyboard is open
-  bool get disableKeyboardScroll => false;
+  Widget get backButton => Container(
+      padding: EdgeInsets.only(left: 8.w),
+      alignment: AlignmentDirectional.bottomCenter,
+      height: double.infinity,
+      child: BackArrowButton());
 }

@@ -11,19 +11,22 @@ class GymSearchView extends ScreenView {
   final TextEditingController searchController;
   final List<GymCard> cards;
   final Function() onEditSearch;
-  final FocusNode keyboardFocus;
-
-  @override
-  bool get disableKeyboardScroll => true;
+  final bool keyboardVisible;
 
   const GymSearchView({
     required this.onPressedConfirm,
     required this.errorMessage,
-    required this.keyboardFocus,
     required this.searchController,
     required this.onEditSearch,
+    required this.keyboardVisible,
     required this.cards,
   }) : super();
+
+  @override
+  double get appBarHeight => keyboardVisible ? 20.h : super.appBarHeight;
+
+  @override
+  Widget get backButton => keyboardVisible ? Container() : super.backButton;
 
   @override
   Widget build(BuildContext context) => Column(children: [
@@ -35,7 +38,6 @@ class GymSearchView extends ScreenView {
                 textAlignVertical: TextAlignVertical.center,
                 style: Theme.of(context).textTheme.labelMedium,
                 controller: searchController,
-                focusNode: keyboardFocus,
                 keyboardType: TextInputType.streetAddress,
                 onChanged: (_) => onEditSearch(),
                 decoration: InputDecoration(
@@ -57,9 +59,9 @@ class GymSearchView extends ScreenView {
             child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: ListView(children: cards))),
-        10.verticalSpace,
+        keyboardVisible ? 300.verticalSpace : 10.verticalSpace,
         Visibility(
-            visible: !keyboardFocus.hasFocus,
+            visible: !keyboardVisible,
             child: Padding(
                 padding: EdgeInsets.only(bottom: 44.h),
                 child: StyledButton(

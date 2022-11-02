@@ -13,11 +13,6 @@ import 'gym_search_view.dart';
  */
 class GymSearchState extends ScreenState {
   final TextEditingController searchController = TextEditingController();
-  final FocusNode keyboardFocus = FocusNode();
-
-  GymSearchState() {
-    keyboardFocus.addListener(rebuildView);
-  }
 
   String? _errorMessage;
 
@@ -49,7 +44,6 @@ class GymSearchState extends ScreenState {
   @override
   void dispose() {
     searchController.dispose();
-    keyboardFocus.dispose();
     super.dispose();
   }
 }

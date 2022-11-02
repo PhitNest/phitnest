@@ -13,12 +13,18 @@ class ContactUsState extends ScreenState {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController feedbackController = TextEditingController();
+  final FocusNode feedbackFocus = FocusNode();
+
+  ContactUsState() : super() {
+    feedbackFocus.addListener(rebuildView);
+  }
 
   @override
   void dispose() {
     nameController.dispose();
     emailController.dispose();
     feedbackController.dispose();
+    feedbackFocus.dispose();
     super.dispose();
   }
 }

@@ -7,7 +7,7 @@ import '../screens/screens.dart';
 import 'no_animation_page_route.dart';
 
 class StyledNavBar extends StatelessWidget {
-  static double get kHeight => Platform.isIOS ? 85.h : 66.h;
+  static double get kHeight => 66.h;
 
   final int pageIndex;
   final Function(TapDownDetails? details) onTapDownLogo;
@@ -28,7 +28,6 @@ class StyledNavBar extends StatelessWidget {
           BuildContext context, String text, Function() onPressed, int index) =>
       TextButton(
           style: ButtonStyle(
-              padding: MaterialStateProperty.all(EdgeInsets.only(right: 15.w)),
               overlayColor: MaterialStateProperty.all(Colors.transparent)),
           child: Text(text,
               style: index == pageIndex
@@ -57,58 +56,65 @@ class StyledNavBar extends StatelessWidget {
           ],
         ),
         child: Ink(
-          width: double.infinity,
-          height: double.maxFinite,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              15.horizontalSpace,
-              createButton(
-                  context,
-                  'NEWS',
-                  () => Navigator.pushAndRemoveUntil(
+            width: double.infinity,
+            height: double.maxFinite,
+            child: Padding(
+              padding: EdgeInsets.only(top: kHeight * 0.1),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  10.verticalSpace,
+                  createButton(
                       context,
-                      NoAnimationMaterialPageRoute(
-                          builder: (context) => NewsProvider()),
-                      (route) => false),
-                  0),
-              createButton(
-                  context,
-                  'EXPLORE',
-                  () => Navigator.pushAndRemoveUntil(
+                      'NEWS',
+                      () => Navigator.pushAndRemoveUntil(
+                          context,
+                          NoAnimationMaterialPageRoute(
+                              builder: (context) => NewsProvider()),
+                          (route) => false),
+                      0),
+                  10.verticalSpace,
+                  createButton(
                       context,
-                      NoAnimationMaterialPageRoute(
-                          builder: (context) => ExploreProvider()),
-                      (route) => false),
-                  1),
-              GestureDetector(
-                onTapDown: onTapDownLogo,
-                onTapUp: onTapUpLogo,
-                child: Image.asset(
-                  kColoredLogoPath,
-                  width: 38.62.w,
-                ),
+                      'EXPLORE',
+                      () => Navigator.pushAndRemoveUntil(
+                          context,
+                          NoAnimationMaterialPageRoute(
+                              builder: (context) => ExploreProvider()),
+                          (route) => false),
+                      1),
+                  10.verticalSpace,
+                  GestureDetector(
+                    onTapDown: onTapDownLogo,
+                    onTapUp: onTapUpLogo,
+                    child: Image.asset(
+                      kColoredLogoPath,
+                      width: 38.62.w,
+                    ),
+                  ),
+                  createButton(
+                      context,
+                      'CHAT',
+                      () => Navigator.pushAndRemoveUntil(
+                          context,
+                          NoAnimationMaterialPageRoute(
+                              builder: (context) => ChatProvider()),
+                          (route) => false),
+                      2),
+                  10.verticalSpace,
+                  createButton(
+                      context,
+                      'OPTIONS',
+                      () => Navigator.pushAndRemoveUntil(
+                          context,
+                          NoAnimationMaterialPageRoute(
+                              builder: (context) => OptionsProvider()),
+                          (route) => false),
+                      3),
+                  10.verticalSpace,
+                ],
               ),
-              createButton(
-                  context,
-                  'CHAT',
-                  () => Navigator.pushAndRemoveUntil(
-                      context,
-                      NoAnimationMaterialPageRoute(
-                          builder: (context) => ChatProvider()),
-                      (route) => false),
-                  2),
-              createButton(
-                  context,
-                  'OPTIONS',
-                  () => Navigator.pushAndRemoveUntil(
-                      context,
-                      NoAnimationMaterialPageRoute(
-                          builder: (context) => OptionsProvider()),
-                      (route) => false),
-                  3),
-            ],
-          ),
-        ),
+            )),
       );
 }

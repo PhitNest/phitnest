@@ -10,6 +10,7 @@ class LoginView extends ScreenView {
   final Function() onPressedSignIn;
   final Function() onPressedForgotPassword;
   final Function() onPressedRegister;
+  final bool keyboardVisible;
 
   LoginView({
     required this.emailController,
@@ -17,13 +18,14 @@ class LoginView extends ScreenView {
     required this.onPressedSignIn,
     required this.onPressedForgotPassword,
     required this.onPressedRegister,
+    required this.keyboardVisible,
   }) : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Column(
           children: [
-            112.verticalSpace,
+            keyboardVisible ? 70.verticalSpace : 112.verticalSpace,
             LogoWidget(width: 72.w),
             26.verticalSpace,
             Text(
@@ -31,7 +33,7 @@ class LoginView extends ScreenView {
               style: Theme.of(context).textTheme.headlineMedium,
               textAlign: TextAlign.center,
             ),
-            54.verticalSpace,
+            keyboardVisible ? 40.verticalSpace : 54.verticalSpace,
             SizedBox(
               width: 291.w,
               child: Form(
@@ -41,6 +43,7 @@ class LoginView extends ScreenView {
                       height: 34.h,
                       child: TextInputField(
                         hint: 'Email',
+                        inputAction: TextInputAction.next,
                         controller: emailController,
                       ),
                     ),
@@ -49,6 +52,7 @@ class LoginView extends ScreenView {
                       height: 34.h,
                       child: TextInputField(
                         hint: 'Password',
+                        inputAction: TextInputAction.done,
                         controller: passwordController,
                       ),
                     ),

@@ -13,6 +13,7 @@ class ApologyView extends ScreenView {
   final String? Function(String?) validateFirstName;
   final String? Function(String?) validateEmail;
   final GlobalKey<FormState> formKey;
+  final bool keyboardVisible;
 
   const ApologyView(
       {required this.onPressedContactUs,
@@ -22,6 +23,7 @@ class ApologyView extends ScreenView {
       required this.autovalidateMode,
       required this.validateFirstName,
       required this.validateEmail,
+      required this.keyboardVisible,
       required this.formKey});
 
   @override
@@ -37,15 +39,21 @@ class ApologyView extends ScreenView {
             ),
           ),
           40.verticalSpace,
-          SizedBox(
-            width: 301.w,
-            child: Text(
-              "PhitNest is currently available to select fitness club locations only.\n\n\nMay we contact you when this changes?",
-              style: Theme.of(context).textTheme.labelLarge,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          40.verticalSpace,
+          AnimatedCrossFade(
+              duration: Duration(milliseconds: 500),
+              firstChild: Container(
+                padding: EdgeInsets.only(bottom: 40.h),
+                width: 301.w,
+                child: Text(
+                  "PhitNest is currently available to\nselect fitness club locations only.\n\n\nMay we contact you when this\nchanges?",
+                  style: Theme.of(context).textTheme.labelLarge,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              secondChild: Container(),
+              crossFadeState: keyboardVisible
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst),
           SizedBox(
             width: 291.w,
             child: Form(
@@ -55,6 +63,7 @@ class ApologyView extends ScreenView {
                 SizedBox(
                   height: 34.h,
                   child: TextInputField(
+                      inputAction: TextInputAction.next,
                       controller: nameController,
                       hint: 'Name',
                       validator: validateFirstName),
@@ -63,6 +72,7 @@ class ApologyView extends ScreenView {
                 SizedBox(
                   height: 34.h,
                   child: TextInputField(
+                      inputAction: TextInputAction.done,
                       controller: emailController,
                       hint: 'Email',
                       validator: validateEmail),
@@ -75,7 +85,7 @@ class ApologyView extends ScreenView {
             child: Text('SUBMIT'),
             onPressed: onPressedSubmit,
           ),
-          Expanded(child: Container()),
+          keyboardVisible ? 25.verticalSpace : Expanded(child: Container()),
           TextButton(
             onPressed: onPressedContactUs,
             style: ButtonStyle(
