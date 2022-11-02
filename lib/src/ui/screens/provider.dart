@@ -95,7 +95,9 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
               // The screen will be scrollable when the keyboard is open
               body: KeyboardVisibilityBuilder(
                 builder: (context, visible) => SingleChildScrollView(
-                    physics: visible ? null : NeverScrollableScrollPhysics(),
+                    physics: visible && !view.disableKeyboardScroll
+                        ? null
+                        : NeverScrollableScrollPhysics(),
                     child: ConstrainedBox(
                         constraints: BoxConstraints(
                           minWidth: 1.sw,
