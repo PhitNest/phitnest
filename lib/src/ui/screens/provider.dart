@@ -108,7 +108,7 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                                   ? appBarHeight * 1.5
                                   : 0) -
                               (view.navbarIndex != null
-                                  ? StyledNavBar.kHeight
+                                  ? StyledNavBar.kHeight.h
                                   : 0),
                         ),
                         child: IntrinsicHeight(
