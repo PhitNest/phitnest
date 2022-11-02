@@ -3,8 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CountdownRing extends StatelessWidget {
   final int countdownNum;
+  final bool dark;
 
-  const CountdownRing({Key? key, required this.countdownNum}) : super(key: key);
+  Color get color => dark ? Color(0xffE9E8E8) : Colors.white;
+
+  const CountdownRing({Key? key, required this.countdownNum, this.dark = true})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,7 @@ class CountdownRing extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: Color(0xffE9E8E8),
+          color: color,
           width: 6.0,
         ),
       ),
@@ -22,7 +26,7 @@ class CountdownRing extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-            color: Color(0xffE9E8E8),
+            color: color,
           ),
         ),
         child: Padding(
@@ -33,7 +37,7 @@ class CountdownRing extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: Color(0xffE9E8E8),
+                color: color,
                 width: 6.0,
               ),
             ),
@@ -41,15 +45,15 @@ class CountdownRing extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Color(0xffE9E8E8),
+                  color: color,
                 ),
               ),
               child: Center(
                 child: Text(
                   '$countdownNum',
                   style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                        fontSize: 128.sp,
-                      ),
+                      fontSize: 128.sp,
+                      color: dark ? Colors.black : Colors.white),
                 ),
               ),
             ),

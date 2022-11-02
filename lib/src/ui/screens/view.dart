@@ -19,6 +19,9 @@ abstract class ScreenView extends StatelessWidget {
   /// This will display in the AppBar
   String? get appBarText => null;
 
+  /// Whether or not the screen can scroll when overflowed
+  bool get scrollEnabled => false;
+
   /// This is the height of the app bar
   /// The app bar contains the backbutton and optional text
   double get appBarHeight => 60.h;
@@ -29,9 +32,13 @@ abstract class ScreenView extends StatelessWidget {
   /// Controls whether navigation from the nav bar is enabled
   bool get navigationEnabled => true;
 
+  /// Back button displayed in top left corner
   Widget get backButton => Container(
       padding: EdgeInsets.only(left: 8.w),
       alignment: AlignmentDirectional.bottomCenter,
       height: double.infinity,
       child: BackArrowButton());
+
+  /// Controls whether the system overlay is light or dark
+  bool get systemOverlayDark => true;
 }

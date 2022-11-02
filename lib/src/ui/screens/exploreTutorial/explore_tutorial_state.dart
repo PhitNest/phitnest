@@ -19,4 +19,10 @@ class ExploreTutorialState extends ScreenState {
     _holding = holding;
     rebuildView();
   }
+
+  @override
+  dispose() {
+    counter?.cancel();
+    super.dispose();
+  }
 }

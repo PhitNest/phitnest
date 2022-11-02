@@ -5,19 +5,37 @@ import '../../common/widgets.dart';
 import '../view.dart';
 
 class ExploreView extends ScreenView {
-  const ExploreView() : super();
+  final bool holding;
+  final int countdown;
+
+  ExploreView({
+    required this.holding,
+    required this.countdown,
+  }) : super();
 
   @override
   int? get navbarIndex => 1;
 
   @override
+  bool get systemOverlayDark => false;
+
+  @override
   Widget build(BuildContext context) => Column(
         children: [
-          Image.asset(
-            'assets/images/selfie.png',
+          SizedBox(
             width: 375.w,
             height: 333.h,
-            fit: BoxFit.cover,
+            child: Stack(fit: StackFit.expand, children: [
+              Image.asset(
+                'assets/images/selfie.png',
+                fit: BoxFit.cover,
+              ),
+              holding
+                  ? Center(
+                      child:
+                          CountdownRing(countdownNum: countdown, dark: false))
+                  : Container()
+            ]),
           ),
           120.verticalSpace,
           Row(

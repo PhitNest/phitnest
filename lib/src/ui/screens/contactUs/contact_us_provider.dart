@@ -16,7 +16,6 @@ class ContactUsProvider extends ScreenProvider<ContactUsState, ContactUsView> {
         emailController: state.emailController,
         feedbackController: state.feedbackController,
         maxFeedbackLength: kMaxFeedbackLength,
-        feedbackFocus: state.feedbackFocus,
         onPressedDoneEditing: () => state.feedbackFocus.unfocus(),
         onPressedExit: () {},
         onPressedSubmit: () => Navigator.pushAndRemoveUntil(

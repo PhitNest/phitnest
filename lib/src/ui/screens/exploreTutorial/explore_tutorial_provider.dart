@@ -15,13 +15,14 @@ class ExploreTutorialProvider
     state.holding = true;
     state.countdown = 3;
     state.counter = new Timer.periodic(Duration(seconds: 1), (timer) {
-      state.countdown = state.countdown - 1;
-      if (state.countdown == 0) {
+      if (state.countdown == 1) {
         Navigator.pushAndRemoveUntil(
             context,
             NoAnimationMaterialPageRoute(
                 builder: (context) => ExploreProvider()),
             (_) => false);
+      } else {
+        state.countdown = state.countdown - 1;
       }
     });
   }

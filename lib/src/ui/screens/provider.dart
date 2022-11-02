@@ -77,7 +77,9 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
               // Shows app bar if the view has app bar text or the back button should be shown
               appBar: showAppBar(view, context)
                   ? AppBar(
-                      systemOverlayStyle: SystemUiOverlayStyle.dark,
+                      systemOverlayStyle: view.systemOverlayDark
+                          ? SystemUiOverlayStyle.dark
+                          : SystemUiOverlayStyle.light,
                       toolbarHeight: view.appBarHeight,
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
@@ -88,7 +90,9 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                   : null,
               // To prevent overflows
               body: SingleChildScrollView(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: view.scrollEnabled
+                      ? null
+                      : NeverScrollableScrollPhysics(),
                   child: ConstrainedBox(
                       constraints: BoxConstraints(
                         minWidth: 1.sw,
@@ -113,7 +117,10 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
             return showAppBar(view, context)
                 ? screen
                 : AnnotatedRegion<SystemUiOverlayStyle>(
-                    child: screen, value: SystemUiOverlayStyle.dark);
+                    child: screen,
+                    value: view.systemOverlayDark
+                        ? SystemUiOverlayStyle.dark
+                        : SystemUiOverlayStyle.light);
           }));
 
   /// Called when we leave the screen
