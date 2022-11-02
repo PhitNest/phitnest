@@ -13,7 +13,7 @@ class LocationRepository extends Repository {
       .get(
         repositories<EnvironmentRepository>().getBackendAddress(
             kNearestGymRoute,
-            params: {...location.toJson(), "distance": "100"}),
+            params: {...location.toJson(), "distance": "30000"}),
       )
       .then((response) => response.statusCode == kStatusOK
           ? Gym.fromJson(jsonDecode(response.body))
@@ -22,7 +22,7 @@ class LocationRepository extends Repository {
   Future<List<Gym>> getNearestGyms(Location location) => http
       .get(
         repositories<EnvironmentRepository>().getBackendAddress(kListGymsRoute,
-            params: {...location.toJson(), "distance": "100"}),
+            params: {...location.toJson(), "distance": "30000"}),
       )
       .then((response) => response.statusCode == kStatusOK
           ? List<Gym>.from(
