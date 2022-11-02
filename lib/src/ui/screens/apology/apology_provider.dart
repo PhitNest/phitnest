@@ -20,6 +20,7 @@ class ApologyProvider extends ScreenProvider<ApologyState, ApologyView> {
       emailController: state.emailController,
       validateFirstName: validateFirstName,
       validateEmail: validateEmail,
+      keyboardVisible: state.keyboardVisible,
       formKey: state.formKey);
 
   @override

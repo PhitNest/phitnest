@@ -11,6 +11,7 @@ class RegisterPageOneProvider
       RegisterPageOneView(
         firstNameController: state.firstNameController,
         lastNameController: state.lastNameController,
+        keyboardVisible: state.keyboardVisible,
         onPressedNext: () {},
       );
 

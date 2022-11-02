@@ -8,10 +8,12 @@ class RegisterPageOneView extends ScreenView {
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
   final Function() onPressedNext;
+  final bool keyboardVisible;
 
   RegisterPageOneView(
       {required this.firstNameController,
       required this.lastNameController,
+      required this.keyboardVisible,
       required this.onPressedNext})
       : super();
 
@@ -35,6 +37,7 @@ class RegisterPageOneView extends ScreenView {
                     child: TextInputField(
                       hint: 'First Name',
                       controller: firstNameController,
+                      inputAction: TextInputAction.next,
                     ),
                   ),
                   16.verticalSpace,
@@ -49,12 +52,12 @@ class RegisterPageOneView extends ScreenView {
               ),
             ),
           ),
-          Expanded(child: Container()),
+          keyboardVisible ? 65.verticalSpace : Expanded(child: Container()),
           StyledButton(
             onPressed: onPressedNext,
             child: Text('NEXT'),
           ),
-          116.verticalSpace,
+          keyboardVisible ? Container() : 116.verticalSpace,
         ],
       );
 }
