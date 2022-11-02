@@ -22,4 +22,7 @@ abstract class ScreenView extends StatelessWidget {
 
   /// Controls whether navigation from the nav bar is enabled
   bool get navigationEnabled => true;
+
+  /// Disables intrinsic scrolling when the keyboard is open
+  bool get disableKeyboardScroll => false;
 }
