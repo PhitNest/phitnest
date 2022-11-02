@@ -5,7 +5,7 @@ import '../screens/screens.dart';
 import 'no_animation_page_route.dart';
 
 class StyledNavBar extends StatelessWidget {
-  static const double kHeight = 80;
+  static const double kHeight = 100;
 
   final int pageIndex;
   final Function(TapDownDetails? details) onTapDownLogo;
@@ -26,6 +26,7 @@ class StyledNavBar extends StatelessWidget {
           BuildContext context, String text, Function() onPressed, int index) =>
       TextButton(
           style: ButtonStyle(
+              padding: MaterialStateProperty.all(EdgeInsets.only(right: 15.w)),
               overlayColor: MaterialStateProperty.all(Colors.transparent)),
           child: Text(text,
               style: index == pageIndex
@@ -42,7 +43,7 @@ class StyledNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: kHeight,
+      height: kHeight.h,
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -59,8 +60,8 @@ class StyledNavBar extends StatelessWidget {
         width: double.infinity,
         height: double.maxFinite,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            15.horizontalSpace,
             createButton(
                 context,
                 'NEWS',
@@ -84,8 +85,7 @@ class StyledNavBar extends StatelessWidget {
               onTapUp: onTapUpLogo,
               child: Image.asset(
                 kColoredLogoPath,
-                width: 50.0.w,
-                height: 38.62.h,
+                width: 48.62.w,
               ),
             ),
             createButton(
