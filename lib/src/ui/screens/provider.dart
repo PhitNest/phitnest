@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_mobile/src/ui/screens/explore/explore_provider.dart';
@@ -77,6 +78,7 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
               // Shows app bar if the view has app bar text or the back button should be shown
               appBar: showAppBar(view, context)
                   ? AppBar(
+                      systemOverlayStyle: SystemUiOverlayStyle.dark,
                       toolbarHeight: appBarHeight,
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
