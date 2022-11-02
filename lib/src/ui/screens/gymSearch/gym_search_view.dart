@@ -13,6 +13,9 @@ class GymSearchView extends ScreenView {
   final Function() onEditSearch;
   final FocusNode keyboardFocus;
 
+  @override
+  bool get disableKeyboardScroll => true;
+
   const GymSearchView({
     required this.onPressedConfirm,
     required this.errorMessage,
