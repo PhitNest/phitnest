@@ -1,5 +1,4 @@
-import checkEnv from "./common/env";
-checkEnv();
+import "./common/env";
 
 import Database from "./common/database";
 import Server from "./common/server";
