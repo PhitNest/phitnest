@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'ui/screens/screens.dart';
 import 'ui/theme.dart';
+import 'ui/screens/photoAccepted/photo_accepted_provider.dart';
 
 /**
  * Use flutter run --dart-define="USE_PREVIEW=true" or add USE_PREVIEW=true to .env 
@@ -26,7 +27,8 @@ class App extends StatelessWidget {
             theme: theme,
             debugShowCheckedModeBanner: false,
             // The app always enters at the on boarding screen.
-            home: OnBoardingProvider(),
+            //home: OnBoardingProvider(),
+            home: PhotoAcceptedProvider(),
           ),
         ),
       );

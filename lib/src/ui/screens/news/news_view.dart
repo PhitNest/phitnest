@@ -61,7 +61,7 @@ class NewsView extends ScreenView {
           ),
         ),
         Container(
-          height: 490.h,
+          height: 430.h,
           child: ListView.builder(
             itemCount: posts.length,
             itemBuilder: (context, index) {
