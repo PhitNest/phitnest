@@ -85,7 +85,7 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                       shadowColor: Colors.transparent,
                       title: Text(view.appBarText ?? "",
                           style: Theme.of(context).textTheme.headlineMedium),
-                      leadingWidth: 64.w,
+                      leadingWidth: 112.w,
                       leading: view.backButton)
                   : null,
               // To prevent overflows
