@@ -30,7 +30,9 @@ abstract class NavBarScreenView extends ScreenView {
       body: SingleChildScrollView(
           physics: scrollEnabled ? null : NeverScrollableScrollPhysics(),
           child: SizedBox(
-              height: 1.sh - (showAppBar(context) ? appBarHeight : 0),
+              height: 1.sh -
+                  (showAppBar(context) ? appBarHeight : 0) -
+                  StyledNavBar.kHeight,
               width: 1.sw,
               child: buildView(context))),
       bottomNavigationBar: StyledNavBar(
