@@ -8,7 +8,6 @@ import 'explore_state.dart';
 import 'explore_view.dart';
 
 class ExploreProvider extends ScreenProvider<ExploreState, ExploreView> {
-  @override
   onTapDownLogo(BuildContext context, ExploreState state) {
     state.holding = true;
     state.countdown = 3;
@@ -25,7 +24,6 @@ class ExploreProvider extends ScreenProvider<ExploreState, ExploreView> {
     });
   }
 
-  @override
   onTapUpLogo(BuildContext context, ExploreState state) {
     state.holding = false;
     state.counter?.cancel();
@@ -35,6 +33,8 @@ class ExploreProvider extends ScreenProvider<ExploreState, ExploreView> {
   ExploreView build(BuildContext context, ExploreState state) => ExploreView(
         holding: state.holding,
         countdown: state.countdown,
+        onLogoTap: (context) => onTapDownLogo(context, state),
+        onLogoRelease: (context) => onTapUpLogo(context, state),
       );
 
   @override

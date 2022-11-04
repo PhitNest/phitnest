@@ -1,8 +1,12 @@
+import 'package:meta/meta.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../common/styled_app_bar.dart';
 import '../common/widgets.dart';
 import 'state.dart';
 import 'provider.dart';
+
+export 'nav_bar_view.dart';
 
 /// Holds the UI elements of a screen. All variables should be defined in the
 /// [ScreenState] class associated with the [ScreenProvider] this class corresponds to.
@@ -16,6 +20,22 @@ import 'provider.dart';
 abstract class ScreenView extends StatelessWidget {
   const ScreenView() : super();
 
+  /// Builds the UI of the screen
+  Widget buildView(BuildContext context);
+
+  /// Constructs the scaffold with the app bar and navbar
+  @nonVirtual
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: appBar(context),
+        body: SingleChildScrollView(
+            physics: scrollEnabled ? null : NeverScrollableScrollPhysics(),
+            child: SizedBox(
+                height: 1.sh - (showAppBar(context) ? appBarHeight : 0),
+                width: 1.sw,
+                child: buildView(context))),
+      );
+
   /// This will display in the AppBar
   String? get appBarText => null;
 
@@ -26,11 +46,21 @@ abstract class ScreenView extends StatelessWidget {
   /// The app bar contains the backbutton and optional text
   double get appBarHeight => 60.h;
 
-  /// The current navbar page index. Set to null to hide nav bar.
-  int? get navbarIndex => null;
+  /// Control whether or not the app bar is shown
+  bool showAppBar(BuildContext context) =>
+      appBarText != null || Navigator.canPop(context);
 
-  /// Controls whether navigation from the nav bar is enabled
-  bool get navigationEnabled => true;
+  /// Builds the app bar
+  @nonVirtual
+  StyledAppBar? appBar(BuildContext context) => showAppBar(context)
+      ? StyledAppBar(
+          context: context,
+          height: appBarHeight,
+          text: appBarText,
+          backButton: backButton,
+          systemOverlayDark: systemOverlayDark,
+        )
+      : null;
 
   /// Back button displayed in top left corner
   Widget get backButton => Container(

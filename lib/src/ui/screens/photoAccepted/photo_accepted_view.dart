@@ -5,7 +5,7 @@ import '../../common/widgets.dart';
 
 class PhotoAcceptedView extends ScreenView {
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget buildView(BuildContext context) => Scaffold(
         body: Container(
           width: double.infinity,
           child: Column(

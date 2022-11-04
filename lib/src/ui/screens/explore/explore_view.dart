@@ -4,23 +4,27 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../common/widgets.dart';
 import '../view.dart';
 
-class ExploreView extends ScreenView {
+class ExploreView extends NavBarScreenView {
   final bool holding;
   final int countdown;
+  final Function(BuildContext context) onLogoTap;
+  final Function(BuildContext context) onLogoRelease;
 
   ExploreView({
     required this.holding,
     required this.countdown,
+    required this.onLogoTap,
+    required this.onLogoRelease,
   }) : super();
 
   @override
-  int? get navbarIndex => 1;
+  int get navbarIndex => 1;
 
   @override
   bool get systemOverlayDark => false;
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget buildView(BuildContext context) => Column(
         children: [
           SizedBox(
             width: 375.w,

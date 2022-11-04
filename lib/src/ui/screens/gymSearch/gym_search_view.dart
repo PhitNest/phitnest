@@ -29,7 +29,7 @@ class GymSearchView extends ScreenView {
   Widget get backButton => keyboardVisible ? Container() : super.backButton;
 
   @override
-  Widget build(BuildContext context) => Column(children: [
+  Widget buildView(BuildContext context) => Column(children: [
         15.verticalSpace,
         SizedBox(
             width: 343.w,
@@ -54,16 +54,16 @@ class GymSearchView extends ScreenView {
                       .labelMedium!
                       .copyWith(color: Color(0xFF999999)),
                 ))),
-        15.verticalSpace,
+        12.verticalSpace,
         Expanded(
             child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: ListView(children: cards))),
-        keyboardVisible ? 300.verticalSpace : 10.verticalSpace,
+        keyboardVisible ? 285.verticalSpace : 10.verticalSpace,
         Visibility(
             visible: !keyboardVisible,
             child: Padding(
-                padding: EdgeInsets.only(bottom: 44.h),
+                padding: EdgeInsets.only(bottom: 80.h),
                 child: StyledButton(
                   child: Text('CONFIRM'),
                   onPressed: onPressedConfirm,
