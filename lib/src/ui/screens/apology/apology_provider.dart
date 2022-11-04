@@ -11,16 +11,11 @@ class ApologyProvider extends ScreenProvider<ApologyState, ApologyView> {
   @override
   ApologyView build(BuildContext context, ApologyState state) => ApologyView(
       autovalidateMode: state.validateMode,
-      onPressedContactUs: () => Navigator.pushAndRemoveUntil(
-          context,
-          NoAnimationMaterialPageRoute(builder: (_) => ContactUsProvider()),
-          (_) => false),
       onPressedSubmit: () => validateForm(context, state),
       nameController: state.nameController,
       emailController: state.emailController,
       validateFirstName: validateFirstName,
       validateEmail: validateEmail,
-      keyboardVisible: state.keyboardVisible,
       formKey: state.formKey);
 
   @override
