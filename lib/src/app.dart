@@ -18,16 +18,15 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) => DevicePreview(
         enabled: usePreview,
         builder: (context) => ScreenUtilInit(
-          minTextAdapt: true,
-          // Do not change this. This corresponds to the Figma resolution.
-          designSize: const Size(375, 667),
-          builder: (context, child) => MaterialApp(
-            title: 'PhitNest',
-            theme: theme,
-            debugShowCheckedModeBanner: false,
-            // The app always enters at the on boarding screen.
-            home: OnBoardingProvider(),
-          ),
-        ),
+            minTextAdapt: true,
+            // Do not change this. This corresponds to the Figma resolution.
+            designSize: const Size(375, 667),
+            builder: (context, child) => MaterialApp(
+                  title: 'PhitNest',
+                  theme: theme,
+                  debugShowCheckedModeBanner: false,
+                  // The app always enters at the on boarding screen.
+                  home: OnBoardingProvider(),
+                )),
       );
 }

@@ -63,6 +63,8 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
     widget.init(context, state).then((_) => state.initialized = true);
   }
 
+  double get backButtonWidth => 64.w;
+
   /// This is called whenever [ScreenState.rebuildView] is called
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider.value(
@@ -83,9 +85,15 @@ class _WidgetProviderState<T extends ScreenState, K extends ScreenView>
                       toolbarHeight: view.appBarHeight,
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
-                      title: Text(view.appBarText ?? "",
-                          style: Theme.of(context).textTheme.headlineMedium),
-                      leadingWidth: 64.w,
+                      title: Padding(
+                          padding: EdgeInsets.only(
+                              top: 12.h, right: backButtonWidth),
+                          child: Center(
+                              child: Text(view.appBarText ?? "",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium))),
+                      leadingWidth: backButtonWidth,
                       leading: view.backButton)
                   : null,
               // To prevent overflows
