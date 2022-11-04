@@ -14,3 +14,4 @@ export 'photoInstruction/photo_instruction_provider.dart';
 export 'news/news_provider.dart';
 export 'chat/chat_provider.dart';
 export 'options/options_provider.dart';
+export 'reviewingPhoto/reviewing_photo_provider.dart';
