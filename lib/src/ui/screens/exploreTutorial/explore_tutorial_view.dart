@@ -30,6 +30,9 @@ class ExploreTutorialView extends NavBarScreenView {
   bool get navigationEnabled => false;
 
   @override
+  bool get currentlyHoldingLogo => holding;
+
+  @override
   Widget buildView(BuildContext context) => Scaffold(
         body: holding
             ? SizedBox(
