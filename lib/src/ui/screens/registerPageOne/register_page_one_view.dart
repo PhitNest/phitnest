@@ -18,7 +18,7 @@ class RegisterPageOneView extends ScreenView {
       : super();
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget buildView(BuildContext context) => Column(
         children: [
           28.verticalSpace,
           Text(

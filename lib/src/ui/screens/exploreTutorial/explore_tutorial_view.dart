@@ -4,23 +4,33 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../common/widgets.dart';
 import '../view.dart';
 
-class ExploreTutorialView extends ScreenView {
+class ExploreTutorialView extends NavBarScreenView {
   final bool holding;
   final int countdown;
+  final Function(BuildContext context) onLogoTap;
+  final Function(BuildContext context) onLogoRelease;
 
   ExploreTutorialView({
     required this.holding,
     required this.countdown,
+    required this.onLogoTap,
+    required this.onLogoRelease,
   }) : super();
 
   @override
-  int? get navbarIndex => 1;
+  onTapDownLogo(BuildContext context) => onLogoTap(context);
+
+  @override
+  onTapUpLogo(BuildContext context) => onLogoRelease(context);
+
+  @override
+  int get navbarIndex => 1;
 
   @override
   bool get navigationEnabled => false;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget buildView(BuildContext context) => Scaffold(
         body: holding
             ? SizedBox(
                 width: double.infinity,

@@ -6,7 +6,7 @@ import 'widgets/like_button.dart';
 import '../view.dart';
 import 'models/activity_post.dart';
 
-class NewsView extends ScreenView {
+class NewsView extends NavBarScreenView {
   final String title;
   final bool liked;
   final List<ActivityPostModel> posts;
@@ -24,10 +24,10 @@ class NewsView extends ScreenView {
   }) : super();
 
   @override
-  int? get navbarIndex => 0;
+  int get navbarIndex => 0;
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildView(BuildContext context) {
     return Scaffold(
         body: Column(
       children: [
@@ -48,9 +48,6 @@ class NewsView extends ScreenView {
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: Color(0xff858585), fontWeight: FontWeight.w600),
                   ),
-                  SizedBox(
-                    width: 8.w,
-                  ),
                   LikeButton(
                     liked: liked,
                     onPressedLiked: onPressedLike,
@@ -61,7 +58,7 @@ class NewsView extends ScreenView {
           ),
         ),
         Container(
-          height: 430.h,
+          height: 470.h,
           child: ListView.builder(
             itemCount: posts.length,
             itemBuilder: (context, index) {

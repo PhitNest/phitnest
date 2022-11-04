@@ -25,6 +25,7 @@ dependencies:
   shared_preferences: ^2.0.15
   flutter_launcher_icons: ^0.10.0
   flutter_keyboard_visibility: ^5.4.0
+  meta: ^1.8.0
 
 dev_dependencies:
   flutter_test:

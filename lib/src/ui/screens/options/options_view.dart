@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../view.dart';
 
-class OptionsView extends ScreenView {
-  @override
-  Widget build(BuildContext context) => Container();
+class OptionsView extends NavBarScreenView {
+  const OptionsView() : super();
 
   @override
-  int? get navbarIndex => 3;
+  Widget buildView(BuildContext context) => Container();
+
+  @override
+  int get navbarIndex => 3;
 }

@@ -15,7 +15,7 @@ class UnauthorizedView extends ScreenView {
   }) : super();
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget buildView(BuildContext context) => Scaffold(
         body: SizedBox(
           width: double.infinity,
           child: Column(

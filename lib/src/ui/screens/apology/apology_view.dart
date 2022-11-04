@@ -26,7 +26,7 @@ class ApologyView extends ScreenView {
       required this.formKey});
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget buildView(BuildContext context) => Column(
         children: [
           110.verticalSpace,
           SizedBox(

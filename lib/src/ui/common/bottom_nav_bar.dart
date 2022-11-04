@@ -85,14 +85,16 @@ class StyledNavBar extends StatelessWidget {
                           (route) => false),
                       1),
                   10.verticalSpace,
-                  GestureDetector(
-                    onTapDown: onTapDownLogo,
-                    onTapUp: onTapUpLogo,
-                    child: Image.asset(
-                      kColoredLogoPath,
-                      width: 38.62.w,
-                    ),
-                  ),
+                  Padding(
+                      padding: EdgeInsets.only(top: 4.h),
+                      child: GestureDetector(
+                        onTapDown: onTapDownLogo,
+                        onTapUp: onTapUpLogo,
+                        child: Image.asset(
+                          kColoredLogoPath,
+                          width: 38.62.w,
+                        ),
+                      )),
                   createButton(
                       context,
                       'CHAT',

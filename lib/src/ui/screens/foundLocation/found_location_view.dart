@@ -17,7 +17,10 @@ class FoundLocationView extends ScreenView {
   });
 
   @override
-  Widget build(BuildContext context) => Column(children: [
+  bool showAppBar(BuildContext context) => false;
+
+  @override
+  Widget buildView(BuildContext context) => Column(children: [
         200.verticalSpace,
         SizedBox(
           width: 321.w,
