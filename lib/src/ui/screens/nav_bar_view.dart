@@ -8,6 +8,9 @@ import 'view.dart';
 abstract class NavBarScreenView extends ScreenView {
   const NavBarScreenView() : super();
 
+  /// Defines whether or not the user is currently holding the logo
+  bool get currentlyHoldingLogo => false;
+
   /// The current navbar page index. Set to null to hide nav bar.
   int get navbarIndex;
 
@@ -36,8 +39,9 @@ abstract class NavBarScreenView extends ScreenView {
               width: 1.sw,
               child: buildView(context))),
       bottomNavigationBar: StyledNavBar(
+          logoHeld: currentlyHoldingLogo,
           navigationEnabled: navigationEnabled,
           pageIndex: navbarIndex,
-          onTapDownLogo: (_) => onTapDownLogo(context),
-          onTapUpLogo: (_) => onTapUpLogo(context)));
+          onTapDownLogo: () => onTapDownLogo(context),
+          onTapUpLogo: () => onTapUpLogo(context)));
 }

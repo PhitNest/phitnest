@@ -30,6 +30,9 @@ class ExploreView extends NavBarScreenView {
   bool get systemOverlayDark => false;
 
   @override
+  bool get currentlyHoldingLogo => holding;
+
+  @override
   Widget buildView(BuildContext context) => Column(
         children: [
           SizedBox(
