@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../screens/screens.dart';
 import 'no_animation_page_route.dart';
+import 'widgets.dart';
 
 class StyledNavBar extends StatelessWidget {
   static double get kHeight => 66.h;
@@ -15,6 +14,7 @@ class StyledNavBar extends StatelessWidget {
   final bool navigationEnabled;
 
   static const String kColoredLogoPath = 'assets/images/logo_color.png';
+  static const String kLogoPath = 'assets/images/logo.png';
 
   const StyledNavBar(
       {Key? key,
@@ -64,7 +64,6 @@ class StyledNavBar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  10.verticalSpace,
                   createButton(
                       context,
                       'NEWS',
@@ -74,7 +73,6 @@ class StyledNavBar extends StatelessWidget {
                               builder: (context) => NewsProvider()),
                           (route) => false),
                       0),
-                  10.verticalSpace,
                   createButton(
                       context,
                       'EXPLORE',
@@ -84,17 +82,16 @@ class StyledNavBar extends StatelessWidget {
                               builder: (context) => ExploreProvider()),
                           (route) => false),
                       1),
-                  10.verticalSpace,
+                  10.horizontalSpace,
                   Padding(
                       padding: EdgeInsets.only(top: 4.h),
                       child: GestureDetector(
-                        onTapDown: onTapDownLogo,
-                        onTapUp: onTapUpLogo,
-                        child: Image.asset(
-                          kColoredLogoPath,
-                          width: 38.62.w,
-                        ),
-                      )),
+                          onTapDown: onTapDownLogo,
+                          onTapUp: onTapUpLogo,
+                          child: Image.asset(
+                            pageIndex == 1 ? kColoredLogoPath : kLogoPath,
+                            width: 38.62.w,
+                          ))),
                   createButton(
                       context,
                       'CHAT',
@@ -104,7 +101,6 @@ class StyledNavBar extends StatelessWidget {
                               builder: (context) => ChatProvider()),
                           (route) => false),
                       2),
-                  10.verticalSpace,
                   createButton(
                       context,
                       'OPTIONS',
@@ -114,7 +110,6 @@ class StyledNavBar extends StatelessWidget {
                               builder: (context) => OptionsProvider()),
                           (route) => false),
                       3),
-                  10.verticalSpace,
                 ],
               ),
             )),

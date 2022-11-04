@@ -18,6 +18,12 @@ class ExploreView extends NavBarScreenView {
   }) : super();
 
   @override
+  onTapDownLogo(BuildContext context) => onLogoTap(context);
+
+  @override
+  onTapUpLogo(BuildContext context) => onLogoRelease(context);
+
+  @override
   int get navbarIndex => 1;
 
   @override
