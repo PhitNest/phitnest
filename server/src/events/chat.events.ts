@@ -5,6 +5,6 @@ export default function (socket: Socket): void {
   socket.on("sendMessage", sendMessage);
 }
 
-function sendMessage(data: any) {
+function sendMessage(data) {
   l.info(data);
 }

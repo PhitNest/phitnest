@@ -10,7 +10,7 @@ export default class Events {
   }
 
   onDisconnect(reason: string): void {
-    l.info("Disconnected");
+    l.info(`Disconnected: ${reason}`);
   }
 
   registerEvents(): void {
