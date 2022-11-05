@@ -15,7 +15,7 @@ class RequestLocationProvider
   init(BuildContext context, RequestLocationState state) =>
       repositories<LocationRepository>().getLocation().then((response) =>
           response.fold(
-              (location) => repositories<LocationRepository>()
+              (location) => repositories<GymRepository>()
                       .getNearestGym(location)
                       .then((gym) {
                     try {

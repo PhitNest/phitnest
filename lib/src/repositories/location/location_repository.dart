@@ -1,37 +1,15 @@
-import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
 
-import '../../constants/constants.dart';
 import '../../models/models.dart';
 import '../repositories.dart';
 
 class LocationRepository extends Repository {
-  Future<Gym?> getNearestGym(Location location) => http
-      .get(
-        repositories<EnvironmentRepository>().getBackendAddress(
-            kNearestGymRoute,
-            params: {...location.toJson(), "distance": "30000"}),
-      )
-      .then((response) => response.statusCode == kStatusOK
-          ? Gym.fromJson(jsonDecode(response.body))
-          : null);
-
-  Future<List<Gym>> getNearestGyms(Location location) => http
-      .get(
-        repositories<EnvironmentRepository>().getBackendAddress(kListGymsRoute,
-            params: {...location.toJson(), "distance": "30000"}),
-      )
-      .then((response) => response.statusCode == kStatusOK
-          ? List<Gym>.from(
-              jsonDecode(response.body).map((gym) => Gym.fromJson(gym)))
-          : []);
-
+  /// Streams the current location permissions settings
   Stream<ServiceStatus> streamServiceStatus() =>
       Geolocator.getServiceStatusStream();
 
+  /// Converts a [Position] from the geolocator package to a [Location]
   Location _positionToLocation(Position position) =>
       Location(longitude: position.longitude, latitude: position.latitude);
 

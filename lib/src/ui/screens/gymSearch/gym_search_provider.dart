@@ -16,7 +16,7 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
   init(BuildContext context, GymSearchState state) =>
       repositories<LocationRepository>().getLocation().then((response) =>
           response.fold(
-              (location) => repositories<LocationRepository>()
+              (location) => repositories<GymRepository>()
                       .getNearestGyms(location)
                       .then((gyms) {
                     state.gymsAndDistances = gyms
@@ -61,9 +61,6 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
               .where((val) => val != null)
               .cast<GymCard>()
               .toList());
-
-  @override
-  dispose(BuildContext context, GymSearchState state) {}
 
   @override
   GymSearchState buildState() => GymSearchState();
