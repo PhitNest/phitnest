@@ -6,7 +6,7 @@ import '../view.dart';
 
 class ForgotPasswordView extends ScreenView {
   final TextEditingController emailAddressController;
-  final Function onPressedsubmit;
+  final Function() onPressedsubmit;
   const ForgotPasswordView(
       {required this.emailAddressController, required this.onPressedsubmit})
       : super();
