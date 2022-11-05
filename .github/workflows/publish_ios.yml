@@ -4,7 +4,7 @@ on:
   release:
     types: [published]
     tags:
-      - "v*"
+      - 'v*'
 
 jobs:
   build_and_publish:
@@ -39,7 +39,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None SSH_ASKPASS=~/.ssh_askpass ssh-add - >/dev/null
 
       - name: Create .env
-        run: mv .env.example .env
+        run: mv .env.example.prod .env
 
       - name: Download dependencies
         run: flutter pub get
