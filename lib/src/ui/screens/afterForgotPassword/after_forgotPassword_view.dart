@@ -5,7 +5,7 @@ import '../../common/widgets.dart';
 import '../view.dart';
 
 class AfterForgotPasswordView extends ScreenView {
-  final Function onPressedSignIn;
+  final Function() onPressedSignIn;
   const AfterForgotPasswordView({required this.onPressedSignIn}) : super();
 
   @override
@@ -26,7 +26,7 @@ class AfterForgotPasswordView extends ScreenView {
             ),
             40.verticalSpace,
             StyledButton(
-                onPressed: () => onPressedSignIn,
+                onPressed: onPressedSignIn,
                 child: Text(
                   'SIGN IN',
                 ))
