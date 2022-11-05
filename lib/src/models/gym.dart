@@ -6,21 +6,28 @@ import 'models.dart';
  * Represents a gym
  */
 class Gym extends Equatable {
+  final String id;
   final String name;
   final Address address;
   final Location location;
 
   /// This is the constructor for the gym
-  Gym({required this.address, required this.name, required this.location});
+  Gym(
+      {required this.id,
+      required this.address,
+      required this.name,
+      required this.location});
 
   /// Converts a JSON object to a gym
   factory Gym.fromJson(Map<String, dynamic> json) => Gym(
+      id: json['id'],
       name: json['name'],
       address: Address.fromJson(json['address']),
       location: Location.fromJson(json['location']));
 
   /// Creates a JSON representation of the gym
   Map<String, dynamic> toJson() => {
+        'id': id,
         'name': name,
         'address': address.toJson(),
         'location': location.toJson(),
@@ -28,5 +35,5 @@ class Gym extends Equatable {
 
   /// These are the properties to compare when determining equality
   @override
-  List<Object?> get props => [name, address, location];
+  List<Object?> get props => [id, name, address, location];
 }

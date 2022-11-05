@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/models.dart';
+import '../../../repositories/repositories.dart';
 import '../../common/widgets.dart';
 import '../provider.dart';
 import '../screens.dart';
@@ -22,13 +23,16 @@ class FoundLocationProvider
             builder: (_) => GymSearchProvider(),
           ),
         ),
-        onPressedYes: () => Navigator.pushAndRemoveUntil(
-          context,
-          NoAnimationMaterialPageRoute(
-            builder: (_) => ExploreTutorialProvider(),
-          ),
-          (_) => false,
-        ),
+        onPressedYes: () {
+          repositories<GymRepository>().currentlySelectedGym = gym;
+          Navigator.pushAndRemoveUntil(
+            context,
+            NoAnimationMaterialPageRoute(
+              builder: (_) => ExploreTutorialProvider(),
+            ),
+            (_) => false,
+          );
+        },
         address: gym.address,
       );
 
