@@ -15,3 +15,4 @@ export 'chat/chat_provider.dart';
 export 'options/options_provider.dart';
 export 'photoAccepted/photo_accepted_provider.dart';
 export 'reviewingPhoto/reviewing_photo_provider.dart';
+export 'forgotPassword/forgot_password_provider.dart';
