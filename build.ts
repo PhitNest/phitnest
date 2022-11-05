@@ -1,5 +1,5 @@
 import s from "shelljs";
-const config = require("./tsconfig.json");
+import config from "./tsconfig.json";
 const outDir = config.compilerOptions.outDir;
 
 s.rm("-rf", outDir);
@@ -10,5 +10,5 @@ s.cp("openapi/api.yml", `${outDir}/openapi/api.yml`);
 s.mkdir("-p", `${outDir}/openapi/specs`);
 const files = s.ls("openapi/specs");
 for (let i = 0; i < files.length; i++) {
-    s.cp(`openapi/specs/${files[i]}`, `${outDir}/openapi/specs/${files[i]}`);
+  s.cp(`openapi/specs/${files[i]}`, `${outDir}/openapi/specs/${files[i]}`);
 }
