@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'ui/screens/screens.dart';
 import 'ui/theme.dart';
 import 'ui/screens/forgotPassword/forgot_password_provider.dart';
+import 'ui/screens/afterForgotPassword/after_forgotPassword_provider.dart';
 
 /**
  * Use flutter run --dart-define="USE_PREVIEW=true" or add USE_PREVIEW=true to .env 
@@ -23,11 +24,13 @@ class App extends StatelessWidget {
             // Do not change this. This corresponds to the Figma resolution.
             designSize: const Size(375, 667),
             builder: (context, child) => MaterialApp(
-                title: 'PhitNest',
-                theme: theme,
-                debugShowCheckedModeBanner: false,
-                // The app always enters at the on boarding screen.
-                //home: OnBoardingProvider(),
-                home: ForgotPasswordProvider())),
+                  title: 'PhitNest',
+                  theme: theme,
+                  debugShowCheckedModeBanner: false,
+                  // The app always enters at the on boarding screen.
+                  //home: OnBoardingProvider(),
+                  // home: ForgotPasswordProvider(),
+                  home: AfterForgotPasswordProvider(),
+                )),
       );
 }
