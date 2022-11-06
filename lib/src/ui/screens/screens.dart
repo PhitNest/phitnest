@@ -14,3 +14,5 @@ export 'options/options_provider.dart';
 export 'reviewingPhoto/reviewing_photo_provider.dart';
 export 'forgotPassword/forgot_password_provider.dart';
 export 'afterForgotPassword/after_forgotPassword_provider.dart';
+export 'match/match_provider.dart';
+export 'confirmEmail/confirm_email_provider.dart';
