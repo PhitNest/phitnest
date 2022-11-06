@@ -203,13 +203,6 @@
   dependencies:
     mongoose "*"
 
-"@types/morgan@1.9.3":
-  version "1.9.3"
-  resolved "https://registry.npmjs.org/@types/morgan/-/morgan-1.9.3.tgz"
-  integrity sha512-BiLcfVqGBZCyNCnCH3F4o2GmDLrpy0HeBVnNlyZG4fo88ZiE9SoiBe3C+2ezuwbjlEyT+PDZ17//TAlRxAn75Q==
-  dependencies:
-    "@types/node" "*"
-
 "@types/multer@^1.4.7":
   version "1.4.7"
   resolved "https://registry.npmjs.org/@types/multer/-/multer-1.4.7.tgz"
@@ -227,12 +220,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.7.tgz#8ccef136f240770c1379d50100796a6952f01f94"
   integrity sha512-LhFTglglr63mNXUSRYD8A+ZAIu5sFqNJ4Y2fPuY7UlrySJH87rRRlhtVmMHplmfk5WkoJGmDjE9oiTfyX94CpQ==
 
-"@types/pino@7.0.5":
-  version "7.0.5"
-  resolved "https://registry.npmjs.org/@types/pino/-/pino-7.0.5.tgz"
-  integrity sha512-wKoab31pknvILkxAF8ss+v9iNyhw5Iu/0jLtRkUD74cNfOOLJNnqfFKAv0r7wVaTQxRZtWrMpGfShwwBjOcgcg==
-  dependencies:
-    pino "*"
+"@types/node@^18.11.9":
+  version "18.11.9"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.9.tgz#02d013de7058cea16d36168ef2fc653464cfbad4"
+  integrity sha512-CRpX21/kGdzjOpFsZSkcrXMGIBWMGNIHXXBVFSH+ggkftxg+XYP20TESbh+zFvFj3EQOl5byk0HTRn1IL6hbqg==
 
 "@types/qs@*":
   version "6.9.7"
@@ -2171,7 +2162,7 @@ pino-std-serializers@^6.0.0:
   resolved "https://registry.npmjs.org/pino-std-serializers/-/pino-std-serializers-6.0.0.tgz"
   integrity sha512-mMMOwSKrmyl+Y12Ri2xhH1lbzQxwwpuru9VjyJpgFIH4asSj88F2csdMwN6+M5g1Ll4rmsYghHLQJw81tgZ7LQ==
 
-pino@*, pino@8.6.1:
+pino@8.6.1:
   version "8.6.1"
   resolved "https://registry.npmjs.org/pino/-/pino-8.6.1.tgz"
   integrity sha512-fi+V2K98eMZjQ/uEHHSiMALNrz7HaFdKNYuyA3ZUrbH0f1e8sPFDmeRGzg7ZH2q4QDxGnJPOswmqlEaTAZeDPA==

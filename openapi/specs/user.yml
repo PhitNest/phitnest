@@ -4,6 +4,7 @@ components:
       title: user
       required:
         - id
+        - gymId
         - email
         - firstName
         - lastName
@@ -12,6 +13,9 @@ components:
         id:
           type: string
           example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh
+        gymId:
+          type: string
+          example: 6361c05b30d64fe62ff485cb
         email:
           $ref: "auth.yml#/components/schemas/Email"
         firstName:
