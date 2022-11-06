@@ -1,12 +1,12 @@
 import { IGymModel, Gym } from "../models/gym.model";
-import { IAddressModel } from "../models/address.model";
-import { ILocationModel } from "../models/location.model";
+import { AddressModel } from "../models/address.model";
+import { LocationModel } from "../models/location.model";
 
 export class GymQueries {
   static createGym(
     name: string,
-    address: IAddressModel,
-    location: ILocationModel
+    address: AddressModel,
+    location: LocationModel
   ): Promise<IGymModel> {
     return Gym.create({
       name: name,

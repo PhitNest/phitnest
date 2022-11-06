@@ -9,6 +9,7 @@ describe("Register user that already exists", () => {
       .post("/auth/register")
       .send({
         email: testUser.email,
+        gymId: testUser.gymId,
         password: testUserPassword,
         firstName: testUser.firstName,
         lastName: testUser.lastName,
