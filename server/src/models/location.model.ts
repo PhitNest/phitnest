@@ -3,7 +3,7 @@ export class LocationModel {
   coordinates: number[];
 
   constructor(lon: number, lat: number) {
-    this.type = 'Point';
+    this.type = "Point";
     this.coordinates = [lon, lat];
   }
 }
