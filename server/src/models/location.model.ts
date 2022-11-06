@@ -1,6 +1,9 @@
-import mongoose from "mongoose";
-
-export interface ILocationModel extends mongoose.Document {
+export class LocationModel {
   type: string;
   coordinates: number[];
+
+  constructor(lon: number, lat: number) {
+    this.type = 'Point';
+    this.coordinates = [lon, lat];
+  }
 }

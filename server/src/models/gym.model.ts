@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-import { IAddressModel } from "./address.model";
-import { ILocationModel } from "./location.model";
+import { AddressModel } from "./address.model";
+import { LocationModel } from "./location.model";
 
 export interface IGymModel extends mongoose.Document {
   name: string;
-  address: IAddressModel;
-  location: ILocationModel;
+  address: AddressModel;
+  location: LocationModel;
 }
 
 const schema = new mongoose.Schema(
