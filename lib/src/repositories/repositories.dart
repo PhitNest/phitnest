@@ -14,6 +14,7 @@ GetIt repositories = GetIt.instance;
 
 setup() async {
   await DeviceCacheRepository.init();
+  await EnvironmentRepository.init();
   repositories.registerSingleton(UserRepository());
   repositories.registerSingleton(GymRepository());
   repositories.registerSingleton(LocationRepository());
