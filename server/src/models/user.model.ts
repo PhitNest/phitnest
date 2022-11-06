@@ -11,7 +11,7 @@ export interface IUserModel extends mongoose.Document {
 const schema = new mongoose.Schema(
   {
     cognitoId: { type: String, required: true, unique: true },
-    gymId: { type: mongoose.Types.ObjectId, ref: 'Gym', required: true },
+    gymId: { type: mongoose.Types.ObjectId, ref: "Gym", required: true },
     email: { type: String, required: true, unique: true, trim: true },
     firstName: { type: String, required: true, trim: true },
     lastName: { type: String, required: true, trim: true },
@@ -21,6 +21,6 @@ const schema = new mongoose.Schema(
   }
 );
 
-schema.index({gymId: 1});
+schema.index({ gymId: 1 });
 
 export const User = mongoose.model<IUserModel>("User", schema);
