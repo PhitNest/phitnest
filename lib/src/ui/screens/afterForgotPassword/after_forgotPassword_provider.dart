@@ -14,7 +14,7 @@ class AfterForgotPasswordProvider
         onPressedSignIn: () => Navigator.pushAndRemoveUntil(
             context,
             NoAnimationMaterialPageRoute(builder: (context) => LoginProvider()),
-            (route) => false),
+            (_) => false),
       );
 
   @override
