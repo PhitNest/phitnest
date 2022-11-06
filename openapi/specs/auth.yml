@@ -51,6 +51,7 @@ paths:
             schema:
               required:
                 - email
+                - gymId
                 - password
                 - firstName
                 - lastName
@@ -60,12 +61,21 @@ paths:
                   $ref: "#/components/schemas/Email"
                 password:
                   $ref: "#/components/schemas/Password"
+                gymId:
+                  type: string
+                  example: 6361c05b30d64fe62ff485cb
+                  minLength: 24
+                  maxLength: 24
                 firstName:
                   type: string
                   example: john
+                  minLength: 2
+                  maxLength: 20
                 lastName:
                   type: string
                   example: jones
+                  minLength: 1
+                  maxLength: 24
       responses:
         200:
           description: The registration was successful and a confirmation email was sent
@@ -223,11 +233,13 @@ components:
     Email:
       title: email
       type: string
+      format: email
       example: jp@phitnest.com
 
     Password:
       title: password
       type: string
+      format: password
       example: H3llOW0RLD$$
 
     Tokens:

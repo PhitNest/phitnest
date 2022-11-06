@@ -181,8 +181,8 @@ components:
       type: object
       properties:
         id:
-          type: number
-          example: 63509a3fab99f3c02d07c1f9
+          type: string
+          example: 6361c05b30d64fe62ff485cb
         name:
           type: string
           example: Planet Fitness
