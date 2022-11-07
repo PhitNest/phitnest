@@ -1,9 +1,6 @@
 import "mocha";
-import request from "supertest";
-import { testGym, testUser, testUserPassword } from "./constants";
-import Server from "../server";
+import { testGym, testUser } from "./constants";
 import mongoose from "mongoose";
-import l from "../server/common/logger";
 
 // clear database after connected
 before(function (done) {
