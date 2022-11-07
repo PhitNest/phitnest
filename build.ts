@@ -1,3 +1,4 @@
+/* eslint-disable */
 const s = require("shelljs");
 const config = require("./tsconfig.json");
 const outDir = config.compilerOptions.outDir;
