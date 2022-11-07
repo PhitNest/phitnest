@@ -41,7 +41,9 @@ export default class ExpressServer {
       process.env.OPENAPI_ENABLE_RESPONSE_VALIDATION &&
       process.env.OPENAPI_ENABLE_RESPONSE_VALIDATION.toLowerCase() === "true"
     );
-    app.use("/spec", express.static(apiSpec));
+    if (process.env.NODE_ENV != "production") {
+      app.use("/spec", express.static(apiSpec));
+    }
     app.use(
       OpenApiValidator.middleware({
         apiSpec,
