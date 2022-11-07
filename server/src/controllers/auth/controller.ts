@@ -20,7 +20,7 @@ class AuthController {
 
   async register(req: Request, res: Response) {
     await UserQueries.createUser(
-      res.locals.userId,
+      res.locals.cognitoId,
       req.body.gymId,
       req.body.email,
       req.body.firstName,
