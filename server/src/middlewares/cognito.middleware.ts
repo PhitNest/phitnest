@@ -33,7 +33,7 @@ class CognitoMiddleware {
         } else if (session.isValid()) {
           l.info(`Authenticated user: ${user.getUsername()}`);
           res.locals.cognitoSession = session;
-          res.locals.userId = user.getUsername();
+          res.locals.cognitoId = user.getUsername();
           res.locals.cognitoUser = user;
           next();
         } else {
@@ -86,7 +86,7 @@ class CognitoMiddleware {
           l.info(
             `Registered user identity with username: ${result.user.getUsername()}`
           );
-          res.locals.userId = result.userSub;
+          res.locals.cognitoId = result.userSub;
           next();
         }
       }
@@ -140,7 +140,7 @@ class CognitoMiddleware {
       {
         onSuccess: (session) => {
           res.locals.cognitoSession = session;
-          res.locals.userId = session.getAccessToken().payload.username;
+          res.locals.cognitoId = session.getAccessToken().payload.username;
           l.info(`User authenticated with email: ${req.body.email}`);
           next();
         },

@@ -40,6 +40,26 @@ paths:
               schema:
                 type: string
                 example: Validation error has occurred.
+    get:
+      tags:
+        - Gym
+      summary: Get the gym I belong to
+      security:
+        - AccessToken: []
+      responses:
+        200:
+          description: Fetched your gym
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gym"
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: You are not authenticated
 
   # /gym/list
   list:

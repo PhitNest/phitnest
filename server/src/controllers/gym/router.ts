@@ -10,6 +10,8 @@ router.post(
   controller.createGym
 );
 
+router.get("/", [CognitoMiddleware.authenticate], controller.myGym);
+
 router.get("/list", [], controller.nearestGyms);
 
 router.get("/nearest", [], controller.nearestGym);

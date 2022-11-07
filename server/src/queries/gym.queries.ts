@@ -1,4 +1,5 @@
 import { IGymModel, Gym } from "../models/gym.model";
+import { User } from "../models/user.model";
 import { AddressModel } from "../models/address.model";
 import { LocationModel } from "../models/location.model";
 
@@ -13,6 +14,10 @@ export class GymQueries {
       address: address,
       location: location,
     });
+  }
+
+  static async myGym(cognitoId: string): Promise<IGymModel> {
+    return Gym.findById((await User.findOne({ cognitoId: cognitoId })).gymId);
   }
 
   static nearestGyms(

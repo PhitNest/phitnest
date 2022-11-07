@@ -16,12 +16,23 @@ function gymResponse(gym: IGymModel) {
 
 class GymController {
   async createGym(req: Request, res: Response) {
-    const gym = await GymQueries.createGym(
-      req.body.name,
-      req.body.address,
-      res.locals.location
-    );
-    return res.status(200).json(gymResponse(gym));
+    return res
+      .status(200)
+      .json(
+        gymResponse(
+          await GymQueries.createGym(
+            req.body.name,
+            req.body.address,
+            res.locals.location
+          )
+        )
+      );
+  }
+
+  async myGym(req: Request, res: Response) {
+    return res
+      .status(200)
+      .json(gymResponse(await GymQueries.myGym(res.locals.cognitoId)));
   }
 
   async nearestGyms(req: Request, res: Response) {

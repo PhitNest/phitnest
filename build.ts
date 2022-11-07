@@ -1,6 +1,4 @@
-// @ts-ignore
 const s = require("shelljs");
-// @ts-ignore
 const config = require("./tsconfig.json");
 const outDir = config.compilerOptions.outDir;
 
