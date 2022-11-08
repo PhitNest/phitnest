@@ -26,6 +26,14 @@ abstract class NavBarScreenView extends ScreenView {
       NoAnimationMaterialPageRoute(builder: (context) => ExploreProvider()),
       (_) => false);
 
+  /// Defines the nav bar
+  StyledNavBar navBar(BuildContext context) => StyledNavBar(
+      logoHeld: currentlyHoldingLogo,
+      navigationEnabled: navigationEnabled,
+      pageIndex: navbarIndex,
+      onTapDownLogo: () => onTapDownLogo(context),
+      onTapUpLogo: () => onTapUpLogo(context));
+
   @override
   // ignore: invalid_override_of_non_virtual_member
   Widget build(BuildContext context) => Scaffold(
@@ -38,10 +46,5 @@ abstract class NavBarScreenView extends ScreenView {
                   StyledNavBar.kHeight,
               width: 1.sw,
               child: buildView(context))),
-      bottomNavigationBar: StyledNavBar(
-          logoHeld: currentlyHoldingLogo,
-          navigationEnabled: navigationEnabled,
-          pageIndex: navbarIndex,
-          onTapDownLogo: () => onTapDownLogo(context),
-          onTapUpLogo: () => onTapUpLogo(context)));
+      bottomNavigationBar: navBar(context));
 }
