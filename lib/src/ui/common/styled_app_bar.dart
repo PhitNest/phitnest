@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StyledAppBar extends AppBar {
@@ -7,14 +6,10 @@ class StyledAppBar extends AppBar {
 
   StyledAppBar(
       {required BuildContext context,
-      bool systemOverlayDark = true,
       double? height,
       String? text,
       Widget? backButton})
       : super(
-            systemOverlayStyle: systemOverlayDark
-                ? SystemUiOverlayStyle.dark
-                : SystemUiOverlayStyle.light,
             toolbarHeight: height ?? 60.w,
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,

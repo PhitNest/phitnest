@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,7 +27,12 @@ abstract class ScreenView extends StatelessWidget {
   /// Constructs the scaffold with the app bar and navbar
   @nonVirtual
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
+      value: systemOverlayDark
+          ? SystemUiOverlayStyle.dark
+          : SystemUiOverlayStyle.light,
+      child: SafeArea(
+          child: Scaffold(
         appBar: appBar(context),
         body: SingleChildScrollView(
             physics: scrollEnabled ? null : NeverScrollableScrollPhysics(),
@@ -34,7 +40,7 @@ abstract class ScreenView extends StatelessWidget {
                 height: 1.sh - (showAppBar(context) ? appBarHeight : 0),
                 width: 1.sw,
                 child: buildView(context))),
-      );
+      )));
 
   /// This will display in the AppBar
   String? get appBarText => null;
@@ -58,7 +64,6 @@ abstract class ScreenView extends StatelessWidget {
           height: appBarHeight,
           text: appBarText,
           backButton: backButton,
-          systemOverlayDark: systemOverlayDark,
         )
       : null;
 
