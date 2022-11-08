@@ -29,6 +29,21 @@ class StyledNavBar extends StatefulWidget {
       required this.onTapUpLogo})
       : super(key: key);
 
+  StyledNavBar copyWith(
+          {bool? navigationEnabled,
+          int? pageIndex,
+          Function()? onTapDownLogo,
+          bool? reversed,
+          bool? logoHeld,
+          Function()? onTapUpLogo}) =>
+      StyledNavBar(
+          navigationEnabled: navigationEnabled ?? this.navigationEnabled,
+          pageIndex: pageIndex ?? this.pageIndex,
+          reversed: reversed ?? this.reversed,
+          logoHeld: logoHeld ?? this.logoHeld,
+          onTapDownLogo: onTapDownLogo ?? this.onTapDownLogo,
+          onTapUpLogo: onTapUpLogo ?? this.onTapUpLogo);
+
   @override
   State<StatefulWidget> createState() => _StyledNavBarState();
 }
@@ -87,76 +102,72 @@ class _StyledNavBarState extends State<StyledNavBar>
 
   @override
   Widget build(BuildContext context) => Container(
-        height: StyledNavBar.kHeight,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: widget.reversed ? Colors.black : Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 8.5,
-              spreadRadius: 0.0,
-              color: Colors.black,
-              offset: Offset(0, 7),
-            ),
+      height: StyledNavBar.kHeight,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: widget.reversed ? Colors.black : Colors.white,
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 8.5,
+            spreadRadius: 0.0,
+            color: Colors.black,
+            offset: Offset(0, 7),
+          ),
+        ],
+      ),
+      child: Stack(children: [
+        Center(
+            child: Padding(
+                padding: EdgeInsets.only(left: 12.w),
+                child: controller != null
+                    ? AnimatedBuilder(
+                        animation: controller!,
+                        builder: (context, child) => logoButton)
+                    : logoButton)),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            createButton(
+                context,
+                'NEWS',
+                () => Navigator.pushAndRemoveUntil(
+                    context,
+                    NoAnimationMaterialPageRoute(
+                        builder: (context) => NewsProvider()),
+                    (route) => false),
+                0),
+            createButton(
+                context,
+                'EXPLORE',
+                () => Navigator.pushAndRemoveUntil(
+                    context,
+                    NoAnimationMaterialPageRoute(
+                        builder: (context) => ExploreProvider()),
+                    (route) => false),
+                1),
+            60.horizontalSpace,
+            createButton(
+                context,
+                'CHAT',
+                () => Navigator.pushAndRemoveUntil(
+                    context,
+                    NoAnimationMaterialPageRoute(
+                        builder: (context) => ChatProvider()),
+                    (route) => false),
+                2),
+            createButton(
+                context,
+                'OPTIONS',
+                () => Navigator.pushAndRemoveUntil(
+                    context,
+                    NoAnimationMaterialPageRoute(
+                        builder: (context) => OptionsProvider()),
+                    (route) => false),
+                3),
           ],
         ),
-        child: Ink(
-            width: double.infinity,
-            height: double.maxFinite,
-            child: Stack(children: [
-              Center(
-                  child: Padding(
-                      padding: EdgeInsets.only(left: 12.w, bottom: 12.h),
-                      child: controller != null
-                          ? AnimatedBuilder(
-                              animation: controller!,
-                              builder: (context, child) => logoButton)
-                          : logoButton)),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  createButton(
-                      context,
-                      'NEWS',
-                      () => Navigator.pushAndRemoveUntil(
-                          context,
-                          NoAnimationMaterialPageRoute(
-                              builder: (context) => NewsProvider()),
-                          (route) => false),
-                      0),
-                  createButton(
-                      context,
-                      'EXPLORE',
-                      () => Navigator.pushAndRemoveUntil(
-                          context,
-                          NoAnimationMaterialPageRoute(
-                              builder: (context) => ExploreProvider()),
-                          (route) => false),
-                      1),
-                  60.horizontalSpace,
-                  createButton(
-                      context,
-                      'CHAT',
-                      () => Navigator.pushAndRemoveUntil(
-                          context,
-                          NoAnimationMaterialPageRoute(
-                              builder: (context) => ChatProvider()),
-                          (route) => false),
-                      2),
-                  createButton(
-                      context,
-                      'OPTIONS',
-                      () => Navigator.pushAndRemoveUntil(
-                          context,
-                          NoAnimationMaterialPageRoute(
-                              builder: (context) => OptionsProvider()),
-                          (route) => false),
-                      3),
-                ],
-              ),
-            ])),
-      );
+      ]));
 
   @override
   void dispose() {
