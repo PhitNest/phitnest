@@ -75,10 +75,12 @@ class _StyledNavBarState extends State<StyledNavBar>
           child: Text(text,
               style: index == widget.pageIndex
                   ? Theme.of(context).textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.bold, color: Colors.black)
-                  : Theme.of(context).textTheme.bodySmall!.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB((0.4 * 255).round(), 0, 0, 0))),
+                      color: widget.reversed ? Colors.white : Colors.black)
+                  : Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: widget.reversed
+                          ? Color.fromARGB((0.8 * 255).round(), 255, 255, 255)
+                          : Color.fromARGB((0.8 * 255).round(), 0, 0, 0))),
           onPressed: widget.navigationEnabled && index != widget.pageIndex
               ? onPressed
               : null);
@@ -88,7 +90,7 @@ class _StyledNavBarState extends State<StyledNavBar>
         height: StyledNavBar.kHeight,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: widget.reversed ? Colors.black : Colors.white,
           boxShadow: [
             BoxShadow(
               blurRadius: 8.5,
