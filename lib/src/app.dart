@@ -26,7 +26,7 @@ class App extends StatelessWidget {
                   theme: theme,
                   debugShowCheckedModeBanner: false,
                   // The app always enters at the on boarding screen.
-                  home: ConfirmEmailProvider(),
+                  home: OnBoardingProvider(),
                 )),
       );
 }
