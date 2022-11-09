@@ -8,7 +8,10 @@ class ConfirmEmailProvider
     extends ScreenProvider<ConfirmEmailState, ConfirmEmailView> {
   @override
   ConfirmEmailView build(BuildContext context, ConfirmEmailState state) =>
-      ConfirmEmailView();
+      ConfirmEmailView(
+        onCompletedVerification: (code) {},
+        onPressedNext: () {}
+      );
 
   @override
   ConfirmEmailState buildState() => ConfirmEmailState();

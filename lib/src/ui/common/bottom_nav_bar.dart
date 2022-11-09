@@ -12,19 +12,37 @@ class StyledNavBar extends StatefulWidget {
   final bool logoHeld;
   final Function() onTapDownLogo;
   final Function() onTapUpLogo;
+  final bool reversed;
   final bool navigationEnabled;
 
   static const String kColoredLogoPath = 'assets/images/logo_color.png';
   static const String kLogoPath = 'assets/images/logo.png';
+  static const String kReversedLogoPath = 'assets/images/logo_reversed.png';
 
   const StyledNavBar(
       {Key? key,
       required this.navigationEnabled,
       required this.pageIndex,
       required this.onTapDownLogo,
+      this.reversed = false,
       this.logoHeld = false,
       required this.onTapUpLogo})
       : super(key: key);
+
+  StyledNavBar copyWith(
+          {bool? navigationEnabled,
+          int? pageIndex,
+          Function()? onTapDownLogo,
+          bool? reversed,
+          bool? logoHeld,
+          Function()? onTapUpLogo}) =>
+      StyledNavBar(
+          navigationEnabled: navigationEnabled ?? this.navigationEnabled,
+          pageIndex: pageIndex ?? this.pageIndex,
+          reversed: reversed ?? this.reversed,
+          logoHeld: logoHeld ?? this.logoHeld,
+          onTapDownLogo: onTapDownLogo ?? this.onTapDownLogo,
+          onTapUpLogo: onTapUpLogo ?? this.onTapUpLogo);
 
   @override
   State<StatefulWidget> createState() => _StyledNavBarState();
@@ -34,10 +52,12 @@ class _StyledNavBarState extends State<StyledNavBar>
     with SingleTickerProviderStateMixin {
   late final AnimationController? controller;
 
+  bool get shouldAnimate => widget.pageIndex == 1 && !widget.reversed;
+
   @override
   void initState() {
     super.initState();
-    controller = widget.pageIndex == 1
+    controller = shouldAnimate
         ? (AnimationController(vsync: this)
           ..repeat(
               min: 0,
@@ -53,7 +73,9 @@ class _StyledNavBarState extends State<StyledNavBar>
       onTapUp: (_) => widget.onTapUpLogo(),
       child: Image.asset(
         widget.pageIndex == 1
-            ? StyledNavBar.kColoredLogoPath
+            ? widget.reversed
+                ? StyledNavBar.kReversedLogoPath
+                : StyledNavBar.kColoredLogoPath
             : StyledNavBar.kLogoPath,
         width: 38.62.w + (widget.logoHeld ? 1 : (controller?.value ?? 0)) * 5.w,
       ));
@@ -68,89 +90,87 @@ class _StyledNavBarState extends State<StyledNavBar>
           child: Text(text,
               style: index == widget.pageIndex
                   ? Theme.of(context).textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.bold, color: Colors.black)
-                  : Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(fontWeight: FontWeight.bold)),
+                      fontWeight: FontWeight.bold,
+                      color: widget.reversed ? Colors.white : Colors.black)
+                  : Theme.of(context).textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: widget.reversed
+                          ? Color.fromARGB((0.7 * 255).round(), 255, 255, 255)
+                          : Color.fromARGB((0.4 * 255).round(), 0, 0, 0))),
           onPressed: widget.navigationEnabled && index != widget.pageIndex
               ? onPressed
               : null);
 
   @override
   Widget build(BuildContext context) => Container(
-        height: StyledNavBar.kHeight,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 8.5,
-              spreadRadius: 0.0,
-              color: Colors.black,
-              offset: Offset(0, 7),
+      height: StyledNavBar.kHeight,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: widget.reversed ? Colors.black : Colors.white,
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 8.5,
+            spreadRadius: 0.0,
+            color: Colors.black,
+            offset: Offset(0, 7),
+          ),
+        ],
+      ),
+      child: Padding(
+          padding: EdgeInsets.only(bottom: 18.h),
+          child: Stack(children: [
+            Center(
+                child: Padding(
+                    padding: EdgeInsets.only(left: 12.w),
+                    child: controller != null
+                        ? AnimatedBuilder(
+                            animation: controller!,
+                            builder: (context, child) => logoButton)
+                        : logoButton)),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                createButton(
+                    context,
+                    'NEWS',
+                    () => Navigator.pushAndRemoveUntil(
+                        context,
+                        NoAnimationMaterialPageRoute(
+                            builder: (context) => NewsProvider()),
+                        (route) => false),
+                    0),
+                createButton(
+                    context,
+                    'EXPLORE',
+                    () => Navigator.pushAndRemoveUntil(
+                        context,
+                        NoAnimationMaterialPageRoute(
+                            builder: (context) => ExploreProvider()),
+                        (route) => false),
+                    1),
+                60.horizontalSpace,
+                createButton(
+                    context,
+                    'CHAT',
+                    () => Navigator.pushAndRemoveUntil(
+                        context,
+                        NoAnimationMaterialPageRoute(
+                            builder: (context) => ChatProvider()),
+                        (route) => false),
+                    2),
+                createButton(
+                    context,
+                    'OPTIONS',
+                    () => Navigator.pushAndRemoveUntil(
+                        context,
+                        NoAnimationMaterialPageRoute(
+                            builder: (context) => OptionsProvider()),
+                        (route) => false),
+                    3),
+              ],
             ),
-          ],
-        ),
-        child: Ink(
-            width: double.infinity,
-            height: double.maxFinite,
-            child: Padding(
-                padding: EdgeInsets.only(top: StyledNavBar.kHeight * 0.1),
-                child: Stack(children: [
-                  Center(
-                      child: Padding(
-                          padding: EdgeInsets.only(left: 12.w, bottom: 12.h),
-                          child: controller != null
-                              ? AnimatedBuilder(
-                                  animation: controller!,
-                                  builder: (context, child) => logoButton)
-                              : logoButton)),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      createButton(
-                          context,
-                          'NEWS',
-                          () => Navigator.pushAndRemoveUntil(
-                              context,
-                              NoAnimationMaterialPageRoute(
-                                  builder: (context) => NewsProvider()),
-                              (route) => false),
-                          0),
-                      createButton(
-                          context,
-                          'EXPLORE',
-                          () => Navigator.pushAndRemoveUntil(
-                              context,
-                              NoAnimationMaterialPageRoute(
-                                  builder: (context) => ExploreProvider()),
-                              (route) => false),
-                          1),
-                      30.horizontalSpace,
-                      createButton(
-                          context,
-                          'CHAT',
-                          () => Navigator.pushAndRemoveUntil(
-                              context,
-                              NoAnimationMaterialPageRoute(
-                                  builder: (context) => ChatProvider()),
-                              (route) => false),
-                          2),
-                      createButton(
-                          context,
-                          'OPTIONS',
-                          () => Navigator.pushAndRemoveUntil(
-                              context,
-                              NoAnimationMaterialPageRoute(
-                                  builder: (context) => OptionsProvider()),
-                              (route) => false),
-                          3),
-                    ],
-                  ),
-                ]))),
-      );
+          ])));
 
   @override
   void dispose() {

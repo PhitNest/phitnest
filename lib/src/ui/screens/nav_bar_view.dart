@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../common/widgets.dart';
@@ -26,22 +27,37 @@ abstract class NavBarScreenView extends ScreenView {
       NoAnimationMaterialPageRoute(builder: (context) => ExploreProvider()),
       (_) => false);
 
+  /// Defines the nav bar
+  StyledNavBar navBar(BuildContext context) => StyledNavBar(
+      logoHeld: currentlyHoldingLogo,
+      navigationEnabled: navigationEnabled,
+      pageIndex: navbarIndex,
+      onTapDownLogo: () => onTapDownLogo(context),
+      onTapUpLogo: () => onTapUpLogo(context));
+
   @override
   // ignore: invalid_override_of_non_virtual_member
-  Widget build(BuildContext context) => Scaffold(
-      appBar: appBar(context),
-      body: SingleChildScrollView(
-          physics: scrollEnabled ? null : NeverScrollableScrollPhysics(),
-          child: SizedBox(
-              height: 1.sh -
-                  (showAppBar(context) ? appBarHeight : 0) -
-                  StyledNavBar.kHeight,
-              width: 1.sw,
-              child: buildView(context))),
-      bottomNavigationBar: StyledNavBar(
-          logoHeld: currentlyHoldingLogo,
-          navigationEnabled: navigationEnabled,
-          pageIndex: navbarIndex,
-          onTapDownLogo: () => onTapDownLogo(context),
-          onTapUpLogo: () => onTapUpLogo(context)));
+  Widget build(BuildContext context) {
+    Scaffold scaffold = Scaffold(
+        appBar: appBar(context),
+        body: Stack(children: [
+          SingleChildScrollView(
+              physics: scrollEnabled ? null : NeverScrollableScrollPhysics(),
+              child: SizedBox(
+                  height: 1.sh -
+                      (showAppBar(context) ? appBarHeight : 0) -
+                      StyledNavBar.kHeight +
+                      1.h,
+                  width: 1.sw,
+                  child: buildView(context))),
+          Align(alignment: Alignment.bottomCenter, child: navBar(context))
+        ]));
+    return showAppBar(context)
+        ? scaffold
+        : AnnotatedRegion<SystemUiOverlayStyle>(
+            value: systemOverlayDark
+                ? SystemUiOverlayStyle.dark
+                : SystemUiOverlayStyle.light,
+            child: scaffold);
+  }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../common/widgets.dart';
 import '../provider.dart';
+import '../screens.dart';
 import 'explore_state.dart';
 import 'explore_view.dart';
 
@@ -15,8 +16,7 @@ class ExploreProvider extends ScreenProvider<ExploreState, ExploreView> {
       if (state.countdown == 1) {
         Navigator.pushAndRemoveUntil(
             context,
-            NoAnimationMaterialPageRoute(
-                builder: (context) => ExploreProvider()),
+            NoAnimationMaterialPageRoute(builder: (context) => MatchProvider()),
             (_) => false);
       } else {
         state.countdown = state.countdown - 1;
