@@ -93,9 +93,10 @@ class _StyledNavBarState extends State<StyledNavBar>
                       fontWeight: FontWeight.bold,
                       color: widget.reversed ? Colors.white : Colors.black)
                   : Theme.of(context).textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.bold,
                       color: widget.reversed
-                          ? Color.fromARGB((0.8 * 255).round(), 255, 255, 255)
-                          : Color.fromARGB((0.8 * 255).round(), 0, 0, 0))),
+                          ? Color.fromARGB((0.7 * 255).round(), 255, 255, 255)
+                          : Color.fromARGB((0.4 * 255).round(), 0, 0, 0))),
           onPressed: widget.navigationEnabled && index != widget.pageIndex
               ? onPressed
               : null);
@@ -115,59 +116,61 @@ class _StyledNavBarState extends State<StyledNavBar>
           ),
         ],
       ),
-      child: Stack(children: [
-        Center(
-            child: Padding(
-                padding: EdgeInsets.only(left: 12.w),
-                child: controller != null
-                    ? AnimatedBuilder(
-                        animation: controller!,
-                        builder: (context, child) => logoButton)
-                    : logoButton)),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            createButton(
-                context,
-                'NEWS',
-                () => Navigator.pushAndRemoveUntil(
+      child: Padding(
+          padding: EdgeInsets.only(bottom: 18.h),
+          child: Stack(children: [
+            Center(
+                child: Padding(
+                    padding: EdgeInsets.only(left: 12.w),
+                    child: controller != null
+                        ? AnimatedBuilder(
+                            animation: controller!,
+                            builder: (context, child) => logoButton)
+                        : logoButton)),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                createButton(
                     context,
-                    NoAnimationMaterialPageRoute(
-                        builder: (context) => NewsProvider()),
-                    (route) => false),
-                0),
-            createButton(
-                context,
-                'EXPLORE',
-                () => Navigator.pushAndRemoveUntil(
+                    'NEWS',
+                    () => Navigator.pushAndRemoveUntil(
+                        context,
+                        NoAnimationMaterialPageRoute(
+                            builder: (context) => NewsProvider()),
+                        (route) => false),
+                    0),
+                createButton(
                     context,
-                    NoAnimationMaterialPageRoute(
-                        builder: (context) => ExploreProvider()),
-                    (route) => false),
-                1),
-            60.horizontalSpace,
-            createButton(
-                context,
-                'CHAT',
-                () => Navigator.pushAndRemoveUntil(
+                    'EXPLORE',
+                    () => Navigator.pushAndRemoveUntil(
+                        context,
+                        NoAnimationMaterialPageRoute(
+                            builder: (context) => ExploreProvider()),
+                        (route) => false),
+                    1),
+                60.horizontalSpace,
+                createButton(
                     context,
-                    NoAnimationMaterialPageRoute(
-                        builder: (context) => ChatProvider()),
-                    (route) => false),
-                2),
-            createButton(
-                context,
-                'OPTIONS',
-                () => Navigator.pushAndRemoveUntil(
+                    'CHAT',
+                    () => Navigator.pushAndRemoveUntil(
+                        context,
+                        NoAnimationMaterialPageRoute(
+                            builder: (context) => ChatProvider()),
+                        (route) => false),
+                    2),
+                createButton(
                     context,
-                    NoAnimationMaterialPageRoute(
-                        builder: (context) => OptionsProvider()),
-                    (route) => false),
-                3),
-          ],
-        ),
-      ]));
+                    'OPTIONS',
+                    () => Navigator.pushAndRemoveUntil(
+                        context,
+                        NoAnimationMaterialPageRoute(
+                            builder: (context) => OptionsProvider()),
+                        (route) => false),
+                    3),
+              ],
+            ),
+          ])));
 
   @override
   void dispose() {
