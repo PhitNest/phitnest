@@ -4,15 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'ui/screens/screens.dart';
 import 'ui/theme.dart';
 
-/**
- * Use flutter run --dart-define="USE_PREVIEW=true" or add USE_PREVIEW=true to .env 
- * to use device preview.
- */
+/// Use flutter run --dart-define="USE_PREVIEW=true" or add USE_PREVIEW=true to .env
+/// to use device preview.
 const usePreview = bool.fromEnvironment("USE_PREVIEW", defaultValue: false);
 
-/**
- * This is the base Flutter [MaterialApp] instance. 
- */
+/// This is the base Flutter [MaterialApp] instance.
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) => DevicePreview(
