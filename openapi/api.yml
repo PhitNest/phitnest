@@ -35,6 +35,9 @@ paths:
   /gym/nearest:
     $ref: "specs/gym.yml#/paths/nearest"
 
+  /user:
+    $ref: "specs/user.yml#/paths/myData"
+
 components:
   securitySchemes:
     AccessToken:

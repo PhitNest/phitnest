@@ -1,16 +1,39 @@
+paths:
+  myData:
+    get:
+      tags:
+        - User
+      summary: Get my user data
+      security:
+        - AccessToken: []
+      responses:
+        200:
+          description: Fetched your data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: You are not authenticated
+
 components:
   schemas:
     User:
       title: user
       required:
-        - id
+        - cognitoId
         - gymId
         - email
         - firstName
         - lastName
       type: object
       properties:
-        id:
+        cognitoId:
           type: string
           example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh
         gymId:
