@@ -4,7 +4,7 @@ import Server from "../server";
 import { testUser, testUserPassword } from "./constants";
 import Q from "q";
 
-export function produceAccessToken(): Promise<string> {
+export function produceAccessToken(callback: (accessToken: string) => void) {
   const accessToken = Q.defer();
   describe("Login to test user", () => {
     it("should produce an access token", () =>
@@ -19,5 +19,5 @@ export function produceAccessToken(): Promise<string> {
           accessToken.resolve(res.body.accessToken);
         }));
   });
-  return accessToken.promise;
+  accessToken.promise.then(callback);
 }
