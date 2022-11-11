@@ -17,4 +17,8 @@ export class UserQueries {
       lastName: lastName,
     });
   }
+
+  static getUser(cognitoId: string): Promise<IUserModel> {
+    return User.findOne({ cognitoId: cognitoId }).exec();
+  }
 }
