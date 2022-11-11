@@ -1,4 +1,5 @@
 paths:
+  # /user
   myData:
     get:
       tags:
@@ -20,6 +21,59 @@ paths:
               schema:
                 type: string
                 example: You are not authenticated
+
+  # /gym/list
+  explore:
+    get:
+      tags:
+        - User
+      summary: Search for users at my gym
+      security:
+        - AccessToken: []
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: number
+            example: 2
+          required: true
+          description: The number of users to skip past
+        - in: query
+          name: limit
+          schema:
+            type: number
+            example: 50
+          required: true
+          description: The number of users to find
+      responses:
+        200:
+          description: Found users at my gym
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                    - cognitoId
+                    - firstName
+                    - lastName
+                  properties:
+                    cognitoId:
+                      type: string
+                      example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh
+                    firstName:
+                      type: string
+                      example: John
+                    lastName:
+                      type: string
+                      example: Jones
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
 
 components:
   schemas:
