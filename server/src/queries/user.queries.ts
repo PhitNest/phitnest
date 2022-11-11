@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import l from "../../common/logger";
 import { IUserModel, User } from "../models/user.model";
 
 export class UserQueries {
@@ -18,7 +19,7 @@ export class UserQueries {
     });
   }
 
-  static getUser(cognitoId: string): Promise<IUserModel> {
-    return User.findOne({ cognitoId: cognitoId }).exec();
+  static async getUser(cognitoId: string): Promise<IUserModel> {
+    return User.findOne({ cognitoId: cognitoId });
   }
 }
