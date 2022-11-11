@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import l from "../../common/logger";
 import { IUserModel, User } from "../models/user.model";
 
 export class UserQueries {
@@ -19,7 +18,28 @@ export class UserQueries {
     });
   }
 
-  static async getUser(cognitoId: string): Promise<IUserModel> {
-    return User.findOne({ cognitoId: cognitoId });
+  static async getPrivateUserData(cognitoId: string): Promise<IUserModel> {
+    return (
+      await User.aggregate([
+        { $match: { cognitoId: cognitoId } },
+        {
+          $project: {
+            cognitoId: 1,
+            gymId: 1,
+            email: 1,
+            firstName: 1,
+            lastName: 1,
+          },
+        },
+      ])
+    )[0];
+  }
+
+  static async explore(
+    cognitoId: string,
+    offset: number | null,
+    limit: number | null
+  ): Promise<IUserModel[]> {
+    return User.aggregate([]);
   }
 }

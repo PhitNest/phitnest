@@ -2,6 +2,7 @@ import { IGymModel, Gym } from "../models/gym.model";
 import { User } from "../models/user.model";
 import { AddressModel } from "../models/address.model";
 import { LocationModel } from "../models/location.model";
+import l from "../../common/logger";
 
 export class GymQueries {
   static createGym(
@@ -17,7 +18,25 @@ export class GymQueries {
   }
 
   static async myGym(cognitoId: string): Promise<IGymModel> {
-    return Gym.findById((await User.findOne({ cognitoId: cognitoId })).gymId);
+    return (
+      await User.aggregate([
+        { $match: { cognitoId: cognitoId } },
+        {
+          $lookup: {
+            from: "gyms",
+            localField: "gymId",
+            foreignField: "_id",
+            as: "gym",
+          },
+        },
+        {
+          $project: {
+            _id: -1,
+            gym: 1,
+          },
+        },
+      ])
+    )[0].gym[0];
   }
 
   static nearestGyms(

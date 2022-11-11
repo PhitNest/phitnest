@@ -37,6 +37,8 @@ paths:
 
   /user:
     $ref: "specs/user.yml#/paths/myData"
+  /user/explore:
+    $ref: "specs/user.yml#/paths/explore"
 
 components:
   securitySchemes:
