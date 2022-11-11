@@ -4,14 +4,12 @@ import Server from "../server";
 import { testUser, testUserPassword } from "./constants";
 import { produceAccessToken } from "./helpers";
 
-produceAccessToken().then((accessToken) => {
-  describe("Requesting an authenticated route without an access token", () => {
-    it("should deny my request", () =>
+produceAccessToken((accessToken) => {
+  describe("Requesting an authenticated route", () => {
+    it("should deny my request without an access token", () =>
       request(Server).get("/auth/authenticated").send().expect(401));
-  });
 
-  describe("Requesting an authenticated route with an access token", () => {
-    it("should result in status code 200", () =>
+    it("should accept my request with an access token", () =>
       request(Server)
         .get("/auth/authenticated")
         .set("Authorization", `Bearer ${accessToken}`)

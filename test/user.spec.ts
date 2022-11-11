@@ -5,9 +5,12 @@ import Server from "../server";
 import { produceAccessToken } from "./helpers";
 import { testUser } from "./constants";
 
-produceAccessToken().then((accessToken) => {
+produceAccessToken((accessToken) => {
   describe("Request my user data", () => {
-    it("should return my user data", () =>
+    it("should not return my user data without an access token", () =>
+      request(Server).get("/user").expect(401));
+
+    it("should return my user data with an access token", () =>
       request(Server)
         .get("/user")
         .set("Authorization", `Bearer ${accessToken}`)
