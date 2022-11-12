@@ -93,3 +93,51 @@ paths:
               schema:
                 type: string
                 example: Validation error has occurred.
+  # /userRelationship/friends
+  friends:
+    get:
+      tags:
+        - User Relationship
+      summary: Get all of my friends public data
+      security:
+        - AccessToken: []
+      responses:
+        200:
+          description: Got my friends data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserPublic"
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
+components:
+  schemas:
+    UserPublic:
+      title: public user
+      required:
+        - cognitoId
+        - gymId
+        - firstName
+        - lastName
+      type: object
+      properties:
+        cognitoId:
+          type: string
+          example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh
+        gymId:
+          type: string
+          example: 6361c05b30d64fe62ff485cb
+        firstName:
+          type: string
+          example: Jp
+        lastName:
+          type: string
+          example: Siegel

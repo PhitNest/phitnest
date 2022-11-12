@@ -1,3 +1,4 @@
+import { IPublicUserModel } from "../models/user.model";
 import {
   UserRelationship,
   UserRelationshipType,
@@ -26,5 +27,75 @@ export class UserRelationshipQueries {
       { type: UserRelationshipType.Denied },
       { upsert: true }
     );
+  }
+
+  static async myFriends(cognitoId: string) {
+    return UserRelationship.aggregate([
+      {
+        $match: {
+          sender: cognitoId,
+          type: UserRelationshipType.Requested,
+        },
+      },
+      {
+        $lookup: {
+          from: "user_relationships",
+          localField: "recipient",
+          foreignField: "sender",
+          as: "friends",
+          pipeline: [
+            {
+              $match: {
+                recipient: cognitoId,
+                type: UserRelationshipType.Requested,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $match: {
+          friends: {
+            $gt: [
+              {
+                $size: "$friends",
+              },
+              0,
+            ],
+          },
+        },
+      },
+      {
+        $project: {
+          friendId: {
+            $first: "$friends.sender",
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "friendId",
+          foreignField: "cognitoId",
+          as: "friend",
+        },
+      },
+      {
+        $project: {
+          cognitoId: {
+            $first: "$friend.cognitoId",
+          },
+          gymId: {
+            $first: "$friend.gymId",
+          },
+          firstName: {
+            $first: "$friend.firstName",
+          },
+          lastName: {
+            $first: "$friend.lastName",
+          },
+        },
+      },
+    ]);
   }
 }

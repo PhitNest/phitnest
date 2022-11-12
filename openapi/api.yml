@@ -46,6 +46,8 @@ paths:
     $ref: "specs/userRelationship.yml#/paths/block"
   /userRelationship/denyRequest:
     $ref: "specs/userRelationship.yml#/paths/denyRequest"
+  /userRelationship/friends:
+    $ref: "specs/userRelationship.yml#/paths/friends"
 
 components:
   securitySchemes:

@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
 export enum UserRelationshipType {
-  Requested,
-  Denied,
-  Blocked,
+  Requested = "Requested",
+  Denied = "Denied",
+  Blocked = "Blocked",
 }
 
 export interface IUserRelationshipModel extends mongoose.Document {
@@ -14,8 +14,8 @@ export interface IUserRelationshipModel extends mongoose.Document {
 
 const schema = new mongoose.Schema(
   {
-    sender: { type: mongoose.Types.ObjectId, ref: "User", required: true },
-    recipient: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+    sender: { type: String, required: true },
+    recipient: { type: String, required: true },
     type: { type: String, enum: UserRelationshipType, required: true },
   },
   {
