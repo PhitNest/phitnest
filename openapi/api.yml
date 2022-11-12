@@ -40,6 +40,13 @@ paths:
   /user/explore:
     $ref: "specs/user.yml#/paths/explore"
 
+  /userRelationship/sendRequest:
+    $ref: "specs/userRelationship.yml#/paths/sendRequest"
+  /userRelationship/block:
+    $ref: "specs/userRelationship.yml#/paths/block"
+  /userRelationship/denyRequest:
+    $ref: "specs/userRelationship.yml#/paths/denyRequest"
+
 components:
   securitySchemes:
     AccessToken:

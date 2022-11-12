@@ -18,7 +18,7 @@ export const testGym: IGymModel = new Gym({
   location: testGymLocation,
 });
 
-// This user is already created within the cognito user pool.
+// These users are already created within the cognito user pool.
 // Don't modify the id or email
 export const testUser: IUserModel = new User({
   cognitoId: "788f8252-5383-4f0c-88f6-efe447b2b878",
@@ -28,5 +28,19 @@ export const testUser: IUserModel = new User({
   lastName: "Jones",
 });
 
+export const testUser2: IUserModel = new User({
+  cognitoId: "ce909a14-4f1f-4632-8b65-a25414b1426f",
+  gymId: testGym._id,
+  email: "jpTest2@phitnest.com",
+  firstName: "Joe",
+  lastName: "James",
+});
+
 // This is the password for the above user.
 export const testUserPassword = "H3llOW0RLD$$";
+
+export async function setup() {
+  await testGym.save();
+  await testUser.save();
+  await testUser2.save();
+}

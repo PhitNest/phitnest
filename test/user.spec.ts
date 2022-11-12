@@ -5,7 +5,7 @@ import Server from "../server";
 import { produceAccessToken } from "./helpers";
 import { testUser } from "./constants";
 
-produceAccessToken((accessToken) => {
+produceAccessToken(testUser, (accessToken) => {
   describe("Request my user data", () => {
     it("should not return my user data without an access token", () =>
       request(Server).get("/user").expect(401));
