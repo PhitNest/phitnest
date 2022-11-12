@@ -33,8 +33,7 @@ class ConfirmPhotoView extends ScreenView {
                     fontStyle: FontStyle.italic,
                     decoration: TextDecoration.underline),
               ))
-    ]),
-    
+    ]), 
   );
           
 }
