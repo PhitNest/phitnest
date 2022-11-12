@@ -1,21 +1,20 @@
 import { Request, Response } from "express";
 import { UserQueries } from "../../queries/user.queries";
 
-function respondWithTokens(req: Request, res: Response) {
-  return res.status(200).json({
-    accessToken: res.locals.cognitoSession.getAccessToken().getJwtToken(),
-    refreshToken: res.locals.cognitoSession.getRefreshToken().getToken(),
-    idToken: res.locals.cognitoSession.getIdToken().getJwtToken(),
-  });
-}
-
 class AuthController {
   login(req: Request, res: Response) {
-    return respondWithTokens(req, res);
+    return res.status(200).json({
+      accessToken: res.locals.cognitoSession.getAccessToken().getJwtToken(),
+      refreshToken: res.locals.cognitoSession.getRefreshToken().getToken(),
+      idToken: res.locals.cognitoSession.getIdToken().getJwtToken(),
+    });
   }
 
   refreshSession(req: Request, res: Response) {
-    return respondWithTokens(req, res);
+    return res.status(200).json({
+      accessToken: res.locals.cognitoSession.getAccessToken().getJwtToken(),
+      idToken: res.locals.cognitoSession.getIdToken().getJwtToken(),
+    });
   }
 
   async register(req: Request, res: Response) {

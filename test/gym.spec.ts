@@ -1,9 +1,7 @@
 import "mocha";
 import request from "supertest";
-import { expect } from "chai";
 import Server from "../server";
 import { produceAccessToken } from "./helpers";
-import { testUser } from "./constants";
 
 produceAccessToken((accessToken) => {
   describe("Request my gym data", () => {
