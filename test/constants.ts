@@ -21,7 +21,7 @@ export const testGym: IGymModel = new Gym({
 // This user is already created within the cognito user pool.
 // Don't modify the id or email
 export const testUser: IUserModel = new User({
-  cognitoId: "74d32de0-6780-4462-9d81-b1d3f0e3508b",
+  cognitoId: "788f8252-5383-4f0c-88f6-efe447b2b878",
   gymId: testGym._id,
   email: "jp@phitnest.com",
   firstName: "John",

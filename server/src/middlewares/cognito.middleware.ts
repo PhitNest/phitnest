@@ -11,10 +11,17 @@ import {
 } from "amazon-cognito-identity-js";
 import l from "../../common/logger";
 
-const userPool = new CognitoUserPool({
-  UserPoolId: process.env.COGNITO_POOL_ID,
-  ClientId: process.env.COGNITO_APP_CLIENT_ID,
-});
+const userPool = new CognitoUserPool(
+  process.env.NODE_ENV == "test"
+    ? {
+        UserPoolId: process.env.COGNITO_POOL_ID_TEST,
+        ClientId: process.env.COGNITO_APP_CLIENT_ID_TEST,
+      }
+    : {
+        UserPoolId: process.env.COGNITO_POOL_ID,
+        ClientId: process.env.COGNITO_APP_CLIENT_ID,
+      }
+);
 
 class CognitoMiddleware {
   authenticate(req: Request, res: Response, next: NextFunction) {
