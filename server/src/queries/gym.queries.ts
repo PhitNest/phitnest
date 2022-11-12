@@ -2,7 +2,6 @@ import { IGymModel, Gym } from "../models/gym.model";
 import { User } from "../models/user.model";
 import { AddressModel } from "../models/address.model";
 import { LocationModel } from "../models/location.model";
-import l from "../../common/logger";
 
 export class GymQueries {
   static createGym(
