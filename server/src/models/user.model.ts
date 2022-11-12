@@ -8,6 +8,13 @@ export interface IUserModel extends mongoose.Document {
   lastName: string;
 }
 
+export interface IPublicUserModel extends mongoose.Document {
+  cognitoId: string;
+  gymId: string;
+  firstName: string;
+  lastName: string;
+}
+
 const schema = new mongoose.Schema(
   {
     cognitoId: { type: String, required: true, unique: true },

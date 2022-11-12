@@ -36,6 +36,14 @@ export const testUser2: IUserModel = new User({
   lastName: "James",
 });
 
+export const testUser3: IUserModel = new User({
+  cognitoId: "03b7175e-1dcc-4adf-87e3-8aa2d4f7f6d8",
+  gymId: testGym._id,
+  email: "jpTest3@phitnest.com",
+  firstName: "Jack",
+  lastName: "Jonah",
+});
+
 // This is the password for the above user.
 export const testUserPassword = "H3llOW0RLD$$";
 
@@ -43,4 +51,5 @@ export async function setup() {
   await testGym.save();
   await testUser.save();
   await testUser2.save();
+  await testUser3.save();
 }

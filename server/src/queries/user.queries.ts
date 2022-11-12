@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IUserModel, User } from "../models/user.model";
+import { IPublicUserModel, IUserModel, User } from "../models/user.model";
 
 export class UserQueries {
   static createUser(
@@ -39,7 +39,7 @@ export class UserQueries {
     cognitoId: string,
     offset: number | null,
     limit: number | null
-  ): Promise<IUserModel[]> {
+  ): Promise<IPublicUserModel[]> {
     return User.aggregate([]);
   }
 }
