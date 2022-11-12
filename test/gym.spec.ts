@@ -1,9 +1,10 @@
 import "mocha";
 import request from "supertest";
 import Server from "../server";
+import { testUser } from "./constants";
 import { produceAccessToken } from "./helpers";
 
-produceAccessToken((accessToken) => {
+produceAccessToken(testUser, (accessToken) => {
   describe("Request my gym data", () => {
     it("should reject my request without an access token", () =>
       request(Server).get("/gym").expect(401));

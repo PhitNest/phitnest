@@ -4,7 +4,7 @@ import Server from "../server";
 import { testUser, testUserPassword } from "./constants";
 import { produceAccessToken } from "./helpers";
 
-produceAccessToken((accessToken) => {
+produceAccessToken(testUser, (accessToken) => {
   describe("Requesting an authenticated route", () => {
     it("should deny my request without an access token", () =>
       request(Server).get("/auth/authenticated").send().expect(401));

@@ -1,17 +1,21 @@
 import "mocha";
 import request from "supertest";
 import Server from "../server";
-import { testUser, testUserPassword } from "./constants";
+import { testUserPassword } from "./constants";
+import { IUserModel } from "../server/src/models/user.model";
 import Q from "q";
 
-export function produceAccessToken(callback: (accessToken: string) => void) {
+export function produceAccessToken(
+  user: IUserModel,
+  callback: (accessToken: string) => void
+) {
   const accessToken = Q.defer();
   describe("Login to test user", () => {
     it("should produce an access token", () =>
       request(Server)
         .post("/auth/login")
         .send({
-          email: testUser.email,
+          email: user.email,
           password: testUserPassword,
         })
         .expect(200)
