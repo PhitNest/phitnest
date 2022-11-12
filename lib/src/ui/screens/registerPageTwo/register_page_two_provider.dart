@@ -8,11 +8,8 @@ import 'register_page_two_view.dart';
 class RegisterPageTwoProvider
     extends ScreenProvider<RegisterPageTwoState, RegisterPageTwoView> {
   @override
-  RegisterPageTwoView build(
-          BuildContext context, RegisterPageTwoState state) =>
-        RegisterPageTwoView();
-  }
-       
+  RegisterPageTwoView build(BuildContext context, RegisterPageTwoState state) =>
+      RegisterPageTwoView();
 
   @override
   RegisterPageTwoState buildState() => RegisterPageTwoState();
