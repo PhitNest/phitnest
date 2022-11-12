@@ -1,27 +1,32 @@
 import mongoose from "mongoose";
 
+export enum FriendshipType {
+  Requested,
+  Accepted,
+  Denied,
+  Blocked,
+}
+
 export interface IFriendshipModel extends mongoose.Document {
-  userIdA: string;
-  acceptanceA: boolean;
-  userIdB: string;
-  acceptanceB: boolean;
+  sender: string;
+  recipient: string;
+  type: FriendshipType;
 }
 
 const schema = new mongoose.Schema(
   {
-    userIdA: { type: mongoose.Types.ObjectId, ref: "User", required: true },
-    acceptanceA: { type: Boolean, required: true },
-    userIdB: { type: mongoose.Types.ObjectId, ref: "User", required: true },
-    acceptanceB: { type: Boolean, required: true },
+    sender: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+    recipient: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+    type: { type: String, enum: FriendshipType, required: true },
   },
   {
     collection: "friendships",
   }
 );
 
-schema.index({ userIdA: 1, userIdB: 1 });
-schema.index({ userIdA: 1 });
-schema.index({ userIdB: 1 });
+schema.index({ sender: 1, recipient: 1 });
+schema.index({ sender: 1, type: 1 });
+schema.index({ recipient: 1, type: 1 });
 
 export const Friendship = mongoose.model<IFriendshipModel>(
   "Friendship",
