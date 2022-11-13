@@ -30,10 +30,18 @@ class UserRelationshipController {
     }
   }
 
-  async myRequests(req: Request, res: Response) {
+  async mySentRequests(req: Request, res: Response) {
     res
       .status(200)
-      .json(await UserRelationshipQueries.myRequests(res.locals.cognitoId));
+      .json(await UserRelationshipQueries.mySentRequests(res.locals.cognitoId));
+  }
+
+  async myReceivedRequests(req: Request, res: Response) {
+    res
+      .status(200)
+      .json(
+        await UserRelationshipQueries.myReceivedRequests(res.locals.cognitoId)
+      );
   }
 
   async denyRequest(req: Request, res: Response) {
