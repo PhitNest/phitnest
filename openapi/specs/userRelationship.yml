@@ -125,12 +125,12 @@ paths:
                 type: string
                 example: Validation error has occurred.
 
-  # /userRelationship/requests
-  requests:
+  # /userRelationship/sentRequests
+  sentRequests:
     get:
       tags:
         - User Relationship
-      summary: Get all of my pending friend requests
+      summary: Get all of my pending sent friend requests
       security:
         - AccessToken: []
       responses:
