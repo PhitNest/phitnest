@@ -53,6 +53,70 @@ export class UserRelationshipQueries {
     }
   }
 
+  static async myRequests(cognitoId: string): Promise<IPublicUserModel[]> {
+    return UserRelationship.aggregate([
+      {
+        $match: {
+          sender: cognitoId,
+          type: UserRelationshipType.Requested,
+        },
+      },
+      {
+        $lookup: {
+          from: "user_relationships",
+          localField: "recipient",
+          foreignField: "sender",
+          pipeline: [
+            {
+              $match: {
+                recipient: cognitoId,
+              },
+            },
+          ],
+          as: "response",
+        },
+      },
+      {
+        $match: {
+          $expr: {
+            $not: {
+              $gt: [
+                {
+                  $size: "$response",
+                },
+                0,
+              ],
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "recipient",
+          foreignField: "cognitoId",
+          as: "users",
+        },
+      },
+      {
+        $project: {
+          cognitoId: {
+            $first: "$users.cognitoId",
+          },
+          gymId: {
+            $first: "$users.gymId",
+          },
+          firstName: {
+            $first: "$users.firstName",
+          },
+          lastName: {
+            $first: "$users.lastName",
+          },
+        },
+      },
+    ]);
+  }
+
   static async myFriends(cognitoId: string): Promise<IPublicUserModel[]> {
     return UserRelationship.aggregate([
       {

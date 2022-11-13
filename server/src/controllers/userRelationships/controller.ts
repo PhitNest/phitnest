@@ -30,6 +30,12 @@ class UserRelationshipController {
     }
   }
 
+  async myRequests(req: Request, res: Response) {
+    res
+      .status(200)
+      .json(await UserRelationshipQueries.myRequests(res.locals.cognitoId));
+  }
+
   async denyRequest(req: Request, res: Response) {
     if (
       await UserRelationshipQueries.denyRequest(
