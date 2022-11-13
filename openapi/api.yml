@@ -52,6 +52,8 @@ paths:
     $ref: "specs/userRelationship.yml#/paths/friends"
   /userRelationship/sentRequests:
     $ref: "specs/userRelationship.yml#/paths/sentRequests"
+  /userRelationship/receivedRequests:
+    $ref: "specs/userRelationship.yml#/paths/receivedRequests"
 
 components:
   securitySchemes:

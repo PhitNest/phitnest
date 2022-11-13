@@ -150,6 +150,31 @@ paths:
                 type: string
                 example: Validation error has occurred.
 
+  # /userRelationship/receivedRequests
+  receivedRequests:
+    get:
+      tags:
+        - User Relationship
+      summary: Get all of my received friend requests
+      security:
+        - AccessToken: []
+      responses:
+        200:
+          description: Got my pending requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserPublic"
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
   # /userRelationship/friends
   friends:
     get:
