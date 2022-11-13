@@ -1,35 +1,59 @@
-import { IPublicUserModel } from "../models/user.model";
+import { IPublicUserModel, User } from "../models/user.model";
 import {
+  IUserRelationshipModel,
   UserRelationship,
   UserRelationshipType,
 } from "../models/userRelationship.model";
 
 export class UserRelationshipQueries {
-  static async block(cognitoId: string, otherUserCognitoId: string) {
-    await UserRelationship.findOneAndUpdate(
-      { sender: cognitoId, recipient: otherUserCognitoId },
-      { type: UserRelationshipType.Blocked },
-      { upsert: true }
-    );
+  static async block(
+    cognitoId: string,
+    otherUserCognitoId: string
+  ): Promise<IUserRelationshipModel> {
+    if ((await User.find({ cognitoId: otherUserCognitoId })).length) {
+      return await UserRelationship.findOneAndUpdate(
+        { sender: cognitoId, recipient: otherUserCognitoId },
+        { type: UserRelationshipType.Blocked },
+        { upsert: true, new: true }
+      );
+    }
   }
 
-  static async sendRequest(cognitoId: string, otherUserCognitoId: string) {
-    await UserRelationship.findOneAndUpdate(
-      { sender: cognitoId, recipient: otherUserCognitoId },
-      { type: UserRelationshipType.Requested },
-      { upsert: true }
-    );
+  static async unblock(cognitoId: string, otherUserCognitoId: string) {
+    await UserRelationship.deleteOne({
+      sender: cognitoId,
+      recipient: otherUserCognitoId,
+      type: UserRelationshipType.Blocked,
+    });
   }
 
-  static async denyRequest(cognitoId: string, otherUserCognitoId: string) {
-    await UserRelationship.findOneAndUpdate(
-      { sender: cognitoId, recipient: otherUserCognitoId },
-      { type: UserRelationshipType.Denied },
-      { upsert: true }
-    );
+  static async sendRequest(
+    cognitoId: string,
+    otherUserCognitoId: string
+  ): Promise<IUserRelationshipModel> {
+    if ((await User.find({ cognitoId: otherUserCognitoId })).length) {
+      return await UserRelationship.findOneAndUpdate(
+        { sender: cognitoId, recipient: otherUserCognitoId },
+        { type: UserRelationshipType.Requested },
+        { upsert: true, new: true }
+      );
+    }
   }
 
-  static async myFriends(cognitoId: string) {
+  static async denyRequest(
+    cognitoId: string,
+    otherUserCognitoId: string
+  ): Promise<IUserRelationshipModel> {
+    if ((await User.find({ cognitoId: otherUserCognitoId })).length) {
+      return await UserRelationship.findOneAndUpdate(
+        { sender: cognitoId, recipient: otherUserCognitoId },
+        { type: UserRelationshipType.Denied },
+        { upsert: true, new: true }
+      );
+    }
+  }
+
+  static async myFriends(cognitoId: string): Promise<IPublicUserModel[]> {
     return UserRelationship.aggregate([
       {
         $match: {

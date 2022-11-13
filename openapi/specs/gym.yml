@@ -73,18 +73,23 @@ paths:
           schema:
             type: number
             example: -80.2
+            minimum: -180
+            maximum: 180
           required: true
         - in: query
           name: latitude
           schema:
             type: number
             example: 37.4
+            minimum: -90
+            maximum: 90
           required: true
         - in: query
           name: distance
           schema:
             type: number
             example: 110.5
+            minimum: 0
           description: A distance in units of miles
           required: true
         - in: query
@@ -92,6 +97,7 @@ paths:
           schema:
             type: integer
             example: 5
+            minimum: 0
           description: The amount of gyms to find. If undefined, all gyms within distance will be found.
       responses:
         200:
@@ -122,18 +128,23 @@ paths:
           schema:
             type: number
             example: -80.2
+            minimum: -180
+            maximum: 180
           required: true
         - in: query
           name: latitude
           schema:
             type: number
             example: 37.4
+            minimum: -90
+            maximum: 90
           required: true
         - in: query
           name: distance
           schema:
             type: number
             example: 110.5
+            minimum: 0
           description: A distance in units of miles
           required: true
       responses:

@@ -40,6 +40,7 @@ paths:
           schema:
             type: number
             example: 2
+            minimum: 0
           required: true
           description: The number of users to skip past
         - in: query
@@ -47,6 +48,8 @@ paths:
           schema:
             type: number
             example: 50
+            minimum: 0
+            maximum: 50
           required: true
           description: The number of users to find
       responses:
