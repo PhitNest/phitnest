@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import registerChat from "./chat.events";
+import { registerChat } from "./chat.events";
 import l from "../../common/logger";
 
 export default class Events {
