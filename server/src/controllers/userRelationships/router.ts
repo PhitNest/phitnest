@@ -13,4 +13,6 @@ router.post("/denyRequest", [cognito.authenticate], controller.denyRequest);
 
 router.get("/friends", [cognito.authenticate], controller.myFriends);
 
+router.get("/requests", [cognito.authenticate], controller.myRequests);
+
 export default router;

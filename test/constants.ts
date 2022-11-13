@@ -82,6 +82,14 @@ export const testUsers = [
 export const testUserPassword = "H3llOW0RLD$$";
 
 export async function setup() {
-  await Promise.all(testGyms.map((gym) => gym.save()));
-  await Promise.all(testUsers.map((user) => user.save()));
+  await Promise.all(
+    testGyms.map((gym) =>
+      Gym.findOneAndUpdate({ _id: gym._id }, gym, { upsert: true })
+    )
+  );
+  await Promise.all(
+    testUsers.map((user) =>
+      User.findOneAndUpdate({ _id: user._id }, user, { upsert: true })
+    )
+  );
 }
