@@ -2,8 +2,9 @@ import "mocha";
 import request from "supertest";
 import Server from "../server";
 import { testUserPassword } from "./constants";
-import { IUserModel } from "../server/src/models/user.model";
+import { IPublicUserModel, IUserModel } from "../server/src/models/user.model";
 import Q from "q";
+import { expect } from "chai";
 
 export function produceAccessToken(
   user: IUserModel,
@@ -24,4 +25,11 @@ export function produceAccessToken(
         }));
   });
   accessToken.promise.then(callback);
+}
+
+export function comparePublicData(user: any, expected: IPublicUserModel) {
+  expect(user.cognitoId).equals(expected.cognitoId);
+  expect(user.gymId).equals(expected.gymId.toString());
+  expect(user.firstName).equals(expected.firstName);
+  expect(user.lastName).equals(expected.lastName);
 }

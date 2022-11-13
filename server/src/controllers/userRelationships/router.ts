@@ -7,6 +7,8 @@ router.post("/sendRequest", [cognito.authenticate], controller.sendRequest);
 
 router.post("/block", [cognito.authenticate], controller.block);
 
+router.post("/unblock", [cognito.authenticate], controller.unblock);
+
 router.post("/denyRequest", [cognito.authenticate], controller.denyRequest);
 
 router.get("/friends", [cognito.authenticate], controller.myFriends);

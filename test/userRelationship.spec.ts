@@ -2,21 +2,13 @@ import "mocha";
 import request from "supertest";
 import { expect } from "chai";
 import Server from "../server";
-import { produceAccessToken } from "./helpers";
-import { testUser, testUser2, testUser3 } from "./constants";
-import { IUserModel } from "../server/src/models/user.model";
+import { produceAccessToken, comparePublicData } from "./helpers";
+import { testUsers } from "./constants";
 import { fail } from "assert";
 
-function compareData(user: any, expected: IUserModel) {
-  expect(user.cognitoId).equals(expected.cognitoId);
-  expect(user.gymId).equals(expected.gymId.toString());
-  expect(user.firstName).equals(expected.firstName);
-  expect(user.lastName).equals(expected.lastName);
-}
-
-produceAccessToken(testUser, (accessToken1) => {
-  produceAccessToken(testUser2, (accessToken2) => {
-    produceAccessToken(testUser3, (accessToken3) => {
+produceAccessToken(testUsers[0], (accessToken1) => {
+  produceAccessToken(testUsers[1], (accessToken2) => {
+    produceAccessToken(testUsers[2], (accessToken3) => {
       const header1 = `Bearer ${accessToken1}`;
       const header2 = `Bearer ${accessToken2}`;
       const header3 = `Bearer ${accessToken3}`;
@@ -40,7 +32,7 @@ produceAccessToken(testUser, (accessToken1) => {
           request(Server)
             .post("/userRelationship/sendRequest")
             .send({
-              recipientId: testUser2.cognitoId,
+              recipientId: testUsers[1].cognitoId,
             })
             .expect(401));
 
@@ -49,9 +41,18 @@ produceAccessToken(testUser, (accessToken1) => {
             .post("/userRelationship/sendRequest")
             .set("Authorization", header1)
             .send({
-              recipientId: testUser2.cognitoId,
+              recipientId: testUsers[1].cognitoId,
             })
             .expect(200));
+
+        it("sending to an invalid id", () =>
+          request(Server)
+            .post("/userRelationship/sendRequest")
+            .set("Authorization", header1)
+            .send({
+              recipientId: "abcd",
+            })
+            .expect(500));
 
         it("should not immediately result in friendship for sender", () =>
           request(Server)
@@ -78,7 +79,7 @@ produceAccessToken(testUser, (accessToken1) => {
             .post("/userRelationship/sendRequest")
             .set("Authorization", header2)
             .send({
-              recipientId: testUser.cognitoId,
+              recipientId: testUsers[0].cognitoId,
             })
             .expect(200));
 
@@ -90,7 +91,7 @@ produceAccessToken(testUser, (accessToken1) => {
             .expect(200)
             .then((res: request.Response) => {
               expect(res.body.length).equals(1);
-              compareData(res.body[0], testUser2);
+              comparePublicData(res.body[0], testUsers[1]);
             }));
 
         it("should result in friendship for recipient", () =>
@@ -101,7 +102,7 @@ produceAccessToken(testUser, (accessToken1) => {
             .expect(200)
             .then((res: request.Response) => {
               expect(res.body.length).equals(1);
-              compareData(res.body[0], testUser);
+              comparePublicData(res.body[0], testUsers[0]);
             }));
 
         it("accept the request a second time", () =>
@@ -109,7 +110,7 @@ produceAccessToken(testUser, (accessToken1) => {
             .post("/userRelationship/sendRequest")
             .set("Authorization", header2)
             .send({
-              recipientId: testUser.cognitoId,
+              recipientId: testUsers[0].cognitoId,
             })
             .expect(200));
 
@@ -121,7 +122,7 @@ produceAccessToken(testUser, (accessToken1) => {
             .expect(200)
             .then((res: request.Response) => {
               expect(res.body.length).equals(1);
-              compareData(res.body[0], testUser);
+              comparePublicData(res.body[0], testUsers[0]);
             }));
 
         it("Send another friend request", () =>
@@ -129,7 +130,7 @@ produceAccessToken(testUser, (accessToken1) => {
             .post("/userRelationship/sendRequest")
             .set("Authorization", header2)
             .send({
-              recipientId: testUser3.cognitoId,
+              recipientId: testUsers[2].cognitoId,
             })
             .expect(200));
 
@@ -141,7 +142,7 @@ produceAccessToken(testUser, (accessToken1) => {
             .expect(200)
             .then((res: request.Response) => {
               expect(res.body.length).equals(1);
-              compareData(res.body[0], testUser);
+              comparePublicData(res.body[0], testUsers[0]);
             }));
 
         it("Deny the friend request", () =>
@@ -149,7 +150,7 @@ produceAccessToken(testUser, (accessToken1) => {
             .post("/userRelationship/denyRequest")
             .set("Authorization", header3)
             .send({
-              recipientId: testUser2.cognitoId,
+              recipientId: testUsers[1].cognitoId,
             })
             .expect(200));
 
@@ -161,7 +162,7 @@ produceAccessToken(testUser, (accessToken1) => {
             .expect(200)
             .then((res: request.Response) => {
               expect(res.body.length).equals(1);
-              compareData(res.body[0], testUser);
+              comparePublicData(res.body[0], testUsers[0]);
             }));
 
         it("Accept the friend request", () =>
@@ -169,7 +170,7 @@ produceAccessToken(testUser, (accessToken1) => {
             .post("/userRelationship/sendRequest")
             .set("Authorization", header3)
             .send({
-              recipientId: testUser2.cognitoId,
+              recipientId: testUsers[1].cognitoId,
             })
             .expect(200));
 
@@ -181,12 +182,12 @@ produceAccessToken(testUser, (accessToken1) => {
             .expect(200)
             .then((res: request.Response) => {
               expect(res.body.length).equals(2);
-              if (res.body[0].cognitoId == testUser.cognitoId) {
-                compareData(res.body[0], testUser);
-                compareData(res.body[1], testUser3);
-              } else if (res.body[1].cognitoId == testUser.cognitoId) {
-                compareData(res.body[0], testUser3);
-                compareData(res.body[1], testUser);
+              if (res.body[0].cognitoId == testUsers[0].cognitoId) {
+                comparePublicData(res.body[0], testUsers[0]);
+                comparePublicData(res.body[1], testUsers[2]);
+              } else if (res.body[1].cognitoId == testUsers[0].cognitoId) {
+                comparePublicData(res.body[0], testUsers[2]);
+                comparePublicData(res.body[1], testUsers[0]);
               } else {
                 fail();
               }
@@ -200,7 +201,7 @@ produceAccessToken(testUser, (accessToken1) => {
             .expect(200)
             .then((res: request.Response) => {
               expect(res.body.length).equals(1);
-              compareData(res.body[0], testUser2);
+              comparePublicData(res.body[0], testUsers[1]);
             }));
 
         it("Cancel the friend request", () =>
@@ -208,7 +209,7 @@ produceAccessToken(testUser, (accessToken1) => {
             .post("/userRelationship/denyRequest")
             .set("Authorization", header3)
             .send({
-              recipientId: testUser2.cognitoId,
+              recipientId: testUsers[1].cognitoId,
             })
             .expect(200));
 
@@ -220,7 +221,7 @@ produceAccessToken(testUser, (accessToken1) => {
             .expect(200)
             .then((res: request.Response) => {
               expect(res.body.length).equals(1);
-              compareData(res.body[0], testUser);
+              comparePublicData(res.body[0], testUsers[0]);
             }));
 
         it("should result in no friendship", () =>

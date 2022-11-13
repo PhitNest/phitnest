@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import errorHandler from "../../middlewares/error.middleware";
 import { UserRelationshipQueries } from "../../queries/userRelationship.queries";
 
 class UserRelationshipController {
@@ -8,28 +9,51 @@ class UserRelationshipController {
       .json(await UserRelationshipQueries.myFriends(res.locals.cognitoId));
   }
 
-  async block(req: Request, res: Response) {
-    await UserRelationshipQueries.block(
+  async unblock(req: Request, res: Response) {
+    await UserRelationshipQueries.unblock(
       res.locals.cognitoId,
       req.body.recipientId.toString()
     );
     res.status(200).send("SUCCESS");
+  }
+
+  async block(req: Request, res: Response) {
+    if (
+      await UserRelationshipQueries.block(
+        res.locals.cognitoId,
+        req.body.recipientId.toString()
+      )
+    ) {
+      res.status(200).send("SUCCESS");
+    } else {
+      return errorHandler({ message: "Invalid Cognito ID" }, req, res);
+    }
   }
 
   async denyRequest(req: Request, res: Response) {
-    await UserRelationshipQueries.denyRequest(
-      res.locals.cognitoId,
-      req.body.recipientId.toString()
-    );
-    res.status(200).send("SUCCESS");
+    if (
+      await UserRelationshipQueries.denyRequest(
+        res.locals.cognitoId,
+        req.body.recipientId.toString()
+      )
+    ) {
+      res.status(200).send("SUCCESS");
+    } else {
+      return errorHandler({ message: "Invalid Cognito ID" }, req, res);
+    }
   }
 
   async sendRequest(req: Request, res: Response) {
-    await UserRelationshipQueries.sendRequest(
-      res.locals.cognitoId,
-      req.body.recipientId
-    );
-    res.status(200).send("SUCCESS");
+    if (
+      await UserRelationshipQueries.sendRequest(
+        res.locals.cognitoId,
+        req.body.recipientId
+      )
+    ) {
+      res.status(200).send("SUCCESS");
+    } else {
+      return errorHandler({ message: "Invalid Cognito ID" }, req, res);
+    }
   }
 }
 

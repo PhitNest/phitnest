@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { IPublicUserModel, IUserModel, User } from "../models/user.model";
+import { UserRelationshipType } from "../models/userRelationship.model";
 
 export class UserQueries {
   static createUser(
@@ -40,6 +41,119 @@ export class UserQueries {
     offset: number | null,
     limit: number | null
   ): Promise<IPublicUserModel[]> {
-    return User.aggregate([]);
+    return User.aggregate([
+      {
+        $match: {
+          cognitoId: cognitoId,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "gymId",
+          foreignField: "gymId",
+          as: "users",
+          pipeline: [
+            {
+              $match: {
+                cognitoId: {
+                  $not: {
+                    $eq: cognitoId,
+                  },
+                },
+              },
+            },
+            {
+              $lookup: {
+                from: "user_relationships",
+                localField: "cognitoId",
+                foreignField: "recipient",
+                as: "sent",
+                pipeline: [
+                  {
+                    $match: {
+                      sender: cognitoId,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $lookup: {
+                from: "user_relationships",
+                localField: "cognitoId",
+                foreignField: "sender",
+                as: "denies",
+                pipeline: [
+                  {
+                    $match: {
+                      recipient: cognitoId,
+                      $or: [
+                        {
+                          type: UserRelationshipType.Denied,
+                        },
+                        {
+                          type: UserRelationshipType.Blocked,
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $match: {
+                $expr: {
+                  $not: {
+                    $or: [
+                      {
+                        $gt: [
+                          {
+                            $size: "$sent",
+                          },
+                          0,
+                        ],
+                      },
+                      {
+                        $gt: [
+                          {
+                            $size: "$denies",
+                          },
+                          0,
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: {
+          path: "$users",
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: "$users",
+        },
+      },
+      {
+        $project: {
+          cognitoId: 1,
+          gymId: 1,
+          firstName: 1,
+          lastName: 1,
+        },
+      },
+      {
+        $skip: offset,
+      },
+      {
+        $limit: limit,
+      },
+    ]);
   }
 }

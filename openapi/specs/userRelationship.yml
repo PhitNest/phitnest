@@ -93,6 +93,38 @@ paths:
               schema:
                 type: string
                 example: Validation error has occurred.
+
+  # /userRelationship/unblock
+  unblock:
+    post:
+      tags:
+        - User Relationship
+      summary: Unblock a user
+      security:
+        - AccessToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - recipientId
+              properties:
+                recipientId:
+                  type: string
+                  example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh
+      responses:
+        200:
+          description: The user was blocked
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
   # /userRelationship/friends
   friends:
     get:

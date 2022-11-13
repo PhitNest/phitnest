@@ -144,6 +144,8 @@ paths:
                 code:
                   type: string
                   example: "012345"
+                  minLength: 6
+                  maxLength: 6
       responses:
         200:
           description: The user registration was successfully confirmed

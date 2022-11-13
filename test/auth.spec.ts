@@ -1,8 +1,10 @@
 import "mocha";
 import request from "supertest";
 import Server from "../server";
-import { testUser, testUserPassword } from "./constants";
+import { testUsers, testUserPassword } from "./constants";
 import { produceAccessToken } from "./helpers";
+
+const testUser = testUsers[0];
 
 produceAccessToken(testUser, (accessToken) => {
   describe("Requesting an authenticated route", () => {
