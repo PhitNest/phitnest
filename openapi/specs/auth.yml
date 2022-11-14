@@ -29,7 +29,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Tokens"
+                required:
+                  - accessToken
+                  - refreshToken
+                  - idToken
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: abcdefghijklmnopqrstuv
+                  refreshToken:
+                    type: string
+                    example: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
+                  idToken:
+                    type: string
+                    example: ABCDEFGHIJKLMNOP
         500:
           description: An internal error occurred
           content:
@@ -114,7 +128,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Tokens"
+                required:
+                  - accessToken
+                  - idToken
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: abcdefghijklmnopqrstuv
+                  idToken:
+                    type: string
+                    example: ABCDEFGHIJKLMNOP
         500:
           description: An internal error occurred
           content:
@@ -308,21 +332,3 @@ components:
       type: string
       format: password
       example: H3llOW0RLD$$
-
-    Tokens:
-      title: tokens
-      required:
-        - accessToken
-        - refreshToken
-        - idToken
-      type: object
-      properties:
-        accessToken:
-          type: string
-          example: abcdefghijklmnopqrstuv
-        refreshToken:
-          type: string
-          example: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
-        idToken:
-          type: string
-          example: ABCDEFGHIJKLMNOP
