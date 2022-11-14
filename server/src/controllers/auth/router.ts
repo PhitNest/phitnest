@@ -16,6 +16,18 @@ router.post(
 );
 
 router.post(
+  "/forgotPassword",
+  [cognito.forgotPassword],
+  controller.forgotPassword
+);
+
+router.post(
+  "/forgotPasswordSubmit",
+  [cognito.forgotPasswordSubmit],
+  controller.forgotPasswordSubmit
+);
+
+router.post(
   "/resendConfirmation",
   [cognito.resendConfirmationCode],
   controller.resendConfirmationCode

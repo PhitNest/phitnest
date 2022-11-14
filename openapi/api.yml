@@ -23,6 +23,10 @@ paths:
     $ref: "specs/auth.yml#/paths/refresh"
   /auth/resendConfirmation:
     $ref: "specs/auth.yml#/paths/resendConfirmation"
+  /auth/forgotPassword:
+    $ref: "specs/auth.yml#/paths/forgotPassword"
+  /auth/forgotPasswordSubmit:
+    $ref: "specs/auth.yml#/paths/forgotPasswordSubmit"
   /auth/signOut:
     $ref: "specs/auth.yml#/paths/signOut"
   /auth/authenticated:

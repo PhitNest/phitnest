@@ -100,6 +100,39 @@ class CognitoMiddleware {
     );
   }
 
+  forgotPassword(req: Request, res: Response, next: NextFunction) {
+    const user = new CognitoUser({ Username: req.body.email, Pool: userPool });
+    user.forgotPassword({
+      onSuccess: (success) => {
+        l.info(
+          `Sent reset password code to user with email: ${req.body.email}`
+        );
+        next();
+      },
+      onFailure: (err) => {
+        l.error(`Could not send code to user with email: ${req.body.email}`);
+        next(err);
+      },
+      inputVerificationCode: null,
+    });
+  }
+
+  forgotPasswordSubmit(req: Request, res: Response, next: NextFunction) {
+    const user = new CognitoUser({ Username: req.body.email, Pool: userPool });
+    user.confirmPassword(req.body.code, req.body.password, {
+      onSuccess: (success) => {
+        l.info(`Changed password for user with email: ${req.body.email}`);
+        next();
+      },
+      onFailure: (err) => {
+        l.info(
+          `Could not change password for user with email: ${req.body.email}`
+        );
+        next(err);
+      },
+    });
+  }
+
   confirmRegister(req: Request, res: Response, next: NextFunction) {
     const user = new CognitoUser({ Username: req.body.email, Pool: userPool });
     user.confirmRegistration(req.body.code, true, (err) => {
