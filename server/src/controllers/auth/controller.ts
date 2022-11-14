@@ -10,6 +10,14 @@ class AuthController {
     });
   }
 
+  forgotPassword(req: Request, res: Response) {
+    return res.status(200).send("SUCCESS");
+  }
+
+  forgotPasswordSubmit(req: Request, res: Response) {
+    return res.status(200).send("SUCCESS");
+  }
+
   refreshSession(req: Request, res: Response) {
     return res.status(200).json({
       accessToken: res.locals.cognitoSession.getAccessToken().getJwtToken(),

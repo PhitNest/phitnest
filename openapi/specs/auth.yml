@@ -157,6 +157,71 @@ paths:
                 type: string
                 example: Validation error has occurred.
 
+  # /auth/forgotPassword
+  forgotPassword:
+    post:
+      tags:
+        - Auth
+      summary: Request a forgot passwod code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+              type: object
+              properties:
+                email:
+                  $ref: "#/components/schemas/Email"
+      responses:
+        200:
+          description: The reset password code was sent
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
+  # /auth/forgotPasswordSubmit
+  forgotPasswordSubmit:
+    post:
+      tags:
+        - Auth
+      summary: Submit forgot password request with code and new password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+                - password
+                - code
+              type: object
+              properties:
+                email:
+                  $ref: "#/components/schemas/Email"
+                password:
+                  $ref: "#/components/schemas/Password"
+                code:
+                  type: string
+                  example: "012345"
+                  minLength: 6
+                  maxLength: 6
+      responses:
+        200:
+          description: The password was reset
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
   # /auth/resendConfirmation
   resendConfirmation:
     post:
