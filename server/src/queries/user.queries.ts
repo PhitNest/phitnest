@@ -36,6 +36,10 @@ export class UserQueries {
     )[0];
   }
 
+  static async delete(cognitoId: string) {
+    return User.deleteOne({ cognitoId: cognitoId });
+  }
+
   static async explore(
     cognitoId: string,
     offset: number | null,

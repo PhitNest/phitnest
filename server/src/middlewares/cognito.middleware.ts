@@ -33,9 +33,10 @@ class CognitoMiddleware {
         Username: accessToken.payload.username,
         Pool: userPool,
       });
+      const accessTokenString = accessToken.getJwtToken();
       user.getSession((err: Error, session: CognitoUserSession) => {
         if (err) {
-          l.error(`Invalid access token: ${accessToken.getJwtToken()}`);
+          l.error(`Invalid access token: ${accessTokenString}`);
           next(err);
         } else if (session.isValid()) {
           l.info(`Authenticated user: ${user.getUsername()}`);
@@ -72,6 +73,18 @@ class CognitoMiddleware {
         }
       }
     );
+  }
+
+  deleteUser(req: Request, res: Response, next: NextFunction) {
+    res.locals.cognitoUser.deleteUser((err) => {
+      if (err) {
+        l.error(`Could not delete user with id: ${res.locals.cognitoId}`);
+        next(err);
+      } else {
+        l.info(`Deleted user with id: ${res.locals.cognitoId}`);
+        next();
+      }
+    });
   }
 
   register(req: Request, res: Response, next: NextFunction) {

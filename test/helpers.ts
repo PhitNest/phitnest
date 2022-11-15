@@ -1,35 +1,67 @@
-import "mocha";
-import request from "supertest";
-import Server from "../server";
-import { testUserPassword } from "./constants";
-import { IPublicUserModel, IUserModel } from "../server/src/models/user.model";
-import Q from "q";
-import { expect } from "chai";
+import supertest, { Response } from "supertest";
+import { AddressModel } from "../server/src/models/address.model";
+import { Gym } from "../server/src/models/gym.model";
+import { LocationModel } from "../server/src/models/location.model";
 
-export function produceAccessToken(
-  user: IUserModel,
-  callback: (accessToken: string) => void
-) {
-  const accessToken = Q.defer();
-  describe("Login to test user", () => {
-    it("should produce an access token", () =>
-      request(Server)
-        .post("/auth/login")
-        .send({
-          email: user.email,
-          password: testUserPassword,
-        })
-        .expect(200)
-        .then((res: request.Response) => {
-          accessToken.resolve(res.body.accessToken);
-        }));
-  });
-  accessToken.promise.then(callback);
+export function getHeader(accessToken: string): string {
+  return `Bearer ${accessToken}`;
 }
 
-export function comparePublicData(user: any, expected: IPublicUserModel) {
-  expect(user.cognitoId).equals(expected.cognitoId);
-  expect(user.gymId).equals(expected.gymId.toString());
-  expect(user.firstName).equals(expected.firstName);
-  expect(user.lastName).equals(expected.lastName);
+export async function createGym(
+  name: string,
+  address: AddressModel,
+  location: LocationModel
+): Promise<string> {
+  return (
+    await Gym.create({ name: name, address: address, location: location })
+  )._id;
+}
+
+export async function deleteUser(app: any, accessToken: string) {
+  await supertest(app)
+    .delete("/user")
+    .set("Authorization", `Bearer ${accessToken}`)
+    .send()
+    .expect(200);
+}
+
+export async function createUser(
+  app: any,
+  email: string,
+  gymId: string,
+  password: string,
+  firstName: string,
+  lastName: string
+): Promise<string> {
+  await supertest(app)
+    .post("/auth/register")
+    .send({
+      email: email,
+      gymId: gymId,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+    })
+    .expect(200);
+  let accessToken: string;
+  await supertest(app)
+    .post("/auth/login")
+    .send({
+      email: email,
+      password: password,
+    })
+    .expect(200)
+    .then((res: Response) => {
+      accessToken = res.body.accessToken;
+    });
+  let cognitoId: string;
+  await supertest(app)
+    .get("/user")
+    .set("Authorization", `Bearer ${accessToken}`)
+    .send()
+    .expect(200)
+    .then(async (res: Response) => {
+      cognitoId = res.body.cognitoId;
+    });
+  return cognitoId;
 }
