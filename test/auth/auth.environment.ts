@@ -1,7 +1,9 @@
+import supertest, { Response } from "supertest";
 import { AddressModel } from "../../server/src/models/address.model";
 import { LocationModel } from "../../server/src/models/location.model";
 import BaseEnvironment from "../environment";
-import { createGym } from "../helpers";
+import { createGym, deleteUser } from "../helpers";
+import { testEmail, testPassword } from "./constants";
 
 class AuthTestEnvironment extends BaseEnvironment {
   async setup() {
