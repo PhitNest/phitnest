@@ -1,8 +1,6 @@
 import supertest, { Response } from "supertest";
-import { getHeader } from "../helpers";
-
-const testEmail = "jp@phitnest.com";
-const testPassword = "H3llOW0RLD$$";
+import { testEmail, testPassword } from "./constants";
+import { cleanup } from "./helpers";
 
 export default () => {
   test("Register request with no body", () =>
@@ -23,23 +21,16 @@ export default () => {
       })
       .expect(200));
 
-  let accessToken: string;
-
-  test("Login to the new user", () =>
+  test("Registering an existing user should result in error", () =>
     supertest(globalThis.app)
-      .post("/auth/login")
+      .post("/auth/register")
       .send({
         email: testEmail,
+        gymId: globalThis.gymIds[0],
         password: testPassword,
+        firstName: "Joe",
+        lastName: "James",
       })
-      .expect(200)
-      .then((res: Response) => {
-        accessToken = res.body.accessToken;
-      }));
-
-  test("Cleanup", () =>
-    supertest(globalThis.app)
-      .delete("/user")
-      .set("Authorization", getHeader(accessToken))
-      .expect(200));
+      .expect(500)
+      .then((res: Response) => cleanup()));
 };
