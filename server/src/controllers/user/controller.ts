@@ -19,6 +19,11 @@ class UserController {
         )
       );
   }
+
+  async delete(req: Request, res: Response) {
+    await UserQueries.delete(res.locals.cognitoId);
+    return res.status(200).send("SUCCESS");
+  }
 }
 
 export default new UserController();

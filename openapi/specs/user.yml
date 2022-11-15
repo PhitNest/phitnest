@@ -4,7 +4,7 @@ tags:
 
 paths:
   # /user
-  myData:
+  me:
     get:
       tags:
         - User
@@ -18,6 +18,22 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: You are not authenticated
+    delete:
+      tags:
+        - User
+      summary: Delete my account
+      security:
+        - AccessToken: []
+      responses:
+        200:
+          description: Successfully deleted my account
         500:
           description: An internal error occurred
           content:

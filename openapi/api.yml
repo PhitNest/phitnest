@@ -40,7 +40,7 @@ paths:
     $ref: "specs/gym.yml#/paths/nearest"
 
   /user:
-    $ref: "specs/user.yml#/paths/myData"
+    $ref: "specs/user.yml#/paths/me"
   /user/explore:
     $ref: "specs/user.yml#/paths/explore"
 
