@@ -5,7 +5,9 @@ export function buildAuthenticationMiddleware(
   authenticate: AuthenticationUseCase
 ): Middleware {
   return async function (req, res, next) {
-    res.locals.userId = authenticate(req.authorization());
+    res.locals.userId = authenticate(
+      req.authorization().replace("Bearer ", "")
+    );
     if (res.locals.userId) {
       next();
     } else {

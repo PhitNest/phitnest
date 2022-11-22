@@ -18,6 +18,7 @@ import {
   Middleware,
 } from "./adapters/controllers";
 import l from "./common/logger";
+import { CognitoAuthenticationRepository } from "./adapters/repositories/implementations/authentication.repository";
 
 type Repositories = {
   userRepository: IUserRepository;
@@ -53,11 +54,7 @@ export function injectDependencies(
 function buildRepositories(): Repositories {
   return {
     userRepository: new MongoUserRepository(),
-    authenticationRepository: {
-      authenticate: async (accessToken) => {
-        return "test";
-      },
-    } as IAuthenticationRepository,
+    authenticationRepository: new CognitoAuthenticationRepository(),
   };
 }
 
