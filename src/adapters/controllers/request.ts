@@ -1,4 +1,4 @@
-export interface IRequest<ReqType = any> {
-  content(): ReqType;
+export interface IRequest {
+  content(): any;
   authorization(): string;
 }

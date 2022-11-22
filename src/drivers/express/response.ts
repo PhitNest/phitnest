@@ -5,9 +5,7 @@ import { IResponse } from "../../adapters/controllers";
  * This is an express implementation of the response interface. This allows
  * controllers to be injected into the express router
  */
-export class Response<ResType, LocalsType>
-  implements IResponse<ResType, LocalsType>
-{
+export class Response<LocalsType = any> implements IResponse<LocalsType> {
   locals: LocalsType;
   expressResponse: express.Response;
 
@@ -21,7 +19,7 @@ export class Response<ResType, LocalsType>
     return this;
   }
 
-  json(content: ResType) {
+  json(content: any) {
     this.expressResponse.json(content);
     return this;
   }

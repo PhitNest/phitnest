@@ -4,7 +4,7 @@ import { AuthenticatedLocals } from "../locals";
 
 export function buildGetGymController(
   getGym: GetGymUseCase
-): Controller<any, any, AuthenticatedLocals> {
+): Controller<AuthenticatedLocals> {
   return async (req, res) => {
     try {
       const gym = await getGym(res.locals.userId);

@@ -1,8 +1,8 @@
 export { buildGetGymUseCase, GetGymUseCase } from "./get-gym";
 export {
-  buildGetNearestGymUseCase,
-  GetNearestGymUseCase,
-} from "./get-nearest-gym";
+  buildGetNearestGymsUseCase,
+  GetNearestGymsUseCase,
+} from "./get-nearest-gyms";
 export {
   buildAuthenticationUseCase,
   AuthenticationUseCase,

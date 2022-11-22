@@ -5,7 +5,7 @@ import express from "express";
  * This is an express implementation of the request interface. This allows
  * controllers to be injected into the express router
  */
-export class Request<ReqType> implements IRequest<ReqType> {
+export class Request implements IRequest {
   expressRequest: express.Request;
 
   constructor(expressRequest: express.Request) {
