@@ -5,8 +5,13 @@ import '../../common/widgets.dart';
 import '../view.dart';
 
 class RegisterPageTwoView extends ScreenView {
+  final Function() onPressedNext;
+  final bool keyboardVisible;
 
-  RegisterPageTwoView()
+
+  RegisterPageTwoView(
+      {required this.keyboardVisible,
+      required this.onPressedNext})
       : super();
 
   @override
@@ -27,7 +32,7 @@ class RegisterPageTwoView extends ScreenView {
                   SizedBox(
                     height: 34.h,
                     child: TextInputField(
-                      hint: 'First Name',
+                      hint: 'Email',
                       inputAction: TextInputAction.next,
                     ),
                   ),
@@ -35,19 +40,26 @@ class RegisterPageTwoView extends ScreenView {
                   SizedBox(
                     height: 34.h,
                     child: TextInputField(
-                      hint: 'Last Name',
+                      hint: 'Password',
                     ),
                   ),
+                  16.verticalSpace,
+                  SizedBox(
+                    height: 34.h,
+                    child: TextInputField(
+                      hint: "Confirm Password",
+                    )
+                  )
                 ],
               ),
             ),
           ),
+          keyboardVisible ? 65.verticalSpace : Expanded(child: Container()),
           StyledButton(
-            onPressed: (() {
-              
-            }),
+            onPressed: onPressedNext,
             child: Text('NEXT'),
           ),
+          keyboardVisible ? Container() : 116.verticalSpace,
         ],
       );
 }
