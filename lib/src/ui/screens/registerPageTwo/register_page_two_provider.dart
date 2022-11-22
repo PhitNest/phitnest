@@ -9,7 +9,10 @@ class RegisterPageTwoProvider
     extends ScreenProvider<RegisterPageTwoState, RegisterPageTwoView> {
   @override
   RegisterPageTwoView build(BuildContext context, RegisterPageTwoState state) =>
-      RegisterPageTwoView();
+      RegisterPageTwoView(
+        keyboardVisible: state.keyboardVisible,
+        onPressedNext: () {},
+      );
 
   @override
   RegisterPageTwoState buildState() => RegisterPageTwoState();
