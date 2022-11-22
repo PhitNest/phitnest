@@ -1,0 +1,1 @@
+export { buildGetGymController } from "./get";
