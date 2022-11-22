@@ -4,14 +4,14 @@ import {
   CognitoUserPool,
   CognitoUserSession,
 } from "amazon-cognito-identity-js";
-import { env } from "../../../common/env";
+import { getEnv } from "../../../common/env";
 import l from "../../../common/logger";
 import { IAuthenticationRepository } from "../interfaces";
 import Q from "q";
 
 const userPool = new CognitoUserPool({
-  UserPoolId: env.COGNITO_POOL_ID,
-  ClientId: env.COGNITO_APP_CLIENT_ID,
+  UserPoolId: getEnv().COGNITO_POOL_ID,
+  ClientId: getEnv().COGNITO_APP_CLIENT_ID,
 });
 
 export class CognitoAuthenticationRepository

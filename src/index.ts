@@ -1,4 +1,4 @@
-import { env } from "./common/env";
+import { getEnv } from "./common/env";
 import { createApp } from "./drivers/express";
 import l from "./common/logger";
 import http from "http";
@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 /**
  * This is the entry point of the app. This will initialize all drivers/services.
  */
-mongoose.connect(env.MONGODB_CONN_STRING, (err) => {
+mongoose.connect(getEnv().MONGODB_CONN_STRING, (err) => {
   if (err) {
     l.error(`Failed to connect to MongoDB: ${err}`);
   } else {
@@ -16,7 +16,7 @@ mongoose.connect(env.MONGODB_CONN_STRING, (err) => {
   }
   const app = createApp();
   injectDependencies(app);
-  const server = http.createServer(app).listen(env.PORT, () => {
-    l.info(`Opened express server on port ${env.PORT}`);
+  const server = http.createServer(app).listen(getEnv().PORT, () => {
+    l.info(`Opened express server on port ${getEnv().PORT}`);
   });
 });

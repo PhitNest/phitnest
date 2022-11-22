@@ -9,7 +9,7 @@ const validator = z.object({
   amount: z.number().int().nonnegative(),
 });
 
-export function buildGetGymController(
+export function buildGetNearestGymsController(
   getNearestGyms: GetNearestGymsUseCase
 ): Controller {
   return async (req, res) => {

@@ -12,6 +12,7 @@ export function buildRouter(controllers: Controllers) {
     "/gym",
     buildGymRouter(
       controllers.getGymController,
+      controllers.getNearestGymsController,
       controllers.authenticationMiddleware
     )
   );

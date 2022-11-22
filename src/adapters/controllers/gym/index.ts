@@ -1,1 +1,0 @@
-export { buildGetGymController } from "./get";

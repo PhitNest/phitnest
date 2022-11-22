@@ -5,6 +5,7 @@ import { buildMiddleware } from "../buildMiddleware";
 
 export function buildGymRouter(
   getGymController: Controller,
+  getNearestGymsController: Controller,
   authenticationMiddleware: Middleware
 ) {
   const router = express.Router();
@@ -14,6 +15,8 @@ export function buildGymRouter(
     buildMiddleware([authenticationMiddleware]),
     buildController(getGymController)
   );
+
+  router.get("/nearest", buildController(getNearestGymsController));
 
   return router;
 }
