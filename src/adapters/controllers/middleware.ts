@@ -1,8 +1,8 @@
 import { IRequest } from "./request";
 import { IResponse } from "./response";
 
-export type Middleware<ReqType = any, ResType = any, LocalsType = any> = (
-  req: IRequest<ReqType>,
-  res: IResponse<ResType, LocalsType>,
+export type Middleware<LocalsType = any> = (
+  req: IRequest,
+  res: IResponse<LocalsType>,
   next: (err?: string) => void
 ) => Promise<void>;

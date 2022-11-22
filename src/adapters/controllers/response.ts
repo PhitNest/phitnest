@@ -1,6 +1,6 @@
-export interface IResponse<ResType = any, LocalsType = any> {
+export interface IResponse<LocalsType = any> {
   locals: LocalsType;
 
   status(code: number): this;
-  json(content: ResType): this;
+  json(content: any): this;
 }

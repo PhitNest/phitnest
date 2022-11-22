@@ -20,17 +20,17 @@ import {
 import l from "./common/logger";
 import { CognitoAuthenticationRepository } from "./adapters/repositories/implementations/authentication.repository";
 
-type Repositories = {
+export type Repositories = {
   userRepository: IUserRepository;
   authenticationRepository: IAuthenticationRepository;
 };
 
-type UseCases = {
+export type UseCases = {
   getGymUseCase: GetGymUseCase;
   authenticationUseCase: AuthenticationUseCase;
 };
 
-type Controllers = {
+export type Controllers = {
   getGymController: Controller;
   authenticationMiddleware: Middleware;
 };

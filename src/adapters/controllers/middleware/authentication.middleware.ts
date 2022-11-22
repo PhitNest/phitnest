@@ -3,12 +3,13 @@ import { Middleware } from "../middleware";
 
 export function buildAuthenticationMiddleware(
   authenticate: AuthenticationUseCase
-): Middleware {
+): Middleware<{ userId: string | undefined }> {
   return async function (req, res, next) {
-    res.locals.userId = authenticate(
+    const userId = await authenticate(
       req.authorization().replace("Bearer ", "")
     );
-    if (res.locals.userId) {
+    if (userId) {
+      res.locals.userId = userId;
       next();
     } else {
       next("You are not authenticated");

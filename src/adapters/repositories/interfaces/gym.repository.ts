@@ -1,8 +1,9 @@
 import { IGymEntity, ILocationEntity } from "../../../domain/entities";
 
 export interface IGymRepository {
-  getNearestGym(
+  getNearestGyms(
     location: ILocationEntity,
-    distance: number
-  ): Promise<IGymEntity>;
+    distance: number,
+    amount: number
+  ): Promise<IGymEntity[]>;
 }
