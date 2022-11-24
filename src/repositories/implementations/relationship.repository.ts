@@ -1,10 +1,6 @@
 import { injectable } from "inversify";
 import mongoose from "mongoose";
-import {
-  IRelationshipEntity,
-  IUserEntity,
-  RelationshipType,
-} from "../../entities";
+import { IRelationshipEntity, RelationshipType } from "../../entities";
 import { IRelationshipRepository } from "../interfaces";
 import { USER_COLLECTION_NAME } from "./user.repository";
 
@@ -129,11 +125,137 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
     ]).exec();
   }
 
-  getPendingInboundRequests(recipientId: string): Promise<IUserEntity[]> {
-    throw new Error("Method not implemented.");
+  getPendingInboundRequests(recipientId: string) {
+    return RelationshipModel.aggregate([
+      {
+        $match: {
+          recipient: recipientId,
+          type: RelationshipType.Requested,
+        },
+      },
+      {
+        $lookup: {
+          from: RELATIONSHIP_COLLECTION_NAME,
+          localField: "sender",
+          foreignField: "recipient",
+          pipeline: [
+            {
+              $match: {
+                sender: recipientId,
+              },
+            },
+          ],
+          as: "response",
+        },
+      },
+      {
+        $match: {
+          $expr: {
+            $not: {
+              $gt: [
+                {
+                  $size: "$response",
+                },
+                0,
+              ],
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: USER_COLLECTION_NAME,
+          localField: "sender",
+          foreignField: "_id",
+          as: "users",
+        },
+      },
+      {
+        $project: {
+          id: {
+            $first: "$users._id",
+          },
+          gymId: {
+            $first: "$users.gymId",
+          },
+          firstName: {
+            $first: "$users.firstName",
+          },
+          lastName: {
+            $first: "$users.lastName",
+          },
+        },
+      },
+    ]).exec();
   }
 
-  getFriends(userId: string): Promise<IUserEntity[]> {
-    throw new Error("Method not implemented.");
+  getFriends(userId: string) {
+    return RelationshipModel.aggregate([
+      {
+        $match: {
+          sender: userId,
+          type: RelationshipType.Requested,
+        },
+      },
+      {
+        $lookup: {
+          from: RELATIONSHIP_COLLECTION_NAME,
+          localField: "recipient",
+          foreignField: "sender",
+          as: "friends",
+          pipeline: [
+            {
+              $match: {
+                recipient: userId,
+                type: RelationshipType.Requested,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $match: {
+          friends: {
+            $gt: [
+              {
+                $size: "$friends",
+              },
+              0,
+            ],
+          },
+        },
+      },
+      {
+        $project: {
+          friendId: {
+            $first: "$friends.sender",
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: USER_COLLECTION_NAME,
+          localField: "friendId",
+          foreignField: "_id",
+          as: "friend",
+        },
+      },
+      {
+        $project: {
+          id: {
+            $first: "$friend._id",
+          },
+          gymId: {
+            $first: "$friend.gymId",
+          },
+          firstName: {
+            $first: "$friend.firstName",
+          },
+          lastName: {
+            $first: "$friend.lastName",
+          },
+        },
+      },
+    ]).exec();
   }
 }
