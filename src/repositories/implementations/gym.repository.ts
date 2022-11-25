@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import mongoose from "mongoose";
-import { IGymEntity, ILocationEntity } from "../../entities";
+import { IAddressEntity, IGymEntity, ILocationEntity } from "../../entities";
 import { IGymRepository } from "../interfaces";
 import { UserModel } from "./user.repository";
 
@@ -32,79 +32,47 @@ export const GymModel = mongoose.model<IGymEntity>(GYM_MODEL_NAME, schema);
 
 @injectable()
 export class MongoGymRepository implements IGymRepository {
-  async get(userId: string): Promise<IGymEntity> {
-    const res = (
-      await UserModel.aggregate([
-        { $match: { _id: userId } },
-        {
-          $lookup: {
-            from: GYM_COLLECTION_NAME,
-            localField: "gymId",
-            foreignField: "_id",
-            as: "gym",
-          },
-        },
-        {
-          $project: {
-            gym: 1,
-          },
-        },
-      ])
-    )[0].gym[0];
-    return {
-      id: res._id,
-      name: res.name,
-      address: res.address,
-      location: {
-        longitude: res.location.coordinates[0],
-        latitude: res.location.coordinates[1],
-      },
-    };
+  create(name: string, address: IAddressEntity, location: ILocationEntity) {
+    return GymModel.create({
+      name: name,
+      address: address,
+      location: location,
+    });
   }
 
-  async getNearest(
-    location: ILocationEntity,
-    distance: number,
-    amount?: number
-  ): Promise<IGymEntity[]> {
-    const gyms = await GymModel.aggregate([
+  async get(cognitoId: string) {
+    const results = await UserModel.aggregate([
+      { $match: { cognitoId: cognitoId } },
       {
-        $match: {
-          location: {
-            $near: {
-              $maxDistance: distance,
-              $geometry: {
-                type: "Point",
-                coordinates: [location.longitude, location.latitude],
-              },
-            },
-          },
+        $lookup: {
+          from: GYM_COLLECTION_NAME,
+          localField: "gymId",
+          foreignField: "_id",
+          as: "gym",
         },
-      },
-      {
-        $limit: amount ?? 0,
       },
       {
         $project: {
-          id: {
-            _id: 1,
-          },
-          name: 1,
-          address: 1,
-          location: 1,
+          gym: 1,
         },
       },
     ]);
-    return gyms.map((gym) => {
-      return {
-        id: gym._id,
-        name: gym.name,
-        address: gym.address,
-        location: {
-          longitude: gym.location.coordinates[0],
-          latitude: gym.location.coordinates[1],
+    return results[0].gym[0];
+  }
+
+  getNearest(location: ILocationEntity, meters: number, amount?: number) {
+    return GymModel.find({
+      location: {
+        $near: {
+          $maxDistance: meters,
+          $geometry: {
+            type: location.type,
+            coordinates: location.coordinates,
+          },
         },
-      };
-    });
+      },
+    })
+      .limit(amount ?? 0)
+      .exec();
   }
 }

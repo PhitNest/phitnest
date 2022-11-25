@@ -33,7 +33,7 @@ export class GymController implements IGymController {
         })
         .parse(req.content());
       const gyms = await this.getNearestGymsUseCase.execute(
-        { longitude: longitude, latitude: latitude },
+        { type: "Point", coordinates: [longitude, latitude] },
         distance,
         amount
       );

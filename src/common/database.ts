@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
-import { getEnv } from "./env";
 import { l } from "./logger";
 
 export function connect() {
   return new Promise<void>((resolve, reject) => {
-    mongoose.connect(getEnv().MONGODB_CONN_STRING, (err) => {
+    mongoose.connect(process.env.MONGODB_CONN_STRING!, (err) => {
       if (err) {
         l.error(`Failed to connect to MongoDB: ${err}`);
         reject(new Error(err.message));
@@ -14,4 +13,9 @@ export function connect() {
       }
     });
   });
+}
+
+export async function disconnect() {
+  l.info(`Disconnected from MongoDB`);
+  await mongoose.disconnect();
 }

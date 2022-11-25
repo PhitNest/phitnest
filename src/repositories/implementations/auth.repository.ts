@@ -7,21 +7,20 @@ import {
   CognitoUserPool,
   CognitoUserSession,
 } from "amazon-cognito-identity-js";
-import { getEnv } from "../../common/env";
 import { l } from "../../common/logger";
 import { IAuthRepository } from "../interfaces";
 import { injectable } from "inversify";
 import "cross-fetch/polyfill";
 
 const userPool = new CognitoUserPool({
-  UserPoolId: getEnv().COGNITO_POOL_ID,
-  ClientId: getEnv().COGNITO_APP_CLIENT_ID,
+  UserPoolId: process.env.COGNITO_POOL_ID!,
+  ClientId: process.env.COGNITO_APP_CLIENT_ID!,
 });
 
 @injectable()
 export class CognitoAuthRepository implements IAuthRepository {
-  signOut(userId: string, allDevices: boolean) {
-    const user = new CognitoUser({ Username: userId, Pool: userPool });
+  signOut(cognitoId: string, allDevices: boolean) {
+    const user = new CognitoUser({ Username: cognitoId, Pool: userPool });
     return new Promise<void>((resolve, reject) => {
       if (allDevices) {
         user.globalSignOut({
@@ -50,7 +49,7 @@ export class CognitoAuthRepository implements IAuthRepository {
       Username: email,
       Pool: userPool,
     });
-    return new Promise<string | undefined>((resolve, reject) => {
+    return new Promise<string | null>((resolve, reject) => {
       user.authenticateUser(
         new AuthenticationDetails({
           Username: email,
@@ -63,7 +62,8 @@ export class CognitoAuthRepository implements IAuthRepository {
           },
           onFailure: (err) => {
             l.error(`User could not be authenticated with email: ${email}`);
-            reject(err);
+            l.error(err);
+            resolve(null);
           },
         }
       );
@@ -76,6 +76,7 @@ export class CognitoAuthRepository implements IAuthRepository {
       user.resendConfirmationCode((err) => {
         if (err) {
           l.error(`Could not resend confirmation code for user: ${email}`);
+          l.error(err);
           reject(err);
         } else {
           l.info(`Resent confirmation code for user: ${email}`);
@@ -91,6 +92,7 @@ export class CognitoAuthRepository implements IAuthRepository {
       user.confirmRegistration(code, true, (err) => {
         if (err) {
           l.error(`Could not confirm registration for user: ${email}`);
+          l.error(err);
           reject(err);
         } else {
           l.info(`Confirmed registration for user: ${email}`);
@@ -110,6 +112,7 @@ export class CognitoAuthRepository implements IAuthRepository {
         },
         onFailure: (err) => {
           l.error(`Failed to change password for user: ${email}`);
+          l.error(err);
           reject(err);
         },
       });
@@ -129,6 +132,7 @@ export class CognitoAuthRepository implements IAuthRepository {
         },
         onFailure: (err) => {
           l.error(`Failed to send forgot password email to: ${email}`);
+          l.error(err);
           reject(err);
         },
       });
@@ -136,7 +140,7 @@ export class CognitoAuthRepository implements IAuthRepository {
   }
 
   registerUser(email: string, password: string) {
-    return new Promise<string | undefined>((resolve, reject) => {
+    return new Promise<string | null>((resolve, reject) => {
       userPool.signUp(
         email,
         password,
@@ -150,7 +154,8 @@ export class CognitoAuthRepository implements IAuthRepository {
         (err, result) => {
           if (err || !result) {
             l.error(`Could not register user with email: ${email}`);
-            reject(err);
+            l.error(err);
+            resolve(null);
           } else {
             l.info(`Registered user with email: ${email}`);
             resolve(result.user.getUsername());
@@ -160,15 +165,16 @@ export class CognitoAuthRepository implements IAuthRepository {
     });
   }
 
-  deleteUser(userId: string) {
-    const user = new CognitoUser({ Username: userId, Pool: userPool });
+  deleteUser(cognitoId: string) {
+    const user = new CognitoUser({ Username: cognitoId, Pool: userPool });
     return new Promise<boolean>((resolve, reject) => {
-      user.deleteUser((err, result) => {
+      user.deleteUser((err) => {
         if (err) {
-          l.error(`Could not delete user: ${userId}`);
-          reject(false);
+          l.error(`Could not delete user: ${cognitoId}`);
+          l.error(err);
+          resolve(false);
         } else {
-          l.info(`Deleted user: ${userId}`);
+          l.info(`Deleted user: ${cognitoId}`);
           resolve(true);
         }
       });
@@ -177,7 +183,7 @@ export class CognitoAuthRepository implements IAuthRepository {
 
   refreshAccessToken(refreshToken: string, email: string) {
     const user = new CognitoUser({ Username: email, Pool: userPool });
-    return new Promise<string | undefined>((resolve, reject) => {
+    return new Promise<string | null>((resolve, reject) => {
       user.refreshSession(
         new CognitoRefreshToken({
           RefreshToken: refreshToken,
@@ -185,7 +191,8 @@ export class CognitoAuthRepository implements IAuthRepository {
         (err: Error | null, session: CognitoUserSession) => {
           if (err) {
             l.error(`Could not refresh session for user with email: ${email}`);
-            reject(err);
+            l.error(err);
+            resolve(null);
           } else {
             l.info(`Refreshed session for user with email: ${email}`);
             resolve(session.getAccessToken().getJwtToken());
@@ -195,7 +202,7 @@ export class CognitoAuthRepository implements IAuthRepository {
     });
   }
 
-  getUserId(accessToken: string) {
+  getCognitoId(accessToken: string) {
     const cognitoAccessToken = new CognitoAccessToken({
       AccessToken: accessToken,
     });
@@ -203,15 +210,16 @@ export class CognitoAuthRepository implements IAuthRepository {
       Username: cognitoAccessToken.payload.username,
       Pool: userPool,
     });
-    return new Promise<string | undefined>((resolve, reject) => {
+    return new Promise<string | null>((resolve, reject) => {
       user.getSession((err: Error | null, session: CognitoUserSession) => {
         if (session.isValid()) {
-          const userId = user.getUsername();
-          l.info(`Authenticated user: ${userId}`);
-          resolve(userId);
+          const cognitoId = user.getUsername();
+          l.info(`Authenticated user: ${cognitoId}`);
+          resolve(cognitoId);
         } else {
           l.error(`Invalid access token: ${accessToken}`);
-          reject(err?.message ?? "Invalid session");
+          l.error(err?.message ?? "Invalid session");
+          resolve(null);
         }
       });
     });

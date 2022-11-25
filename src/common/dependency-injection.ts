@@ -6,6 +6,7 @@ export const Repositories = {
   auth: Symbol("auth.repository"),
   gym: Symbol("gym.repository"),
   relationship: Symbol("relationship.repository"),
+  location: Symbol("location.repository"),
 };
 
 export const UseCases = {
@@ -26,6 +27,7 @@ import {
   IGymRepository,
   IUserRepository,
   IRelationshipRepository,
+  ILocationRepository,
 } from "../repositories/interfaces";
 
 import {
@@ -33,6 +35,7 @@ import {
   CognitoAuthRepository,
   MongoGymRepository,
   MongoRelationshipRepository,
+  OSMLocationRepository,
 } from "../repositories/implementations";
 
 import {
@@ -59,6 +62,10 @@ import { l } from "./logger";
 
 export let dependencies: Container;
 
+export function unbind() {
+  dependencies.unbindAll();
+}
+
 export function inject() {
   dependencies = new Container();
   dependencies
@@ -73,6 +80,9 @@ export function inject() {
   dependencies
     .bind<IRelationshipRepository>(Repositories.relationship)
     .toConstantValue(new MongoRelationshipRepository());
+  dependencies
+    .bind<ILocationRepository>(Repositories.location)
+    .toConstantValue(new OSMLocationRepository());
 
   dependencies
     .bind<IGetGymUseCase>(UseCases.getGym)

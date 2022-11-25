@@ -3,25 +3,30 @@ import express, { Router } from "express";
 import http from "http";
 import morgan from "morgan";
 import { HttpMethod, IRouter } from "../../routers/types";
-import { getEnv } from "../env";
 import { buildController } from "./controller";
 import { buildMiddleware } from "./middleware";
 import { l } from "../logger";
 import { GymRouter } from "../../routers";
 import { dependencies } from "../dependency-injection";
 
+let server: http.Server;
+
 export function createServer() {
   const app = express();
   app.use(bodyParser.json());
   app.use(morgan("dev"));
   app.use(buildRoutes());
-  const server = http.createServer(app);
+  server = http.createServer(app);
   return new Promise((resolve) => {
-    server.listen(getEnv().PORT, () => {
-      l.info(`Server started on port: ${getEnv().PORT}`);
+    server.listen(process.env.PORT, () => {
+      l.info(`Server started on port: ${process.env.PORT}`);
       resolve(server);
     });
   });
+}
+
+export function stopServer() {
+  return server.close();
 }
 
 function buildRoutes() {

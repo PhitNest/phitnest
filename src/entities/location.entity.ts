@@ -1,4 +1,4 @@
 export interface ILocationEntity {
-  longitude: number;
-  latitude: number;
+  type: Readonly<string>;
+  coordinates: Readonly<[number, number]>;
 }
