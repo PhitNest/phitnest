@@ -1,7 +1,6 @@
 export interface IAddressEntity {
-  street: string;
-  streetTwo: string;
-  city: string;
-  state: string;
-  zipCode: string;
+  street: Readonly<string>;
+  city: Readonly<string>;
+  state: Readonly<string>;
+  zipCode: Readonly<string>;
 }

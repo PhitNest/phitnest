@@ -5,9 +5,11 @@ export interface IRelationshipRepository {
   deleteBlock(senderId: string, recipientId: string): Promise<void>;
   createRequest(senderId: string, recipientId: string): Promise<void>;
   createDeny(senderId: string, recipientId: string): Promise<void>;
-  getPendingOutboundRequests(senderId: string): Promise<Partial<IUserEntity>[]>;
+  getPendingOutboundRequests(
+    cognitoId: string
+  ): Promise<Omit<IUserEntity, "email">[]>;
   getPendingInboundRequests(
-    recipientId: string
-  ): Promise<Partial<IUserEntity>[]>;
-  getFriends(userId: string): Promise<Partial<IUserEntity>[]>;
+    cognitoId: string
+  ): Promise<Omit<IUserEntity, "email">[]>;
+  getFriends(cognitoId: string): Promise<Omit<IUserEntity, "email">[]>;
 }

@@ -10,12 +10,19 @@ export const USER_MODEL_NAME = "User";
 
 const schema = new mongoose.Schema(
   {
+    cognitoId: { type: String, required: true, unique: true, trim: true },
     gymId: {
       type: mongoose.Types.ObjectId,
       ref: GYM_MODEL_NAME,
       required: true,
     },
-    email: { type: String, required: true, unique: true, trim: true },
+    email: {
+      type: String,
+      format: "email",
+      required: true,
+      unique: true,
+      trim: true,
+    },
     firstName: { type: String, required: true, trim: true },
     lastName: { type: String, required: true, trim: true },
   },
@@ -30,11 +37,11 @@ export const UserModel = mongoose.model<IUserEntity>(USER_MODEL_NAME, schema);
 
 @injectable()
 export class MongoUserRepository implements IUserRepository {
-  exploreUsers(userId: string, offset?: number, limit?: number) {
-    return UserModel.aggregate([
+  exploreUsers(cognitoId: string, offset?: number, limit?: number) {
+    const pipeline: mongoose.PipelineStage[] = [
       {
         $match: {
-          _id: userId,
+          cognitoId: cognitoId,
         },
       },
       {
@@ -46,9 +53,9 @@ export class MongoUserRepository implements IUserRepository {
           pipeline: [
             {
               $match: {
-                _id: {
+                cognitoId: {
                   $not: {
-                    $eq: userId,
+                    $eq: cognitoId,
                   },
                 },
               },
@@ -56,13 +63,13 @@ export class MongoUserRepository implements IUserRepository {
             {
               $lookup: {
                 from: RELATIONSHIP_COLLECTION_NAME,
-                localField: "_id",
+                localField: "cognitoId",
                 foreignField: "recipient",
                 as: "sent",
                 pipeline: [
                   {
                     $match: {
-                      sender: userId,
+                      sender: cognitoId,
                     },
                   },
                 ],
@@ -71,13 +78,13 @@ export class MongoUserRepository implements IUserRepository {
             {
               $lookup: {
                 from: RELATIONSHIP_COLLECTION_NAME,
-                localField: "_id",
+                localField: "cognitoId",
                 foreignField: "sender",
                 as: "blocks",
                 pipeline: [
                   {
                     $match: {
-                      recipient: userId,
+                      recipient: cognitoId,
                       type: RelationshipType.Blocked,
                     },
                   },
@@ -125,36 +132,46 @@ export class MongoUserRepository implements IUserRepository {
       },
       {
         $project: {
-          id: {
-            _id: 1,
-          },
-          gymId: 1,
+          cognitoId: 1,
           firstName: 1,
           lastName: 1,
         },
       },
-      {
-        $skip: offset ?? 0,
-      },
-      {
-        $limit: limit ?? 0,
-      },
-    ]).exec();
-  }
-
-  async delete(userId: string) {
-    await UserModel.deleteOne({ _id: userId });
-  }
-
-  async create(user: IUserEntity) {
-    try {
-      await UserModel.create({
-        ...user,
-        gymId: new mongoose.Types.ObjectId(user.gymId),
+    ];
+    if (offset) {
+      pipeline.push({
+        $skip: offset,
       });
-      return true;
-    } catch (error) {
-      return false;
     }
+    if (limit) {
+      pipeline.push({
+        $limit: limit,
+      });
+    }
+    return UserModel.aggregate(pipeline).exec();
+  }
+
+  async delete(cognitoId: string) {
+    await UserModel.deleteOne({ cognitoId: cognitoId });
+  }
+
+  async get(cognitoId: string) {
+    return UserModel.findOne({ cognitoId: cognitoId }).exec();
+  }
+
+  create(
+    cognitoId: string,
+    email: string,
+    gymId: mongoose.Types.ObjectId,
+    firstName: string,
+    lastName: string
+  ) {
+    return UserModel.create({
+      cognitoId: cognitoId,
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      gymId: gymId,
+    });
   }
 }

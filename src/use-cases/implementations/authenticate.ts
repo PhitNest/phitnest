@@ -12,6 +12,6 @@ export class AuthenticateUseCase implements IAuthenticateUseCase {
   }
 
   execute(accessToken: string) {
-    return this.authRepo.getUserId(accessToken);
+    return this.authRepo.getCognitoId(accessToken);
   }
 }

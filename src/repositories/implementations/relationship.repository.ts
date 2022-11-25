@@ -22,7 +22,7 @@ schema.index({ sender: 1, recipient: 1 }, { unique: true });
 schema.index({ sender: 1, type: 1 });
 schema.index({ recipient: 1, type: 1 });
 
-const RelationshipModel = mongoose.model<IRelationshipEntity>(
+export const RelationshipModel = mongoose.model<IRelationshipEntity>(
   RELATIONSHIP_MODEL_NAME,
   schema
 );
@@ -31,7 +31,10 @@ const RelationshipModel = mongoose.model<IRelationshipEntity>(
 export class MongoRelationshipRepository implements IRelationshipRepository {
   async createBlock(senderId: string, recipientId: string) {
     await RelationshipModel.findOneAndUpdate(
-      { sender: senderId, recipient: recipientId },
+      {
+        sender: senderId,
+        recipient: recipientId,
+      },
       { type: RelationshipType.Blocked },
       { upsert: true, new: true }
     );
@@ -47,7 +50,10 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
 
   async createRequest(senderId: string, recipientId: string) {
     await RelationshipModel.findOneAndUpdate(
-      { sender: senderId, recipient: recipientId },
+      {
+        sender: senderId,
+        recipient: recipientId,
+      },
       { type: RelationshipType.Requested },
       { upsert: true, new: true }
     );
@@ -55,17 +61,20 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
 
   async createDeny(senderId: string, recipientId: string) {
     await RelationshipModel.findOneAndUpdate(
-      { sender: senderId, recipient: recipientId },
+      {
+        sender: senderId,
+        recipient: recipientId,
+      },
       { type: RelationshipType.Denied },
       { upsert: true, new: true }
     );
   }
 
-  getPendingOutboundRequests(senderId: string) {
+  getPendingOutboundRequests(cognitoId: string) {
     return RelationshipModel.aggregate([
       {
         $match: {
-          sender: senderId,
+          sender: cognitoId,
           type: RelationshipType.Requested,
         },
       },
@@ -77,7 +86,7 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
           pipeline: [
             {
               $match: {
-                recipient: senderId,
+                recipient: cognitoId,
               },
             },
           ],
@@ -102,14 +111,14 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
         $lookup: {
           from: USER_COLLECTION_NAME,
           localField: "recipient",
-          foreignField: "_id",
+          foreignField: "cognitoId",
           as: "users",
         },
       },
       {
         $project: {
-          id: {
-            $first: "$users._id",
+          cognitoId: {
+            $first: "$users.cognitoId",
           },
           gymId: {
             $first: "$users.gymId",
@@ -125,11 +134,11 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
     ]).exec();
   }
 
-  getPendingInboundRequests(recipientId: string) {
+  getPendingInboundRequests(cognitoId: string) {
     return RelationshipModel.aggregate([
       {
         $match: {
-          recipient: recipientId,
+          recipient: cognitoId,
           type: RelationshipType.Requested,
         },
       },
@@ -141,7 +150,7 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
           pipeline: [
             {
               $match: {
-                sender: recipientId,
+                sender: cognitoId,
               },
             },
           ],
@@ -166,14 +175,14 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
         $lookup: {
           from: USER_COLLECTION_NAME,
           localField: "sender",
-          foreignField: "_id",
+          foreignField: "cognitoId",
           as: "users",
         },
       },
       {
         $project: {
-          id: {
-            $first: "$users._id",
+          cognitoId: {
+            $first: "$users.cognitoId",
           },
           gymId: {
             $first: "$users.gymId",
@@ -189,11 +198,11 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
     ]).exec();
   }
 
-  getFriends(userId: string) {
+  getFriends(cognitoId: string) {
     return RelationshipModel.aggregate([
       {
         $match: {
-          sender: userId,
+          sender: cognitoId,
           type: RelationshipType.Requested,
         },
       },
@@ -206,7 +215,7 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
           pipeline: [
             {
               $match: {
-                recipient: userId,
+                recipient: cognitoId,
                 type: RelationshipType.Requested,
               },
             },
@@ -236,14 +245,14 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
         $lookup: {
           from: USER_COLLECTION_NAME,
           localField: "friendId",
-          foreignField: "_id",
+          foreignField: "cognitoId",
           as: "friend",
         },
       },
       {
         $project: {
-          id: {
-            $first: "$friend._id",
+          cognitoId: {
+            $first: "$friend.cognitoId",
           },
           gymId: {
             $first: "$friend.gymId",
