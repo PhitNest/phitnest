@@ -19,3 +19,5 @@ export 'forgotPassword/forgot_password_provider.dart';
 export 'afterForgotPassword/after_forgotPassword_provider.dart';
 export 'match/match_provider.dart';
 export 'confirmEmail/confirm_email_provider.dart';
+export 'confirmPhoto/confirm_photo_provider.dart';
+export 'registerPageTwo/register_page_two_provider.dart';
