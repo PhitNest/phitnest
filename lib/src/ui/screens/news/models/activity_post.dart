@@ -3,5 +3,9 @@ class ActivityPostModel {
   final String subtitle;
   bool? liked;
 
-  ActivityPostModel({required this.title, required this.subtitle, this.liked});
+  ActivityPostModel({
+    required this.title,
+    required this.subtitle,
+    this.liked,
+  });
 }

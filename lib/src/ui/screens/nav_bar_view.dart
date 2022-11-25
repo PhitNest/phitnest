@@ -29,35 +29,45 @@ abstract class NavBarScreenView extends ScreenView {
 
   /// Defines the nav bar
   StyledNavBar navBar(BuildContext context) => StyledNavBar(
-      logoHeld: currentlyHoldingLogo,
-      navigationEnabled: navigationEnabled,
-      pageIndex: navbarIndex,
-      onTapDownLogo: () => onTapDownLogo(context),
-      onTapUpLogo: () => onTapUpLogo(context));
+        logoHeld: currentlyHoldingLogo,
+        navigationEnabled: navigationEnabled,
+        pageIndex: navbarIndex,
+        onTapDownLogo: () => onTapDownLogo(context),
+        onTapUpLogo: () => onTapUpLogo(context),
+      );
 
   @override
   // ignore: invalid_override_of_non_virtual_member
   Widget build(BuildContext context) {
     Scaffold scaffold = Scaffold(
-        appBar: appBar(context),
-        body: Stack(children: [
+      appBar: appBar(context),
+      body: Stack(
+        children: [
           SingleChildScrollView(
-              physics: scrollEnabled ? null : NeverScrollableScrollPhysics(),
-              child: SizedBox(
-                  height: 1.sh -
-                      (showAppBar(context) ? appBarHeight : 0) -
-                      StyledNavBar.kHeight +
-                      1.h,
-                  width: 1.sw,
-                  child: buildView(context))),
-          Align(alignment: Alignment.bottomCenter, child: navBar(context))
-        ]));
+            physics: scrollEnabled ? null : NeverScrollableScrollPhysics(),
+            child: SizedBox(
+              height: 1.sh -
+                  (showAppBar(context) ? appBarHeight : 0) -
+                  StyledNavBar.kHeight +
+                  1.h,
+              width: 1.sw,
+              child: buildView(context),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: navBar(context),
+          )
+        ],
+      ),
+    );
     return showAppBar(context)
         ? scaffold
         : AnnotatedRegion<SystemUiOverlayStyle>(
             value: systemOverlayDark
                 ? SystemUiOverlayStyle.dark
                 : SystemUiOverlayStyle.light,
-            child: scaffold);
+            child: scaffold,
+          );
   }
 }

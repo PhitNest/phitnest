@@ -13,11 +13,11 @@ class TextInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => TextFormField(
-      textInputAction: inputAction,
-      controller: controller,
-      validator: validator,
-      style: Theme.of(context).textTheme.labelMedium,
-      decoration: InputDecoration(
+        textInputAction: inputAction,
+        controller: controller,
+        validator: validator,
+        style: Theme.of(context).textTheme.labelMedium,
+        decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
           helperText: ' ',
           hintText: hint,
@@ -25,10 +25,15 @@ class TextInputField extends StatelessWidget {
               .textTheme
               .labelMedium!
               .copyWith(color: Color(0xFF999999)),
-          border: MaterialStateUnderlineInputBorder.resolveWith((state) =>
-              UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: state.contains(MaterialState.focused)
-                          ? Colors.black
-                          : Color(0xFFDADADA))))));
+          border: MaterialStateUnderlineInputBorder.resolveWith(
+            (state) => UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: state.contains(MaterialState.focused)
+                    ? Colors.black
+                    : Color(0xFFDADADA),
+              ),
+            ),
+          ),
+        ),
+      );
 }
