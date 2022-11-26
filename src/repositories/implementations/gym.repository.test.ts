@@ -1,41 +1,41 @@
 import mongoose from "mongoose";
-import {
-  compareAddress,
-  compareLocation,
-} from "../../../test/helpers/comparisons";
+import { compareGym } from "../../../test/helpers/comparisons";
 import { dependencies, Repositories } from "../../common/dependency-injection";
-import {
-  IAddressEntity,
-  IGymEntity,
-  ILocationEntity,
-  IUserEntity,
-} from "../../entities";
+import { IGymEntity, IUserEntity } from "../../entities";
 import { IGymRepository, IUserRepository } from "../interfaces";
 
-const gymName1 = "TestGym1";
-const gymAddress1: IAddressEntity = {
-  street: "TestStreet1",
-  city: "TestCity1",
-  state: "TestState1",
-  zipCode: "TestZipCode1",
+const testGym1 = {
+  name: "TestGym1",
+  address: {
+    street: "TestStreet1",
+    city: "TestCity1",
+    state: "TestState1",
+    zipCode: "TestZipCode1",
+  },
+  location: { type: "Point", coordinates: [50, 40] as [number, number] },
 };
-const gymLocation1: ILocationEntity = { type: "Point", coordinates: [50, 40] };
-const gymName2 = "TestGym2";
-const gymAddress2: IAddressEntity = {
-  street: "TestStreet2",
-  city: "TestCity2",
-  state: "TestState2",
-  zipCode: "TestZipCode2",
+
+const testGym2 = {
+  name: "TestGym2",
+  address: {
+    street: "TestStreet2",
+    city: "TestCity2",
+    state: "TestState2",
+    zipCode: "TestZipCode2",
+  },
+  location: { type: "Point", coordinates: [50, -40] as [number, number] },
 };
-const gymLocation2: ILocationEntity = { type: "Point", coordinates: [50, -40] };
-const gymName3 = "TestGym3";
-const gymAddress3: IAddressEntity = {
-  street: "TestStreet3",
-  city: "TestCity3",
-  state: "TestState3",
-  zipCode: "TestZipCode3",
+
+const testGym3 = {
+  name: "TestGym3",
+  address: {
+    street: "TestStreet3",
+    city: "TestCity3",
+    state: "TestState3",
+    zipCode: "TestZipCode3",
+  },
+  location: { type: "Point", coordinates: [20, -40] as [number, number] },
 };
-const gymLocation3: ILocationEntity = { type: "Point", coordinates: [20, -40] };
 
 const testUser1 = {
   cognitoId: "TestCognitoId",
@@ -64,21 +64,24 @@ let userRepo: IUserRepository;
 
 test("Gyms can be created", async () => {
   gymRepo = dependencies.get(Repositories.gym);
-  gym1 = await gymRepo.create(gymName1, gymAddress1, gymLocation1);
-  expect(gym1).toBeDefined();
-  expect(gym1.name).toBe(gymName1);
-  compareAddress(gym1.address, gymAddress1);
-  compareLocation(gym1.location, gymLocation1);
-  gym2 = await gymRepo.create(gymName2, gymAddress2, gymLocation2);
-  expect(gym2).toBeDefined();
-  expect(gym2.name).toBe(gymName2);
-  compareAddress(gym2.address, gymAddress2);
-  compareLocation(gym2.location, gymLocation2);
-  gym3 = await gymRepo.create(gymName3, gymAddress3, gymLocation3);
-  expect(gym3).toBeDefined();
-  expect(gym3.name).toBe(gymName3);
-  compareAddress(gym3.address, gymAddress3);
-  compareLocation(gym3.location, gymLocation3);
+  gym1 = await gymRepo.create(
+    testGym1.name,
+    testGym1.address,
+    testGym1.location
+  );
+  compareGym(gym1, testGym1);
+  gym2 = await gymRepo.create(
+    testGym2.name,
+    testGym2.address,
+    testGym2.location
+  );
+  compareGym(gym2, testGym2);
+  gym3 = await gymRepo.create(
+    testGym3.name,
+    testGym3.address,
+    testGym3.location
+  );
+  compareGym(gym3, testGym3);
 });
 
 test("Get a users gym", async () => {
@@ -92,11 +95,7 @@ test("Get a users gym", async () => {
     testUser1.lastName
   );
   const myGym1 = await gymRepo.get(user1.cognitoId);
-  expect(myGym1).toBeDefined();
-  expect(myGym1._id).toEqual(gym1._id);
-  expect(myGym1.name).toBe(gymName1);
-  compareAddress(myGym1.address, gymAddress1);
-  compareLocation(myGym1.location, gymLocation1);
+  compareGym(myGym1, gym1);
   testUser2.gymId = gym2._id;
   user2 = await userRepo.create(
     testUser2.cognitoId,
@@ -106,11 +105,7 @@ test("Get a users gym", async () => {
     testUser2.lastName
   );
   const myGym2 = await gymRepo.get(user2.cognitoId);
-  expect(myGym2).toBeDefined();
-  expect(myGym2._id).toEqual(gym2._id);
-  expect(myGym2.name).toBe(gymName2);
-  compareAddress(myGym2.address, gymAddress2);
-  compareLocation(myGym2.location, gymLocation2);
+  compareGym(myGym2, gym2);
 });
 
 test("Get the nearest gyms", async () => {
@@ -125,31 +120,25 @@ test("Get the nearest gyms", async () => {
     200000
   );
   expect(nearestGyms.length).toBe(1);
-  expect(nearestGyms[0]._id).toEqual(gym1._id);
-  expect(nearestGyms[0].name).toBe(gymName1);
-  compareAddress(nearestGyms[0].address, gymAddress1);
-  compareLocation(nearestGyms[0].location, gymLocation1);
+  compareGym(nearestGyms[0], gym1);
   nearestGyms = await gymRepo.getNearest(
     { type: "Point", coordinates: [50.1, 40.1] },
     9000000
   );
   expect(nearestGyms.length).toBe(2);
-  expect(nearestGyms[0]._id).toEqual(gym1._id);
-  expect(nearestGyms[0].name).toBe(gymName1);
-  compareAddress(nearestGyms[0].address, gymAddress1);
-  compareLocation(nearestGyms[0].location, gymLocation1);
-  expect(nearestGyms[1]._id).toEqual(gym2._id);
-  expect(nearestGyms[1].name).toBe(gymName2);
-  compareAddress(nearestGyms[1].address, gymAddress2);
-  compareLocation(nearestGyms[1].location, gymLocation2);
+  compareGym(nearestGyms[0], gym1);
+  compareGym(nearestGyms[1], gym2);
   nearestGyms = await gymRepo.getNearest(
     { type: "Point", coordinates: [50.1, 40.1] },
     9000000,
     1
   );
   expect(nearestGyms.length).toBe(1);
-  expect(nearestGyms[0]._id).toEqual(gym1._id);
-  expect(nearestGyms[0].name).toBe(gymName1);
-  compareAddress(nearestGyms[0].address, gymAddress1);
-  compareLocation(nearestGyms[0].location, gymLocation1);
+  compareGym(nearestGyms[0], gym1);
+  nearestGyms = await gymRepo.getNearest(
+    { type: "Point", coordinates: [50.1, 40.1] },
+    9000000,
+    0
+  );
+  expect(nearestGyms.length).toBe(0);
 });

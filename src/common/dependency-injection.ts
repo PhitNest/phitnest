@@ -13,11 +13,15 @@ export const UseCases = {
   getGym: Symbol("getGym.use-case"),
   getNearestGyms: Symbol("getNearestGyms.use-case"),
   authenticate: Symbol("authenticate.use-case"),
+  getUser: Symbol("getUser.use-case"),
+  explore: Symbol("explore.use-case"),
+  createGym: Symbol("createGym.use-case"),
 };
 
 export const Controllers = {
   gymController: Symbol("gym.controller"),
   authenticate: Symbol("authenticate.middleware"),
+  user: Symbol("user.controller"),
 };
 
 // Make sure to export repositories, use cases, and controllers symbols before importing
@@ -42,21 +46,33 @@ import {
   IGetGymUseCase,
   IGetNearestGymsUseCase,
   IAuthenticateUseCase,
+  IGetUserUseCase,
+  IExploreUseCase,
+  ICreateGymUseCase,
 } from "../use-cases/interfaces";
 
 import {
   GetGymUseCase,
   GetNearestGymsUseCase,
   AuthenticateUseCase,
+  GetUserUseCase,
+  ExploreUseCase,
+  CreateGymUseCase,
 } from "../use-cases/implementations";
 
 import { IAuthMiddleware } from "../adapters/middleware/interfaces";
 
 import { AuthMiddleware } from "../adapters/middleware/implementations";
 
-import { IGymController } from "../adapters/controllers/interfaces";
+import {
+  IGymController,
+  IUserController,
+} from "../adapters/controllers/interfaces";
 
-import { GymController } from "../adapters/controllers/implementations";
+import {
+  GymController,
+  UserController,
+} from "../adapters/controllers/implementations";
 
 import { l } from "./logger";
 
@@ -96,7 +112,23 @@ export function inject() {
     .bind<IAuthenticateUseCase>(UseCases.authenticate)
     .to(AuthenticateUseCase)
     .inSingletonScope();
+  dependencies
+    .bind<IGetUserUseCase>(Controllers.user)
+    .to(GetUserUseCase)
+    .inSingletonScope();
+  dependencies
+    .bind<IExploreUseCase>(UseCases.explore)
+    .to(ExploreUseCase)
+    .inSingletonScope();
+  dependencies
+    .bind<ICreateGymUseCase>(UseCases.createGym)
+    .to(CreateGymUseCase)
+    .inSingletonScope();
 
+  dependencies
+    .bind<IUserController>(Controllers.user)
+    .to(UserController)
+    .inSingletonScope();
   dependencies
     .bind<IAuthMiddleware>(Controllers.authenticate)
     .to(AuthMiddleware)

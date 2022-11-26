@@ -60,19 +60,22 @@ export class MongoGymRepository implements IGymRepository {
     return results[0].gym[0];
   }
 
-  getNearest(location: ILocationEntity, meters: number, amount?: number) {
-    return GymModel.find({
-      location: {
-        $near: {
-          $maxDistance: meters,
-          $geometry: {
-            type: location.type,
-            coordinates: location.coordinates,
+  async getNearest(location: ILocationEntity, meters: number, amount?: number) {
+    if (amount != 0) {
+      const query = GymModel.find({
+        location: {
+          $near: {
+            $maxDistance: meters,
+            $geometry: {
+              type: location.type,
+              coordinates: location.coordinates,
+            },
           },
         },
-      },
-    })
-      .limit(amount ?? 0)
-      .exec();
+      }).limit(amount ?? 0);
+      return query.exec();
+    } else {
+      return [];
+    }
   }
 }

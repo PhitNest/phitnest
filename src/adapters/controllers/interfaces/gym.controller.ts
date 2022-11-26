@@ -1,6 +1,9 @@
-import { Controller } from "../../types";
+import { AuthenticatedLocals, Controller } from "../../types";
 
 export interface IGymController {
-  get: Controller;
+  // TODO: DELETE THIS FOR PROD
+  create: Controller<AuthenticatedLocals>;
+
+  get: Controller<AuthenticatedLocals>;
   getNearest: Controller;
 }

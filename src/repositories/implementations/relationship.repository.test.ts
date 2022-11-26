@@ -133,7 +133,7 @@ test("Sending and denying friend requests, and blocking", async () => {
     user1.cognitoId
   );
   expect(sentRequests.length).toBe(1);
-  comparePublicUserData(user2, sentRequests[0]);
+  comparePublicUserData(sentRequests[0], user2);
   let receivedRequests = await relationshipRepo.getPendingInboundRequests(
     user1.cognitoId
   );
@@ -146,7 +146,7 @@ test("Sending and denying friend requests, and blocking", async () => {
     user2.cognitoId
   );
   expect(receivedRequests.length).toBe(1);
-  comparePublicUserData(user1, receivedRequests[0]);
+  comparePublicUserData(receivedRequests[0], user1);
   let friends = await relationshipRepo.getFriends(user1.cognitoId);
   expect(friends.length).toBe(0);
   friends = await relationshipRepo.getFriends(user2.cognitoId);
@@ -183,7 +183,7 @@ test("Sending and denying friend requests, and blocking", async () => {
   expect(sentRequests.length).toBe(0);
   friends = await relationshipRepo.getFriends(user1.cognitoId);
   expect(friends.length).toBe(1);
-  comparePublicUserData(user2, friends[0]);
+  comparePublicUserData(friends[0], user2);
   await relationshipRepo.createBlock(user1.cognitoId, user2.cognitoId);
   sentRequests = await relationshipRepo.getPendingOutboundRequests(
     user1.cognitoId
@@ -222,7 +222,7 @@ test("Sending and denying friend requests, and blocking", async () => {
   );
   expect(receivedRequests.length).toBe(0);
   expect(sentRequests.length).toBe(1);
-  comparePublicUserData(user1, sentRequests[0]);
+  comparePublicUserData(sentRequests[0], user1);
   friends = await relationshipRepo.getFriends(user2.cognitoId);
   expect(friends.length).toBe(0);
   friends = await relationshipRepo.getFriends(user1.cognitoId);

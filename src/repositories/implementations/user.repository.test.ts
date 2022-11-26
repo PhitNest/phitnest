@@ -1,4 +1,8 @@
 import mongoose from "mongoose";
+import {
+  compareExploreUserData,
+  compareUserData,
+} from "../../../test/helpers/comparisons";
 import { dependencies, Repositories } from "../../common/dependency-injection";
 import { IGymEntity, IUserEntity } from "../../entities";
 import {
@@ -106,11 +110,7 @@ test("Users can be created", async () => {
     testUser1.firstName,
     testUser1.lastName
   );
-  expect(user1.cognitoId).toEqual(testUser1.cognitoId);
-  expect(user1.firstName).toEqual(testUser1.firstName);
-  expect(user1.lastName).toEqual(testUser1.lastName);
-  expect(user1.email).toEqual(testUser1.email);
-  expect(user1.gymId).toEqual(testUser1.gymId);
+  compareUserData(user1, testUser1);
   user2 = await userRepo.create(
     testUser2.cognitoId,
     testUser2.email,
@@ -118,11 +118,7 @@ test("Users can be created", async () => {
     testUser2.firstName,
     testUser2.lastName
   );
-  expect(user2.cognitoId).toEqual(testUser2.cognitoId);
-  expect(user2.firstName).toEqual(testUser2.firstName);
-  expect(user2.lastName).toEqual(testUser2.lastName);
-  expect(user2.email).toEqual(testUser2.email);
-  expect(user2.gymId).toEqual(testUser2.gymId);
+  compareUserData(user2, testUser2);
   user3 = await userRepo.create(
     testUser3.cognitoId,
     testUser3.email,
@@ -130,11 +126,7 @@ test("Users can be created", async () => {
     testUser3.firstName,
     testUser3.lastName
   );
-  expect(user3.cognitoId).toEqual(testUser3.cognitoId);
-  expect(user3.firstName).toEqual(testUser3.firstName);
-  expect(user3.lastName).toEqual(testUser3.lastName);
-  expect(user3.email).toEqual(testUser3.email);
-  expect(user3.gymId).toEqual(testUser3.gymId);
+  compareUserData(user3, testUser3);
   user4 = await userRepo.create(
     testUser4.cognitoId,
     testUser4.email,
@@ -142,11 +134,7 @@ test("Users can be created", async () => {
     testUser4.firstName,
     testUser4.lastName
   );
-  expect(user4.cognitoId).toEqual(testUser4.cognitoId);
-  expect(user4.firstName).toEqual(testUser4.firstName);
-  expect(user4.lastName).toEqual(testUser4.lastName);
-  expect(user4.email).toEqual(testUser4.email);
-  expect(user4.gymId).toEqual(testUser4.gymId);
+  compareUserData(user4, testUser4);
 });
 
 test("Users can be explored properly", async () => {
@@ -189,30 +177,22 @@ test("Users can be explored properly", async () => {
   await relationshipRepo.createRequest(user1.cognitoId, user2.cognitoId);
   exploreResults = await userRepo.exploreUsers(user1.cognitoId);
   expect(exploreResults.length).toEqual(1);
-  expect(exploreResults[0].cognitoId).toEqual(user3.cognitoId);
-  expect(exploreResults[0].firstName).toEqual(user3.firstName);
-  expect(exploreResults[0].lastName).toEqual(user3.lastName);
+  compareExploreUserData(exploreResults[0], user3);
   await relationshipRepo.createRequest(user3.cognitoId, user1.cognitoId);
   exploreResults = await userRepo.exploreUsers(user1.cognitoId);
   expect(exploreResults.length).toEqual(1);
-  expect(exploreResults[0].cognitoId).toEqual(user3.cognitoId);
-  expect(exploreResults[0].firstName).toEqual(user3.firstName);
-  expect(exploreResults[0].lastName).toEqual(user3.lastName);
+  compareExploreUserData(exploreResults[0], user3);
   await relationshipRepo.createDeny(user3.cognitoId, user1.cognitoId);
   exploreResults = await userRepo.exploreUsers(user1.cognitoId);
   expect(exploreResults.length).toEqual(1);
-  expect(exploreResults[0].cognitoId).toEqual(user3.cognitoId);
-  expect(exploreResults[0].firstName).toEqual(user3.firstName);
-  expect(exploreResults[0].lastName).toEqual(user3.lastName);
+  compareExploreUserData(exploreResults[0], user3);
   await relationshipRepo.createBlock(user3.cognitoId, user1.cognitoId);
   exploreResults = await userRepo.exploreUsers(user1.cognitoId);
   expect(exploreResults.length).toEqual(0);
   await relationshipRepo.createRequest(user3.cognitoId, user1.cognitoId);
   exploreResults = await userRepo.exploreUsers(user1.cognitoId);
   expect(exploreResults.length).toEqual(1);
-  expect(exploreResults[0].cognitoId).toEqual(user3.cognitoId);
-  expect(exploreResults[0].firstName).toEqual(user3.firstName);
-  expect(exploreResults[0].lastName).toEqual(user3.lastName);
+  compareExploreUserData(exploreResults[0], user3);
   await relationshipRepo.createDeny(user1.cognitoId, user3.cognitoId);
   exploreResults = await userRepo.exploreUsers(user1.cognitoId);
   expect(exploreResults.length).toEqual(0);

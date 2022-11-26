@@ -14,14 +14,19 @@ export class GymRouter implements IRouter {
   ) {
     this.routes = [
       {
-        path: "/gym",
+        path: "/",
         method: HttpMethod.GET,
         middlewares: [authMiddleware.authenticate],
         controller: gymController.get,
       },
-
       {
-        path: "/gym/nearest",
+        path: "/",
+        method: HttpMethod.POST,
+        middlewares: [authMiddleware.authenticate],
+        controller: gymController.create,
+      },
+      {
+        path: "/nearest",
         method: HttpMethod.GET,
         middlewares: [],
         controller: gymController.getNearest,
