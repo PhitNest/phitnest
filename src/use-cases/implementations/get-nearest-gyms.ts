@@ -12,7 +12,7 @@ export class GetNearestGymsUseCase implements IGetNearestGymsUseCase {
     this.gymRepo = gymRepo;
   }
 
-  execute(location: ILocationEntity, distance: number, amount: number) {
+  execute(location: ILocationEntity, distance: number, amount?: number) {
     return this.gymRepo.getNearest(location, distance, amount);
   }
 }

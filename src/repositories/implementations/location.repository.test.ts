@@ -1,3 +1,4 @@
+import { compareLocation } from "../../../test/helpers/comparisons";
 import { dependencies, Repositories } from "../../common/dependency-injection";
 import { ILocationRepository } from "../interfaces";
 
@@ -15,22 +16,21 @@ const testAddress2 = {
   zipCode: "24060",
 };
 
+const fakeAddress = {
+  street: "1234 Main St",
+  city: "Blacksburg",
+  state: "CA",
+  zipCode: "25060",
+};
+
 let locationRepo: ILocationRepository;
 
 test("Get location from address", async () => {
   locationRepo = dependencies.get(Repositories.location);
   let location = await locationRepo.get(testAddress1);
-  expect(location).not.toBeNull();
-  expect(location!.type).toBe("Point");
-  expect(location!.coordinates).toBeDefined();
-  expect(location!.coordinates!.length).toBe(2);
-  expect(location!.coordinates![0]).toBeCloseTo(-75.996, 2);
-  expect(location!.coordinates![1]).toBeCloseTo(36.85, 2);
+  compareLocation(location!, { type: "Point", coordinates: [-75.996, 36.85] });
   location = await locationRepo.get(testAddress2);
-  expect(location).not.toBeNull();
-  expect(location!.type).toBe("Point");
-  expect(location!.coordinates).toBeDefined();
-  expect(location!.coordinates!.length).toBe(2);
-  expect(location!.coordinates![0]).toBeCloseTo(-80.413, 2);
-  expect(location!.coordinates![1]).toBeCloseTo(37.229, 2);
+  compareLocation(location!, { type: "Point", coordinates: [-80.413, 37.229] });
+  location = await locationRepo.get(fakeAddress);
+  expect(location).toBeNull();
 });

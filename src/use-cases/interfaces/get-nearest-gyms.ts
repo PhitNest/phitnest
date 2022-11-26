@@ -5,6 +5,6 @@ export interface IGetNearestGymsUseCase extends IUseCase {
   execute(
     location: ILocationEntity,
     distance: number,
-    amount: number
+    amount?: number
   ): Promise<IGymEntity[]>;
 }
