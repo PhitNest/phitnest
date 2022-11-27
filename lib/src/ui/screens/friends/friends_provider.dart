@@ -8,7 +8,8 @@ class FriendProvider extends ScreenProvider<FriendState, FriendsView> {
   @override
   FriendsView build(BuildContext context, FriendState state) => FriendsView(
         searchController: state.searchController,
-        friends: state.friend,
+        friends: state.friends,
+        requests: state.requests,
       );
 
   @override
