@@ -10,6 +10,9 @@ class FriendProvider extends ScreenProvider<FriendState, FriendsView> {
         searchController: state.searchController,
         friends: state.friends,
         requests: state.requests,
+        addFriend: () {},
+        ignoreRequest: () {},
+        removeFriend: () {},
       );
 
   @override

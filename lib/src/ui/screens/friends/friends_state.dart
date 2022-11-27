@@ -20,7 +20,7 @@ class FriendState extends ScreenState {
       isFriend: true,
     ),
     FriendModel(
-      name: 'Zane P.',
+      name: 'Rahul P.',
       isFriend: true,
     ),
     FriendModel(

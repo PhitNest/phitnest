@@ -9,11 +9,17 @@ class FriendsView extends NavBarScreenView {
   final TextEditingController searchController;
   final List<FriendModel> friends;
   final List<FriendModel> requests;
+  final Function() removeFriend;
+  final Function() addFriend;
+  final Function() ignoreRequest;
 
   FriendsView({
     required this.searchController,
     required this.friends,
     required this.requests,
+    required this.addFriend,
+    required this.ignoreRequest,
+    required this.removeFriend,
   });
 
   @override
@@ -76,9 +82,12 @@ class FriendsView extends NavBarScreenView {
                               ),
                         ),
                         Spacer(),
-                        AddButton(context),
+                        GestureDetector(
+                          onTap: addFriend,
+                          child: AddButton(context),
+                        ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: ignoreRequest,
                           child: Text(
                             'IGNORE',
                             style: Theme.of(context).textTheme.bodySmall,
@@ -118,7 +127,7 @@ class FriendsView extends NavBarScreenView {
                         ),
                         Spacer(),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: removeFriend,
                           child: Text(
                             'REMOVE',
                             style: Theme.of(context).textTheme.bodySmall,
