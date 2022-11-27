@@ -24,7 +24,7 @@ export const Controllers = {
   user: Symbol("user.controller"),
 };
 
-// Make sure to export repositories, use cases, and controllers symbols before importing
+// Make sure to export repositories, use cases, and controllers symbols before importing the following
 
 import {
   IAuthRepository,
@@ -83,7 +83,10 @@ export function unbind() {
 }
 
 export function inject() {
-  dependencies = new Container();
+  dependencies = new Container({
+    defaultScope: "Singleton",
+    autoBindInjectable: true,
+  });
   dependencies
     .bind<IGymRepository>(Repositories.gym)
     .toConstantValue(new MongoGymRepository());
@@ -100,43 +103,24 @@ export function inject() {
     .bind<ILocationRepository>(Repositories.location)
     .toConstantValue(new OSMLocationRepository());
 
-  dependencies
-    .bind<IGetGymUseCase>(UseCases.getGym)
-    .to(GetGymUseCase)
-    .inSingletonScope();
+  dependencies.bind<IGetGymUseCase>(UseCases.getGym).to(GetGymUseCase);
   dependencies
     .bind<IGetNearestGymsUseCase>(UseCases.getNearestGyms)
-    .to(GetNearestGymsUseCase)
-    .inSingletonScope();
+    .to(GetNearestGymsUseCase);
   dependencies
     .bind<IAuthenticateUseCase>(UseCases.authenticate)
-    .to(AuthenticateUseCase)
-    .inSingletonScope();
-  dependencies
-    .bind<IGetUserUseCase>(Controllers.user)
-    .to(GetUserUseCase)
-    .inSingletonScope();
-  dependencies
-    .bind<IExploreUseCase>(UseCases.explore)
-    .to(ExploreUseCase)
-    .inSingletonScope();
-  dependencies
-    .bind<ICreateGymUseCase>(UseCases.createGym)
-    .to(CreateGymUseCase)
-    .inSingletonScope();
+    .to(AuthenticateUseCase);
+  dependencies.bind<IGetUserUseCase>(Controllers.user).to(GetUserUseCase);
+  dependencies.bind<IExploreUseCase>(UseCases.explore).to(ExploreUseCase);
+  dependencies.bind<ICreateGymUseCase>(UseCases.createGym).to(CreateGymUseCase);
 
-  dependencies
-    .bind<IUserController>(Controllers.user)
-    .to(UserController)
-    .inSingletonScope();
+  dependencies.bind<IUserController>(Controllers.user).to(UserController);
   dependencies
     .bind<IAuthMiddleware>(Controllers.authenticate)
-    .to(AuthMiddleware)
-    .inSingletonScope();
+    .to(AuthMiddleware);
   dependencies
     .bind<IGymController>(Controllers.gymController)
-    .to(GymController)
-    .inSingletonScope();
+    .to(GymController);
 
   l.info(`All dependencies have been injected`);
 }

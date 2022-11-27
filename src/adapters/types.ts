@@ -22,5 +22,5 @@ export interface IResponse<LocalsType = any> {
 
 export interface IRequest {
   content(): any;
-  authorization(): string;
+  authorization(): string | null;
 }

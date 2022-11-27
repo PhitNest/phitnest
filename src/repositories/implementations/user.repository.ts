@@ -162,7 +162,7 @@ export class MongoUserRepository implements IUserRepository {
   create(
     cognitoId: string,
     email: string,
-    gymId: mongoose.Types.ObjectId,
+    gymId: string,
     firstName: string,
     lastName: string
   ) {
