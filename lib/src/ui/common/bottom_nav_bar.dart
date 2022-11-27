@@ -156,7 +156,7 @@ class _StyledNavBarState extends State<StyledNavBar>
                     () => Navigator.pushAndRemoveUntil(
                         context,
                         NoAnimationMaterialPageRoute(
-                            builder: (context) => ChatProvider()),
+                            builder: (context) => ConversationsProvider()),
                         (route) => false),
                     2),
                 createButton(

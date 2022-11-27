@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../state.dart';
-import 'model/friend_model.dart';
+import 'models/friend_model.dart';
 
-class FriendState extends ScreenState {
+class FriendsState extends ScreenState {
   final TextEditingController searchController = TextEditingController();
 
   List<FriendModel> friend = [

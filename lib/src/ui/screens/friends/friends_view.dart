@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../nav_bar_view.dart';
-import 'model/friend_model.dart';
+import 'models/friend_model.dart';
 import 'widgets/add_button.dart';
 
 class FriendsView extends NavBarScreenView {
