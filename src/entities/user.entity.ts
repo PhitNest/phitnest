@@ -1,9 +1,10 @@
-import mongoose from "mongoose";
-
-export interface IUserEntity extends mongoose.Document {
-  cognitoId: Readonly<string>;
-  gymId: Readonly<mongoose.Types.ObjectId>;
-  email: Readonly<string>;
-  firstName: Readonly<string>;
-  lastName: Readonly<string>;
+export interface IUserEntity {
+  _id: string;
+  cognitoId: string;
+  gymId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
 }
+
+export type IPublicUserEntity = Omit<IUserEntity, "email">;

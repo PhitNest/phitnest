@@ -1,11 +1,10 @@
-import mongoose from "mongoose";
-import { IUserEntity } from "../../entities";
+import { IPublicUserEntity, IUserEntity } from "../../entities";
 
 export interface IUserRepository {
   create(
     cognitoId: string,
     email: string,
-    gymId: mongoose.Types.ObjectId,
+    gymId: string,
     firstName: string,
     lastName: string
   ): Promise<IUserEntity>;
@@ -14,6 +13,6 @@ export interface IUserRepository {
     cognitoId: string,
     offset?: number,
     limit?: number
-  ): Promise<Omit<IUserEntity, "email" | "gymId">[]>;
+  ): Promise<Omit<IPublicUserEntity, "gymId">[]>;
   get(cognitoId: string): Promise<IUserEntity | null>;
 }

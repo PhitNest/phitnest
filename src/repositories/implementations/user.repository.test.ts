@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import {
   compareExploreUserData,
   compareUserData,
@@ -41,7 +40,7 @@ const testGym2 = {
 
 const testUser1 = {
   cognitoId: "testUser1",
-  gymId: undefined as mongoose.Types.ObjectId | undefined,
+  gymId: undefined as string | undefined,
   firstName: "testUser1",
   lastName: "testUser1",
   email: "testEmail1@gmail.com",
@@ -49,7 +48,7 @@ const testUser1 = {
 
 const testUser2 = {
   cognitoId: "testUser2",
-  gymId: undefined as mongoose.Types.ObjectId | undefined,
+  gymId: undefined as string | undefined,
   firstName: "testUser2",
   lastName: "testUser2",
   email: "testEmail2@gmail.com",
@@ -57,7 +56,7 @@ const testUser2 = {
 
 const testUser3 = {
   cognitoId: "testUser3",
-  gymId: undefined as mongoose.Types.ObjectId | undefined,
+  gymId: undefined as string | undefined,
   firstName: "testUser3",
   lastName: "testUser3",
   email: "testEmail3@gmail.com",
@@ -65,7 +64,7 @@ const testUser3 = {
 
 const testUser4 = {
   cognitoId: "testUser4",
-  gymId: undefined as mongoose.Types.ObjectId | undefined,
+  gymId: undefined as string | undefined,
   firstName: "testUser4",
   lastName: "testUser4",
   email: "testEmail4@gmail.com",

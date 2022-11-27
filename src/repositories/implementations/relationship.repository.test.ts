@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { comparePublicUserData } from "../../../test/helpers/comparisons";
 import { dependencies, Repositories } from "../../common/dependency-injection";
 import { IGymEntity, IUserEntity } from "../../entities";
@@ -38,7 +37,7 @@ const testGym2 = {
 
 const testUser1 = {
   cognitoId: "id1",
-  gymId: undefined as mongoose.Types.ObjectId | undefined,
+  gymId: undefined as string | undefined,
   email: "testEmail@gmail.com",
   firstName: "testFirstName",
   lastName: "testLastName",
@@ -46,7 +45,7 @@ const testUser1 = {
 
 const testUser2 = {
   cognitoId: "id2",
-  gymId: undefined as mongoose.Types.ObjectId | undefined,
+  gymId: undefined as string | undefined,
   email: "testEmail2@gmail.com",
   firstName: "testFirstName2",
   lastName: "testLastName2",
@@ -54,7 +53,7 @@ const testUser2 = {
 
 const testUser3 = {
   cognitoId: "id3",
-  gymId: undefined as mongoose.Types.ObjectId | undefined,
+  gymId: undefined as string | undefined,
   email: "testEmail3@gmail.com",
   firstName: "testFirstName3",
   lastName: "testLastName3",
@@ -62,7 +61,7 @@ const testUser3 = {
 
 const testUser4 = {
   cognitoId: "id4",
-  gymId: undefined as mongoose.Types.ObjectId | undefined,
+  gymId: undefined as string | undefined,
   email: "testEmail4@gmail.com",
   firstName: "testFirstName4",
   lastName: "testLastName4",

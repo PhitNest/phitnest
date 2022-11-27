@@ -19,14 +19,15 @@ export class AuthMiddleware implements IAuthMiddleware {
     res: IResponse<{ userId: string | undefined }>,
     next: (err?: string) => void
   ) {
-    const userId = await this.authenticateUseCase.execute(
-      req.authorization().replace("Bearer ", "")
-    );
-    if (userId) {
-      res.locals.userId = userId;
-      next();
-    } else {
-      next("You are not authenticated");
+    if (req.authorization()) {
+      const userId = await this.authenticateUseCase.execute(
+        req.authorization()!.replace("Bearer ", "")
+      );
+      if (userId) {
+        res.locals.userId = userId;
+        return next();
+      }
     }
+    return next("You are not authenticated");
   }
 }

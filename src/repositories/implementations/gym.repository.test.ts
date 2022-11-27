@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { compareGym } from "../../../test/helpers/comparisons";
 import { dependencies, Repositories } from "../../common/dependency-injection";
 import { IGymEntity, IUserEntity } from "../../entities";
@@ -42,7 +41,7 @@ const testUser1 = {
   email: "TestEmail",
   firstName: "TestFirstName",
   lastName: "TestLastName",
-  gymId: undefined as mongoose.Types.ObjectId | undefined,
+  gymId: undefined as string | undefined,
 };
 
 const testUser2 = {
@@ -50,7 +49,7 @@ const testUser2 = {
   email: "TestEmail2@gmail.com",
   firstName: "TestFirstName2",
   lastName: "TestLastName2",
-  gymId: undefined as mongoose.Types.ObjectId | undefined,
+  gymId: undefined as string | undefined,
 };
 
 let gym1: IGymEntity;
