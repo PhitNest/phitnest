@@ -20,6 +20,10 @@ class FriendState extends ScreenState {
       isFriend: true,
     ),
     FriendModel(
+      name: 'Zane P.',
+      isFriend: true,
+    ),
+    FriendModel(
       name: 'Erin-Michelle J.',
       isFriend: false,
     ),
@@ -32,4 +36,10 @@ class FriendState extends ScreenState {
       isFriend: false,
     ),
   ];
+
+  List<FriendModel> get friends =>
+      friend.where((f) => f.isFriend == true).toList();
+
+  List<FriendModel> get requests =>
+      friend.where((f) => f.isFriend == false).toList();
 }
