@@ -23,13 +23,7 @@ export class UserController implements IUserController {
   async explore(req: IRequest, res: IResponse<AuthenticatedLocals>) {
     try {
       const users = await this.exploreUseCase.execute(res.locals.userId);
-      if (users) {
-        return res.status(200).json(users);
-      } else {
-        return res
-          .status(500)
-          .json({ message: "Could not find users at your gym" });
-      }
+      return res.status(200).json(users);
     } catch (err) {
       if (err instanceof Error) {
         return res.status(500).json({ message: err.message });
