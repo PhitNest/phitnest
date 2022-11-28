@@ -39,15 +39,15 @@ export class GymController implements IGymController {
         .object({ name: z.string(), address: addressValidator })
         .parse(req.content());
       const gym = await this.createGymUseCase.execute(name, address);
-      if (gym) {
-        return res.status(200).json(gym);
-      } else {
-        return res.status(500).json({ message: "Could not create a gym" });
-      }
+      return res.status(200).json(gym);
     } catch (err) {
-      return res
-        .status(500)
-        .json({ message: "An internal service error occurred" });
+      if (err instanceof z.ZodError) {
+        return res.status(400).json(err.issues);
+      } else if (err instanceof Error) {
+        return res.status(500).json({ message: err.message });
+      } else {
+        return res.status(500).json(err);
+      }
     }
   }
 
@@ -66,30 +66,28 @@ export class GymController implements IGymController {
         distance,
         amount
       );
-      if (gyms) {
-        return res.status(200).json(gyms);
-      } else {
-        return res.status(500).json({ message: "Could not find gyms" });
-      }
+      return res.status(200).json(gyms);
     } catch (err) {
-      return res
-        .status(500)
-        .json({ message: "An internal service error occurred" });
+      if (err instanceof z.ZodError) {
+        return res.status(400).json(err.issues);
+      } else if (err instanceof Error) {
+        return res.status(500).json({ message: err.message });
+      } else {
+        return res.status(500).json(err);
+      }
     }
   }
 
   async get(req: IRequest, res: IResponse<AuthenticatedLocals>) {
     try {
       const gym = await this.getGymUseCase.execute(res.locals.userId);
-      if (gym) {
-        return res.status(200).json(gym);
-      } else {
-        return res.status(500).json({ message: "Could not find a gym" });
-      }
+      return res.status(200).json(gym);
     } catch (err) {
-      return res
-        .status(500)
-        .json({ message: "An internal service error occurred" });
+      if (err instanceof Error) {
+        return res.status(500).json({ message: err.message });
+      } else {
+        return res.status(500).json(err);
+      }
     }
   }
 }

@@ -4,3 +4,4 @@ export { IGetNearestGymsUseCase } from "./get-nearest-gyms";
 export { IGetUserUseCase } from "./get-user";
 export { IExploreUseCase } from "./explore";
 export { ICreateGymUseCase } from "./create-gym";
+export { ILoginUseCase } from "./login";

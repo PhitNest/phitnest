@@ -1,4 +1,4 @@
-import { IUserEntity } from "../../entities";
+import { IPublicUserEntity } from "../../entities";
 
 export interface IRelationshipRepository {
   createBlock(senderId: string, recipientId: string): Promise<void>;
@@ -7,9 +7,9 @@ export interface IRelationshipRepository {
   createDeny(senderId: string, recipientId: string): Promise<void>;
   getPendingOutboundRequests(
     cognitoId: string
-  ): Promise<Omit<IUserEntity, "email">[]>;
+  ): Promise<IPublicUserEntity[]>;
   getPendingInboundRequests(
     cognitoId: string
-  ): Promise<Omit<IUserEntity, "email">[]>;
-  getFriends(cognitoId: string): Promise<Omit<IUserEntity, "email">[]>;
+  ): Promise<IPublicUserEntity[]>;
+  getFriends(cognitoId: string): Promise<IPublicUserEntity[]>;
 }

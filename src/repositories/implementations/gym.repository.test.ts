@@ -84,6 +84,9 @@ test("Gyms can be created", async () => {
 });
 
 test("Get a users gym", async () => {
+  expect(gym1).toBeDefined();
+  expect(gym2).toBeDefined();
+  expect(gym3).toBeDefined();
   userRepo = dependencies.get(Repositories.user);
   testUser1.gymId = gym1._id;
   user1 = await userRepo.create(
@@ -108,6 +111,8 @@ test("Get a users gym", async () => {
 });
 
 test("Get the nearest gyms", async () => {
+  expect(gym1).toBeDefined();
+  expect(gym2).toBeDefined();
   let nearestGyms = await gymRepo.getNearest(
     { type: "Point", coordinates: [50.1, 40.1] },
     10000

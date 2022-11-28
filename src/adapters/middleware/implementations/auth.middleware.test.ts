@@ -1,12 +1,12 @@
 import {
-  Controllers,
   dependencies,
+  Middlewares,
+  rebindControllers,
   UseCases,
 } from "../../../common/dependency-injection";
 import { IAuthMiddleware } from "../interfaces";
 import { MockResponse, MockRequest } from "../../../../test/mocks";
 import { IAuthenticateUseCase } from "../../../use-cases/interfaces";
-import { AuthMiddleware } from "./auth.middleware";
 
 class MockAuthenticateUseCase implements IAuthenticateUseCase {
   async execute(accessToken: string) {
@@ -20,14 +20,12 @@ beforeAll(() => {
   dependencies
     .rebind<IAuthenticateUseCase>(UseCases.authenticate)
     .toConstantValue(new MockAuthenticateUseCase());
-  dependencies
-    .rebind<IAuthMiddleware>(Controllers.authenticate)
-    .to(AuthMiddleware);
-  authMiddleware = dependencies.get<IAuthMiddleware>(Controllers.authenticate);
+  rebindControllers();
+  authMiddleware = dependencies.get<IAuthMiddleware>(Middlewares.authenticate);
 });
 
 test("Cognito ID should be added to locals if the user is properly authenticated", async () => {
-  let req = new MockRequest({});
+  let req = new MockRequest();
   const res = new MockResponse<{ userId: string | undefined }>({
     userId: undefined,
   });

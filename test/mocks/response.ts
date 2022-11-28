@@ -3,12 +3,11 @@ import { IResponse } from "../../src/adapters/types";
 export class MockResponse<LocalsType = any> implements IResponse<LocalsType> {
   locals: LocalsType;
   code: number;
-  body: any;
+  content: any;
 
   constructor(locals: LocalsType) {
     this.locals = locals;
     this.code = 200;
-    this.body = {};
   }
 
   status(code: number) {
@@ -16,8 +15,8 @@ export class MockResponse<LocalsType = any> implements IResponse<LocalsType> {
     return this;
   }
 
-  json(body: any) {
-    this.body = body;
+  json(content: any) {
+    this.content = content;
     return this;
   }
 }
