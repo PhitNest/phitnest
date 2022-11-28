@@ -8,3 +8,4 @@ export { ILoginUseCase } from "./login";
 export { IRegisterUseCase } from "./register";
 export { IConfirmRegisterUseCase } from "./confirm-register";
 export { IRefreshSessionUseCase } from "./refresh-session";
+export { IResendConfirmationUseCase } from "./resend-confirmation";
