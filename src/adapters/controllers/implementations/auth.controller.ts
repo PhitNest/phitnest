@@ -3,13 +3,14 @@ import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
 import {
   IConfirmRegisterUseCase,
+  IForgotPasswordSubmitUseCase,
   IForgotPasswordUseCase,
   ILoginUseCase,
   IRefreshSessionUseCase,
   IRegisterUseCase,
   IResendConfirmationUseCase,
 } from "../../../use-cases/interfaces";
-import { Controller, IRequest, IResponse } from "../../types";
+import { IRequest, IResponse } from "../../types";
 import { IAuthController } from "../interfaces";
 
 @injectable()
@@ -20,6 +21,7 @@ export class AuthController implements IAuthController {
   refreshSessionUseCase: IRefreshSessionUseCase;
   resendConfirmationUseCase: IResendConfirmationUseCase;
   forgotPasswordUseCase: IForgotPasswordUseCase;
+  forgotPasswordSubmitUseCase: IForgotPasswordSubmitUseCase;
 
   constructor(
     @inject(UseCases.login) loginUseCase: ILoginUseCase,
@@ -31,7 +33,9 @@ export class AuthController implements IAuthController {
     @inject(UseCases.resendConfirmation)
     resendConfirmationUseCase: IResendConfirmationUseCase,
     @inject(UseCases.forgotPassword)
-    forgotPasswordUseCase: IForgotPasswordUseCase
+    forgotPasswordUseCase: IForgotPasswordUseCase,
+    @inject(UseCases.forgotPasswordSubmit)
+    forgotPasswordSubmitUseCase: IForgotPasswordSubmitUseCase
   ) {
     this.loginUseCase = loginUseCase;
     this.registerUseCase = registerUseCase;
@@ -39,6 +43,29 @@ export class AuthController implements IAuthController {
     this.refreshSessionUseCase = refreshSessionUseCase;
     this.resendConfirmationUseCase = resendConfirmationUseCase;
     this.forgotPasswordUseCase = forgotPasswordUseCase;
+    this.forgotPasswordSubmitUseCase = forgotPasswordSubmitUseCase;
+  }
+
+  async forgotPasswordSubmit(req: IRequest, res: IResponse) {
+    try {
+      const { email, code, newPassword } = z
+        .object({
+          email: z.string().email(),
+          code: z.string(),
+          newPassword: z.string(),
+        })
+        .parse(req.content());
+      await this.forgotPasswordSubmitUseCase.execute(email, code, newPassword);
+      return res.status(200);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json(err.issues);
+      } else if (err instanceof Error) {
+        return res.status(500).json({ message: err.message });
+      } else {
+        return res.status(500).json(err);
+      }
+    }
   }
 
   async forgotPassword(req: IRequest, res: IResponse) {
