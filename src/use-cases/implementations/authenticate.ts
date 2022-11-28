@@ -11,7 +11,12 @@ export class AuthenticateUseCase implements IAuthenticateUseCase {
     this.authRepo = authRepo;
   }
 
-  execute(accessToken: string) {
-    return this.authRepo.getCognitoId(accessToken);
+  async execute(accessToken: string) {
+    const userId = await this.authRepo.getCognitoId(accessToken);
+    if (userId) {
+      return userId;
+    } else {
+      throw new Error("Could not authenticate user with AWS Cognito");
+    }
   }
 }

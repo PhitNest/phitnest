@@ -41,7 +41,7 @@ const testUser1 = {
   email: "TestEmail",
   firstName: "TestFirstName",
   lastName: "TestLastName",
-  gymId: undefined as string | undefined,
+  gymId: "",
 };
 
 const testUser2 = {
@@ -49,7 +49,7 @@ const testUser2 = {
   email: "TestEmail2@gmail.com",
   firstName: "TestFirstName2",
   lastName: "TestLastName2",
-  gymId: undefined as string | undefined,
+  gymId: "",
 };
 
 let gym1: IGymEntity;
@@ -63,23 +63,12 @@ let userRepo: IUserRepository;
 
 test("Gyms can be created", async () => {
   gymRepo = dependencies.get(Repositories.gym);
-  gym1 = await gymRepo.create(
-    testGym1.name,
-    testGym1.address,
-    testGym1.location
-  );
+  userRepo = dependencies.get(Repositories.user);
+  gym1 = await gymRepo.create(testGym1);
   compareGym(gym1, testGym1);
-  gym2 = await gymRepo.create(
-    testGym2.name,
-    testGym2.address,
-    testGym2.location
-  );
+  gym2 = await gymRepo.create(testGym2);
   compareGym(gym2, testGym2);
-  gym3 = await gymRepo.create(
-    testGym3.name,
-    testGym3.address,
-    testGym3.location
-  );
+  gym3 = await gymRepo.create(testGym3);
   compareGym(gym3, testGym3);
 });
 
@@ -87,27 +76,17 @@ test("Get a users gym", async () => {
   expect(gym1).toBeDefined();
   expect(gym2).toBeDefined();
   expect(gym3).toBeDefined();
-  userRepo = dependencies.get(Repositories.user);
   testUser1.gymId = gym1._id;
-  user1 = await userRepo.create(
-    testUser1.cognitoId,
-    testUser1.email,
-    testUser1.gymId!,
-    testUser1.firstName,
-    testUser1.lastName
-  );
+  user1 = await userRepo.create(testUser1);
+  expect(await gymRepo.get("fake gym")).toBeNull();
   const myGym1 = await gymRepo.get(user1.cognitoId);
-  compareGym(myGym1, gym1);
+  expect(myGym1).toBeDefined();
+  compareGym(myGym1!, gym1);
   testUser2.gymId = gym2._id;
-  user2 = await userRepo.create(
-    testUser2.cognitoId,
-    testUser2.email,
-    testUser2.gymId!,
-    testUser2.firstName,
-    testUser2.lastName
-  );
+  user2 = await userRepo.create(testUser2);
   const myGym2 = await gymRepo.get(user2.cognitoId);
-  compareGym(myGym2, gym2);
+  expect(myGym2).toBeDefined();
+  compareGym(myGym2!, gym2);
 });
 
 test("Get the nearest gyms", async () => {

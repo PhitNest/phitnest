@@ -12,6 +12,11 @@ export class GetUserUseCase implements IGetUserUseCase {
   }
 
   async execute(cognitoId: string) {
-    return this.userRepo.get(cognitoId);
+    const user = await this.userRepo.get(cognitoId);
+    if (user) {
+      return user;
+    } else {
+      throw new Error(`Could not get user with id: ${cognitoId}`);
+    }
   }
 }

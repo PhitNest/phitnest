@@ -19,6 +19,7 @@ export const UseCases = {
   login: Symbol("login.use-case"),
   register: Symbol("register.use-case"),
   confirmRegister: Symbol("confirmRegister.use-case"),
+  refreshSession: Symbol("refreshSession.use-case"),
 };
 
 export const Middlewares = {
@@ -59,6 +60,7 @@ import {
   ILoginUseCase,
   IRegisterUseCase,
   IConfirmRegisterUseCase,
+  IRefreshSessionUseCase,
 } from "../use-cases/interfaces";
 
 import {
@@ -71,6 +73,7 @@ import {
   LoginUseCase,
   RegisterUseCase,
   ConfirmRegisterUseCase,
+  RefreshSessionUseCase,
 } from "../use-cases/implementations";
 
 import { IAuthMiddleware } from "../adapters/middleware/interfaces";
@@ -127,6 +130,9 @@ function injectUseCases() {
   dependencies
     .bind<IConfirmRegisterUseCase>(UseCases.confirmRegister)
     .to(ConfirmRegisterUseCase);
+  dependencies
+    .bind<IRefreshSessionUseCase>(UseCases.refreshSession)
+    .to(RefreshSessionUseCase);
 }
 
 function injectControllers() {

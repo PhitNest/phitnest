@@ -1,15 +1,11 @@
 import { IAddressEntity, IGymEntity, ILocationEntity } from "../../entities";
 
 export interface IGymRepository {
-  create(
-    name: string,
-    address: IAddressEntity,
-    location: ILocationEntity
-  ): Promise<IGymEntity>;
+  create(gym: Omit<IGymEntity, "_id">): Promise<IGymEntity>;
   getNearest(
     location: ILocationEntity,
     meters: number,
     amount?: number
   ): Promise<IGymEntity[]>;
-  get(cognitoId: string): Promise<IGymEntity>;
+  get(cognitoId: string): Promise<IGymEntity | null>;
 }

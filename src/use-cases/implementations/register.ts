@@ -28,7 +28,13 @@ export class RegisterUseCase implements IRegisterUseCase {
   ) {
     const cognitoId = await this.authRepo.registerUser(email, password);
     if (cognitoId) {
-      await this.userRepo.create(cognitoId, email, gymId, firstName, lastName);
+      await this.userRepo.create({
+        cognitoId: cognitoId,
+        email: email,
+        gymId: gymId,
+        firstName: firstName,
+        lastName: lastName,
+      });
     } else {
       throw new Error("Could not register user with AWS Cognito");
     }

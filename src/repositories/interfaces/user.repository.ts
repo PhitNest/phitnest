@@ -1,14 +1,8 @@
 import { IPublicUserEntity, IUserEntity } from "../../entities";
 
 export interface IUserRepository {
-  create(
-    cognitoId: string,
-    email: string,
-    gymId: string,
-    firstName: string,
-    lastName: string
-  ): Promise<IUserEntity>;
-  delete(cognitoId: string): Promise<void>;
+  create(user: Omit<IUserEntity, "_id">): Promise<IUserEntity>;
+  delete(cognitoId: string): Promise<boolean>;
   exploreUsers(
     cognitoId: string,
     offset?: number,

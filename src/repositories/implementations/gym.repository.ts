@@ -32,12 +32,8 @@ export const GymModel = mongoose.model<IGymEntity>(GYM_MODEL_NAME, schema);
 
 @injectable()
 export class MongoGymRepository implements IGymRepository {
-  create(name: string, address: IAddressEntity, location: ILocationEntity) {
-    return GymModel.create({
-      name: name,
-      address: address,
-      location: location,
-    });
+  create(gym: Omit<IGymEntity, "_id">) {
+    return GymModel.create(gym);
   }
 
   async get(cognitoId: string) {
@@ -57,7 +53,11 @@ export class MongoGymRepository implements IGymRepository {
         },
       },
     ]);
-    return results[0].gym[0];
+    if (results.length > 0) {
+      return results[0].gym[0];
+    } else {
+      return null;
+    }
   }
 
   async getNearest(location: ILocationEntity, meters: number, amount?: number) {
@@ -73,7 +73,7 @@ export class MongoGymRepository implements IGymRepository {
           },
         },
       }).limit(amount ?? 0);
-      return query.exec();
+      return await query.exec();
     } else {
       return [];
     }

@@ -1,22 +1,24 @@
 import { inject, injectable } from "inversify";
 import { Repositories } from "../../common/dependency-injection";
 import { IAuthRepository } from "../../repositories/interfaces";
-import { ILoginUseCase } from "../interfaces";
 
 @injectable()
-export class LoginUseCase implements ILoginUseCase {
+export class RefreshSessionUseCase {
   authRepo: IAuthRepository;
 
   constructor(@inject(Repositories.auth) authRepo: IAuthRepository) {
     this.authRepo = authRepo;
   }
 
-  async execute(email: string, password: string) {
-    const accessToken = await this.authRepo.login(email, password);
+  async execute(refreshToken: string, cognitoId: string) {
+    const accessToken = await this.authRepo.refreshAccessToken(
+      refreshToken,
+      cognitoId
+    );
     if (accessToken) {
       return accessToken;
     } else {
-      throw new Error("Could not login user with AWS Cognito");
+      throw new Error("Could not refresh session with AWS Cognito");
     }
   }
 }

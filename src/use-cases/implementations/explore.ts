@@ -11,7 +11,7 @@ export class ExploreUseCase implements IExploreUseCase {
     this.userRepo = userRepo;
   }
 
-  async execute(cognitoId: string, offset?: number, limit?: number) {
+  execute(cognitoId: string, offset?: number, limit?: number) {
     return this.userRepo.exploreUsers(cognitoId, offset, limit);
   }
 }
