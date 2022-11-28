@@ -1,4 +1,4 @@
-import { Controller } from "../../types";
+import { AuthenticatedLocals, Controller } from "../../types";
 
 export interface IAuthController {
   login: Controller;
@@ -8,4 +8,5 @@ export interface IAuthController {
   resendConfirmation: Controller;
   forgotPassword: Controller;
   forgotPasswordSubmit: Controller;
+  signOut: Controller<AuthenticatedLocals>;
 }

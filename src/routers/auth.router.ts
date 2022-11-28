@@ -55,6 +55,12 @@ export class AuthRouter implements IRouter {
         middlewares: [],
         controller: authController.forgotPasswordSubmit,
       },
+      {
+        path: "/signOut",
+        method: HttpMethod.POST,
+        middlewares: [authMiddleware.authenticate],
+        controller: authController.signOut,
+      },
     ];
   }
 }
