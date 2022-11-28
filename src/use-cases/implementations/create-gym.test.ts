@@ -12,7 +12,7 @@ const testGym1 = {
   },
   location: {
     type: "Point",
-    coordinates: [-75.996, 36.85],
+    coordinates: [-75.996, 36.85] as [number, number],
   },
 };
 
@@ -26,7 +26,7 @@ const testGym2 = {
   },
   location: {
     type: "Point",
-    coordinates: [-80.413, 37.229],
+    coordinates: [-80.413, 37.229] as [number, number],
   },
 };
 

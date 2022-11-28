@@ -28,8 +28,10 @@ let locationRepo: ILocationRepository;
 test("Get location from address", async () => {
   locationRepo = dependencies.get(Repositories.location);
   let location = await locationRepo.get(testAddress1);
+  expect(location).not.toBeNull();
   compareLocation(location!, { type: "Point", coordinates: [-75.996, 36.85] });
   location = await locationRepo.get(testAddress2);
+  expect(location).not.toBeNull();
   compareLocation(location!, { type: "Point", coordinates: [-80.413, 37.229] });
   location = await locationRepo.get(fakeAddress);
   expect(location).toBeNull();

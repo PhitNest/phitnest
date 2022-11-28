@@ -6,26 +6,29 @@ import {
   IUserEntity,
 } from "../../src/entities";
 
-export function compareGym(gym1: IGymEntity, doc: any) {
-  expect(gym1.name).toBe(doc.name);
-  compareLocation(gym1.location, doc.location);
-  compareAddress(gym1.address, doc.address);
+export function compareGym(gym1: IGymEntity, ref: Omit<IGymEntity, "_id">) {
+  expect(gym1.name).toBe(ref.name);
+  compareLocation(gym1.location, ref.location);
+  compareAddress(gym1.address, ref.address);
 }
 
-export function compareAddress(address: IAddressEntity, doc: any) {
-  expect(address.street).toEqual(doc.street);
-  expect(address.city).toEqual(doc.city);
-  expect(address.state).toEqual(doc.state);
-  expect(address.zipCode).toEqual(doc.zipCode);
+export function compareAddress(
+  address1: IAddressEntity,
+  address2: IAddressEntity
+) {
+  expect(address1.street).toEqual(address2.street);
+  expect(address1.city).toEqual(address2.city);
+  expect(address1.state).toEqual(address2.state);
+  expect(address1.zipCode).toEqual(address2.zipCode);
 }
 
-export function compareLocation(location: ILocationEntity, doc: any) {
-  expect(location.type).toBe("Point");
-  expect(location.coordinates.length).toBe(2);
-  expect(doc.type).toBe("Point");
-  expect(doc.coordinates.length).toBe(2);
-  expect(location.coordinates[0]).toBeCloseTo(doc.coordinates[0]);
-  expect(location.coordinates[1]).toBeCloseTo(doc.coordinates[1]);
+export function compareLocation(loc1: ILocationEntity, loc2: ILocationEntity) {
+  expect(loc1.type).toBe("Point");
+  expect(loc1.coordinates.length).toBe(2);
+  expect(loc2.type).toBe("Point");
+  expect(loc2.coordinates.length).toBe(2);
+  expect(loc1.coordinates[0]).toBeCloseTo(loc2.coordinates[0]);
+  expect(loc1.coordinates[1]).toBeCloseTo(loc2.coordinates[1]);
 }
 
 export function compareExploreUserData(
@@ -47,10 +50,13 @@ export function comparePublicUserData(
   expect(user.lastName).toEqual(other.lastName);
 }
 
-export function compareUserData(user: IUserEntity, doc: any) {
-  expect(user.cognitoId).toEqual(doc.cognitoId);
-  expect(user.email).toEqual(doc.email);
-  expect(user.gymId).toEqual(doc.gymId);
-  expect(user.firstName).toEqual(doc.firstName);
-  expect(user.lastName).toEqual(doc.lastName);
+export function compareUserData(
+  user: IUserEntity,
+  ref: Omit<IUserEntity, "_id">
+) {
+  expect(user.cognitoId).toEqual(ref.cognitoId);
+  expect(user.email).toEqual(ref.email);
+  expect(user.gymId).toEqual(ref.gymId);
+  expect(user.firstName).toEqual(ref.firstName);
+  expect(user.lastName).toEqual(ref.lastName);
 }
