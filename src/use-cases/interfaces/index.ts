@@ -5,3 +5,5 @@ export { IGetUserUseCase } from "./get-user";
 export { IExploreUseCase } from "./explore";
 export { ICreateGymUseCase } from "./create-gym";
 export { ILoginUseCase } from "./login";
+export { IRegisterUseCase } from "./register";
+export { IConfirmRegisterUseCase } from "./confirm-register";

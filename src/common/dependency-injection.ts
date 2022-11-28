@@ -17,6 +17,8 @@ export const UseCases = {
   explore: Symbol("explore.use-case"),
   createGym: Symbol("createGym.use-case"),
   login: Symbol("login.use-case"),
+  register: Symbol("register.use-case"),
+  confirmRegister: Symbol("confirmRegister.use-case"),
 };
 
 export const Middlewares = {
@@ -55,6 +57,8 @@ import {
   IExploreUseCase,
   ICreateGymUseCase,
   ILoginUseCase,
+  IRegisterUseCase,
+  IConfirmRegisterUseCase,
 } from "../use-cases/interfaces";
 
 import {
@@ -65,6 +69,8 @@ import {
   ExploreUseCase,
   CreateGymUseCase,
   LoginUseCase,
+  RegisterUseCase,
+  ConfirmRegisterUseCase,
 } from "../use-cases/implementations";
 
 import { IAuthMiddleware } from "../adapters/middleware/interfaces";
@@ -86,27 +92,6 @@ import {
 import { l } from "./logger";
 
 export let dependencies: Container;
-
-export function unbind() {
-  dependencies.unbindAll();
-}
-
-export function rebindUseCases() {
-  for (let i = 0; i < Object.keys(UseCases).length; i++) {
-    dependencies.unbind(Object.values(UseCases)[i]);
-  }
-  injectUseCases();
-}
-
-export function rebindControllers() {
-  for (let i = 0; i < Object.keys(Controllers).length; i++) {
-    dependencies.unbind(Object.values(Controllers)[i]);
-  }
-  for (let i = 0; i < Object.keys(Middlewares).length; i++) {
-    dependencies.unbind(Object.values(Middlewares)[i]);
-  }
-  injectControllers();
-}
 
 function injectRepositories() {
   dependencies
@@ -138,6 +123,10 @@ function injectUseCases() {
   dependencies.bind<IExploreUseCase>(UseCases.explore).to(ExploreUseCase);
   dependencies.bind<ICreateGymUseCase>(UseCases.createGym).to(CreateGymUseCase);
   dependencies.bind<ILoginUseCase>(UseCases.login).to(LoginUseCase);
+  dependencies.bind<IRegisterUseCase>(UseCases.register).to(RegisterUseCase);
+  dependencies
+    .bind<IConfirmRegisterUseCase>(UseCases.confirmRegister)
+    .to(ConfirmRegisterUseCase);
 }
 
 function injectControllers() {
@@ -147,6 +136,27 @@ function injectControllers() {
     .to(AuthMiddleware);
   dependencies.bind<IGymController>(Controllers.gym).to(GymController);
   dependencies.bind<IAuthController>(Controllers.auth).to(AuthController);
+}
+
+export function unbind() {
+  dependencies.unbindAll();
+}
+
+export function rebindUseCases() {
+  for (let i = 0; i < Object.keys(UseCases).length; i++) {
+    dependencies.unbind(Object.values(UseCases)[i]);
+  }
+  injectUseCases();
+}
+
+export function rebindControllers() {
+  for (let i = 0; i < Object.keys(Controllers).length; i++) {
+    dependencies.unbind(Object.values(Controllers)[i]);
+  }
+  for (let i = 0; i < Object.keys(Middlewares).length; i++) {
+    dependencies.unbind(Object.values(Middlewares)[i]);
+  }
+  injectControllers();
 }
 
 export function injectDependencies() {

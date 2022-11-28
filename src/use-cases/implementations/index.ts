@@ -5,3 +5,5 @@ export { GetUserUseCase } from "./get-user";
 export { ExploreUseCase } from "./explore";
 export { CreateGymUseCase } from "./create-gym";
 export { LoginUseCase } from "./login";
+export { RegisterUseCase } from "./register";
+export { ConfirmRegisterUseCase } from "./confirm-register";

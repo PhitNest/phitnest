@@ -19,6 +19,18 @@ export class AuthRouter implements IRouter {
         middlewares: [],
         controller: authController.login,
       },
+      {
+        path: "/register",
+        method: HttpMethod.POST,
+        middlewares: [],
+        controller: authController.register,
+      },
+      {
+        path: "/confirmRegister",
+        method: HttpMethod.POST,
+        middlewares: [],
+        controller: authController.confirmRegister,
+      },
     ];
   }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1669654937343" clover="3.2.0">
-  <project timestamp="1669654937343" name="All files">
-    <metrics statements="498" coveredstatements="347" conditionals="79" coveredconditionals="29" methods="144" coveredmethods="92" elements="721" coveredelements="468" complexity="0" loc="498" ncloc="498" packages="11" files="41" classes="41"/>
+<coverage generated="1669665158111" clover="3.2.0">
+  <project timestamp="1669665158111" name="All files">
+    <metrics statements="534" coveredstatements="358" conditionals="89" coveredconditionals="29" methods="152" coveredmethods="96" elements="775" coveredelements="483" complexity="0" loc="534" ncloc="534" packages="11" files="39" classes="39"/>
     <package name="src">
       <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
       <file name="app.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\app.ts">
@@ -18,23 +18,43 @@
       </file>
     </package>
     <package name="src.adapters.controllers.implementations">
-      <metrics statements="70" coveredstatements="35" conditionals="22" coveredconditionals="4" methods="12" coveredmethods="8"/>
+      <metrics statements="90" coveredstatements="37" conditionals="30" coveredconditionals="4" methods="14" coveredmethods="8"/>
       <file name="auth.controller.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\adapters\controllers\implementations\auth.controller.ts">
-        <metrics statements="14" coveredstatements="5" conditionals="4" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <metrics statements="34" coveredstatements="7" conditionals="12" coveredconditionals="0" methods="4" coveredmethods="1"/>
         <line num="1" count="7" type="stmt"/>
         <line num="2" count="7" type="stmt"/>
         <line num="3" count="7" type="stmt"/>
-        <line num="9" count="7" type="stmt"/>
         <line num="13" count="7" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="18" count="0" type="stmt"/>
-        <line num="24" count="0" type="stmt"/>
-        <line num="25" count="0" type="stmt"/>
-        <line num="27" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="28" count="0" type="stmt"/>
-        <line num="29" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="24" count="7" type="stmt"/>
+        <line num="25" count="7" type="stmt"/>
+        <line num="26" count="7" type="stmt"/>
         <line num="30" count="0" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="40" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="42" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="43" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="52" count="0" type="stmt"/>
+        <line num="61" count="0" type="stmt"/>
+        <line num="68" count="0" type="stmt"/>
+        <line num="70" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="71" count="0" type="stmt"/>
+        <line num="72" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="73" count="0" type="stmt"/>
+        <line num="75" count="0" type="stmt"/>
+        <line num="81" count="0" type="stmt"/>
+        <line num="82" count="0" type="stmt"/>
+        <line num="88" count="0" type="stmt"/>
+        <line num="89" count="0" type="stmt"/>
+        <line num="91" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="92" count="0" type="stmt"/>
+        <line num="93" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="94" count="0" type="stmt"/>
+        <line num="96" count="0" type="stmt"/>
       </file>
       <file name="gym.controller.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\adapters\controllers\implementations\gym.controller.ts">
         <metrics statements="32" coveredstatements="22" conditionals="10" coveredconditionals="4" methods="4" coveredmethods="3"/>
@@ -123,7 +143,7 @@
       </file>
     </package>
     <package name="src.common">
-      <metrics statements="61" coveredstatements="56" conditionals="2" coveredconditionals="1" methods="11" coveredmethods="10"/>
+      <metrics statements="63" coveredstatements="58" conditionals="2" coveredconditionals="1" methods="11" coveredmethods="10"/>
       <file name="database.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\common\database.ts">
         <metrics statements="13" coveredstatements="11" conditionals="2" coveredconditionals="1" methods="4" coveredmethods="4"/>
         <line num="1" count="7" type="stmt"/>
@@ -141,52 +161,54 @@
         <line num="20" count="7" type="stmt"/>
       </file>
       <file name="dependency-injection.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\common\dependency-injection.ts">
-        <metrics statements="45" coveredstatements="42" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="6"/>
+        <metrics statements="47" coveredstatements="44" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="6"/>
         <line num="1" count="7" type="stmt"/>
         <line num="2" count="7" type="stmt"/>
         <line num="4" count="7" type="stmt"/>
         <line num="12" count="7" type="stmt"/>
-        <line num="22" count="7" type="stmt"/>
-        <line num="26" count="7" type="stmt"/>
-        <line num="42" count="7" type="stmt"/>
-        <line num="60" count="7" type="stmt"/>
-        <line num="72" count="7" type="stmt"/>
-        <line num="80" count="7" type="stmt"/>
+        <line num="24" count="7" type="stmt"/>
+        <line num="28" count="7" type="stmt"/>
+        <line num="44" count="7" type="stmt"/>
+        <line num="64" count="7" type="stmt"/>
+        <line num="78" count="7" type="stmt"/>
         <line num="86" count="7" type="stmt"/>
-        <line num="90" count="7" type="stmt"/>
-        <line num="91" count="7" type="stmt"/>
-        <line num="94" count="7" type="stmt"/>
-        <line num="95" count="0" type="stmt"/>
-        <line num="96" count="0" type="stmt"/>
-        <line num="98" count="0" type="stmt"/>
-        <line num="101" count="7" type="stmt"/>
-        <line num="102" count="1" type="stmt"/>
-        <line num="103" count="3" type="stmt"/>
-        <line num="105" count="1" type="stmt"/>
-        <line num="106" count="1" type="stmt"/>
-        <line num="108" count="1" type="stmt"/>
-        <line num="112" count="7" type="stmt"/>
+        <line num="92" count="7" type="stmt"/>
+        <line num="97" count="7" type="stmt"/>
+        <line num="100" count="7" type="stmt"/>
+        <line num="103" count="7" type="stmt"/>
+        <line num="106" count="7" type="stmt"/>
+        <line num="109" count="7" type="stmt"/>
         <line num="115" count="7" type="stmt"/>
-        <line num="118" count="7" type="stmt"/>
-        <line num="121" count="7" type="stmt"/>
+        <line num="116" count="7" type="stmt"/>
+        <line num="119" count="7" type="stmt"/>
+        <line num="122" count="7" type="stmt"/>
+        <line num="123" count="7" type="stmt"/>
         <line num="124" count="7" type="stmt"/>
-        <line num="130" count="7" type="stmt"/>
-        <line num="131" count="7" type="stmt"/>
-        <line num="134" count="7" type="stmt"/>
-        <line num="137" count="7" type="stmt"/>
-        <line num="138" count="7" type="stmt"/>
-        <line num="139" count="7" type="stmt"/>
-        <line num="140" count="7" type="stmt"/>
-        <line num="144" count="8" type="stmt"/>
-        <line num="145" count="8" type="stmt"/>
-        <line num="148" count="8" type="stmt"/>
-        <line num="149" count="8" type="stmt"/>
+        <line num="125" count="7" type="stmt"/>
+        <line num="126" count="7" type="stmt"/>
+        <line num="127" count="7" type="stmt"/>
+        <line num="133" count="8" type="stmt"/>
+        <line num="134" count="8" type="stmt"/>
+        <line num="137" count="8" type="stmt"/>
+        <line num="138" count="8" type="stmt"/>
+        <line num="141" count="7" type="stmt"/>
+        <line num="142" count="7" type="stmt"/>
+        <line num="145" count="7" type="stmt"/>
+        <line num="146" count="0" type="stmt"/>
+        <line num="147" count="0" type="stmt"/>
+        <line num="149" count="0" type="stmt"/>
         <line num="152" count="7" type="stmt"/>
-        <line num="153" count="7" type="stmt"/>
-        <line num="158" count="7" type="stmt"/>
-        <line num="159" count="7" type="stmt"/>
-        <line num="160" count="7" type="stmt"/>
+        <line num="153" count="1" type="stmt"/>
+        <line num="154" count="3" type="stmt"/>
+        <line num="156" count="1" type="stmt"/>
+        <line num="157" count="1" type="stmt"/>
+        <line num="159" count="1" type="stmt"/>
         <line num="162" count="7" type="stmt"/>
+        <line num="163" count="7" type="stmt"/>
+        <line num="168" count="7" type="stmt"/>
+        <line num="169" count="7" type="stmt"/>
+        <line num="170" count="7" type="stmt"/>
+        <line num="172" count="7" type="stmt"/>
       </file>
       <file name="logger.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\common\logger.ts">
         <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
@@ -196,65 +218,51 @@
       </file>
     </package>
     <package name="src.common.express">
-      <metrics statements="63" coveredstatements="47" conditionals="8" coveredconditionals="2" methods="18" coveredmethods="10"/>
-      <file name="controller.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\common\express\controller.ts">
-        <metrics statements="5" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
-        <line num="2" count="7" type="stmt"/>
-        <line num="3" count="7" type="stmt"/>
-        <line num="9" count="7" type="stmt"/>
-        <line num="10" count="42" type="stmt"/>
-        <line num="11" count="0" type="stmt"/>
-      </file>
-      <file name="middleware.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\common\express\middleware.ts">
-        <metrics statements="6" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
-        <line num="2" count="7" type="stmt"/>
-        <line num="3" count="7" type="stmt"/>
-        <line num="9" count="7" type="stmt"/>
-        <line num="10" count="42" type="stmt"/>
-        <line num="12" count="28" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-      </file>
-      <file name="request.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\common\express\request.ts">
-        <metrics statements="4" coveredstatements="1" conditionals="4" coveredconditionals="0" methods="3" coveredmethods="0"/>
-        <line num="8" count="7" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="23" count="0" type="cond" truecount="0" falsecount="4"/>
-      </file>
-      <file name="response.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\common\express\response.ts">
-        <metrics statements="10" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
-        <line num="8" count="7" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="21" count="0" type="stmt"/>
-        <line num="22" count="0" type="stmt"/>
-        <line num="23" count="0" type="stmt"/>
-        <line num="27" count="0" type="stmt"/>
-        <line num="28" count="0" type="stmt"/>
-        <line num="29" count="0" type="stmt"/>
-      </file>
+      <metrics statements="61" coveredstatements="43" conditionals="8" coveredconditionals="2" methods="18" coveredmethods="10"/>
       <file name="routes.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\common\express\routes.ts">
-        <metrics statements="19" coveredstatements="17" conditionals="4" coveredconditionals="2" methods="3" coveredmethods="3"/>
+        <metrics statements="42" coveredstatements="24" conditionals="8" coveredconditionals="2" methods="14" coveredmethods="6"/>
         <line num="1" count="7" type="stmt"/>
-        <line num="3" count="7" type="stmt"/>
-        <line num="4" count="7" type="stmt"/>
-        <line num="5" count="7" type="stmt"/>
-        <line num="6" count="7" type="stmt"/>
-        <line num="8" count="7" type="stmt"/>
         <line num="9" count="7" type="stmt"/>
         <line num="10" count="7" type="stmt"/>
         <line num="11" count="7" type="stmt"/>
-        <line num="12" count="7" type="stmt"/>
         <line num="13" count="7" type="stmt"/>
-        <line num="17" count="21" type="stmt"/>
-        <line num="18" count="42" type="stmt"/>
-        <line num="19" count="42" type="stmt"/>
-        <line num="20" count="42" type="cond" truecount="2" falsecount="2"/>
-        <line num="22" count="28" type="stmt"/>
-        <line num="24" count="14" type="stmt"/>
-        <line num="26" count="0" type="stmt"/>
+        <line num="14" count="7" type="stmt"/>
+        <line num="15" count="7" type="stmt"/>
+        <line num="16" count="7" type="stmt"/>
+        <line num="17" count="7" type="stmt"/>
+        <line num="18" count="7" type="stmt"/>
         <line num="28" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="34" count="0" type="stmt"/>
+        <line num="35" count="0" type="stmt"/>
+        <line num="36" count="0" type="stmt"/>
+        <line num="40" count="0" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="47" count="56" type="stmt"/>
+        <line num="49" count="28" type="stmt"/>
+        <line num="54" count="0" type="stmt"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="67" count="0" type="stmt"/>
+        <line num="74" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="79" count="56" type="stmt"/>
+        <line num="80" count="0" type="stmt"/>
+        <line num="85" count="21" type="stmt"/>
+        <line num="86" count="21" type="stmt"/>
+        <line num="87" count="21" type="stmt"/>
+        <line num="88" count="56" type="stmt"/>
+        <line num="89" count="56" type="stmt"/>
+        <line num="90" count="56" type="cond" truecount="2" falsecount="2"/>
+        <line num="92" count="28" type="stmt"/>
+        <line num="93" count="28" type="stmt"/>
+        <line num="95" count="28" type="stmt"/>
+        <line num="96" count="28" type="stmt"/>
+        <line num="98" count="0" type="stmt"/>
+        <line num="99" count="0" type="stmt"/>
+        <line num="101" count="0" type="stmt"/>
+        <line num="102" count="0" type="stmt"/>
+        <line num="105" count="21" type="stmt"/>
       </file>
       <file name="server.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\common\express\server.ts">
         <metrics statements="19" coveredstatements="19" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
@@ -521,8 +529,16 @@
       </file>
     </package>
     <package name="src.use-cases.implementations">
-      <metrics statements="46" coveredstatements="41" conditionals="2" coveredconditionals="2" methods="21" coveredmethods="16"/>
+      <metrics statements="62" coveredstatements="52" conditionals="4" coveredconditionals="2" methods="27" coveredmethods="20"/>
       <file name="authenticate.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\use-cases\implementations\authenticate.ts">
+        <metrics statements="5" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="7" count="7" type="stmt"/>
+        <line num="11" count="7" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+      </file>
+      <file name="confirm-register.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\use-cases\implementations\confirm-register.ts">
         <metrics statements="5" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
         <line num="1" count="7" type="stmt"/>
         <line num="2" count="7" type="stmt"/>
@@ -575,7 +591,7 @@
         <line num="15" count="0" type="stmt"/>
       </file>
       <file name="index.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\use-cases\implementations\index.ts">
-        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="7"/>
+        <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="9" coveredmethods="9"/>
         <line num="1" count="14" type="stmt"/>
         <line num="2" count="14" type="stmt"/>
         <line num="3" count="14" type="stmt"/>
@@ -583,6 +599,8 @@
         <line num="5" count="14" type="stmt"/>
         <line num="6" count="14" type="stmt"/>
         <line num="7" count="14" type="stmt"/>
+        <line num="8" count="14" type="stmt"/>
+        <line num="9" count="14" type="stmt"/>
       </file>
       <file name="login.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\use-cases\implementations\login.ts">
         <metrics statements="5" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
@@ -591,6 +609,18 @@
         <line num="7" count="7" type="stmt"/>
         <line num="11" count="7" type="stmt"/>
         <line num="15" count="0" type="stmt"/>
+      </file>
+      <file name="register.ts" path="C:\Users\jpsie\phitnest\phitnest-api-clean\src\use-cases\implementations\register.ts">
+        <metrics statements="9" coveredstatements="5" conditionals="2" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="1" count="7" type="stmt"/>
+        <line num="2" count="7" type="stmt"/>
+        <line num="10" count="7" type="stmt"/>
+        <line num="18" count="7" type="stmt"/>
+        <line num="19" count="7" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="30" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
       </file>
     </package>
     <package name="test.helpers">

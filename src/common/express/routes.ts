@@ -1,31 +1,106 @@
-import { Router } from "express";
-import { Container } from "inversify";
+import express, { Router } from "express";
+import { Container, interfaces } from "inversify";
+import {
+  Controller,
+  IRequest,
+  IResponse,
+  Middleware,
+} from "../../adapters/types";
 import { AuthRouter, GymRouter, UserRouter } from "../../routers";
 import { HttpMethod, IRouter } from "../../routers/types";
-import { buildController } from "./controller";
-import { buildMiddleware } from "./middleware";
+import { dependencies } from "../dependency-injection";
 
 export function buildRoutes(dependencies: Container) {
   const router = Router();
-  buildRoute(router, dependencies.resolve(GymRouter));
-  buildRoute(router, dependencies.resolve(UserRouter));
-  buildRoute(router, dependencies.resolve(AuthRouter));
+  router.use("/gym", buildRoute(GymRouter));
+  router.use("/user", buildRoute(UserRouter));
+  router.use("/auth", buildRoute(AuthRouter));
   return router;
 }
 
-function buildRoute(expressRouter: Router, router: IRouter) {
+class Response<LocalsType = any> implements IResponse<LocalsType> {
+  locals: LocalsType;
+  expressResponse: express.Response;
+  code: number;
+  content: any;
+
+  constructor(expressResponse: express.Response) {
+    this.expressResponse = expressResponse;
+    this.locals = expressResponse.locals as LocalsType;
+    this.code = 200;
+  }
+
+  status(code: number) {
+    this.code = code;
+    this.expressResponse.status(code);
+    return this;
+  }
+
+  json(content: any) {
+    this.content = content;
+    this.expressResponse.json(content);
+    return this;
+  }
+}
+
+function buildMiddleware(middlewares: Middleware[]) {
+  return middlewares.map(
+    (middleware) =>
+      async function (
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+      ) {
+        await middleware(new Request(req), new Response(res), next);
+      }
+  );
+}
+
+class Request implements IRequest {
+  expressRequest: express.Request;
+
+  constructor(expressRequest: express.Request) {
+    this.expressRequest = expressRequest;
+  }
+
+  content() {
+    return {
+      ...this.expressRequest.body,
+      ...this.expressRequest.query,
+      ...this.expressRequest.params,
+    };
+  }
+  authorization() {
+    return this.expressRequest.headers.authorization ?? "";
+  }
+}
+
+function buildController(controller: Controller) {
+  return async function (req: express.Request, res: express.Response) {
+    await controller(new Request(req), new Response(res));
+  };
+}
+
+function buildRoute(routerClass: interfaces.Newable<IRouter>) {
+  const expressRouter = Router();
+  const router = dependencies.get<IRouter>(routerClass);
   router.routes.forEach((route) => {
     const middlewares = buildMiddleware(route.middlewares);
     const controller = buildController(route.controller);
     switch (route.method) {
       case HttpMethod.GET:
-        return expressRouter.get(route.path, middlewares, controller);
+        expressRouter.get(route.path, middlewares, controller);
+        break;
       case HttpMethod.POST:
-        return expressRouter.post(route.path, middlewares, controller);
+        expressRouter.post(route.path, middlewares, controller);
+        break;
       case HttpMethod.PUT:
-        return expressRouter.put(route.path, middlewares, controller);
+        expressRouter.put(route.path, middlewares, controller);
+        break;
       case HttpMethod.DELETE:
-        return expressRouter.delete(route.path, middlewares, controller);
+        expressRouter.delete(route.path, middlewares, controller);
+        break;
     }
   });
+  return expressRouter;
 }
