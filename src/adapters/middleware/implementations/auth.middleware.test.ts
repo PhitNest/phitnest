@@ -1,14 +1,14 @@
 import {
   dependencies,
   Middlewares,
-  rebindControllers,
-  rebindUseCases,
+  injectUseCases,
   Repositories,
+  injectControllers,
+  injectRepository,
 } from "../../../common/dependency-injection";
 import { IAuthMiddleware } from "../interfaces";
 import { MockResponse, MockRequest } from "../../../../test/mocks";
 import { CognitoAuthRepository } from "../../../repositories/implementations";
-import { IAuthRepository } from "../../../repositories/interfaces";
 
 class MockAuthenticateRepo extends CognitoAuthRepository {
   async getCognitoId(accessToken: string): Promise<string | null> {
@@ -19,12 +19,10 @@ class MockAuthenticateRepo extends CognitoAuthRepository {
 let authMiddleware: IAuthMiddleware;
 
 beforeAll(() => {
-  dependencies
-    .rebind<IAuthRepository>(Repositories.auth)
-    .toConstantValue(new MockAuthenticateRepo());
-  rebindUseCases();
-  rebindControllers();
-  authMiddleware = dependencies.get<IAuthMiddleware>(Middlewares.authenticate);
+  injectRepository(Repositories.auth, MockAuthenticateRepo);
+  injectUseCases();
+  injectControllers();
+  authMiddleware = dependencies.get(Middlewares.authenticate);
 });
 
 test("Cognito ID should be added to locals if the user is properly authenticated", async () => {
