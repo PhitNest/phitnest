@@ -10,3 +10,4 @@ export { ConfirmRegisterUseCase } from "./confirm-register";
 export { RefreshSessionUseCase } from "./refresh-session";
 export { ResendConfirmationUseCase } from "./resend-confirmation";
 export { ForgotPasswordUseCase } from "./forgot-password";
+export { ForgotPasswordSubmitUseCase } from "./forgot-password-submit";

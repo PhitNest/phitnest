@@ -103,10 +103,10 @@ export class CognitoAuthRepository implements IAuthRepository {
     });
   }
 
-  forgotPasswordSubmit(email: string, code: string, password: string) {
+  forgotPasswordSubmit(email: string, code: string, newPassword: string) {
     const user = new CognitoUser({ Username: email, Pool: userPool });
     return new Promise<boolean>((resolve) => {
-      user.confirmPassword(code, password, {
+      user.confirmPassword(code, newPassword, {
         onSuccess: () => {
           l.info(`Changed password for user: ${email}`);
           resolve(true);

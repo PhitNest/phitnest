@@ -15,6 +15,7 @@ export const UseCases = {
   authenticate: Symbol("authenticate.use-case"),
   getUser: Symbol("getUser.use-case"),
   explore: Symbol("explore.use-case"),
+  forgotPasswordSubmit: Symbol("forgotPasswordSubmit.use-case"),
   createGym: Symbol("createGym.use-case"),
   login: Symbol("login.use-case"),
   register: Symbol("register.use-case"),
@@ -57,6 +58,7 @@ import {
   RefreshSessionUseCase,
   ResendConfirmationUseCase,
   ForgotPasswordUseCase,
+  ForgotPasswordSubmitUseCase,
 } from "../use-cases/implementations";
 
 import { AuthMiddleware } from "../adapters/middleware/implementations";
@@ -121,6 +123,7 @@ export function injectUseCases() {
   injectUseCase(UseCases.getUser, GetUserUseCase);
   injectUseCase(UseCases.explore, ExploreUseCase);
   injectUseCase(UseCases.createGym, CreateGymUseCase);
+  injectUseCase(UseCases.forgotPasswordSubmit, ForgotPasswordSubmitUseCase);
   injectUseCase(UseCases.login, LoginUseCase);
   injectUseCase(UseCases.register, RegisterUseCase);
   injectUseCase(UseCases.confirmRegister, ConfirmRegisterUseCase);

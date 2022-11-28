@@ -11,7 +11,7 @@ export interface IAuthRepository {
   forgotPasswordSubmit(
     email: string,
     code: string,
-    password: string
+    newPassword: string
   ): Promise<boolean>;
   confirmRegister(email: string, code: string): Promise<boolean>;
   login(email: string, password: string): Promise<string | null>;
