@@ -23,6 +23,7 @@ export const UseCases = {
   refreshSession: Symbol("refreshSession.use-case"),
   resendConfirmation: Symbol("resendConfirmation.use-case"),
   forgotPassword: Symbol("forgotPassword.use-case"),
+  signOut: Symbol("signOut.use-case"),
 };
 
 export const Middlewares = {
@@ -59,6 +60,7 @@ import {
   ResendConfirmationUseCase,
   ForgotPasswordUseCase,
   ForgotPasswordSubmitUseCase,
+  SignOutUseCase,
 } from "../use-cases/implementations";
 
 import { AuthMiddleware } from "../adapters/middleware/implementations";
@@ -130,6 +132,7 @@ export function injectUseCases() {
   injectUseCase(UseCases.refreshSession, RefreshSessionUseCase);
   injectUseCase(UseCases.resendConfirmation, ResendConfirmationUseCase);
   injectUseCase(UseCases.forgotPassword, ForgotPasswordUseCase);
+  injectUseCase(UseCases.signOut, SignOutUseCase);
 }
 
 export function injectControllers() {

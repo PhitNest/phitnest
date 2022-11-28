@@ -9,8 +9,9 @@ import {
   IRefreshSessionUseCase,
   IRegisterUseCase,
   IResendConfirmationUseCase,
+  ISignOutUseCase,
 } from "../../../use-cases/interfaces";
-import { IRequest, IResponse } from "../../types";
+import { AuthenticatedLocals, IRequest, IResponse } from "../../types";
 import { IAuthController } from "../interfaces";
 
 @injectable()
@@ -21,6 +22,7 @@ export class AuthController implements IAuthController {
   refreshSessionUseCase: IRefreshSessionUseCase;
   resendConfirmationUseCase: IResendConfirmationUseCase;
   forgotPasswordUseCase: IForgotPasswordUseCase;
+  signOutUseCase: ISignOutUseCase;
   forgotPasswordSubmitUseCase: IForgotPasswordSubmitUseCase;
 
   constructor(
@@ -35,7 +37,8 @@ export class AuthController implements IAuthController {
     @inject(UseCases.forgotPassword)
     forgotPasswordUseCase: IForgotPasswordUseCase,
     @inject(UseCases.forgotPasswordSubmit)
-    forgotPasswordSubmitUseCase: IForgotPasswordSubmitUseCase
+    forgotPasswordSubmitUseCase: IForgotPasswordSubmitUseCase,
+    @inject(UseCases.signOut) signOutUseCase: ISignOutUseCase
   ) {
     this.loginUseCase = loginUseCase;
     this.registerUseCase = registerUseCase;
@@ -44,6 +47,25 @@ export class AuthController implements IAuthController {
     this.resendConfirmationUseCase = resendConfirmationUseCase;
     this.forgotPasswordUseCase = forgotPasswordUseCase;
     this.forgotPasswordSubmitUseCase = forgotPasswordSubmitUseCase;
+    this.signOutUseCase = signOutUseCase;
+  }
+
+  async signOut(req: IRequest, res: IResponse<AuthenticatedLocals>) {
+    try {
+      const { allDevices } = z
+        .object({ allDevices: z.boolean() })
+        .parse(req.content());
+      await this.signOutUseCase.execute(res.locals.userId, allDevices);
+      return res.status(200);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json(err.issues);
+      } else if (err instanceof Error) {
+        return res.status(500).json({ message: err.message });
+      } else {
+        return res.status(500).json(err);
+      }
+    }
   }
 
   async forgotPasswordSubmit(req: IRequest, res: IResponse) {
