@@ -85,16 +85,8 @@ beforeAll(async () => {
   userRepo = dependencies.get(Repositories.user);
   gymRepo = dependencies.get(Repositories.gym);
   relationshipRepo = dependencies.get(Repositories.relationship);
-  gym1 = await gymRepo.create(
-    testGym1.name,
-    testGym1.address,
-    testGym1.location
-  );
-  gym2 = await gymRepo.create(
-    testGym2.name,
-    testGym2.address,
-    testGym2.location
-  );
+  gym1 = await gymRepo.create(testGym1);
+  gym2 = await gymRepo.create(testGym2);
   testUser1.gymId = gym1._id;
   testUser2.gymId = gym1._id;
   testUser3.gymId = gym1._id;
@@ -102,37 +94,13 @@ beforeAll(async () => {
 });
 
 test("Users can be created", async () => {
-  user1 = await userRepo.create(
-    testUser1.cognitoId,
-    testUser1.email,
-    testUser1.gymId!,
-    testUser1.firstName,
-    testUser1.lastName
-  );
+  user1 = await userRepo.create(testUser1);
   compareUserData(user1, testUser1);
-  user2 = await userRepo.create(
-    testUser2.cognitoId,
-    testUser2.email,
-    testUser2.gymId!,
-    testUser2.firstName,
-    testUser2.lastName
-  );
+  user2 = await userRepo.create(testUser2);
   compareUserData(user2, testUser2);
-  user3 = await userRepo.create(
-    testUser3.cognitoId,
-    testUser3.email,
-    testUser3.gymId!,
-    testUser3.firstName,
-    testUser3.lastName
-  );
+  user3 = await userRepo.create(testUser3);
   compareUserData(user3, testUser3);
-  user4 = await userRepo.create(
-    testUser4.cognitoId,
-    testUser4.email,
-    testUser4.gymId!,
-    testUser4.firstName,
-    testUser4.lastName
-  );
+  user4 = await userRepo.create(testUser4);
   compareUserData(user4, testUser4);
 });
 
@@ -212,6 +180,7 @@ test("Users can be deleted properly", async () => {
   expect(user2).toBeDefined();
   expect(user3).toBeDefined();
   expect(user4).toBeDefined();
+  expect(await userRepo.delete("fakeId")).toBeFalsy();
   await userRepo.delete(user1.cognitoId);
   await userRepo.delete(user2.cognitoId);
   expect(await userRepo.get(user1.cognitoId)).toBeNull();

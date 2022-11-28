@@ -23,7 +23,11 @@ export class CreateGymUseCase implements ICreateGymUseCase {
   async execute(name: string, address: IAddressEntity) {
     const location = await this.locationRepo.get(address);
     if (location) {
-      return this.gymRepo.create(name, address, location);
+      return await this.gymRepo.create({
+        name: name,
+        address: address,
+        location: location,
+      });
     } else {
       throw new Error("Address could not be located");
     }

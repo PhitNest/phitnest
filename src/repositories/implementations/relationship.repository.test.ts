@@ -37,7 +37,7 @@ const testGym2 = {
 
 const testUser1 = {
   cognitoId: "id1",
-  gymId: undefined as string | undefined,
+  gymId: "",
   email: "testEmail@gmail.com",
   firstName: "testFirstName",
   lastName: "testLastName",
@@ -45,7 +45,7 @@ const testUser1 = {
 
 const testUser2 = {
   cognitoId: "id2",
-  gymId: undefined as string | undefined,
+  gymId: "",
   email: "testEmail2@gmail.com",
   firstName: "testFirstName2",
   lastName: "testLastName2",
@@ -53,7 +53,7 @@ const testUser2 = {
 
 const testUser3 = {
   cognitoId: "id3",
-  gymId: undefined as string | undefined,
+  gymId: "",
   email: "testEmail3@gmail.com",
   firstName: "testFirstName3",
   lastName: "testLastName3",
@@ -61,7 +61,7 @@ const testUser3 = {
 
 const testUser4 = {
   cognitoId: "id4",
-  gymId: undefined as string | undefined,
+  gymId: "",
   email: "testEmail4@gmail.com",
   firstName: "testFirstName4",
   lastName: "testLastName4",
@@ -82,48 +82,16 @@ beforeAll(async () => {
   relationshipRepo = dependencies.get(Repositories.relationship);
   gymRepo = dependencies.get(Repositories.gym);
   userRepo = dependencies.get(Repositories.user);
-  gym1 = await gymRepo.create(
-    testGym1.name,
-    testGym1.address,
-    testGym1.location
-  );
-  gym2 = await gymRepo.create(
-    testGym2.name,
-    testGym2.address,
-    testGym2.location
-  );
+  gym1 = await gymRepo.create(testGym1);
+  gym2 = await gymRepo.create(testGym2);
   testUser1.gymId = gym1._id;
-  user1 = await userRepo.create(
-    testUser1.cognitoId,
-    testUser1.email,
-    testUser1.gymId!,
-    testUser1.firstName,
-    testUser1.lastName
-  );
+  user1 = await userRepo.create(testUser1);
   testUser2.gymId = gym1._id;
-  user2 = await userRepo.create(
-    testUser2.cognitoId,
-    testUser2.email,
-    testUser2.gymId!,
-    testUser2.firstName,
-    testUser2.lastName
-  );
+  user2 = await userRepo.create(testUser2);
   testUser3.gymId = gym1._id;
-  user3 = await userRepo.create(
-    testUser3.cognitoId,
-    testUser3.email,
-    testUser3.gymId!,
-    testUser3.firstName,
-    testUser3.lastName
-  );
+  user3 = await userRepo.create(testUser3);
   testUser4.gymId = gym2._id;
-  user4 = await userRepo.create(
-    testUser4.cognitoId,
-    testUser4.email,
-    testUser4.gymId!,
-    testUser4.firstName,
-    testUser4.lastName
-  );
+  user4 = await userRepo.create(testUser4);
 });
 
 test("Sending and denying friend requests, and blocking", async () => {

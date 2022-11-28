@@ -31,6 +31,12 @@ export class AuthRouter implements IRouter {
         middlewares: [],
         controller: authController.confirmRegister,
       },
+      {
+        path: "/refreshSession",
+        method: HttpMethod.POST,
+        middlewares: [],
+        controller: authController.refreshSession,
+      },
     ];
   }
 }

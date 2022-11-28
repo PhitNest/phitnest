@@ -7,3 +7,4 @@ export { ICreateGymUseCase } from "./create-gym";
 export { ILoginUseCase } from "./login";
 export { IRegisterUseCase } from "./register";
 export { IConfirmRegisterUseCase } from "./confirm-register";
+export { IRefreshSessionUseCase } from "./refresh-session";

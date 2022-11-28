@@ -138,12 +138,12 @@ export class MongoUserRepository implements IUserRepository {
         },
       },
     ];
-    if (offset) {
+    if (offset && offset > 0) {
       pipeline.push({
         $skip: offset,
       });
     }
-    if (limit) {
+    if (limit && limit > 0) {
       pipeline.push({
         $limit: limit,
       });
@@ -152,26 +152,16 @@ export class MongoUserRepository implements IUserRepository {
   }
 
   async delete(cognitoId: string) {
-    await UserModel.deleteOne({ cognitoId: cognitoId });
+    return (
+      (await UserModel.deleteOne({ cognitoId: cognitoId })).deletedCount > 0
+    );
   }
 
-  async get(cognitoId: string) {
+  get(cognitoId: string) {
     return UserModel.findOne({ cognitoId: cognitoId }).exec();
   }
 
-  create(
-    cognitoId: string,
-    email: string,
-    gymId: string,
-    firstName: string,
-    lastName: string
-  ) {
-    return UserModel.create({
-      cognitoId: cognitoId,
-      email: email,
-      firstName: firstName,
-      lastName: lastName,
-      gymId: gymId,
-    });
+  create(user: Omit<IUserEntity, "_id">) {
+    return UserModel.create(user);
   }
 }

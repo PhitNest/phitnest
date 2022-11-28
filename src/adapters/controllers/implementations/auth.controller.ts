@@ -4,6 +4,7 @@ import { UseCases } from "../../../common/dependency-injection";
 import {
   IConfirmRegisterUseCase,
   ILoginUseCase,
+  IRefreshSessionUseCase,
   IRegisterUseCase,
 } from "../../../use-cases/interfaces";
 import { IRequest, IResponse } from "../../types";
@@ -14,16 +15,20 @@ export class AuthController implements IAuthController {
   loginUseCase: ILoginUseCase;
   registerUseCase: IRegisterUseCase;
   confirmRegisterUseCase: IConfirmRegisterUseCase;
+  refreshSessionUseCase: IRefreshSessionUseCase;
 
   constructor(
     @inject(UseCases.login) loginUseCase: ILoginUseCase,
     @inject(UseCases.register) registerUseCase: IRegisterUseCase,
     @inject(UseCases.confirmRegister)
-    confirmRegisterUseCase: IConfirmRegisterUseCase
+    confirmRegisterUseCase: IConfirmRegisterUseCase,
+    @inject(UseCases.refreshSession)
+    refreshSessionUseCase: IRefreshSessionUseCase
   ) {
     this.loginUseCase = loginUseCase;
     this.registerUseCase = registerUseCase;
     this.confirmRegisterUseCase = confirmRegisterUseCase;
+    this.refreshSessionUseCase = refreshSessionUseCase;
   }
 
   async login(req: IRequest, res: IResponse) {
@@ -87,6 +92,30 @@ export class AuthController implements IAuthController {
         .parse(req.content());
       await this.confirmRegisterUseCase.execute(email, code);
       return res.status(200);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json(err.issues);
+      } else if (err instanceof Error) {
+        return res.status(500).json({ message: err.message });
+      } else {
+        return res.status(500).json(err);
+      }
+    }
+  }
+
+  async refreshSession(req: IRequest, res: IResponse) {
+    try {
+      const { refreshToken, cognitoId } = z
+        .object({
+          refreshToken: z.string(),
+          cognitoId: z.string(),
+        })
+        .parse(req.content());
+      const accessToken = await this.refreshSessionUseCase.execute(
+        refreshToken,
+        cognitoId
+      );
+      return res.status(200).json({ accessToken: accessToken });
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);

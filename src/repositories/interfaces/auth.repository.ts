@@ -2,18 +2,18 @@ export interface IAuthRepository {
   getCognitoId(accessToken: string): Promise<string | null>;
   refreshAccessToken(
     refreshToken: string,
-    email: string
+    cognitoId: string
   ): Promise<string | null>;
   deleteUser(cognitoId: string): Promise<boolean>;
   registerUser(email: string, password: string): Promise<string | null>;
-  signOut(cognitoId: string, allDevices: boolean): Promise<void>;
-  forgotPassword(email: string): Promise<void>;
+  signOut(cognitoId: string, allDevices: boolean): Promise<boolean>;
+  forgotPassword(email: string): Promise<boolean>;
   forgotPasswordSubmit(
     email: string,
     code: string,
     password: string
-  ): Promise<void>;
-  confirmRegister(email: string, code: string): Promise<void>;
+  ): Promise<boolean>;
+  confirmRegister(email: string, code: string): Promise<boolean>;
   login(email: string, password: string): Promise<string | null>;
-  resendConfirmationCode(email: string): Promise<void>;
+  resendConfirmationCode(email: string): Promise<boolean>;
 }
