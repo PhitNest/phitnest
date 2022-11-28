@@ -2,6 +2,7 @@ import {
   IAddressEntity,
   IGymEntity,
   ILocationEntity,
+  IPublicUserEntity,
   IUserEntity,
 } from "../../src/entities";
 
@@ -28,7 +29,7 @@ export function compareLocation(location: ILocationEntity, doc: any) {
 }
 
 export function compareExploreUserData(
-  user: Omit<IUserEntity, "email" | "gymId">,
+  user: Omit<IPublicUserEntity, "gymId">,
   other: IUserEntity
 ) {
   expect(user.cognitoId).toEqual(other.cognitoId);
@@ -37,7 +38,7 @@ export function compareExploreUserData(
 }
 
 export function comparePublicUserData(
-  user: Omit<IUserEntity, "email">,
+  user: IPublicUserEntity,
   other: IUserEntity
 ) {
   expect(user.cognitoId).toEqual(other.cognitoId);

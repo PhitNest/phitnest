@@ -137,6 +137,12 @@ test("Users can be created", async () => {
 });
 
 test("Users can be explored properly", async () => {
+  expect(gym1).toBeDefined();
+  expect(gym2).toBeDefined();
+  expect(user1).toBeDefined();
+  expect(user2).toBeDefined();
+  expect(user3).toBeDefined();
+  expect(user4).toBeDefined();
   let exploreResults = await userRepo.exploreUsers(user1.cognitoId);
   expect(exploreResults.length).toEqual(2);
   let foundUser2 = false;
@@ -200,6 +206,12 @@ test("Users can be explored properly", async () => {
 });
 
 test("Users can be deleted properly", async () => {
+  expect(gym1).toBeDefined();
+  expect(gym2).toBeDefined();
+  expect(user1).toBeDefined();
+  expect(user2).toBeDefined();
+  expect(user3).toBeDefined();
+  expect(user4).toBeDefined();
   await userRepo.delete(user1.cognitoId);
   await userRepo.delete(user2.cognitoId);
   expect(await userRepo.get(user1.cognitoId)).toBeNull();

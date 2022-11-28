@@ -1,8 +1,8 @@
 import { AuthenticatedLocals, Controller } from "../../types";
 
 export interface IGymController {
-  // TODO: DELETE THIS FOR PROD
-  create: Controller<AuthenticatedLocals>;
+  // TODO: SECURE THIS WITH ADMIN AUTH FOR PROD
+  create: Controller;
 
   get: Controller<AuthenticatedLocals>;
   getNearest: Controller;

@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { IUserController } from "../adapters/controllers/interfaces";
 import { IAuthMiddleware } from "../adapters/middleware/interfaces";
-import { Controllers } from "../common/dependency-injection";
+import { Controllers, Middlewares } from "../common/dependency-injection";
 import { HttpMethod, IRoute, IRouter } from "./types";
 
 @injectable()
@@ -10,7 +10,7 @@ export class UserRouter implements IRouter {
 
   constructor(
     @inject(Controllers.user) userController: IUserController,
-    @inject(Controllers.authenticate) authMiddleware: IAuthMiddleware
+    @inject(Middlewares.authenticate) authMiddleware: IAuthMiddleware
   ) {
     this.routes = [
       {

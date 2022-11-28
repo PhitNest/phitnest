@@ -1,4 +1,4 @@
-import { IUserEntity } from "../../entities";
+import { IPublicUserEntity } from "../../entities";
 import { IUseCase } from "../types";
 
 export interface IExploreUseCase extends IUseCase {
@@ -6,5 +6,5 @@ export interface IExploreUseCase extends IUseCase {
     cognitoId: string,
     offset?: number,
     limit?: number
-  ) => Promise<Omit<IUserEntity, "gymId" | "email">[]>;
+  ) => Promise<Omit<IPublicUserEntity, "gymId">[]>;
 }

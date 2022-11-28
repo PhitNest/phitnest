@@ -16,12 +16,17 @@ export const UseCases = {
   getUser: Symbol("getUser.use-case"),
   explore: Symbol("explore.use-case"),
   createGym: Symbol("createGym.use-case"),
+  login: Symbol("login.use-case"),
+};
+
+export const Middlewares = {
+  authenticate: Symbol("authenticate.middleware"),
 };
 
 export const Controllers = {
-  gymController: Symbol("gym.controller"),
-  authenticate: Symbol("authenticate.middleware"),
+  gym: Symbol("gym.controller"),
   user: Symbol("user.controller"),
+  auth: Symbol("auth.controller"),
 };
 
 // Make sure to export repositories, use cases, and controllers symbols before importing the following
@@ -49,6 +54,7 @@ import {
   IGetUserUseCase,
   IExploreUseCase,
   ICreateGymUseCase,
+  ILoginUseCase,
 } from "../use-cases/interfaces";
 
 import {
@@ -58,6 +64,7 @@ import {
   GetUserUseCase,
   ExploreUseCase,
   CreateGymUseCase,
+  LoginUseCase,
 } from "../use-cases/implementations";
 
 import { IAuthMiddleware } from "../adapters/middleware/interfaces";
@@ -67,11 +74,13 @@ import { AuthMiddleware } from "../adapters/middleware/implementations";
 import {
   IGymController,
   IUserController,
+  IAuthController,
 } from "../adapters/controllers/interfaces";
 
 import {
   GymController,
   UserController,
+  AuthController,
 } from "../adapters/controllers/implementations";
 
 import { l } from "./logger";
@@ -82,11 +91,24 @@ export function unbind() {
   dependencies.unbindAll();
 }
 
-export function inject() {
-  dependencies = new Container({
-    defaultScope: "Singleton",
-    autoBindInjectable: true,
-  });
+export function rebindUseCases() {
+  for (let i = 0; i < Object.keys(UseCases).length; i++) {
+    dependencies.unbind(Object.values(UseCases)[i]);
+  }
+  injectUseCases();
+}
+
+export function rebindControllers() {
+  for (let i = 0; i < Object.keys(Controllers).length; i++) {
+    dependencies.unbind(Object.values(Controllers)[i]);
+  }
+  for (let i = 0; i < Object.keys(Middlewares).length; i++) {
+    dependencies.unbind(Object.values(Middlewares)[i]);
+  }
+  injectControllers();
+}
+
+function injectRepositories() {
   dependencies
     .bind<IGymRepository>(Repositories.gym)
     .toConstantValue(new MongoGymRepository());
@@ -102,7 +124,9 @@ export function inject() {
   dependencies
     .bind<ILocationRepository>(Repositories.location)
     .toConstantValue(new OSMLocationRepository());
+}
 
+function injectUseCases() {
   dependencies.bind<IGetGymUseCase>(UseCases.getGym).to(GetGymUseCase);
   dependencies
     .bind<IGetNearestGymsUseCase>(UseCases.getNearestGyms)
@@ -110,17 +134,30 @@ export function inject() {
   dependencies
     .bind<IAuthenticateUseCase>(UseCases.authenticate)
     .to(AuthenticateUseCase);
-  dependencies.bind<IGetUserUseCase>(Controllers.user).to(GetUserUseCase);
+  dependencies.bind<IGetUserUseCase>(UseCases.getUser).to(GetUserUseCase);
   dependencies.bind<IExploreUseCase>(UseCases.explore).to(ExploreUseCase);
   dependencies.bind<ICreateGymUseCase>(UseCases.createGym).to(CreateGymUseCase);
+  dependencies.bind<ILoginUseCase>(UseCases.login).to(LoginUseCase);
+}
 
+function injectControllers() {
   dependencies.bind<IUserController>(Controllers.user).to(UserController);
   dependencies
-    .bind<IAuthMiddleware>(Controllers.authenticate)
+    .bind<IAuthMiddleware>(Middlewares.authenticate)
     .to(AuthMiddleware);
-  dependencies
-    .bind<IGymController>(Controllers.gymController)
-    .to(GymController);
+  dependencies.bind<IGymController>(Controllers.gym).to(GymController);
+  dependencies.bind<IAuthController>(Controllers.auth).to(AuthController);
+}
+
+export function injectDependencies() {
+  dependencies = new Container({
+    defaultScope: "Singleton",
+    autoBindInjectable: true,
+  });
+
+  injectRepositories();
+  injectUseCases();
+  injectControllers();
 
   l.info(`All dependencies have been injected`);
 }

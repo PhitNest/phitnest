@@ -31,9 +31,11 @@ export class UserController implements IUserController {
           .json({ message: "Could not find users at your gym" });
       }
     } catch (err) {
-      return res
-        .status(500)
-        .json({ message: "An internal service error occurred" });
+      if (err instanceof Error) {
+        return res.status(500).json({ message: err.message });
+      } else {
+        return res.status(500).json(err);
+      }
     }
   }
 
@@ -46,9 +48,11 @@ export class UserController implements IUserController {
         return res.status(500).json({ message: "Could not find a user" });
       }
     } catch (err) {
-      return res
-        .status(500)
-        .json({ message: "An internal service error occurred" });
+      if (err instanceof Error) {
+        return res.status(500).json({ message: err.message });
+      } else {
+        return res.status(500).json(err);
+      }
     }
   }
 }

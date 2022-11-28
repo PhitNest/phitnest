@@ -127,6 +127,12 @@ beforeAll(async () => {
 });
 
 test("Sending and denying friend requests, and blocking", async () => {
+  expect(gym1).toBeDefined();
+  expect(gym2).toBeDefined();
+  expect(user1).toBeDefined();
+  expect(user2).toBeDefined();
+  expect(user3).toBeDefined();
+  expect(user4).toBeDefined();
   await relationshipRepo.createRequest(user1.cognitoId, user2.cognitoId);
   let sentRequests = await relationshipRepo.getPendingOutboundRequests(
     user1.cognitoId

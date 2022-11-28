@@ -15,6 +15,8 @@ export type Middleware<LocalsType = any> = (
 
 export interface IResponse<LocalsType = any> {
   locals: LocalsType;
+  code: number;
+  content: any;
 
   status(code: number): this;
   json(content: any): this;
