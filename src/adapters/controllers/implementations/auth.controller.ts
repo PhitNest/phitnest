@@ -6,6 +6,7 @@ import {
   ILoginUseCase,
   IRefreshSessionUseCase,
   IRegisterUseCase,
+  IResendConfirmationUseCase,
 } from "../../../use-cases/interfaces";
 import { IRequest, IResponse } from "../../types";
 import { IAuthController } from "../interfaces";
@@ -16,6 +17,7 @@ export class AuthController implements IAuthController {
   registerUseCase: IRegisterUseCase;
   confirmRegisterUseCase: IConfirmRegisterUseCase;
   refreshSessionUseCase: IRefreshSessionUseCase;
+  resendConfirmationUseCase: IResendConfirmationUseCase;
 
   constructor(
     @inject(UseCases.login) loginUseCase: ILoginUseCase,
@@ -23,12 +25,33 @@ export class AuthController implements IAuthController {
     @inject(UseCases.confirmRegister)
     confirmRegisterUseCase: IConfirmRegisterUseCase,
     @inject(UseCases.refreshSession)
-    refreshSessionUseCase: IRefreshSessionUseCase
+    refreshSessionUseCase: IRefreshSessionUseCase,
+    @inject(UseCases.resendConfirmation)
+    resendConfirmationUseCase: IResendConfirmationUseCase
   ) {
     this.loginUseCase = loginUseCase;
     this.registerUseCase = registerUseCase;
     this.confirmRegisterUseCase = confirmRegisterUseCase;
     this.refreshSessionUseCase = refreshSessionUseCase;
+    this.resendConfirmationUseCase = resendConfirmationUseCase;
+  }
+
+  async resendConfirmation(req: IRequest, res: IResponse) {
+    try {
+      const { email } = z
+        .object({ email: z.string().email() })
+        .parse(req.content());
+      await this.resendConfirmationUseCase.execute(email);
+      return res.status(200);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json(err.issues);
+      } else if (err instanceof Error) {
+        return res.status(500).json({ message: err.message });
+      } else {
+        return res.status(500).json(err);
+      }
+    }
   }
 
   async login(req: IRequest, res: IResponse) {
