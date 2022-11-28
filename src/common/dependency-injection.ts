@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { Container } from "inversify";
+import { Container, interfaces } from "inversify";
 
 export const Repositories = {
   user: Symbol("user.repository"),
@@ -36,34 +36,12 @@ export const Controllers = {
 // Make sure to export repositories, use cases, and controllers symbols before importing the following
 
 import {
-  IAuthRepository,
-  IGymRepository,
-  IUserRepository,
-  IRelationshipRepository,
-  ILocationRepository,
-} from "../repositories/interfaces";
-
-import {
   MongoUserRepository,
   CognitoAuthRepository,
   MongoGymRepository,
   MongoRelationshipRepository,
   OSMLocationRepository,
 } from "../repositories/implementations";
-
-import {
-  IGetGymUseCase,
-  IGetNearestGymsUseCase,
-  IAuthenticateUseCase,
-  IGetUserUseCase,
-  IExploreUseCase,
-  ICreateGymUseCase,
-  ILoginUseCase,
-  IRegisterUseCase,
-  IConfirmRegisterUseCase,
-  IResendConfirmationUseCase,
-  IRefreshSessionUseCase,
-} from "../use-cases/interfaces";
 
 import {
   GetGymUseCase,
@@ -79,15 +57,7 @@ import {
   ResendConfirmationUseCase,
 } from "../use-cases/implementations";
 
-import { IAuthMiddleware } from "../adapters/middleware/interfaces";
-
 import { AuthMiddleware } from "../adapters/middleware/implementations";
-
-import {
-  IGymController,
-  IUserController,
-  IAuthController,
-} from "../adapters/controllers/interfaces";
 
 import {
   GymController,
@@ -97,78 +67,74 @@ import {
 
 import { l } from "./logger";
 
+import { IUseCase } from "../use-cases/types";
+
 export let dependencies: Container;
 
+export function injectRepository<Type>(
+  repository: symbol,
+  implementation: interfaces.Newable<Type>
+) {
+  if (dependencies.isBound(repository)) {
+    dependencies.rebind<Type>(repository).toConstantValue(new implementation());
+  } else {
+    dependencies.bind<Type>(repository).toConstantValue(new implementation());
+  }
+}
+
+function injectUseCase<Type extends IUseCase>(
+  useCase: symbol,
+  implementation: interfaces.Newable<Type>
+) {
+  if (dependencies.isBound(useCase)) {
+    dependencies.rebind<Type>(useCase).to(implementation);
+  } else {
+    dependencies.bind<Type>(useCase).to(implementation);
+  }
+}
+
+function injectController<Type>(
+  controller: symbol,
+  implementation: interfaces.Newable<Type>
+) {
+  if (dependencies.isBound(controller)) {
+    dependencies.rebind<Type>(controller).to(implementation);
+  } else {
+    dependencies.bind<Type>(controller).to(implementation);
+  }
+}
+
 function injectRepositories() {
-  dependencies
-    .bind<IGymRepository>(Repositories.gym)
-    .toConstantValue(new MongoGymRepository());
-  dependencies
-    .bind<IAuthRepository>(Repositories.auth)
-    .toConstantValue(new CognitoAuthRepository());
-  dependencies
-    .bind<IUserRepository>(Repositories.user)
-    .toConstantValue(new MongoUserRepository());
-  dependencies
-    .bind<IRelationshipRepository>(Repositories.relationship)
-    .toConstantValue(new MongoRelationshipRepository());
-  dependencies
-    .bind<ILocationRepository>(Repositories.location)
-    .toConstantValue(new OSMLocationRepository());
+  injectRepository(Repositories.gym, MongoGymRepository);
+  injectRepository(Repositories.user, MongoUserRepository);
+  injectRepository(Repositories.auth, CognitoAuthRepository);
+  injectRepository(Repositories.relationship, MongoRelationshipRepository);
+  injectRepository(Repositories.location, OSMLocationRepository);
 }
 
-function injectUseCases() {
-  dependencies.bind<IGetGymUseCase>(UseCases.getGym).to(GetGymUseCase);
-  dependencies
-    .bind<IGetNearestGymsUseCase>(UseCases.getNearestGyms)
-    .to(GetNearestGymsUseCase);
-  dependencies
-    .bind<IAuthenticateUseCase>(UseCases.authenticate)
-    .to(AuthenticateUseCase);
-  dependencies.bind<IGetUserUseCase>(UseCases.getUser).to(GetUserUseCase);
-  dependencies.bind<IExploreUseCase>(UseCases.explore).to(ExploreUseCase);
-  dependencies.bind<ICreateGymUseCase>(UseCases.createGym).to(CreateGymUseCase);
-  dependencies.bind<ILoginUseCase>(UseCases.login).to(LoginUseCase);
-  dependencies.bind<IRegisterUseCase>(UseCases.register).to(RegisterUseCase);
-  dependencies
-    .bind<IConfirmRegisterUseCase>(UseCases.confirmRegister)
-    .to(ConfirmRegisterUseCase);
-  dependencies
-    .bind<IRefreshSessionUseCase>(UseCases.refreshSession)
-    .to(RefreshSessionUseCase);
-  dependencies
-    .bind<IResendConfirmationUseCase>(UseCases.resendConfirmation)
-    .to(ResendConfirmationUseCase);
+export function injectUseCases() {
+  injectUseCase(UseCases.getGym, GetGymUseCase);
+  injectUseCase(UseCases.getNearestGyms, GetNearestGymsUseCase);
+  injectUseCase(UseCases.authenticate, AuthenticateUseCase);
+  injectUseCase(UseCases.getUser, GetUserUseCase);
+  injectUseCase(UseCases.explore, ExploreUseCase);
+  injectUseCase(UseCases.createGym, CreateGymUseCase);
+  injectUseCase(UseCases.login, LoginUseCase);
+  injectUseCase(UseCases.register, RegisterUseCase);
+  injectUseCase(UseCases.confirmRegister, ConfirmRegisterUseCase);
+  injectUseCase(UseCases.refreshSession, RefreshSessionUseCase);
+  injectUseCase(UseCases.resendConfirmation, ResendConfirmationUseCase);
 }
 
-function injectControllers() {
-  dependencies.bind<IUserController>(Controllers.user).to(UserController);
-  dependencies
-    .bind<IAuthMiddleware>(Middlewares.authenticate)
-    .to(AuthMiddleware);
-  dependencies.bind<IGymController>(Controllers.gym).to(GymController);
-  dependencies.bind<IAuthController>(Controllers.auth).to(AuthController);
+export function injectControllers() {
+  injectController(Controllers.gym, GymController);
+  injectController(Controllers.user, UserController);
+  injectController(Controllers.auth, AuthController);
+  injectController(Middlewares.authenticate, AuthMiddleware);
 }
 
 export function unbind() {
   dependencies.unbindAll();
-}
-
-export function rebindUseCases() {
-  for (let i = 0; i < Object.keys(UseCases).length; i++) {
-    dependencies.unbind(Object.values(UseCases)[i]);
-  }
-  injectUseCases();
-}
-
-export function rebindControllers() {
-  for (let i = 0; i < Object.keys(Controllers).length; i++) {
-    dependencies.unbind(Object.values(Controllers)[i]);
-  }
-  for (let i = 0; i < Object.keys(Middlewares).length; i++) {
-    dependencies.unbind(Object.values(Middlewares)[i]);
-  }
-  injectControllers();
 }
 
 export function injectDependencies() {
