@@ -6,4 +6,5 @@ export interface IAuthController {
   confirmRegister: Controller;
   refreshSession: Controller;
   resendConfirmation: Controller;
+  forgotPassword: Controller;
 }
