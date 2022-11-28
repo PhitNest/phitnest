@@ -78,9 +78,9 @@ export function injectRepository<Type>(
   implementation: interfaces.Newable<Type>
 ) {
   if (dependencies.isBound(repository)) {
-    dependencies.rebind<Type>(repository).toConstantValue(new implementation());
+    dependencies.rebind(repository).toConstantValue(new implementation());
   } else {
-    dependencies.bind<Type>(repository).toConstantValue(new implementation());
+    dependencies.bind(repository).toConstantValue(new implementation());
   }
 }
 
@@ -89,9 +89,9 @@ function injectUseCase<Type extends IUseCase>(
   implementation: interfaces.Newable<Type>
 ) {
   if (dependencies.isBound(useCase)) {
-    dependencies.rebind<Type>(useCase).to(implementation);
+    dependencies.rebind(useCase).to(implementation);
   } else {
-    dependencies.bind<Type>(useCase).to(implementation);
+    dependencies.bind(useCase).to(implementation);
   }
 }
 
@@ -100,9 +100,9 @@ function injectController<Type>(
   implementation: interfaces.Newable<Type>
 ) {
   if (dependencies.isBound(controller)) {
-    dependencies.rebind<Type>(controller).to(implementation);
+    dependencies.rebind(controller).to(implementation);
   } else {
-    dependencies.bind<Type>(controller).to(implementation);
+    dependencies.bind(controller).to(implementation);
   }
 }
 
