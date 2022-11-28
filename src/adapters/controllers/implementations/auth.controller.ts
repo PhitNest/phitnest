@@ -3,12 +3,13 @@ import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
 import {
   IConfirmRegisterUseCase,
+  IForgotPasswordUseCase,
   ILoginUseCase,
   IRefreshSessionUseCase,
   IRegisterUseCase,
   IResendConfirmationUseCase,
 } from "../../../use-cases/interfaces";
-import { IRequest, IResponse } from "../../types";
+import { Controller, IRequest, IResponse } from "../../types";
 import { IAuthController } from "../interfaces";
 
 @injectable()
@@ -18,6 +19,7 @@ export class AuthController implements IAuthController {
   confirmRegisterUseCase: IConfirmRegisterUseCase;
   refreshSessionUseCase: IRefreshSessionUseCase;
   resendConfirmationUseCase: IResendConfirmationUseCase;
+  forgotPasswordUseCase: IForgotPasswordUseCase;
 
   constructor(
     @inject(UseCases.login) loginUseCase: ILoginUseCase,
@@ -27,13 +29,34 @@ export class AuthController implements IAuthController {
     @inject(UseCases.refreshSession)
     refreshSessionUseCase: IRefreshSessionUseCase,
     @inject(UseCases.resendConfirmation)
-    resendConfirmationUseCase: IResendConfirmationUseCase
+    resendConfirmationUseCase: IResendConfirmationUseCase,
+    @inject(UseCases.forgotPassword)
+    forgotPasswordUseCase: IForgotPasswordUseCase
   ) {
     this.loginUseCase = loginUseCase;
     this.registerUseCase = registerUseCase;
     this.confirmRegisterUseCase = confirmRegisterUseCase;
     this.refreshSessionUseCase = refreshSessionUseCase;
     this.resendConfirmationUseCase = resendConfirmationUseCase;
+    this.forgotPasswordUseCase = forgotPasswordUseCase;
+  }
+
+  async forgotPassword(req: IRequest, res: IResponse) {
+    try {
+      const { email } = z
+        .object({ email: z.string().email() })
+        .parse(req.content());
+      await this.forgotPasswordUseCase.execute(email);
+      return res.status(200);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json(err.issues);
+      } else if (err instanceof Error) {
+        return res.status(500).json({ message: err.message });
+      } else {
+        return res.status(500).json(err);
+      }
+    }
   }
 
   async resendConfirmation(req: IRequest, res: IResponse) {
