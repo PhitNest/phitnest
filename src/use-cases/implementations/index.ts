@@ -15,3 +15,5 @@ export { SignOutUseCase } from "./sign-out";
 export { SendFriendRequestUseCase } from "./send-friend-request";
 export { BlockUseCase } from "./block";
 export { UnblockUseCase } from "./unblock";
+export { DenyFriendRequestUseCase } from "./deny-friend-request";
+export { GetFriendsUseCase } from "./get-friends";

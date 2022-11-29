@@ -27,6 +27,8 @@ export const UseCases = {
   sendFriendRequest: Symbol("sendFriendRequest.use-case"),
   block: Symbol("block.use-case"),
   unblock: Symbol("unblock.use-case"),
+  denyFriendRequest: Symbol("denyFriendRequest.use-case"),
+  getFriends: Symbol("getFriends.use-case"),
 };
 
 export const Middlewares = {
@@ -68,6 +70,8 @@ import {
   SendFriendRequestUseCase,
   BlockUseCase,
   UnblockUseCase,
+  DenyFriendRequestUseCase,
+  GetFriendsUseCase,
 } from "../use-cases/implementations";
 
 import { AuthMiddleware } from "../adapters/middleware/implementations";
@@ -144,6 +148,8 @@ export function injectUseCases() {
   injectUseCase(UseCases.sendFriendRequest, SendFriendRequestUseCase);
   injectUseCase(UseCases.block, BlockUseCase);
   injectUseCase(UseCases.unblock, UnblockUseCase);
+  injectUseCase(UseCases.denyFriendRequest, DenyFriendRequestUseCase);
+  injectUseCase(UseCases.getFriends, GetFriendsUseCase);
 }
 
 export function injectControllers() {
