@@ -12,3 +12,4 @@ export { ResendConfirmationUseCase } from "./resend-confirmation";
 export { ForgotPasswordUseCase } from "./forgot-password";
 export { ForgotPasswordSubmitUseCase } from "./forgot-password-submit";
 export { SignOutUseCase } from "./sign-out";
+export { SendFriendRequestUseCase } from "./send-friend-request";

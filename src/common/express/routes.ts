@@ -6,7 +6,12 @@ import {
   IResponse,
   Middleware,
 } from "../../adapters/types";
-import { AuthRouter, GymRouter, UserRouter } from "../../routers";
+import {
+  AuthRouter,
+  GymRouter,
+  RelationshipRouter,
+  UserRouter,
+} from "../../routers";
 import { HttpMethod, IRouter } from "../../routers/types";
 import { dependencies } from "../dependency-injection";
 
@@ -15,6 +20,7 @@ export function buildRoutes(dependencies: Container) {
   router.use("/gym", buildRoute(GymRouter));
   router.use("/user", buildRoute(UserRouter));
   router.use("/auth", buildRoute(AuthRouter));
+  router.use("/relationship", buildRoute(RelationshipRouter));
   return router;
 }
 
