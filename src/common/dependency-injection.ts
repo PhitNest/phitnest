@@ -25,6 +25,8 @@ export const UseCases = {
   forgotPassword: Symbol("forgotPassword.use-case"),
   signOut: Symbol("signOut.use-case"),
   sendFriendRequest: Symbol("sendFriendRequest.use-case"),
+  block: Symbol("block.use-case"),
+  unblock: Symbol("unblock.use-case"),
 };
 
 export const Middlewares = {
@@ -64,6 +66,8 @@ import {
   ForgotPasswordSubmitUseCase,
   SignOutUseCase,
   SendFriendRequestUseCase,
+  BlockUseCase,
+  UnblockUseCase,
 } from "../use-cases/implementations";
 
 import { AuthMiddleware } from "../adapters/middleware/implementations";
@@ -138,6 +142,8 @@ export function injectUseCases() {
   injectUseCase(UseCases.forgotPassword, ForgotPasswordUseCase);
   injectUseCase(UseCases.signOut, SignOutUseCase);
   injectUseCase(UseCases.sendFriendRequest, SendFriendRequestUseCase);
+  injectUseCase(UseCases.block, BlockUseCase);
+  injectUseCase(UseCases.unblock, UnblockUseCase);
 }
 
 export function injectControllers() {

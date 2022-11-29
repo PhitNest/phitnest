@@ -20,6 +20,18 @@ export class RelationshipRouter implements IRouter {
         middlewares: [authMiddleware.authenticate],
         controller: relationshipController.sendFriendRequest,
       },
+      {
+        path: "/block",
+        method: HttpMethod.POST,
+        middlewares: [authMiddleware.authenticate],
+        controller: relationshipController.block,
+      },
+      {
+        path: "/unblock",
+        method: HttpMethod.POST,
+        middlewares: [authMiddleware.authenticate],
+        controller: relationshipController.unblock,
+      },
     ];
   }
 }
