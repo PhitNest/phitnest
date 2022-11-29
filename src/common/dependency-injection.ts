@@ -24,6 +24,7 @@ export const UseCases = {
   resendConfirmation: Symbol("resendConfirmation.use-case"),
   forgotPassword: Symbol("forgotPassword.use-case"),
   signOut: Symbol("signOut.use-case"),
+  sendFriendRequest: Symbol("sendFriendRequest.use-case"),
 };
 
 export const Middlewares = {
@@ -34,6 +35,7 @@ export const Controllers = {
   gym: Symbol("gym.controller"),
   user: Symbol("user.controller"),
   auth: Symbol("auth.controller"),
+  relationship: Symbol("relationship.controller"),
 };
 
 // Make sure to export repositories, use cases, and controllers symbols before importing the following
@@ -61,6 +63,7 @@ import {
   ForgotPasswordUseCase,
   ForgotPasswordSubmitUseCase,
   SignOutUseCase,
+  SendFriendRequestUseCase,
 } from "../use-cases/implementations";
 
 import { AuthMiddleware } from "../adapters/middleware/implementations";
@@ -69,6 +72,7 @@ import {
   GymController,
   UserController,
   AuthController,
+  RelationshipController,
 } from "../adapters/controllers/implementations";
 
 import { l } from "./logger";
@@ -133,6 +137,7 @@ export function injectUseCases() {
   injectUseCase(UseCases.resendConfirmation, ResendConfirmationUseCase);
   injectUseCase(UseCases.forgotPassword, ForgotPasswordUseCase);
   injectUseCase(UseCases.signOut, SignOutUseCase);
+  injectUseCase(UseCases.sendFriendRequest, SendFriendRequestUseCase);
 }
 
 export function injectControllers() {
@@ -140,6 +145,7 @@ export function injectControllers() {
   injectController(Controllers.user, UserController);
   injectController(Controllers.auth, AuthController);
   injectController(Middlewares.authenticate, AuthMiddleware);
+  injectController(Controllers.relationship, RelationshipController);
 }
 
 export function unbind() {
