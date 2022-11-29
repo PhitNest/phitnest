@@ -13,3 +13,5 @@ export { IForgotPasswordUseCase } from "./forgot-password";
 export { IForgotPasswordSubmitUseCase } from "./forgot-password-submit";
 export { ISignOutUseCase } from "./sign-out";
 export { ISendFriendRequestUseCase } from "./send-friend-request";
+export { IBlockUseCase } from "./block";
+export { IUnblockUseCase } from "./unblock";
