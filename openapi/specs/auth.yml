@@ -91,7 +91,7 @@ paths:
                   minLength: 1
                   maxLength: 24
       responses:
-        200:
+        201:
           description: The registration was successful and a confirmation email was sent
         500:
           description: An internal error occurred

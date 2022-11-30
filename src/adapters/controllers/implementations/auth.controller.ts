@@ -56,7 +56,7 @@ export class AuthController implements IAuthController {
         .object({ allDevices: z.boolean() })
         .parse(req.content());
       await this.signOutUseCase.execute(res.locals.userId, allDevices);
-      return res.status(200);
+      return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
@@ -78,7 +78,7 @@ export class AuthController implements IAuthController {
         })
         .parse(req.content());
       await this.forgotPasswordSubmitUseCase.execute(email, code, newPassword);
-      return res.status(200);
+      return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
@@ -96,7 +96,7 @@ export class AuthController implements IAuthController {
         .object({ email: z.string().email() })
         .parse(req.content());
       await this.forgotPasswordUseCase.execute(email);
-      return res.status(200);
+      return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
@@ -114,7 +114,7 @@ export class AuthController implements IAuthController {
         .object({ email: z.string().email() })
         .parse(req.content());
       await this.resendConfirmationUseCase.execute(email);
-      return res.status(200);
+      return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
@@ -165,7 +165,7 @@ export class AuthController implements IAuthController {
         firstName,
         lastName
       );
-      return res.status(201);
+      return res.status(201).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
@@ -186,7 +186,7 @@ export class AuthController implements IAuthController {
         })
         .parse(req.content());
       await this.confirmRegisterUseCase.execute(email, code);
-      return res.status(200);
+      return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);

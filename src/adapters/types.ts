@@ -18,6 +18,7 @@ export interface IResponse<LocalsType = any> {
   code: number;
   content: any;
 
+  send(): this;
   status(code: number): this;
   json(content: any): this;
 }
