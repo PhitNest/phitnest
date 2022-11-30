@@ -98,10 +98,19 @@ test("Users can be created", async () => {
   compareUserData(user1, testUser1);
   user2 = await userRepo.create(testUser2);
   compareUserData(user2, testUser2);
+  expect(await userRepo.haveSameGym(user1.cognitoId, user2.cognitoId)).toBe(
+    true
+  );
   user3 = await userRepo.create(testUser3);
   compareUserData(user3, testUser3);
+  expect(await userRepo.haveSameGym(user1.cognitoId, user3.cognitoId)).toBe(
+    true
+  );
   user4 = await userRepo.create(testUser4);
   compareUserData(user4, testUser4);
+  expect(await userRepo.haveSameGym(user1.cognitoId, user4.cognitoId)).toBe(
+    false
+  );
 });
 
 test("Users can be explored properly", async () => {

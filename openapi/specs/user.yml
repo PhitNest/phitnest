@@ -1,0 +1,110 @@
+tags:
+  - name: User
+    description: User database endpoint
+
+paths:
+  # /user
+  me:
+    get:
+      tags:
+        - User
+      summary: Get my user data
+      security:
+        - AccessToken: []
+      responses:
+        200:
+          description: Fetched your data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: You are not authenticated
+
+  # /user/explore
+  explore:
+    get:
+      tags:
+        - User
+      summary: Search for users at my gym
+      security:
+        - AccessToken: []
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: number
+            example: 2
+            minimum: 0
+          required: true
+          description: The number of users to skip past
+        - in: query
+          name: limit
+          schema:
+            type: number
+            example: 50
+            minimum: 0
+            maximum: 50
+          required: true
+          description: The number of users to find
+      responses:
+        200:
+          description: Found users at my gym
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                    - cognitoId
+                    - firstName
+                    - lastName
+                  properties:
+                    cognitoId:
+                      type: string
+                      example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh
+                    firstName:
+                      type: string
+                      example: John
+                    lastName:
+                      type: string
+                      example: Jones
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
+components:
+  schemas:
+    User:
+      title: user
+      required:
+        - cognitoId
+        - gymId
+        - email
+        - firstName
+        - lastName
+      type: object
+      properties:
+        cognitoId:
+          type: string
+          example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh
+        gymId:
+          type: string
+          example: 6361c05b30d64fe62ff485cb
+        email:
+          $ref: "auth.yml#/components/schemas/Email"
+        firstName:
+          type: string
+          example: Jp
+        lastName:
+          type: string
+          example: Siegel

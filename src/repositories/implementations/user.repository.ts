@@ -164,4 +164,33 @@ export class MongoUserRepository implements IUserRepository {
   create(user: Omit<IUserEntity, "_id">) {
     return UserModel.create(user);
   }
+
+  async haveSameGym(cognitoId1: string, cognitoId2: string) {
+    const result = await UserModel.aggregate([
+      {
+        $match: {
+          cognitoId: cognitoId1,
+        },
+      },
+      {
+        $lookup: {
+          from: USER_COLLECTION_NAME,
+          localField: "gymId",
+          foreignField: "gymId",
+          pipeline: [{ $match: { cognitoId: cognitoId2 } }],
+          as: "recipient",
+        },
+      },
+      {
+        $project: {
+          recipient: 1,
+        },
+      },
+    ]);
+    if (result.length > 0) {
+      return result[0].recipient.length > 0;
+    } else {
+      return false;
+    }
+  }
 }

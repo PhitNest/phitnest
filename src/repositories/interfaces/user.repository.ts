@@ -9,4 +9,5 @@ export interface IUserRepository {
     limit?: number
   ): Promise<Omit<IPublicUserEntity, "gymId">[]>;
   get(cognitoId: string): Promise<IUserEntity | null>;
+  haveSameGym(cognitoId1: string, cognitoId2: string): Promise<boolean>;
 }
