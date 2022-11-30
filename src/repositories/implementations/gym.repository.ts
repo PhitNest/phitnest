@@ -28,7 +28,7 @@ const schema = new mongoose.Schema(
 
 schema.index({ location: "2dsphere" });
 
-export const GymModel = mongoose.model<IGymEntity>(GYM_MODEL_NAME, schema);
+const GymModel = mongoose.model<IGymEntity>(GYM_MODEL_NAME, schema);
 
 @injectable()
 export class MongoGymRepository implements IGymRepository {

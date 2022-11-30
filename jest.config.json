@@ -4,5 +4,8 @@
     "globalTeardown": "./test/teardown.ts",
     "setupFilesAfterEnv": [
         "./test/setupFile.ts"
+    ],
+    "modulePathIgnorePatterns": [
+        "dist"
     ]
 }

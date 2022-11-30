@@ -104,28 +104,6 @@ export function injectRepository<Type>(
   }
 }
 
-function injectUseCase<Type extends IUseCase>(
-  useCase: symbol,
-  implementation: interfaces.Newable<Type>
-) {
-  if (dependencies.isBound(useCase)) {
-    dependencies.rebind(useCase).to(implementation);
-  } else {
-    dependencies.bind(useCase).to(implementation);
-  }
-}
-
-function injectController<Type>(
-  controller: symbol,
-  implementation: interfaces.Newable<Type>
-) {
-  if (dependencies.isBound(controller)) {
-    dependencies.rebind(controller).to(implementation);
-  } else {
-    dependencies.bind(controller).to(implementation);
-  }
-}
-
 function injectRepositories() {
   injectRepository(Repositories.gym, MongoGymRepository);
   injectRepository(Repositories.user, MongoUserRepository);
@@ -167,6 +145,28 @@ export function injectControllers() {
   injectController(Controllers.auth, AuthController);
   injectController(Middlewares.authenticate, AuthMiddleware);
   injectController(Controllers.relationship, RelationshipController);
+}
+
+function injectUseCase<Type extends IUseCase>(
+  useCase: symbol,
+  implementation: interfaces.Newable<Type>
+) {
+  if (dependencies.isBound(useCase)) {
+    dependencies.rebind(useCase).to(implementation);
+  } else {
+    dependencies.bind(useCase).to(implementation);
+  }
+}
+
+function injectController<Type>(
+  controller: symbol,
+  implementation: interfaces.Newable<Type>
+) {
+  if (dependencies.isBound(controller)) {
+    dependencies.rebind(controller).to(implementation);
+  } else {
+    dependencies.bind(controller).to(implementation);
+  }
 }
 
 export function unbind() {
