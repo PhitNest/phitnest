@@ -17,20 +17,20 @@ export class GymRouter implements IRouter {
         path: "/",
         method: HttpMethod.GET,
         middlewares: [authMiddleware.authenticate],
-        controller: gymController.get,
+        controller: (req, res) => gymController.get(req, res),
       },
       {
         path: "/",
         method: HttpMethod.POST,
         // TODO: SECURE WITH ADMIN AUTH
         middlewares: [authMiddleware.authenticate],
-        controller: gymController.create,
+        controller: (req, res) => gymController.create(req, res),
       },
       {
         path: "/nearest",
         method: HttpMethod.GET,
         middlewares: [],
-        controller: gymController.getNearest,
+        controller: (req, res) => gymController.getNearest(req, res),
       },
     ];
   }

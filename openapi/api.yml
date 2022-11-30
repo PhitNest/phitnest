@@ -1,0 +1,63 @@
+##############################################################################
+###                                                                        ###
+###                  PhitNest Backend API Specification                    ###
+###              https://spec.openapis.org/oas/latest.html#                ###
+###                                                                        ###
+##############################################################################
+openapi: 3.0.1
+info:
+  title: phitnest-api
+  description: API for PhitNest backend
+  version: 1.0.0
+servers:
+  - url: /
+
+paths:
+  /auth/login:
+    $ref: "specs/auth.yml#/paths/login"
+  /auth/register:
+    $ref: "specs/auth.yml#/paths/register"
+  /auth/confirmRegister:
+    $ref: "specs/auth.yml#/paths/confirmRegister"
+  /auth/refreshSession:
+    $ref: "specs/auth.yml#/paths/refresh"
+  /auth/resendConfirmation:
+    $ref: "specs/auth.yml#/paths/resendConfirmation"
+  /auth/forgotPassword:
+    $ref: "specs/auth.yml#/paths/forgotPassword"
+  /auth/forgotPasswordSubmit:
+    $ref: "specs/auth.yml#/paths/forgotPasswordSubmit"
+  /auth/signOut:
+    $ref: "specs/auth.yml#/paths/signOut"
+
+  /gym:
+    $ref: "specs/gym.yml#/paths/root"
+  /gym/nearest:
+    $ref: "specs/gym.yml#/paths/nearest"
+
+  /user:
+    $ref: "specs/user.yml#/paths/me"
+  /user/explore:
+    $ref: "specs/user.yml#/paths/explore"
+
+  /relationship/sendFriendRequest:
+    $ref: "specs/relationship.yml#/paths/sendFriendRequest"
+  /relationship/block:
+    $ref: "specs/relationship.yml#/paths/block"
+  /relationship/unblock:
+    $ref: "specs/relationship.yml#/paths/unblock"
+  /relationship/denyFriendRequest:
+    $ref: "specs/relationship.yml#/paths/denyFriendRequest"
+  /relationship/friends:
+    $ref: "specs/relationship.yml#/paths/friends"
+  /relationship/sentFriendRequests:
+    $ref: "specs/relationship.yml#/paths/sentFriendRequests"
+  /relationship/receivedFriendRequests:
+    $ref: "specs/relationship.yml#/paths/receivedFriendRequests"
+
+components:
+  securitySchemes:
+    AccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

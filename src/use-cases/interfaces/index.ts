@@ -17,3 +17,5 @@ export { IBlockUseCase } from "./block";
 export { IUnblockUseCase } from "./unblock";
 export { IDenyFriendRequestUseCase } from "./deny-friend-request";
 export { IGetFriendsUseCase } from "./get-friends";
+export { IGetSentFriendRequestsUseCase } from "./get-sent-friend-requests";
+export { IGetReceivedFriendRequestsUseCase } from "./get-received-friend-requests";

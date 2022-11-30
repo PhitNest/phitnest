@@ -89,7 +89,7 @@ function buildController(controller: Controller) {
 
 function buildRoute(routerClass: interfaces.Newable<IRouter>) {
   const expressRouter = Router();
-  const router = dependencies.get<IRouter>(routerClass);
+  const router = dependencies.resolve(routerClass);
   router.routes.forEach((route) => {
     const middlewares = buildMiddleware(route.middlewares);
     const controller = buildController(route.controller);

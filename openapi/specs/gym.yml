@@ -1,0 +1,174 @@
+tags:
+  - name: Gym
+    description: Gym database endpoint
+
+paths:
+  # /gym
+  root:
+    post:
+      tags:
+        - Gym
+      summary: Create a new gym
+      security:
+        - AccessToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - address
+              properties:
+                name:
+                  type: string
+                  example: Planet Fitness
+                address:
+                  $ref: "#/components/schemas/Address"
+      responses:
+        200:
+          description: The gym was created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gym"
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+    get:
+      tags:
+        - Gym
+      summary: Get the gym I belong to
+      security:
+        - AccessToken: []
+      responses:
+        200:
+          description: Fetched your gym
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gym"
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: You are not authenticated
+
+  # /gym/nearest
+  nearest:
+    get:
+      tags:
+        - Gym
+      summary: Search for gyms in a given radius (meters)
+      parameters:
+        - in: query
+          name: longitude
+          schema:
+            type: number
+            example: -80.2
+            minimum: -180
+            maximum: 180
+          required: true
+        - in: query
+          name: latitude
+          schema:
+            type: number
+            example: 37.4
+            minimum: -90
+            maximum: 90
+          required: true
+        - in: query
+          name: distance
+          schema:
+            type: number
+            example: 160300.5
+            minimum: 0
+          description: A distance in units of meters
+          required: true
+        - in: query
+          name: amount
+          schema:
+            type: integer
+            example: 5
+            minimum: 0
+          description: The amount of gyms to find. If undefined, all gyms within distance will be found.
+      responses:
+        200:
+          description: Found nearby gyms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Gym"
+        500:
+          description: An internal error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Validation error has occurred.
+
+components:
+  schemas:
+    Address:
+      title: address
+      required:
+        - street
+        - city
+        - state
+        - zipCode
+      type: object
+      properties:
+        street:
+          type: string
+          example: 413 E Roanoke st
+        city:
+          type: string
+          example: Blacksburg
+        state:
+          type: string
+          example: VA
+        zipCode:
+          type: string
+          example: "24060"
+
+    Location:
+      title: location
+      required:
+        - longitude
+        - latitude
+      properties:
+        longitude:
+          type: number
+          example: 80.5
+        latitude:
+          type: number
+          example: -37.2
+
+    Gym:
+      title: gym
+      required:
+        - id
+        - name
+        - address
+        - location
+      type: object
+      properties:
+        id:
+          type: string
+          example: 6361c05b30d64fe62ff485cb
+        name:
+          type: string
+          example: Planet Fitness
+        address:
+          $ref: "#/components/schemas/Address"
+        location:
+          $ref: "#/components/schemas/Location"

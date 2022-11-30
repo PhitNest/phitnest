@@ -44,6 +44,18 @@ export class RelationshipRouter implements IRouter {
         middlewares: [authMiddleware.authenticate],
         controller: relationshipController.getFriends,
       },
+      {
+        path: "/sentFriendRequests",
+        method: HttpMethod.GET,
+        middlewares: [authMiddleware.authenticate],
+        controller: relationshipController.getSentFriendRequests,
+      },
+      {
+        path: "/receivedFriendRequests",
+        method: HttpMethod.GET,
+        middlewares: [authMiddleware.authenticate],
+        controller: relationshipController.getReceivedFriendRequests,
+      },
     ];
   }
 }

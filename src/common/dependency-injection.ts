@@ -21,11 +21,13 @@ export const UseCases = {
   register: Symbol("register.use-case"),
   confirmRegister: Symbol("confirmRegister.use-case"),
   refreshSession: Symbol("refreshSession.use-case"),
+  getReceivedFriendRequests: Symbol("getReceivedFriendRequests.use-case"),
   resendConfirmation: Symbol("resendConfirmation.use-case"),
   forgotPassword: Symbol("forgotPassword.use-case"),
   signOut: Symbol("signOut.use-case"),
   sendFriendRequest: Symbol("sendFriendRequest.use-case"),
   block: Symbol("block.use-case"),
+  getSentFriendRequests: Symbol("getSentFriendRequests.use-case"),
   unblock: Symbol("unblock.use-case"),
   denyFriendRequest: Symbol("denyFriendRequest.use-case"),
   getFriends: Symbol("getFriends.use-case"),
@@ -72,6 +74,8 @@ import {
   UnblockUseCase,
   DenyFriendRequestUseCase,
   GetFriendsUseCase,
+  GetSentFriendRequestsUseCase,
+  GetReceivedFriendRequestsUseCase,
 } from "../use-cases/implementations";
 
 import { AuthMiddleware } from "../adapters/middleware/implementations";
@@ -138,7 +142,12 @@ export function injectUseCases() {
   injectUseCase(UseCases.explore, ExploreUseCase);
   injectUseCase(UseCases.createGym, CreateGymUseCase);
   injectUseCase(UseCases.forgotPasswordSubmit, ForgotPasswordSubmitUseCase);
+  injectUseCase(
+    UseCases.getReceivedFriendRequests,
+    GetReceivedFriendRequestsUseCase
+  );
   injectUseCase(UseCases.login, LoginUseCase);
+  injectUseCase(UseCases.getSentFriendRequests, GetSentFriendRequestsUseCase);
   injectUseCase(UseCases.register, RegisterUseCase);
   injectUseCase(UseCases.confirmRegister, ConfirmRegisterUseCase);
   injectUseCase(UseCases.refreshSession, RefreshSessionUseCase);

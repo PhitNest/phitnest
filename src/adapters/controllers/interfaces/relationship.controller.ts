@@ -6,4 +6,6 @@ export interface IRelationshipController {
   unblock: Controller<AuthenticatedLocals>;
   denyFriendRequest: Controller<AuthenticatedLocals>;
   getFriends: Controller<AuthenticatedLocals>;
+  getSentFriendRequests: Controller<AuthenticatedLocals>;
+  getReceivedFriendRequests: Controller<AuthenticatedLocals>;
 }
