@@ -36,6 +36,11 @@ class Response<LocalsType = any> implements IResponse<LocalsType> {
     this.code = 200;
   }
 
+  send() {
+    this.expressResponse.send();
+    return this;
+  }
+
   status(code: number) {
     this.code = code;
     this.expressResponse.status(code);

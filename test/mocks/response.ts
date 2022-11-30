@@ -10,6 +10,10 @@ export class MockResponse<LocalsType = any> implements IResponse<LocalsType> {
     this.code = 200;
   }
 
+  send() {
+    return this;
+  }
+
   status(code: number) {
     this.code = code;
     return this;

@@ -110,7 +110,7 @@ export class RelationshipController implements IRelationshipController {
         res.locals.userId,
         recipientId
       );
-      return res.status(200);
+      return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json({
@@ -132,7 +132,7 @@ export class RelationshipController implements IRelationshipController {
         .object({ recipientId: z.string() })
         .parse(req.content());
       await this.unblockUseCase.execute(res.locals.userId, recipientId);
-      return res.status(200);
+      return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json({
@@ -154,7 +154,7 @@ export class RelationshipController implements IRelationshipController {
         .object({ recipientId: z.string() })
         .parse(req.content());
       await this.blockUseCase.execute(res.locals.userId, recipientId);
-      return res.status(200);
+      return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json({
@@ -181,7 +181,7 @@ export class RelationshipController implements IRelationshipController {
         res.locals.userId,
         recipientId
       );
-      return res.status(200);
+      return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json({
