@@ -62,7 +62,11 @@ class FriendsView extends NavBarScreenView {
             24.verticalSpace,
             ...requests.map(
               (req) => Padding(
-                padding: EdgeInsets.only(bottom: 24.h),
+                padding: EdgeInsets.only(
+                  bottom: 24.h,
+                  left: 32.w,
+                  right: 32.w,
+                ),
                 child: Row(
                   children: [
                     Text(
@@ -78,11 +82,15 @@ class FriendsView extends NavBarScreenView {
                       onTap: addFriend,
                       child: AddButton(context),
                     ),
+                    28.horizontalSpace,
                     TextButton(
                       onPressed: ignoreRequest,
                       child: Text(
                         'IGNORE',
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(color: Colors.black),
                       ),
                     ),
                   ],
@@ -96,7 +104,11 @@ class FriendsView extends NavBarScreenView {
             24.verticalSpace,
             ...friends.map(
               (friend) => Padding(
-                padding: EdgeInsets.only(bottom: 24.h),
+                padding: EdgeInsets.only(
+                  bottom: 24.h,
+                  left: 32.w,
+                  right: 32.w,
+                ),
                 child: Row(
                   children: [
                     Text(
@@ -112,7 +124,10 @@ class FriendsView extends NavBarScreenView {
                       onPressed: removeFriend,
                       child: Text(
                         'REMOVE',
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(color: Colors.black),
                       ),
                     ),
                   ],
