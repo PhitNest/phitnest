@@ -35,6 +35,18 @@ class FriendsState extends ScreenState {
       name: 'Turner W.',
       isFriend: false,
     ),
+    FriendModel(
+      name: 'Turner W.',
+      isFriend: false,
+    ),
+    FriendModel(
+      name: 'Turner W.',
+      isFriend: false,
+    ),
+    FriendModel(
+      name: 'Turner W.',
+      isFriend: false,
+    ),
   ];
 
   List<FriendModel> get friends =>

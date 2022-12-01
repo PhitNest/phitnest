@@ -139,7 +139,7 @@ class FriendsView extends NavBarScreenView {
                     );
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),
