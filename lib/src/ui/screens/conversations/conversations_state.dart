@@ -1,18 +1,17 @@
-import 'package:phitnest_mobile/src/ui/screens/conversations/models/conversation.dart';
-
 import '../state.dart';
+import 'models/conversation.dart';
 
 class ConversationsState extends ScreenState {
   List<ConversationModel> _conversations = [
-    new ConversationModel(
+    ConversationModel(
         name: "Priscilla H.",
         recentMessage:
             "I’m an occupational therapist... I can help you with that!"),
-    new ConversationModel(
+    ConversationModel(
         name: "Random Name",
         recentMessage:
             "I’m not an occupational therapist... I can't help you with that!"),
-    new ConversationModel(
+    ConversationModel(
         name: "John S.",
         recentMessage:
             "I’m also not an occupational therapist... But maybe I can help you with that?"),

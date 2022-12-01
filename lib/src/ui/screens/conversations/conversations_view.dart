@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_mobile/src/ui/screens/conversations/models/conversation.dart';
 
 import '../view.dart';
+import 'models/conversation.dart';
 import 'widgets/conversation_card.dart';
 
 class ConversationsView extends NavBarScreenView {
