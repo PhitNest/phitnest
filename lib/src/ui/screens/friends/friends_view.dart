@@ -60,73 +60,65 @@ class FriendsView extends NavBarScreenView {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             24.verticalSpace,
-            ...requests
-                .map(
-                  (req) => Padding(
-                    padding: EdgeInsets.only(bottom: 24.h),
-                    child: Row(
-                      children: [
-                        Text(
-                          req.name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium!
-                              .copyWith(
+            ...requests.map(
+              (req) => Padding(
+                padding: EdgeInsets.only(bottom: 24.h),
+                child: Row(
+                  children: [
+                    Text(
+                      req.name,
+                      style:
+                          Theme.of(context).textTheme.headlineMedium!.copyWith(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w400,
                               ),
-                        ),
-                        Spacer(),
-                        GestureDetector(
-                          onTap: addFriend,
-                          child: AddButton(context),
-                        ),
-                        TextButton(
-                          onPressed: ignoreRequest,
-                          child: Text(
-                            'IGNORE',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                      ],
                     ),
-                  ),
-                )
-                .toList(),
+                    Spacer(),
+                    GestureDetector(
+                      onTap: addFriend,
+                      child: AddButton(context),
+                    ),
+                    TextButton(
+                      onPressed: ignoreRequest,
+                      child: Text(
+                        'IGNORE',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             Text(
               'Friends',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             24.verticalSpace,
-            ...friends
-                .map(
-                  (friend) => Padding(
-                    padding: EdgeInsets.only(bottom: 24.h),
-                    child: Row(
-                      children: [
-                        Text(
-                          friend.name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium!
-                              .copyWith(
+            ...friends.map(
+              (friend) => Padding(
+                padding: EdgeInsets.only(bottom: 24.h),
+                child: Row(
+                  children: [
+                    Text(
+                      friend.name,
+                      style:
+                          Theme.of(context).textTheme.headlineMedium!.copyWith(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w400,
                               ),
-                        ),
-                        Spacer(),
-                        TextButton(
-                          onPressed: removeFriend,
-                          child: Text(
-                            'REMOVE',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                      ],
                     ),
-                  ),
-                )
-                .toList()
+                    Spacer(),
+                    TextButton(
+                      onPressed: removeFriend,
+                      child: Text(
+                        'REMOVE',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       );
