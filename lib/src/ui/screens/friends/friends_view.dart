@@ -60,43 +60,46 @@ class FriendsView extends NavBarScreenView {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             24.verticalSpace,
-            SizedBox(
-              height: 60.h * requests.length,
-              width: 320.w,
-              child: ListView.builder(
+            Expanded(
+              // height: 60.h * requests.length,
+              // width: 320.w,
+              child: ListView(
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: requests.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 24.h),
-                    child: Row(
-                      children: [
-                        Text(
-                          requests[index].name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium!
-                              .copyWith(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
+                children: requests
+                    .asMap()
+                    .entries
+                    .map(
+                      (req) => Padding(
+                        padding: EdgeInsets.only(bottom: 24.h),
+                        child: Row(
+                          children: [
+                            Text(
+                              req.value.name,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium!
+                                  .copyWith(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                            ),
+                            Spacer(),
+                            GestureDetector(
+                              onTap: addFriend,
+                              child: AddButton(context),
+                            ),
+                            TextButton(
+                              onPressed: ignoreRequest,
+                              child: Text(
+                                'IGNORE',
+                                style: Theme.of(context).textTheme.bodySmall,
                               ),
+                            ),
+                          ],
                         ),
-                        Spacer(),
-                        GestureDetector(
-                          onTap: addFriend,
-                          child: AddButton(context),
-                        ),
-                        TextButton(
-                          onPressed: ignoreRequest,
-                          child: Text(
-                            'IGNORE',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                      ),
+                    )
+                    .toList(),
               ),
             ),
             Text(
