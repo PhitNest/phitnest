@@ -27,121 +27,107 @@ class FriendsView extends NavBarScreenView {
 
   @override
   Widget buildView(BuildContext context) => SingleChildScrollView(
-        child: SizedBox(
-          height: 1.sh,
-          child: Column(
-            children: [
-              24.verticalSpace,
-              SizedBox(
-                width: 311.w,
-                child: TextField(
-                  textAlignVertical: TextAlignVertical.center,
-                  style: Theme.of(context).textTheme.labelMedium,
-                  controller: searchController,
-                  keyboardType: TextInputType.streetAddress,
-                  onChanged: (_) => {},
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 16.w),
-                    hintText: 'Search',
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(8)),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(8)),
-                    hintStyle: Theme.of(context)
-                        .textTheme
-                        .labelMedium!
-                        .copyWith(color: Color(0xFF999999)),
-                  ),
+        child: Column(
+          children: [
+            24.verticalSpace,
+            SizedBox(
+              width: 311.w,
+              child: TextField(
+                textAlignVertical: TextAlignVertical.center,
+                style: Theme.of(context).textTheme.labelMedium,
+                controller: searchController,
+                keyboardType: TextInputType.streetAddress,
+                onChanged: (_) => {},
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(left: 16.w),
+                  hintText: 'Search',
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                      borderRadius: BorderRadius.circular(8)),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                      borderRadius: BorderRadius.circular(8)),
+                  hintStyle: Theme.of(context)
+                      .textTheme
+                      .labelMedium!
+                      .copyWith(color: Color(0xFF999999)),
                 ),
               ),
-              24.verticalSpace,
-              Text(
-                'Requests',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              24.verticalSpace,
-              Expanded(
-                child: ListView(
-                  physics: NeverScrollableScrollPhysics(),
-                  children: requests
-                      .asMap()
-                      .entries
-                      .map(
-                        (req) => Padding(
-                          padding: EdgeInsets.only(bottom: 24.h),
-                          child: Row(
-                            children: [
-                              Text(
-                                req.value.name,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium!
-                                    .copyWith(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400,
-                                    ),
+            ),
+            24.verticalSpace,
+            Text(
+              'Requests',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            24.verticalSpace,
+            ...requests
+                .map(
+                  (req) => Padding(
+                    padding: EdgeInsets.only(bottom: 24.h),
+                    child: Row(
+                      children: [
+                        Text(
+                          req.name,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium!
+                              .copyWith(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
                               ),
-                              Spacer(),
-                              GestureDetector(
-                                onTap: addFriend,
-                                child: AddButton(context),
-                              ),
-                              TextButton(
-                                onPressed: ignoreRequest,
-                                child: Text(
-                                  'IGNORE',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ),
-                            ],
+                        ),
+                        Spacer(),
+                        GestureDetector(
+                          onTap: addFriend,
+                          child: AddButton(context),
+                        ),
+                        TextButton(
+                          onPressed: ignoreRequest,
+                          child: Text(
+                            'IGNORE',
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ),
-                      )
-                      .toList(),
-                ),
-              ),
-              Text(
-                'Friends',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              24.verticalSpace,
-              Expanded(
-                child: ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: friends.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 24.h),
-                      child: Row(
-                        children: [
-                          Text(
-                            friends[index].name,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineMedium!
-                                .copyWith(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                      ],
+                    ),
+                  ),
+                )
+                .toList(),
+            Text(
+              'Friends',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            24.verticalSpace,
+            ...friends
+                .map(
+                  (friend) => Padding(
+                    padding: EdgeInsets.only(bottom: 24.h),
+                    child: Row(
+                      children: [
+                        Text(
+                          friend.name,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium!
+                              .copyWith(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
+                              ),
+                        ),
+                        Spacer(),
+                        TextButton(
+                          onPressed: removeFriend,
+                          child: Text(
+                            'REMOVE',
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
-                          Spacer(),
-                          TextButton(
-                            onPressed: removeFriend,
-                            child: Text(
-                              'REMOVE',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+                .toList()
+          ],
         ),
       );
 }
