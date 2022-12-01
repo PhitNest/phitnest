@@ -134,8 +134,8 @@ export class AuthController implements IAuthController {
           password: z.string(),
         })
         .parse(req.content());
-      const userId = await this.loginUseCase.execute(email, password);
-      return res.status(200).json({ _id: userId });
+      const tokens = await this.loginUseCase.execute(email, password);
+      return res.status(200).json(tokens);
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);

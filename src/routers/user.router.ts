@@ -16,13 +16,13 @@ export class UserRouter implements IRouter {
       {
         path: "/",
         method: HttpMethod.GET,
-        middlewares: [authMiddleware.authenticate],
+        middlewares: [authMiddleware],
         controller: (req, res) => userController.get(req, res),
       },
       {
         path: "/explore",
         method: HttpMethod.GET,
-        middlewares: [authMiddleware.authenticate],
+        middlewares: [authMiddleware],
         controller: (req, res) => userController.explore(req, res),
       },
     ];

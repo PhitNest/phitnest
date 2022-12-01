@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import mongoose from "mongoose";
-import { IAddressEntity, IGymEntity, ILocationEntity } from "../../entities";
+import { IGymEntity, ILocationEntity } from "../../entities";
 import { IGymRepository } from "../interfaces";
 import { UserModel } from "./user.repository";
 
@@ -36,9 +36,11 @@ export class MongoGymRepository implements IGymRepository {
     return GymModel.create(gym);
   }
 
-  async get(cognitoId: string) {
+  async getByUser(cognitoId: string) {
     const results = await UserModel.aggregate([
-      { $match: { cognitoId: cognitoId } },
+      {
+        $match: { cognitoId: cognitoId },
+      },
       {
         $lookup: {
           from: GYM_COLLECTION_NAME,
@@ -77,5 +79,9 @@ export class MongoGymRepository implements IGymRepository {
     } else {
       return [];
     }
+  }
+
+  async get(gymId: string) {
+    return GymModel.findById(gymId);
   }
 }

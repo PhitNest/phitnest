@@ -12,7 +12,7 @@ export class GetGymUseCase implements IGetGymUseCase {
   }
 
   async execute(userId: string) {
-    const gym = await this.gymRepo.get(userId);
+    const gym = await this.gymRepo.getByUser(userId);
     if (gym) {
       return gym;
     } else {

@@ -12,9 +12,9 @@ export class LoginUseCase implements ILoginUseCase {
   }
 
   async execute(email: string, password: string) {
-    const accessToken = await this.authRepo.login(email, password);
-    if (accessToken) {
-      return accessToken;
+    const tokens = await this.authRepo.login(email, password);
+    if (tokens) {
+      return tokens;
     } else {
       throw new Error("Could not login user with AWS Cognito");
     }

@@ -7,11 +7,13 @@ export type Controller<LocalsType = any> = (
   res: IResponse<LocalsType>
 ) => Promise<IResponse<LocalsType>>;
 
-export type Middleware<LocalsType = any> = (
-  req: IRequest,
-  res: IResponse<LocalsType>,
-  next: (err?: string) => void
-) => Promise<void>;
+export interface MiddlewareController<LocalsType = any> {
+  execute: (
+    req: IRequest,
+    res: IResponse<LocalsType>,
+    next: (err?: string) => void
+  ) => Promise<void>;
+}
 
 export interface IResponse<LocalsType = any> {
   locals: LocalsType;
