@@ -1,3 +1,5 @@
+import { IAuthEntity } from "../../entities";
+
 export interface IAuthRepository {
   getCognitoId(accessToken: string): Promise<string | null>;
   refreshAccessToken(
@@ -14,6 +16,6 @@ export interface IAuthRepository {
     newPassword: string
   ): Promise<boolean>;
   confirmRegister(email: string, code: string): Promise<boolean>;
-  login(email: string, password: string): Promise<string | null>;
+  login(email: string, password: string): Promise<IAuthEntity | null>;
   resendConfirmationCode(email: string): Promise<boolean>;
 }

@@ -14,22 +14,24 @@ export class AuthMiddleware implements IAuthMiddleware {
     this.authenticateUseCase = authenticate;
   }
 
-  async authenticate(
+  async execute(
     req: IRequest,
     res: IResponse<{ userId: string | undefined }>,
     next: (err?: string) => void
   ) {
-    try {
-      const userId = await this.authenticateUseCase.execute(
-        req.authorization()!.replace("Bearer ", "")
-      );
-      if (userId) {
-        res.locals.userId = userId;
-        return next();
-      }
-    } catch (err: any) {
-      if (err instanceof Error) {
-        return next(err.message);
+    if (req.authorization()) {
+      try {
+        const userId = await this.authenticateUseCase.execute(
+          req.authorization()!.replace("Bearer ", "")
+        );
+        if (userId) {
+          res.locals.userId = userId;
+          return next();
+        }
+      } catch (err: any) {
+        if (err instanceof Error) {
+          return next(err.message);
+        }
       }
     }
     return next("You are not authenticated");

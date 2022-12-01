@@ -4,7 +4,7 @@ import {
   Controller,
   IRequest,
   IResponse,
-  Middleware,
+  MiddlewareController,
 } from "../../adapters/types";
 import {
   AuthRouter,
@@ -54,7 +54,7 @@ class Response<LocalsType = any> implements IResponse<LocalsType> {
   }
 }
 
-function buildMiddleware(middlewares: Middleware[]) {
+function buildMiddleware(middlewares: MiddlewareController[]) {
   return middlewares.map(
     (middleware) =>
       async function (
@@ -62,7 +62,7 @@ function buildMiddleware(middlewares: Middleware[]) {
         res: express.Response,
         next: express.NextFunction
       ) {
-        await middleware(new Request(req), new Response(res), next);
+        await middleware.execute(new Request(req), new Response(res), next);
       }
   );
 }

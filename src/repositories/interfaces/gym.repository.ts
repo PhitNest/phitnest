@@ -7,5 +7,6 @@ export interface IGymRepository {
     meters: number,
     amount?: number
   ): Promise<IGymEntity[]>;
-  get(cognitoId: string): Promise<IGymEntity | null>;
+  getByUser(cognitoId: string): Promise<IGymEntity | null>;
+  get(gymId: string): Promise<IGymEntity | null>;
 }

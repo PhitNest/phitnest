@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { Repositories } from "../../common/dependency-injection";
 import {
   IAuthRepository,
+  IGymRepository,
   IUserRepository,
 } from "../../repositories/interfaces";
 import { IRegisterUseCase } from "../interfaces";
@@ -10,13 +11,16 @@ import { IRegisterUseCase } from "../interfaces";
 export class RegisterUseCase implements IRegisterUseCase {
   authRepo: IAuthRepository;
   userRepo: IUserRepository;
+  gymRepo: IGymRepository;
 
   constructor(
     @inject(Repositories.auth) authRepo: IAuthRepository,
-    @inject(Repositories.user) userRepo: IUserRepository
+    @inject(Repositories.user) userRepo: IUserRepository,
+    @inject(Repositories.gym) gymRepo: IGymRepository
   ) {
     this.authRepo = authRepo;
     this.userRepo = userRepo;
+    this.gymRepo = gymRepo;
   }
 
   async execute(
@@ -27,7 +31,8 @@ export class RegisterUseCase implements IRegisterUseCase {
     lastName: string
   ) {
     const cognitoId = await this.authRepo.registerUser(email, password);
-    if (cognitoId) {
+    const gym = await this.gymRepo.get(gymId);
+    if (cognitoId && gym) {
       await this.userRepo.create({
         cognitoId: cognitoId,
         email: email,

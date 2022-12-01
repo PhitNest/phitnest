@@ -16,14 +16,14 @@ export class GymRouter implements IRouter {
       {
         path: "/",
         method: HttpMethod.GET,
-        middlewares: [authMiddleware.authenticate],
+        middlewares: [authMiddleware],
         controller: (req, res) => gymController.get(req, res),
       },
       {
         path: "/",
         method: HttpMethod.POST,
         // TODO: SECURE WITH ADMIN AUTH
-        middlewares: [authMiddleware.authenticate],
+        middlewares: [authMiddleware],
         controller: (req, res) => gymController.create(req, res),
       },
       {

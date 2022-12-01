@@ -11,6 +11,15 @@ import fs from "fs";
 
 let server: http.Server;
 
+export function listen() {
+  return new Promise((resolve) => {
+    server.listen(process.env.PORT, () => {
+      l.info(`Server started on port: ${process.env.PORT}`);
+      resolve(server);
+    });
+  });
+}
+
 export function createServer() {
   const app = express();
   app.use(bodyParser.json());
@@ -38,12 +47,7 @@ export function createServer() {
     app.use("/spec", express.static(apiSpec));
   }
   server = http.createServer(app);
-  return new Promise((resolve) => {
-    server.listen(process.env.PORT, () => {
-      l.info(`Server started on port: ${process.env.PORT}`);
-      resolve(server);
-    });
-  });
+  return server;
 }
 
 export function stopServer() {

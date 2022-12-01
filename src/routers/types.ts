@@ -1,4 +1,4 @@
-import { Controller, Middleware } from "../adapters/types";
+import { Controller, MiddlewareController } from "../adapters/types";
 
 export enum HttpMethod {
   GET,
@@ -10,7 +10,7 @@ export enum HttpMethod {
 export interface IRoute {
   method: HttpMethod;
   path: string;
-  middlewares: Middleware[];
+  middlewares: MiddlewareController[];
   controller: Controller;
 }
 

@@ -78,13 +78,13 @@ test("Get a users gym", async () => {
   expect(gym3).toBeDefined();
   testUser1.gymId = gym1._id;
   user1 = await userRepo.create(testUser1);
-  expect(await gymRepo.get("fake gym")).toBeNull();
-  const myGym1 = await gymRepo.get(user1.cognitoId);
+  expect(await gymRepo.getByUser("fake gym")).toBeNull();
+  const myGym1 = await gymRepo.getByUser(user1.cognitoId);
   expect(myGym1).toBeDefined();
   compareGym(myGym1!, gym1);
   testUser2.gymId = gym2._id;
   user2 = await userRepo.create(testUser2);
-  const myGym2 = await gymRepo.get(user2.cognitoId);
+  const myGym2 = await gymRepo.getByUser(user2.cognitoId);
   expect(myGym2).toBeDefined();
   compareGym(myGym2!, gym2);
 });

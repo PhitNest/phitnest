@@ -11,6 +11,7 @@ import { l } from "../../common/logger";
 import { IAuthRepository } from "../interfaces";
 import { injectable } from "inversify";
 import "cross-fetch/polyfill";
+import { IAuthEntity } from "../../entities";
 
 const userPool = new CognitoUserPool({
   UserPoolId: process.env.COGNITO_POOL_ID!,
@@ -30,7 +31,6 @@ export class CognitoAuthRepository implements IAuthRepository {
           },
           onFailure: (err) => {
             l.error(`User ${user.getUsername()} could not be signed out`);
-            l.error(err);
             resolve(false);
           },
         });
@@ -50,7 +50,7 @@ export class CognitoAuthRepository implements IAuthRepository {
       Username: email,
       Pool: userPool,
     });
-    return new Promise<string | null>((resolve) => {
+    return new Promise<IAuthEntity | null>((resolve) => {
       user.authenticateUser(
         new AuthenticationDetails({
           Username: email,
@@ -59,11 +59,14 @@ export class CognitoAuthRepository implements IAuthRepository {
         {
           onSuccess: (session) => {
             l.info(`User authenticated with email: ${email}`);
-            resolve(session.getAccessToken().getJwtToken());
+            resolve({
+              accessToken: session.getAccessToken().getJwtToken(),
+              refreshToken: session.getRefreshToken().getToken(),
+              idToken: session.getIdToken().getJwtToken(),
+            });
           },
           onFailure: (err) => {
             l.error(`User could not be authenticated with email: ${email}`);
-            l.error(err);
             resolve(null);
           },
         }
@@ -77,7 +80,6 @@ export class CognitoAuthRepository implements IAuthRepository {
       user.resendConfirmationCode((err) => {
         if (err) {
           l.error(`Could not resend confirmation code for user: ${email}`);
-          l.error(err);
           resolve(false);
         } else {
           l.info(`Resent confirmation code for user: ${email}`);
@@ -93,7 +95,6 @@ export class CognitoAuthRepository implements IAuthRepository {
       user.confirmRegistration(code, true, (err) => {
         if (err) {
           l.error(`Could not confirm registration for user: ${email}`);
-          l.error(err);
           resolve(false);
         } else {
           l.info(`Confirmed registration for user: ${email}`);
@@ -113,7 +114,6 @@ export class CognitoAuthRepository implements IAuthRepository {
         },
         onFailure: (err) => {
           l.error(`Failed to change password for user: ${email}`);
-          l.error(err);
           resolve(false);
         },
       });
@@ -133,7 +133,6 @@ export class CognitoAuthRepository implements IAuthRepository {
         },
         onFailure: (err) => {
           l.error(`Failed to send forgot password email to: ${email}`);
-          l.error(err);
           resolve(false);
         },
       });
@@ -155,11 +154,10 @@ export class CognitoAuthRepository implements IAuthRepository {
         (err, result) => {
           if (err || !result) {
             l.error(`Could not register user with email: ${email}`);
-            l.error(err);
             resolve(null);
           } else {
             l.info(`Registered user with email: ${email}`);
-            resolve(result.user.getUsername());
+            resolve(result.userSub);
           }
         }
       );
@@ -214,15 +212,14 @@ export class CognitoAuthRepository implements IAuthRepository {
       Pool: userPool,
     });
     return new Promise<string | null>((resolve) => {
-      user.getSession((err: Error | null, session: CognitoUserSession) => {
-        if (session.isValid()) {
+      user.getSession((err: Error | null) => {
+        if (err) {
+          l.error(`Invalid access token: ${accessToken}`);
+          resolve(null);
+        } else {
           const cognitoId = user.getUsername();
           l.info(`Authenticated user: ${cognitoId}`);
           resolve(cognitoId);
-        } else {
-          l.error(`Invalid access token: ${accessToken}`);
-          l.error(err);
-          resolve(null);
         }
       });
     });
