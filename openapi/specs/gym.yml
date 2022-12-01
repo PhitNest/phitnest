@@ -27,7 +27,7 @@ paths:
                 address:
                   $ref: "#/components/schemas/Address"
       responses:
-        200:
+        201:
           description: The gym was created successfully
           content:
             application/json:

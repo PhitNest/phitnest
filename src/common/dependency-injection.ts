@@ -7,6 +7,9 @@ export const Repositories = {
   gym: Symbol("gym.repository"),
   relationship: Symbol("relationship.repository"),
   location: Symbol("location.repository"),
+  conversation: Symbol("conversation.repository"),
+  conversationMember: Symbol("conversation-member.repository"),
+  message: Symbol("message.repository"),
 };
 
 export const UseCases = {
@@ -52,6 +55,9 @@ import {
   MongoGymRepository,
   MongoRelationshipRepository,
   OSMLocationRepository,
+  MongoMessageRepository,
+  MongoConversationMemberRepository,
+  MongoConversationRepository,
 } from "../repositories/implementations";
 
 import {
@@ -110,6 +116,12 @@ function injectRepositories() {
   injectRepository(Repositories.auth, CognitoAuthRepository);
   injectRepository(Repositories.relationship, MongoRelationshipRepository);
   injectRepository(Repositories.location, OSMLocationRepository);
+  injectRepository(Repositories.conversation, MongoConversationRepository);
+  injectRepository(
+    Repositories.conversationMember,
+    MongoConversationMemberRepository
+  );
+  injectRepository(Repositories.message, MongoMessageRepository);
 }
 
 export function injectUseCases() {

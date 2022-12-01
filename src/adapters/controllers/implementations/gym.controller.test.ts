@@ -152,7 +152,7 @@ test("Can create a new gym", async () => {
   });
   mockResponse = new MockResponse({});
   res = await gymController.create(mockRequest, mockResponse);
-  expect(res.code).toBe(200);
+  expect(res.code).toBe(201);
   gym1 = res.content;
   compareGym(gym1, testGym1);
   mockRequest = new MockRequest({
@@ -161,7 +161,7 @@ test("Can create a new gym", async () => {
   });
   mockResponse = new MockResponse({});
   res = await gymController.create(mockRequest, mockResponse);
-  expect(res.code).toBe(200);
+  expect(res.code).toBe(201);
   gym2 = res.content;
   compareGym(gym2, testGym2);
 });

@@ -39,7 +39,7 @@ export class GymController implements IGymController {
         .object({ name: z.string(), address: addressValidator })
         .parse(req.content());
       const gym = await this.createGymUseCase.execute(name, address);
-      return res.status(200).json(gym);
+      return res.status(201).json(gym);
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
