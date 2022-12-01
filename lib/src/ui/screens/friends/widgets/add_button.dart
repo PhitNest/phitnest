@@ -12,7 +12,10 @@ class AddButton extends Container {
           ),
           child: Text(
             'ADD',
-            style: Theme.of(context).textTheme.bodySmall,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall!
+                .copyWith(color: Colors.black),
           ),
         );
 }

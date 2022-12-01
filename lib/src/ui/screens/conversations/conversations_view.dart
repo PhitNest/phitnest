@@ -22,6 +22,9 @@ class ConversationsView extends NavBarScreenView {
   int get navbarIndex => 2;
 
   @override
+  bool showAppBar(BuildContext context) => false;
+
+  @override
   Widget buildView(BuildContext context) => Column(
         children: [
           73.verticalSpace,
