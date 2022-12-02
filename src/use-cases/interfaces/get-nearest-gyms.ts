@@ -1,9 +1,9 @@
-import { IGymEntity, ILocationEntity } from "../../entities";
+import { IGymEntity, LocationEntity } from "../../entities";
 import { IUseCase } from "../types";
 
 export interface IGetNearestGymsUseCase extends IUseCase {
   execute(
-    location: ILocationEntity,
+    location: LocationEntity,
     distance: number,
     amount?: number
   ): Promise<IGymEntity[]>;

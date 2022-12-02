@@ -16,16 +16,16 @@ export class AuthMiddleware implements IAuthMiddleware {
 
   async execute(
     req: IRequest,
-    res: IResponse<{ userId: string | undefined }>,
+    res: IResponse<{ cognitoId: string | undefined }>,
     next: (err?: string) => void
   ) {
     if (req.authorization()) {
       try {
-        const userId = await this.authenticateUseCase.execute(
+        const cognitoId = await this.authenticateUseCase.execute(
           req.authorization()!.replace("Bearer ", "")
         );
-        if (userId) {
-          res.locals.userId = userId;
+        if (cognitoId) {
+          res.locals.cognitoId = cognitoId;
           return next();
         }
       } catch (err: any) {

@@ -1,5 +1,24 @@
+export interface IEventHandler {
+  execute: EventExecutor;
+}
+
+export type EventExecutor = (
+  connection: IConnection,
+  data: any
+) => Promise<void>;
+
+export interface IConnection {
+  locals: AuthenticatedLocals;
+  id: string;
+  disconnect(): void;
+  broadcast(event: string, data: any, room?: string): void;
+  joinRoom(room: string): Promise<void>;
+  leaveRoom(room: string): Promise<void>;
+  send(event: string, data: any, room?: string): void;
+}
+
 export interface AuthenticatedLocals {
-  userId: string;
+  cognitoId: string;
 }
 
 export type Controller<LocalsType = any> = (

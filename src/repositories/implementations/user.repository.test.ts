@@ -3,7 +3,7 @@ import {
   compareUserData,
 } from "../../../test/helpers/comparisons";
 import { dependencies, Repositories } from "../../common/dependency-injection";
-import { IGymEntity, IUserEntity } from "../../entities";
+import { IGymEntity, IUserEntity, LocationEntity } from "../../entities";
 import {
   IGymRepository,
   IRelationshipRepository,
@@ -18,10 +18,7 @@ const testGym1 = {
     state: "testState1",
     zipCode: "testZipCode1",
   },
-  location: {
-    type: "Point",
-    coordinates: [-122.4194, 37.7749] as [number, number],
-  },
+  location: new LocationEntity(-122.4194, 37.7749),
 };
 
 const testGym2 = {
@@ -32,10 +29,7 @@ const testGym2 = {
     state: "testState2",
     zipCode: "testZipCode2",
   },
-  location: {
-    type: "Point",
-    coordinates: [122.4194, 37.7749] as [number, number],
-  },
+  location: new LocationEntity(122.4194, 37.7749),
 };
 
 const testUser1 = {

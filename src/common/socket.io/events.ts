@@ -1,14 +1,58 @@
 import { Server, Socket } from "socket.io";
 import { ExtendedError } from "socket.io/dist/namespace";
 import {
+  AuthenticatedLocals,
+  IConnection,
+  IEventHandler,
   IRequest,
   IResponse,
   MiddlewareController,
 } from "../../adapters/types";
-import { dependencies, Middlewares } from "../dependency-injection";
-import { l } from "../logger";
+import { SendDirectMessageEvent } from "../../events";
+import { IEvent } from "../../events/types";
+import {
+  dependencies,
+  EventHandlers,
+  Middlewares,
+} from "../dependency-injection";
 
-export class ConnectionRequest implements IRequest {
+class Connection implements IConnection {
+  socket: Socket;
+  locals: AuthenticatedLocals;
+  id: string;
+
+  constructor(socket: any) {
+    this.socket = socket;
+    this.locals = socket.locals;
+    this.id = socket.id;
+  }
+
+  broadcast(event: string, data: any, room?: string) {
+    if (room) {
+      this.socket.broadcast.to(room).emit(event, data);
+    } else {
+      this.socket.broadcast.emit(event, data);
+    }
+  }
+
+  async joinRoom(room: string) {
+    return this.socket.join(room);
+  }
+
+  async leaveRoom(room: string) {
+    return this.socket.leave(room);
+  }
+
+  send(event: string, data: any) {
+    this.socket.emit(event, data);
+  }
+
+  disconnect() {
+    this.socket.disconnect(true);
+  }
+}
+
+class ConnectionRequest implements IRequest {
   socket: Socket;
 
   constructor(socket: Socket) {
@@ -22,7 +66,7 @@ export class ConnectionRequest implements IRequest {
   }
 }
 
-export class ConnectionResponse implements IResponse<any> {
+class ConnectionResponse implements IResponse<any> {
   socket: Socket;
   locals: any;
   code: any;
@@ -30,7 +74,7 @@ export class ConnectionResponse implements IResponse<any> {
 
   constructor(socket: any) {
     this.socket = socket;
-    socket.locals = {} as { userId?: string };
+    socket.locals = {} as { cognitoId?: string };
     this.locals = socket.locals;
   }
 
@@ -47,25 +91,42 @@ export class ConnectionResponse implements IResponse<any> {
   }
 }
 
-function buildMiddleware(middleware: MiddlewareController) {
-  return async function (
-    socket: Socket,
-    next: (err?: ExtendedError | undefined) => void
-  ) {
-    await middleware.execute(
-      new ConnectionRequest(socket),
-      new ConnectionResponse(socket),
-      (err) => next(err ? new Error(err) : undefined)
-    );
-  };
+function runEventHandler(
+  eventHandler: IEventHandler,
+  socket: Socket,
+  data: any
+) {
+  return eventHandler.execute(new Connection(socket), data);
+}
+
+function buildMiddleware(io: Server, middleware: MiddlewareController) {
+  io.use(
+    async (socket: Socket, next: (err?: ExtendedError | undefined) => void) => {
+      await middleware.execute(
+        new ConnectionRequest(socket),
+        new ConnectionResponse(socket),
+        (err) => next(err ? new Error(err) : undefined)
+      );
+    }
+  );
+}
+
+function bindEvent(socket: Socket, event: IEvent) {
+  socket.on(event.name, (data) => runEventHandler(event.handler, socket, data));
 }
 
 export function buildMiddlewares(io: Server) {
-  io.use(buildMiddleware(dependencies.get(Middlewares.authenticate)));
+  buildMiddleware(io, dependencies.get(Middlewares.authenticate));
 }
 
-export function runConnectionEvents(connection: Socket) {}
+export function runConnectionEvents(socket: Socket) {
+  runEventHandler(dependencies.get(EventHandlers.onConnect), socket, null);
+}
 
-export function bindIncomingEvents(connection: Socket) {}
+export function bindIncomingEvents(socket: Socket) {
+  bindEvent(socket, dependencies.resolve(SendDirectMessageEvent));
+}
 
-export function runDisconnectEvents(connection: Socket) {}
+export function runDisconnectEvents(socket: Socket) {
+  runEventHandler(dependencies.get(EventHandlers.onDisconnect), socket, null);
+}

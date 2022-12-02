@@ -22,31 +22,23 @@ export class UserController implements IUserController {
 
   async explore(req: IRequest, res: IResponse<AuthenticatedLocals>) {
     try {
-      const users = await this.exploreUseCase.execute(res.locals.userId);
+      const users = await this.exploreUseCase.execute(res.locals.cognitoId);
       return res.status(200).json(users);
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(500).json({ message: err.message });
-      } else {
-        return res.status(500).json(err);
-      }
+      return res.status(500).json(err);
     }
   }
 
   async get(req: IRequest, res: IResponse<AuthenticatedLocals>) {
     try {
-      const user = await this.getUserUseCase.execute(res.locals.userId);
+      const user = await this.getUserUseCase.execute(res.locals.cognitoId);
       if (user) {
         return res.status(200).json(user);
       } else {
         return res.status(500).json({ message: "Could not find a user" });
       }
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(500).json({ message: err.message });
-      } else {
-        return res.status(500).json(err);
-      }
+      return res.status(500).json(err);
     }
   }
 }

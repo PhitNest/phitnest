@@ -13,7 +13,7 @@ export class GetFriendsUseCase implements IGetFriendsUseCase {
     this.relationshipRepo = relationshipRepo;
   }
 
-  async execute(userId: string) {
-    return this.relationshipRepo.getFriends(userId);
+  async execute(cognitoId: string) {
+    return this.relationshipRepo.getFriends(cognitoId);
   }
 }

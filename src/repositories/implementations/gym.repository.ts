@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import mongoose from "mongoose";
-import { IGymEntity, ILocationEntity } from "../../entities";
+import { IGymEntity, LocationEntity } from "../../entities";
 import { IGymRepository } from "../interfaces";
 import { UserModel } from "./user.repository";
 
@@ -28,7 +28,7 @@ const schema = new mongoose.Schema(
 
 schema.index({ location: "2dsphere" });
 
-const GymModel = mongoose.model<IGymEntity>(GYM_MODEL_NAME, schema);
+export const GymModel = mongoose.model<IGymEntity>(GYM_MODEL_NAME, schema);
 
 @injectable()
 export class MongoGymRepository implements IGymRepository {
@@ -62,16 +62,13 @@ export class MongoGymRepository implements IGymRepository {
     }
   }
 
-  async getNearest(location: ILocationEntity, meters: number, amount?: number) {
+  async getNearest(location: LocationEntity, meters: number, amount?: number) {
     if (amount != 0) {
       const query = GymModel.find({
         location: {
           $near: {
             $maxDistance: meters,
-            $geometry: {
-              type: location.type,
-              coordinates: location.coordinates,
-            },
+            $geometry: location,
           },
         },
       }).limit(amount ?? 0);

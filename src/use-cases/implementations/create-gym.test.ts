@@ -1,5 +1,6 @@
 import { compareGym } from "../../../test/helpers/comparisons";
 import { dependencies, UseCases } from "../../common/dependency-injection";
+import { LocationEntity } from "../../entities";
 import { ICreateGymUseCase } from "../interfaces";
 
 const testGym1 = {
@@ -10,10 +11,7 @@ const testGym1 = {
     state: "VA",
     zipCode: "23451",
   },
-  location: {
-    type: "Point",
-    coordinates: [-75.996, 36.85] as [number, number],
-  },
+  location: new LocationEntity(-75.996, 36.85),
 };
 
 const testGym2 = {
@@ -24,10 +22,7 @@ const testGym2 = {
     state: "VA",
     zipCode: "24060",
   },
-  location: {
-    type: "Point",
-    coordinates: [-80.413, 37.229] as [number, number],
-  },
+  location: new LocationEntity(-80.413, 37.229),
 };
 
 const fakeAddress = {
@@ -45,5 +40,7 @@ test("Can search for a location from an address and create a gym with it", async
   compareGym(gym, testGym1);
   gym = await createGym.execute(testGym2.name, testGym2.address);
   compareGym(gym, testGym2);
-  await expect(createGym.execute(testGym1.name, fakeAddress)).rejects.toThrow();
+  await expect(
+    createGym.execute(testGym1.name, fakeAddress)
+  ).rejects.toThrowError("Address could not be located");
 });

@@ -17,10 +17,10 @@ import { dependencies } from "../dependency-injection";
 
 export function buildRoutes(dependencies: Container) {
   const router = Router();
-  router.use("/gym", buildRoute(GymRouter));
-  router.use("/user", buildRoute(UserRouter));
-  router.use("/auth", buildRoute(AuthRouter));
-  router.use("/relationship", buildRoute(RelationshipRouter));
+  buildRoute(router, "/gym", GymRouter);
+  buildRoute(router, "/user", UserRouter);
+  buildRoute(router, "/auth", AuthRouter);
+  buildRoute(router, "/relationship", RelationshipRouter);
   return router;
 }
 
@@ -92,26 +92,30 @@ function buildController(controller: Controller) {
   };
 }
 
-function buildRoute(routerClass: interfaces.Newable<IRouter>) {
-  const expressRouter = Router();
+function buildRoute(
+  expressRouter: Router,
+  path: string,
+  routerClass: interfaces.Newable<IRouter>
+) {
   const router = dependencies.resolve(routerClass);
+  const subRouter = Router();
   router.routes.forEach((route) => {
     const middlewares = buildMiddleware(route.middlewares);
     const controller = buildController(route.controller);
     switch (route.method) {
       case HttpMethod.GET:
-        expressRouter.get(route.path, middlewares, controller);
+        subRouter.get(route.path, middlewares, controller);
         break;
       case HttpMethod.POST:
-        expressRouter.post(route.path, middlewares, controller);
+        subRouter.post(route.path, middlewares, controller);
         break;
       case HttpMethod.PUT:
-        expressRouter.put(route.path, middlewares, controller);
+        subRouter.put(route.path, middlewares, controller);
         break;
       case HttpMethod.DELETE:
-        expressRouter.delete(route.path, middlewares, controller);
+        subRouter.delete(route.path, middlewares, controller);
         break;
     }
   });
-  return expressRouter;
+  expressRouter.use(path, subRouter);
 }
