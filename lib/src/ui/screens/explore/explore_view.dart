@@ -38,17 +38,23 @@ class ExploreView extends NavBarScreenView {
           SizedBox(
             width: 375.w,
             height: 333.h,
-            child: Stack(fit: StackFit.expand, children: [
-              Image.asset(
-                'assets/images/selfie.png',
-                fit: BoxFit.cover,
-              ),
-              holding
-                  ? Center(
-                      child:
-                          CountdownRing(countdownNum: countdown, dark: false))
-                  : Container()
-            ]),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(
+                  'assets/images/selfie.png',
+                  fit: BoxFit.cover,
+                ),
+                holding
+                    ? Center(
+                        child: CountdownRing(
+                          countdownNum: countdown,
+                          dark: false,
+                        ),
+                      )
+                    : Container(),
+              ],
+            ),
           ),
           120.verticalSpace,
           Row(

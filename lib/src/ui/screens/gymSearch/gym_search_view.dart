@@ -29,44 +29,50 @@ class GymSearchView extends ScreenView {
   Widget get backButton => keyboardVisible ? Container() : super.backButton;
 
   @override
-  Widget buildView(BuildContext context) => Column(children: [
-        15.verticalSpace,
-        SizedBox(
+  Widget buildView(BuildContext context) => Column(
+        children: [
+          15.verticalSpace,
+          SizedBox(
             width: 343.w,
             height: 32.h,
             child: TextField(
-                textAlignVertical: TextAlignVertical.center,
-                style: Theme.of(context).textTheme.labelMedium,
-                controller: searchController,
-                keyboardType: TextInputType.streetAddress,
-                onChanged: (_) => onEditSearch(),
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 16.w),
-                  hintText: 'Search',
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
-                      borderRadius: BorderRadius.circular(8)),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
-                      borderRadius: BorderRadius.circular(8)),
-                  hintStyle: Theme.of(context)
-                      .textTheme
-                      .labelMedium!
-                      .copyWith(color: Color(0xFF999999)),
-                ))),
-        12.verticalSpace,
-        Expanded(
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: ListView(children: cards))),
-        keyboardVisible ? 285.verticalSpace : 10.verticalSpace,
-        Visibility(
+              textAlignVertical: TextAlignVertical.center,
+              style: Theme.of(context).textTheme.labelMedium,
+              controller: searchController,
+              keyboardType: TextInputType.streetAddress,
+              onChanged: (_) => onEditSearch(),
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 16.w),
+                hintText: 'Search',
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.circular(8)),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.circular(8)),
+                hintStyle: Theme.of(context)
+                    .textTheme
+                    .labelMedium!
+                    .copyWith(color: Color(0xFF999999)),
+              ),
+            ),
+          ),
+          12.verticalSpace,
+          Expanded(
+              child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: ListView(children: cards))),
+          keyboardVisible ? 285.verticalSpace : 10.verticalSpace,
+          Visibility(
             visible: !keyboardVisible,
             child: Padding(
-                padding: EdgeInsets.only(bottom: 80.h),
-                child: StyledButton(
-                  child: Text('CONFIRM'),
-                  onPressed: onPressedConfirm,
-                )))
-      ]);
+              padding: EdgeInsets.only(bottom: 80.h),
+              child: StyledButton(
+                child: Text('CONFIRM'),
+                onPressed: onPressedConfirm,
+              ),
+            ),
+          ),
+        ],
+      );
 }
