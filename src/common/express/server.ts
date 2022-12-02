@@ -45,6 +45,8 @@ export function createServer() {
     }
     const apiSpec = `${root}/openapi/api.yml`;
     app.use("/spec", express.static(apiSpec));
+  } else {
+    app.use("/", (req, res) => res.status(200).send());
   }
   server = http.createServer(app);
   return server;
