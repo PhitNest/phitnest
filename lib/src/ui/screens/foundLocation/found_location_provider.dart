@@ -24,7 +24,7 @@ class FoundLocationProvider
           ),
         ),
         onPressedYes: () {
-          repositories<GymRepository>().currentlySelectedGym = gym;
+          repositories<MemoryCacheRepository>().myGym = gym;
           Navigator.pushAndRemoveUntil(
             context,
             NoAnimationMaterialPageRoute(

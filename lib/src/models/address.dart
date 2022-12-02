@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-/**
- * Represents an address
- */
+/// Represents an address
 class Address extends Equatable {
   final String street;
   final String city;
@@ -34,11 +32,12 @@ class Address extends Equatable {
       };
 
   /// Checks if the address contains a String
-  bool contains(String query) => street.toLowerCase().contains(query) ||
-        city.toLowerCase().contains(query) ||
-        state.toLowerCase().contains(query) ||
-        zipCode.toLowerCase().contains(query);
-  
+  bool contains(String query) =>
+      street.toLowerCase().contains(query) ||
+      city.toLowerCase().contains(query) ||
+      state.toLowerCase().contains(query) ||
+      zipCode.toLowerCase().contains(query);
+
   /// These are the properties to compare when determining equality
   @override
   List<Object?> get props => [street, city, state, zipCode];

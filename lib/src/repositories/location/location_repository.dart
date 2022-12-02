@@ -4,10 +4,6 @@ import 'package:geolocator/geolocator.dart';
 import '../../models/models.dart';
 
 class LocationRepository {
-  /// Streams the current location permissions settings
-  Stream<ServiceStatus> streamServiceStatus() =>
-      Geolocator.getServiceStatusStream();
-
   /// Converts a [Position] from the geolocator package to a [Location]
   Location _positionToLocation(Position position) =>
       Location(longitude: position.longitude, latitude: position.latitude);
