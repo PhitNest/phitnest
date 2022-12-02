@@ -2,9 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../models/models.dart';
-import '../repositories.dart';
 
-class LocationRepository extends Repository {
+class LocationRepository {
   /// Streams the current location permissions settings
   Stream<ServiceStatus> streamServiceStatus() =>
       Geolocator.getServiceStatusStream();

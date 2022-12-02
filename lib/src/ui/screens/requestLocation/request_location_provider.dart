@@ -16,15 +16,15 @@ class RequestLocationProvider
       repositories<LocationRepository>().getLocation().then((response) =>
           response.fold(
               (location) => repositories<GymRepository>()
-                      .getNearestGym(location)
-                      .then((gym) {
+                      .getNearestGyms(location: location, amount: 1)
+                      .then((gyms) {
                     try {
-                      return gym != null
+                      return gyms.length > 0
                           ? Navigator.pushAndRemoveUntil(
                               context,
                               NoAnimationMaterialPageRoute(
                                   builder: (context) =>
-                                      FoundLocationProvider(gym: gym)),
+                                      FoundLocationProvider(gym: gyms[0])),
                               (_) => false)
                           : state.errorMessage =
                               'No nearby gyms could be found.';

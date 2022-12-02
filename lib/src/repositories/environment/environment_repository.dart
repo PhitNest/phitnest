@@ -1,8 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../repository.dart';
-
-class EnvironmentRepository extends Repository {
+class EnvironmentRepository {
   static const String kBackendHost = 'BACKEND_HOST';
   static const String kBackendPort = 'BACKEND_PORT';
 

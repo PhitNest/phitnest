@@ -1,8 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../repositories.dart';
-
-class DeviceCacheRepository extends Repository {
+class DeviceCacheRepository {
   static late SharedPreferences _storage;
 
   static init() async {

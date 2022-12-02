@@ -1,3 +1,1 @@
-import '../repositories.dart';
-
-class AuthenticationRepository extends Repository {}
+class AuthenticationRepository {}
