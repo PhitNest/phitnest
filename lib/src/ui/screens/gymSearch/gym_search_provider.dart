@@ -17,7 +17,7 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
       repositories<LocationRepository>().getLocation().then((response) =>
           response.fold(
               (location) => repositories<GymRepository>()
-                      .getNearestGyms(location)
+                      .getNearestGyms(location: location)
                       .then((gyms) {
                     state.gymsAndDistances = gyms
                         .map((gym) =>

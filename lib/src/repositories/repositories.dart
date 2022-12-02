@@ -8,7 +8,6 @@ export 'environment/environment_repository.dart';
 export 'location/location_repository.dart';
 export 'gym/gym_repository.dart';
 export 'user/user_repository.dart';
-export 'repository.dart';
 
 GetIt repositories = GetIt.instance;
 
