@@ -8,8 +8,14 @@ import 'model/message.dart';
 
 class MessageView extends ScreenView {
   final List<MessageModel> msg;
+  final Function() sendMsg;
+  final TextEditingController messageController;
 
-  MessageView({required this.msg});
+  MessageView({
+    required this.msg,
+    required this.messageController,
+    required this.sendMsg,
+  });
 
   @override
   Widget buildView(BuildContext context) => Scaffold(
@@ -69,6 +75,7 @@ class MessageView extends ScreenView {
                     SizedBox(
                       width: 280.w,
                       child: TextFormField(
+                        controller: messageController,
                         decoration: InputDecoration(
                           hintText: 'Write a message...',
                           hintStyle: Theme.of(context).textTheme.bodySmall,
@@ -83,7 +90,7 @@ class MessageView extends ScreenView {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: sendMsg,
                       child: Text(
                         'SEND',
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(

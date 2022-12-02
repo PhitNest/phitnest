@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
+
 import '../state.dart';
 import 'model/message.dart';
 
 class MessageState extends ScreenState {
+  TextEditingController messageController = TextEditingController();
+
   List<MessageModel> _message = [
     MessageModel(
       msg: 'Are you really sure?',
