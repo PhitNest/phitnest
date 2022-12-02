@@ -1,7 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_mobile/src/ui/screens/message/message_provider.dart';
+import 'package:phitnest_mobile/src/ui/screens/onBoarding/on_boarding_provider.dart';
 
 import 'ui/theme.dart';
 
@@ -23,7 +23,7 @@ class App extends StatelessWidget {
             theme: theme,
             debugShowCheckedModeBanner: false,
             // The app always enters at the on boarding screen.
-            home: MessageProvider(),
+            home: OnBoardingProvider(),
           ),
         ),
       );
