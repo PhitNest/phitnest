@@ -1,9 +1,8 @@
 export { IGymEntity } from "./gym.entity";
 export { IAddressEntity } from "./address.entity";
-export { ILocationEntity } from "./location.entity";
+export { LocationEntity } from "./location.entity";
 export { IUserEntity, IPublicUserEntity } from "./user.entity";
 export { IRelationshipEntity, RelationshipType } from "./relationship.entity";
 export { IAuthEntity } from "./auth.entity";
-export { IConversationEntity } from "./conversation.entity";
+export { IDirectConversationEntity } from "./direct-conversation.entity";
 export { IMessageEntity } from "./message.entity";
-export { IConversationMemberEntity } from "./conversation-member.entity";

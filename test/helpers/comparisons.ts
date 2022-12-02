@@ -1,7 +1,7 @@
 import {
   IAddressEntity,
   IGymEntity,
-  ILocationEntity,
+  LocationEntity,
   IPublicUserEntity,
   IUserEntity,
 } from "../../src/entities";
@@ -22,10 +22,8 @@ export function compareAddress(
   expect(address1.zipCode).toEqual(address2.zipCode);
 }
 
-export function compareLocation(loc1: ILocationEntity, loc2: ILocationEntity) {
-  expect(loc1.type).toBe("Point");
+export function compareLocation(loc1: LocationEntity, loc2: LocationEntity) {
   expect(loc1.coordinates.length).toBe(2);
-  expect(loc2.type).toBe("Point");
   expect(loc2.coordinates.length).toBe(2);
   expect(loc1.coordinates[0]).toBeCloseTo(loc2.coordinates[0]);
   expect(loc1.coordinates[1]).toBeCloseTo(loc2.coordinates[1]);

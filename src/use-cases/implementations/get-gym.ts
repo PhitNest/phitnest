@@ -11,12 +11,12 @@ export class GetGymUseCase implements IGetGymUseCase {
     this.gymRepo = gymRepo;
   }
 
-  async execute(userId: string) {
-    const gym = await this.gymRepo.getByUser(userId);
+  async execute(cognitoId: string) {
+    const gym = await this.gymRepo.getByUser(cognitoId);
     if (gym) {
       return gym;
     } else {
-      throw new Error(`Could not get gym for user with id: ${userId}`);
+      throw new Error(`Could not get gym for user with id: ${cognitoId}`);
     }
   }
 }

@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { Repositories } from "../../common/dependency-injection";
-import { ILocationEntity } from "../../entities";
+import { LocationEntity } from "../../entities";
 import { IGymRepository } from "../../repositories/interfaces";
 import { IGetNearestGymsUseCase } from "../interfaces";
 
@@ -12,7 +12,7 @@ export class GetNearestGymsUseCase implements IGetNearestGymsUseCase {
     this.gymRepo = gymRepo;
   }
 
-  execute(location: ILocationEntity, distance: number, amount?: number) {
+  execute(location: LocationEntity, distance: number, amount?: number) {
     return this.gymRepo.getNearest(location, distance, amount);
   }
 }

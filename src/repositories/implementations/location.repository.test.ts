@@ -1,5 +1,6 @@
 import { compareLocation } from "../../../test/helpers/comparisons";
 import { dependencies, Repositories } from "../../common/dependency-injection";
+import { LocationEntity } from "../../entities";
 import { ILocationRepository } from "../interfaces";
 
 const testAddress1 = {
@@ -29,10 +30,10 @@ test("Get location from address", async () => {
   locationRepo = dependencies.get(Repositories.location);
   let location = await locationRepo.get(testAddress1);
   expect(location).not.toBeNull();
-  compareLocation(location!, { type: "Point", coordinates: [-75.996, 36.85] });
+  compareLocation(location!, new LocationEntity(-75.996, 36.85));
   location = await locationRepo.get(testAddress2);
   expect(location).not.toBeNull();
-  compareLocation(location!, { type: "Point", coordinates: [-80.413, 37.229] });
+  compareLocation(location!, new LocationEntity(-80.413, 37.229));
   location = await locationRepo.get(fakeAddress);
   expect(location).toBeNull();
 });

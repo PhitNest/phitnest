@@ -29,6 +29,36 @@ const RelationshipModel = mongoose.model<IRelationshipEntity>(
 
 @injectable()
 export class MongoRelationshipRepository implements IRelationshipRepository {
+  async friends(cognitoId1: string, cognitoId2: string) {
+    const result = await RelationshipModel.aggregate([
+      {
+        $match: {
+          sender: cognitoId1,
+          recipient: cognitoId2,
+          type: RelationshipType.Requested,
+        },
+      },
+      {
+        $lookup: {
+          from: RELATIONSHIP_COLLECTION_NAME,
+          localField: "recipient",
+          foreignField: "sender",
+          pipeline: [
+            {
+              $match: {
+                recipient: cognitoId1,
+                type: RelationshipType.Requested,
+              },
+            },
+          ],
+          as: "response",
+        },
+      },
+      { $match: { $expr: { $gt: [{ $size: "$response" }, 0] } } },
+    ]);
+    return result.length > 0;
+  }
+
   async createBlock(senderId: string, recipientId: string) {
     await RelationshipModel.findOneAndUpdate(
       {

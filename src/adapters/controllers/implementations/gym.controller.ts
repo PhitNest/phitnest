@@ -1,6 +1,7 @@
 import { inject, injectable } from "inversify";
 import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
+import { LocationEntity } from "../../../entities";
 import {
   ICreateGymUseCase,
   IGetGymUseCase,
@@ -43,8 +44,6 @@ export class GymController implements IGymController {
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(500).json({ message: err.message });
       } else {
         return res.status(500).json(err);
       }
@@ -62,7 +61,7 @@ export class GymController implements IGymController {
         })
         .parse(req.content());
       const gyms = await this.getNearestGymsUseCase.execute(
-        { type: "Point", coordinates: [longitude, latitude] },
+        new LocationEntity(longitude, latitude),
         distance,
         amount
       );
@@ -70,8 +69,6 @@ export class GymController implements IGymController {
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(500).json({ message: err.message });
       } else {
         return res.status(500).json(err);
       }
@@ -80,14 +77,10 @@ export class GymController implements IGymController {
 
   async get(req: IRequest, res: IResponse<AuthenticatedLocals>) {
     try {
-      const gym = await this.getGymUseCase.execute(res.locals.userId);
+      const gym = await this.getGymUseCase.execute(res.locals.cognitoId);
       return res.status(200).json(gym);
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(500).json({ message: err.message });
-      } else {
-        return res.status(500).json(err);
-      }
+      return res.status(500).json(err);
     }
   }
 }

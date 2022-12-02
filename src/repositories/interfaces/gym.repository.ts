@@ -1,9 +1,9 @@
-import { IAddressEntity, IGymEntity, ILocationEntity } from "../../entities";
+import { IGymEntity, LocationEntity } from "../../entities";
 
 export interface IGymRepository {
   create(gym: Omit<IGymEntity, "_id">): Promise<IGymEntity>;
   getNearest(
-    location: ILocationEntity,
+    location: LocationEntity,
     meters: number,
     amount?: number
   ): Promise<IGymEntity[]>;

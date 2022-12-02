@@ -1,4 +1,4 @@
-import { IAddressEntity, ILocationEntity } from "../../entities";
+import { IAddressEntity, LocationEntity } from "../../entities";
 import axios from "axios";
 import { ILocationRepository } from "../interfaces/location.repository";
 import { injectable } from "inversify";
@@ -22,10 +22,7 @@ export class OSMLocationRepository implements ILocationRepository {
     );
     if (response.data && response.data.length > 0) {
       const { lon, lat } = response.data[0];
-      const location: ILocationEntity = {
-        type: "Point",
-        coordinates: [parseFloat(lon), parseFloat(lat)],
-      };
+      const location = new LocationEntity(parseFloat(lon), parseFloat(lat));
       return location;
     }
     return null;

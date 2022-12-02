@@ -7,8 +7,7 @@ export const Repositories = {
   gym: Symbol("gym.repository"),
   relationship: Symbol("relationship.repository"),
   location: Symbol("location.repository"),
-  conversation: Symbol("conversation.repository"),
-  conversationMember: Symbol("conversation-member.repository"),
+  directConversation: Symbol("directConversation.repository"),
   message: Symbol("message.repository"),
 };
 
@@ -34,6 +33,7 @@ export const UseCases = {
   unblock: Symbol("unblock.use-case"),
   denyFriendRequest: Symbol("denyFriendRequest.use-case"),
   getFriends: Symbol("getFriends.use-case"),
+  sendDirectMessage: Symbol("sendDirectMessage.use-case"),
 };
 
 export const Middlewares = {
@@ -47,6 +47,12 @@ export const Controllers = {
   relationship: Symbol("relationship.controller"),
 };
 
+export const EventHandlers = {
+  onConnect: Symbol("onConnect.event-handler"),
+  onDisconnect: Symbol("onDisconnect.event-handler"),
+  sendDirectMessage: Symbol("sendMessage.event-handler"),
+};
+
 // Make sure to export repositories, use cases, and controllers symbols before importing the following
 
 import {
@@ -56,8 +62,7 @@ import {
   MongoRelationshipRepository,
   OSMLocationRepository,
   MongoMessageRepository,
-  MongoConversationMemberRepository,
-  MongoConversationRepository,
+  MongoDirectConversationRepository,
 } from "../repositories/implementations";
 
 import {
@@ -82,6 +87,7 @@ import {
   GetFriendsUseCase,
   GetSentFriendRequestsUseCase,
   GetReceivedFriendRequestsUseCase,
+  SendDirectMessageUseCase,
 } from "../use-cases/implementations";
 
 import { AuthMiddleware } from "../adapters/middleware/implementations";
@@ -96,6 +102,12 @@ import {
 import { l } from "./logger";
 
 import { IUseCase } from "../use-cases/types";
+import { IEventHandler } from "../adapters/types";
+import {
+  OnConnectEventHandler,
+  OnDisconnectEventHandler,
+  SendDirectMessageEventHandler,
+} from "../adapters/event-handlers/implementations";
 
 export let dependencies: Container;
 
@@ -116,10 +128,9 @@ function injectRepositories() {
   injectRepository(Repositories.auth, CognitoAuthRepository);
   injectRepository(Repositories.relationship, MongoRelationshipRepository);
   injectRepository(Repositories.location, OSMLocationRepository);
-  injectRepository(Repositories.conversation, MongoConversationRepository);
   injectRepository(
-    Repositories.conversationMember,
-    MongoConversationMemberRepository
+    Repositories.directConversation,
+    MongoDirectConversationRepository
   );
   injectRepository(Repositories.message, MongoMessageRepository);
 }
@@ -149,9 +160,10 @@ export function injectUseCases() {
   injectUseCase(UseCases.unblock, UnblockUseCase);
   injectUseCase(UseCases.denyFriendRequest, DenyFriendRequestUseCase);
   injectUseCase(UseCases.getFriends, GetFriendsUseCase);
+  injectUseCase(UseCases.sendDirectMessage, SendDirectMessageUseCase);
 }
 
-export function injectControllers() {
+export function injectAdapters() {
   injectController(Controllers.gym, GymController);
   injectController(Controllers.user, UserController);
   injectController(Controllers.auth, AuthController);
@@ -159,7 +171,16 @@ export function injectControllers() {
   injectController(Controllers.relationship, RelationshipController);
 }
 
-function injectUseCase<Type extends IUseCase>(
+export function injectEventHandlers() {
+  injectEventHandler(EventHandlers.onConnect, OnConnectEventHandler);
+  injectEventHandler(EventHandlers.onDisconnect, OnDisconnectEventHandler);
+  injectEventHandler(
+    EventHandlers.sendDirectMessage,
+    SendDirectMessageEventHandler
+  );
+}
+
+export function injectUseCase<Type extends IUseCase>(
   useCase: symbol,
   implementation: interfaces.Newable<Type>
 ) {
@@ -170,7 +191,7 @@ function injectUseCase<Type extends IUseCase>(
   }
 }
 
-function injectController<Type>(
+export function injectController<Type>(
   controller: symbol,
   implementation: interfaces.Newable<Type>
 ) {
@@ -178,6 +199,17 @@ function injectController<Type>(
     dependencies.rebind(controller).to(implementation);
   } else {
     dependencies.bind(controller).to(implementation);
+  }
+}
+
+export function injectEventHandler<Type extends IEventHandler>(
+  eventHandler: symbol,
+  implementation: interfaces.Newable<Type>
+) {
+  if (dependencies.isBound(eventHandler)) {
+    dependencies.rebind(eventHandler).to(implementation);
+  } else {
+    dependencies.bind(eventHandler).to(implementation);
   }
 }
 
@@ -193,7 +225,8 @@ export function injectDependencies() {
 
   injectRepositories();
   injectUseCases();
-  injectControllers();
+  injectAdapters();
+  injectEventHandlers();
 
   l.info(`All dependencies have been injected`);
 }

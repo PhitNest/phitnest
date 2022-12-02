@@ -1,6 +1,6 @@
 import { comparePublicUserData } from "../../../test/helpers/comparisons";
 import { dependencies, Repositories } from "../../common/dependency-injection";
-import { IGymEntity, IUserEntity } from "../../entities";
+import { IGymEntity, IUserEntity, LocationEntity } from "../../entities";
 import {
   IGymRepository,
   IRelationshipRepository,
@@ -15,10 +15,7 @@ const testGym1 = {
     state: "Test State",
     zipCode: "12345",
   },
-  location: {
-    type: "Point",
-    coordinates: [-122.4194, 37.7749] as [number, number],
-  },
+  location: new LocationEntity(-122.4194, 37.7749),
 };
 
 const testGym2 = {
@@ -29,10 +26,7 @@ const testGym2 = {
     state: "Test State",
     zipCode: "12344",
   },
-  location: {
-    type: "Point",
-    coordinates: [122.4194, 37.7749] as [number, number],
-  },
+  location: new LocationEntity(122.4194, 37.7749),
 };
 
 const testUser1 = {
@@ -124,6 +118,9 @@ test("Sending and denying friend requests, and blocking", async () => {
   expect(friends.length).toBe(0);
   friends = await relationshipRepo.getFriends(user2.cognitoId);
   expect(friends.length).toBe(0);
+  expect(
+    await relationshipRepo.friends(user1.cognitoId, user2.cognitoId)
+  ).toBeFalsy();
   await relationshipRepo.createDeny(user2.cognitoId, user1.cognitoId);
   sentRequests = await relationshipRepo.getPendingOutboundRequests(
     user1.cognitoId
@@ -156,6 +153,9 @@ test("Sending and denying friend requests, and blocking", async () => {
   expect(sentRequests.length).toBe(0);
   friends = await relationshipRepo.getFriends(user1.cognitoId);
   expect(friends.length).toBe(1);
+  expect(
+    await relationshipRepo.friends(user1.cognitoId, user2.cognitoId)
+  ).toBeTruthy();
   comparePublicUserData(friends[0], user2);
   await relationshipRepo.createBlock(user1.cognitoId, user2.cognitoId);
   sentRequests = await relationshipRepo.getPendingOutboundRequests(

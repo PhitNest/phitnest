@@ -1,5 +1,5 @@
-import { IAddressEntity, ILocationEntity } from "../../entities";
+import { IAddressEntity, LocationEntity } from "../../entities";
 
 export interface ILocationRepository {
-  get(address: IAddressEntity): Promise<ILocationEntity | null>;
+  get(address: IAddressEntity): Promise<LocationEntity | null>;
 }

@@ -51,16 +51,12 @@ export class RelationshipController implements IRelationshipController {
   ) {
     try {
       const friendRequests =
-        await this.getReceivedFriendRequestsUseCase.execute(res.locals.userId);
+        await this.getReceivedFriendRequestsUseCase.execute(
+          res.locals.cognitoId
+        );
       return res.status(200).json(friendRequests);
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(500).json({
-          message: err.message,
-        });
-      } else {
-        return res.status(500).json(err);
-      }
+      return res.status(500).json(err);
     }
   }
 
@@ -70,32 +66,22 @@ export class RelationshipController implements IRelationshipController {
   ) {
     try {
       const friendRequests = await this.getSentFriendRequestsUseCase.execute(
-        res.locals.userId
+        res.locals.cognitoId
       );
       return res.status(200).json(friendRequests);
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(500).json({
-          message: err.message,
-        });
-      } else {
-        return res.status(500).json(err);
-      }
+      return res.status(500).json(err);
     }
   }
 
   async getFriends(req: IRequest, res: IResponse<AuthenticatedLocals>) {
     try {
-      const friends = await this.getFriendsUseCase.execute(res.locals.userId);
+      const friends = await this.getFriendsUseCase.execute(
+        res.locals.cognitoId
+      );
       return res.status(200).json(friends);
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(500).json({
-          message: err.message,
-        });
-      } else {
-        return res.status(500).json(err);
-      }
+      return res.status(500).json(err);
     }
   }
 
@@ -107,17 +93,13 @@ export class RelationshipController implements IRelationshipController {
         })
         .parse(req.content());
       await this.denyFriendRequestUseCase.execute(
-        res.locals.userId,
+        res.locals.cognitoId,
         recipientId
       );
       return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json({
-          message: err.message,
-        });
-      } else if (err instanceof Error) {
-        return res.status(500).json({
           message: err.message,
         });
       } else {
@@ -131,15 +113,11 @@ export class RelationshipController implements IRelationshipController {
       const { recipientId } = z
         .object({ recipientId: z.string() })
         .parse(req.content());
-      await this.unblockUseCase.execute(res.locals.userId, recipientId);
+      await this.unblockUseCase.execute(res.locals.cognitoId, recipientId);
       return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json({
-          message: err.message,
-        });
-      } else if (err instanceof Error) {
-        return res.status(500).json({
           message: err.message,
         });
       } else {
@@ -153,15 +131,11 @@ export class RelationshipController implements IRelationshipController {
       const { recipientId } = z
         .object({ recipientId: z.string() })
         .parse(req.content());
-      await this.blockUseCase.execute(res.locals.userId, recipientId);
+      await this.blockUseCase.execute(res.locals.cognitoId, recipientId);
       return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json({
-          message: err.message,
-        });
-      } else if (err instanceof Error) {
-        return res.status(500).json({
           message: err.message,
         });
       } else {
@@ -178,17 +152,13 @@ export class RelationshipController implements IRelationshipController {
         })
         .parse(req.content());
       await this.sendFriendRequestUseCase.execute(
-        res.locals.userId,
+        res.locals.cognitoId,
         recipientId
       );
       return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json({
-          message: err.message,
-        });
-      } else if (err instanceof Error) {
-        return res.status(500).json({
           message: err.message,
         });
       } else {

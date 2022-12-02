@@ -1,6 +1,6 @@
 export interface IMessageEntity {
   _id: string;
   text: string;
-  userCognitoId: string;
+  senderCognitoId: string;
   conversationId: string;
 }

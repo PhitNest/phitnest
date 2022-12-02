@@ -55,13 +55,11 @@ export class AuthController implements IAuthController {
       const { allDevices } = z
         .object({ allDevices: z.boolean() })
         .parse(req.content());
-      await this.signOutUseCase.execute(res.locals.userId, allDevices);
+      await this.signOutUseCase.execute(res.locals.cognitoId, allDevices);
       return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(500).json({ message: err.message });
       } else {
         return res.status(500).json(err);
       }
@@ -82,8 +80,6 @@ export class AuthController implements IAuthController {
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(500).json({ message: err.message });
       } else {
         return res.status(500).json(err);
       }
@@ -100,8 +96,6 @@ export class AuthController implements IAuthController {
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(500).json({ message: err.message });
       } else {
         return res.status(500).json(err);
       }
@@ -118,8 +112,6 @@ export class AuthController implements IAuthController {
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(500).json({ message: err.message });
       } else {
         return res.status(500).json(err);
       }
@@ -139,8 +131,6 @@ export class AuthController implements IAuthController {
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(500).json({ message: err.message });
       } else {
         return res.status(500).json(err);
       }
@@ -169,8 +159,6 @@ export class AuthController implements IAuthController {
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(500).json({ message: err.message });
       } else {
         return res.status(500).json(err);
       }
@@ -190,8 +178,6 @@ export class AuthController implements IAuthController {
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(500).json({ message: err.message });
       } else {
         return res.status(500).json(err);
       }
@@ -214,8 +200,6 @@ export class AuthController implements IAuthController {
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(500).json({ message: err.message });
       } else {
         return res.status(500).json(err);
       }
