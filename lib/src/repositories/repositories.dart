@@ -8,12 +8,14 @@ export 'environment/environment_repository.dart';
 export 'location/location_repository.dart';
 export 'gym/gym_repository.dart';
 export 'user/user_repository.dart';
+export 'memoryCache/memory_cache_repository.dart';
 
 GetIt repositories = GetIt.instance;
 
-setup() async {
+inject() async {
   await DeviceCacheRepository.init();
   await EnvironmentRepository.init();
+  repositories.registerSingleton(MemoryCacheRepository());
   repositories.registerSingleton(UserRepository());
   repositories.registerSingleton(GymRepository());
   repositories.registerSingleton(LocationRepository());

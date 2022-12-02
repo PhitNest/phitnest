@@ -7,11 +7,6 @@ import '../repositories.dart';
 
 /// Handles making requests to the backend involving gyms
 class GymRepository {
-  /// This is the currently selected gym. If you are logged in, this will be
-  /// the gym you are registered with. If you are not logged in, this will be
-  /// the gym you select on the gym search screen.
-  Gym? currentlySelectedGym;
-
   /// The distance in miles to search for gyms
   static const double kGymSearchRadiusMiles = 30000;
 

@@ -3,7 +3,8 @@ import 'package:geolocator/geolocator.dart';
 
 /// Represents a location
 class Location extends Equatable {
-  final double longitude, latitude;
+  final double longitude;
+  final double latitude;
 
   /// This is the constructor for the location
   Location({required this.longitude, required this.latitude});
