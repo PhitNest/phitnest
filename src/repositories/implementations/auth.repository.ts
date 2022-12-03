@@ -14,8 +14,8 @@ import "cross-fetch/polyfill";
 import { IAuthEntity } from "../../entities";
 
 const userPool = new CognitoUserPool({
-  UserPoolId: process.env.COGNITO_POOL_ID!,
-  ClientId: process.env.COGNITO_APP_CLIENT_ID!,
+  UserPoolId: process.env.COGNITO_POOL_ID ?? "",
+  ClientId: process.env.COGNITO_APP_CLIENT_ID ?? "",
 });
 
 @injectable()
@@ -31,6 +31,7 @@ export class CognitoAuthRepository implements IAuthRepository {
           },
           onFailure: (err) => {
             l.error(`User ${user.getUsername()} could not be signed out`);
+            l.error(err);
             resolve(false);
           },
         });
@@ -67,6 +68,7 @@ export class CognitoAuthRepository implements IAuthRepository {
           },
           onFailure: (err) => {
             l.error(`User could not be authenticated with email: ${email}`);
+            l.error(err);
             resolve(null);
           },
         }
@@ -114,6 +116,7 @@ export class CognitoAuthRepository implements IAuthRepository {
         },
         onFailure: (err) => {
           l.error(`Failed to change password for user: ${email}`);
+          l.error(err);
           resolve(false);
         },
       });
@@ -133,6 +136,7 @@ export class CognitoAuthRepository implements IAuthRepository {
         },
         onFailure: (err) => {
           l.error(`Failed to send forgot password email to: ${email}`);
+          l.error(err);
           resolve(false);
         },
       });

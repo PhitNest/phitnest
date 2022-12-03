@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { Container, interfaces } from "inversify";
+import { interfaces } from "inversify";
 import {
   Controller,
   IRequest,
@@ -15,7 +15,7 @@ import {
 import { HttpMethod, IRouter } from "../../routers/types";
 import { dependencies } from "../dependency-injection";
 
-export function buildRoutes(dependencies: Container) {
+export function buildRoutes() {
   const router = Router();
   buildRoute(router, "/gym", GymRouter);
   buildRoute(router, "/user", UserRouter);

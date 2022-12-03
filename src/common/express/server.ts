@@ -4,7 +4,6 @@ import http from "http";
 import { queryParser } from "express-query-parser";
 import morgan from "morgan";
 import { l } from "../logger";
-import { dependencies } from "../dependency-injection";
 import { buildRoutes } from "./routes";
 import path from "path";
 import fs from "fs";
@@ -31,7 +30,7 @@ export function createServer() {
     })
   );
   app.use(morgan("dev"));
-  app.use(buildRoutes(dependencies));
+  app.use(buildRoutes());
   if (process.env.NODE_ENV != "production") {
     const root = path.normalize(__dirname + "/../../..");
     app.set("appPath", root + "client");
