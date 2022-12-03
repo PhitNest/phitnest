@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../common/widgets.dart';
+import '../../../common/validators.dart';
+import '../../widgets/widgets.dart';
 import '../provider.dart';
 import '../screens.dart';
 import 'login_state.dart';
@@ -11,8 +12,12 @@ class LoginProvider extends ScreenProvider<LoginState, LoginView> {
   LoginView build(BuildContext context, LoginState state) => LoginView(
         emailController: state.emailController,
         passwordController: state.passwordController,
-        onPressedSignIn: () {},
-        keyboardVisible: state.keyboardVisible,
+        onPressedSignIn: () => login(context, state),
+        validateEmail: validateEmail,
+        autovalidateMode: state.validateMode,
+        validatePassword: (pass) =>
+            pass?.length == 0 ? "Password is required" : null,
+        formKey: state.formKey,
         onPressedForgotPassword: () => Navigator.push(
             context,
             NoAnimationMaterialPageRoute(
@@ -22,6 +27,12 @@ class LoginProvider extends ScreenProvider<LoginState, LoginView> {
             NoAnimationMaterialPageRoute(
                 builder: (context) => RegisterPageOneProvider())),
       );
+
+  login(BuildContext context, LoginState state) {
+    if (!state.formKey.currentState!.validate()) {
+      state.validateMode = AutovalidateMode.always;
+    } else {}
+  }
 
   @override
   LoginState buildState() => LoginState();

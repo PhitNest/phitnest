@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../common/widgets.dart';
+import '../../widgets/widgets.dart';
 import '../screens.dart';
 import '../provider.dart';
 import 'on_boarding_state.dart';

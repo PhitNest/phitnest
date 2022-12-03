@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 
-import '../../common/widgets.dart';
+import '../../widgets/widgets.dart';
 import '../view.dart';
 
 class ConfirmEmailView extends ScreenView {

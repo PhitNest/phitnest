@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../common/widgets.dart';
+import '../../widgets/widgets.dart';
 import '../view.dart';
 
 class RegisterPageTwoView extends ScreenView {
   final Function() onPressedNext;
   final bool keyboardVisible;
 
-
   RegisterPageTwoView(
-      {required this.keyboardVisible,
-      required this.onPressedNext})
+      {required this.keyboardVisible, required this.onPressedNext})
       : super();
 
   @override
@@ -45,11 +43,10 @@ class RegisterPageTwoView extends ScreenView {
                   ),
                   16.verticalSpace,
                   SizedBox(
-                    height: 34.h,
-                    child: TextInputField(
-                      hint: "Confirm Password",
-                    )
-                  )
+                      height: 34.h,
+                      child: TextInputField(
+                        hint: "Confirm Password",
+                      ))
                 ],
               ),
             ),

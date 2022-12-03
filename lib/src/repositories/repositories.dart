@@ -1,25 +1,24 @@
 import 'package:get_it/get_it.dart';
 
-import 'repositories.dart';
+import 'implementations/implementations.dart';
+import 'interfaces/interfaces.dart';
 
-export 'authentication/authentication_repository.dart';
-export 'deviceCache/device_cache_repository.dart';
-export 'environment/environment_repository.dart';
-export 'location/location_repository.dart';
-export 'gym/gym_repository.dart';
-export 'user/user_repository.dart';
-export 'memoryCache/memory_cache_repository.dart';
+export 'interfaces/interfaces.dart';
 
-GetIt repositories = GetIt.instance;
+final repositories = GetIt.instance;
 
-inject() async {
-  await DeviceCacheRepository.init();
+Future<void> setup() async {
   await EnvironmentRepository.init();
-  repositories.registerSingleton(MemoryCacheRepository());
-  repositories.registerSingleton(UserRepository());
-  repositories.registerSingleton(GymRepository());
-  repositories.registerSingleton(LocationRepository());
-  repositories.registerSingleton(DeviceCacheRepository());
-  repositories.registerSingleton(EnvironmentRepository());
-  repositories.registerSingleton(AuthenticationRepository());
+}
+
+void injectRepositories() {
+  repositories
+      .registerSingleton<IEnvironmentRepository>(EnvironmentRepository());
+  repositories.registerSingleton<IGymRepository>(GymRepository());
+  repositories.registerSingleton<IAuthRepository>(AuthenticationRepository());
+  repositories.registerSingleton<ILocationRepository>(LocationRepository());
+  repositories
+      .registerSingleton<IMemoryCacheRepository>(MemoryCacheRepository());
+  repositories
+      .registerSingleton<IDeviceCacheRepository>(DeviceCacheRepository());
 }

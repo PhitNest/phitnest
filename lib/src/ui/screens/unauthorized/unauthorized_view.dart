@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_mobile/src/ui/common/styled_button.dart';
+import 'package:phitnest_mobile/src/ui/widgets/styled_button.dart';
 
 import '../view.dart';
 

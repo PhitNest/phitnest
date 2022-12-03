@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:phitnest_mobile/src/utils/utils.dart';
 
-import '../../common/widgets.dart';
+import '../../../common/validators.dart';
+import '../../widgets/widgets.dart';
 import '../screens.dart';
 import '../provider.dart';
 import 'apology_state.dart';

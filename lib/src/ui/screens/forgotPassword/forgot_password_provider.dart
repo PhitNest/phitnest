@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../common/widgets.dart';
+import '../../widgets/widgets.dart';
 import '../provider.dart';
 import '../screens.dart';
 import './forgot_password_state.dart';

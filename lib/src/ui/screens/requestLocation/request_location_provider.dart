@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../repositories/repositories.dart';
-import '../../common/widgets.dart';
+import '../../widgets/widgets.dart';
 import '../screens.dart';
 import '../provider.dart';
 import 'request_location_state.dart';
@@ -13,10 +13,11 @@ class RequestLocationProvider
 
   @override
   init(BuildContext context, RequestLocationState state) =>
-      repositories<LocationRepository>().getLocation().then((response) =>
+      repositories<ILocationRepository>().getLocation().then((response) =>
           response.fold(
-              (location) => repositories<GymRepository>()
-                      .getNearestGyms(location: location, amount: 1)
+              (location) => repositories<IGymRepository>()
+                      .getNearestGyms(
+                          location: location, distance: 30000, amount: 1)
                       .then((gyms) {
                     try {
                       return gyms.length > 0

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../models/models.dart';
-import '../../../../utils/utils.dart';
+import '../../../../common/utils.dart';
+import '../../../../entities/entities.dart';
 
 class GymCard extends StatelessWidget {
   final bool selected;
-  final Gym gym;
+  final GymEntity gym;
   final double distance;
   final Function() onPressed;
 

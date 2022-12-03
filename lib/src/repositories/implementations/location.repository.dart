@@ -1,16 +1,15 @@
 import 'package:dartz/dartz.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../models/models.dart';
+import '../../entities/entities.dart';
+import '../interfaces/interfaces.dart';
 
-class LocationRepository {
-  /// Converts a [Position] from the geolocator package to a [Location]
-  Location _positionToLocation(Position position) =>
-      Location(longitude: position.longitude, latitude: position.latitude);
+class LocationRepository implements ILocationRepository {
+  /// Converts a [Position] from the geolocator package to a [LocationEntity]
+  LocationEntity _positionToLocation(Position position) => LocationEntity(
+      longitude: position.longitude, latitude: position.latitude);
 
-  /// Will either return a valid user location as a [Location], or
-  /// return a [String] if there is an error.
-  Future<Either<Location, String>> getLocation() async {
+  Future<Either<LocationEntity, String>> getLocation() async {
     LocationPermission permission;
 
     // Test if location services are enabled.

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../common/widgets.dart';
+import '../../widgets/widgets.dart';
 import '../provider.dart';
 import '../screens.dart';
 import 'thank_you_state.dart';

@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 import '../../../repositories/repositories.dart';
-import '../../common/widgets.dart';
+import '../../widgets/widgets.dart';
 import '../screens.dart';
 import '../provider.dart';
 import 'widgets/gym_card.dart';
@@ -14,10 +14,10 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
 
   @override
   init(BuildContext context, GymSearchState state) =>
-      repositories<LocationRepository>().getLocation().then((response) =>
+      repositories<ILocationRepository>().getLocation().then((response) =>
           response.fold(
-              (location) => repositories<GymRepository>()
-                      .getNearestGyms(location: location)
+              (location) => repositories<IGymRepository>()
+                      .getNearestGyms(location: location, distance: 30000)
                       .then((gyms) {
                     state.gymsAndDistances = gyms
                         .map((gym) =>
