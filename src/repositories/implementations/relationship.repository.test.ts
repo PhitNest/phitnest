@@ -119,7 +119,7 @@ test("Sending and denying friend requests, and blocking", async () => {
   friends = await relationshipRepo.getFriends(user2.cognitoId);
   expect(friends.length).toBe(0);
   expect(
-    await relationshipRepo.friends(user1.cognitoId, user2.cognitoId)
+    await relationshipRepo.isFriend(user1.cognitoId, user2.cognitoId)
   ).toBeFalsy();
   await relationshipRepo.createDeny(user2.cognitoId, user1.cognitoId);
   sentRequests = await relationshipRepo.getPendingOutboundRequests(
@@ -154,7 +154,7 @@ test("Sending and denying friend requests, and blocking", async () => {
   friends = await relationshipRepo.getFriends(user1.cognitoId);
   expect(friends.length).toBe(1);
   expect(
-    await relationshipRepo.friends(user1.cognitoId, user2.cognitoId)
+    await relationshipRepo.isFriend(user1.cognitoId, user2.cognitoId)
   ).toBeTruthy();
   comparePublicUserData(friends[0], user2);
   await relationshipRepo.createBlock(user1.cognitoId, user2.cognitoId);

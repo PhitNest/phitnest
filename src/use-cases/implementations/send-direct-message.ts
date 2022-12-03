@@ -32,7 +32,7 @@ export class SendDirectMessageUseCase implements ISendDirectMessageUseCase {
     text: string
   ) {
     if (
-      await this.relationshipRepo.friends(senderCognitoId, recipientCognitoId)
+      await this.relationshipRepo.isFriend(senderCognitoId, recipientCognitoId)
     ) {
       let conversation = await this.directConversationRepo.getByUsers([
         senderCognitoId,

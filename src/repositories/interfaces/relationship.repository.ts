@@ -8,5 +8,5 @@ export interface IRelationshipRepository {
   getPendingOutboundRequests(cognitoId: string): Promise<IPublicUserEntity[]>;
   getPendingInboundRequests(cognitoId: string): Promise<IPublicUserEntity[]>;
   getFriends(cognitoId: string): Promise<IPublicUserEntity[]>;
-  friends(cognitoId1: string, cognitoId2: string): Promise<boolean>;
+  isFriend(cognitoId1: string, cognitoId2: string): Promise<boolean>;
 }
