@@ -156,13 +156,13 @@ components:
     Gym:
       title: gym
       required:
-        - id
+        - _id
         - name
         - address
         - location
       type: object
       properties:
-        id:
+        _id:
           type: string
           example: 6361c05b30d64fe62ff485cb
         name:
