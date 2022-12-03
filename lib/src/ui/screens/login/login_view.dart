@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../common/widgets.dart';
+import '../../widgets/widgets.dart';
 import '../view.dart';
 
 class LoginView extends ScreenView {
@@ -10,7 +10,10 @@ class LoginView extends ScreenView {
   final Function() onPressedSignIn;
   final Function() onPressedForgotPassword;
   final Function() onPressedRegister;
-  final bool keyboardVisible;
+  final GlobalKey<FormState> formKey;
+  final String? Function(String? email) validateEmail;
+  final String? Function(String? password) validatePassword;
+  final AutovalidateMode autovalidateMode;
 
   LoginView({
     required this.emailController,
@@ -18,7 +21,10 @@ class LoginView extends ScreenView {
     required this.onPressedSignIn,
     required this.onPressedForgotPassword,
     required this.onPressedRegister,
-    required this.keyboardVisible,
+    required this.autovalidateMode,
+    required this.formKey,
+    required this.validateEmail,
+    required this.validatePassword,
   }) : super();
 
   @override
@@ -27,7 +33,7 @@ class LoginView extends ScreenView {
   @override
   Widget buildView(BuildContext context) => Column(
         children: [
-          keyboardVisible ? 70.verticalSpace : 112.verticalSpace,
+          112.verticalSpace,
           LogoWidget(width: 72.w),
           26.verticalSpace,
           Text(
@@ -35,16 +41,19 @@ class LoginView extends ScreenView {
             style: Theme.of(context).textTheme.headlineMedium,
             textAlign: TextAlign.center,
           ),
-          keyboardVisible ? 40.verticalSpace : 54.verticalSpace,
+          54.verticalSpace,
           SizedBox(
             width: 291.w,
             child: Form(
+              key: formKey,
+              autovalidateMode: autovalidateMode,
               child: Column(
                 children: [
                   SizedBox(
                     height: 34.h,
                     child: TextInputField(
                       hint: 'Email',
+                      validator: validateEmail,
                       inputAction: TextInputAction.next,
                       controller: emailController,
                     ),
@@ -54,6 +63,7 @@ class LoginView extends ScreenView {
                     height: 34.h,
                     child: TextInputField(
                       hint: 'Password',
+                      validator: validatePassword,
                       inputAction: TextInputAction.done,
                       controller: passwordController,
                     ),

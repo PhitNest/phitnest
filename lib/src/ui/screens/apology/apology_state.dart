@@ -5,10 +5,8 @@ import '../state.dart';
 import 'apology_provider.dart';
 import 'apology_view.dart';
 
-/**
- * Holds the dynamic content of [ApologyProvider]. Calls to [rebuildView] will rebuild 
- * the [ApologyView].
- */
+/// Holds the dynamic content of [ApologyProvider]. Calls to [rebuildView] will rebuild
+/// the [ApologyView].
 class ApologyState extends ScreenState {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();

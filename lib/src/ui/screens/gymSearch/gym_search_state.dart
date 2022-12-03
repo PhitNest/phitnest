@@ -1,16 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/models.dart';
+import '../../../entities/entities.dart';
 import '../state.dart';
 
 import 'gym_search_provider.dart';
 import 'gym_search_view.dart';
 
-/**
- * Holds the dynamic content of [GymSearchProvider]. Calls to [rebuildView] will rebuild 
- * the [GymSearchView].
- */
+/// Holds the dynamic content of [GymSearchProvider]. Calls to [rebuildView] will rebuild
+/// the [GymSearchView].
 class GymSearchState extends ScreenState {
   final TextEditingController searchController = TextEditingController();
 
@@ -23,20 +21,20 @@ class GymSearchState extends ScreenState {
     rebuildView();
   }
 
-  late Gym _currentlySelectedGym;
+  late GymEntity _currentlySelectedGym;
 
-  Gym get currentlySelectedGym => _currentlySelectedGym;
+  GymEntity get currentlySelectedGym => _currentlySelectedGym;
 
-  set currentlySelectedGym(Gym currentlySelectedGym) {
+  set currentlySelectedGym(GymEntity currentlySelectedGym) {
     _currentlySelectedGym = currentlySelectedGym;
     rebuildView();
   }
 
-  List<Tuple2<Gym, double>> _gymsAndDistances = [];
+  List<Tuple2<GymEntity, double>> _gymsAndDistances = [];
 
-  List<Tuple2<Gym, double>> get gymsAndDistances => _gymsAndDistances;
+  List<Tuple2<GymEntity, double>> get gymsAndDistances => _gymsAndDistances;
 
-  set gymsAndDistances(List<Tuple2<Gym, double>> gymsAndDistances) {
+  set gymsAndDistances(List<Tuple2<GymEntity, double>> gymsAndDistances) {
     _gymsAndDistances = gymsAndDistances;
     rebuildView();
   }

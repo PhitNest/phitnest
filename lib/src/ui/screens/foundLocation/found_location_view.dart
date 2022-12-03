@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../models/models.dart';
-import '../../common/widgets.dart';
+import '../../../entities/entities.dart';
+import '../../widgets/widgets.dart';
 import '../view.dart';
 
 class FoundLocationView extends ScreenView {

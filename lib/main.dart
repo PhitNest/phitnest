@@ -8,6 +8,7 @@ import 'src/repositories/repositories.dart' as repositories;
 /// Data repositories should not be accessed before calling [repositories.setup]
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await repositories.inject();
+  await repositories.setup();
+  repositories.injectRepositories();
   runApp(App());
 }

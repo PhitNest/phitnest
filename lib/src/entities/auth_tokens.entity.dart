@@ -1,17 +1,18 @@
 import 'package:equatable/equatable.dart';
 
-class AuthTokens extends Equatable {
+class AuthTokensEntity extends Equatable {
   final String accessToken;
   final String refreshToken;
   final String idToken;
 
-  AuthTokens({
+  AuthTokensEntity({
     required this.accessToken,
     required this.refreshToken,
     required this.idToken,
   });
 
-  factory AuthTokens.fromJson(Map<String, dynamic> json) => AuthTokens(
+  factory AuthTokensEntity.fromJson(Map<String, dynamic> json) =>
+      AuthTokensEntity(
         accessToken: json['accessToken'],
         refreshToken: json['refreshToken'],
         idToken: json['idToken'],
