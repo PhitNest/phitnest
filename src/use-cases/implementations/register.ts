@@ -33,17 +33,13 @@ export class RegisterUseCase implements IRegisterUseCase {
     const gym = await this.gymRepo.get(gymId);
     if (gym) {
       const cognitoId = await this.authRepo.registerUser(email, password);
-      if (cognitoId) {
-        await this.userRepo.create({
-          cognitoId: cognitoId,
-          email: email,
-          gymId: gymId,
-          firstName: firstName,
-          lastName: lastName,
-        });
-      } else {
-        throw new Error("Could not register user with AWS Cognito");
-      }
+      await this.userRepo.create({
+        cognitoId: cognitoId,
+        email: email,
+        gymId: gymId,
+        firstName: firstName,
+        lastName: lastName,
+      });
     } else {
       throw new Error("Gym not found");
     }

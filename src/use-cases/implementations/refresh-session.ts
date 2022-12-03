@@ -1,9 +1,10 @@
 import { inject, injectable } from "inversify";
 import { Repositories } from "../../common/dependency-injection";
 import { IAuthRepository } from "../../repositories/interfaces";
+import { IRefreshSessionUseCase } from "../interfaces";
 
 @injectable()
-export class RefreshSessionUseCase {
+export class RefreshSessionUseCase implements IRefreshSessionUseCase {
   authRepo: IAuthRepository;
 
   constructor(@inject(Repositories.auth) authRepo: IAuthRepository) {
@@ -11,14 +12,6 @@ export class RefreshSessionUseCase {
   }
 
   async execute(refreshToken: string, cognitoId: string) {
-    const accessToken = await this.authRepo.refreshAccessToken(
-      refreshToken,
-      cognitoId
-    );
-    if (accessToken) {
-      return accessToken;
-    } else {
-      throw new Error("Could not refresh session with AWS Cognito");
-    }
+    return this.authRepo.refreshSession(refreshToken, cognitoId);
   }
 }

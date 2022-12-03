@@ -14,8 +14,6 @@ export class ForgotPasswordSubmitUseCase
   }
 
   async execute(email: string, code: string, newPassword: string) {
-    if (!(await this.authRepo.forgotPasswordSubmit(email, code, newPassword))) {
-      throw new Error("Could not submit forgot password");
-    }
+    return this.authRepo.forgotPasswordSubmit(email, code, newPassword);
   }
 }

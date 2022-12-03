@@ -31,14 +31,14 @@ test("Cognito ID should be added to locals if the user is properly authenticated
   let spy = jest.spyOn(nextSpy, "next");
   await authMiddleware.execute(req, res, nextSpy.next);
   expect(spy).toBeCalledTimes(1);
-  expect(spy).toBeCalledWith("Could not authenticate user with AWS Cognito");
+  expect(spy).toBeCalledWith("Invalid access token");
   expect(res.locals.cognitoId).toBeUndefined();
   req = new MockRequest({}, "notTest");
   nextSpy = { next: (err?: string) => {} };
   spy = jest.spyOn(nextSpy, "next");
   await authMiddleware.execute(req, res, nextSpy.next);
   expect(spy).toBeCalledTimes(1);
-  expect(spy).toBeCalledWith("Could not authenticate user with AWS Cognito");
+  expect(spy).toBeCalledWith("Invalid access token");
   expect(res.locals.cognitoId).toBeUndefined();
   req = new MockRequest({}, "test");
   nextSpy = { next: (err?: string) => {} };
