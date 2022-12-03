@@ -87,6 +87,7 @@ components:
     User:
       title: user
       required:
+        - _id
         - cognitoId
         - gymId
         - email
@@ -94,6 +95,9 @@ components:
         - lastName
       type: object
       properties:
+        _id:
+          type: string
+          example: 5f4d2c7b0b1b2c0017a5e9f5
         cognitoId:
           type: string
           example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh
