@@ -12,8 +12,6 @@ export class ResendConfirmationUseCase implements IResendConfirmationUseCase {
   }
 
   async execute(email: string) {
-    if (!(await this.authRepo.resendConfirmationCode(email))) {
-      throw new Error("Could not resend confirmation code");
-    }
+    return this.authRepo.resendConfirmationCode(email);
   }
 }

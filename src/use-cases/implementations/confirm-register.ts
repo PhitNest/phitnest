@@ -12,8 +12,6 @@ export class ConfirmRegisterUseCase implements IConfirmRegisterUseCase {
   }
 
   async execute(email: string, code: string) {
-    if (!(await this.authRepo.confirmRegister(email, code))) {
-      throw new Error("Could not confirm registration with AWS Cognito");
-    }
+    return this.authRepo.confirmRegister(email, code);
   }
 }

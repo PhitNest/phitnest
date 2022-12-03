@@ -12,8 +12,6 @@ export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
   }
 
   async execute(email: string) {
-    if (!(await this.authRepo.forgotPassword(email))) {
-      throw new Error("Could not send forgot password email");
-    }
+    return this.authRepo.forgotPassword(email);
   }
 }

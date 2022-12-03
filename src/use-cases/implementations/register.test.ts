@@ -60,7 +60,7 @@ describe("Register Use Case", () => {
         "testName1",
         "testName1"
       )
-    ).rejects.toThrowError("Could not register user with AWS Cognito");
+    ).rejects.toThrowError("Password must be at least 8 characters");
   });
 
   test("Register user with valid credentials", async () => {

@@ -12,8 +12,6 @@ export class SignOutUseCase implements ISignOutUseCase {
   }
 
   async execute(cognitoId: string, allDevices: boolean) {
-    if (!(await this.authRepo.signOut(cognitoId, allDevices))) {
-      throw new Error("Failed to sign out");
-    }
+    return this.authRepo.signOut(cognitoId, allDevices);
   }
 }
