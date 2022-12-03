@@ -13,25 +13,33 @@ class RequestLocationProvider
 
   @override
   init(BuildContext context, RequestLocationState state) =>
-      repositories<ILocationRepository>().getLocation().then((response) =>
-          response.fold(
+      repositories<ILocationRepository>().getLocation().then(
+            (response) => response.fold(
               (location) => repositories<IGymRepository>()
-                      .getNearestGyms(
-                          location: location, distance: 30000, amount: 1)
-                      .then((gyms) {
-                    try {
-                      return gyms.length > 0
+                  .getNearestGyms(
+                    location: location,
+                    distance: 30000,
+                    amount: 1,
+                  )
+                  .then(
+                    (gyms) => gyms.fold(
+                      (gyms) => gyms.length > 0
                           ? Navigator.pushAndRemoveUntil(
                               context,
                               NoAnimationMaterialPageRoute(
-                                  builder: (context) =>
-                                      FoundLocationProvider(gym: gyms[0])),
+                                builder: (context) => FoundLocationProvider(
+                                  gym: gyms[0],
+                                ),
+                              ),
                               (_) => false)
                           : state.errorMessage =
-                              'No nearby gyms could be found.';
-                    } catch (ignore) {}
-                  }),
-              (error) => state.errorMessage = error));
+                              'No nearby gyms could be found.',
+                      (error) => state.errorMessage = error,
+                    ),
+                  ),
+              (error) => state.errorMessage = error,
+            ),
+          );
 
   @override
   RequestLocationView build(BuildContext context, RequestLocationState state) =>

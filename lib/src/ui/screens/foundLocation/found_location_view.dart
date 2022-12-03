@@ -8,7 +8,7 @@ import '../view.dart';
 class FoundLocationView extends ScreenView {
   final Function() onPressedNo;
   final Function() onPressedYes;
-  final Address address;
+  final AddressEntity address;
 
   const FoundLocationView({
     required this.onPressedNo,

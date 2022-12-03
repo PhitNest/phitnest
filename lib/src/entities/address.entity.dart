@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 
 /// Represents an address
-class Address extends Equatable {
+class AddressEntity extends Equatable {
   final String street;
   final String city;
   final String state;
   final String zipCode;
 
   /// This is the constructor for the address
-  Address({
+  AddressEntity({
     required this.street,
     required this.city,
     required this.state,
@@ -16,7 +16,7 @@ class Address extends Equatable {
   });
 
   /// Converts a JSON object to an address
-  factory Address.fromJson(Map<String, dynamic> json) => Address(
+  factory AddressEntity.fromJson(Map<String, dynamic> json) => AddressEntity(
         street: json['street'],
         city: json['city'],
         state: json['state'],

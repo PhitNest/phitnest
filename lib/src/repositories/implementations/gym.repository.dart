@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 
 import '../../constants/constants.dart';
@@ -8,7 +9,7 @@ import 'implementations.dart';
 
 /// Handles making requests to the backend involving gyms
 class GymRepository implements IGymRepository {
-  Future<List<GymEntity>> getNearestGyms(
+  Future<Either<List<GymEntity>, String>> getNearestGyms(
           {required LocationEntity location,
           required int distance,
           int? amount}) =>
@@ -23,7 +24,7 @@ class GymRepository implements IGymRepository {
             }),
           )
           .then((response) => response.statusCode == kStatusOK
-              ? List<GymEntity>.from(jsonDecode(response.body)
-                  .map((gym) => GymEntity.fromJson(gym)))
-              : []);
+              ? Left(List<GymEntity>.from(jsonDecode(response.body)
+                  .map((gym) => GymEntity.fromJson(gym))))
+              : Right(response.body));
 }
