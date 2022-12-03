@@ -60,17 +60,20 @@ class FriendsView extends NavBarScreenView {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             24.verticalSpace,
-            ...requests.map(
-              (req) => Padding(
-                padding: EdgeInsets.only(
-                  bottom: 24.h,
-                  left: 32.w,
-                  right: 32.w,
-                ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.only(
+                left: 32.w,
+                right: 32.w,
+              ),
+              itemCount: requests.length,
+              itemBuilder: (context, index) => Padding(
+                padding: EdgeInsets.only(bottom: 24.h),
                 child: Row(
                   children: [
                     Text(
-                      req.name,
+                      requests[index].name,
                       style:
                           Theme.of(context).textTheme.headlineMedium!.copyWith(
                                 fontSize: 18,
@@ -102,17 +105,21 @@ class FriendsView extends NavBarScreenView {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             24.verticalSpace,
-            ...friends.map(
-              (friend) => Padding(
-                padding: EdgeInsets.only(
-                  bottom: 24.h,
-                  left: 32.w,
-                  right: 32.w,
-                ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.only(
+                bottom: 40.h,
+                left: 32.w,
+                right: 32.w,
+              ),
+              itemCount: friends.length,
+              itemBuilder: (context, index) => Padding(
+                padding: EdgeInsets.only(bottom: 24.h),
                 child: Row(
                   children: [
                     Text(
-                      friend.name,
+                      friends[index].name,
                       style:
                           Theme.of(context).textTheme.headlineMedium!.copyWith(
                                 fontSize: 18,
