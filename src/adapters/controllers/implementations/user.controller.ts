@@ -1,4 +1,5 @@
 import { inject, injectable } from "inversify";
+import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
 import {
   IExploreUseCase,
@@ -22,7 +23,17 @@ export class UserController implements IUserController {
 
   async explore(req: IRequest, res: IResponse<AuthenticatedLocals>) {
     try {
-      const users = await this.exploreUseCase.execute(res.locals.cognitoId);
+      const { skip, limit } = z
+        .object({
+          skip: z.number().min(0).optional(),
+          limit: z.number().min(0).max(100).optional(),
+        })
+        .parse(req.content());
+      const users = await this.exploreUseCase.execute(
+        res.locals.cognitoId,
+        skip,
+        limit
+      );
       return res.status(200).json(users);
     } catch (err) {
       return res.status(500).json(err);
