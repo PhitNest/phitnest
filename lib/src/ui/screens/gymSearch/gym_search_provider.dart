@@ -14,18 +14,34 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
 
   @override
   init(BuildContext context, GymSearchState state) =>
-      repositories<ILocationRepository>().getLocation().then((response) =>
-          response.fold(
-              (location) => repositories<IGymRepository>()
-                      .getNearestGyms(location: location, distance: 30000)
-                      .then((gyms) {
-                    state.gymsAndDistances = gyms
-                        .map((gym) =>
-                            Tuple2(gym, gym.location.distanceTo(location)))
-                        .toList();
-                    state.currentlySelectedGym = gyms[0];
-                  }),
-              (error) => state.errorMessage = error));
+      repositories<ILocationRepository>()
+          .getLocation()
+          .then(
+            (response) => response.fold(
+                (location) => repositories<IGymRepository>()
+                        .getNearestGyms(
+                      location: location,
+                      distance: 30000,
+                    )
+                        .then(
+                      (gyms) {
+                        gyms.fold(
+                          (gyms) {
+                            state.gymsAndDistances = gyms
+                                .map((gym) => Tuple2(
+                                    gym, gym.location.distanceTo(location)))
+                                .toList();
+                            state.currentlySelectedGym = gyms[0];
+                          },
+                          (error) => state.errorMessage = error,
+                        );
+                      },
+                    ),
+                (error) => state.errorMessage = error),
+          )
+          .catchError(
+            (error) => state.errorMessage = error,
+          );
 
   @override
   GymSearchView build(BuildContext context, GymSearchState state) =>

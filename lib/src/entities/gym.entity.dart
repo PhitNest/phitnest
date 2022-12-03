@@ -6,7 +6,7 @@ import 'entities.dart';
 class GymEntity extends Equatable {
   final String id;
   final String name;
-  final Address address;
+  final AddressEntity address;
   final LocationEntity location;
 
   /// This is the constructor for the gym
@@ -20,7 +20,7 @@ class GymEntity extends Equatable {
   factory GymEntity.fromJson(Map<String, dynamic> json) => GymEntity(
       id: json['_id'],
       name: json['name'],
-      address: Address.fromJson(json['address']),
+      address: AddressEntity.fromJson(json['address']),
       location: LocationEntity.fromJson(json['location']));
 
   /// Creates a JSON representation of the gym
