@@ -29,7 +29,7 @@ const RelationshipModel = mongoose.model<IRelationshipEntity>(
 
 @injectable()
 export class MongoRelationshipRepository implements IRelationshipRepository {
-  async friends(cognitoId1: string, cognitoId2: string) {
+  async isFriend(cognitoId1: string, cognitoId2: string) {
     const result = await RelationshipModel.aggregate([
       {
         $match: {

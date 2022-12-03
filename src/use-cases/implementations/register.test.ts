@@ -7,7 +7,7 @@ import {
   UseCases,
 } from "../../common/dependency-injection";
 import { IGymEntity, LocationEntity } from "../../entities";
-import { IAuthRepository, IGymRepository } from "../../repositories/interfaces";
+import { IGymRepository } from "../../repositories/interfaces";
 import { IRegisterUseCase } from "../interfaces";
 
 const testGym1 = {
@@ -23,14 +23,12 @@ const testGym1 = {
 
 let registerUseCase: IRegisterUseCase;
 let gymRepo: IGymRepository;
-let authRepo: IAuthRepository;
 
 beforeAll(async () => {
   gymRepo = dependencies.get(Repositories.gym);
   injectRepository(Repositories.auth, MockAuthRepo);
   injectUseCases();
   registerUseCase = dependencies.get(UseCases.register);
-  authRepo = dependencies.get(Repositories.auth);
 });
 
 describe("Register Use Case", () => {
