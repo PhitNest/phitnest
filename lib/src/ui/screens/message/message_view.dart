@@ -19,93 +19,100 @@ class MessageView extends ScreenView {
 
   @override
   Widget buildView(BuildContext context) => Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: StyledAppBar(
           context: context,
           backButton: BackArrowButton(),
           text: 'Peter H.',
           height: 92.h,
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ...msg.map(
-                      (m) => Container(
-                        alignment: m.sendByMe
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        padding: EdgeInsets.only(
-                          top: 24.w,
-                          bottom: 24.w,
-                          right: m.sendByMe ? 32.w : 0.0,
-                          left: m.sendByMe ? 0.0 : 32.w,
-                        ),
-                        child: Container(
-                          constraints: BoxConstraints(maxWidth: 225.w),
-                          padding: EdgeInsets.all(10.w),
-                          decoration: BoxDecoration(
-                            color: m.sendByMe
-                                ? Color(0xFFF8F7F7)
-                                : Color(0xFFFFE3E3),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Text(m.msg),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Color(0xFFFBFAFA),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 9.0,
-                  horizontal: 15.0,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    SizedBox(
-                      width: 280.w,
-                      child: TextFormField(
-                        controller: messageController,
-                        decoration: InputDecoration(
-                          hintText: 'Write a message...',
-                          hintStyle: Theme.of(context).textTheme.bodySmall,
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 12.w,
-                            vertical: 7.5.w,
-                          ),
-                          border: InputBorder.none,
-                          fillColor: Color(0xFFFFFFFF),
-                          filled: true,
-                        ),
-                      ),
+        body: Container(
+          height: MediaQuery.of(context).size.height -
+              MediaQuery.of(context).viewInsets.bottom -
+              92.h -
+              MediaQuery.of(context).viewPadding.top,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: BouncingScrollPhysics(),
+                  primary: false,
+                  reverse: true,
+                  itemCount: msg.length,
+                  itemBuilder: (context, index) => Container(
+                    alignment: msg[index].sendByMe
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    padding: EdgeInsets.only(
+                      top: 24.w,
+                      bottom: 24.w,
+                      right: msg[index].sendByMe ? 32.w : 0.0,
+                      left: msg[index].sendByMe ? 0.0 : 32.w,
                     ),
-                    TextButton(
-                      onPressed: sendMsg,
-                      child: Text(
-                        'SEND',
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                              fontWeight: FontWeight.w600,
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: 225.w),
+                      padding: EdgeInsets.all(10.w),
+                      decoration: BoxDecoration(
+                        color: msg[index].sendByMe
+                            ? Color(0xFFF8F7F7)
+                            : Color(0xFFFFE3E3),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Text(msg[index].msg),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFFBFAFA),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 9.0,
+                    horizontal: 15.0,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(
+                        width: 280.w,
+                        child: TextFormField(
+                          controller: messageController,
+                          decoration: InputDecoration(
+                            hintText: 'Write a message...',
+                            hintStyle: Theme.of(context).textTheme.bodySmall,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 7.5.w,
                             ),
+                            border: InputBorder.none,
+                            fillColor: Color(0xFFFFFFFF),
+                            filled: true,
+                          ),
+                        ),
                       ),
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
+                      TextButton(
+                        onPressed: sendMsg,
+                        child: Text(
+                          'SEND',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(fontWeight: FontWeight.w600),
+                        ),
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       );
 }
