@@ -23,13 +23,7 @@ class GymSearchView extends ScreenView {
   }) : super();
 
   @override
-  double get appBarHeight => keyboardVisible ? 20.h : super.appBarHeight;
-
-  @override
-  Widget get backButton => keyboardVisible ? Container() : super.backButton;
-
-  @override
-  Widget buildView(BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         children: [
           15.verticalSpace,
           SizedBox(
@@ -61,7 +55,22 @@ class GymSearchView extends ScreenView {
           Expanded(
               child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: ListView(children: cards))),
+                  child: ShaderMask(
+                      shaderCallback: (Rect bounds) {
+                        return LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.white.withOpacity(0.05),
+                            Colors.white,
+                            Colors.white,
+                            Colors.white.withOpacity(0.05)
+                          ],
+                          stops: [0, 0.02, 0.9, 1],
+                          tileMode: TileMode.mirror,
+                        ).createShader(bounds);
+                      },
+                      child: ListView(children: cards)))),
           keyboardVisible ? 285.verticalSpace : 10.verticalSpace,
           Visibility(
             visible: !keyboardVisible,

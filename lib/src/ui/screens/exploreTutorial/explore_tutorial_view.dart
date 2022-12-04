@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
-class ExploreTutorialView extends NavBarScreenView {
+class ExploreTutorialView extends ScreenView {
   final bool holding;
   final int countdown;
   final Function(BuildContext context) onLogoTap;
@@ -44,7 +44,7 @@ class ExploreTutorialView extends NavBarScreenView {
   }
 
   @override
-  Widget buildView(BuildContext context) => SizedBox(
+  Widget build(BuildContext context) => SizedBox(
       width: double.infinity,
       child: Column(
         children: [

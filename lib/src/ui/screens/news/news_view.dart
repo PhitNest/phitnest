@@ -6,7 +6,7 @@ import 'widgets/like_button.dart';
 import '../view.dart';
 import 'models/activity_post.dart';
 
-class NewsView extends NavBarScreenView {
+class NewsView extends ScreenView {
   final String title;
   final bool liked;
   final List<ActivityPostModel> posts;
@@ -27,7 +27,7 @@ class NewsView extends NavBarScreenView {
   int get navbarIndex => 0;
 
   @override
-  Widget buildView(BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         children: [
           80.verticalSpace,
           Container(

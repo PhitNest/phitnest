@@ -10,29 +10,41 @@ import 'login_view.dart';
 class LoginProvider extends ScreenProvider<LoginState, LoginView> {
   @override
   LoginView build(BuildContext context, LoginState state) => LoginView(
+        scrollController: state.scrollController,
         emailController: state.emailController,
         passwordController: state.passwordController,
-        onPressedSignIn: () => login(context, state),
-        validateEmail: validateEmail,
+        onPressedSignIn: () {
+          if (!state.formKey.currentState!.validate()) {
+            state.validateMode = AutovalidateMode.always;
+          } else {}
+        },
+        validateEmail: (value) => validateEmail(value),
+        validatePassword: (value) => validatePassword(value),
+        onTapEmail: () => state.scrollController.animateTo(
+          0.2,
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.easeIn,
+        ),
+        onTapPassword: () => state.scrollController.animateTo(
+          0.3,
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.easeIn,
+        ),
         autovalidateMode: state.validateMode,
-        validatePassword: (pass) =>
-            pass?.length == 0 ? "Password is required" : null,
         formKey: state.formKey,
         onPressedForgotPassword: () => Navigator.push(
-            context,
-            NoAnimationMaterialPageRoute(
-                builder: (context) => ForgotPasswordProvider())),
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (context) => ForgotPasswordProvider(),
+          ),
+        ),
         onPressedRegister: () => Navigator.push(
-            context,
-            NoAnimationMaterialPageRoute(
-                builder: (context) => RegisterPageOneProvider())),
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (context) => RegisterPageOneProvider(),
+          ),
+        ),
       );
-
-  login(BuildContext context, LoginState state) {
-    if (!state.formKey.currentState!.validate()) {
-      state.validateMode = AutovalidateMode.always;
-    } else {}
-  }
 
   @override
   LoginState buildState() => LoginState();

@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
-class ExploreView extends NavBarScreenView {
+class ExploreView extends ScreenView {
   final bool holding;
   final int countdown;
   final Function(BuildContext context) onLogoTap;
@@ -33,7 +33,7 @@ class ExploreView extends NavBarScreenView {
   bool get currentlyHoldingLogo => holding;
 
   @override
-  Widget buildView(BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         children: [
           SizedBox(
             width: 375.w,
@@ -61,20 +61,17 @@ class ExploreView extends NavBarScreenView {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.max,
             children: [
-              Arrow(
+              Image.asset(
+                'assets/images/left_arrow.png',
                 width: 40.w,
-                height: 11.h,
-                color: Colors.black,
-                left: true,
               ),
               Text(
                 'Erin-Michelle J.',
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
-              Arrow(
+              Image.asset(
+                'assets/images/right_arrow.png',
                 width: 40.w,
-                height: 11.h,
-                color: Colors.black,
               ),
             ],
           ),

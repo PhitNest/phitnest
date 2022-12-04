@@ -22,20 +22,16 @@ class RequestLocationProvider
                     amount: 1,
                   )
                   .then(
-                    (gyms) => gyms.fold(
-                      (gyms) => gyms.length > 0
-                          ? Navigator.pushAndRemoveUntil(
-                              context,
-                              NoAnimationMaterialPageRoute(
-                                builder: (context) => FoundLocationProvider(
-                                  gym: gyms[0],
-                                ),
+                    (gyms) => gyms.length > 0
+                        ? Navigator.pushAndRemoveUntil(
+                            context,
+                            NoAnimationMaterialPageRoute(
+                              builder: (context) => FoundLocationProvider(
+                                gym: gyms[0],
                               ),
-                              (_) => false)
-                          : state.errorMessage =
-                              'No nearby gyms could be found.',
-                      (error) => state.errorMessage = error,
-                    ),
+                            ),
+                            (_) => false)
+                        : state.errorMessage = 'No nearby gyms could be found.',
                   ),
               (error) => state.errorMessage = error,
             ),

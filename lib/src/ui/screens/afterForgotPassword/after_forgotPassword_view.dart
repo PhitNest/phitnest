@@ -9,7 +9,7 @@ class AfterForgotPasswordView extends ScreenView {
   const AfterForgotPasswordView({required this.onPressedSignIn}) : super();
 
   @override
-  Widget buildView(BuildContext context) => Container(
+  Widget build(BuildContext context) => Container(
         width: double.infinity,
         child: Column(
           children: [

@@ -21,6 +21,6 @@ class ConversationsState extends ScreenState {
 
   selectConversation(int index, bool selected) {
     conversations[index].selected = selected;
-    rebuildView();
+    notifyListeners();
   }
 }

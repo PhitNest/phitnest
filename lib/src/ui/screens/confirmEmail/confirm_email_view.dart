@@ -14,7 +14,7 @@ class ConfirmEmailView extends ScreenView {
       : super();
 
   @override
-  Widget buildView(BuildContext context) => Column(children: [
+  Widget build(BuildContext context) => Column(children: [
         18.verticalSpace,
         Text("Please confirm\nthat it's you.",
             textAlign: TextAlign.center,

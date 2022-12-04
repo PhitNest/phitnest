@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../nav_bar_view.dart';
+import '../view.dart';
 import 'models/friend_model.dart';
 import 'widgets/add_button.dart';
 
-class FriendsView extends NavBarScreenView {
+class FriendsView extends ScreenView {
   final TextEditingController searchController;
   final List<FriendModel> friends;
   final List<FriendModel> requests;
@@ -26,7 +26,7 @@ class FriendsView extends NavBarScreenView {
   int get navbarIndex => 2;
 
   @override
-  Widget buildView(BuildContext context) => SingleChildScrollView(
+  Widget build(BuildContext context) => SingleChildScrollView(
         child: Column(
           children: [
             24.verticalSpace,

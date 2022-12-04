@@ -12,7 +12,7 @@ class RequestLocationView extends ScreenView {
       : super();
 
   @override
-  Widget buildView(BuildContext context) =>
+  Widget build(BuildContext context) =>
       Column(mainAxisSize: MainAxisSize.min, children: [
         200.verticalSpace,
         SizedBox(

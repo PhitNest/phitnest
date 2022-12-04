@@ -12,7 +12,7 @@ class ThankYouView extends ScreenView {
       : super();
 
   @override
-  Widget buildView(BuildContext context) =>
+  Widget build(BuildContext context) =>
       Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         double.infinity.horizontalSpace,
         200.verticalSpace,

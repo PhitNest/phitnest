@@ -16,7 +16,7 @@ String? validateFirstName(String? name) {
   }
 
   if (name.length > kMaxFirstNameLength) {
-    return 'Please enter a name shorter than $kMaxFirstNameLength characters.';
+    return 'Must be less than $kMaxFirstNameLength characters.';
   }
 
   if (RegExp(kNameRegex).hasMatch(name)) {
@@ -32,7 +32,7 @@ String? validatePassword(String? password) {
   }
 
   if (password.length < kMinPasswordLength) {
-    return 'Please enter a password longer than $kMinPasswordLength characters.';
+    return 'Must be greater than $kMinPasswordLength characters.';
   }
 
   return null;
@@ -40,16 +40,12 @@ String? validatePassword(String? password) {
 
 /// Checks to see if the entered email address is valid
 String? validateEmail(String? email) {
-  if (email == null || email.isEmpty) {
+  if (email == null || email.isEmpty || !RegExp(kEmailRegex).hasMatch(email)) {
     return 'You must enter a valid email.';
   }
 
   if (email.length > kMaxEmailLength) {
-    return 'Please enter an email shorter than $kMaxEmailLength characters.';
-  }
-
-  if (!RegExp(kEmailRegex).hasMatch(email)) {
-    return 'Please enter a valid email address.';
+    return 'Must be less than $kMaxEmailLength characters.';
   }
 
   return null;

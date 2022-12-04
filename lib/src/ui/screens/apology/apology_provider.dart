@@ -11,26 +11,25 @@ class ApologyProvider extends ScreenProvider<ApologyState, ApologyView> {
   @override
   ApologyView build(BuildContext context, ApologyState state) => ApologyView(
       autovalidateMode: state.validateMode,
-      onPressedSubmit: () => validateForm(context, state),
+      onPressedSubmit: () {
+        if (!state.formKey.currentState!.validate()) {
+          state.validateMode = AutovalidateMode.always;
+        } else {
+          Navigator.pushAndRemoveUntil(
+              context,
+              NoAnimationMaterialPageRoute(
+                builder: (_) =>
+                    ThankYouProvider(name: state.nameController.text),
+              ),
+              (_) => false);
+        }
+      },
       nameController: state.nameController,
       emailController: state.emailController,
-      validateFirstName: validateFirstName,
-      validateEmail: validateEmail,
+      validateFirstName: (val) => validateFirstName(val),
+      validateEmail: (val) => validateEmail(val),
       formKey: state.formKey);
 
   @override
   ApologyState buildState() => ApologyState();
-
-  validateForm(BuildContext context, ApologyState state) {
-    if (!state.formKey.currentState!.validate()) {
-      state.validateMode = AutovalidateMode.always;
-    } else {
-      Navigator.pushAndRemoveUntil(
-          context,
-          NoAnimationMaterialPageRoute(
-              builder: (_) =>
-                  ThankYouProvider(name: state.nameController.text)),
-          (_) => false);
-    }
-  }
 }
