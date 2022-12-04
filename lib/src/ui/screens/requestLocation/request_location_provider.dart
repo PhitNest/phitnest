@@ -15,7 +15,7 @@ class RequestLocationProvider
   init(BuildContext context, RequestLocationState state) =>
       repositories<ILocationRepository>().getLocation().then(
             (response) => response.fold(
-              (location) => repositories<IGymRepository>()
+              (location) => gymRepo
                   .getNearestGyms(
                     location: location,
                     distance: 30000,
@@ -33,7 +33,7 @@ class RequestLocationProvider
                             (_) => false)
                         : state.errorMessage = 'No nearby gyms could be found.',
                   ),
-              (error) => state.errorMessage = error,
+              (error) => state.errorMessage = error.message,
             ),
           );
 
@@ -42,10 +42,12 @@ class RequestLocationProvider
       RequestLocationView(
         errorMessage: state.errorMessage ?? '',
         onPressedExit: () => Navigator.pushAndRemoveUntil(
-            context,
-            NoAnimationMaterialPageRoute(
-                builder: (context) => ApologyProvider()),
-            (_) => false),
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (context) => ApologyProvider(),
+          ),
+          (_) => false,
+        ),
       );
 
   @override

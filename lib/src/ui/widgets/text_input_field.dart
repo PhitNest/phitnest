@@ -7,6 +7,8 @@ class TextInputField extends StatelessWidget {
   final FormFieldValidator? validator;
   final TextInputAction? inputAction;
   final VoidCallback? onTap;
+  final FocusNode? focusNode;
+  final bool hide;
 
   const TextInputField({
     Key? key,
@@ -15,10 +17,14 @@ class TextInputField extends StatelessWidget {
     this.validator,
     this.onTap,
     this.inputAction,
+    this.focusNode,
+    this.hide = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => TextFormField(
+        focusNode: focusNode,
+        obscureText: hide,
         onTap: onTap,
         textInputAction: inputAction,
         controller: controller,

@@ -10,25 +10,27 @@ import 'apology_view.dart';
 class ApologyProvider extends ScreenProvider<ApologyState, ApologyView> {
   @override
   ApologyView build(BuildContext context, ApologyState state) => ApologyView(
-      autovalidateMode: state.validateMode,
-      onPressedSubmit: () {
-        if (!state.formKey.currentState!.validate()) {
-          state.validateMode = AutovalidateMode.always;
-        } else {
-          Navigator.pushAndRemoveUntil(
-              context,
-              NoAnimationMaterialPageRoute(
-                builder: (_) =>
-                    ThankYouProvider(name: state.nameController.text),
-              ),
-              (_) => false);
-        }
-      },
-      nameController: state.nameController,
-      emailController: state.emailController,
-      validateFirstName: (val) => validateFirstName(val),
-      validateEmail: (val) => validateEmail(val),
-      formKey: state.formKey);
+        autovalidateMode: state.validateMode,
+        onPressedSubmit: () {
+          if (!state.formKey.currentState!.validate()) {
+            state.validateMode = AutovalidateMode.always;
+          } else {
+            Navigator.pushAndRemoveUntil(
+                context,
+                NoAnimationMaterialPageRoute(
+                  builder: (_) => ThankYouProvider(
+                    name: state.nameController.text,
+                  ),
+                ),
+                (_) => false);
+          }
+        },
+        nameController: state.nameController,
+        emailController: state.emailController,
+        validateFirstName: (val) => validateFirstName(val),
+        validateEmail: (val) => validateEmail(val),
+        formKey: state.formKey,
+      );
 
   @override
   ApologyState buildState() => ApologyState();

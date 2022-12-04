@@ -14,7 +14,8 @@ class ForgotPasswordProvider
         onPressedsubmit: () => Navigator.pushAndRemoveUntil(
             context,
             NoAnimationMaterialPageRoute(
-                builder: (context) => AfterForgotPasswordProvider()),
+              builder: (context) => AfterForgotPasswordProvider(),
+            ),
             (_) => false),
       );
 

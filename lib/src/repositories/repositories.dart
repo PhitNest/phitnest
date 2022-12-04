@@ -24,3 +24,11 @@ void injectRepositories() {
       .registerSingleton<IDeviceCacheRepository>(DeviceCacheRepository());
   repositories.registerSingleton<IUserRepository>(UserRepository());
 }
+
+IEnvironmentRepository get environmentRepo => repositories();
+IGymRepository get gymRepo => repositories();
+IAuthRepository get authRepo => repositories();
+ILocationRepository get locationRepo => repositories();
+IMemoryCacheRepository get memoryCacheRepo => repositories();
+IDeviceCacheRepository get deviceCacheRepo => repositories();
+IUserRepository get userRepo => repositories();

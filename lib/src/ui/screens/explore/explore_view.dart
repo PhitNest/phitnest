@@ -18,68 +18,55 @@ class ExploreView extends ScreenView {
   }) : super();
 
   @override
-  onTapDownLogo(BuildContext context) => onLogoTap(context);
-
-  @override
-  onTapUpLogo(BuildContext context) => onLogoRelease(context);
-
-  @override
-  int get navbarIndex => 1;
-
-  @override
-  bool get systemOverlayDark => false;
-
-  @override
-  bool get currentlyHoldingLogo => holding;
-
-  @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          SizedBox(
-            width: 375.w,
-            height: 333.h,
-            child: Stack(
-              fit: StackFit.expand,
+  Widget build(BuildContext context) => Scaffold(
+        body: Column(
+          children: [
+            SizedBox(
+              width: 375.w,
+              height: 333.h,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset(
+                    'assets/images/selfie.png',
+                    fit: BoxFit.cover,
+                  ),
+                  holding
+                      ? Center(
+                          child: CountdownRing(
+                            countdownNum: countdown,
+                            dark: false,
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
+            120.verticalSpace,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Image.asset(
-                  'assets/images/selfie.png',
-                  fit: BoxFit.cover,
+                  'assets/images/left_arrow.png',
+                  width: 40.w,
                 ),
-                holding
-                    ? Center(
-                        child: CountdownRing(
-                          countdownNum: countdown,
-                          dark: false,
-                        ),
-                      )
-                    : Container(),
+                Text(
+                  'Erin-Michelle J.',
+                  style: Theme.of(context).textTheme.headlineLarge,
+                ),
+                Image.asset(
+                  'assets/images/right_arrow.png',
+                  width: 40.w,
+                ),
               ],
             ),
-          ),
-          120.verticalSpace,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Image.asset(
-                'assets/images/left_arrow.png',
-                width: 40.w,
-              ),
-              Text(
-                'Erin-Michelle J.',
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              Image.asset(
-                'assets/images/right_arrow.png',
-                width: 40.w,
-              ),
-            ],
-          ),
-          80.verticalSpace,
-          Text(
-            'Press logo to send friend request',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        ],
+            80.verticalSpace,
+            Text(
+              'Press logo to send friend request',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
       );
 }

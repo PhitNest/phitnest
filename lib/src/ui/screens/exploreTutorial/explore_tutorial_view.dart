@@ -17,21 +17,6 @@ class ExploreTutorialView extends ScreenView {
     required this.onLogoRelease,
   }) : super();
 
-  @override
-  onTapDownLogo(BuildContext context) => onLogoTap(context);
-
-  @override
-  onTapUpLogo(BuildContext context) => onLogoRelease(context);
-
-  @override
-  int get navbarIndex => 1;
-
-  @override
-  bool get navigationEnabled => false;
-
-  @override
-  bool get currentlyHoldingLogo => holding;
-
   String get _countdownText {
     switch (countdown) {
       case 3:
@@ -44,28 +29,31 @@ class ExploreTutorialView extends ScreenView {
   }
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-      width: double.infinity,
-      child: Column(
-        children: [
-          (holding ? 144 : 186).verticalSpace,
-          holding
-              ? CountdownRing(countdownNum: countdown)
-              : Text(
-                  'Great!',
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
-          (holding ? 149 : 40).verticalSpace,
-          holding
-              ? Text(_countdownText,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(color: Color(0xFF707070)))
-              : Text(
-                  'Let’s meet friends in your Nest',
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
-        ],
-      ));
+  Widget build(BuildContext context) => Scaffold(
+        body: SizedBox(
+          width: double.infinity,
+          child: Column(
+            children: [
+              (holding ? 144 : 186).verticalSpace,
+              holding
+                  ? CountdownRing(countdownNum: countdown)
+                  : Text(
+                      'Great!',
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
+              (holding ? 149 : 40).verticalSpace,
+              holding
+                  ? Text(_countdownText,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(color: Color(0xFF707070)))
+                  : Text(
+                      'Let’s meet friends in your Nest',
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
+            ],
+          ),
+        ),
+      );
 }
