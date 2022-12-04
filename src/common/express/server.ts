@@ -31,6 +31,16 @@ export function createServer() {
   );
   app.use(morgan("dev"));
   app.use(buildRoutes());
+  app.use(
+    (
+      err: any,
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+    ) => {
+      res.status(500).json({ message: err });
+    }
+  );
   if (process.env.NODE_ENV != "production") {
     const root = path.normalize(__dirname + "/../../..");
     app.set("appPath", root + "client");
