@@ -16,7 +16,7 @@ class ForgotPasswordView extends ScreenView {
   String? get appBarText => "";
 
   @override
-  Widget buildView(BuildContext context) => Container(
+  Widget build(BuildContext context) => Container(
         width: double.infinity,
         child: Column(
           children: [

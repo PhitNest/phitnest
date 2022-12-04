@@ -12,7 +12,7 @@ class ReviewingPhotoView extends ScreenView {
   String? get appBarText => "Thank You";
 
   @override
-  Widget buildView(BuildContext context) => Container(
+  Widget build(BuildContext context) => Container(
         margin: EdgeInsets.symmetric(horizontal: 48.w, vertical: 48.h),
         child: Column(
           children: [

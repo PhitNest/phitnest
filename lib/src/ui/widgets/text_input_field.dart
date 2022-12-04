@@ -4,15 +4,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class TextInputField extends StatelessWidget {
   final TextEditingController? controller;
   final String? hint;
-  final String? Function(String?)? validator;
+  final FormFieldValidator? validator;
   final TextInputAction? inputAction;
+  final VoidCallback? onTap;
 
-  const TextInputField(
-      {Key? key, this.controller, this.hint, this.validator, this.inputAction})
-      : super(key: key);
+  const TextInputField({
+    Key? key,
+    this.controller,
+    this.hint,
+    this.validator,
+    this.onTap,
+    this.inputAction,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => TextFormField(
+        onTap: onTap,
         textInputAction: inputAction,
         controller: controller,
         validator: validator,

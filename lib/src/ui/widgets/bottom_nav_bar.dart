@@ -19,30 +19,32 @@ class StyledNavBar extends StatefulWidget {
   static const String kLogoPath = 'assets/images/logo.png';
   static const String kReversedLogoPath = 'assets/images/logo_reversed.png';
 
-  const StyledNavBar(
-      {Key? key,
-      required this.navigationEnabled,
-      required this.pageIndex,
-      required this.onTapDownLogo,
-      this.reversed = false,
-      this.logoHeld = false,
-      required this.onTapUpLogo})
-      : super(key: key);
+  const StyledNavBar({
+    Key? key,
+    required this.navigationEnabled,
+    required this.pageIndex,
+    required this.onTapDownLogo,
+    this.reversed = false,
+    this.logoHeld = false,
+    required this.onTapUpLogo,
+  }) : super(key: key);
 
-  StyledNavBar copyWith(
-          {bool? navigationEnabled,
-          int? pageIndex,
-          Function()? onTapDownLogo,
-          bool? reversed,
-          bool? logoHeld,
-          Function()? onTapUpLogo}) =>
+  StyledNavBar copyWith({
+    bool? navigationEnabled,
+    int? pageIndex,
+    Function()? onTapDownLogo,
+    bool? reversed,
+    bool? logoHeld,
+    Function()? onTapUpLogo,
+  }) =>
       StyledNavBar(
-          navigationEnabled: navigationEnabled ?? this.navigationEnabled,
-          pageIndex: pageIndex ?? this.pageIndex,
-          reversed: reversed ?? this.reversed,
-          logoHeld: logoHeld ?? this.logoHeld,
-          onTapDownLogo: onTapDownLogo ?? this.onTapDownLogo,
-          onTapUpLogo: onTapUpLogo ?? this.onTapUpLogo);
+        navigationEnabled: navigationEnabled ?? this.navigationEnabled,
+        pageIndex: pageIndex ?? this.pageIndex,
+        reversed: reversed ?? this.reversed,
+        logoHeld: logoHeld ?? this.logoHeld,
+        onTapDownLogo: onTapDownLogo ?? this.onTapDownLogo,
+        onTapUpLogo: onTapUpLogo ?? this.onTapUpLogo,
+      );
 
   @override
   State<StatefulWidget> createState() => _StyledNavBarState();
@@ -60,10 +62,11 @@ class _StyledNavBarState extends State<StyledNavBar>
     controller = shouldAnimate
         ? (AnimationController(vsync: this)
           ..repeat(
-              min: 0,
-              max: 1,
-              reverse: true,
-              period: Duration(milliseconds: 1200)))
+            min: 0,
+            max: 1,
+            reverse: true,
+            period: Duration(milliseconds: 1200),
+          ))
         : null;
   }
 
@@ -83,94 +86,114 @@ class _StyledNavBarState extends State<StyledNavBar>
   Widget createButton(
           BuildContext context, String text, Function() onPressed, int index) =>
       TextButton(
-          style: ButtonStyle(
-              maximumSize: MaterialStateProperty.all(Size.fromWidth(78.w)),
-              minimumSize: MaterialStateProperty.all(Size.fromWidth(78.w)),
-              overlayColor: MaterialStateProperty.all(Colors.transparent)),
-          child: Text(text,
-              style: index == widget.pageIndex
-                  ? Theme.of(context).textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: widget.reversed ? Colors.white : Colors.black)
-                  : Theme.of(context).textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: widget.reversed
-                          ? Color.fromARGB((0.7 * 255).round(), 255, 255, 255)
-                          : Color.fromARGB((0.4 * 255).round(), 0, 0, 0))),
-          onPressed: widget.navigationEnabled && index != widget.pageIndex
-              ? onPressed
-              : null);
+        style: ButtonStyle(
+            maximumSize: MaterialStateProperty.all(
+              Size.fromWidth(78.w),
+            ),
+            minimumSize: MaterialStateProperty.all(
+              Size.fromWidth(78.w),
+            ),
+            overlayColor: MaterialStateProperty.all(
+              Colors.transparent,
+            )),
+        child: Text(
+          text,
+          style: index == widget.pageIndex
+              ? Theme.of(context).textTheme.bodySmall!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: widget.reversed ? Colors.white : Colors.black)
+              : Theme.of(context).textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: widget.reversed
+                        ? Color.fromARGB((0.7 * 255).round(), 255, 255, 255)
+                        : Color.fromARGB((0.4 * 255).round(), 0, 0, 0),
+                  ),
+        ),
+        onPressed: widget.navigationEnabled && index != widget.pageIndex
+            ? onPressed
+            : null,
+      );
 
   @override
   Widget build(BuildContext context) => Container(
-      height: StyledNavBar.kHeight,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: widget.reversed ? Colors.black : Colors.white,
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 8.5,
-            spreadRadius: 0.0,
-            color: Colors.black,
-            offset: Offset(0, 7),
-          ),
-        ],
-      ),
-      child: Padding(
+        height: StyledNavBar.kHeight,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: widget.reversed ? Colors.black : Colors.white,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 8.5,
+              spreadRadius: 0.0,
+              color: Colors.black,
+              offset: Offset(0, 7),
+            ),
+          ],
+        ),
+        child: Padding(
           padding: EdgeInsets.only(bottom: 18.h),
-          child: Stack(children: [
-            Center(
-                child: Padding(
-                    padding: EdgeInsets.only(left: 12.w),
-                    child: controller != null
-                        ? AnimatedBuilder(
-                            animation: controller!,
-                            builder: (context, child) => logoButton)
-                        : logoButton)),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                createButton(
-                    context,
-                    'NEWS',
-                    () => Navigator.pushAndRemoveUntil(
-                        context,
-                        NoAnimationMaterialPageRoute(
-                            builder: (context) => NewsProvider()),
-                        (route) => false),
-                    0),
-                createButton(
-                    context,
-                    'EXPLORE',
-                    () => Navigator.pushAndRemoveUntil(
-                        context,
-                        NoAnimationMaterialPageRoute(
-                            builder: (context) => ExploreProvider()),
-                        (route) => false),
-                    1),
-                60.horizontalSpace,
-                createButton(
-                    context,
-                    'CHAT',
-                    () => Navigator.pushAndRemoveUntil(
-                        context,
-                        NoAnimationMaterialPageRoute(
-                            builder: (context) => ConversationsProvider()),
-                        (route) => false),
-                    2),
-                createButton(
+          child: Stack(
+            children: [
+              Center(
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 12.w),
+                      child: controller != null
+                          ? AnimatedBuilder(
+                              animation: controller!,
+                              builder: (context, child) => logoButton,
+                            )
+                          : logoButton)),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  createButton(
+                      context,
+                      'NEWS',
+                      () => Navigator.pushAndRemoveUntil(
+                          context,
+                          NoAnimationMaterialPageRoute(
+                            builder: (context) => NewsProvider(),
+                          ),
+                          (route) => false),
+                      0),
+                  createButton(
+                      context,
+                      'EXPLORE',
+                      () => Navigator.pushAndRemoveUntil(
+                          context,
+                          NoAnimationMaterialPageRoute(
+                            builder: (context) => ExploreProvider(),
+                          ),
+                          (route) => false),
+                      1),
+                  60.horizontalSpace,
+                  createButton(
+                      context,
+                      'CHAT',
+                      () => Navigator.pushAndRemoveUntil(
+                          context,
+                          NoAnimationMaterialPageRoute(
+                            builder: (context) => ConversationsProvider(),
+                          ),
+                          (route) => false),
+                      2),
+                  createButton(
                     context,
                     'OPTIONS',
                     () => Navigator.pushAndRemoveUntil(
                         context,
                         NoAnimationMaterialPageRoute(
-                            builder: (context) => OptionsProvider()),
+                          builder: (context) => OptionsProvider(),
+                        ),
                         (route) => false),
-                    3),
-              ],
-            ),
-          ])));
+                    3,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
 
   @override
   void dispose() {

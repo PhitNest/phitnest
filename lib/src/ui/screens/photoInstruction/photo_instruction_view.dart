@@ -9,7 +9,7 @@ class PhotoInstructionView extends ScreenView {
   const PhotoInstructionView({required this.onPressedTakePhoto}) : super();
 
   @override
-  Widget buildView(BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         children: [
           32.verticalSpace,
           SizedBox(

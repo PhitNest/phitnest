@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
-class MatchView extends NavBarScreenView {
+class MatchView extends ScreenView {
   final Function() onPressedSayHello;
   final Function() onPressedMeetMore;
 
@@ -13,7 +13,7 @@ class MatchView extends NavBarScreenView {
       : super();
 
   @override
-  Widget buildView(BuildContext context) => Container(
+  Widget build(BuildContext context) => Container(
       color: Colors.black,
       child: Column(
         children: [
@@ -51,14 +51,4 @@ class MatchView extends NavBarScreenView {
           28.verticalSpace,
         ],
       ));
-
-  @override
-  int get navbarIndex => 1;
-
-  @override
-  bool get systemOverlayDark => false;
-
-  @override
-  StyledNavBar navBar(BuildContext context) =>
-      super.navBar(context).copyWith(reversed: true);
 }

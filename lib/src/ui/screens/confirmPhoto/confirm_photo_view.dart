@@ -9,7 +9,7 @@ class ConfirmPhotoView extends ScreenView {
   String? get appBarText => "Confirm Photo";
 
   @override
-  Widget buildView(BuildContext context) => Container(
+  Widget build(BuildContext context) => Container(
         child: Column(children: [
           SizedBox(
             width: 262.w,

@@ -5,7 +5,7 @@ import '../view.dart';
 import 'models/conversation.dart';
 import 'widgets/conversation_card.dart';
 
-class ConversationsView extends NavBarScreenView {
+class ConversationsView extends ScreenView {
   final List<ConversationModel> conversations;
   final Function(int conversationIndex) onDownTapMessage;
   final Function(int conversationIndex) onUpTapMessage;
@@ -25,7 +25,7 @@ class ConversationsView extends NavBarScreenView {
   bool showAppBar(BuildContext context) => false;
 
   @override
-  Widget buildView(BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         children: [
           73.verticalSpace,
           Row(

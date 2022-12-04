@@ -1,21 +1,19 @@
 import 'dart:convert';
-import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 
 import '../../constants/constants.dart';
 import '../../entities/entities.dart';
 import '../repositories.dart';
-import 'implementations.dart';
 
 /// Handles making requests to the backend involving gyms
 class GymRepository implements IGymRepository {
-  Future<Either<List<GymEntity>, String>> getNearestGyms(
+  Future<List<GymEntity>> getNearestGyms(
           {required LocationEntity location,
           required int distance,
           int? amount}) =>
       http
           .get(
-            repositories<EnvironmentRepository>()
+            repositories<IEnvironmentRepository>()
                 .getBackendAddress(kNearestGymsRoute, params: {
               "longitude": location.longitude.toString(),
               "latitude": location.latitude.toString(),
@@ -23,8 +21,6 @@ class GymRepository implements IGymRepository {
               ...(amount != null ? {"amount": amount.toString()} : {}),
             }),
           )
-          .then((response) => response.statusCode == kStatusOK
-              ? Left(List<GymEntity>.from(jsonDecode(response.body)
-                  .map((gym) => GymEntity.fromJson(gym))))
-              : Right(response.body));
+          .then((response) => List<GymEntity>.from(
+              jsonDecode(response.body).map((gym) => GymEntity.fromJson(gym))));
 }

@@ -5,16 +5,13 @@ import '../../widgets/widgets.dart';
 import '../view.dart';
 
 class ApologyView extends ScreenView {
-  final Function() onPressedSubmit;
+  final VoidCallback onPressedSubmit;
   final TextEditingController nameController;
   final TextEditingController emailController;
   final AutovalidateMode autovalidateMode;
-  final String? Function(String?) validateFirstName;
-  final String? Function(String?) validateEmail;
+  final FormFieldValidator validateFirstName;
+  final FormFieldValidator validateEmail;
   final GlobalKey<FormState> formKey;
-
-  @override
-  bool get scrollEnabled => true;
 
   const ApologyView(
       {required this.onPressedSubmit,
@@ -26,7 +23,7 @@ class ApologyView extends ScreenView {
       required this.formKey});
 
   @override
-  Widget buildView(BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         children: [
           110.verticalSpace,
           SizedBox(

@@ -13,7 +13,7 @@ class RegisterPageTwoView extends ScreenView {
       : super();
 
   @override
-  Widget buildView(BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
         children: [
           28.verticalSpace,
           Text(

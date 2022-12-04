@@ -50,7 +50,7 @@ class CountdownRing extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  '$countdownNum',
+                  countdownNum.toString(),
                   style: Theme.of(context).textTheme.labelLarge!.copyWith(
                       fontSize: 128.sp,
                       color: dark ? Colors.black : Colors.white),

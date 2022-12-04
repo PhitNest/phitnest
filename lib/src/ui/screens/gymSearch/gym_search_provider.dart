@@ -25,16 +25,11 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
                     )
                         .then(
                       (gyms) {
-                        gyms.fold(
-                          (gyms) {
-                            state.gymsAndDistances = gyms
-                                .map((gym) => Tuple2(
-                                    gym, gym.location.distanceTo(location)))
-                                .toList();
-                            state.currentlySelectedGym = gyms[0];
-                          },
-                          (error) => state.errorMessage = error,
-                        );
+                        state.gymsAndDistances = gyms
+                            .map((gym) =>
+                                Tuple2(gym, gym.location.distanceTo(location)))
+                            .toList();
+                        state.currentlySelectedGym = gyms[0];
                       },
                     ),
                 (error) => state.errorMessage = error),
@@ -49,7 +44,7 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
           keyboardVisible: state.keyboardVisible,
           searchController: state.searchController,
           errorMessage: state.errorMessage ?? '',
-          onEditSearch: () => state.rebuildView(),
+          onEditSearch: state.notifyListeners,
           onPressedConfirm: () {
             Navigator.of(context).pushAndRemoveUntil(
                 NoAnimationMaterialPageRoute(

@@ -5,7 +5,7 @@ import '../state.dart';
 import 'apology_provider.dart';
 import 'apology_view.dart';
 
-/// Holds the dynamic content of [ApologyProvider]. Calls to [rebuildView] will rebuild
+/// Holds the dynamic content of [ApologyProvider]. Calls to [notifyListeners] will notifyListeners
 /// the [ApologyView].
 class ApologyState extends ScreenState {
   final TextEditingController nameController = TextEditingController();
@@ -17,7 +17,7 @@ class ApologyState extends ScreenState {
 
   set validateMode(AutovalidateMode validateMode) {
     _validateMode = validateMode;
-    rebuildView();
+    notifyListeners();
   }
 
   @override

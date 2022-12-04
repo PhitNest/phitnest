@@ -7,7 +7,7 @@ import '../state.dart';
 import 'gym_search_provider.dart';
 import 'gym_search_view.dart';
 
-/// Holds the dynamic content of [GymSearchProvider]. Calls to [rebuildView] will rebuild
+/// Holds the dynamic content of [GymSearchProvider]. Calls to [notifyListeners] will notifyListeners
 /// the [GymSearchView].
 class GymSearchState extends ScreenState {
   final TextEditingController searchController = TextEditingController();
@@ -18,7 +18,7 @@ class GymSearchState extends ScreenState {
 
   set errorMessage(String? errorMessage) {
     _errorMessage = errorMessage;
-    rebuildView();
+    notifyListeners();
   }
 
   late GymEntity _currentlySelectedGym;
@@ -27,7 +27,7 @@ class GymSearchState extends ScreenState {
 
   set currentlySelectedGym(GymEntity currentlySelectedGym) {
     _currentlySelectedGym = currentlySelectedGym;
-    rebuildView();
+    notifyListeners();
   }
 
   List<Tuple2<GymEntity, double>> _gymsAndDistances = [];
@@ -36,7 +36,7 @@ class GymSearchState extends ScreenState {
 
   set gymsAndDistances(List<Tuple2<GymEntity, double>> gymsAndDistances) {
     _gymsAndDistances = gymsAndDistances;
-    rebuildView();
+    notifyListeners();
   }
 
   @override

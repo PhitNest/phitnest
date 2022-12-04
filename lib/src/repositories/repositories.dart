@@ -9,6 +9,7 @@ final repositories = GetIt.instance;
 
 Future<void> setup() async {
   await EnvironmentRepository.init();
+  await DeviceCacheRepository.init();
 }
 
 void injectRepositories() {
@@ -21,4 +22,5 @@ void injectRepositories() {
       .registerSingleton<IMemoryCacheRepository>(MemoryCacheRepository());
   repositories
       .registerSingleton<IDeviceCacheRepository>(DeviceCacheRepository());
+  repositories.registerSingleton<IUserRepository>(UserRepository());
 }

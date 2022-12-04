@@ -11,7 +11,7 @@ class NewsState extends ScreenState {
 
   set liked(bool liked) {
     _liked = liked;
-    rebuildView();
+    notifyListeners();
   }
 
   List<ActivityPostModel> posts = [
@@ -42,6 +42,6 @@ class NewsState extends ScreenState {
 
   likePost(int index) {
     posts[index].liked = !posts[index].liked!;
-    rebuildView();
+    notifyListeners();
   }
 }

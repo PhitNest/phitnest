@@ -4,9 +4,9 @@ import '../state.dart';
 
 class LoginState extends ScreenState {
   final GlobalKey<FormState> formKey = GlobalKey();
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
 
   AutovalidateMode _validateMode = AutovalidateMode.disabled;
 
