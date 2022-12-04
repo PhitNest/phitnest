@@ -6,5 +6,7 @@ class OptionsView extends ScreenView {
   const OptionsView() : super();
 
   @override
-  Widget build(BuildContext context) => Container();
+  Widget build(BuildContext context) => Scaffold(
+        body: Container(),
+      );
 }

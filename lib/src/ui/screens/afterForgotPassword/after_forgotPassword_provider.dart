@@ -13,7 +13,9 @@ class AfterForgotPasswordProvider
       AfterForgotPasswordView(
         onPressedSignIn: () => Navigator.pushAndRemoveUntil(
             context,
-            NoAnimationMaterialPageRoute(builder: (context) => LoginProvider()),
+            NoAnimationMaterialPageRoute(
+              builder: (context) => LoginProvider(),
+            ),
             (_) => false),
       );
 

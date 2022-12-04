@@ -14,9 +14,10 @@ class ThankYouProvider extends ScreenProvider<ThankYouState, ThankYouView> {
   @override
   ThankYouView build(BuildContext context, ThankYouState state) => ThankYouView(
         onPressedBye: () => Navigator.pushAndRemoveUntil(
-            context,
-            NoAnimationMaterialPageRoute(builder: (context) => LoginProvider()),
-            (_) => false),
+          context,
+          NoAnimationMaterialPageRoute(builder: (context) => LoginProvider()),
+          (_) => false,
+        ),
         name: name,
       );
 

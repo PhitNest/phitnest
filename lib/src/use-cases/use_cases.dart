@@ -9,5 +9,8 @@ final useCases = GetIt.instance;
 
 void injectUseCases() {
   useCases.registerSingleton<ISkipOnBoardingUseCase>(SkipOnBoardingUseCase());
-  useCases.registerSingleton<ILoginWithCacheUseCase>(LoginWithCacheUseCase());
+  useCases.registerSingleton<IGetAuthTokenUseCase>(GetAuthTokenUseCase());
 }
+
+ISkipOnBoardingUseCase get skipOnBoardingUseCase => useCases();
+IGetAuthTokenUseCase get getAuthTokenUseCase => useCases();

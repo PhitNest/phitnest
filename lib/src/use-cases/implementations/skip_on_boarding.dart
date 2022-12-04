@@ -4,11 +4,11 @@ import '../use_cases.dart';
 class SkipOnBoardingUseCase implements ISkipOnBoardingUseCase {
   @override
   bool shouldSkip() {
-    return repositories<IDeviceCacheRepository>().shouldSkipOnBoarding;
+    return deviceCacheRepo.shouldSkipOnBoarding;
   }
 
   @override
   void setShouldSkip() {
-    repositories<IDeviceCacheRepository>().shouldSkipOnBoarding = true;
+    deviceCacheRepo.shouldSkipOnBoarding = true;
   }
 }

@@ -16,7 +16,9 @@ class ExploreProvider extends ScreenProvider<ExploreState, ExploreView> {
       if (state.countdown == 1) {
         Navigator.pushAndRemoveUntil(
             context,
-            NoAnimationMaterialPageRoute(builder: (context) => MatchProvider()),
+            NoAnimationMaterialPageRoute(
+              builder: (context) => MatchProvider(),
+            ),
             (_) => false);
       } else {
         state.countdown = state.countdown - 1;

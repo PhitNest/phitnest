@@ -7,8 +7,11 @@ class CountdownRing extends StatelessWidget {
 
   Color get color => dark ? Color(0xffE9E8E8) : Colors.white;
 
-  const CountdownRing({Key? key, required this.countdownNum, this.dark = true})
-      : super(key: key);
+  const CountdownRing({
+    Key? key,
+    required this.countdownNum,
+    this.dark = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

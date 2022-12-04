@@ -6,47 +6,47 @@ import '../view.dart';
 
 class ForgotPasswordView extends ScreenView {
   final TextEditingController emailAddressController;
-  final Function() onPressedsubmit;
+  final VoidCallback onPressedsubmit;
 
-  const ForgotPasswordView(
-      {required this.emailAddressController, required this.onPressedsubmit})
-      : super();
-
-  @override
-  String? get appBarText => "";
+  const ForgotPasswordView({
+    required this.emailAddressController,
+    required this.onPressedsubmit,
+  }) : super();
 
   @override
-  Widget build(BuildContext context) => Container(
-        width: double.infinity,
-        child: Column(
-          children: [
-            110.verticalSpace,
-            Text(
-              'Forgot the password?',
-              style: Theme.of(context).textTheme.headlineLarge,
-            ),
-            42.verticalSpace,
-            Text(
-              'We’ll send you an email to reset\nyour password.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-            56.verticalSpace,
-            SizedBox(
-              height: 34.h,
-              width: 291.w,
-              child: TextInputField(
-                controller: emailAddressController,
-                hint: 'Email',
+  Widget build(BuildContext context) => Scaffold(
+        body: Container(
+          width: double.infinity,
+          child: Column(
+            children: [
+              110.verticalSpace,
+              Text(
+                'Forgot the password?',
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
-            ),
-            30.verticalSpace,
-            StyledButton(
-                onPressed: onPressedsubmit,
-                child: Text(
-                  'SUBMIT',
-                ))
-          ],
+              42.verticalSpace,
+              Text(
+                'We’ll send you an email to reset\nyour password.',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+              56.verticalSpace,
+              SizedBox(
+                height: 34.h,
+                width: 291.w,
+                child: TextInputField(
+                  controller: emailAddressController,
+                  hint: 'Email',
+                ),
+              ),
+              30.verticalSpace,
+              StyledButton(
+                  onPressed: onPressedsubmit,
+                  child: Text(
+                    'SUBMIT',
+                  ))
+            ],
+          ),
         ),
       );
 }

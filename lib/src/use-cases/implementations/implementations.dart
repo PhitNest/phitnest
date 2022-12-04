@@ -1,2 +1,2 @@
 export 'skip_on_boarding.dart';
-export 'login_with_cache.dart';
+export 'get_auth_token.dart';

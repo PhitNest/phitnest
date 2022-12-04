@@ -12,7 +12,9 @@ class FoundLocationProvider
     extends ScreenProvider<FoundLocationState, FoundLocationView> {
   final GymEntity gym;
 
-  const FoundLocationProvider({required this.gym}) : super();
+  const FoundLocationProvider({
+    required this.gym,
+  }) : super();
 
   @override
   FoundLocationView build(BuildContext context, FoundLocationState state) =>
@@ -24,7 +26,7 @@ class FoundLocationProvider
           ),
         ),
         onPressedYes: () {
-          repositories<IMemoryCacheRepository>().myGym = gym;
+          memoryCacheRepo.myGym = gym;
           Navigator.pushAndRemoveUntil(
             context,
             NoAnimationMaterialPageRoute(

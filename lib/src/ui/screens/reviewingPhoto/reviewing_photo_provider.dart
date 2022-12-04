@@ -5,9 +5,17 @@ import './reviewing_photo_view.dart';
 
 class ReviewingPhotoProvider
     extends ScreenProvider<ReviewingPhotoState, ReviewingPhotoView> {
+  final String name;
+
+  const ReviewingPhotoProvider({
+    required this.name,
+  }) : super();
+
   @override
   ReviewingPhotoView build(BuildContext context, ReviewingPhotoState state) =>
-      ReviewingPhotoView();
+      ReviewingPhotoView(
+        name: name,
+      );
 
   @override
   ReviewingPhotoState buildState() => ReviewingPhotoState();

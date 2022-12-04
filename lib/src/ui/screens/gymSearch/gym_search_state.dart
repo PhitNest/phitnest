@@ -12,13 +12,17 @@ import 'gym_search_view.dart';
 class GymSearchState extends ScreenState {
   final TextEditingController searchController = TextEditingController();
 
+  void editSearch() {
+    rebuildView();
+  }
+
   String? _errorMessage;
 
   String? get errorMessage => _errorMessage;
 
   set errorMessage(String? errorMessage) {
     _errorMessage = errorMessage;
-    notifyListeners();
+    rebuildView();
   }
 
   late GymEntity _currentlySelectedGym;
@@ -27,7 +31,7 @@ class GymSearchState extends ScreenState {
 
   set currentlySelectedGym(GymEntity currentlySelectedGym) {
     _currentlySelectedGym = currentlySelectedGym;
-    notifyListeners();
+    rebuildView();
   }
 
   List<Tuple2<GymEntity, double>> _gymsAndDistances = [];
@@ -36,7 +40,7 @@ class GymSearchState extends ScreenState {
 
   set gymsAndDistances(List<Tuple2<GymEntity, double>> gymsAndDistances) {
     _gymsAndDistances = gymsAndDistances;
-    notifyListeners();
+    rebuildView();
   }
 
   @override

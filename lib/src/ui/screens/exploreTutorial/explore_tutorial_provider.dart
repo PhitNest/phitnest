@@ -18,7 +18,8 @@ class ExploreTutorialProvider
         Navigator.pushAndRemoveUntil(
             context,
             NoAnimationMaterialPageRoute(
-                builder: (context) => ExploreProvider()),
+              builder: (context) => ExploreProvider(),
+            ),
             (_) => false);
       } else {
         state.countdown = state.countdown - 1;
@@ -34,10 +35,11 @@ class ExploreTutorialProvider
   @override
   ExploreTutorialView build(BuildContext context, ExploreTutorialState state) =>
       ExploreTutorialView(
-          countdown: state.countdown,
-          holding: state.holding,
-          onLogoTap: (context) => onTapDownLogo(context, state),
-          onLogoRelease: (context) => onTapUpLogo(context, state));
+        countdown: state.countdown,
+        holding: state.holding,
+        onLogoTap: (context) => onTapDownLogo(context, state),
+        onLogoRelease: (context) => onTapUpLogo(context, state),
+      );
 
   @override
   ExploreTutorialState buildState() => ExploreTutorialState();

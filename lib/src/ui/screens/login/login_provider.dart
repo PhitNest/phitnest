@@ -18,19 +18,19 @@ class LoginProvider extends ScreenProvider<LoginState, LoginView> {
             state.validateMode = AutovalidateMode.always;
           } else {}
         },
+        focusEmail: state.focusEmail,
+        focusPassword: state.focusPassword,
         validateEmail: (value) => validateEmail(value),
         validatePassword: (value) => validatePassword(value),
-        onTapEmail: () => state.scrollController.animateTo(
-          0.2,
-          duration: const Duration(milliseconds: 100),
-          curve: Curves.easeIn,
-        ),
-        onTapPassword: () => state.scrollController.animateTo(
-          0.3,
-          duration: const Duration(milliseconds: 100),
-          curve: Curves.easeIn,
-        ),
         autovalidateMode: state.validateMode,
+        onTapEmail: () => Future.delayed(
+          const Duration(milliseconds: 400),
+          () => state.onFocusEmail(true),
+        ),
+        onTapPassword: () => Future.delayed(
+          const Duration(milliseconds: 400),
+          () => state.onFocusPassword(true),
+        ),
         formKey: state.formKey,
         onPressedForgotPassword: () => Navigator.push(
           context,

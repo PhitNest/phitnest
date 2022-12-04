@@ -12,12 +12,12 @@ class ExploreState extends ScreenState {
 
   set countdown(int countdown) {
     _countdown = countdown;
-    notifyListeners();
+    rebuildView();
   }
 
   set holding(bool holding) {
     _holding = holding;
-    notifyListeners();
+    rebuildView();
   }
 
   @override

@@ -16,6 +16,8 @@ class LoginView extends ScreenView {
   final FormFieldValidator validatePassword;
   final AutovalidateMode autovalidateMode;
   final ScrollController scrollController;
+  final FocusNode focusPassword;
+  final FocusNode focusEmail;
   final VoidCallback onTapEmail;
   final VoidCallback onTapPassword;
 
@@ -30,6 +32,8 @@ class LoginView extends ScreenView {
     required this.validateEmail,
     required this.validatePassword,
     required this.scrollController,
+    required this.focusPassword,
+    required this.focusEmail,
     required this.onTapEmail,
     required this.onTapPassword,
   }) : super();
@@ -66,6 +70,7 @@ class LoginView extends ScreenView {
                           child: TextInputField(
                             hint: 'Email',
                             onTap: onTapEmail,
+                            focusNode: focusEmail,
                             validator: validateEmail,
                             inputAction: TextInputAction.next,
                             controller: emailController,
@@ -77,6 +82,8 @@ class LoginView extends ScreenView {
                           child: TextInputField(
                             hint: 'Password',
                             onTap: onTapPassword,
+                            focusNode: focusPassword,
+                            hide: true,
                             validator: validatePassword,
                             inputAction: TextInputAction.done,
                             controller: passwordController,

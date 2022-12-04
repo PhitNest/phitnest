@@ -5,8 +5,8 @@ import 'package:phitnest_mobile/src/ui/widgets/styled_button.dart';
 import '../view.dart';
 
 class UnauthorizedView extends ScreenView {
-  final Function() onRegister;
-  final Function() onSignIn;
+  final VoidCallback onRegister;
+  final VoidCallback onSignIn;
 
   UnauthorizedView({
     Key? key,

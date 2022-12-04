@@ -17,7 +17,7 @@ class ApologyState extends ScreenState {
 
   set validateMode(AutovalidateMode validateMode) {
     _validateMode = validateMode;
-    notifyListeners();
+    rebuildView();
   }
 
   @override

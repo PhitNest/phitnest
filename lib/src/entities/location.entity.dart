@@ -11,7 +11,9 @@ class LocationEntity extends Equatable {
 
   /// Converts a JSON object to a location
   factory LocationEntity.fromJson(Map<String, dynamic> json) => LocationEntity(
-      longitude: json['coordinates'][0], latitude: json['coordinates'][1]);
+        longitude: json['coordinates'][0],
+        latitude: json['coordinates'][1],
+      );
 
   /// Creates a JSON representation of the location
   Map<String, dynamic> toJson() => {
@@ -22,7 +24,11 @@ class LocationEntity extends Equatable {
   /// Compares the distance between two locations and returns a double
   double distanceTo(LocationEntity other) =>
       Geolocator.distanceBetween(
-          latitude, longitude, other.latitude, other.longitude) /
+        latitude,
+        longitude,
+        other.latitude,
+        other.longitude,
+      ) /
       1600;
 
   /// These are the properties to compare when determining equality
