@@ -186,17 +186,17 @@ export class AuthController implements IAuthController {
 
   async refreshSession(req: IRequest, res: IResponse) {
     try {
-      const { refreshToken, cognitoId } = z
+      const { refreshToken, email } = z
         .object({
           refreshToken: z.string(),
-          cognitoId: z.string(),
+          email: z.string(),
         })
         .parse(req.content());
-      const accessToken = await this.refreshSessionUseCase.execute(
+      const tokens = await this.refreshSessionUseCase.execute(
         refreshToken,
-        cognitoId
+        email
       );
-      return res.status(200).json({ accessToken: accessToken });
+      return res.status(200).json(tokens);
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);

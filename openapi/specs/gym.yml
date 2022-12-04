@@ -33,13 +33,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Gym"
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
     get:
       tags:
         - Gym
@@ -53,13 +50,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Gym"
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: You are not authenticated
 
   # /gym/nearest
   nearest:
@@ -73,23 +67,18 @@ paths:
           schema:
             type: number
             example: -80.2
-            minimum: -180
-            maximum: 180
           required: true
         - in: query
           name: latitude
           schema:
             type: number
             example: 37.4
-            minimum: -90
-            maximum: 90
           required: true
         - in: query
           name: distance
           schema:
             type: number
             example: 160300.5
-            minimum: 0
           description: A distance in units of meters
           required: true
         - in: query
@@ -97,7 +86,6 @@ paths:
           schema:
             type: integer
             example: 5
-            minimum: 0
           description: The amount of gyms to find. If undefined, all gyms within distance will be found.
       responses:
         200:
@@ -108,13 +96,10 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Gym"
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
 components:
   schemas:

@@ -4,7 +4,7 @@ export interface IAuthRepository {
   getCognitoId(accessToken: string): Promise<string>;
   refreshSession(
     refreshToken: string,
-    cognitoId: string
+    email: string
   ): Promise<Omit<IAuthEntity, "refreshToken">>;
   deleteUser(cognitoId: string): Promise<void>;
   registerUser(email: string, password: string): Promise<string>;

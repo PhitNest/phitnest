@@ -18,13 +18,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: You are not authenticated
 
   # /user/explore
   explore:
@@ -40,7 +37,6 @@ paths:
           schema:
             type: number
             example: 2
-            minimum: 0
           required: true
           description: The number of users to skip past
         - in: query
@@ -48,8 +44,6 @@ paths:
           schema:
             type: number
             example: 50
-            minimum: 0
-            maximum: 50
           required: true
           description: The number of users to find
       responses:
@@ -74,13 +68,10 @@ paths:
                     lastName:
                       type: string
                       example: Jones
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
 components:
   schemas:

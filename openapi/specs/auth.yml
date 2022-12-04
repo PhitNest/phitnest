@@ -44,13 +44,10 @@ paths:
                   idToken:
                     type: string
                     example: ABCDEFGHIJKLMNOP
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
   # /auth/register
   register:
@@ -78,28 +75,19 @@ paths:
                 gymId:
                   type: string
                   example: 6361c05b30d64fe62ff485cb
-                  minLength: 24
-                  maxLength: 24
                 firstName:
                   type: string
                   example: john
-                  minLength: 2
-                  maxLength: 20
                 lastName:
                   type: string
                   example: jones
-                  minLength: 1
-                  maxLength: 24
       responses:
         201:
           description: The registration was successful and a confirmation email was sent
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
   # /auth/refreshSession
   refresh:
@@ -139,13 +127,10 @@ paths:
                   idToken:
                     type: string
                     example: ABCDEFGHIJKLMNOP
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
   # /auth/confirmRegister
   confirmRegister:
@@ -168,18 +153,13 @@ paths:
                 code:
                   type: string
                   example: "012345"
-                  minLength: 6
-                  maxLength: 6
       responses:
         200:
           description: The user registration was successfully confirmed
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
   # /auth/forgotPassword
   forgotPassword:
@@ -201,13 +181,10 @@ paths:
       responses:
         200:
           description: The reset password code was sent
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
   # /auth/forgotPasswordSubmit
   forgotPasswordSubmit:
@@ -233,18 +210,13 @@ paths:
                 code:
                   type: string
                   example: "012345"
-                  minLength: 6
-                  maxLength: 6
       responses:
         200:
           description: The password was reset
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
   # /auth/resendConfirmation
   resendConfirmation:
@@ -261,13 +233,10 @@ paths:
       responses:
         200:
           description: The confirmation code was resent
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
   # /auth/signOut
   signOut:
@@ -292,13 +261,10 @@ paths:
       responses:
         200:
           description: The user was signed out
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
 components:
   schemas:
