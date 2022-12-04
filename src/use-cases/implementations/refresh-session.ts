@@ -11,7 +11,7 @@ export class RefreshSessionUseCase implements IRefreshSessionUseCase {
     this.authRepo = authRepo;
   }
 
-  async execute(refreshToken: string, cognitoId: string) {
-    return this.authRepo.refreshSession(refreshToken, cognitoId);
+  async execute(refreshToken: string, email: string) {
+    return this.authRepo.refreshSession(refreshToken, email);
   }
 }

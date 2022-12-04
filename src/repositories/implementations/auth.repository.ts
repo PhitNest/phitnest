@@ -161,8 +161,8 @@ export class CognitoAuthRepository implements IAuthRepository {
     });
   }
 
-  refreshSession(refreshToken: string, cognitoId: string) {
-    const user = new CognitoUser({ Username: cognitoId, Pool: userPool });
+  refreshSession(refreshToken: string, email: string) {
+    const user = new CognitoUser({ Username: email, Pool: userPool });
     return new Promise<Omit<IAuthEntity, "refreshToken">>((resolve, reject) => {
       user.refreshSession(
         new CognitoRefreshToken({

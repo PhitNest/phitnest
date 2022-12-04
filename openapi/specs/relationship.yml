@@ -26,13 +26,10 @@ paths:
       responses:
         200:
           description: The friend request was sent/accepted
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
   # /relationship/denyFriendRequest
   denyFriendRequest:
@@ -57,13 +54,10 @@ paths:
       responses:
         200:
           description: The friend request was denied
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
   # /relationship/block
   block:
@@ -88,13 +82,10 @@ paths:
       responses:
         200:
           description: The user was blocked
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
   # /relationship/unblock
   unblock:
@@ -119,13 +110,10 @@ paths:
       responses:
         200:
           description: The user was blocked
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
   # /relationship/sentFriendRequests
   sentFriendRequests:
@@ -144,13 +132,10 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/UserPublic"
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
   # /relationship/receivedFriendRequests
   receivedFriendRequests:
@@ -169,13 +154,10 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/UserPublic"
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
   # /relationship/friends
   friends:
@@ -194,13 +176,10 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/UserPublic"
+        400:
+          description: Validation error
         500:
           description: An internal error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Validation error has occurred.
 
 components:
   schemas:
