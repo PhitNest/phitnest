@@ -1,11 +1,13 @@
 import 'package:equatable/equatable.dart';
 
 class ExploreUserEntity extends Equatable {
+  final String id;
   final String cognitoId;
   final String firstName;
   final String lastName;
 
-  ExploreUserEntity({
+  const ExploreUserEntity({
+    required this.id,
     required this.cognitoId,
     required this.firstName,
     required this.lastName,
@@ -13,25 +15,30 @@ class ExploreUserEntity extends Equatable {
 
   factory ExploreUserEntity.fromJson(Map<String, dynamic> json) =>
       ExploreUserEntity(
+        id: json['_id'],
         cognitoId: json['cognitoId'],
         firstName: json['firstName'],
         lastName: json['lastName'],
       );
 
   Map<String, dynamic> toJson() => {
+        '_id': id,
         'cognitoId': cognitoId,
         'firstName': firstName,
         'lastName': lastName,
       };
 
+  String get fullName => '$firstName $lastName';
+
   @override
-  List<Object?> get props => [cognitoId, firstName, lastName];
+  List<Object?> get props => [id, cognitoId, firstName, lastName];
 }
 
 class PublicUserEntity extends ExploreUserEntity {
   final String gymId;
 
-  PublicUserEntity({
+  const PublicUserEntity({
+    required super.id,
     required super.cognitoId,
     required super.firstName,
     required super.lastName,
@@ -40,6 +47,7 @@ class PublicUserEntity extends ExploreUserEntity {
 
   factory PublicUserEntity.fromJson(Map<String, dynamic> json) =>
       PublicUserEntity(
+        id: json['_id'],
         cognitoId: json['cognitoId'],
         firstName: json['firstName'],
         lastName: json['lastName'],
@@ -58,7 +66,8 @@ class PublicUserEntity extends ExploreUserEntity {
 class UserEntity extends PublicUserEntity {
   final String email;
 
-  UserEntity({
+  const UserEntity({
+    required super.id,
     required super.cognitoId,
     required super.firstName,
     required super.lastName,
@@ -67,6 +76,7 @@ class UserEntity extends PublicUserEntity {
   }) : super();
 
   factory UserEntity.fromJson(Map<String, dynamic> json) => UserEntity(
+        id: json['_id'],
         cognitoId: json['cognitoId'],
         firstName: json['firstName'],
         lastName: json['lastName'],

@@ -203,9 +203,11 @@ packages:
   flutter_verification_code:
     dependency: "direct main"
     description:
-      name: flutter_verification_code
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "1d2108892c2159775497cf1a57aadb716511c9d1"
+      url: "https://github.com/avraham-mayer/flutter_verification_code.git"
+    source: git
     version: "1.1.6"
   flutter_web_plugins:
     dependency: transitive

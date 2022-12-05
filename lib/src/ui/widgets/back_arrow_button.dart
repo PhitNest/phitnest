@@ -4,9 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class BackArrowButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
-        padding: EdgeInsets.only(left: 8.w),
-        alignment: AlignmentDirectional.bottomCenter,
-        height: double.infinity,
+        padding: EdgeInsets.only(left: 12.w),
+        alignment: Alignment.centerLeft,
         child: IconButton(
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,

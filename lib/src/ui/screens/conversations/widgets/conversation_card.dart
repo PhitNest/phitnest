@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../models/conversation.dart';
-
 class ConversationCard extends StatelessWidget {
-  final ConversationModel conversation;
-  final Function() onDownTap;
-  final Function() onUpTap;
+  final String message;
+  final String title;
+  final bool selected;
+  final void Function(DismissDirection direction) onDismissed;
 
   const ConversationCard({
-    required this.conversation,
-    required this.onDownTap,
-    required this.onUpTap,
+    required this.message,
+    required this.title,
+    required this.selected,
+    required this.onDismissed,
   });
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTapDown: (_) => onDownTap(),
-        onTapCancel: onUpTap,
-        onTapUp: (details) => onUpTap(),
+  Widget build(BuildContext context) => Dismissible(
+        key: UniqueKey(),
+        onDismissed: onDismissed,
         child: Container(
           width: 343.w,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.0),
-            color:
-                conversation.selected ? Color(0xFFFFE3E3) : Colors.transparent,
+            color: selected ? Color(0xFFFFE3E3) : Colors.transparent,
           ),
           child: Padding(
             padding: EdgeInsets.all(24.w),
@@ -32,15 +30,12 @@ class ConversationCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  conversation.name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium!
-                      .copyWith(fontSize: 18.sp),
+                  title,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 8.44.verticalSpace,
                 Text(
-                  conversation.recentMessage,
+                  message,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
