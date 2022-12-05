@@ -27,10 +27,7 @@ class ConversationsProvider
                 message: element.value.value2.text,
                 title: element.value.value1.fullName,
                 selected: element.value.value3,
-                onDismissed: (direction) => state.selectConversation(
-                  element.key,
-                  direction == DismissDirection.startToEnd,
-                ),
+                onDismissed: (_) => state.removeConversation(element.key),
               ),
             )
             .toList(),

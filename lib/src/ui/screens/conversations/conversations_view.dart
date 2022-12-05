@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../theme.dart';
+import '../../widgets/widgets.dart';
 import '../view.dart';
 import 'widgets/conversation_card.dart';
 
@@ -17,26 +19,34 @@ class ConversationsView extends ScreenView {
   Widget build(BuildContext context) => Scaffold(
         body: Column(
           children: [
-            73.verticalSpace,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: onClickFriends,
-                  child: Text(
-                    'FRIENDS',
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+            40.verticalSpace,
+            Container(
+              width: 0.9.sw,
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: onClickFriends,
+                child: Text(
+                  'FRIENDS',
+                  style: theme.textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 ),
-                32.horizontalSpace,
-              ],
+              ),
             ),
             Expanded(
-              child: ListView(
-                children: conversations,
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: conversations.length,
+                itemBuilder: (context, index) => conversations[index],
               ),
+            ),
+            StyledNavBar(
+              pageIndex: 2,
+              onTapDownLogo: () {},
+              onTapUpLogo: () {},
+              navigationEnabled: true,
             ),
           ],
         ),

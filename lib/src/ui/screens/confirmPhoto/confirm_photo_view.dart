@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
@@ -26,7 +27,7 @@ class ConfirmPhotoView extends ScreenView {
                   padding: EdgeInsets.only(top: 10.h),
                   child: Text(
                     "Confirm Photo",
-                    style: Theme.of(context).textTheme.headlineLarge,
+                    style: theme.textTheme.headlineLarge,
                   ),
                 ),
               ],

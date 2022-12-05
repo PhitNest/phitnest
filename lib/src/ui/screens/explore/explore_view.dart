@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
@@ -53,7 +54,7 @@ class ExploreView extends ScreenView {
                 ),
                 Text(
                   'Erin-Michelle J.',
-                  style: Theme.of(context).textTheme.headlineLarge,
+                  style: theme.textTheme.headlineLarge,
                 ),
                 Image.asset(
                   'assets/images/right_arrow.png',
@@ -64,7 +65,7 @@ class ExploreView extends ScreenView {
             80.verticalSpace,
             Text(
               'Press logo to send friend request',
-              style: Theme.of(context).textTheme.bodySmall,
+              style: theme.textTheme.bodySmall,
             ),
           ],
         ),

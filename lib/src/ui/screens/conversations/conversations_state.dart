@@ -114,4 +114,9 @@ class ConversationsState extends ScreenState {
     );
     rebuildView();
   }
+
+  void removeConversation(int index) {
+    _conversations.removeAt(index);
+    rebuildView();
+  }
 }
