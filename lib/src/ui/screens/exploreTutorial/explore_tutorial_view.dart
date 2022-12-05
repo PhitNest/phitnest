@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
 class ExploreTutorialView extends ScreenView {
   final bool holding;
   final int countdown;
-  final Function(BuildContext context) onLogoTap;
-  final Function(BuildContext context) onLogoRelease;
+  final VoidCallback onLogoTap;
+  final VoidCallback onLogoRelease;
 
-  ExploreTutorialView({
+  const ExploreTutorialView({
     required this.holding,
     required this.countdown,
     required this.onLogoTap,
@@ -31,27 +32,45 @@ class ExploreTutorialView extends ScreenView {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: SizedBox(
-          width: double.infinity,
           child: Column(
             children: [
-              (holding ? 144 : 186).verticalSpace,
+              (holding ? 120 : 200).verticalSpace,
               holding
-                  ? CountdownRing(countdownNum: countdown)
+                  ? CountdownRing(
+                      countdownNum: countdown,
+                    )
                   : Text(
                       'Great!',
-                      style: Theme.of(context).textTheme.headlineLarge,
+                      style: theme.textTheme.headlineLarge,
                     ),
-              (holding ? 149 : 40).verticalSpace,
+              (holding ? 20 : 40).verticalSpace,
               holding
-                  ? Text(_countdownText,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall!
-                          .copyWith(color: Color(0xFF707070)))
+                  ? Text(
+                      _countdownText,
+                      style: theme.textTheme.bodySmall!.copyWith(
+                        color: Color(0xFF707070),
+                      ),
+                    )
                   : Text(
                       'Let’s meet friends in your Nest',
-                      style: Theme.of(context).textTheme.labelLarge,
+                      style: theme.textTheme.labelLarge,
                     ),
+              Expanded(child: Container()),
+              holding
+                  ? Container()
+                  : Text(
+                      'Press and hold logo to send friend request',
+                      style: theme.textTheme.bodySmall,
+                    ),
+              20.verticalSpace,
+              StyledNavBar(
+                navigationEnabled: false,
+                pageIndex: 1,
+                animateLogo: !holding,
+                colorful: true,
+                onTapDownLogo: onLogoTap,
+                onTapUpLogo: onLogoRelease,
+              )
             ],
           ),
         ),
