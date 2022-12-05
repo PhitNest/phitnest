@@ -3,6 +3,20 @@ tags:
     description: Authentication endpoint
 
 paths:
+  # /auth
+  root:
+    get:
+      tags:
+        - Auth
+      summary: Check whether a user is authenticated
+      security:
+        - AccessToken: []
+      responses:
+        200:
+          description: User is authenticated
+        500:
+          description: User is not authenticated
+
   # /auth/login
   login:
     post:

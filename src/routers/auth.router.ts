@@ -61,6 +61,12 @@ export class AuthRouter implements IRouter {
         middlewares: [authMiddleware],
         controller: (req, res) => authController.signOut(req, res),
       },
+      {
+        path: "/",
+        method: HttpMethod.GET,
+        middlewares: [authMiddleware],
+        controller: async (req, res) => res.status(200).send(),
+      },
     ];
   }
 }
