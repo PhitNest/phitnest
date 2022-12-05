@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../theme.dart';
@@ -35,67 +36,70 @@ class ApologyView extends ScreenView {
   });
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: SingleChildScrollView(
-          controller: scrollController,
-          child: Column(
-            children: [
-              double.infinity.horizontalSpace,
-              110.verticalSpace,
-              SizedBox(
-                child: Text(
-                  "We apologize",
-                  style: theme.textTheme.headlineLarge,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              40.verticalSpace,
-              SizedBox(
+  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          body: SingleChildScrollView(
+            controller: scrollController,
+            child: Column(
+              children: [
+                double.infinity.horizontalSpace,
+                110.verticalSpace,
+                SizedBox(
                   child: Text(
-                "PhitNest is currently available to\nselect fitness club locations only.\n\n\nMay we contact you when this\nchanges?",
-                style: theme.textTheme.labelLarge,
-                textAlign: TextAlign.center,
-              )),
-              40.verticalSpace,
-              SizedBox(
-                width: 291.w,
-                child: Form(
-                  key: formKey,
-                  autovalidateMode: autovalidateMode,
-                  child: Column(children: [
-                    SizedBox(
-                      height: 34.h,
-                      child: TextInputField(
-                        inputAction: TextInputAction.next,
-                        controller: nameController,
-                        focusNode: nameFocusNode,
-                        onTap: onTapName,
-                        hint: 'Name',
-                        validator: validateFirstName,
-                      ),
-                    ),
-                    16.verticalSpace,
-                    SizedBox(
-                      height: 34.h,
-                      child: TextInputField(
-                        inputAction: TextInputAction.done,
-                        controller: emailController,
-                        focusNode: emailFocusNode,
-                        onTap: onTapEmail,
-                        hint: 'Email',
-                        validator: validateEmail,
-                      ),
-                    ),
-                  ]),
+                    "We apologize",
+                    style: theme.textTheme.headlineLarge,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-              40.verticalSpace,
-              StyledButton(
-                child: Text('SUBMIT'),
-                onPressed: onPressedSubmit,
-              ),
-              10.verticalSpace,
-            ],
+                40.verticalSpace,
+                SizedBox(
+                    child: Text(
+                  "PhitNest is currently available to\nselect fitness club locations only.\n\n\nMay we contact you when this\nchanges?",
+                  style: theme.textTheme.labelLarge,
+                  textAlign: TextAlign.center,
+                )),
+                40.verticalSpace,
+                SizedBox(
+                  width: 291.w,
+                  child: Form(
+                    key: formKey,
+                    autovalidateMode: autovalidateMode,
+                    child: Column(children: [
+                      SizedBox(
+                        height: 34.h,
+                        child: TextInputField(
+                          inputAction: TextInputAction.next,
+                          controller: nameController,
+                          focusNode: nameFocusNode,
+                          onTap: onTapName,
+                          hint: 'Name',
+                          validator: validateFirstName,
+                        ),
+                      ),
+                      16.verticalSpace,
+                      SizedBox(
+                        height: 34.h,
+                        child: TextInputField(
+                          inputAction: TextInputAction.done,
+                          controller: emailController,
+                          focusNode: emailFocusNode,
+                          onTap: onTapEmail,
+                          hint: 'Email',
+                          validator: validateEmail,
+                        ),
+                      ),
+                    ]),
+                  ),
+                ),
+                40.verticalSpace,
+                StyledButton(
+                  child: Text('SUBMIT'),
+                  onPressed: onPressedSubmit,
+                ),
+                10.verticalSpace,
+              ],
+            ),
           ),
         ),
       );

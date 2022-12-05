@@ -6,19 +6,15 @@ import '../../../theme.dart';
 
 class ConversationCard extends StatelessWidget {
   final String message;
-  final bool selected;
   final String title;
   final void Function(DismissDirection direction) onDismissed;
-  final VoidCallback onDeselect;
-  final VoidCallback onSelect;
+  final VoidCallback onTap;
 
   const ConversationCard({
     required this.message,
     required this.title,
-    required this.selected,
     required this.onDismissed,
-    required this.onDeselect,
-    required this.onSelect,
+    required this.onTap,
   });
 
   @override
@@ -27,7 +23,6 @@ class ConversationCard extends StatelessWidget {
           bottom: 14.h,
         ),
         child: Dismissible(
-          behavior: HitTestBehavior.translucent,
           dragStartBehavior: DragStartBehavior.down,
           background: Container(
             color: Colors.red,
@@ -41,17 +36,15 @@ class ConversationCard extends StatelessWidget {
           key: UniqueKey(),
           onDismissed: onDismissed,
           direction: DismissDirection.startToEnd,
-          child: GestureDetector(
-            onTapDown: (details) => onSelect(),
+          child: InkWell(
+            onTap: onTap,
+            highlightColor: Color(0xFFFFE3E3),
+            borderRadius: BorderRadius.circular(8.0),
             child: Container(
-              width: 343.w,
+              width: 0.9.sw,
               padding: EdgeInsets.symmetric(
-                horizontal: 16.w,
+                horizontal: 18.w,
                 vertical: 16.h,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                color: selected ? Color(0xFFFFE3E3) : Colors.transparent,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
