@@ -40,7 +40,7 @@ class ExploreView extends ScreenView {
                         ),
                       ),
                       Text(
-                        'Press logo to send friend request',
+                        'Press and hold logo to send friend request',
                         style: theme.textTheme.bodySmall,
                       ),
                       20.verticalSpace,
