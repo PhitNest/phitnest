@@ -6,9 +6,14 @@ import 'confirm_photo_view.dart';
 
 class ConfirmPhotoProvider
     extends ScreenProvider<ConfirmPhotoState, ConfirmPhotoView> {
+  const ConfirmPhotoProvider() : super();
+
   @override
   ConfirmPhotoView build(BuildContext context, ConfirmPhotoState state) =>
-      ConfirmPhotoView();
+      ConfirmPhotoView(
+        onPressedConfirm: () {},
+        onPressedRetake: () {},
+      );
 
   @override
   ConfirmPhotoState buildState() => ConfirmPhotoState();

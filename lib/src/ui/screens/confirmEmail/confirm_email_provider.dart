@@ -6,6 +6,8 @@ import 'confirm_email_view.dart';
 
 class ConfirmEmailProvider
     extends ScreenProvider<ConfirmEmailState, ConfirmEmailView> {
+  const ConfirmEmailProvider() : super();
+
   @override
   ConfirmEmailView build(BuildContext context, ConfirmEmailState state) =>
       ConfirmEmailView(

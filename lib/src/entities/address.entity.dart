@@ -8,7 +8,7 @@ class AddressEntity extends Equatable {
   final String zipCode;
 
   /// This is the constructor for the address
-  AddressEntity({
+  const AddressEntity({
     required this.street,
     required this.city,
     required this.state,

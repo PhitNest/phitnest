@@ -104,7 +104,7 @@ class LoginView extends ScreenView {
                   text: 'FORGOT PASSWORD?',
                 ),
                 TextButtonWidget(
-                  onPressed: onPressedForgotPassword,
+                  onPressed: onPressedRegister,
                   text: 'REGISTER',
                 ),
                 37.verticalSpace

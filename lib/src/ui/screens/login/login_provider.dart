@@ -8,6 +8,8 @@ import 'login_state.dart';
 import 'login_view.dart';
 
 class LoginProvider extends ScreenProvider<LoginState, LoginView> {
+  const LoginProvider() : super();
+
   @override
   LoginView build(BuildContext context, LoginState state) => LoginView(
         scrollController: state.scrollController,
@@ -24,11 +26,11 @@ class LoginProvider extends ScreenProvider<LoginState, LoginView> {
         validatePassword: (value) => validatePassword(value),
         autovalidateMode: state.validateMode,
         onTapEmail: () => Future.delayed(
-          const Duration(milliseconds: 400),
+          const Duration(milliseconds: 600),
           () => state.onFocusEmail(true),
         ),
         onTapPassword: () => Future.delayed(
-          const Duration(milliseconds: 400),
+          const Duration(milliseconds: 600),
           () => state.onFocusPassword(true),
         ),
         formKey: state.formKey,

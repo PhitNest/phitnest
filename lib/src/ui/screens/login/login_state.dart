@@ -44,6 +44,9 @@ class LoginState extends ScreenState {
 
   @override
   void dispose() {
+    focusEmail.dispose();
+    focusPassword.dispose();
+    scrollController.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.dispose();

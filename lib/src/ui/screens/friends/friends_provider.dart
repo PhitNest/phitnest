@@ -5,6 +5,8 @@ import 'friends_state.dart';
 import 'friends_view.dart';
 
 class FriendsProvider extends ScreenProvider<FriendsState, FriendsView> {
+  const FriendsProvider() : super();
+
   @override
   FriendsView build(BuildContext context, FriendsState state) => FriendsView(
         searchController: state.searchController,

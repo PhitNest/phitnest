@@ -33,6 +33,12 @@ ThemeData theme = ThemeData(
       height: 1.1,
       color: Colors.black,
     ),
+    headlineSmall: GoogleFonts.baskervville(
+      fontSize: 18.sp,
+      letterSpacing: -0.02,
+      height: 1.1,
+      color: Colors.black,
+    ),
     // Label
     labelLarge: TextStyle(
       fontSize: 18.sp,

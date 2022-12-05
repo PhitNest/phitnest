@@ -4,7 +4,7 @@ class SessionRefreshTokensEntity extends Equatable {
   final String accessToken;
   final String idToken;
 
-  SessionRefreshTokensEntity({
+  const SessionRefreshTokensEntity({
     required this.accessToken,
     required this.idToken,
   });
@@ -27,7 +27,7 @@ class SessionRefreshTokensEntity extends Equatable {
 class AuthTokensEntity extends SessionRefreshTokensEntity {
   final String refreshToken;
 
-  AuthTokensEntity({
+  const AuthTokensEntity({
     required super.accessToken,
     required super.idToken,
     required this.refreshToken,
