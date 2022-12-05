@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
@@ -44,7 +45,7 @@ class ApologyView extends ScreenView {
               SizedBox(
                 child: Text(
                   "We apologize",
-                  style: Theme.of(context).textTheme.headlineLarge,
+                  style: theme.textTheme.headlineLarge,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -52,7 +53,7 @@ class ApologyView extends ScreenView {
               SizedBox(
                   child: Text(
                 "PhitNest is currently available to\nselect fitness club locations only.\n\n\nMay we contact you when this\nchanges?",
-                style: Theme.of(context).textTheme.labelLarge,
+                style: theme.textTheme.labelLarge,
                 textAlign: TextAlign.center,
               )),
               40.verticalSpace,

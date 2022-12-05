@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 
+import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
@@ -28,13 +29,13 @@ class ConfirmEmailView extends ScreenView {
               Text(
                 "Please confirm\nthat it's you.",
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineLarge,
+                style: theme.textTheme.headlineLarge,
               ),
               40.verticalSpace,
               Text(
                 "Check your email for a verification\ncode from us and enter it below",
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.labelLarge,
+                style: theme.textTheme.labelLarge,
               ),
               60.verticalSpace,
               VerificationCode(
