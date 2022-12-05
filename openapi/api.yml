@@ -13,6 +13,8 @@ servers:
   - url: /
 
 paths:
+  /auth:
+    $ref: "specs/auth.yml#/paths/root"
   /auth/login:
     $ref: "specs/auth.yml#/paths/login"
   /auth/register:
