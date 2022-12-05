@@ -28,6 +28,8 @@ class ConversationsProvider
                 title: element.value.value1.fullName,
                 selected: element.value.value3,
                 onDismissed: (_) => state.removeConversation(element.key),
+                onSelect: () => state.selectConversation(element.key, true),
+                onDeselect: () => state.selectConversation(element.key, false),
               ),
             )
             .toList(),
