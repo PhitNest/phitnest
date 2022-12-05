@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../widgets/widgets.dart';
 import '../provider.dart';
 import '../screens.dart';
 import 'conversations_state.dart';
@@ -19,6 +20,12 @@ class ConversationsProvider
             builder: (context) => const FriendsProvider(),
           ),
         ),
+        onTapLogoButton: () => Navigator.push(
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (context) => const ExploreProvider(),
+          ),
+        ),
         conversations: state.conversations
             .asMap()
             .entries
@@ -26,10 +33,8 @@ class ConversationsProvider
               (element) => ConversationCard(
                 message: element.value.value2.text,
                 title: element.value.value1.fullName,
-                selected: element.value.value3,
                 onDismissed: (_) => state.removeConversation(element.key),
-                onSelect: () => state.selectConversation(element.key, true),
-                onDeselect: () => state.selectConversation(element.key, false),
+                onTap: () {},
               ),
             )
             .toList(),

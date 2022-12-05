@@ -7,10 +7,12 @@ import '../view.dart';
 class MatchView extends ScreenView {
   final VoidCallback onPressedSayHello;
   final VoidCallback onPressedMeetMore;
+  final String fullName;
 
   const MatchView({
     required this.onPressedSayHello,
     required this.onPressedMeetMore,
+    required this.fullName,
   }) : super();
 
   @override
@@ -20,7 +22,7 @@ class MatchView extends ScreenView {
           child: Column(
             children: [
               240.verticalSpace,
-              Text("Erin-Michelle J.\nwants to meet you too!",
+              Text("$fullName\nwants to meet you too!",
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme

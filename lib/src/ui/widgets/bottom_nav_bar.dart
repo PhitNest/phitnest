@@ -9,11 +9,12 @@ class StyledNavBar extends StatefulWidget {
   static double get kHeight => 66.h;
 
   final int pageIndex;
-  final bool logoHeld;
-  final Function() onTapDownLogo;
-  final Function() onTapUpLogo;
+  final bool animateLogo;
+  final VoidCallback onTapDownLogo;
+  final VoidCallback? onTapUpLogo;
   final bool reversed;
   final bool navigationEnabled;
+  final bool colorful;
 
   static const String kColoredLogoPath = 'assets/images/logo_color.png';
   static const String kLogoPath = 'assets/images/logo.png';
@@ -24,9 +25,10 @@ class StyledNavBar extends StatefulWidget {
     required this.navigationEnabled,
     required this.pageIndex,
     required this.onTapDownLogo,
+    this.colorful = false,
     this.reversed = false,
-    this.logoHeld = false,
-    required this.onTapUpLogo,
+    this.animateLogo = false,
+    this.onTapUpLogo,
   }) : super(key: key);
 
   StyledNavBar copyWith({
@@ -34,14 +36,14 @@ class StyledNavBar extends StatefulWidget {
     int? pageIndex,
     Function()? onTapDownLogo,
     bool? reversed,
-    bool? logoHeld,
+    bool? animateLogo,
     Function()? onTapUpLogo,
   }) =>
       StyledNavBar(
         navigationEnabled: navigationEnabled ?? this.navigationEnabled,
         pageIndex: pageIndex ?? this.pageIndex,
         reversed: reversed ?? this.reversed,
-        logoHeld: logoHeld ?? this.logoHeld,
+        animateLogo: animateLogo ?? this.animateLogo,
         onTapDownLogo: onTapDownLogo ?? this.onTapDownLogo,
         onTapUpLogo: onTapUpLogo ?? this.onTapUpLogo,
       );
@@ -54,12 +56,10 @@ class _StyledNavBarState extends State<StyledNavBar>
     with SingleTickerProviderStateMixin {
   late final AnimationController? controller;
 
-  bool get shouldAnimate => widget.pageIndex == 1 && !widget.reversed;
-
   @override
   void initState() {
     super.initState();
-    controller = shouldAnimate
+    controller = widget.colorful
         ? (AnimationController(vsync: this)
           ..repeat(
             min: 0,
@@ -73,14 +73,15 @@ class _StyledNavBarState extends State<StyledNavBar>
   Widget get logoButton => GestureDetector(
       onTapCancel: widget.onTapUpLogo,
       onTapDown: (_) => widget.onTapDownLogo(),
-      onTapUp: (_) => widget.onTapUpLogo(),
+      onTapUp: widget.onTapUpLogo == null ? null : (_) => widget.onTapUpLogo!(),
       child: Image.asset(
-        widget.pageIndex == 1
+        widget.colorful
             ? widget.reversed
                 ? StyledNavBar.kReversedLogoPath
                 : StyledNavBar.kColoredLogoPath
             : StyledNavBar.kLogoPath,
-        width: 38.62.w + (widget.logoHeld ? 1 : (controller?.value ?? 0)) * 5.w,
+        width:
+            38.62.w + (widget.animateLogo ? (controller?.value ?? 0) : 1) * 5.w,
       ));
 
   Widget createButton(
