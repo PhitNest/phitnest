@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_mobile/src/ui/widgets/back_arrow_button.dart';
 
-import '../../../entities/entities.dart';
 import '../../theme.dart';
+import '../../widgets/widgets.dart';
 import '../view.dart';
-import 'widgets/add_button.dart';
+import 'widgets/widgets.dart';
 
 class FriendsView extends ScreenView {
   final TextEditingController searchController;
-  final List<PublicUserEntity> friends;
-  final List<PublicUserEntity> requests;
-  final VoidCallback removeFriend;
-  final VoidCallback addFriend;
-  final VoidCallback ignoreRequest;
+  final List<FriendCard> friends;
+  final List<RequestCard> requests;
+  final VoidCallback onEditSearch;
 
   FriendsView({
     required this.searchController,
     required this.friends,
     required this.requests,
-    required this.addFriend,
-    required this.ignoreRequest,
-    required this.removeFriend,
+    required this.onEditSearch,
   });
 
   @override
@@ -36,100 +31,42 @@ class FriendsView extends ScreenView {
                 width: 0.9.sw,
                 child: Column(
                   children: [
-                    TextField(
-                      textAlignVertical: TextAlignVertical.center,
-                      style: theme.textTheme.labelMedium,
+                    SearchBox(
+                      hintText: 'Search',
                       controller: searchController,
-                      keyboardType: TextInputType.streetAddress,
-                      onChanged: (_) => {},
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(left: 16.w),
-                        hintText: 'Search',
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(8)),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(8)),
-                        hintStyle: theme.textTheme.labelMedium!
-                            .copyWith(color: Color(0xFF999999)),
-                      ),
+                      keyboardType: TextInputType.name,
+                      onChanged: (_) => onEditSearch(),
                     ),
                     24.verticalSpace,
-                    Text(
-                      'Requests',
-                      style: theme.textTheme.headlineMedium,
-                    ),
-                    24.verticalSpace,
-                    ...requests.map(
-                      (req) => Padding(
-                        padding: EdgeInsets.only(
-                          bottom: 24.h,
-                        ),
-                        child: Row(
-                          children: [
+                    ...(requests.length > 0
+                        ? [
                             Text(
-                              req.fullName,
-                              style: theme.textTheme.headlineMedium!.copyWith(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                              ),
+                              'Requests',
+                              style: theme.textTheme.headlineMedium,
                             ),
-                            Spacer(),
-                            GestureDetector(
-                              onTap: addFriend,
-                              child: AddButton(),
-                            ),
-                            12.horizontalSpace,
-                            Container(
-                              padding: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                color: Colors.transparent,
-                              ),
-                              child: Text(
-                                'IGNORE',
-                                style: theme.textTheme.bodySmall!
-                                    .copyWith(color: Colors.black),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    24.verticalSpace,
+                            24.verticalSpace,
+                            ...requests,
+                            24.verticalSpace,
+                          ]
+                        : []),
                     Text(
                       'Friends',
                       style: theme.textTheme.headlineMedium,
                     ),
                     12.verticalSpace,
-                    ...friends.map(
-                      (friend) => Padding(
-                        padding: EdgeInsets.only(
-                          bottom: 12.h,
-                        ),
-                        child: Row(
-                          children: [
+                    ...(friends.length > 0
+                        ? friends
+                        : [
                             Text(
-                              friend.fullName,
-                              style: theme.textTheme.headlineMedium!.copyWith(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                              ),
+                              searchController.text.length > 0
+                                  ? "No results for: \"${searchController.text}\""
+                                  : "You have not made any friends yet",
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.labelMedium,
                             ),
-                            Spacer(),
-                            TextButton(
-                              onPressed: removeFriend,
-                              child: Text(
-                                'REMOVE',
-                                style: theme.textTheme.bodySmall!
-                                    .copyWith(color: Colors.black),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                          ]),
                   ],
                 ),
               ),

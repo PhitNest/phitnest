@@ -6,7 +6,7 @@ import '../state.dart';
 class FriendsState extends ScreenState {
   final TextEditingController searchController = TextEditingController();
 
-  List<PublicUserEntity> requests = [
+  List<PublicUserEntity> _requests = [
     PublicUserEntity(
       id: '1',
       cognitoId: '1',
@@ -39,12 +39,14 @@ class FriendsState extends ScreenState {
       id: '5',
       cognitoId: '5',
       firstName: 'Erin-Michelle',
-      lastName: 'J.',
+      lastName: 'Jeankowski',
       gymId: '1',
     ),
   ];
 
-  List<PublicUserEntity> friends = [
+  List<PublicUserEntity> get requests => _requests;
+
+  List<PublicUserEntity> _friends = [
     PublicUserEntity(
       id: '6',
       cognitoId: '6',
@@ -81,4 +83,24 @@ class FriendsState extends ScreenState {
       gymId: '1',
     ),
   ];
+
+  List<PublicUserEntity> get friends => _friends;
+
+  void removeRequest(int index) {
+    _requests.removeAt(index);
+    rebuildView();
+  }
+
+  void removeFriend(int index) {
+    _friends.removeAt(index);
+    rebuildView();
+  }
+
+  void onEditSearch() => rebuildView();
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 }
