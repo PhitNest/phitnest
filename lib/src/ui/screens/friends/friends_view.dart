@@ -38,20 +38,18 @@ class FriendsView extends ScreenView {
                 ),
                 Expanded(
                   child: ShaderMask(
-                    shaderCallback: (Rect bounds) {
-                      return LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.white.withOpacity(0.05),
-                          Colors.white,
-                          Colors.white,
-                          Colors.white.withOpacity(0.05)
-                        ],
-                        stops: [0, 0.03, 0.95, 1],
-                        tileMode: TileMode.mirror,
-                      ).createShader(bounds);
-                    },
+                    shaderCallback: (Rect bounds) => LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.white.withOpacity(0.05),
+                        Colors.white,
+                        Colors.white,
+                        Colors.white.withOpacity(0.05)
+                      ],
+                      stops: [0, 0.03, 0.95, 1],
+                      tileMode: TileMode.mirror,
+                    ).createShader(bounds),
                     child: SingleChildScrollView(
                       child: Container(
                         padding: EdgeInsets.only(

@@ -34,7 +34,12 @@ class ConversationsProvider
                 message: element.value.value2.text,
                 title: element.value.value1.fullName,
                 onDismissed: (_) => state.removeConversation(element.key),
-                onTap: () {},
+                onTap: () => Navigator.push(
+                  context,
+                  NoAnimationMaterialPageRoute(
+                    builder: (context) => const MessageProvider(),
+                  ),
+                ),
               ),
             )
             .toList(),
