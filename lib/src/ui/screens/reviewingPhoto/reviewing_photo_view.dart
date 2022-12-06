@@ -1,28 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
 class ReviewingPhotoView extends ScreenView {
-  final String userName;
-  const ReviewingPhotoView({this.userName = "[Name]"}) : super();
+  final String name;
+  final VoidCallback onPressedFinish;
+
+  const ReviewingPhotoView({
+    required this.name,
+    required this.onPressedFinish,
+  }) : super();
 
   @override
-  String? get appBarText => "Thank You";
-
-  @override
-  Widget buildView(BuildContext context) => Container(
-        margin: EdgeInsets.symmetric(horizontal: 48.w, vertical: 48.h),
-        child: Column(
+  Widget build(BuildContext context) => Scaffold(
+        body: Column(
           children: [
+            double.infinity.horizontalSpace,
+            90.verticalSpace,
+            Text(
+              "Thank You",
+              style: theme.textTheme.headlineLarge,
+            ),
+            40.verticalSpace,
             RichText(
               text: TextSpan(
                 text:
-                    'Dear $userName,\n\nWe are reviewing your photo.\n\nIt may take up to 48 hours to review\nyour photo. Please make sure\n',
-                style: Theme.of(context)
-                    .textTheme
-                    .labelMedium!
+                    'Dear $name,\n\nWe are reviewing your photo.\n\nIt may take up to 48 hours to review\nyour photo. Please make sure\n',
+                style: theme.textTheme.labelMedium!
                     .copyWith(fontStyle: FontStyle.italic),
                 children: const <TextSpan>[
                   TextSpan(
@@ -34,12 +41,13 @@ class ReviewingPhotoView extends ScreenView {
                 ],
               ),
             ),
-            96.verticalSpace,
+            140.verticalSpace,
             StyledButton(
-                onPressed: () {},
-                child: Text(
-                  'FINISH',
-                ))
+              onPressed: onPressedFinish,
+              child: Text(
+                'FINISH',
+              ),
+            )
           ],
         ),
       );

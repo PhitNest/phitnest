@@ -1,140 +1,116 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../nav_bar_view.dart';
-import 'models/friend_model.dart';
-import 'widgets/add_button.dart';
+import '../../theme.dart';
+import '../../widgets/widgets.dart';
+import '../screens.dart';
+import '../view.dart';
+import 'widgets/widgets.dart';
 
-class FriendsView extends NavBarScreenView {
+class FriendsView extends ScreenView {
   final TextEditingController searchController;
-  final List<FriendModel> friends;
-  final List<FriendModel> requests;
-  final Function() removeFriend;
-  final Function() addFriend;
-  final Function() ignoreRequest;
+  final List<FriendCard> friends;
+  final List<RequestCard> requests;
+  final VoidCallback onEditSearch;
 
   FriendsView({
     required this.searchController,
     required this.friends,
     required this.requests,
-    required this.addFriend,
-    required this.ignoreRequest,
-    required this.removeFriend,
+    required this.onEditSearch,
   });
 
   @override
-  int get navbarIndex => 2;
-
-  @override
-  Widget buildView(BuildContext context) => SingleChildScrollView(
-        child: Column(
-          children: [
-            24.verticalSpace,
-            SizedBox(
-              width: 311.w,
-              child: TextField(
-                textAlignVertical: TextAlignVertical.center,
-                style: Theme.of(context).textTheme.labelMedium,
-                controller: searchController,
-                keyboardType: TextInputType.streetAddress,
-                onChanged: (_) => {},
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 16.w),
+  Widget build(BuildContext context) => Scaffold(
+        body: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          child: SizedBox(
+            height: 1.sh,
+            child: Column(
+              children: [
+                40.verticalSpace,
+                BackArrowButton(),
+                SearchBox(
                   hintText: 'Search',
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
-                      borderRadius: BorderRadius.circular(8)),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
-                      borderRadius: BorderRadius.circular(8)),
-                  hintStyle: Theme.of(context)
-                      .textTheme
-                      .labelMedium!
-                      .copyWith(color: Color(0xFF999999)),
+                  controller: searchController,
+                  keyboardType: TextInputType.name,
+                  onChanged: (_) => onEditSearch(),
                 ),
-              ),
-            ),
-            24.verticalSpace,
-            Text(
-              'Requests',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            24.verticalSpace,
-            ...requests.map(
-              (req) => Padding(
-                padding: EdgeInsets.only(
-                  bottom: 24.h,
-                  left: 32.w,
-                  right: 32.w,
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      req.name,
-                      style:
-                          Theme.of(context).textTheme.headlineMedium!.copyWith(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                              ),
-                    ),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: addFriend,
-                      child: AddButton(context),
-                    ),
-                    28.horizontalSpace,
-                    TextButton(
-                      onPressed: ignoreRequest,
-                      child: Text(
-                        'IGNORE',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall!
-                            .copyWith(color: Colors.black),
+                Expanded(
+                  child: ShaderMask(
+                    shaderCallback: (Rect bounds) {
+                      return LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.white.withOpacity(0.05),
+                          Colors.white,
+                          Colors.white,
+                          Colors.white.withOpacity(0.05)
+                        ],
+                        stops: [0, 0.03, 0.95, 1],
+                        tileMode: TileMode.mirror,
+                      ).createShader(bounds);
+                    },
+                    child: SingleChildScrollView(
+                      child: Container(
+                        padding: EdgeInsets.only(
+                          left: 0.05.sw,
+                          right: 0.05.sw,
+                          top: 16.h,
+                        ),
+                        width: 0.9.sw,
+                        child: Column(
+                          children: [
+                            ...(requests.length > 0
+                                ? [
+                                    Text(
+                                      'Requests',
+                                      style: theme.textTheme.headlineMedium,
+                                    ),
+                                    24.verticalSpace,
+                                    ...requests,
+                                    24.verticalSpace,
+                                  ]
+                                : []),
+                            Text(
+                              'Friends',
+                              style: theme.textTheme.headlineMedium,
+                            ),
+                            12.verticalSpace,
+                            ...(friends.length > 0
+                                ? friends
+                                : [
+                                    Text(
+                                      searchController.text.length > 0
+                                          ? "No results for: \"${searchController.text}\""
+                                          : "You have not made any friends yet",
+                                      textAlign: TextAlign.center,
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: theme.textTheme.labelMedium,
+                                    ),
+                                  ]),
+                          ],
+                        ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            Text(
-              'Friends',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            24.verticalSpace,
-            ...friends.map(
-              (friend) => Padding(
-                padding: EdgeInsets.only(
-                  bottom: 24.h,
-                  left: 32.w,
-                  right: 32.w,
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      friend.name,
-                      style:
-                          Theme.of(context).textTheme.headlineMedium!.copyWith(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                              ),
+                StyledNavBar(
+                  navigationEnabled: true,
+                  pageIndex: 2,
+                  onTapDownLogo: () => Navigator.pushAndRemoveUntil(
+                    context,
+                    NoAnimationMaterialPageRoute(
+                      builder: (context) => const ExploreProvider(),
                     ),
-                    Spacer(),
-                    TextButton(
-                      onPressed: removeFriend,
-                      child: Text(
-                        'REMOVE',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall!
-                            .copyWith(color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                    (_) => false,
+                  ),
+                )
+              ],
             ),
-          ],
+          ),
         ),
       );
 }

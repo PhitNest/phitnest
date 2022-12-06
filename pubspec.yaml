@@ -4,7 +4,7 @@ publish_to: "none"
 version: 0.0.2+4
 
 environment:
-  sdk: ">=2.17.6 <=3.3.3"
+  sdk: ">=2.17.6 <=3.3.9"
 
 dependencies:
   flutter:
@@ -24,7 +24,11 @@ dependencies:
   flutter_launcher_icons: ^0.10.0
   flutter_keyboard_visibility: ^5.4.0
   meta: ^1.8.0
-  flutter_verification_code: ^1.1.6
+  flutter_verification_code:
+    git:
+      url: https://github.com/avraham-mayer/flutter_verification_code.git
+
+  jwt_decode: ^0.3.1
 
 dev_dependencies:
   flutter_test:

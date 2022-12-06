@@ -6,9 +6,15 @@ class LogoWidget extends StatelessWidget {
 
   final double? width, height;
 
-  const LogoWidget({this.width, this.height}) : super();
+  const LogoWidget({
+    this.width,
+    this.height,
+  }) : super();
 
   @override
-  Widget build(BuildContext context) =>
-      Center(child: SvgPicture.asset(kLogoPath, width: width, height: height));
+  Widget build(BuildContext context) => SvgPicture.asset(
+        kLogoPath,
+        width: width,
+        height: height,
+      );
 }

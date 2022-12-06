@@ -1,33 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../theme.dart';
 import '../view.dart';
 import '../../widgets/widgets.dart';
 
 class PhotoAcceptedView extends ScreenView {
+  final VoidCallback onPressedStart;
+
+  const PhotoAcceptedView({
+    required this.onPressedStart,
+  }) : super();
+
   @override
-  Widget buildView(BuildContext context) => Container(
-        width: double.infinity,
-        child: Column(
-          children: [
-            200.verticalSpace,
-            Text(
-              'Congratulations!',
-              style: Theme.of(context).textTheme.headlineLarge,
-            ),
-            40.verticalSpace,
-            Text(
-              'Your profile photo was approved.\nYou’re ready to meet new\nfriends.',
-              textAlign: TextAlign.center,
-              style:
-                  Theme.of(context).textTheme.labelLarge!.copyWith(height: 1.7),
-            ),
-            40.verticalSpace,
-            StyledButton(
-                onPressed: () {},
+  Widget build(BuildContext context) => Scaffold(
+        body: Container(
+          width: double.infinity,
+          child: Column(
+            children: [
+              200.verticalSpace,
+              Text(
+                'Congratulations!',
+                style: theme.textTheme.headlineLarge,
+              ),
+              40.verticalSpace,
+              Text(
+                'Your profile photo was approved.\nYou’re ready to meet new\nfriends.',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.labelLarge!.copyWith(height: 1.7),
+              ),
+              40.verticalSpace,
+              StyledButton(
+                onPressed: onPressedStart,
                 child: Text(
                   'START',
-                ))
-          ],
+                ),
+              )
+            ],
+          ),
         ),
       );
 }

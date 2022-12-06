@@ -1,37 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../widgets/styled_button.dart';
+import '../../theme.dart';
+import '../../widgets/widgets.dart';
 import '../view.dart';
 
 class ConfirmPhotoView extends ScreenView {
-  @override
-  String? get appBarText => "Confirm Photo";
+  final VoidCallback onPressedConfirm;
+  final VoidCallback onPressedRetake;
+
+  const ConfirmPhotoView({
+    required this.onPressedConfirm,
+    required this.onPressedRetake,
+  }) : super();
 
   @override
-  Widget buildView(BuildContext context) => Container(
-        child: Column(children: [
-          SizedBox(
-            width: 262.w,
-            height: 346.h,
-            child: Image.asset('assets/images/phitnestSelfie.png'),
+  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          body: Column(
+            children: [
+              40.verticalSpace,
+              Stack(
+                children: [
+                  BackArrowButton(),
+                  Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.only(top: 10.h),
+                    child: Text(
+                      "Confirm Photo",
+                      style: theme.textTheme.headlineLarge,
+                    ),
+                  ),
+                ],
+              ),
+              40.verticalSpace,
+              SizedBox(
+                width: 262.w,
+                height: 346.h,
+                child: Image.asset('assets/images/phitnestSelfie.png'),
+              ),
+              20.verticalSpace,
+              StyledButton(
+                  onPressed: onPressedConfirm,
+                  child: Text(
+                    'CONFIRM',
+                  )),
+              Expanded(child: Container()),
+              TextButtonWidget(
+                onPressed: onPressedRetake,
+                text: 'RETAKE',
+              ),
+              37.verticalSpace,
+            ],
           ),
-          38.verticalSpace,
-          StyledButton(
-              onPressed: () => [],
-              child: Text(
-                'CONFIRM',
-              )),
-          51.verticalSpace,
-          TextButton(
-              onPressed: () {},
-              child: Text(
-                'RETAKE',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    color: Colors.black,
-                    fontStyle: FontStyle.italic,
-                    decoration: TextDecoration.underline),
-              ))
-        ]),
+        ),
       );
 }

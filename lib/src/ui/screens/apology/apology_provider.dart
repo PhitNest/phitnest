@@ -8,29 +8,39 @@ import 'apology_state.dart';
 import 'apology_view.dart';
 
 class ApologyProvider extends ScreenProvider<ApologyState, ApologyView> {
+  const ApologyProvider() : super();
+
   @override
   ApologyView build(BuildContext context, ApologyState state) => ApologyView(
-      autovalidateMode: state.validateMode,
-      onPressedSubmit: () => validateForm(context, state),
-      nameController: state.nameController,
-      emailController: state.emailController,
-      validateFirstName: validateFirstName,
-      validateEmail: validateEmail,
-      formKey: state.formKey);
+        autovalidateMode: state.validateMode,
+        scrollController: state.scrollController,
+        onPressedSubmit: () => state.formKey.currentState!.validate()
+            ? Navigator.pushAndRemoveUntil(
+                context,
+                NoAnimationMaterialPageRoute(
+                  builder: (_) => ThankYouProvider(
+                    name: state.nameController.text,
+                  ),
+                ),
+                (_) => false)
+            : state.validateMode = AutovalidateMode.always,
+        nameController: state.nameController,
+        emailController: state.emailController,
+        validateFirstName: (val) => validateFirstName(val),
+        validateEmail: (val) => validateEmail(val),
+        formKey: state.formKey,
+        nameFocusNode: state.nameFocusNode,
+        emailFocusNode: state.emailFocusNode,
+        onTapName: () => Future.delayed(
+          const Duration(milliseconds: 600),
+          () => state.onFocusName(true),
+        ),
+        onTapEmail: () => Future.delayed(
+          const Duration(milliseconds: 600),
+          () => state.onFocusEmail(true),
+        ),
+      );
 
   @override
   ApologyState buildState() => ApologyState();
-
-  validateForm(BuildContext context, ApologyState state) {
-    if (!state.formKey.currentState!.validate()) {
-      state.validateMode = AutovalidateMode.always;
-    } else {
-      Navigator.pushAndRemoveUntil(
-          context,
-          NoAnimationMaterialPageRoute(
-              builder: (_) =>
-                  ThankYouProvider(name: state.nameController.text)),
-          (_) => false);
-    }
-  }
 }

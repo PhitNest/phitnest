@@ -1,7 +1,5 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
-import '../../../repositories/repositories.dart';
 import '../../widgets/widgets.dart';
 import '../screens.dart';
 import '../provider.dart';
@@ -13,42 +11,31 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
   const GymSearchProvider() : super();
 
   @override
-  init(BuildContext context, GymSearchState state) =>
-      repositories<ILocationRepository>().getLocation().then((response) =>
-          response.fold(
-              (location) => repositories<IGymRepository>()
-                      .getNearestGyms(location: location, distance: 30000)
-                      .then((gyms) {
-                    state.gymsAndDistances = gyms
-                        .map((gym) =>
-                            Tuple2(gym, gym.location.distanceTo(location)))
-                        .toList();
-                    state.currentlySelectedGym = gyms[0];
-                  }),
-              (error) => state.errorMessage = error));
-
-  @override
   GymSearchView build(BuildContext context, GymSearchState state) =>
       GymSearchView(
-          keyboardVisible: state.keyboardVisible,
-          searchController: state.searchController,
-          errorMessage: state.errorMessage ?? '',
-          onEditSearch: () => state.rebuildView(),
-          onPressedConfirm: () {
-            Navigator.of(context).pushAndRemoveUntil(
-                NoAnimationMaterialPageRoute(
-                    builder: (_) =>
-                        FoundLocationProvider(gym: state.currentlySelectedGym)),
-                (_) => false);
-          },
-          cards: state.gymsAndDistances
-              .map((gymAndDistance) => state.searchController.text.length ==
-                          0 ||
+        showConfirmButton: state.showConfirmButton,
+        searchController: state.searchController,
+        searchFocus: state.searchFocus,
+        onTapSearch: () => state.showConfirmButton = false,
+        errorMessage: state.errorMessage ?? '',
+        onEditSearch: state.editSearch,
+        onPressedConfirm: () {
+          Navigator.of(context).pushAndRemoveUntil(
+              NoAnimationMaterialPageRoute(
+                builder: (_) =>
+                    FoundLocationProvider(gym: state.currentlySelectedGym),
+              ),
+              (_) => false);
+        },
+        cards: state.gymsAndDistances
+            .map(
+              (gymAndDistance) => state.searchController.text.length == 0 ||
                       gymAndDistance.head.address.contains(
-                          state.searchController.text.toLowerCase()) ||
-                      gymAndDistance.head.name
-                          .toLowerCase()
-                          .contains(state.searchController.text.toLowerCase())
+                        state.searchController.text.toLowerCase(),
+                      ) ||
+                      gymAndDistance.head.name.toLowerCase().contains(
+                            state.searchController.text.toLowerCase(),
+                          )
                   ? GymCard(
                       onPressed: () =>
                           state.currentlySelectedGym = gymAndDistance.head,
@@ -57,10 +44,14 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
                       selected:
                           gymAndDistance.head == state.currentlySelectedGym,
                     )
-                  : null)
-              .where((val) => val != null)
-              .cast<GymCard>()
-              .toList());
+                  : null,
+            )
+            .where(
+              (val) => val != null,
+            )
+            .cast<GymCard>()
+            .toList(),
+      );
 
   @override
   GymSearchState buildState() => GymSearchState();

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'src/app.dart';
-import 'src/repositories/repositories.dart' as repositories;
+import 'src/repositories/repositories.dart';
+import 'src/use-cases/use_cases.dart';
 
-/// This is the driver function for the flutter application, [App].
-/// This calls [repositories.setup], which must not be called again.
-/// Data repositories should not be accessed before calling [repositories.setup]
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await repositories.setup();
-  repositories.injectRepositories();
-  runApp(App());
+  await setup();
+  injectRepositories();
+  injectUseCases();
+  runApp(
+    App(),
+  );
 }

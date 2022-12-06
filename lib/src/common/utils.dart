@@ -1,4 +1,4 @@
-export 'validators.dart';
+import '../repositories/repositories.dart';
 
 extension FormatQuantity on double {
   /// This will return a rounded string version of this [double] with [unit]
@@ -11,3 +11,9 @@ extension FormatQuantity on double {
   String formatQuantity(String unit) =>
       '${this.floor().toDouble() == this ? this.floor() : this.toStringAsFixed(1)} $unit${this == 1 ? '' : 's'}';
 }
+
+Uri getBackendAddress(String route, {Map<String, dynamic>? params}) => Uri.http(
+      '${environmentRepo.backendHost}:${environmentRepo.backendHost}',
+      route,
+      params,
+    );

@@ -40,7 +40,7 @@ class NewsState extends ScreenState {
         liked: true),
   ];
 
-  likePost(int index) {
+  void likePost(int index) {
     posts[index].liked = !posts[index].liked!;
     rebuildView();
   }

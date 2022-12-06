@@ -9,9 +9,8 @@ class EnvironmentRepository implements IEnvironmentRepository {
   static Future<void> init() => dotenv.load();
 
   @override
-  String get(String key) => dotenv.get(key);
+  String get backendHost => dotenv.get(kBackendHost);
 
   @override
-  Uri getBackendAddress(String route, {Map<String, dynamic>? params}) =>
-      Uri.http('${get(kBackendHost)}:${get(kBackendPort)}', route, params);
+  String get backendPort => dotenv.get(kBackendPort);
 }

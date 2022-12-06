@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../theme.dart';
+
 class CountdownRing extends StatelessWidget {
   final int countdownNum;
   final bool dark;
 
   Color get color => dark ? Color(0xffE9E8E8) : Colors.white;
 
-  const CountdownRing({Key? key, required this.countdownNum, this.dark = true})
-      : super(key: key);
+  const CountdownRing({
+    Key? key,
+    required this.countdownNum,
+    this.dark = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +55,8 @@ class CountdownRing extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  '$countdownNum',
-                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                  countdownNum.toString(),
+                  style: theme.textTheme.labelLarge!.copyWith(
                       fontSize: 128.sp,
                       color: dark ? Colors.black : Colors.white),
                 ),

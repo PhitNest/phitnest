@@ -1,49 +1,68 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../models/conversation.dart';
+import '../../../theme.dart';
 
 class ConversationCard extends StatelessWidget {
-  final ConversationModel conversation;
-  final Function() onDownTap;
-  final Function() onUpTap;
+  final String message;
+  final String title;
+  final void Function(DismissDirection direction) onDismissed;
+  final VoidCallback onTap;
 
   const ConversationCard({
-    required this.conversation,
-    required this.onDownTap,
-    required this.onUpTap,
+    required this.message,
+    required this.title,
+    required this.onDismissed,
+    required this.onTap,
   });
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTapDown: (_) => onDownTap(),
-        onTapCancel: onUpTap,
-        onTapUp: (details) => onUpTap(),
-        child: Container(
-          width: 343.w,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            color:
-                conversation.selected ? Color(0xFFFFE3E3) : Colors.transparent,
+  Widget build(BuildContext context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: 14.h,
+        ),
+        child: Dismissible(
+          dragStartBehavior: DragStartBehavior.down,
+          background: Container(
+            color: Colors.red,
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(left: 12.w),
+            child: const Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
           ),
-          child: Padding(
-            padding: EdgeInsets.all(24.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  conversation.name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium!
-                      .copyWith(fontSize: 18.sp),
-                ),
-                8.44.verticalSpace,
-                Text(
-                  conversation.recentMessage,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
+          key: UniqueKey(),
+          onDismissed: onDismissed,
+          direction: DismissDirection.startToEnd,
+          child: InkWell(
+            onTap: onTap,
+            highlightColor: Color(0xFFFFE3E3),
+            borderRadius: BorderRadius.circular(8.0),
+            child: Container(
+              width: 0.9.sw,
+              padding: EdgeInsets.symmetric(
+                horizontal: 18.w,
+                vertical: 16.h,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.headlineSmall,
+                  ),
+                  8.44.verticalSpace,
+                  Text(
+                    message,
+                    style: theme.textTheme.bodySmall,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

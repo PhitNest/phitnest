@@ -1,29 +1,37 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../../common/utils.dart';
 import '../../constants/constants.dart';
 import '../../entities/entities.dart';
 import '../repositories.dart';
-import 'implementations.dart';
 
 /// Handles making requests to the backend involving gyms
 class GymRepository implements IGymRepository {
-  Future<List<GymEntity>> getNearestGyms(
-          {required LocationEntity location,
-          required int distance,
-          int? amount}) =>
+  Future<List<GymEntity>> getNearestGyms({
+    required LocationEntity location,
+    required int distance,
+    int? amount,
+  }) =>
       http
           .get(
-            repositories<EnvironmentRepository>()
-                .getBackendAddress(kNearestGymsRoute, params: {
-              "longitude": location.longitude.toString(),
-              "latitude": location.latitude.toString(),
-              "distance": (distance * 1600).toString(),
-              ...(amount != null ? {"amount": amount.toString()} : {}),
-            }),
+            getBackendAddress(
+              kNearestGymsRoute,
+              params: {
+                "longitude": location.longitude.toString(),
+                "latitude": location.latitude.toString(),
+                "distance": (distance * 1600).toString(),
+                ...(amount != null ? {"amount": amount.toString()} : {}),
+              },
+            ),
           )
-          .then((response) => response.statusCode == kStatusOK
-              ? List<GymEntity>.from(jsonDecode(response.body)
-                  .map((gym) => GymEntity.fromJson(gym)))
-              : []);
+          .then(
+            (response) => List<GymEntity>.from(
+              jsonDecode(
+                response.body,
+              ).map(
+                (gym) => GymEntity.fromJson(gym),
+              ),
+            ),
+          );
 }

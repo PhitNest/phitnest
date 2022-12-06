@@ -1,4 +1,7 @@
 /// These are the HTTP routes for the backend
-const String kNearestGymsRoute = '/gym/nearest';
-const String kLogin = '/auth/login';
-const String kRegister = '/auth/register';
+const kNearestGymsRoute = '/gym/nearest';
+const kLogin = '/auth/login';
+const kRegister = '/auth/register';
+const kRefreshSession = '/auth/refreshSession';
+const kGetUser = '/user';
+const kAuth = '/auth';

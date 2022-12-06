@@ -1,16 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../state.dart';
 
-import 'apology_provider.dart';
-import 'apology_view.dart';
-
-/// Holds the dynamic content of [ApologyProvider]. Calls to [rebuildView] will rebuild
-/// the [ApologyView].
 class ApologyState extends ScreenState {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final GlobalKey<FormState> formKey = GlobalKey();
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final scrollController = ScrollController();
+  late final FocusNode nameFocusNode = FocusNode()
+    ..addListener(() => onFocusName(nameFocusNode.hasFocus));
+  late final FocusNode emailFocusNode = FocusNode()
+    ..addListener(() => onFocusEmail(emailFocusNode.hasFocus));
+
+  void onFocusEmail(bool focused) {
+    if (focused) {
+      scrollController.animateTo(
+        70.h,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void onFocusName(bool focused) {
+    if (focused) {
+      scrollController.animateTo(
+        60.h,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   AutovalidateMode _validateMode = AutovalidateMode.disabled;
 
   AutovalidateMode get validateMode => _validateMode;
@@ -22,6 +44,9 @@ class ApologyState extends ScreenState {
 
   @override
   void dispose() {
+    nameFocusNode.dispose();
+    emailFocusNode.dispose();
+    scrollController.dispose();
     nameController.dispose();
     emailController.dispose();
     super.dispose();
