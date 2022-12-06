@@ -1,13 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-/// Represents an address
 class AddressEntity extends Equatable {
   final String street;
   final String city;
   final String state;
   final String zipCode;
 
-  /// This is the constructor for the address
   const AddressEntity({
     required this.street,
     required this.city,
@@ -15,7 +13,6 @@ class AddressEntity extends Equatable {
     required this.zipCode,
   });
 
-  /// Converts a JSON object to an address
   factory AddressEntity.fromJson(Map<String, dynamic> json) => AddressEntity(
         street: json['street'],
         city: json['city'],
@@ -23,7 +20,6 @@ class AddressEntity extends Equatable {
         zipCode: json['zipCode'],
       );
 
-  /// Creates a JSON representation of the address
   Map<String, dynamic> toJson() => {
         'street': street,
         'city': city,
@@ -31,18 +27,15 @@ class AddressEntity extends Equatable {
         'zipCode': zipCode,
       };
 
-  /// Checks if the address contains a String
   bool contains(String query) =>
       street.toLowerCase().contains(query) ||
       city.toLowerCase().contains(query) ||
       state.toLowerCase().contains(query) ||
       zipCode.toLowerCase().contains(query);
 
-  /// These are the properties to compare when determining equality
   @override
   List<Object?> get props => [street, city, state, zipCode];
 
-  /// Creates a String representation of the address
   @override
   String toString() => '$street,\n$city, $state $zipCode';
 }

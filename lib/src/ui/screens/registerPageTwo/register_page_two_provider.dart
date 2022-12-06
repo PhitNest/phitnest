@@ -9,7 +9,6 @@ class RegisterPageTwoProvider
   @override
   RegisterPageTwoView build(BuildContext context, RegisterPageTwoState state) =>
       RegisterPageTwoView(
-        keyboardVisible: state.keyboardVisible,
         onPressedNext: () {},
       );
 

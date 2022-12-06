@@ -16,7 +16,7 @@ class ConversationsProvider
       ConversationsView(
         onClickFriends: () => Navigator.push(
           context,
-          MaterialPageRoute(
+          NoAnimationMaterialPageRoute(
             builder: (context) => const FriendsProvider(),
           ),
         ),
