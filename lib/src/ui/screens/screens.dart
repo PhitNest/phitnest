@@ -22,3 +22,4 @@ export 'confirmEmail/confirm_email_provider.dart';
 export 'confirmPhoto/confirm_photo_provider.dart';
 export 'registerPageTwo/register_page_two_provider.dart';
 export 'friends/friends_provider.dart';
+export 'unauthorized/unauthorized_provider.dart';

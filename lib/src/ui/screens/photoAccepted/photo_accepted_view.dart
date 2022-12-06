@@ -5,6 +5,12 @@ import '../view.dart';
 import '../../widgets/widgets.dart';
 
 class PhotoAcceptedView extends ScreenView {
+  final VoidCallback onPressedStart;
+
+  const PhotoAcceptedView({
+    required this.onPressedStart,
+  }) : super();
+
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Container(
@@ -24,7 +30,7 @@ class PhotoAcceptedView extends ScreenView {
               ),
               40.verticalSpace,
               StyledButton(
-                onPressed: () {},
+                onPressed: onPressedStart,
                 child: Text(
                   'START',
                 ),

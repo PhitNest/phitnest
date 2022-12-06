@@ -5,9 +5,13 @@ import './photo_accepted_view.dart';
 
 class PhotoAcceptedProvider
     extends ScreenProvider<PhotoAcceptState, PhotoAcceptedView> {
+  const PhotoAcceptedProvider() : super();
+
   @override
   PhotoAcceptedView build(BuildContext context, PhotoAcceptState state) =>
-      PhotoAcceptedView();
+      PhotoAcceptedView(
+        onPressedStart: () {},
+      );
 
   @override
   PhotoAcceptState buildState() => PhotoAcceptState();

@@ -42,7 +42,6 @@ class LoginView extends ScreenView {
   Widget build(BuildContext context) => Scaffold(
         body: SingleChildScrollView(
           controller: scrollController,
-          physics: NeverScrollableScrollPhysics(),
           child: SizedBox(
             height: 1.sh,
             child: Column(

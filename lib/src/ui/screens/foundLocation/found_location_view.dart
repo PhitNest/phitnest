@@ -45,19 +45,9 @@ class FoundLocationView extends ScreenView {
               child: Text('YES'),
             ),
             Expanded(child: Container()),
-            TextButton(
+            TextButtonWidget(
+              text: 'NO, IT\S NOT',
               onPressed: onPressedNo,
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.transparent),
-              ),
-              child: Text(
-                'NO, IT\'S NOT',
-                style: theme.textTheme.bodyMedium!.copyWith(
-                  color: Colors.black,
-                  fontStyle: FontStyle.italic,
-                  decoration: TextDecoration.underline,
-                ),
-              ),
             ),
             37.verticalSpace,
           ],

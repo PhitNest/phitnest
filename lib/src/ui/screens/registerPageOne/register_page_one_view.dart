@@ -20,6 +20,8 @@ class RegisterPageOneView extends ScreenView {
   Widget build(BuildContext context) => Scaffold(
         body: Column(
           children: [
+            40.verticalSpace,
+            BackArrowButton(),
             28.verticalSpace,
             Text(
               'Register',
@@ -59,7 +61,7 @@ class RegisterPageOneView extends ScreenView {
               onPressed: onPressedNext,
               child: Text('NEXT'),
             ),
-            116.verticalSpace,
+            60.verticalSpace,
           ],
         ),
       );

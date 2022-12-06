@@ -35,12 +35,13 @@ class ConfirmPhotoView extends ScreenView {
                   ),
                 ],
               ),
+              40.verticalSpace,
               SizedBox(
                 width: 262.w,
                 height: 346.h,
                 child: Image.asset('assets/images/phitnestSelfie.png'),
               ),
-              38.verticalSpace,
+              20.verticalSpace,
               StyledButton(
                   onPressed: onPressedConfirm,
                   child: Text(

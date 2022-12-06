@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../widgets/widgets.dart';
 import '../view.dart';
-import 'widgets/gym_card.dart';
+import 'widgets/widgets.dart';
 
 class GymSearchView extends ScreenView {
   final VoidCallback onPressedConfirm;
@@ -46,20 +46,18 @@ class GymSearchView extends ScreenView {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: ShaderMask(
-                    shaderCallback: (Rect bounds) {
-                      return LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.white.withOpacity(0.05),
-                          Colors.white,
-                          Colors.white,
-                          Colors.white.withOpacity(0.05)
-                        ],
-                        stops: [0, 0.02, 0.95, 1],
-                        tileMode: TileMode.mirror,
-                      ).createShader(bounds);
-                    },
+                    shaderCallback: (Rect bounds) => LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.white.withOpacity(0.05),
+                        Colors.white,
+                        Colors.white,
+                        Colors.white.withOpacity(0.05)
+                      ],
+                      stops: [0, 0.02, 0.95, 1],
+                      tileMode: TileMode.mirror,
+                    ).createShader(bounds),
                     child: ListView.builder(
                       itemCount: cards.length,
                       itemBuilder: (context, index) => cards[index],

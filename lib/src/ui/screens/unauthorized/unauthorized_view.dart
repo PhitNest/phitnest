@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_mobile/src/ui/widgets/styled_button.dart';
 
 import '../../theme.dart';
+import '../../widgets/widgets.dart';
 import '../view.dart';
 
 class UnauthorizedView extends ScreenView {
@@ -41,17 +42,12 @@ class UnauthorizedView extends ScreenView {
                 onPressed: onRegister,
                 child: Text('REGISTER'),
               ),
-              205.verticalSpace,
-              TextButton(
+              Expanded(child: Container()),
+              TextButtonWidget(
                 onPressed: onSignIn,
-                child: Text(
-                  'SIGN IN',
-                  style: theme.textTheme.bodySmall!.copyWith(
-                    decoration: TextDecoration.underline,
-                    color: Color(0xFF000000),
-                  ),
-                ),
-              )
+                text: 'SIGN IN',
+              ),
+              40.verticalSpace,
             ],
           ),
         ),

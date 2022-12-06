@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../repositories/repositories.dart';
+import '../../../entities/entities.dart';
 import '../../widgets/widgets.dart';
 import '../screens.dart';
 import '../provider.dart';
@@ -12,37 +12,30 @@ class RequestLocationProvider
   const RequestLocationProvider() : super();
 
   @override
-  init(BuildContext context, RequestLocationState state) =>
-      repositories<ILocationRepository>().getLocation().then(
-            (response) => response.fold(
-              (location) => gymRepo
-                  .getNearestGyms(
-                    location: location,
-                    distance: 30000,
-                    amount: 1,
-                  )
-                  .then(
-                    (gyms) => gyms.length > 0
-                        ? Navigator.pushAndRemoveUntil(
-                            context,
-                            NoAnimationMaterialPageRoute(
-                              builder: (context) => FoundLocationProvider(
-                                gym: gyms[0],
-                              ),
-                            ),
-                            (_) => false)
-                        : state.errorMessage = 'No nearby gyms could be found.',
-                  ),
-              (error) => state.errorMessage = error.message,
-            ),
-          );
-
-  @override
   RequestLocationView build(BuildContext context, RequestLocationState state) =>
       RequestLocationView(
         errorMessage: state.errorMessage ?? '',
-        onPressedExit: () => Navigator.pushAndRemoveUntil(
-          context,
+        onPressedSkip: () => Navigator.of(context).pushAndRemoveUntil(
+            NoAnimationMaterialPageRoute(
+              builder: (context) => FoundLocationProvider(
+                gym: new GymEntity(
+                  id: "1",
+                  name: "Planet Fitness",
+                  address: new AddressEntity(
+                    street: "123 Street st",
+                    city: "Virginia Beach",
+                    state: "VA",
+                    zipCode: "23456",
+                  ),
+                  location: new LocationEntity(
+                    longitude: 52,
+                    latitude: -20,
+                  ),
+                ),
+              ),
+            ),
+            (route) => false),
+        onPressedExit: () => Navigator.of(context).pushAndRemoveUntil(
           NoAnimationMaterialPageRoute(
             builder: (context) => ApologyProvider(),
           ),

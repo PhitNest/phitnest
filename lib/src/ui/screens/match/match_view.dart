@@ -9,11 +9,13 @@ class MatchView extends ScreenView {
   final VoidCallback onPressedSayHello;
   final VoidCallback onPressedMeetMore;
   final String fullName;
+  final VoidCallback onPressedLogo;
 
   const MatchView({
     required this.onPressedSayHello,
     required this.onPressedMeetMore,
     required this.fullName,
+    required this.onPressedLogo,
   }) : super();
 
   @override
@@ -53,6 +55,13 @@ class MatchView extends ScreenView {
                 ),
               ),
               28.verticalSpace,
+              StyledNavBar(
+                navigationEnabled: true,
+                pageIndex: 1,
+                onTapDownLogo: onPressedLogo,
+                reversed: true,
+                colorful: true,
+              ),
             ],
           ),
         ),
