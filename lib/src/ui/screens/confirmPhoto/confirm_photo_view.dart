@@ -27,7 +27,6 @@ class ConfirmPhotoView extends ScreenView {
                   BackArrowButton(),
                   Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.only(top: 10.h),
                     child: Text(
                       "Confirm Photo",
                       style: theme.textTheme.headlineLarge,

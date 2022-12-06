@@ -23,6 +23,7 @@ class ConfirmEmailView extends ScreenView {
         value: SystemUiOverlayStyle.dark,
         child: Scaffold(
           body: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: SizedBox(
               height: 1.sh,
               child: Column(

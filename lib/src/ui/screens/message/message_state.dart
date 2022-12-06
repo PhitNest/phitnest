@@ -41,16 +41,18 @@ class MessageState extends ScreenState {
   );
 
   void sendMessage() {
-    _message.insert(
-      0,
-      new MessageEntity(
-          conversationId: conversation.id,
-          text: messageController.text,
-          userCognitoId: myCognitoId),
-    );
-    messageController.clear();
+    if (messageController.text.length > 0) {
+      _message.insert(
+        0,
+        new MessageEntity(
+            conversationId: conversation.id,
+            text: messageController.text,
+            userCognitoId: myCognitoId),
+      );
+      messageController.clear();
+      rebuildView();
+    }
     messageFocus.unfocus();
-    rebuildView();
   }
 
   final List<MessageEntity> _message = [

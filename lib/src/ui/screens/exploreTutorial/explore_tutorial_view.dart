@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../theme.dart';
@@ -30,48 +31,51 @@ class ExploreTutorialView extends ScreenView {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: SizedBox(
-          child: Column(
-            children: [
-              (holding ? 120 : 200).verticalSpace,
-              holding
-                  ? CountdownRing(
-                      countdownNum: countdown,
-                    )
-                  : Text(
-                      'Great!',
-                      style: theme.textTheme.headlineLarge,
-                    ),
-              (holding ? 20 : 40).verticalSpace,
-              holding
-                  ? Text(
-                      _countdownText,
-                      style: theme.textTheme.bodySmall!.copyWith(
-                        color: Color(0xFF707070),
+  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          body: SizedBox(
+            child: Column(
+              children: [
+                (holding ? 120 : 200).verticalSpace,
+                holding
+                    ? CountdownRing(
+                        countdownNum: countdown,
+                      )
+                    : Text(
+                        'Great!',
+                        style: theme.textTheme.headlineLarge,
                       ),
-                    )
-                  : Text(
-                      'Let’s meet friends in your Nest',
-                      style: theme.textTheme.labelLarge,
-                    ),
-              Expanded(child: Container()),
-              holding
-                  ? Container()
-                  : Text(
-                      'Press and hold logo to send friend request',
-                      style: theme.textTheme.bodySmall,
-                    ),
-              20.verticalSpace,
-              StyledNavBar(
-                navigationEnabled: false,
-                pageIndex: 1,
-                animateLogo: !holding,
-                colorful: true,
-                onTapDownLogo: onLogoTap,
-                onTapUpLogo: onLogoRelease,
-              )
-            ],
+                (holding ? 20 : 40).verticalSpace,
+                holding
+                    ? Text(
+                        _countdownText,
+                        style: theme.textTheme.bodySmall!.copyWith(
+                          color: Color(0xFF707070),
+                        ),
+                      )
+                    : Text(
+                        'Let’s meet friends in your Nest',
+                        style: theme.textTheme.labelLarge,
+                      ),
+                Expanded(child: Container()),
+                holding
+                    ? Container()
+                    : Text(
+                        'Press and hold logo to send friend request',
+                        style: theme.textTheme.bodySmall,
+                      ),
+                20.verticalSpace,
+                StyledNavBar(
+                  navigationEnabled: false,
+                  pageIndex: 1,
+                  animateLogo: !holding,
+                  colorful: true,
+                  onTapDownLogo: onLogoTap,
+                  onTapUpLogo: onLogoRelease,
+                )
+              ],
+            ),
           ),
         ),
       );

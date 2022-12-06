@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../theme.dart';
@@ -39,75 +40,79 @@ class LoginView extends ScreenView {
   }) : super();
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: SingleChildScrollView(
-          controller: scrollController,
-          child: SizedBox(
-            height: 1.sh,
-            child: Column(
-              children: [
-                112.verticalSpace,
-                LogoWidget(
-                  width: 72.w,
-                ),
-                26.verticalSpace,
-                Text(
-                  'Phitnest is Better Together',
-                  style: theme.textTheme.headlineMedium,
-                  textAlign: TextAlign.center,
-                ),
-                54.verticalSpace,
-                SizedBox(
-                  width: 291.w,
-                  child: Form(
-                    key: formKey,
-                    autovalidateMode: autovalidateMode,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 40.h,
-                          child: TextInputField(
-                            hint: 'Email',
-                            onTap: onTapEmail,
-                            focusNode: focusEmail,
-                            validator: validateEmail,
-                            inputAction: TextInputAction.next,
-                            controller: emailController,
+  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          body: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            controller: scrollController,
+            child: SizedBox(
+              height: 1.sh,
+              child: Column(
+                children: [
+                  112.verticalSpace,
+                  LogoWidget(
+                    width: 72.w,
+                  ),
+                  26.verticalSpace,
+                  Text(
+                    'Phitnest is Better Together',
+                    style: theme.textTheme.headlineMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  54.verticalSpace,
+                  SizedBox(
+                    width: 291.w,
+                    child: Form(
+                      key: formKey,
+                      autovalidateMode: autovalidateMode,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 40.h,
+                            child: TextInputField(
+                              hint: 'Email',
+                              onTap: onTapEmail,
+                              focusNode: focusEmail,
+                              validator: validateEmail,
+                              inputAction: TextInputAction.next,
+                              controller: emailController,
+                            ),
                           ),
-                        ),
-                        16.verticalSpace,
-                        SizedBox(
-                          height: 40.h,
-                          child: TextInputField(
-                            hint: 'Password',
-                            onTap: onTapPassword,
-                            focusNode: focusPassword,
-                            hide: true,
-                            validator: validatePassword,
-                            inputAction: TextInputAction.done,
-                            controller: passwordController,
+                          16.verticalSpace,
+                          SizedBox(
+                            height: 40.h,
+                            child: TextInputField(
+                              hint: 'Password',
+                              onTap: onTapPassword,
+                              focusNode: focusPassword,
+                              hide: true,
+                              validator: validatePassword,
+                              inputAction: TextInputAction.done,
+                              controller: passwordController,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                34.verticalSpace,
-                StyledButton(
-                  onPressed: onPressedSignIn,
-                  child: Text('SIGN IN'),
-                ),
-                Expanded(child: Container()),
-                TextButtonWidget(
-                  onPressed: onPressedForgotPassword,
-                  text: 'FORGOT PASSWORD?',
-                ),
-                TextButtonWidget(
-                  onPressed: onPressedRegister,
-                  text: 'REGISTER',
-                ),
-                37.verticalSpace
-              ],
+                  34.verticalSpace,
+                  StyledButton(
+                    onPressed: onPressedSignIn,
+                    child: Text('SIGN IN'),
+                  ),
+                  Expanded(child: Container()),
+                  TextButtonWidget(
+                    onPressed: onPressedForgotPassword,
+                    text: 'FORGOT PASSWORD?',
+                  ),
+                  TextButtonWidget(
+                    onPressed: onPressedRegister,
+                    text: 'REGISTER',
+                  ),
+                  37.verticalSpace
+                ],
+              ),
             ),
           ),
         ),

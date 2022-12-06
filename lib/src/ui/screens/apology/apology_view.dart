@@ -41,6 +41,7 @@ class ApologyView extends ScreenView {
         child: Scaffold(
           body: SingleChildScrollView(
             controller: scrollController,
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Column(
               children: [
                 double.infinity.horizontalSpace,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../view.dart';
 import 'widgets/widgets.dart';
@@ -13,16 +14,19 @@ class OnBoardingView extends ScreenView {
   }) : super();
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: PageView(
-          children: [
-            FirstPage(),
-            SecondPage(),
-            ThirdPage(
-              onPressedYes: onPressedYes,
-              onPressedNo: onPressedNo,
-            )
-          ],
+  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          body: PageView(
+            children: [
+              FirstPage(),
+              SecondPage(),
+              ThirdPage(
+                onPressedYes: onPressedYes,
+                onPressedNo: onPressedNo,
+              )
+            ],
+          ),
         ),
       );
 }
