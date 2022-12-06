@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../theme.dart';
@@ -21,99 +22,97 @@ class FriendsView extends ScreenView {
   });
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          child: SizedBox(
-            height: 1.sh,
-            child: Column(
-              children: [
-                40.verticalSpace,
-                BackArrowButton(),
-                SearchBox(
-                  hintText: 'Search',
-                  controller: searchController,
-                  keyboardType: TextInputType.name,
-                  onChanged: (_) => onEditSearch(),
-                ),
-              ),
-            ),
-            24.verticalSpace,
-            Text(
-              'Requests',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            24.verticalSpace,
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.only(
-                left: 32.w,
-                right: 32.w,
-              ),
-              itemCount: requests.length,
-              itemBuilder: (context, index) => Padding(
-                padding: EdgeInsets.only(bottom: 24.h),
-                child: Row(
-                  children: [
-                    Text(
-                      requests[index].name,
-                      style:
-                          Theme.of(context).textTheme.headlineMedium!.copyWith(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
+  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          body: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: SizedBox(
+              height: 1.sh,
+              child: Column(
+                children: [
+                  40.verticalSpace,
+                  BackArrowButton(),
+                  SearchBox(
+                    hintText: 'Search',
+                    controller: searchController,
+                    keyboardType: TextInputType.name,
+                    onChanged: (_) => onEditSearch(),
+                  ),
+                  Expanded(
+                    child: ShaderMask(
+                      shaderCallback: (Rect bounds) => LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.white.withOpacity(0.05),
+                          Colors.white,
+                          Colors.white,
+                          Colors.white.withOpacity(0.05)
+                        ],
+                        stops: [0, 0.03, 0.95, 1],
+                        tileMode: TileMode.mirror,
+                      ).createShader(bounds),
+                      child: SingleChildScrollView(
+                        keyboardDismissBehavior:
+                            ScrollViewKeyboardDismissBehavior.onDrag,
+                        child: Container(
+                          padding: EdgeInsets.only(
+                            left: 0.05.sw,
+                            right: 0.05.sw,
+                            top: 16.h,
+                          ),
+                          width: 0.9.sw,
+                          child: Column(
+                            children: [
+                              ...(requests.length > 0
+                                  ? [
+                                      Text(
+                                        'Requests',
+                                        style: theme.textTheme.headlineMedium,
+                                      ),
+                                      24.verticalSpace,
+                                      ...requests,
+                                      24.verticalSpace,
+                                    ]
+                                  : []),
+                              Text(
+                                'Friends',
+                                style: theme.textTheme.headlineMedium,
                               ),
-                    ),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: addFriend,
-                      child: AddButton(context),
-                    ),
-                    28.horizontalSpace,
-                    TextButton(
-                      onPressed: ignoreRequest,
-                      child: Text(
-                        'IGNORE',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall!
-                            .copyWith(color: Colors.black),
+                              12.verticalSpace,
+                              ...(friends.length > 0
+                                  ? friends
+                                  : [
+                                      Text(
+                                        searchController.text.length > 0
+                                            ? "No results for: \"${searchController.text}\""
+                                            : "You have not made any friends yet",
+                                        textAlign: TextAlign.center,
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: theme.textTheme.labelMedium,
+                                      ),
+                                    ]),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ),
-            Text(
-              'Friends',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            24.verticalSpace,
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.only(
-                bottom: 40.h,
-                left: 32.w,
-                right: 32.w,
-              ),
-              itemCount: friends.length,
-              itemBuilder: (context, index) => Padding(
-                padding: EdgeInsets.only(bottom: 24.h),
-                child: Row(
-                  children: [
-                    Text(
-                      friends[index].name,
-                      style:
-                          Theme.of(context).textTheme.headlineMedium!.copyWith(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                              ),
+                  StyledNavBar(
+                    navigationEnabled: true,
+                    pageIndex: 2,
+                    onTapDownLogo: () => Navigator.pushAndRemoveUntil(
+                      context,
+                      NoAnimationMaterialPageRoute(
+                        builder: (context) => const ExploreProvider(),
+                      ),
+                      (_) => false,
                     ),
-                    (_) => false,
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
