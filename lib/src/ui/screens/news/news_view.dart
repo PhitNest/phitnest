@@ -1,73 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phitnest_mobile/src/ui/widgets/bottom_nav_bar.dart';
 import '../../theme.dart';
 import 'widgets/activity_post.dart';
-import 'widgets/like_button.dart';
 
 import '../view.dart';
 import 'models/activity_post.dart';
 
 class NewsView extends ScreenView {
   final String title;
-  final bool liked;
   final List<ActivityPostModel> posts;
-  final String likeCount;
-  final Function() onPressedLike;
-  final Function(int index) onPressedLikePost;
+  final void Function(int index) onPressedLike;
+  final VoidCallback onPressedLogo;
 
   const NewsView({
     required this.title,
-    required this.likeCount,
-    required this.liked,
     required this.onPressedLike,
     required this.posts,
-    required this.onPressedLikePost,
+    required this.onPressedLogo,
   }) : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Column(
           children: [
-            80.verticalSpace,
+            60.verticalSpace,
             Container(
+              alignment: Alignment.centerLeft,
               margin: EdgeInsets.symmetric(horizontal: 32.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    title,
-                    style: theme.textTheme.headlineLarge,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        likeCount,
-                        style: theme.textTheme.bodySmall!.copyWith(
-                          color: Color(0xff858585),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      LikeButton(
-                        liked: liked,
-                        onPressedLiked: onPressedLike,
-                      ),
-                    ],
-                  ),
-                ],
+              child: Text(
+                title,
+                style: theme.textTheme.headlineLarge,
               ),
             ),
-            Container(
-              height: 470.h,
-              child: ListView.builder(
-                itemCount: posts.length,
-                itemBuilder: (context, index) {
-                  return ActivityPost(
+            Expanded(
+              child: ShaderMask(
+                shaderCallback: (Rect bounds) => LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white.withOpacity(0.05),
+                    Colors.white,
+                    Colors.white,
+                    Colors.white.withOpacity(0.05)
+                  ],
+                  stops: [0, 0.02, 0.95, 1],
+                  tileMode: TileMode.mirror,
+                ).createShader(bounds),
+                child: ListView.builder(
+                  itemCount: posts.length,
+                  itemBuilder: (context, index) => ActivityPost(
                     model: posts[index],
-                    onPressedLike: () => onPressedLikePost(index),
-                  );
-                },
+                    onPressedLike: () => onPressedLike(index),
+                  ),
+                ),
               ),
-            )
+            ),
+            StyledNavBar(
+              navigationEnabled: true,
+              pageIndex: 0,
+              onTapDownLogo: onPressedLogo,
+            ),
           ],
         ),
       );

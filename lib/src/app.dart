@@ -13,7 +13,7 @@ class App extends StatelessWidget {
           title: 'PhitNest',
           theme: theme,
           debugShowCheckedModeBanner: false,
-          home: FriendsProvider(),
+          home: UnauthorizedProvider(),
         ),
       );
 }

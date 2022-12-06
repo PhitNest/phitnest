@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../widgets/widgets.dart';
 import '../provider.dart';
+import '../screens.dart';
 import './reviewing_photo_state.dart';
 import './reviewing_photo_view.dart';
 
@@ -15,6 +17,12 @@ class ReviewingPhotoProvider
   ReviewingPhotoView build(BuildContext context, ReviewingPhotoState state) =>
       ReviewingPhotoView(
         name: name,
+        onPressedFinish: () => Navigator.of(context).pushAndRemoveUntil(
+          NoAnimationMaterialPageRoute(
+            builder: (context) => const ExploreProvider(),
+          ),
+          (_) => false,
+        ),
       );
 
   @override

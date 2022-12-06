@@ -15,6 +15,7 @@ class MatchProvider extends ScreenProvider<MatchState, MatchView> {
         fullName: user.fullName,
         onPressedSayHello: () {},
         onPressedMeetMore: () => Navigator.of(context).pop(),
+        onPressedLogo: () => Navigator.of(context).pop(),
       );
 
   @override
