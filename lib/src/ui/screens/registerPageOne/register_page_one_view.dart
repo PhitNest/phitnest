@@ -9,12 +9,10 @@ class RegisterPageOneView extends ScreenView {
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
   final VoidCallback onPressedNext;
-  final bool keyboardVisible;
 
   RegisterPageOneView({
     required this.firstNameController,
     required this.lastNameController,
-    required this.keyboardVisible,
     required this.onPressedNext,
   }) : super();
 
@@ -54,16 +52,14 @@ class RegisterPageOneView extends ScreenView {
                 ),
               ),
             ),
-            keyboardVisible
-                ? 65.verticalSpace
-                : Expanded(
-                    child: Container(),
-                  ),
+            Expanded(
+              child: Container(),
+            ),
             StyledButton(
               onPressed: onPressedNext,
               child: Text('NEXT'),
             ),
-            keyboardVisible ? Container() : 116.verticalSpace,
+            116.verticalSpace,
           ],
         ),
       );

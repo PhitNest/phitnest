@@ -7,10 +7,8 @@ import '../view.dart';
 
 class RegisterPageTwoView extends ScreenView {
   final VoidCallback onPressedNext;
-  final bool keyboardVisible;
 
   RegisterPageTwoView({
-    required this.keyboardVisible,
     required this.onPressedNext,
   }) : super();
 
@@ -54,12 +52,12 @@ class RegisterPageTwoView extends ScreenView {
                 ),
               ),
             ),
-            keyboardVisible ? 65.verticalSpace : Expanded(child: Container()),
+            Expanded(child: Container()),
             StyledButton(
               onPressed: onPressedNext,
               child: Text('NEXT'),
             ),
-            keyboardVisible ? Container() : 116.verticalSpace,
+            116.verticalSpace,
           ],
         ),
       );
