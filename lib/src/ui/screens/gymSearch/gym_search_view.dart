@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 import 'widgets/gym_card.dart';
@@ -32,7 +33,7 @@ class GymSearchView extends ScreenView {
               height: 32.h,
               child: TextField(
                 textAlignVertical: TextAlignVertical.center,
-                style: Theme.of(context).textTheme.labelMedium,
+                style: theme.textTheme.labelMedium,
                 controller: searchController,
                 keyboardType: TextInputType.streetAddress,
                 onChanged: (_) => onEditSearch(),
@@ -45,9 +46,9 @@ class GymSearchView extends ScreenView {
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.circular(8)),
-                  hintStyle: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        color: Color(0xFF999999),
-                      ),
+                  hintStyle: theme.textTheme.labelMedium!.copyWith(
+                    color: Color(0xFF999999),
+                  ),
                 ),
               ),
             ),

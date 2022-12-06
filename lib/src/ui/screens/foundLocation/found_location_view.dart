@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../entities/entities.dart';
+import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
@@ -25,10 +26,7 @@ class FoundLocationView extends ScreenView {
               width: 321.w,
               child: Text(
                 'Is this your\nfitness club?',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineLarge!
-                    .copyWith(height: 1.2),
+                style: theme.textTheme.headlineLarge!.copyWith(height: 1.2),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -37,7 +35,7 @@ class FoundLocationView extends ScreenView {
               width: 291.w,
               child: Text(
                 address.toString(),
-                style: Theme.of(context).textTheme.labelLarge,
+                style: theme.textTheme.labelLarge,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -54,11 +52,11 @@ class FoundLocationView extends ScreenView {
               ),
               child: Text(
                 'NO, IT\'S NOT',
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: Colors.black,
-                      fontStyle: FontStyle.italic,
-                      decoration: TextDecoration.underline,
-                    ),
+                style: theme.textTheme.bodyMedium!.copyWith(
+                  color: Colors.black,
+                  fontStyle: FontStyle.italic,
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
             37.verticalSpace,

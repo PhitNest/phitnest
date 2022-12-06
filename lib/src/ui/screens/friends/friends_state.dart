@@ -1,57 +1,84 @@
 import 'package:flutter/material.dart';
 
+import '../../../entities/entities.dart';
 import '../state.dart';
-import 'models/friend_model.dart';
 
 class FriendsState extends ScreenState {
   final TextEditingController searchController = TextEditingController();
 
-  List<FriendModel> friend = [
-    FriendModel(
-      name: 'Json M.',
-      isFriend: true,
+  List<PublicUserEntity> requests = [
+    PublicUserEntity(
+      id: '1',
+      cognitoId: '1',
+      firstName: 'Json',
+      lastName: 'M.',
+      gymId: '1',
     ),
-    FriendModel(
-      name: 'James B.',
-      isFriend: true,
+    PublicUserEntity(
+      id: '2',
+      cognitoId: '2',
+      firstName: 'James',
+      lastName: 'B.',
+      gymId: '1',
     ),
-    FriendModel(
-      name: 'Zane M.',
-      isFriend: true,
+    PublicUserEntity(
+      id: '3',
+      cognitoId: '3',
+      firstName: 'Zane',
+      lastName: 'M.',
+      gymId: '1',
     ),
-    FriendModel(
-      name: 'Rahul P.',
-      isFriend: true,
+    PublicUserEntity(
+      id: '4',
+      cognitoId: '4',
+      firstName: 'Rahul',
+      lastName: 'P.',
+      gymId: '1',
     ),
-    FriendModel(
-      name: 'Erin-Michelle J.',
-      isFriend: false,
-    ),
-    FriendModel(
-      name: 'Umaar E.',
-      isFriend: false,
-    ),
-    FriendModel(
-      name: 'Turner W.',
-      isFriend: false,
-    ),
-    FriendModel(
-      name: 'Turner W.',
-      isFriend: false,
-    ),
-    FriendModel(
-      name: 'Turner W.',
-      isFriend: false,
-    ),
-    FriendModel(
-      name: 'Turner W.',
-      isFriend: false,
+    PublicUserEntity(
+      id: '5',
+      cognitoId: '5',
+      firstName: 'Erin-Michelle',
+      lastName: 'J.',
+      gymId: '1',
     ),
   ];
 
-  List<FriendModel> get friends =>
-      friend.where((f) => f.isFriend == true).toList();
-
-  List<FriendModel> get requests =>
-      friend.where((f) => f.isFriend == false).toList();
+  List<PublicUserEntity> friends = [
+    PublicUserEntity(
+      id: '6',
+      cognitoId: '6',
+      firstName: 'Umaar',
+      lastName: 'E.',
+      gymId: '1',
+    ),
+    PublicUserEntity(
+      id: '7',
+      cognitoId: '7',
+      firstName: 'Turner',
+      lastName: 'W.',
+      gymId: '1',
+    ),
+    PublicUserEntity(
+      id: '8',
+      cognitoId: '8',
+      firstName: 'Turner',
+      lastName: 'W.',
+      gymId: '1',
+    ),
+    PublicUserEntity(
+      id: '9',
+      cognitoId: '9',
+      firstName: 'Turner',
+      lastName: 'W.',
+      gymId: '1',
+    ),
+    PublicUserEntity(
+      id: '10',
+      cognitoId: '10',
+      firstName: 'Turner',
+      lastName: 'W.',
+      gymId: '1',
+    ),
+  ];
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../theme.dart';
+
 class StyledButton extends StatelessWidget {
   final EdgeInsets? interiorPadding;
   final Color backgroundColor;
@@ -34,8 +36,7 @@ class StyledButton extends StatelessWidget {
           ),
           backgroundColor: MaterialStateProperty.all(backgroundColor),
           foregroundColor: MaterialStateProperty.all(foregroundColor),
-          textStyle:
-              MaterialStateProperty.all(Theme.of(context).textTheme.bodySmall),
+          textStyle: MaterialStateProperty.all(theme.textTheme.bodySmall),
         ),
       );
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_mobile/src/ui/widgets/styled_button.dart';
 
+import '../../theme.dart';
 import '../view.dart';
 
 class UnauthorizedView extends ScreenView {
@@ -24,14 +25,14 @@ class UnauthorizedView extends ScreenView {
               200.verticalSpace,
               Text(
                 'Oh no!',
-                style: Theme.of(context).textTheme.headlineLarge,
+                style: theme.textTheme.headlineLarge,
               ),
               40.verticalSpace,
               SizedBox(
                 width: 291.w,
                 child: Text(
                   'Please sign-in or register before sending a friend request!',
-                  style: Theme.of(context).textTheme.labelMedium,
+                  style: theme.textTheme.labelMedium,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -45,10 +46,10 @@ class UnauthorizedView extends ScreenView {
                 onPressed: onSignIn,
                 child: Text(
                   'SIGN IN',
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        decoration: TextDecoration.underline,
-                        color: Color(0xFF000000),
-                      ),
+                  style: theme.textTheme.bodySmall!.copyWith(
+                    decoration: TextDecoration.underline,
+                    color: Color(0xFF000000),
+                  ),
                 ),
               )
             ],

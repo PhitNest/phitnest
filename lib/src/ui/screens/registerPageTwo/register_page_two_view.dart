@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
@@ -20,7 +21,7 @@ class RegisterPageTwoView extends ScreenView {
             28.verticalSpace,
             Text(
               'Register',
-              style: Theme.of(context).textTheme.headlineLarge,
+              style: theme.textTheme.headlineLarge,
               textAlign: TextAlign.center,
             ),
             35.verticalSpace,

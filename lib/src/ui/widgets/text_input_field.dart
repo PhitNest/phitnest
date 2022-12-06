@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../theme.dart';
+
 class TextInputField extends StatelessWidget {
   final TextEditingController? controller;
   final String? hint;
@@ -29,15 +31,13 @@ class TextInputField extends StatelessWidget {
         textInputAction: inputAction,
         controller: controller,
         validator: validator,
-        style: Theme.of(context).textTheme.labelMedium,
+        style: theme.textTheme.labelMedium,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
           helperText: ' ',
           hintText: hint,
-          hintStyle: Theme.of(context)
-              .textTheme
-              .labelMedium!
-              .copyWith(color: Color(0xFF999999)),
+          hintStyle:
+              theme.textTheme.labelMedium!.copyWith(color: Color(0xFF999999)),
           border: MaterialStateUnderlineInputBorder.resolveWith(
             (state) => UnderlineInputBorder(
               borderSide: BorderSide(

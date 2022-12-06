@@ -23,11 +23,12 @@ class ExploreTutorialProvider
             (timer) {
               if (state.countdown == 1) {
                 Navigator.pushAndRemoveUntil(
-                    context,
-                    NoAnimationMaterialPageRoute(
-                      builder: (context) => ExploreProvider(),
-                    ),
-                    (_) => false);
+                  context,
+                  NoAnimationMaterialPageRoute(
+                    builder: (context) => const ExploreProvider(),
+                  ),
+                  (_) => false,
+                );
               } else {
                 state.countdown = state.countdown - 1;
               }

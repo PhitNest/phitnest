@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../theme.dart';
 import 'widgets/activity_post.dart';
 import 'widgets/like_button.dart';
 
@@ -35,16 +36,16 @@ class NewsView extends ScreenView {
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context).textTheme.headlineLarge,
+                    style: theme.textTheme.headlineLarge,
                   ),
                   Row(
                     children: [
                       Text(
                         likeCount,
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                              color: Color(0xff858585),
-                              fontWeight: FontWeight.w600,
-                            ),
+                        style: theme.textTheme.bodySmall!.copyWith(
+                          color: Color(0xff858585),
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       LikeButton(
                         liked: liked,

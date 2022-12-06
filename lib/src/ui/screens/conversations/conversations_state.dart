@@ -4,8 +4,6 @@ import '../../../entities/entities.dart';
 import '../state.dart';
 
 class ConversationsState extends ScreenState {
-  String? userId;
-
   List<Tuple2<PublicUserEntity, MessageEntity>> _conversations = [
     Tuple2(
       PublicUserEntity(

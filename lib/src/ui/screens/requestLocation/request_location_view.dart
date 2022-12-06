@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../theme.dart';
 import '../view.dart';
 
 class RequestLocationView extends ScreenView {
@@ -22,7 +23,7 @@ class RequestLocationView extends ScreenView {
                 width: 291.w,
                 child: Text(
                   'Where is your\nfitness club?',
-                  style: Theme.of(context).textTheme.headlineLarge,
+                  style: theme.textTheme.headlineLarge,
                   textAlign: TextAlign.center,
                 )),
             42.verticalSpace,
@@ -30,16 +31,14 @@ class RequestLocationView extends ScreenView {
                 width: 291.w,
                 child: Text(
                   'Please allow location permissions in your phone settings:',
-                  style: Theme.of(context).textTheme.labelLarge,
+                  style: theme.textTheme.labelLarge,
                   textAlign: TextAlign.center,
                 )),
             40.verticalSpace,
             Text(
               errorMessage,
-              style: Theme.of(context)
-                  .textTheme
-                  .labelLarge!
-                  .copyWith(color: Theme.of(context).colorScheme.error),
+              style: theme.textTheme.labelLarge!
+                  .copyWith(color: theme.colorScheme.error),
               textAlign: TextAlign.center,
             ),
             Expanded(child: Container()),
@@ -50,7 +49,7 @@ class RequestLocationView extends ScreenView {
               ),
               child: Text(
                 'EXIT',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                style: theme.textTheme.bodySmall!.copyWith(
                     color: Colors.black,
                     fontStyle: FontStyle.italic,
                     decoration: TextDecoration.underline),

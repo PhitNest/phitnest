@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../screens/screens.dart';
+import '../theme.dart';
 import 'no_animation_page_route.dart';
 import 'widgets.dart';
 
@@ -100,15 +101,15 @@ class _StyledNavBarState extends State<StyledNavBar>
         child: Text(
           text,
           style: index == widget.pageIndex
-              ? Theme.of(context).textTheme.bodySmall!.copyWith(
+              ? theme.textTheme.bodySmall!.copyWith(
                   fontWeight: FontWeight.bold,
                   color: widget.reversed ? Colors.white : Colors.black)
-              : Theme.of(context).textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: widget.reversed
-                        ? Color.fromARGB((0.7 * 255).round(), 255, 255, 255)
-                        : Color.fromARGB((0.4 * 255).round(), 0, 0, 0),
-                  ),
+              : theme.textTheme.bodySmall!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: widget.reversed
+                      ? Color.fromARGB((0.7 * 255).round(), 255, 255, 255)
+                      : Color.fromARGB((0.4 * 255).round(), 0, 0, 0),
+                ),
         ),
         onPressed: widget.navigationEnabled && index != widget.pageIndex
             ? onPressed
