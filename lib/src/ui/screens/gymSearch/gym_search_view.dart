@@ -28,29 +28,11 @@ class GymSearchView extends ScreenView {
         body: Column(
           children: [
             15.verticalSpace,
-            SizedBox(
-              width: 343.w,
-              height: 32.h,
-              child: TextField(
-                textAlignVertical: TextAlignVertical.center,
-                style: theme.textTheme.labelMedium,
-                controller: searchController,
-                keyboardType: TextInputType.streetAddress,
-                onChanged: (_) => onEditSearch(),
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 16.w),
-                  hintText: 'Search',
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
-                      borderRadius: BorderRadius.circular(8)),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
-                      borderRadius: BorderRadius.circular(8)),
-                  hintStyle: theme.textTheme.labelMedium!.copyWith(
-                    color: Color(0xFF999999),
-                  ),
-                ),
-              ),
+            SearchBox(
+              hintText: 'Search',
+              controller: searchController,
+              keyboardType: TextInputType.streetAddress,
+              onChanged: (_) => onEditSearch(),
             ),
             12.verticalSpace,
             Expanded(
