@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
@@ -21,9 +22,7 @@ class ReviewingPhotoView extends ScreenView {
                 text: TextSpan(
                   text:
                       'Dear $name,\n\nWe are reviewing your photo.\n\nIt may take up to 48 hours to review\nyour photo. Please make sure\n',
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelMedium!
+                  style: theme.textTheme.labelMedium!
                       .copyWith(fontStyle: FontStyle.italic),
                   children: const <TextSpan>[
                     TextSpan(

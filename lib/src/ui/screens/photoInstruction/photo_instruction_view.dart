@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
@@ -20,18 +21,18 @@ class PhotoInstructionView extends ScreenView {
               width: 278.w,
               child: Text(
                 'Please take or upload a \npassport-style profile photo. \n\nPhotos must clearly show your face. \n\nNo body pictures are allowed.',
-                style: Theme.of(context).textTheme.labelMedium,
+                style: theme.textTheme.labelMedium,
               ),
             ),
             24.verticalSpace,
             Container(
               child: Text(
                 'EXAMPLE',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color: Theme.of(context).colorScheme.tertiary,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w700,
-                    ),
+                style: theme.textTheme.bodySmall!.copyWith(
+                  color: theme.colorScheme.tertiary,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             12.verticalSpace,
@@ -55,11 +56,11 @@ class PhotoInstructionView extends ScreenView {
               onPressed: () {},
               child: Text(
                 'UPLOAD FROM ALBUMS',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color: Colors.black,
-                      fontStyle: FontStyle.italic,
-                      decoration: TextDecoration.underline,
-                    ),
+                style: theme.textTheme.bodySmall!.copyWith(
+                  color: Colors.black,
+                  fontStyle: FontStyle.italic,
+                  decoration: TextDecoration.underline,
+                ),
               ),
             )
           ],

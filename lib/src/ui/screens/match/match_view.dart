@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
@@ -24,9 +25,7 @@ class MatchView extends ScreenView {
               240.verticalSpace,
               Text("$fullName\nwants to meet you too!",
                   textAlign: TextAlign.center,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium!
+                  style: theme.textTheme.headlineMedium!
                       .copyWith(color: Colors.white)),
               40.verticalSpace,
               StyledButton(
@@ -45,7 +44,7 @@ class MatchView extends ScreenView {
                 ),
                 child: Text(
                   'MEET MORE FRIENDS',
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  style: theme.textTheme.bodyMedium!.copyWith(
                       color: Colors.white,
                       fontStyle: FontStyle.italic,
                       decorationColor: Colors.white,

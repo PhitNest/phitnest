@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../view.dart';
 
@@ -24,13 +25,13 @@ class ThankYouView extends ScreenView {
                 width: 301.w,
                 child: Text(
                   'Thank you,\n${this.name}.',
-                  style: Theme.of(context).textTheme.headlineLarge,
+                  style: theme.textTheme.headlineLarge,
                   textAlign: TextAlign.center,
                 )),
             42.verticalSpace,
             Text(
               'We\'ll be in touch, my friend.',
-              style: Theme.of(context).textTheme.labelLarge,
+              style: theme.textTheme.labelLarge,
               textAlign: TextAlign.center,
             ),
             40.verticalSpace,

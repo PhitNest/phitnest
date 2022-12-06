@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common/utils.dart';
 import '../../../../entities/entities.dart';
+import '../../../theme.dart';
 
 class GymCard extends StatelessWidget {
   final bool selected;
@@ -38,14 +39,12 @@ class GymCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('${gym.name} (${distance.formatQuantity("mile")})',
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium!
+                      style: theme.textTheme.labelMedium!
                           .copyWith(fontWeight: FontWeight.bold)),
                   SizedBox(
                       width: 250.w,
                       child: Text(gym.address.toString(),
-                          style: Theme.of(context).textTheme.labelMedium))
+                          style: theme.textTheme.labelMedium))
                 ],
               ))));
 }

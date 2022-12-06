@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../theme.dart';
 import '../models/activity_post.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,7 +23,7 @@ class ActivityPost extends StatelessWidget {
             width: double.infinity,
             child: Text(
               model.title,
-              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+              style: theme.textTheme.bodySmall!.copyWith(
                   color: Color(0xff858585), fontWeight: FontWeight.w400),
             ),
           ),
@@ -35,9 +36,7 @@ class ActivityPost extends StatelessWidget {
                   width: 254.w,
                   child: Text(
                     model.subtitle,
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelMedium!
+                    style: theme.textTheme.labelMedium!
                         .copyWith(fontWeight: FontWeight.w400),
                   ),
                 ),
