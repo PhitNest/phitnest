@@ -98,7 +98,7 @@ class ApologyView extends ScreenView {
                   child: Text('SUBMIT'),
                   onPressed: onPressedSubmit,
                 ),
-                10.verticalSpace,
+                Expanded(child: Container()),
               ],
             ),
           ),
