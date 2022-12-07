@@ -45,6 +45,7 @@ class RegisterPageTwoView extends ScreenView {
                         height: 34.h,
                         child: TextInputField(
                           hint: 'Password',
+                          inputAction: TextInputAction.next,
                         ),
                       ),
                       16.verticalSpace,

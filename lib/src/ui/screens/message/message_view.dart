@@ -79,7 +79,7 @@ class MessageView extends ScreenView {
                       child: Padding(
                         padding: EdgeInsets.only(
                           top: 9.h,
-                          bottom: 24.h,
+                          bottom: 18.h,
                           left: 14.w,
                           right: 14.w,
                         ),
