@@ -36,7 +36,11 @@ export class UserController implements IUserController {
       );
       return res.status(200).json(users);
     } catch (err) {
-      return res.status(500).json(err);
+      if (err instanceof Error) {
+        return res.status(500).json(err.message);
+      } else {
+        return res.status(500).send(err);
+      }
     }
   }
 
@@ -49,7 +53,11 @@ export class UserController implements IUserController {
         return res.status(500).json({ message: "Could not find a user" });
       }
     } catch (err) {
-      return res.status(500).json(err);
+      if (err instanceof Error) {
+        return res.status(500).json(err.message);
+      } else {
+        return res.status(500).send(err);
+      }
     }
   }
 }

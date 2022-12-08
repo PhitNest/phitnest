@@ -36,8 +36,8 @@ class Response<LocalsType = any> implements IResponse<LocalsType> {
     this.code = 200;
   }
 
-  send() {
-    this.expressResponse.send();
+  send(content?: any) {
+    this.expressResponse.send(content);
     return this;
   }
 
