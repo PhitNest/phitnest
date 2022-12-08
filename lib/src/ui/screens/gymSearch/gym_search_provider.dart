@@ -16,6 +16,8 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
   @override
   Future<void> init(BuildContext context, GymSearchState state) async {
     state.currentlySelectedGym = gym;
+    state.errorMessage = null;
+    state.gymsAndDistances = null;
     getLocationUseCase.get().then(
           (either) => either.fold(
             (location) => getNearestGymsUseCase
@@ -55,6 +57,7 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
         showConfirmButton: state.showConfirmButton,
         searchController: state.searchController,
         searchFocus: state.searchFocus,
+        onPressRetry: () => init(context, state),
         onTapSearch: () => state.showConfirmButton = false,
         errorMessage: state.errorMessage,
         onEditSearch: state.editSearch,

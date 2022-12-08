@@ -30,9 +30,7 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
         memoryCacheRepo.email = email;
       } else {
         return Right(
-          Failure(
-            type: FailureType.cache,
-          ),
+          Failure("No email cached"),
         );
       }
     }
@@ -77,9 +75,7 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
       }
     }
     return Right(
-      Failure(
-        type: FailureType.cache,
-      ),
+      Failure("No auth credentials in the cache"),
     );
   }
 }

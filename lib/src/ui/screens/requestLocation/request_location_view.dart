@@ -8,13 +8,15 @@ import '../view.dart';
 
 class RequestLocationView extends ScreenView {
   final VoidCallback onPressedExit;
-  final String errorMessage;
+  final String? errorMessage;
   final bool searching;
+  final VoidCallback onPressRetry;
 
   const RequestLocationView({
     required this.onPressedExit,
     required this.errorMessage,
     required this.searching,
+    required this.onPressRetry,
   }) : super();
 
   @override
@@ -48,13 +50,25 @@ class RequestLocationView extends ScreenView {
                     child: CircularProgressIndicator(),
                     visible: searching,
                   ),
-                  SizedBox(
-                    width: 0.9.sw,
-                    child: Text(
-                      errorMessage,
-                      style: theme.textTheme.labelLarge!
-                          .copyWith(color: theme.colorScheme.error),
-                      textAlign: TextAlign.center,
+                  Visibility(
+                    visible: errorMessage != null,
+                    child: SizedBox(
+                      width: 0.9.sw,
+                      child: Column(
+                        children: [
+                          Text(
+                            errorMessage ?? '',
+                            style: theme.textTheme.labelLarge!
+                                .copyWith(color: theme.colorScheme.error),
+                            textAlign: TextAlign.center,
+                          ),
+                          30.verticalSpace,
+                          StyledButton(
+                            onPressed: onPressRetry,
+                            child: Text('RETRY'),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   Expanded(child: Container()),

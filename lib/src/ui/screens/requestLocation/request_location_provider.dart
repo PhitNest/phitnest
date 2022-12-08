@@ -12,10 +12,11 @@ class RequestLocationProvider
     extends ScreenProvider<RequestLocationState, RequestLocationView> {
   @override
   Future<void> init(BuildContext context, RequestLocationState state) async {
+    state.errorMessage = null;
+    state.searching = true;
     getLocationUseCase.get().then(
           (either) => either.fold(
             (location) {
-              state.searching = true;
               getNearestGymsUseCase
                   .get(
                     location: location,
@@ -63,8 +64,9 @@ class RequestLocationProvider
   @override
   RequestLocationView build(BuildContext context, RequestLocationState state) =>
       RequestLocationView(
-        errorMessage: state.errorMessage ?? '',
+        errorMessage: state.errorMessage,
         searching: state.searching,
+        onPressRetry: () => init(context, state),
         onPressedExit: () => Navigator.of(context).pushAndRemoveUntil(
           NoAnimationMaterialPageRoute(
             builder: (context) => ApologyProvider(),

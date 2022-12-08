@@ -13,9 +13,7 @@ class LocationRepository implements ILocationRepository {
 
     if (!await Geolocator.isLocationServiceEnabled()) {
       return Right(
-        Failure(
-          type: FailureType.location_permission_denied,
-        ),
+        Failure("Location permissions are denied."),
       );
     }
 
@@ -24,9 +22,7 @@ class LocationRepository implements ILocationRepository {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         return Right(
-          Failure(
-            type: FailureType.location_permission_denied,
-          ),
+          Failure("Location permissions are denied."),
         );
       }
     }
@@ -34,8 +30,7 @@ class LocationRepository implements ILocationRepository {
     if (permission == LocationPermission.deniedForever) {
       return Right(
         Failure(
-          type: FailureType.location_permission_permanently_denied,
-        ),
+            "Location permissions are permanently denied, we cannot request permissions."),
       );
     }
 
