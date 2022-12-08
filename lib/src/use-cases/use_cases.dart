@@ -10,7 +10,11 @@ final useCases = GetIt.instance;
 void injectUseCases() {
   useCases.registerSingleton<ISkipOnBoardingUseCase>(SkipOnBoardingUseCase());
   useCases.registerSingleton<IGetAuthTokenUseCase>(GetAuthTokenUseCase());
+  useCases.registerSingleton<IGetNearestGymsUseCase>(GetNearestGymsUseCase());
+  useCases.registerSingleton<IGetLocationUseCase>(GetLocationUseCase());
 }
 
 ISkipOnBoardingUseCase get skipOnBoardingUseCase => useCases();
 IGetAuthTokenUseCase get getAuthTokenUseCase => useCases();
+IGetNearestGymsUseCase get getNearestGymsUseCase => useCases();
+IGetLocationUseCase get getLocationUseCase => useCases();
