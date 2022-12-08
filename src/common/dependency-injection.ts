@@ -19,6 +19,7 @@ export const UseCases = {
   explore: Symbol("explore.use-case"),
   forgotPasswordSubmit: Symbol("forgotPasswordSubmit.use-case"),
   createGym: Symbol("createGym.use-case"),
+  tutorialExplore: Symbol("tutorialExplore.use-case"),
   login: Symbol("login.use-case"),
   register: Symbol("register.use-case"),
   confirmRegister: Symbol("confirmRegister.use-case"),
@@ -88,6 +89,7 @@ import {
   GetSentFriendRequestsUseCase,
   GetReceivedFriendRequestsUseCase,
   SendDirectMessageUseCase,
+  TutorialExploreUseCase,
 } from "../use-cases/implementations";
 
 import { AuthMiddleware } from "../adapters/middleware/implementations";
@@ -161,6 +163,7 @@ export function injectUseCases() {
   injectUseCase(UseCases.denyFriendRequest, DenyFriendRequestUseCase);
   injectUseCase(UseCases.getFriends, GetFriendsUseCase);
   injectUseCase(UseCases.sendDirectMessage, SendDirectMessageUseCase);
+  injectUseCase(UseCases.tutorialExplore, TutorialExploreUseCase);
 }
 
 export function injectAdapters() {
