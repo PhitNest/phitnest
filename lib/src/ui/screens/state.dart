@@ -5,6 +5,8 @@ abstract class ScreenState extends ChangeNotifier {
 
   bool _disposed = false;
 
+  bool get disposed => _disposed;
+
   bool _initialized = false;
 
   bool get initialized => _initialized;

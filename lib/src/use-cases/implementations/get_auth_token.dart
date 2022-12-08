@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 
-import '../../failures/failures.dart';
+import '../../entities/entities.dart';
 import '../../repositories/repositories.dart';
 import '../interfaces/interfaces.dart';
 
@@ -29,7 +29,11 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
       if (email != null) {
         memoryCacheRepo.email = email;
       } else {
-        return Right(CacheFailure());
+        return Right(
+          Failure(
+            type: FailureType.cache,
+          ),
+        );
       }
     }
     // Check if we have a valid refresh token cached
@@ -72,6 +76,10 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
         );
       }
     }
-    return Right(CacheFailure());
+    return Right(
+      Failure(
+        type: FailureType.cache,
+      ),
+    );
   }
 }

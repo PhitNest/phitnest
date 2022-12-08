@@ -8,7 +8,6 @@ import '../../constants/constants.dart';
 import '../../entities/entities.dart';
 import 'package:http/http.dart' as http;
 
-import '../../failures/failures.dart';
 import '../repositories.dart';
 
 class AuthenticationRepository implements IAuthRepository {
@@ -36,18 +35,21 @@ class AuthenticationRepository implements IAuthRepository {
           'password': password,
         },
       ).then(
-        (response) => response.statusCode == kStatusOK
-            ? Left(
-                AuthTokensEntity.fromJson(
-                  jsonDecode(response.body),
-                ),
-              )
-            : Right(
-                Failure.fromResponse(
-                  response.statusCode,
-                  jsonDecode(response.body),
-                ),
+        (response) {
+          if (response.statusCode == kStatusOK) {
+            return Left(
+              AuthTokensEntity.fromJson(
+                jsonDecode(response.body),
               ),
+            );
+          } else {
+            return Right(
+              Failure(
+                type: FailureType.login,
+              ),
+            );
+          }
+        },
       );
 
   Future<Failure?> register(String email, String password, String gymId,
@@ -62,12 +64,21 @@ class AuthenticationRepository implements IAuthRepository {
           'lastName': lastName
         },
       ).then(
-        (response) => response.statusCode == kStatusCreated
-            ? null
-            : Failure.fromResponse(
-                response.statusCode,
-                jsonDecode(response.body),
-              ),
+        (response) {
+          if (response.statusCode == kStatusCreated) {
+            return null;
+          } else {
+            if (response.body == "Gym not found.") {
+              return Failure(
+                type: FailureType.gym_not_found,
+              );
+            } else {
+              return Failure(
+                type: FailureType.unknown,
+              );
+            }
+          }
+        },
       );
 
   @override
@@ -80,17 +91,20 @@ class AuthenticationRepository implements IAuthRepository {
           'refreshToken': refreshToken,
         },
       ).then(
-        (response) => response.statusCode == kStatusOK
-            ? Left(
-                SessionRefreshTokensEntity.fromJson(
-                  jsonDecode(response.body),
-                ),
-              )
-            : Right(
-                Failure.fromResponse(
-                  response.statusCode,
-                  jsonDecode(response.body),
-                ),
+        (response) {
+          if (response.statusCode == kStatusOK) {
+            return Left(
+              SessionRefreshTokensEntity.fromJson(
+                jsonDecode(response.body),
               ),
+            );
+          } else {
+            return Right(
+              Failure(
+                type: FailureType.unknown,
+              ),
+            );
+          }
+        },
       );
 }

@@ -1,12 +1,14 @@
+import 'package:dartz/dartz.dart';
+
 import '../../entities/entities.dart';
 import '../../repositories/repositories.dart';
 import '../interfaces/interfaces.dart';
 
 class GetNearestGymsUseCase implements IGetNearestGymsUseCase {
   @override
-  Future<List<GymEntity>> get({
+  Future<Either<List<GymEntity>, Failure>> get({
     required LocationEntity location,
-    required int maxDistance,
+    required double maxDistance,
     int? limit,
   }) =>
       gymRepo.getNearestGyms(
