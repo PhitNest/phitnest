@@ -13,14 +13,17 @@ import '../repositories.dart';
 class AuthenticationRepository implements IAuthRepository {
   Future<bool> validAccessToken(String accessToken) async {
     if (!Jwt.isExpired(accessToken)) {
-      return http.get(
-        getBackendAddress(kAuth),
-        headers: {
-          "authorization": "Bearer $accessToken",
-        },
-      ).then(
-        (res) => res.statusCode == 200,
-      );
+      return http
+          .get(
+            getBackendAddress(kAuth),
+            headers: {
+              "authorization": "Bearer $accessToken",
+            },
+          )
+          .timeout(requestTimeout)
+          .then(
+            (res) => res.statusCode == 200,
+          );
     } else {
       return false;
     }
@@ -28,83 +31,86 @@ class AuthenticationRepository implements IAuthRepository {
 
   Future<Either<AuthTokensEntity, Failure>> login(
           String email, String password) =>
-      http.post(
-        getBackendAddress(kLogin),
-        body: {
-          'email': email,
-          'password': password,
-        },
-      ).then(
-        (response) {
-          if (response.statusCode == kStatusOK) {
-            return Left(
-              AuthTokensEntity.fromJson(
-                jsonDecode(response.body),
-              ),
-            );
-          } else {
-            return Right(
-              Failure(
-                type: FailureType.login,
-              ),
-            );
-          }
-        },
-      );
+      http
+          .post(
+            getBackendAddress(kLogin),
+            body: {
+              'email': email,
+              'password': password,
+            },
+          )
+          .timeout(requestTimeout)
+          .then(
+            (response) {
+              if (response.statusCode == kStatusOK) {
+                return Left(
+                  AuthTokensEntity.fromJson(
+                    jsonDecode(response.body),
+                  ),
+                );
+              } else {
+                return Right(
+                  Failure("Invalid email or password."),
+                );
+              }
+            },
+          );
 
   Future<Failure?> register(String email, String password, String gymId,
           String firstName, String lastName) =>
-      http.post(
-        getBackendAddress(kRegister),
-        body: {
-          'email': email,
-          'password': password,
-          'gymId': gymId,
-          'firstName': firstName,
-          'lastName': lastName
-        },
-      ).then(
-        (response) {
-          if (response.statusCode == kStatusCreated) {
-            return null;
-          } else {
-            if (response.body == "Gym not found.") {
-              return Failure(
-                type: FailureType.gym_not_found,
-              );
-            } else {
-              return Failure(
-                type: FailureType.unknown,
-              );
-            }
-          }
-        },
-      );
+      http
+          .post(
+            getBackendAddress(kRegister),
+            body: {
+              'email': email,
+              'password': password,
+              'gymId': gymId,
+              'firstName': firstName,
+              'lastName': lastName
+            },
+          )
+          .timeout(requestTimeout)
+          .then(
+            (response) {
+              if (response.statusCode == kStatusCreated) {
+                return null;
+              } else {
+                try {
+                  final json = jsonDecode(response.body);
+                  if (json is List<dynamic>) {
+                    return Failure("Formatting error");
+                  }
+                } catch (ignore) {}
+                return Failure(response.body);
+              }
+            },
+          );
 
   @override
   Future<Either<SessionRefreshTokensEntity, Failure>> refreshSession(
           String email, String refreshToken) =>
-      http.post(
-        getBackendAddress(kRefreshSession),
-        body: {
-          'email': email,
-          'refreshToken': refreshToken,
-        },
-      ).then(
-        (response) {
-          if (response.statusCode == kStatusOK) {
-            return Left(
-              SessionRefreshTokensEntity.fromJson(
-                jsonDecode(response.body),
-              ),
-            );
-          } else {
-            return Right(
-              Failure(
-                type: FailureType.unknown,
-              ),
-            );
-          }
-        },
-      );
+      http
+          .post(
+            getBackendAddress(kRefreshSession),
+            body: {
+              'email': email,
+              'refreshToken': refreshToken,
+            },
+          )
+          .timeout(requestTimeout)
+          .then(
+            (response) {
+              if (response.statusCode == kStatusOK) {
+                return Left(
+                  SessionRefreshTokensEntity.fromJson(
+                    jsonDecode(response.body),
+                  ),
+                );
+              } else {
+                return Right(
+                  Failure(response.body),
+                );
+              }
+            },
+          );
 }

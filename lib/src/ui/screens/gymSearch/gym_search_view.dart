@@ -16,6 +16,7 @@ class GymSearchView extends ScreenView {
   final bool showConfirmButton;
   final VoidCallback onTapSearch;
   final FocusNode searchFocus;
+  final VoidCallback onPressRetry;
 
   const GymSearchView({
     required this.onPressedConfirm,
@@ -26,6 +27,7 @@ class GymSearchView extends ScreenView {
     required this.showConfirmButton,
     required this.onTapSearch,
     required this.searchFocus,
+    required this.onPressRetry,
   }) : super();
 
   @override
@@ -44,11 +46,20 @@ class GymSearchView extends ScreenView {
                 ),
                 Visibility(
                   visible: errorMessage != null,
-                  child: Text(
-                    errorMessage ?? '',
-                    style: theme.textTheme.labelLarge!.copyWith(
-                      color: Colors.red,
-                    ),
+                  child: Column(
+                    children: [
+                      Text(
+                        errorMessage ?? '',
+                        style: theme.textTheme.labelLarge!.copyWith(
+                          color: Colors.red,
+                        ),
+                      ),
+                      30.verticalSpace,
+                      StyledButton(
+                        child: Text('RETRY'),
+                        onPressed: onPressRetry,
+                      )
+                    ],
                   ),
                 ),
                 cards != null

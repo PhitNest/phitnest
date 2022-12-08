@@ -10,10 +10,13 @@ import '../repositories.dart';
 
 class UserRepository implements IUserRepository {
   @override
-  getUser(String accessToken) => http.post(
+  getUser(String accessToken) => http
+      .post(
         getBackendAddress(kGetUser),
         headers: {"authorization": "Bearer $accessToken"},
-      ).then(
+      )
+      .timeout(requestTimeout)
+      .then(
         (response) {
           if (response.statusCode == kStatusOK) {
             return Left(
@@ -23,9 +26,7 @@ class UserRepository implements IUserRepository {
             );
           } else {
             return Right(
-              Failure(
-                type: FailureType.unknown,
-              ),
+              Failure("Failed to get user."),
             );
           }
         },

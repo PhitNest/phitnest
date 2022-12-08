@@ -26,11 +26,7 @@ class GymRepository implements IGymRepository {
               },
             ),
           )
-          .timeout(
-            const Duration(
-              seconds: 25,
-            ),
-          )
+          .timeout(requestTimeout)
           .then(
             (response) => Left(
               List<GymEntity>.from(
@@ -44,9 +40,7 @@ class GymRepository implements IGymRepository {
           );
     } catch (error) {
       return Right(
-        Failure(
-          type: FailureType.network,
-        ),
+        Failure("Failed to connect to the network."),
       );
     }
   }

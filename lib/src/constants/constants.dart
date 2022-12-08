@@ -2,3 +2,5 @@
 export 'headers.dart';
 export 'http_codes.dart';
 export 'backend_routes.dart';
+
+const requestTimeout = Duration(seconds: 10);
