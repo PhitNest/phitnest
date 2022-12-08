@@ -12,9 +12,11 @@ void injectUseCases() {
   useCases.registerSingleton<IGetAuthTokenUseCase>(GetAuthTokenUseCase());
   useCases.registerSingleton<IGetNearestGymsUseCase>(GetNearestGymsUseCase());
   useCases.registerSingleton<IGetLocationUseCase>(GetLocationUseCase());
+  useCases.registerSingleton<IExploreUseCase>(ExploreUseCase());
 }
 
 ISkipOnBoardingUseCase get skipOnBoardingUseCase => useCases();
 IGetAuthTokenUseCase get getAuthTokenUseCase => useCases();
 IGetNearestGymsUseCase get getNearestGymsUseCase => useCases();
 IGetLocationUseCase get getLocationUseCase => useCases();
+IExploreUseCase get exploreUseCase => useCases();

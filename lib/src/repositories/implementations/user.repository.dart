@@ -11,7 +11,7 @@ import '../repositories.dart';
 class UserRepository implements IUserRepository {
   @override
   getUser(String accessToken) => http
-      .post(
+      .get(
         getBackendAddress(kGetUser),
         headers: {"authorization": "Bearer $accessToken"},
       )
@@ -29,6 +29,40 @@ class UserRepository implements IUserRepository {
               Failure("Failed to get user."),
             );
           }
+        },
+      );
+
+  @override
+  Future<Either<List<ExploreUserEntity>, Failure>> getTutorialExploreUsers(
+          String gymId,
+          {int? skip,
+          int? limit}) =>
+      http
+          .get(
+            getBackendAddress(kTutorialExplore, params: {
+              "gymId": gymId,
+              ...(skip != null ? {"skip": skip.toString()} : {}),
+              ...(limit != null ? {"limit": limit.toString()} : {}),
+            }),
+          )
+          .timeout(requestTimeout)
+          .then(
+        (response) {
+          if (response.statusCode == kStatusOK) {
+            final json = jsonDecode(response.body);
+            if (json is List) {
+              return Left(
+                json
+                    .map(
+                      (e) => ExploreUserEntity.fromJson(e),
+                    )
+                    .toList(),
+              );
+            }
+          }
+          return Right(
+            Failure("Failed to get users."),
+          );
         },
       );
 }
