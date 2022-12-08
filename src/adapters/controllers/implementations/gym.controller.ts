@@ -44,8 +44,10 @@ export class GymController implements IGymController {
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
+      } else if (err instanceof Error) {
+        return res.status(500).json(err.message);
       } else {
-        return res.status(500).json(err);
+        return res.status(500).send(err);
       }
     }
   }
@@ -69,8 +71,10 @@ export class GymController implements IGymController {
     } catch (err) {
       if (err instanceof z.ZodError) {
         return res.status(400).json(err.issues);
+      } else if (err instanceof Error) {
+        return res.status(500).json(err.message);
       } else {
-        return res.status(500).json(err);
+        return res.status(500).send(err);
       }
     }
   }
@@ -80,7 +84,11 @@ export class GymController implements IGymController {
       const gym = await this.getGymUseCase.execute(res.locals.cognitoId);
       return res.status(200).json(gym);
     } catch (err) {
-      return res.status(500).json(err);
+      if (err instanceof Error) {
+        return res.status(500).json(err.message);
+      } else {
+        return res.status(500).send(err);
+      }
     }
   }
 }

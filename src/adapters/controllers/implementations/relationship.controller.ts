@@ -56,7 +56,11 @@ export class RelationshipController implements IRelationshipController {
         );
       return res.status(200).json(friendRequests);
     } catch (err) {
-      return res.status(500).json(err);
+      if (err instanceof Error) {
+        return res.status(500).json(err.message);
+      } else {
+        return res.status(500).send(err);
+      }
     }
   }
 
@@ -70,7 +74,11 @@ export class RelationshipController implements IRelationshipController {
       );
       return res.status(200).json(friendRequests);
     } catch (err) {
-      return res.status(500).json(err);
+      if (err instanceof Error) {
+        return res.status(500).json(err.message);
+      } else {
+        return res.status(500).send(err);
+      }
     }
   }
 
@@ -81,7 +89,11 @@ export class RelationshipController implements IRelationshipController {
       );
       return res.status(200).json(friends);
     } catch (err) {
-      return res.status(500).json(err);
+      if (err instanceof Error) {
+        return res.status(500).json(err.message);
+      } else {
+        return res.status(500).send(err);
+      }
     }
   }
 
@@ -99,11 +111,11 @@ export class RelationshipController implements IRelationshipController {
       return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json({
-          message: err.message,
-        });
+        return res.status(400).json(err.issues);
+      } else if (err instanceof Error) {
+        return res.status(500).json(err.message);
       } else {
-        return res.status(500).json(err);
+        return res.status(500).send(err);
       }
     }
   }
@@ -117,11 +129,11 @@ export class RelationshipController implements IRelationshipController {
       return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json({
-          message: err.message,
-        });
+        return res.status(400).json(err.issues);
+      } else if (err instanceof Error) {
+        return res.status(500).json(err.message);
       } else {
-        return res.status(500).json(err);
+        return res.status(500).send(err);
       }
     }
   }
@@ -135,11 +147,11 @@ export class RelationshipController implements IRelationshipController {
       return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json({
-          message: err.message,
-        });
+        return res.status(400).json(err.issues);
+      } else if (err instanceof Error) {
+        return res.status(500).json(err.message);
       } else {
-        return res.status(500).json(err);
+        return res.status(500).send(err);
       }
     }
   }
@@ -158,11 +170,11 @@ export class RelationshipController implements IRelationshipController {
       return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json({
-          message: err.message,
-        });
+        return res.status(400).json(err.issues);
+      } else if (err instanceof Error) {
+        return res.status(500).json(err.message);
       } else {
-        return res.status(500).json(err);
+        return res.status(500).send(err);
       }
     }
   }

@@ -10,7 +10,7 @@ export class MockResponse<LocalsType = any> implements IResponse<LocalsType> {
     this.code = 200;
   }
 
-  send() {
+  send(content?: any) {
     return this;
   }
 
