@@ -23,6 +23,61 @@ paths:
         500:
           description: An internal error occurred
 
+  # /user/tutorialExplore
+  tutorialExplore:
+    get:
+      tags:
+        - User
+      summary: Search for users at a gym
+      parameters:
+        - in: query
+          name: gymId
+          schema:
+            type: string
+            example: 6361c05b30d64fe62ff485cb
+          required: true
+          description: The gym to search at
+        - in: query
+          name: skip
+          schema:
+            type: number
+            example: 2
+          required: false
+          description: The number of users to skip past
+        - in: query
+          name: limit
+          schema:
+            type: number
+            example: 50
+          required: false
+          description: The number of users to find
+      responses:
+        200:
+          description: Found users at the gym
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required:
+                    - cognitoId
+                    - firstName
+                    - lastName
+                  properties:
+                    cognitoId:
+                      type: string
+                      example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh
+                    firstName:
+                      type: string
+                      example: John
+                    lastName:
+                      type: string
+                      example: Jones
+        400:
+          description: Validation error
+        500:
+          description: An internal error occurred
+
   # /user/explore
   explore:
     get:
@@ -37,14 +92,14 @@ paths:
           schema:
             type: number
             example: 2
-          required: true
+          required: false
           description: The number of users to skip past
         - in: query
           name: limit
           schema:
             type: number
             example: 50
-          required: true
+          required: false
           description: The number of users to find
       responses:
         200:

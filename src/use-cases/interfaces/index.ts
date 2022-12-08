@@ -20,3 +20,4 @@ export { IGetFriendsUseCase } from "./get-friends";
 export { IGetSentFriendRequestsUseCase } from "./get-sent-friend-requests";
 export { IGetReceivedFriendRequestsUseCase } from "./get-received-friend-requests";
 export { ISendDirectMessageUseCase } from "./send-direct-message";
+export { ITutorialExploreUseCase } from "./tutorial-explore";

@@ -41,6 +41,8 @@ paths:
     $ref: "specs/user.yml#/paths/me"
   /user/explore:
     $ref: "specs/user.yml#/paths/explore"
+  /user/tutorialExplore:
+    $ref: "specs/user.yml#/paths/tutorialExplore"
 
   /relationship/sendFriendRequest:
     $ref: "specs/relationship.yml#/paths/sendFriendRequest"

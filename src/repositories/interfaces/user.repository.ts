@@ -5,7 +5,12 @@ export interface IUserRepository {
   delete(cognitoId: string): Promise<boolean>;
   exploreUsers(
     cognitoId: string,
-    offset?: number,
+    skip?: number,
+    limit?: number
+  ): Promise<Omit<IPublicUserEntity, "gymId">[]>;
+  tutorialExploreUsers(
+    gymId: string,
+    skip?: number,
     limit?: number
   ): Promise<Omit<IPublicUserEntity, "gymId">[]>;
   get(cognitoId: string): Promise<IUserEntity | null>;

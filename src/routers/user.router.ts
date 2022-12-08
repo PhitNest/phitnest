@@ -25,6 +25,12 @@ export class UserRouter implements IRouter {
         middlewares: [authMiddleware],
         controller: (req, res) => userController.explore(req, res),
       },
+      {
+        path: "/tutorialExplore",
+        method: HttpMethod.GET,
+        middlewares: [],
+        controller: (req, res) => userController.tutorialExplore(req, res),
+      },
     ];
   }
 }

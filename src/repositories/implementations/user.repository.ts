@@ -1,6 +1,10 @@
 import { injectable } from "inversify";
 import mongoose from "mongoose";
-import { IUserEntity, RelationshipType } from "../../entities";
+import {
+  IPublicUserEntity,
+  IUserEntity,
+  RelationshipType,
+} from "../../entities";
 import { IUserRepository } from "../interfaces";
 import { GYM_MODEL_NAME } from "./gym.repository";
 import { RELATIONSHIP_COLLECTION_NAME } from "./relationship.repository";
@@ -37,7 +41,39 @@ export const UserModel = mongoose.model<IUserEntity>(USER_MODEL_NAME, schema);
 
 @injectable()
 export class MongoUserRepository implements IUserRepository {
-  exploreUsers(cognitoId: string, offset?: number, limit?: number) {
+  tutorialExploreUsers(
+    gymId: string,
+    skip?: number,
+    limit?: number
+  ): Promise<Omit<IPublicUserEntity, "gymId">[]> {
+    const pipeline: mongoose.PipelineStage[] = [
+      {
+        $match: {
+          gymId: new mongoose.Types.ObjectId(gymId),
+        },
+      },
+      {
+        $project: {
+          cognitoId: 1,
+          firstName: 1,
+          lastName: 1,
+        },
+      },
+    ];
+    if (skip && skip > 0) {
+      pipeline.push({
+        $skip: skip,
+      });
+    }
+    if (limit && limit > 0) {
+      pipeline.push({
+        $limit: limit,
+      });
+    }
+    return UserModel.aggregate(pipeline).exec();
+  }
+
+  exploreUsers(cognitoId: string, skip?: number, limit?: number) {
     const pipeline: mongoose.PipelineStage[] = [
       {
         $match: {
@@ -138,9 +174,9 @@ export class MongoUserRepository implements IUserRepository {
         },
       },
     ];
-    if (offset && offset > 0) {
+    if (skip && skip > 0) {
       pipeline.push({
-        $skip: offset,
+        $skip: skip,
       });
     }
     if (limit && limit > 0) {
