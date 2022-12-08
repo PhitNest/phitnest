@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../entities/entities.dart';
+import '../../../use-cases/use_cases.dart';
 import '../../widgets/widgets.dart';
 import '../screens.dart';
 import '../provider.dart';
@@ -9,32 +9,38 @@ import 'request_location_view.dart';
 
 class RequestLocationProvider
     extends ScreenProvider<RequestLocationState, RequestLocationView> {
+  @override
+  Future<void> init(BuildContext context, RequestLocationState state) async {
+    getLocationUseCase.get().then(
+          (either) => either.fold(
+            (location) => getNearestGymsUseCase
+                .get(
+                  location: location,
+                  maxDistance: 30000,
+                  limit: 1,
+                )
+                .then(
+                  (gyms) => Navigator.pushAndRemoveUntil(
+                    context,
+                    NoAnimationMaterialPageRoute(
+                      builder: (context) => FoundLocationProvider(
+                        gym: gyms[0],
+                      ),
+                    ),
+                    (_) => false,
+                  ),
+                ),
+            (failure) => state.errorMessage = failure.message,
+          ),
+        );
+  }
+
   const RequestLocationProvider() : super();
 
   @override
   RequestLocationView build(BuildContext context, RequestLocationState state) =>
       RequestLocationView(
         errorMessage: state.errorMessage ?? '',
-        onPressedSkip: () => Navigator.of(context).pushAndRemoveUntil(
-            NoAnimationMaterialPageRoute(
-              builder: (context) => FoundLocationProvider(
-                gym: new GymEntity(
-                  id: "1",
-                  name: "Planet Fitness",
-                  address: new AddressEntity(
-                    street: "123 Street st",
-                    city: "Virginia Beach",
-                    state: "VA",
-                    zipCode: "23456",
-                  ),
-                  location: new LocationEntity(
-                    longitude: 52,
-                    latitude: -20,
-                  ),
-                ),
-              ),
-            ),
-            (route) => false),
         onPressedExit: () => Navigator.of(context).pushAndRemoveUntil(
           NoAnimationMaterialPageRoute(
             builder: (context) => ApologyProvider(),

@@ -8,12 +8,10 @@ import '../view.dart';
 
 class RequestLocationView extends ScreenView {
   final VoidCallback onPressedExit;
-  final VoidCallback onPressedSkip;
   final String errorMessage;
 
   const RequestLocationView({
     required this.onPressedExit,
-    required this.onPressedSkip,
     required this.errorMessage,
   }) : super();
 
@@ -51,10 +49,6 @@ class RequestLocationView extends ScreenView {
               TextButtonWidget(
                 onPressed: onPressedExit,
                 text: 'EXIT',
-              ),
-              TextButtonWidget(
-                text: 'SKIP',
-                onPressed: onPressedSkip,
               ),
               37.verticalSpace
             ],

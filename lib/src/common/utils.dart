@@ -13,7 +13,7 @@ extension FormatQuantity on double {
 }
 
 Uri getBackendAddress(String route, {Map<String, dynamic>? params}) => Uri.http(
-      '${environmentRepo.backendHost}:${environmentRepo.backendHost}',
+      '${environmentRepo.backendHost}:${environmentRepo.backendPort}',
       route,
       params,
     );
