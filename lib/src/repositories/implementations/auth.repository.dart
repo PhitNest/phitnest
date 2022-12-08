@@ -30,31 +30,41 @@ class AuthenticationRepository implements IAuthRepository {
   }
 
   Future<Either<AuthTokensEntity, Failure>> login(
-          String email, String password) =>
-      http
+      String email, String password) async {
+    try {
+      return await http
           .post(
             getBackendAddress(kLogin),
-            body: {
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode({
               'email': email,
               'password': password,
-            },
+            }),
           )
           .timeout(requestTimeout)
           .then(
-            (response) {
-              if (response.statusCode == kStatusOK) {
-                return Left(
-                  AuthTokensEntity.fromJson(
-                    jsonDecode(response.body),
-                  ),
-                );
-              } else {
-                return Right(
-                  Failure("Invalid email or password."),
-                );
-              }
-            },
-          );
+        (response) {
+          if (response.statusCode == kStatusOK) {
+            return Left(
+              AuthTokensEntity.fromJson(
+                jsonDecode(response.body),
+              ),
+            );
+          } else {
+            return Right(
+              Failure("Invalid email or password."),
+            );
+          }
+        },
+      );
+    } catch (err) {
+      return Right(
+        Failure("Could not connect to network."),
+      );
+    }
+  }
 
   Future<Failure?> register(String email, String password, String gymId,
           String firstName, String lastName) =>

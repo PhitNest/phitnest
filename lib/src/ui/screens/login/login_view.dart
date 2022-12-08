@@ -21,6 +21,8 @@ class LoginView extends ScreenView {
   final FocusNode focusEmail;
   final VoidCallback onTapEmail;
   final VoidCallback onTapPassword;
+  final String? errorMessage;
+  final bool loading;
 
   LoginView({
     required this.emailController,
@@ -37,6 +39,8 @@ class LoginView extends ScreenView {
     required this.focusEmail,
     required this.onTapEmail,
     required this.onTapPassword,
+    required this.errorMessage,
+    required this.loading,
   }) : super();
 
   @override
@@ -100,6 +104,19 @@ class LoginView extends ScreenView {
                   StyledButton(
                     onPressed: onPressedSignIn,
                     child: Text('SIGN IN'),
+                  ),
+                  30.verticalSpace,
+                  Visibility(
+                    visible: loading,
+                    child: CircularProgressIndicator(),
+                  ),
+                  Visibility(
+                    visible: errorMessage != null,
+                    child: Text(
+                      errorMessage ?? '',
+                      style: theme.textTheme.labelLarge!
+                          .copyWith(color: theme.errorColor),
+                    ),
                   ),
                   Expanded(child: Container()),
                   TextButtonWidget(

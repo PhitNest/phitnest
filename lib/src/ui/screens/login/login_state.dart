@@ -13,6 +13,24 @@ class LoginState extends ScreenState {
   late final FocusNode focusEmail = FocusNode()
     ..addListener(() => onFocusPassword(focusPassword.hasFocus));
 
+  String? _errorMessage;
+
+  String? get errorMessage => _errorMessage;
+
+  bool _loading = false;
+
+  bool get loading => _loading;
+
+  set loading(bool loading) {
+    _loading = loading;
+    rebuildView();
+  }
+
+  set errorMessage(String? errorMessage) {
+    _errorMessage = errorMessage;
+    rebuildView();
+  }
+
   void onFocusEmail(bool focused) {
     if (focused) {
       scrollController.animateTo(
