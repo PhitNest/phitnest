@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../common/validators.dart';
+import '../../../use-cases/use_cases.dart';
 import '../../widgets/widgets.dart';
 import '../provider.dart';
 import '../screens.dart';
@@ -14,13 +15,42 @@ class LoginProvider extends ScreenProvider<LoginState, LoginView> {
   LoginView build(BuildContext context, LoginState state) => LoginView(
         scrollController: state.scrollController,
         emailController: state.emailController,
+        loading: state.loading,
         passwordController: state.passwordController,
         onPressedSignIn: () {
+          state.focusEmail.unfocus();
+          state.focusPassword.unfocus();
+          if (state.loading) {
+            return;
+          }
           if (!state.formKey.currentState!.validate()) {
             state.validateMode = AutovalidateMode.always;
-          } else {}
+          } else {
+            state.loading = true;
+            state.errorMessage = null;
+            loginUseCase
+                .login(
+                    email: state.emailController.text,
+                    password: state.passwordController.text)
+                .then(
+              (either) {
+                state.loading = false;
+                return either.fold(
+                  (session) => Navigator.pushAndRemoveUntil(
+                    context,
+                    NoAnimationMaterialPageRoute(
+                      builder: (context) => ExploreProvider(),
+                    ),
+                    (_) => false,
+                  ),
+                  (failure) => state.errorMessage = failure.message,
+                );
+              },
+            );
+          }
         },
         focusEmail: state.focusEmail,
+        errorMessage: state.errorMessage,
         focusPassword: state.focusPassword,
         validateEmail: (value) => validateEmail(value),
         validatePassword: (value) => validatePassword(value),
