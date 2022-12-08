@@ -42,64 +42,67 @@ class ApologyView extends ScreenView {
           body: SingleChildScrollView(
             controller: scrollController,
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            child: Column(
-              children: [
-                double.infinity.horizontalSpace,
-                110.verticalSpace,
-                SizedBox(
-                  child: Text(
-                    "We apologize",
-                    style: theme.textTheme.headlineLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                40.verticalSpace,
-                SizedBox(
+            child: SizedBox(
+              width: double.infinity,
+              height: 1.sh,
+              child: Column(
+                children: [
+                  110.verticalSpace,
+                  SizedBox(
                     child: Text(
-                  "PhitNest is currently available to\nselect fitness club locations only.\n\n\nMay we contact you when this\nchanges?",
-                  style: theme.textTheme.labelLarge,
-                  textAlign: TextAlign.center,
-                )),
-                40.verticalSpace,
-                SizedBox(
-                  width: 291.w,
-                  child: Form(
-                    key: formKey,
-                    autovalidateMode: autovalidateMode,
-                    child: Column(children: [
-                      SizedBox(
-                        height: 34.h,
-                        child: TextInputField(
-                          inputAction: TextInputAction.next,
-                          controller: nameController,
-                          focusNode: nameFocusNode,
-                          onTap: onTapName,
-                          hint: 'Name',
-                          validator: validateFirstName,
-                        ),
-                      ),
-                      16.verticalSpace,
-                      SizedBox(
-                        height: 34.h,
-                        child: TextInputField(
-                          inputAction: TextInputAction.done,
-                          controller: emailController,
-                          focusNode: emailFocusNode,
-                          onTap: onTapEmail,
-                          hint: 'Email',
-                          validator: validateEmail,
-                        ),
-                      ),
-                    ]),
+                      "We apologize",
+                      style: theme.textTheme.headlineLarge,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
-                40.verticalSpace,
-                StyledButton(
-                  child: Text('SUBMIT'),
-                  onPressed: onPressedSubmit,
-                ),
-                Expanded(child: Container()),
-              ],
+                  40.verticalSpace,
+                  SizedBox(
+                      child: Text(
+                    "PhitNest is currently available to\nselect fitness club locations only.\n\n\nMay we contact you when this\nchanges?",
+                    style: theme.textTheme.labelLarge,
+                    textAlign: TextAlign.center,
+                  )),
+                  40.verticalSpace,
+                  SizedBox(
+                    width: 291.w,
+                    child: Form(
+                      key: formKey,
+                      autovalidateMode: autovalidateMode,
+                      child: Column(children: [
+                        SizedBox(
+                          height: 34.h,
+                          child: TextInputField(
+                            inputAction: TextInputAction.next,
+                            controller: nameController,
+                            focusNode: nameFocusNode,
+                            onTap: onTapName,
+                            hint: 'Name',
+                            validator: validateFirstName,
+                          ),
+                        ),
+                        16.verticalSpace,
+                        SizedBox(
+                          height: 34.h,
+                          child: TextInputField(
+                            inputAction: TextInputAction.done,
+                            controller: emailController,
+                            focusNode: emailFocusNode,
+                            onTap: onTapEmail,
+                            hint: 'Email',
+                            validator: validateEmail,
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
+                  40.verticalSpace,
+                  StyledButton(
+                    child: Text('SUBMIT'),
+                    onPressed: onPressedSubmit,
+                  ),
+                  Expanded(child: Container()),
+                ],
+              ),
             ),
           ),
         ),

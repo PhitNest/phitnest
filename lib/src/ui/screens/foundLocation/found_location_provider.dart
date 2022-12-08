@@ -22,7 +22,9 @@ class FoundLocationProvider
         onPressedNo: () => Navigator.push(
           context,
           NoAnimationMaterialPageRoute(
-            builder: (_) => GymSearchProvider(),
+            builder: (_) => GymSearchProvider(
+              gym: gym,
+            ),
           ),
         ),
         onPressedYes: () {

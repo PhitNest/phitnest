@@ -22,7 +22,8 @@ class ApologyProvider extends ScreenProvider<ApologyState, ApologyView> {
                     name: state.nameController.text,
                   ),
                 ),
-                (_) => false)
+                (_) => false,
+              )
             : state.validateMode = AutovalidateMode.always,
         nameController: state.nameController,
         emailController: state.emailController,

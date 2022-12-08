@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../entities/entities.dart';
 import '../../../use-cases/use_cases.dart';
 import '../../widgets/widgets.dart';
 import '../screens.dart';
@@ -13,26 +14,48 @@ class RequestLocationProvider
   Future<void> init(BuildContext context, RequestLocationState state) async {
     getLocationUseCase.get().then(
           (either) => either.fold(
-            (location) => getNearestGymsUseCase
-                .get(
-                  location: location,
-                  maxDistance: 30000,
-                  limit: 1,
-                )
-                .then(
-                  (gyms) => Navigator.pushAndRemoveUntil(
-                    context,
-                    NoAnimationMaterialPageRoute(
-                      builder: (context) => FoundLocationProvider(
-                        gym: gyms[0],
-                      ),
+            (location) {
+              state.searching = true;
+              getNearestGymsUseCase
+                  .get(
+                    location: location,
+                    maxDistance: 30000,
+                    limit: 1,
+                  )
+                  .then(
+                    (either) => either.fold(
+                      (gyms) => gyms.length > 0
+                          ? {
+                              if (!state.disposed)
+                                {
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    NoAnimationMaterialPageRoute(
+                                      builder: (context) =>
+                                          FoundLocationProvider(
+                                        gym: gyms[0],
+                                      ),
+                                    ),
+                                    (_) => false,
+                                  )
+                                }
+                            }
+                          : {
+                              state.searching = false,
+                              state.errorMessage = 'No gyms found',
+                            },
+                      (failure) => onFailure(failure, state),
                     ),
-                    (_) => false,
-                  ),
-                ),
-            (failure) => state.errorMessage = failure.message,
+                  );
+            },
+            (failure) => onFailure(failure, state),
           ),
         );
+  }
+
+  void onFailure(Failure failure, RequestLocationState state) {
+    state.searching = false;
+    state.errorMessage = failure.message;
   }
 
   const RequestLocationProvider() : super();
@@ -41,6 +64,7 @@ class RequestLocationProvider
   RequestLocationView build(BuildContext context, RequestLocationState state) =>
       RequestLocationView(
         errorMessage: state.errorMessage ?? '',
+        searching: state.searching,
         onPressedExit: () => Navigator.of(context).pushAndRemoveUntil(
           NoAnimationMaterialPageRoute(
             builder: (context) => ApologyProvider(),

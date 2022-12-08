@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import '../../common/utils.dart';
 import '../../constants/constants.dart';
 import '../../entities/entities.dart';
-import '../../failures/failures.dart';
 import '../repositories.dart';
 
 class UserRepository implements IUserRepository {
@@ -15,17 +14,20 @@ class UserRepository implements IUserRepository {
         getBackendAddress(kGetUser),
         headers: {"authorization": "Bearer $accessToken"},
       ).then(
-        (response) => response.statusCode == 200
-            ? Left(
-                UserEntity.fromJson(
-                  jsonDecode(response.body),
-                ),
-              )
-            : Right(
-                Failure.fromResponse(
-                  response.statusCode,
-                  jsonDecode(response.body),
-                ),
+        (response) {
+          if (response.statusCode == kStatusOK) {
+            return Left(
+              UserEntity.fromJson(
+                jsonDecode(response.body),
               ),
+            );
+          } else {
+            return Right(
+              Failure(
+                type: FailureType.unknown,
+              ),
+            );
+          }
+        },
       );
 }

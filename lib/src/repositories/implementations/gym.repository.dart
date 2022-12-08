@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 
 import '../../common/utils.dart';
@@ -6,14 +7,14 @@ import '../../constants/constants.dart';
 import '../../entities/entities.dart';
 import '../repositories.dart';
 
-/// Handles making requests to the backend involving gyms
 class GymRepository implements IGymRepository {
-  Future<List<GymEntity>> getNearestGyms({
+  Future<Either<List<GymEntity>, Failure>> getNearestGyms({
     required LocationEntity location,
-    required int distance,
+    required double distance,
     int? amount,
-  }) =>
-      http
+  }) async {
+    try {
+      return await http
           .get(
             getBackendAddress(
               kNearestGymsRoute,
@@ -25,13 +26,28 @@ class GymRepository implements IGymRepository {
               },
             ),
           )
+          .timeout(
+            const Duration(
+              seconds: 25,
+            ),
+          )
           .then(
-            (response) => List<GymEntity>.from(
-              jsonDecode(
-                response.body,
-              ).map(
-                (gym) => GymEntity.fromJson(gym),
+            (response) => Left(
+              List<GymEntity>.from(
+                jsonDecode(
+                  response.body,
+                ).map(
+                  (gym) => GymEntity.fromJson(gym),
+                ),
               ),
             ),
           );
+    } catch (error) {
+      return Right(
+        Failure(
+          type: FailureType.network,
+        ),
+      );
+    }
+  }
 }
