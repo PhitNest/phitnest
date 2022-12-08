@@ -12,7 +12,8 @@ class ExploreView extends ScreenView {
   final int countdown;
   final VoidCallback onLogoTap;
   final VoidCallback onLogoRelease;
-  final List<ExploreCard> cards;
+  final List<ExploreCard>? cards;
+  final String? errorMessage;
   final void Function(int pageIndex) onChangePage;
 
   ExploreView({
@@ -21,6 +22,7 @@ class ExploreView extends ScreenView {
     required this.onLogoTap,
     required this.onLogoRelease,
     required this.cards,
+    required this.errorMessage,
     required this.onChangePage,
   }) : super();
 
@@ -30,43 +32,65 @@ class ExploreView extends ScreenView {
         child: Scaffold(
           body: Column(
             children: [
-              ...(cards.length > 0
-                  ? [
-                      Flexible(
-                        child: PageView.builder(
-                          onPageChanged: onChangePage,
-                          itemBuilder: (context, index) =>
-                              cards[index % cards.length],
-                        ),
-                      ),
-                      Text(
-                        'Press and hold logo to send friend request',
-                        style: theme.textTheme.bodySmall,
-                      ),
-                      20.verticalSpace,
-                    ]
+              ...(cards != null
+                  ? cards!.length > 0
+                      ? [
+                          Flexible(
+                            child: PageView.builder(
+                              onPageChanged: onChangePage,
+                              itemBuilder: (context, index) =>
+                                  cards![index % cards!.length],
+                            ),
+                          ),
+                          Text(
+                            'Press and hold logo to send friend request',
+                            style: theme.textTheme.bodySmall,
+                          ),
+                          20.verticalSpace,
+                        ]
+                      : [
+                          200.verticalSpace,
+                          Text(
+                            "More friends\nare on the way.",
+                            style: theme.textTheme.headlineLarge,
+                            textAlign: TextAlign.center,
+                          ),
+                          40.verticalSpace,
+                          Text(
+                            "The nest is still growing! Please\ncheck again later.",
+                            style: theme.textTheme.labelLarge,
+                            textAlign: TextAlign.center,
+                          ),
+                          Expanded(child: Container()),
+                        ]
                   : [
                       200.verticalSpace,
-                      Text(
-                        "More friends\nare on the way.",
-                        style: theme.textTheme.headlineLarge,
-                        textAlign: TextAlign.center,
-                      ),
-                      40.verticalSpace,
-                      Text(
-                        "The nest is still growing! Please\ncheck again later.",
-                        style: theme.textTheme.labelLarge,
-                        textAlign: TextAlign.center,
-                      ),
+                      errorMessage != null
+                          ? Column(
+                              children: [
+                                Text(
+                                  errorMessage!,
+                                  style: theme.textTheme.labelLarge!.copyWith(
+                                    color: theme.colorScheme.error,
+                                  ),
+                                ),
+                                30.verticalSpace,
+                                StyledButton(
+                                  onPressed: () {},
+                                  child: Text('RETRY'),
+                                )
+                              ],
+                            )
+                          : CircularProgressIndicator(),
                       Expanded(child: Container()),
                     ]),
               StyledNavBar(
                 navigationEnabled: true,
                 pageIndex: 1,
-                colorful: cards.length > 0,
+                colorful: cards != null && cards!.length > 0,
                 onTapDownLogo: onLogoTap,
                 onTapUpLogo: onLogoRelease,
-                animateLogo: !holding && cards.length > 0,
+                animateLogo: cards != null && !holding && cards!.length > 0,
               )
             ],
           ),

@@ -11,39 +11,28 @@ class ExploreState extends ScreenState {
   int get countdown => _countdown;
   bool get holding => _holding;
 
-  List<ExploreUserEntity> _exploreUsers = [
-    ExploreUserEntity(
-      id: "1",
-      cognitoId: "1",
-      firstName: "Erin-Michelle",
-      lastName: "Jeankowski",
-    ),
-    ExploreUserEntity(
-      id: "2",
-      cognitoId: "2",
-      firstName: "Koustav",
-      lastName: "M.",
-    ),
-    ExploreUserEntity(
-      id: "3",
-      cognitoId: "3",
-      firstName: "Priscilla",
-      lastName: "H.",
-    ),
-    ExploreUserEntity(
-      id: "4",
-      cognitoId: "4",
-      firstName: "John",
-      lastName: "S.",
-    )
-  ];
+  String? _errorMessage;
+
+  String? get errorMessage => _errorMessage;
+
+  set errorMessage(String? errorMessage) {
+    _errorMessage = errorMessage;
+    rebuildView();
+  }
+
+  List<ExploreUserEntity>? _exploreUsers;
 
   int currentUserIndex = 0;
 
-  List<ExploreUserEntity> get exploreUsers => _exploreUsers;
+  List<ExploreUserEntity>? get exploreUsers => _exploreUsers;
+
+  set exploreUsers(List<ExploreUserEntity>? exploreUsers) {
+    _exploreUsers = exploreUsers;
+    rebuildView();
+  }
 
   void removeExploreUser(int index) {
-    _exploreUsers.removeAt(index);
+    _exploreUsers!.removeAt(index);
     rebuildView();
   }
 

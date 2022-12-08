@@ -2,11 +2,18 @@ import '../../entities/entities.dart';
 import '../interfaces/interfaces.dart';
 
 class MemoryCacheRepository implements IMemoryCacheRepository {
+  UserEntity? _me;
   GymEntity? _myGym;
   String? _accessToken;
   String? _refreshToken;
   String? _email;
   String? _password;
+
+  @override
+  UserEntity? get me => _me;
+
+  @override
+  set me(UserEntity? me) => _me = me;
 
   @override
   GymEntity? get myGym => _myGym;

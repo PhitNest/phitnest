@@ -5,3 +5,4 @@ const kRegister = '/auth/register';
 const kRefreshSession = '/auth/refreshSession';
 const kGetUser = '/user';
 const kAuth = '/auth';
+const kTutorialExplore = '/user/tutorialExplore';
