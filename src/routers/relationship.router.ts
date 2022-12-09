@@ -15,13 +15,6 @@ export class RelationshipRouter implements IRouter {
   ) {
     this.routes = [
       {
-        path: "/sendFriendRequest",
-        method: HttpMethod.POST,
-        middlewares: [authMiddleware],
-        controller: (req, res) =>
-          relationshipController.sendFriendRequest(req, res),
-      },
-      {
         path: "/block",
         method: HttpMethod.POST,
         middlewares: [authMiddleware],

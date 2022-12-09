@@ -44,8 +44,6 @@ paths:
   /user/tutorialExplore:
     $ref: "specs/user.yml#/paths/tutorialExplore"
 
-  /relationship/sendFriendRequest:
-    $ref: "specs/relationship.yml#/paths/sendFriendRequest"
   /relationship/block:
     $ref: "specs/relationship.yml#/paths/block"
   /relationship/unblock:

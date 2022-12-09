@@ -14,7 +14,7 @@ const schema = new mongoose.Schema(
       required: true,
     },
     userCognitoId: { type: String, required: true },
-    content: { type: String, required: true, trim: true },
+    text: { type: String, required: true, trim: true },
   },
   {
     collection: DIRECT_MESSAGE_COLLECTION_NAME,
