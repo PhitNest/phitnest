@@ -8,3 +8,4 @@ const kAuth = '/auth';
 const kTutorialExplore = '/user/tutorialExplore';
 const kExplore = '/user/explore';
 const kGym = '/gym';
+const kFriends = '/relationship/friends';
