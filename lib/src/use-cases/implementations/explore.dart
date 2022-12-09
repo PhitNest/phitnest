@@ -10,21 +10,20 @@ class ExploreUseCase implements IExploreUseCase {
     int? skip,
     int? limit,
   }) async {
-    if (memoryCacheRepo.myGym == null) {
-      return Right(
-        Failure("No gym selected."),
-      );
-    }
-    if (memoryCacheRepo.me == null) {
+    if (memoryCacheRepo.accessToken == null) {
+      if (memoryCacheRepo.myGym == null) {
+        return Right(
+          Failure("No gym selected."),
+        );
+      }
       return userRepo.getTutorialExploreUsers(
         memoryCacheRepo.myGym!.id,
         skip: skip,
         limit: limit,
       );
     } else {
-      return Right(
-        Failure("Method not yet implemented."),
-      );
+      return userRepo.getExploreUsers(memoryCacheRepo.accessToken!,
+          skip: skip, limit: limit);
     }
   }
 }

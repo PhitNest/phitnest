@@ -14,7 +14,7 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
         return Left(memoryCache);
       }
     } else {
-      String? deviceCache = deviceCacheRepo.accessToken;
+      String? deviceCache = await deviceCacheRepo.accessToken();
       if (deviceCache != null) {
         if (await authRepo.validAccessToken(deviceCache)) {
           memoryCacheRepo.accessToken = deviceCache;
@@ -25,7 +25,7 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
     // Check if we have a valid email cached
     String? email = memoryCacheRepo.email;
     if (email == null) {
-      email = deviceCacheRepo.email;
+      email = await deviceCacheRepo.email();
       if (email != null) {
         memoryCacheRepo.email = email;
       } else {
@@ -37,7 +37,7 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
     // Check if we have a valid refresh token cached
     String? refreshToken = memoryCacheRepo.refreshToken;
     if (refreshToken == null) {
-      refreshToken = deviceCacheRepo.refreshToken;
+      refreshToken = await deviceCacheRepo.refreshToken();
       if (refreshToken != null) {
         memoryCacheRepo.refreshToken = refreshToken;
       }
@@ -54,7 +54,7 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
     // If we don't have a valid refresh token, we need to login again
     String? password = memoryCacheRepo.password;
     if (password == null) {
-      password = deviceCacheRepo.password;
+      password = await deviceCacheRepo.password();
       if (password != null) {
         memoryCacheRepo.password = password;
       }
@@ -63,9 +63,9 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
       final loginResult = await authRepo.login(email, password);
       if (loginResult.isLeft()) {
         return loginResult.fold(
-          (session) {
-            deviceCacheRepo.accessToken = session.accessToken;
-            deviceCacheRepo.refreshToken = session.refreshToken;
+          (session) async {
+            await deviceCacheRepo.setAccessToken(session.accessToken);
+            await deviceCacheRepo.setRefreshToken(session.refreshToken);
             memoryCacheRepo.accessToken = session.accessToken;
             memoryCacheRepo.refreshToken = session.refreshToken;
             return Left(session.accessToken);

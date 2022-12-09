@@ -3,51 +3,72 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../interfaces/interfaces.dart';
 
 class DeviceCacheRepository implements IDeviceCacheRepository {
-  static late SharedPreferences _storage;
+  Future<SharedPreferences> _storage() => SharedPreferences.getInstance();
 
-  static Future<void> init() async {
-    _storage = await SharedPreferences.getInstance();
+  @override
+  Future<bool> shouldSkipOnBoarding() async {
+    return (await _storage()).getBool('shouldSkipOnBoarding') ?? false;
   }
 
   @override
-  String? get accessToken => _storage.getString('accessToken');
+  Future<void> setShouldSkipOnBoarding(bool shouldSkipOnBoarding) async {
+    await (await _storage())
+        .setBool('shouldSkipOnBoarding', shouldSkipOnBoarding);
+  }
 
   @override
-  String? get email => _storage.getString('email');
+  Future<String?> accessToken() async {
+    return (await _storage()).getString('accessToken');
+  }
 
   @override
-  String? get password => _storage.getString('password');
+  Future<void> setAccessToken(String? accessToken) async {
+    if (accessToken == null) {
+      await (await _storage()).remove('accessToken');
+    } else {
+      await (await _storage()).setString('accessToken', accessToken);
+    }
+  }
 
   @override
-  String? get refreshToken => _storage.getString('refreshToken');
+  Future<String?> refreshToken() async {
+    return (await _storage()).getString('refreshToken');
+  }
 
   @override
-  set shouldSkipOnBoarding(bool shouldSkipOnBoarding) => _storage.setBool(
-        'shouldSkipOnBoarding',
-        shouldSkipOnBoarding,
-      );
+  Future<void> setRefreshToken(String? refreshToken) async {
+    if (refreshToken == null) {
+      await (await _storage()).remove('refreshToken');
+    } else {
+      await (await _storage()).setString('refreshToken', refreshToken);
+    }
+  }
 
   @override
-  bool get shouldSkipOnBoarding =>
-      _storage.getBool('shouldSkipOnBoarding') ?? false;
+  Future<String?> password() async {
+    return (await _storage()).getString('password');
+  }
 
   @override
-  set accessToken(String? accessToken) => accessToken != null
-      ? _storage.setString('refreshToken', accessToken)
-      : _storage.remove('refreshToken');
+  Future<void> setPassword(String? password) async {
+    if (password == null) {
+      await (await _storage()).remove('password');
+    } else {
+      await (await _storage()).setString('password', password);
+    }
+  }
 
   @override
-  set email(String? email) => email != null
-      ? _storage.setString('refreshToken', email)
-      : _storage.remove('refreshToken');
+  Future<String?> email() async {
+    return (await _storage()).getString('email');
+  }
 
   @override
-  set password(String? password) => password != null
-      ? _storage.setString('refreshToken', password)
-      : _storage.remove('refreshToken');
-
-  @override
-  set refreshToken(String? refreshToken) => refreshToken != null
-      ? _storage.setString('refreshToken', refreshToken)
-      : _storage.remove('refreshToken');
+  Future<void> setEmail(String? email) async {
+    if (email == null) {
+      await (await _storage()).remove('email');
+    } else {
+      await (await _storage()).setString('email', email);
+    }
+  }
 }

@@ -10,4 +10,10 @@ abstract class IUserRepository {
     int? skip,
     int? limit,
   });
+
+  Future<Either<List<ExploreUserEntity>, Failure>> getExploreUsers(
+    String accessToken, {
+    int? skip,
+    int? limit,
+  });
 }

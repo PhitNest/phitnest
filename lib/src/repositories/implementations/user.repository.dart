@@ -33,6 +33,44 @@ class UserRepository implements IUserRepository {
       );
 
   @override
+  Future<Either<List<ExploreUserEntity>, Failure>> getExploreUsers(
+          String accessToken,
+          {int? skip,
+          int? limit}) =>
+      http
+          .get(
+              getBackendAddress(
+                kExplore,
+                params: {
+                  ...(skip != null ? {"skip": skip.toString()} : {}),
+                  ...(limit != null ? {"limit": limit.toString()} : {}),
+                },
+              ),
+              headers: {
+                "authorization": "Bearer $accessToken",
+              })
+          .timeout(requestTimeout)
+          .then(
+            (response) {
+              if (response.statusCode == kStatusOK) {
+                final json = jsonDecode(response.body);
+                if (json is List) {
+                  return Left(
+                    json
+                        .map(
+                          (e) => ExploreUserEntity.fromJson(e),
+                        )
+                        .toList(),
+                  );
+                }
+              }
+              return Right(
+                Failure("Failed to get users."),
+              );
+            },
+          );
+
+  @override
   Future<Either<List<ExploreUserEntity>, Failure>> getTutorialExploreUsers(
           String gymId,
           {int? skip,

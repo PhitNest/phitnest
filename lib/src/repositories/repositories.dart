@@ -9,7 +9,6 @@ final repositories = GetIt.instance;
 
 Future<void> setup() async {
   await EnvironmentRepository.init();
-  await DeviceCacheRepository.init();
 }
 
 void injectRepositories() {

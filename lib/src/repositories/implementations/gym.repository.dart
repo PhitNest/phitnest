@@ -44,4 +44,26 @@ class GymRepository implements IGymRepository {
       );
     }
   }
+
+  @override
+  Future<Either<GymEntity, Failure>> getGym(String accessToken) => http.get(
+        getBackendAddress(kGym),
+        headers: {
+          "authorization": "Bearer $accessToken",
+        },
+      ).then(
+        (response) {
+          if (response.statusCode == kStatusOK) {
+            return Left(
+              GymEntity.fromJson(
+                jsonDecode(response.body),
+              ),
+            );
+          } else {
+            return Right(
+              Failure("Failed to get gym."),
+            );
+          }
+        },
+      );
 }
