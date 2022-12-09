@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { UseCases } from "../../../common/dependency-injection";
-import { IGetDirectConversationsUseCase } from "../../../use-cases/interfaces";
+import { IGetRecentDirectConversationsUseCase } from "../../../use-cases/interfaces";
 import { AuthenticatedLocals, IRequest, IResponse } from "../../types";
 import { IDirectConversationController } from "../interfaces";
 
@@ -8,16 +8,17 @@ import { IDirectConversationController } from "../interfaces";
 export class DirectConversationController
   implements IDirectConversationController
 {
-  getDirectConversationsUseCase: IGetDirectConversationsUseCase;
+  getRecentDirectConversationsUseCase: IGetRecentDirectConversationsUseCase;
 
   constructor(
-    @inject(UseCases.getDirectConversations)
-    getDirectConversationsUseCase: IGetDirectConversationsUseCase
+    @inject(UseCases.getRecentDirectConversations)
+    getRecentDirectConversationsUseCase: IGetRecentDirectConversationsUseCase
   ) {
-    this.getDirectConversationsUseCase = getDirectConversationsUseCase;
+    this.getRecentDirectConversationsUseCase =
+      getRecentDirectConversationsUseCase;
   }
 
-  async getDirectConversations(
+  async getRecentDirectConversations(
     req: IRequest,
     res: IResponse<AuthenticatedLocals>
   ) {
@@ -25,7 +26,9 @@ export class DirectConversationController
       return res
         .status(200)
         .json(
-          await this.getDirectConversationsUseCase.execute(res.locals.cognitoId)
+          await this.getRecentDirectConversationsUseCase.execute(
+            res.locals.cognitoId
+          )
         );
     } catch (err) {
       if (err instanceof Error) {

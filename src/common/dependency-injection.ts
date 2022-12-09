@@ -35,6 +35,7 @@ export const UseCases = {
   denyFriendRequest: Symbol("denyFriendRequest.use-case"),
   getFriends: Symbol("getFriends.use-case"),
   sendDirectMessage: Symbol("sendDirectMessage.use-case"),
+  getRecentDirectConversations: Symbol("getRecentDirectConversations.use-case"),
   getDirectConversations: Symbol("getDirectConversations.use-case"),
 };
 
@@ -92,6 +93,7 @@ import {
   GetReceivedFriendRequestsUseCase,
   SendDirectMessageUseCase,
   TutorialExploreUseCase,
+  GetRecentDirectConversationsUseCase,
   GetDirectConversationsUseCase,
 } from "../use-cases/implementations";
 
@@ -168,6 +170,10 @@ export function injectUseCases() {
   injectUseCase(UseCases.getFriends, GetFriendsUseCase);
   injectUseCase(UseCases.sendDirectMessage, SendDirectMessageUseCase);
   injectUseCase(UseCases.tutorialExplore, TutorialExploreUseCase);
+  injectUseCase(
+    UseCases.getRecentDirectConversations,
+    GetRecentDirectConversationsUseCase
+  );
   injectUseCase(UseCases.getDirectConversations, GetDirectConversationsUseCase);
 }
 

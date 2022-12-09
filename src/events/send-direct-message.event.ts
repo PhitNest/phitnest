@@ -5,7 +5,7 @@ import { IEvent } from "./types";
 
 @injectable()
 export class SendDirectMessageEvent implements IEvent {
-  name = "sendDirectMessage";
+  name = "directMessage";
   handler: ISendDirectMessageEventHandler;
 
   constructor(
