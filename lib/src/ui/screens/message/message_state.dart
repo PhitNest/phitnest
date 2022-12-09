@@ -69,9 +69,11 @@ class MessageState extends ScreenState {
       _message.insert(
         0,
         new MessageEntity(
-            conversationId: conversation.id,
-            text: messageController.text,
-            userCognitoId: myCognitoId),
+          conversationId: conversation.id,
+          text: messageController.text,
+          userCognitoId: myCognitoId,
+          createdAt: DateTime.now(),
+        ),
       );
       messageController.clear();
       rebuildView();
@@ -84,60 +86,70 @@ class MessageState extends ScreenState {
       conversationId: "1",
       text: 'Are you really sure?',
       userCognitoId: "1",
+      createdAt: DateTime.now(),
     ),
     MessageEntity(
       conversationId: "1",
       text:
           'Let’s go out to see the latest exhibition. I read that there are a lot of great things there. Sally recommends it too. Why don’t you bring your friend too? ',
       userCognitoId: "2",
+      createdAt: DateTime.now(),
     ),
     MessageEntity(
       conversationId: "1",
       text:
           'Because that’s not what I heard! I thought you were “taking off” to hang out with the new boy toy',
       userCognitoId: "1",
+      createdAt: DateTime.now(),
     ),
     MessageEntity(
       conversationId: "1",
       text:
           'Because that’s not what I heard! I thought you were “taking off” to hang out with the new boy toy',
       userCognitoId: "1",
+      createdAt: DateTime.now(),
     ),
     MessageEntity(
       conversationId: "1",
       text:
           'Let’s go out to see the latest exhibition. I read that there are a lot of great things there. Sally recommends it too. Why don’t you bring your friend too? ',
       userCognitoId: "2",
+      createdAt: DateTime.now(),
     ),
     MessageEntity(
       conversationId: "1",
       text:
           'Because that’s not what I heard! I thought you were “taking off” to hang out with the new boy toy',
       userCognitoId: "1",
+      createdAt: DateTime.now(),
     ),
     MessageEntity(
       conversationId: "1",
       text:
           'Because that’s not what I heard! I thought you were “taking off” to hang out with the new boy toy',
       userCognitoId: "2",
+      createdAt: DateTime.now(),
     ),
     MessageEntity(
       conversationId: "1",
       text:
           'Let’s go out to see the latest exhibition. I read that there are a lot of great things there. Sally recommends it too. Why don’t you bring your friend too? ',
       userCognitoId: "2",
+      createdAt: DateTime.now(),
     ),
     MessageEntity(
       conversationId: "1",
       text:
           'Because that’s not what I heard! I thought you were “taking off” to hang out with the new boy toy',
       userCognitoId: "2",
+      createdAt: DateTime.now(),
     ),
     MessageEntity(
       conversationId: "1",
       text:
           'Because that’s not what I heard! I thought you were “taking off” to hang out with the new boy toy',
       userCognitoId: "1",
+      createdAt: DateTime.now(),
     ),
   ];
 
