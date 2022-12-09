@@ -5,7 +5,6 @@ import {
   IBlockUseCase,
   IDenyFriendRequestUseCase,
   IGetFriendsUseCase,
-  ISendFriendRequestUseCase,
   IUnblockUseCase,
   IGetSentFriendRequestsUseCase,
   IGetReceivedFriendRequestsUseCase,
@@ -16,7 +15,6 @@ import { IRelationshipController } from "../interfaces";
 @injectable()
 export class RelationshipController implements IRelationshipController {
   getReceivedFriendRequestsUseCase: IGetReceivedFriendRequestsUseCase;
-  sendFriendRequestUseCase: ISendFriendRequestUseCase;
   blockUseCase: IBlockUseCase;
   unblockUseCase: IUnblockUseCase;
   denyFriendRequestUseCase: IDenyFriendRequestUseCase;
@@ -24,8 +22,6 @@ export class RelationshipController implements IRelationshipController {
   getSentFriendRequestsUseCase: IGetSentFriendRequestsUseCase;
 
   constructor(
-    @inject(UseCases.sendFriendRequest)
-    sendFriendRequestUseCase: ISendFriendRequestUseCase,
     @inject(UseCases.block) blockUseCase: IBlockUseCase,
     @inject(UseCases.unblock) unblockUseCase: IUnblockUseCase,
     @inject(UseCases.denyFriendRequest)
@@ -36,7 +32,6 @@ export class RelationshipController implements IRelationshipController {
     @inject(UseCases.getReceivedFriendRequests)
     getReceivedFriendRequestsUseCase: IGetReceivedFriendRequestsUseCase
   ) {
-    this.sendFriendRequestUseCase = sendFriendRequestUseCase;
     this.blockUseCase = blockUseCase;
     this.unblockUseCase = unblockUseCase;
     this.denyFriendRequestUseCase = denyFriendRequestUseCase;
@@ -144,29 +139,6 @@ export class RelationshipController implements IRelationshipController {
         .object({ recipientId: z.string() })
         .parse(req.content());
       await this.blockUseCase.execute(res.locals.cognitoId, recipientId);
-      return res.status(200).send();
-    } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
-      } else {
-        return res.status(500).send(err);
-      }
-    }
-  }
-
-  async sendFriendRequest(req: IRequest, res: IResponse<AuthenticatedLocals>) {
-    try {
-      const { recipientId } = z
-        .object({
-          recipientId: z.string(),
-        })
-        .parse(req.content());
-      await this.sendFriendRequestUseCase.execute(
-        res.locals.cognitoId,
-        recipientId
-      );
       return res.status(200).send();
     } catch (err) {
       if (err instanceof z.ZodError) {

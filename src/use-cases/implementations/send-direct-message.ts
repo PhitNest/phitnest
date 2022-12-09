@@ -46,7 +46,7 @@ export class SendDirectMessageUseCase implements ISendDirectMessageUseCase {
       }
       return await this.directMessageRepo.create({
         conversationId: conversation._id,
-        senderCognitoId: senderCognitoId,
+        userCognitoId: senderCognitoId,
         text: text,
       });
     } else {

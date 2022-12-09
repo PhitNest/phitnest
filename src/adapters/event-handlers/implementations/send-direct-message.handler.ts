@@ -1,6 +1,7 @@
 import { injectable, inject } from "inversify";
 import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
+import { l } from "../../../common/logger";
 import { SendDirectMessageUseCase } from "../../../use-cases/implementations";
 import { IConnection } from "../../types";
 import { ISendDirectMessageEventHandler } from "../interfaces";
@@ -31,14 +32,14 @@ export class SendDirectMessageEventHandler
         recipientId,
         text
       );
-      connection.broadcast("directMessage", message, message.conversationId);
+      connection.broadcast("directMessage", message, recipientId);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        connection.send("Validation", err.issues);
+        connection.send("validation", err.issues);
       } else if (err instanceof Error) {
-        connection.send("Error", err.message);
+        connection.send("error", err.message);
       } else {
-        connection.send("Error", err);
+        connection.send("error", err);
       }
     }
   }
