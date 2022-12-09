@@ -18,43 +18,47 @@ export class RelationshipRouter implements IRouter {
         path: "/sendFriendRequest",
         method: HttpMethod.POST,
         middlewares: [authMiddleware],
-        controller: relationshipController.sendFriendRequest,
+        controller: (req, res) =>
+          relationshipController.sendFriendRequest(req, res),
       },
       {
         path: "/block",
         method: HttpMethod.POST,
         middlewares: [authMiddleware],
-        controller: relationshipController.block,
+        controller: (req, res) => relationshipController.block(req, res),
       },
       {
         path: "/unblock",
         method: HttpMethod.POST,
         middlewares: [authMiddleware],
-        controller: relationshipController.unblock,
+        controller: (req, res) => relationshipController.unblock(req, res),
       },
       {
         path: "/denyFriendRequest",
         method: HttpMethod.POST,
         middlewares: [authMiddleware],
-        controller: relationshipController.denyFriendRequest,
+        controller: (req, res) =>
+          relationshipController.denyFriendRequest(req, res),
       },
       {
         path: "/friends",
         method: HttpMethod.GET,
         middlewares: [authMiddleware],
-        controller: relationshipController.getFriends,
+        controller: (req, res) => relationshipController.getFriends(req, res),
       },
       {
         path: "/sentFriendRequests",
         method: HttpMethod.GET,
         middlewares: [authMiddleware],
-        controller: relationshipController.getSentFriendRequests,
+        controller: (req, res) =>
+          relationshipController.getSentFriendRequests(req, res),
       },
       {
         path: "/receivedFriendRequests",
         method: HttpMethod.GET,
         middlewares: [authMiddleware],
-        controller: relationshipController.getReceivedFriendRequests,
+        controller: (req, res) =>
+          relationshipController.getReceivedFriendRequests(req, res),
       },
     ];
   }

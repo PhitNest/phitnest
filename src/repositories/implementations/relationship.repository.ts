@@ -270,6 +270,10 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
           friendId: {
             $first: "$friends.sender",
           },
+          friendRequestDate: {
+            $first: "$friends.createdAt",
+          },
+          createdAt: 1,
         },
       },
       {
@@ -293,6 +297,9 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
           },
           lastName: {
             $first: "$friend.lastName",
+          },
+          since: {
+            $max: ["$createdAt", "$friendRequestDate"],
           },
         },
       },

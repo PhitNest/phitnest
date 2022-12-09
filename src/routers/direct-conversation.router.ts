@@ -15,7 +15,7 @@ export class DirectConversationRouter {
   ) {
     this.routes = [
       {
-        path: "/directConversation/recents",
+        path: "/recents",
         method: HttpMethod.GET,
         middlewares: [authMiddleware],
         controller: (req, res) =>

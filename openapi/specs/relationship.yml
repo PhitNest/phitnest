@@ -175,7 +175,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/UserPublic"
+                  $ref: "#/components/schemas/Friend"
         400:
           description: Validation error
         500:
@@ -208,3 +208,32 @@ components:
         lastName:
           type: string
           example: Siegel
+    Friend:
+      title: friend
+      required:
+        - _id
+        - cognitoId
+        - gymId
+        - firstName
+        - lastName
+        - since
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 6361c05b30d64fe62ff485cb
+        cognitoId:
+          type: string
+          example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh
+        gymId:
+          type: string
+          example: 6361c05b30d64fe62ff485cb
+        firstName:
+          type: string
+          example: Jp
+        lastName:
+          type: string
+          example: Siegel
+        since:
+          type: string
+          example: 2020-01-01T00:00:00.000Z
