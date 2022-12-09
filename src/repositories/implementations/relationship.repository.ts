@@ -15,6 +15,7 @@ const schema = new mongoose.Schema(
   },
   {
     collection: RELATIONSHIP_COLLECTION_NAME,
+    timestamps: true,
   }
 );
 

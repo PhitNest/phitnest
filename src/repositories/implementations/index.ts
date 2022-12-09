@@ -4,4 +4,4 @@ export { CognitoAuthRepository } from "./auth.repository";
 export { MongoRelationshipRepository } from "./relationship.repository";
 export { OSMLocationRepository } from "./location.repository";
 export { MongoDirectConversationRepository } from "./direct-conversation.repository";
-export { MongoMessageRepository } from "./message.repository";
+export { MongoDirectMessageRepository } from "./direct-message.repository";

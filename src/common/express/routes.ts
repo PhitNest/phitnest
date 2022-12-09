@@ -8,7 +8,9 @@ import {
 } from "../../adapters/types";
 import {
   AuthRouter,
+  DirectConversationRouter,
   GymRouter,
+  DirectMessageRouter,
   RelationshipRouter,
   UserRouter,
 } from "../../routers";
@@ -21,6 +23,8 @@ export function buildRoutes() {
   buildRoute(router, "/user", UserRouter);
   buildRoute(router, "/auth", AuthRouter);
   buildRoute(router, "/relationship", RelationshipRouter);
+  buildRoute(router, "/directMessage", DirectMessageRouter);
+  buildRoute(router, "/directConversation", DirectConversationRouter);
   return router;
 }
 

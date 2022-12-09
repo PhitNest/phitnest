@@ -59,6 +59,9 @@ paths:
   /relationship/receivedFriendRequests:
     $ref: "specs/relationship.yml#/paths/receivedFriendRequests"
 
+  /directConversation/recents:
+    $ref: "specs/directConversation.yml#/paths/recents"
+
 components:
   securitySchemes:
     AccessToken:

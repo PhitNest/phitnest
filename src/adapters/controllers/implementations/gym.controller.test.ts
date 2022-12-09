@@ -164,7 +164,7 @@ describe("Creating a new gym", () => {
     const mockResponse = new MockResponse({});
     const res = await gymController.create(mockRequest, mockResponse);
     expect(res.code).toBe(500);
-    expect(res.content).toEqual(new Error("Address could not be located"));
+    expect(res.content).toEqual("Address could not be located");
   });
 
   test("With valid request body", async () => {
@@ -390,8 +390,6 @@ describe("Get a gym by user cognito id", () => {
     const mockResponse = new MockResponse({ cognitoId: "invalid" });
     const res = await gymController.get(mockRequest, mockResponse);
     expect(res.code).toBe(500);
-    expect(res.content).toEqual(
-      new Error("Could not get gym for user with id: invalid")
-    );
+    expect(res.content).toEqual("Could not get gym for user with id: invalid");
   });
 });

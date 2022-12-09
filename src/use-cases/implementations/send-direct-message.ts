@@ -2,26 +2,26 @@ import { inject, injectable } from "inversify";
 import { Repositories } from "../../common/dependency-injection";
 import {
   IDirectConversationRepository,
-  IMessageRepository,
+  IDirectMessageRepository,
   IRelationshipRepository,
 } from "../../repositories/interfaces";
 import { ISendDirectMessageUseCase } from "../interfaces";
 
 @injectable()
 export class SendDirectMessageUseCase implements ISendDirectMessageUseCase {
-  messageRepo: IMessageRepository;
+  directMessageRepo: IDirectMessageRepository;
   directConversationRepo: IDirectConversationRepository;
   relationshipRepo: IRelationshipRepository;
 
   constructor(
-    @inject(Repositories.message)
-    messageRepo: IMessageRepository,
+    @inject(Repositories.directMessage)
+    directMessageRepo: IDirectMessageRepository,
     @inject(Repositories.directConversation)
     directConversationRepo: IDirectConversationRepository,
     @inject(Repositories.relationship)
     relationshipRepo: IRelationshipRepository
   ) {
-    this.messageRepo = messageRepo;
+    this.directMessageRepo = directMessageRepo;
     this.directConversationRepo = directConversationRepo;
     this.relationshipRepo = relationshipRepo;
   }
@@ -44,7 +44,7 @@ export class SendDirectMessageUseCase implements ISendDirectMessageUseCase {
           recipientCognitoId,
         ]);
       }
-      return await this.messageRepo.create({
+      return await this.directMessageRepo.create({
         conversationId: conversation._id,
         senderCognitoId: senderCognitoId,
         text: text,
