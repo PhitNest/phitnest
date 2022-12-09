@@ -13,17 +13,23 @@ import '../repositories.dart';
 class AuthenticationRepository implements IAuthRepository {
   Future<bool> validAccessToken(String accessToken) async {
     if (!Jwt.isExpired(accessToken)) {
-      return http
-          .get(
-            getBackendAddress(kAuth),
-            headers: {
-              "authorization": "Bearer $accessToken",
-            },
-          )
-          .timeout(requestTimeout)
-          .then(
-            (res) => res.statusCode == 200,
-          );
+      try {
+        return await http
+            .get(
+              getBackendAddress(kAuth),
+              headers: {
+                "authorization": "Bearer $accessToken",
+              },
+            )
+            .timeout(
+              const Duration(seconds: 1),
+            )
+            .then(
+              (res) => res.statusCode == 200,
+            );
+      } catch (err) {
+        return false;
+      }
     } else {
       return false;
     }
@@ -67,8 +73,9 @@ class AuthenticationRepository implements IAuthRepository {
   }
 
   Future<Failure?> register(String email, String password, String gymId,
-          String firstName, String lastName) =>
-      http
+      String firstName, String lastName) async {
+    try {
+      return await http
           .post(
             getBackendAddress(kRegister),
             body: {
@@ -85,21 +92,24 @@ class AuthenticationRepository implements IAuthRepository {
               if (response.statusCode == kStatusCreated) {
                 return null;
               } else {
-                try {
-                  final json = jsonDecode(response.body);
-                  if (json is List<dynamic>) {
-                    return Failure("Formatting error");
-                  }
-                } catch (ignore) {}
+                final json = jsonDecode(response.body);
+                if (json is List<dynamic>) {
+                  return Failure("Formatting error");
+                }
                 return Failure(response.body);
               }
             },
           );
+    } catch (err) {
+      return Failure("Could not connect to network.");
+    }
+  }
 
   @override
   Future<Either<SessionRefreshTokensEntity, Failure>> refreshSession(
-          String email, String refreshToken) =>
-      http
+      String email, String refreshToken) async {
+    try {
+      return await http
           .post(
             getBackendAddress(kRefreshSession),
             body: {
@@ -123,4 +133,10 @@ class AuthenticationRepository implements IAuthRepository {
               }
             },
           );
+    } catch (err) {
+      return Right(
+        Failure("Could not connect to network."),
+      );
+    }
+  }
 }

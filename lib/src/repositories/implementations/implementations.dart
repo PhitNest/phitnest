@@ -5,3 +5,4 @@ export 'device_cache.repository.dart';
 export 'environment.repository.dart';
 export 'gym.repository.dart';
 export 'user.repository.dart';
+export 'relationship.repository.dart';

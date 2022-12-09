@@ -10,34 +10,43 @@ import '../repositories.dart';
 
 class UserRepository implements IUserRepository {
   @override
-  getUser(String accessToken) => http
-      .get(
-        getBackendAddress(kGetUser),
-        headers: {"authorization": "Bearer $accessToken"},
-      )
-      .timeout(requestTimeout)
-      .then(
-        (response) {
-          if (response.statusCode == kStatusOK) {
-            return Left(
-              UserEntity.fromJson(
-                jsonDecode(response.body),
-              ),
-            );
-          } else {
-            return Right(
-              Failure("Failed to get user."),
-            );
-          }
-        },
+  getUser(String accessToken) async {
+    try {
+      return await http
+          .get(
+            getBackendAddress(kGetUser),
+            headers: {"authorization": "Bearer $accessToken"},
+          )
+          .timeout(requestTimeout)
+          .then(
+            (response) {
+              if (response.statusCode == kStatusOK) {
+                return Left(
+                  UserEntity.fromJson(
+                    jsonDecode(response.body),
+                  ),
+                );
+              } else {
+                return Right(
+                  Failure("Failed to get user."),
+                );
+              }
+            },
+          );
+    } catch (err) {
+      return Right(
+        Failure("Failed to connect to the network."),
       );
+    }
+  }
 
   @override
   Future<Either<List<ExploreUserEntity>, Failure>> getExploreUsers(
-          String accessToken,
-          {int? skip,
-          int? limit}) =>
-      http
+      String accessToken,
+      {int? skip,
+      int? limit}) async {
+    try {
+      return await http
           .get(
               getBackendAddress(
                 kExplore,
@@ -69,13 +78,20 @@ class UserRepository implements IUserRepository {
               );
             },
           );
+    } catch (err) {
+      return Right(
+        Failure("Failed to connect to the network."),
+      );
+    }
+  }
 
   @override
   Future<Either<List<ExploreUserEntity>, Failure>> getTutorialExploreUsers(
-          String gymId,
-          {int? skip,
-          int? limit}) =>
-      http
+      String gymId,
+      {int? skip,
+      int? limit}) async {
+    try {
+      return await http
           .get(
             getBackendAddress(kTutorialExplore, params: {
               "gymId": gymId,
@@ -103,4 +119,10 @@ class UserRepository implements IUserRepository {
           );
         },
       );
+    } catch (err) {
+      return Right(
+        Failure("Failed to connect to the network."),
+      );
+    }
+  }
 }
