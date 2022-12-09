@@ -72,7 +72,7 @@ export class AuthController implements IAuthController {
     try {
       const { email, code, newPassword } = z
         .object({
-          email: z.string().email(),
+          email: z.string().email().trim(),
           code: z.string(),
           newPassword: z.string(),
         })
@@ -93,7 +93,7 @@ export class AuthController implements IAuthController {
   async forgotPassword(req: IRequest, res: IResponse) {
     try {
       const { email } = z
-        .object({ email: z.string().email() })
+        .object({ email: z.string().trim().email() })
         .parse(req.content());
       await this.forgotPasswordUseCase.execute(email);
       return res.status(200).send();
@@ -111,7 +111,7 @@ export class AuthController implements IAuthController {
   async resendConfirmation(req: IRequest, res: IResponse) {
     try {
       const { email } = z
-        .object({ email: z.string().email() })
+        .object({ email: z.string().trim().email() })
         .parse(req.content());
       await this.resendConfirmationUseCase.execute(email);
       return res.status(200).send();
@@ -130,7 +130,7 @@ export class AuthController implements IAuthController {
     try {
       const { email, password } = z
         .object({
-          email: z.string().email(),
+          email: z.string().trim().email(),
           password: z.string(),
         })
         .parse(req.content());
@@ -151,11 +151,11 @@ export class AuthController implements IAuthController {
     try {
       const { email, password, gymId, firstName, lastName } = z
         .object({
-          email: z.string().email(),
+          email: z.string().trim().email(),
           password: z.string(),
           gymId: z.string(),
-          firstName: z.string().min(1),
-          lastName: z.string().min(1),
+          firstName: z.string().trim().min(1),
+          lastName: z.string().trim().min(1),
         })
         .parse(req.content());
       await this.registerUseCase.execute(
@@ -181,7 +181,7 @@ export class AuthController implements IAuthController {
     try {
       const { email, code } = z
         .object({
-          email: z.string().email(),
+          email: z.string().trim().email(),
           code: z.string(),
         })
         .parse(req.content());
@@ -203,7 +203,7 @@ export class AuthController implements IAuthController {
       const { refreshToken, email } = z
         .object({
           refreshToken: z.string(),
-          email: z.string(),
+          email: z.string().trim(),
         })
         .parse(req.content());
       const tokens = await this.refreshSessionUseCase.execute(
