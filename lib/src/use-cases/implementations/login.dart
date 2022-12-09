@@ -12,15 +12,15 @@ class LoginUseCase implements ILoginUseCase {
   }) =>
       authRepo.login(email, password).then(
             (either) => either.fold(
-              (session) {
+              (session) async {
                 memoryCacheRepo.email = email;
                 memoryCacheRepo.password = password;
                 memoryCacheRepo.accessToken = session.accessToken;
                 memoryCacheRepo.refreshToken = session.refreshToken;
-                deviceCacheRepo.email = email;
-                deviceCacheRepo.password = password;
-                deviceCacheRepo.accessToken = session.accessToken;
-                deviceCacheRepo.refreshToken = session.refreshToken;
+                await deviceCacheRepo.setEmail(email);
+                await deviceCacheRepo.setPassword(password);
+                await deviceCacheRepo.setAccessToken(session.accessToken);
+                await deviceCacheRepo.setRefreshToken(session.refreshToken);
                 return Left(session);
               },
               (failure) => Right(failure),

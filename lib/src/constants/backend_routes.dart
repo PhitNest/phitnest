@@ -6,3 +6,5 @@ const kRefreshSession = '/auth/refreshSession';
 const kGetUser = '/user';
 const kAuth = '/auth';
 const kTutorialExplore = '/user/tutorialExplore';
+const kExplore = '/user/explore';
+const kGym = '/gym';

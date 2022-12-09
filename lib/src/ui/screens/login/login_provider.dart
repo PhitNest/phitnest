@@ -9,6 +9,20 @@ import 'login_state.dart';
 import 'login_view.dart';
 
 class LoginProvider extends ScreenProvider<LoginState, LoginView> {
+  @override
+  Future<void> init(BuildContext context, LoginState state) =>
+      getAuthTokenUseCase.getAccessToken().then(
+            (either) => either.fold(
+              (accessToken) => Navigator.of(context).pushAndRemoveUntil(
+                NoAnimationMaterialPageRoute(
+                  builder: (context) => ExploreProvider(),
+                ),
+                (_) => false,
+              ),
+              (failure) {},
+            ),
+          );
+
   const LoginProvider() : super();
 
   @override
@@ -20,9 +34,6 @@ class LoginProvider extends ScreenProvider<LoginState, LoginView> {
         onPressedSignIn: () {
           state.focusEmail.unfocus();
           state.focusPassword.unfocus();
-          if (state.loading) {
-            return;
-          }
           if (!state.formKey.currentState!.validate()) {
             state.validateMode = AutovalidateMode.always;
           } else {
@@ -36,13 +47,17 @@ class LoginProvider extends ScreenProvider<LoginState, LoginView> {
               (either) {
                 state.loading = false;
                 return either.fold(
-                  (session) => Navigator.pushAndRemoveUntil(
-                    context,
-                    NoAnimationMaterialPageRoute(
-                      builder: (context) => ExploreProvider(),
-                    ),
-                    (_) => false,
-                  ),
+                  (session) {
+                    if (!state.disposed) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        NoAnimationMaterialPageRoute(
+                          builder: (context) => ExploreProvider(),
+                        ),
+                        (_) => false,
+                      );
+                    }
+                  },
                   (failure) => state.errorMessage = failure.message,
                 );
               },

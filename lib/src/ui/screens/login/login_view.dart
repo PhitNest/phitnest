@@ -101,9 +101,12 @@ class LoginView extends ScreenView {
                     ),
                   ),
                   34.verticalSpace,
-                  StyledButton(
-                    onPressed: onPressedSignIn,
-                    child: Text('SIGN IN'),
+                  Visibility(
+                    visible: !loading,
+                    child: StyledButton(
+                      onPressed: onPressedSignIn,
+                      child: Text('SIGN IN'),
+                    ),
                   ),
                   30.verticalSpace,
                   Visibility(

@@ -8,4 +8,6 @@ abstract class IGymRepository {
     required double distance,
     int? amount,
   });
+
+  Future<Either<GymEntity, Failure>> getGym(String accessToken);
 }

@@ -13,7 +13,7 @@ class OnBoardingProvider
 
   @override
   init(BuildContext context, OnBoardingState state) async {
-    if (skipOnBoardingUseCase.shouldSkip()) {
+    if (await skipOnBoardingUseCase.shouldSkip()) {
       await Future.delayed(
         Duration.zero,
         () => Navigator.of(context).pushReplacement(

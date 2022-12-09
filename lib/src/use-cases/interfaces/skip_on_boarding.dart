@@ -1,4 +1,5 @@
 abstract class ISkipOnBoardingUseCase {
-  bool shouldSkip();
-  void setShouldSkip();
+  Future<bool> shouldSkip();
+
+  Future<void> setShouldSkip();
 }
