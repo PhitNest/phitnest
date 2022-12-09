@@ -17,6 +17,7 @@ class ConversationsState extends ScreenState {
         text: "Hello",
         conversationId: "1",
         userCognitoId: "1",
+        createdAt: DateTime.now(),
       ),
     ),
     Tuple2(
@@ -32,6 +33,7 @@ class ConversationsState extends ScreenState {
             "Hello friend how are you doing today, I am going on vacation tomorrow to Egypt. Do you have plans this week?",
         conversationId: "2",
         userCognitoId: "2",
+        createdAt: DateTime.now(),
       ),
     ),
     Tuple2(
@@ -47,6 +49,7 @@ class ConversationsState extends ScreenState {
             "Hello friend how are you doing today, I am going on vacation tomorrow to Peru. Do you have plans this week?",
         conversationId: "3",
         userCognitoId: "3",
+        createdAt: DateTime.now(),
       ),
     ),
     Tuple2(
@@ -61,6 +64,7 @@ class ConversationsState extends ScreenState {
         text: "Hello",
         conversationId: "1",
         userCognitoId: "1",
+        createdAt: DateTime.now(),
       ),
     ),
     Tuple2(
@@ -76,6 +80,7 @@ class ConversationsState extends ScreenState {
             "Hello friend how are you doing today, I am going on vacation tomorrow to Egypt. Do you have plans this week?",
         conversationId: "2",
         userCognitoId: "2",
+        createdAt: DateTime.now(),
       ),
     ),
     Tuple2(
@@ -91,6 +96,7 @@ class ConversationsState extends ScreenState {
             "Hello friend how are you doing today, I am going on vacation tomorrow to Peru. Do you have plans this week?",
         conversationId: "3",
         userCognitoId: "3",
+        createdAt: DateTime.now(),
       ),
     ),
   ];
