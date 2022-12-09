@@ -1,0 +1,74 @@
+tags:
+  - name: Direct Conversation
+    description: Direct Conversation database endpoint
+
+paths:
+  # /directConversation/recents
+  recents:
+    get:
+      tags:
+        - Direct Conversation
+      summary: Get all of my recent direct conversations by most recent message
+      security:
+        - AccessToken: []
+      responses:
+        200:
+          description: Got my direct conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DirectConversationAndMessage"
+        500:
+          description: An internal error occurred
+
+components:
+  schemas:
+    DirectMessage:
+      title: Direct Message
+      required:
+        - _id
+        - userCognitoId
+        - text
+        - createdAt
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 6361c05b30d64fe62ff485cb
+        userCognitoId:
+          type: string
+          example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh
+        text:
+          type: string
+          example: Hello
+        createdAt:
+          type: string
+          example: 2020-04-01T00:00:00.000Z
+    DirectConversation:
+      title: Direct Conversation
+      required:
+        - _id
+        - userCognitoIds
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 6361c05b30d64fe62ff485cb
+        userCognitoIds:
+          type: array
+          items:
+            type: string
+            example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh
+    DirectConversationAndMessage:
+      title: Direct Conversation and Message
+      required:
+        - conversation
+        - message
+      type: object
+      properties:
+        message:
+          $ref: "#/components/schemas/DirectMessage"
+        conversation:
+          $ref: "#/components/schemas/DirectConversation"

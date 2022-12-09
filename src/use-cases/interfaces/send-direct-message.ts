@@ -1,4 +1,4 @@
-import { IMessageEntity } from "../../entities";
+import { IDirectMessageEntity } from "../../entities";
 import { IUseCase } from "../types";
 
 export interface ISendDirectMessageUseCase extends IUseCase {
@@ -6,5 +6,5 @@ export interface ISendDirectMessageUseCase extends IUseCase {
     senderCognitoId: string,
     recipientCognitoId: string,
     text: string
-  ): Promise<IMessageEntity>;
+  ): Promise<IDirectMessageEntity>;
 }

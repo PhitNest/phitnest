@@ -186,12 +186,16 @@ components:
     UserPublic:
       title: public user
       required:
+        - _id
         - cognitoId
         - gymId
         - firstName
         - lastName
       type: object
       properties:
+        _id:
+          type: string
+          example: 6361c05b30d64fe62ff485cb
         cognitoId:
           type: string
           example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh

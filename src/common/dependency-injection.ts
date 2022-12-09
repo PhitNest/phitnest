@@ -8,7 +8,7 @@ export const Repositories = {
   relationship: Symbol("relationship.repository"),
   location: Symbol("location.repository"),
   directConversation: Symbol("directConversation.repository"),
-  message: Symbol("message.repository"),
+  directMessage: Symbol("directMessage.repository"),
 };
 
 export const UseCases = {
@@ -35,6 +35,7 @@ export const UseCases = {
   denyFriendRequest: Symbol("denyFriendRequest.use-case"),
   getFriends: Symbol("getFriends.use-case"),
   sendDirectMessage: Symbol("sendDirectMessage.use-case"),
+  getDirectConversations: Symbol("getDirectConversations.use-case"),
 };
 
 export const Middlewares = {
@@ -46,6 +47,7 @@ export const Controllers = {
   user: Symbol("user.controller"),
   auth: Symbol("auth.controller"),
   relationship: Symbol("relationship.controller"),
+  directConversation: Symbol("directConversation.controller"),
 };
 
 export const EventHandlers = {
@@ -62,7 +64,7 @@ import {
   MongoGymRepository,
   MongoRelationshipRepository,
   OSMLocationRepository,
-  MongoMessageRepository,
+  MongoDirectMessageRepository,
   MongoDirectConversationRepository,
 } from "../repositories/implementations";
 
@@ -90,6 +92,7 @@ import {
   GetReceivedFriendRequestsUseCase,
   SendDirectMessageUseCase,
   TutorialExploreUseCase,
+  GetDirectConversationsUseCase,
 } from "../use-cases/implementations";
 
 import { AuthMiddleware } from "../adapters/middleware/implementations";
@@ -99,6 +102,7 @@ import {
   UserController,
   AuthController,
   RelationshipController,
+  DirectConversationController,
 } from "../adapters/controllers/implementations";
 
 import { l } from "./logger";
@@ -134,7 +138,7 @@ function injectRepositories() {
     Repositories.directConversation,
     MongoDirectConversationRepository
   );
-  injectRepository(Repositories.message, MongoMessageRepository);
+  injectRepository(Repositories.directMessage, MongoDirectMessageRepository);
 }
 
 export function injectUseCases() {
@@ -164,6 +168,7 @@ export function injectUseCases() {
   injectUseCase(UseCases.getFriends, GetFriendsUseCase);
   injectUseCase(UseCases.sendDirectMessage, SendDirectMessageUseCase);
   injectUseCase(UseCases.tutorialExplore, TutorialExploreUseCase);
+  injectUseCase(UseCases.getDirectConversations, GetDirectConversationsUseCase);
 }
 
 export function injectAdapters() {
@@ -172,6 +177,10 @@ export function injectAdapters() {
   injectController(Controllers.auth, AuthController);
   injectController(Middlewares.authenticate, AuthMiddleware);
   injectController(Controllers.relationship, RelationshipController);
+  injectController(
+    Controllers.directConversation,
+    DirectConversationController
+  );
 }
 
 export function injectEventHandlers() {
