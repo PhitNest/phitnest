@@ -1,10 +1,6 @@
 import { injectable } from "inversify";
 import mongoose from "mongoose";
-import {
-  IPublicUserEntity,
-  IUserEntity,
-  RelationshipType,
-} from "../../entities";
+import { IFriendEntity, IUserEntity, RelationshipType } from "../../entities";
 import { IUserRepository } from "../interfaces";
 import { GYM_MODEL_NAME } from "./gym.repository";
 import { RELATIONSHIP_COLLECTION_NAME } from "./relationship.repository";
@@ -41,11 +37,7 @@ export const UserModel = mongoose.model<IUserEntity>(USER_MODEL_NAME, schema);
 
 @injectable()
 export class MongoUserRepository implements IUserRepository {
-  tutorialExploreUsers(
-    gymId: string,
-    skip?: number,
-    limit?: number
-  ): Promise<Omit<IPublicUserEntity, "gymId">[]> {
+  tutorialExploreUsers(gymId: string, skip?: number, limit?: number) {
     const pipeline: mongoose.PipelineStage[] = [
       {
         $match: {

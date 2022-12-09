@@ -1,4 +1,4 @@
-import { IPublicUserEntity } from "../../entities";
+import { IFriendEntity, IPublicUserEntity } from "../../entities";
 
 export interface IRelationshipRepository {
   createBlock(senderId: string, recipientId: string): Promise<void>;
@@ -7,6 +7,6 @@ export interface IRelationshipRepository {
   createDeny(senderId: string, recipientId: string): Promise<void>;
   getPendingOutboundRequests(cognitoId: string): Promise<IPublicUserEntity[]>;
   getPendingInboundRequests(cognitoId: string): Promise<IPublicUserEntity[]>;
-  getFriends(cognitoId: string): Promise<IPublicUserEntity[]>;
+  getFriends(cognitoId: string): Promise<IFriendEntity[]>;
   isFriend(cognitoId1: string, cognitoId2: string): Promise<boolean>;
 }
