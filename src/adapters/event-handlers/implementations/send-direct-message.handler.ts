@@ -26,11 +26,12 @@ export class SendDirectMessageEventHandler
           text: z.string(),
         })
         .parse(data);
-      await this.sendDirectMessageUseCase.execute(
+      const message = await this.sendDirectMessageUseCase.execute(
         connection.locals.cognitoId,
         recipientId,
         text
       );
+      connection.broadcast("directMessage", message, message.conversationId);
     } catch (err) {
       if (err instanceof z.ZodError) {
         connection.send("Validation", err.issues);

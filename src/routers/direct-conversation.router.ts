@@ -19,7 +19,7 @@ export class DirectConversationRouter {
         method: HttpMethod.GET,
         middlewares: [authMiddleware],
         controller: (req, res) =>
-          directConversationController.getDirectConversations(req, res),
+          directConversationController.getRecentDirectConversations(req, res),
       },
     ];
   }
