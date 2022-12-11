@@ -3,140 +3,109 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
-import '../../common/utils.dart';
 import '../../constants/constants.dart';
 import '../../entities/entities.dart';
-import 'package:http/http.dart' as http;
 
+import '../../services/services.dart';
 import '../repositories.dart';
 
 class AuthenticationRepository implements IAuthRepository {
   Future<bool> validAccessToken(String accessToken) async {
     if (!Jwt.isExpired(accessToken)) {
-      try {
-        return await http
-            .get(
-              getBackendAddress(kAuth),
-              headers: {
-                "authorization": "Bearer $accessToken",
-              },
-            )
-            .timeout(
-              const Duration(seconds: 1),
-            )
-            .then(
+      return await restService
+          .get(
+            kAuth,
+            accessToken: accessToken,
+            timeout: const Duration(seconds: 1),
+          )
+          .then(
+            (either) => either.fold(
               (res) => res.statusCode == 200,
-            );
-      } catch (err) {
-        return false;
-      }
+              (failure) => false,
+            ),
+          );
     } else {
       return false;
     }
   }
 
   Future<Either<AuthTokensEntity, Failure>> login(
-      String email, String password) async {
-    try {
-      return await http
+    String email,
+    String password, {
+    Duration? timeout,
+  }) =>
+      restService
           .post(
-            getBackendAddress(kLogin),
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: jsonEncode({
-              'email': email,
-              'password': password,
-            }),
-          )
-          .timeout(requestTimeout)
-          .then(
-        (response) {
-          if (response.statusCode == kStatusOK) {
-            return Left(
-              AuthTokensEntity.fromJson(
-                jsonDecode(response.body),
-              ),
-            );
-          } else {
-            return Right(
-              Failure("Invalid email or password."),
-            );
-          }
-        },
-      );
-    } catch (err) {
-      return Right(
-        Failure("Could not connect to network."),
-      );
-    }
-  }
-
-  Future<Failure?> register(String email, String password, String gymId,
-      String firstName, String lastName) async {
-    try {
-      return await http
-          .post(
-            getBackendAddress(kRegister),
+            kLogin,
             body: {
               'email': email,
               'password': password,
-              'gymId': gymId,
-              'firstName': firstName,
-              'lastName': lastName
             },
+            timeout: timeout,
           )
-          .timeout(requestTimeout)
           .then(
-            (response) {
-              if (response.statusCode == kStatusCreated) {
-                return null;
-              } else {
-                final json = jsonDecode(response.body);
-                if (json is List<dynamic>) {
-                  return Failure("Formatting error");
-                }
-                return Failure(response.body);
-              }
-            },
+            (either) => either.fold(
+              (res) => Left(
+                AuthTokensEntity.fromJson(
+                  jsonDecode(res.body),
+                ),
+              ),
+              (failure) => Right(
+                Failure("Invalid email or password."),
+              ),
+            ),
           );
-    } catch (err) {
-      return Failure("Could not connect to network.");
-    }
-  }
+
+  Future<Failure?> register(String email, String password, String gymId,
+          String firstName, String lastName) =>
+      restService.post(
+        kRegister,
+        body: {
+          'email': email,
+          'password': password,
+          'gymId': gymId,
+          'firstName': firstName,
+          'lastName': lastName
+        },
+      ).then(
+        (either) => either.fold(
+            (res) => res.statusCode == kStatusCreated
+                ? null
+                : Failure("Invalid credentials"),
+            (failure) => failure),
+      );
 
   @override
   Future<Either<SessionRefreshTokensEntity, Failure>> refreshSession(
-      String email, String refreshToken) async {
-    try {
-      return await http
+    String email,
+    String refreshToken, {
+    Duration? timeout,
+  }) =>
+      restService
           .post(
-            getBackendAddress(kRefreshSession),
+            kRefreshSession,
             body: {
               'email': email,
               'refreshToken': refreshToken,
             },
+            timeout: timeout,
           )
-          .timeout(requestTimeout)
           .then(
-            (response) {
-              if (response.statusCode == kStatusOK) {
-                return Left(
-                  SessionRefreshTokensEntity.fromJson(
-                    jsonDecode(response.body),
-                  ),
-                );
-              } else {
-                return Right(
-                  Failure(response.body),
-                );
-              }
-            },
+            (either) => either.fold(
+              (response) {
+                if (response.statusCode == kStatusOK) {
+                  return Left(
+                    SessionRefreshTokensEntity.fromJson(
+                      jsonDecode(response.body),
+                    ),
+                  );
+                } else {
+                  return Right(
+                    Failure(response.body),
+                  );
+                }
+              },
+              (failure) => Right(failure),
+            ),
           );
-    } catch (err) {
-      return Right(
-        Failure("Could not connect to network."),
-      );
-    }
-  }
 }

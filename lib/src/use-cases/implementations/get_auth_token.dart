@@ -43,7 +43,11 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
       }
     }
     if (refreshToken != null) {
-      final refreshResult = await authRepo.refreshSession(email, refreshToken);
+      final refreshResult = await authRepo.refreshSession(
+        email,
+        refreshToken,
+        timeout: const Duration(milliseconds: 750),
+      );
       if (refreshResult.isLeft()) {
         return refreshResult.fold(
           (session) => Left(session.accessToken),
@@ -60,7 +64,11 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
       }
     }
     if (password != null) {
-      final loginResult = await authRepo.login(email, password);
+      final loginResult = await authRepo.login(
+        email,
+        password,
+        timeout: const Duration(milliseconds: 750),
+      );
       if (loginResult.isLeft()) {
         return loginResult.fold(
           (session) async {

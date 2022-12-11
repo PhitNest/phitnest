@@ -4,5 +4,6 @@ export 'address.entity.dart';
 export 'auth_tokens.entity.dart';
 export 'user.entity.dart';
 export 'direct_conversation.entity.dart';
-export 'message.entity.dart';
+export 'direct_message.entity.dart';
 export 'failure.entity.dart';
+export 'friend.entity.dart';

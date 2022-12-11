@@ -2,7 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../interfaces/interfaces.dart';
 
-class EnvironmentRepository implements IEnvironmentRepository {
+class EnvironmentService implements IEnvironmentService {
   static const String kBackendHost = 'BACKEND_HOST';
   static const String kBackendPort = 'BACKEND_PORT';
 

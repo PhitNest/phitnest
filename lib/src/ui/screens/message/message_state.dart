@@ -44,7 +44,8 @@ class MessageState extends ScreenState {
     if (messageController.text.length > 0) {
       _message.insert(
         0,
-        new MessageEntity(
+        new DirectMessageEntity(
+          id: _message.length.toString(),
           conversationId: conversation.id,
           text: messageController.text,
           userCognitoId: myCognitoId,
@@ -57,70 +58,80 @@ class MessageState extends ScreenState {
     messageFocus.unfocus();
   }
 
-  final List<MessageEntity> _message = [
-    MessageEntity(
+  final List<DirectMessageEntity> _message = [
+    DirectMessageEntity(
+      id: "1",
       conversationId: "1",
       text: 'Are you really sure?',
       userCognitoId: "1",
       createdAt: DateTime.now(),
     ),
-    MessageEntity(
+    DirectMessageEntity(
+      id: "2",
       conversationId: "1",
       text:
           'Let’s go out to see the latest exhibition. I read that there are a lot of great things there. Sally recommends it too. Why don’t you bring your friend too? ',
       userCognitoId: "2",
       createdAt: DateTime.now(),
     ),
-    MessageEntity(
+    DirectMessageEntity(
+      id: "3",
       conversationId: "1",
       text:
           'Because that’s not what I heard! I thought you were “taking off” to hang out with the new boy toy',
       userCognitoId: "1",
       createdAt: DateTime.now(),
     ),
-    MessageEntity(
+    DirectMessageEntity(
+      id: "4",
       conversationId: "1",
       text:
           'Because that’s not what I heard! I thought you were “taking off” to hang out with the new boy toy',
       userCognitoId: "1",
       createdAt: DateTime.now(),
     ),
-    MessageEntity(
+    DirectMessageEntity(
+      id: "5",
       conversationId: "1",
       text:
           'Let’s go out to see the latest exhibition. I read that there are a lot of great things there. Sally recommends it too. Why don’t you bring your friend too? ',
       userCognitoId: "2",
       createdAt: DateTime.now(),
     ),
-    MessageEntity(
+    DirectMessageEntity(
+      id: "6",
       conversationId: "1",
       text:
           'Because that’s not what I heard! I thought you were “taking off” to hang out with the new boy toy',
       userCognitoId: "1",
       createdAt: DateTime.now(),
     ),
-    MessageEntity(
+    DirectMessageEntity(
+      id: "7",
       conversationId: "1",
       text:
           'Because that’s not what I heard! I thought you were “taking off” to hang out with the new boy toy',
       userCognitoId: "2",
       createdAt: DateTime.now(),
     ),
-    MessageEntity(
+    DirectMessageEntity(
+      id: "8",
       conversationId: "1",
       text:
           'Let’s go out to see the latest exhibition. I read that there are a lot of great things there. Sally recommends it too. Why don’t you bring your friend too? ',
       userCognitoId: "2",
       createdAt: DateTime.now(),
     ),
-    MessageEntity(
+    DirectMessageEntity(
+      id: "9",
       conversationId: "1",
       text:
           'Because that’s not what I heard! I thought you were “taking off” to hang out with the new boy toy',
       userCognitoId: "2",
       createdAt: DateTime.now(),
     ),
-    MessageEntity(
+    DirectMessageEntity(
+      id: "10",
       conversationId: "1",
       text:
           'Because that’s not what I heard! I thought you were “taking off” to hang out with the new boy toy',
@@ -129,7 +140,7 @@ class MessageState extends ScreenState {
     ),
   ];
 
-  List<MessageEntity> get message => _message;
+  List<DirectMessageEntity> get message => _message;
 
   @override
   void dispose() {
