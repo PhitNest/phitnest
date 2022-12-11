@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../common/validators.dart';
+import '../../../repositories/repositories.dart';
 import '../../../use-cases/use_cases.dart';
 import '../../widgets/widgets.dart';
 import '../provider.dart';
@@ -53,7 +54,7 @@ class LoginProvider extends ScreenProvider<LoginState, LoginView> {
             state.errorMessage = null;
             loginUseCase
                 .login(
-                    email: state.emailController.text,
+                    email: state.emailController.text.trim(),
                     password: state.passwordController.text)
                 .then(
               (either) {
@@ -70,7 +71,48 @@ class LoginProvider extends ScreenProvider<LoginState, LoginView> {
                       );
                     }
                   },
-                  (failure) => state.errorMessage = failure.message,
+                  (failure) {
+                    if (failure.message == "User is not confirmed.") {
+                      final email = state.emailController.text.trim();
+                      final password = state.passwordController.text;
+                      Navigator.push(
+                        context,
+                        NoAnimationMaterialPageRoute(
+                          builder: (context) => ConfirmEmailProvider(
+                            onPressedBack: () => Navigator.pop(context),
+                            resendConfirmation: () =>
+                                confirmRegisterUseCase.resendConfirmation(
+                              email,
+                            ),
+                            confirmVerification: (code) =>
+                                confirmRegisterUseCase
+                                    .confirmRegister(
+                              email,
+                              code,
+                            )
+                                    .then(
+                              (value) {
+                                if (value == null) {
+                                  deviceCacheRepo.setEmail(email);
+                                  deviceCacheRepo.setPassword(password);
+                                  memoryCacheRepo.email = email;
+                                  memoryCacheRepo.password = password;
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    NoAnimationMaterialPageRoute(
+                                      builder: (context) => LoginProvider(),
+                                    ),
+                                    (_) => false,
+                                  );
+                                }
+                                return value;
+                              },
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    state.errorMessage = failure.message;
+                  },
                 );
               },
             );

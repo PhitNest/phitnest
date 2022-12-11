@@ -43,7 +43,7 @@ String? validateEmail(String? email) {
     return 'You must enter a valid email.';
   }
 
-  if (!EmailValidator.validate(email)) {
+  if (!EmailValidator.validate(email.trim())) {
     return 'You must enter a valid email.';
   }
 

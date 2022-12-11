@@ -10,3 +10,5 @@ const kExplore = '/user/explore';
 const kGym = '/gym';
 const kFriends = '/relationship/friends';
 const kRecentDirectConvos = '/directConversation/recents';
+const kConfirmRegister = '/auth/confirmRegister';
+const kResendConfirmation = '/auth/resendConfirmation';

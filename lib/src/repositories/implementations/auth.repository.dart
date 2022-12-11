@@ -118,4 +118,36 @@ class AuthenticationRepository implements IAuthRepository {
               (failure) => Right(failure),
             ),
           );
+
+  @override
+  Future<Failure?> confirmRegister(String email, String code) =>
+      restService.post(
+        kConfirmRegister,
+        body: {
+          'email': email,
+          'code': code,
+        },
+      ).then(
+        (either) => either.fold(
+          (res) => res.statusCode == kStatusOK
+              ? null
+              : Failure(jsonDecode(res.body).toString()),
+          (failure) => failure,
+        ),
+      );
+
+  @override
+  Future<Failure?> resendConfirmation(String email) => restService.post(
+        kResendConfirmation,
+        body: {
+          'email': email,
+        },
+      ).then(
+        (either) => either.fold(
+          (res) => res.statusCode == kStatusOK
+              ? null
+              : Failure(jsonDecode(res.body).toString()),
+          (failure) => failure,
+        ),
+      );
 }

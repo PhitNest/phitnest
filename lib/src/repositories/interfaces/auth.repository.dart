@@ -24,4 +24,8 @@ abstract class IAuthRepository {
   });
 
   Future<bool> validAccessToken(String accessToken);
+
+  Future<Failure?> confirmRegister(String email, String code);
+
+  Future<Failure?> resendConfirmation(String email);
 }

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,10 +10,16 @@ import '../view.dart';
 class ConfirmEmailView extends ScreenView {
   final void Function(String code) onCompletedVerification;
   final VoidCallback onPressedResend;
+  final bool loading;
+  final String? errorMessage;
+  final VoidCallback onPressedBack;
 
   const ConfirmEmailView({
     required this.onCompletedVerification,
     required this.onPressedResend,
+    required this.loading,
+    required this.errorMessage,
+    required this.onPressedBack,
   }) : super();
 
   @override
@@ -31,7 +35,9 @@ class ConfirmEmailView extends ScreenView {
                   40.verticalSpace,
                   SizedBox(
                     width: double.infinity,
-                    child: BackArrowButton(),
+                    child: BackArrowButton(
+                      onPressed: onPressedBack,
+                    ),
                   ),
                   30.verticalSpace,
                   Text(
@@ -54,18 +60,28 @@ class ConfirmEmailView extends ScreenView {
                     margin: EdgeInsets.symmetric(horizontal: 2.w),
                     itemSize: 40.w,
                   ),
-                  Expanded(child: Container()),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      bottom: max(
-                        MediaQuery.of(context).viewInsets.bottom + 20.h,
-                        100.h,
+                  Visibility(
+                    visible: !loading && errorMessage != null,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 20.h),
+                      child: Text(
+                        errorMessage ?? "",
+                        style: theme.textTheme.labelMedium!.copyWith(
+                          color: theme.colorScheme.error,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                    child: StyledButton(
-                      child: Text("RESEND CODE"),
-                      onPressed: onPressedResend,
-                    ),
+                  ),
+                  Expanded(child: Container()),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 100.h),
+                    child: loading
+                        ? CircularProgressIndicator()
+                        : StyledButton(
+                            child: Text("RESEND CODE"),
+                            onPressed: onPressedResend,
+                          ),
                   ),
                 ],
               ),

@@ -5,3 +5,4 @@ export 'get_location.dart';
 export 'explore.dart';
 export 'login.dart';
 export 'register.dart';
+export 'confirm_register.dart';
