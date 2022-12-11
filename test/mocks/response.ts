@@ -1,4 +1,5 @@
 import { IResponse } from "../../src/adapters/types";
+import { statusOK } from "../../src/constants/http_codes";
 
 export class MockResponse<LocalsType = any> implements IResponse<LocalsType> {
   locals: LocalsType;

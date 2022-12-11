@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { IAuthController } from "../adapters/controllers/interfaces";
 import { IAuthMiddleware } from "../adapters/middleware/interfaces";
 import { Controllers, Middlewares } from "../common/dependency-injection";
+import { statusOK } from "../constants/http_codes";
 import { HttpMethod, IRoute, IRouter } from "./types";
 
 @injectable()

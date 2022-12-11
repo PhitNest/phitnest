@@ -6,6 +6,7 @@ import {
   IResponse,
   MiddlewareController,
 } from "../../adapters/types";
+import { statusOK } from "../../constants/http_codes";
 import {
   AuthRouter,
   DirectConversationRouter,

@@ -6,7 +6,7 @@ import { IDirectConversationController } from "../interfaces";
 import {
   statusInternalServerError,
   statusOK,
-} from "../../../constants/status_codes";
+} from "../../../constants/http_codes";
 
 @injectable()
 export class DirectConversationController

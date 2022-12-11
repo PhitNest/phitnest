@@ -44,7 +44,7 @@ describe("Register Use Case", () => {
       registerUseCase.execute(
         "testEmail1@gmail.com",
         "testPassword1",
-        "6388dstatusCreated06e6bc30a3251f06",
+        "6388d20106e6bc30a3251f06",
         "testName1",
         "testName1"
       )
