@@ -11,11 +11,11 @@ import '../view.dart';
 
 class ConfirmEmailView extends ScreenView {
   final void Function(String code) onCompletedVerification;
-  final VoidCallback onPressedNext;
+  final VoidCallback onPressedResend;
 
   const ConfirmEmailView({
     required this.onCompletedVerification,
-    required this.onPressedNext,
+    required this.onPressedResend,
   }) : super();
 
   @override
@@ -63,8 +63,8 @@ class ConfirmEmailView extends ScreenView {
                       ),
                     ),
                     child: StyledButton(
-                      child: Text("NEXT"),
-                      onPressed: onPressedNext,
+                      child: Text("RESEND CODE"),
+                      onPressed: onPressedResend,
                     ),
                   ),
                 ],

@@ -6,13 +6,19 @@ import 'confirm_email_view.dart';
 
 class ConfirmEmailProvider
     extends ScreenProvider<ConfirmEmailState, ConfirmEmailView> {
-  const ConfirmEmailProvider() : super();
+  final void Function(String code) onCompletedVerification;
+  final VoidCallback onPressedResend;
+
+  const ConfirmEmailProvider({
+    required this.onCompletedVerification,
+    required this.onPressedResend,
+  }) : super();
 
   @override
   ConfirmEmailView build(BuildContext context, ConfirmEmailState state) =>
       ConfirmEmailView(
-        onCompletedVerification: (code) {},
-        onPressedNext: () {},
+        onCompletedVerification: onCompletedVerification,
+        onPressedResend: onPressedResend,
       );
 
   @override

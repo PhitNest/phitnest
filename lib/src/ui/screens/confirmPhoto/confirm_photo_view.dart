@@ -9,10 +9,14 @@ import '../view.dart';
 class ConfirmPhotoView extends ScreenView {
   final VoidCallback onPressedConfirm;
   final VoidCallback onPressedRetake;
+  final bool loading;
+  final String? errorMessage;
 
   const ConfirmPhotoView({
     required this.onPressedConfirm,
     required this.onPressedRetake,
+    required this.loading,
+    required this.errorMessage,
   }) : super();
 
   @override
@@ -41,15 +45,40 @@ class ConfirmPhotoView extends ScreenView {
                 child: Image.asset('assets/images/phitnestSelfie.png'),
               ),
               20.verticalSpace,
-              StyledButton(
+              Visibility(
+                visible: !loading,
+                child: StyledButton(
                   onPressed: onPressedConfirm,
                   child: Text(
-                    'CONFIRM',
-                  )),
+                    errorMessage != null ? 'RETRY' : 'CONFIRM',
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: loading,
+                child: CircularProgressIndicator(),
+              ),
+              20.verticalSpace,
+              Visibility(
+                visible: !loading && errorMessage != null,
+                child: SizedBox(
+                  width: 0.9.sw,
+                  child: Text(
+                    errorMessage ?? "",
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.labelMedium!.copyWith(
+                      color: theme.colorScheme.error,
+                    ),
+                  ),
+                ),
+              ),
               Expanded(child: Container()),
-              TextButtonWidget(
-                onPressed: onPressedRetake,
-                text: 'RETAKE',
+              Visibility(
+                visible: !loading,
+                child: TextButtonWidget(
+                  onPressed: onPressedRetake,
+                  text: 'RETAKE',
+                ),
               ),
               37.verticalSpace,
             ],

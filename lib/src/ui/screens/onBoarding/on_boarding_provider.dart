@@ -33,16 +33,24 @@ class OnBoardingProvider
         onPressedYes: () => Navigator.pushAndRemoveUntil(
           context,
           NoAnimationMaterialPageRoute(
-            builder: (_) => RequestLocationProvider(),
+            builder: (_) => RequestLocationProvider(
+              onFoundUsersGym: (context, location, gym) =>
+                  Navigator.pushAndRemoveUntil(
+                context,
+                NoAnimationMaterialPageRoute(
+                  builder: (context) => ExploreTutorialProvider(),
+                ),
+                (_) => false,
+              ),
+            ),
           ),
           (_) => false,
         ),
-        onPressedNo: () => Navigator.pushAndRemoveUntil(
+        onPressedNo: () => Navigator.push(
           context,
           NoAnimationMaterialPageRoute(
             builder: (_) => ApologyProvider(),
           ),
-          (_) => false,
         ),
       );
 

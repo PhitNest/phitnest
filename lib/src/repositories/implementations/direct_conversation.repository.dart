@@ -37,7 +37,7 @@ class DirectConversationRepository implements IDirectConversationRepository {
               }
             }
             return Right(
-              Failure("Failed to get recent conversations."),
+              Failure(jsonDecode(response.body).toString()),
             );
           },
           (failure) => Right(failure),

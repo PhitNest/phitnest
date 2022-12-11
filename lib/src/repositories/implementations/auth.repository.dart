@@ -45,11 +45,15 @@ class AuthenticationRepository implements IAuthRepository {
           )
           .then(
             (either) => either.fold(
-              (res) => Left(
-                AuthTokensEntity.fromJson(
-                  jsonDecode(res.body),
-                ),
-              ),
+              (res) => res.statusCode == kStatusOK
+                  ? Left(
+                      AuthTokensEntity.fromJson(
+                        jsonDecode(res.body),
+                      ),
+                    )
+                  : Right(
+                      Failure(jsonDecode(res.body).toString()),
+                    ),
               (failure) => Right(
                 Failure("Invalid email or password."),
               ),
@@ -68,11 +72,21 @@ class AuthenticationRepository implements IAuthRepository {
           'lastName': lastName
         },
       ).then(
-        (either) => either.fold(
-            (res) => res.statusCode == kStatusCreated
-                ? null
-                : Failure("Invalid credentials"),
-            (failure) => failure),
+        (either) => either.fold((res) {
+          if (res.statusCode == kStatusCreated) {
+            return null;
+          } else {
+            final body = jsonDecode(res.body);
+            if (body is List) {
+              if (body[0]['validation'] == 'email') {
+                return Failure("Please enter a valid email.");
+              } else {
+                return Failure("Please enter a valid password.");
+              }
+            }
+            return Failure(body.toString());
+          }
+        }, (failure) => failure),
       );
 
   @override
@@ -92,19 +106,15 @@ class AuthenticationRepository implements IAuthRepository {
           )
           .then(
             (either) => either.fold(
-              (response) {
-                if (response.statusCode == kStatusOK) {
-                  return Left(
-                    SessionRefreshTokensEntity.fromJson(
-                      jsonDecode(response.body),
+              (response) => response.statusCode == kStatusOK
+                  ? Left(
+                      SessionRefreshTokensEntity.fromJson(
+                        jsonDecode(response.body),
+                      ),
+                    )
+                  : Right(
+                      Failure(jsonDecode(response.body).toString()),
                     ),
-                  );
-                } else {
-                  return Right(
-                    Failure(response.body),
-                  );
-                }
-              },
               (failure) => Right(failure),
             ),
           );

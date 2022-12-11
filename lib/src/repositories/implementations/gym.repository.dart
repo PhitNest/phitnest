@@ -36,7 +36,7 @@ class GymRepository implements IGymRepository {
               }
             }
             return Right(
-              Failure("Failed to get nearest gyms."),
+              Failure(jsonDecode(response.body).toString()),
             );
           },
           (failure) => Right(failure),
@@ -60,7 +60,7 @@ class GymRepository implements IGymRepository {
               );
             } else {
               return Right(
-                Failure("Failed to get gym."),
+                Failure(jsonDecode(response.body).toString()),
               );
             }
           },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../use-cases/use_cases.dart';
 import '../../widgets/widgets.dart';
 import '../provider.dart';
 import '../screens.dart';
@@ -8,20 +9,81 @@ import 'confirm_photo_view.dart';
 
 class ConfirmPhotoProvider
     extends ScreenProvider<ConfirmPhotoState, ConfirmPhotoView> {
-  const ConfirmPhotoProvider() : super();
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String password;
+
+  const ConfirmPhotoProvider({
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.password,
+  }) : super();
 
   @override
   ConfirmPhotoView build(BuildContext context, ConfirmPhotoState state) =>
       ConfirmPhotoView(
-        onPressedConfirm: () => Navigator.of(context).pushAndRemoveUntil(
-          NoAnimationMaterialPageRoute(
-            builder: (context) => ReviewingPhotoProvider(
-              name: '[name]',
-            ),
-          ),
-          (_) => false,
-        ),
+        onPressedConfirm: () {
+          state.errorMessage = null;
+          state.loading = true;
+          registerUseCase
+              .register(
+            this.email,
+            this.password,
+            this.firstName,
+            this.lastName,
+          )
+              .then(
+            (failure) {
+              state.loading = false;
+              if (failure != null) {
+                if (failure.message.toLowerCase().contains('email') ||
+                    failure.message.toLowerCase().contains('password')) {
+                  Navigator.of(context)
+                    ..pop()
+                    ..pop()
+                    ..push(
+                      NoAnimationMaterialPageRoute(
+                        builder: (context) => RegisterPageTwoProvider(
+                          firstName: firstName,
+                          lastName: lastName,
+                          email: email,
+                          password: password,
+                          errorMessage: failure.message,
+                        ),
+                      ),
+                    );
+                } else {
+                  state.errorMessage = failure.message;
+                }
+              } else {
+                Navigator.of(context).pushAndRemoveUntil(
+                  NoAnimationMaterialPageRoute(
+                    builder: (context) => ConfirmEmailProvider(
+                      onCompletedVerification: (code) =>
+                          Navigator.of(context).pushAndRemoveUntil(
+                        NoAnimationMaterialPageRoute(
+                          builder: (context) => ReviewingPhotoProvider(
+                            name: '$firstName $lastName',
+                          ),
+                        ),
+                        (_) => false,
+                      ),
+                      onPressedResend: () {
+                        print('resending');
+                      },
+                    ),
+                  ),
+                  (_) => false,
+                );
+              }
+            },
+          );
+        },
         onPressedRetake: () {},
+        loading: state.loading,
+        errorMessage: state.errorMessage,
       );
 
   @override

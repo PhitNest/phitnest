@@ -27,7 +27,7 @@ class ApologyProvider extends ScreenProvider<ApologyState, ApologyView> {
             : state.validateMode = AutovalidateMode.always,
         nameController: state.nameController,
         emailController: state.emailController,
-        validateFirstName: (val) => validateFirstName(val),
+        validateFirstName: (val) => validateName(val),
         validateEmail: (val) => validateEmail(val),
         formKey: state.formKey,
         nameFocusNode: state.nameFocusNode,

@@ -7,7 +7,17 @@ import './photo_instruction_view.dart';
 
 class PhotoInstructionProvider
     extends ScreenProvider<PhotoInstructionState, PhotoInstructionView> {
-  const PhotoInstructionProvider() : super();
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String password;
+
+  const PhotoInstructionProvider({
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.password,
+  }) : super();
 
   @override
   PhotoInstructionView build(
@@ -15,12 +25,22 @@ class PhotoInstructionProvider
       PhotoInstructionView(
         onPressedTakePhoto: () => Navigator.of(context).push(
           NoAnimationMaterialPageRoute(
-            builder: (context) => ConfirmPhotoProvider(),
+            builder: (context) => ConfirmPhotoProvider(
+              firstName: firstName,
+              lastName: lastName,
+              email: email,
+              password: password,
+            ),
           ),
         ),
         onPressedUpload: () => Navigator.of(context).push(
           NoAnimationMaterialPageRoute(
-            builder: (context) => ConfirmPhotoProvider(),
+            builder: (context) => ConfirmPhotoProvider(
+              firstName: firstName,
+              lastName: lastName,
+              email: email,
+              password: password,
+            ),
           ),
         ),
       );

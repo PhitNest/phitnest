@@ -25,7 +25,7 @@ class UserRepository implements IUserRepository {
               );
             } else {
               return Right(
-                Failure("Failed to get user."),
+                Failure(jsonDecode(response.body).toString()),
               );
             }
           },
@@ -65,7 +65,7 @@ class UserRepository implements IUserRepository {
                   }
                 }
                 return Right(
-                  Failure("Failed to get users."),
+                  Failure(jsonDecode(response.body).toString()),
                 );
               },
               (failure) => Right(failure),
@@ -91,8 +91,8 @@ class UserRepository implements IUserRepository {
           .then(
             (either) => either.fold(
               (response) {
+                final json = jsonDecode(response.body);
                 if (response.statusCode == kStatusOK) {
-                  final json = jsonDecode(response.body);
                   if (json is List) {
                     return Left(
                       json
@@ -104,7 +104,7 @@ class UserRepository implements IUserRepository {
                   }
                 }
                 return Right(
-                  Failure("Failed to get users."),
+                  Failure(json.toString()),
                 );
               },
               (failure) => Right(failure),

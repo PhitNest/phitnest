@@ -9,12 +9,20 @@ import '../view.dart';
 class RegisterPageOneView extends ScreenView {
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
+  final FormFieldValidator validateFirstName;
+  final FormFieldValidator validateLastName;
+  final AutovalidateMode autovalidateMode;
+  final GlobalKey<FormState> formKey;
   final VoidCallback onPressedNext;
 
   RegisterPageOneView({
     required this.firstNameController,
     required this.lastNameController,
     required this.onPressedNext,
+    required this.autovalidateMode,
+    required this.formKey,
+    required this.validateFirstName,
+    required this.validateLastName,
   }) : super();
 
   @override
@@ -35,12 +43,15 @@ class RegisterPageOneView extends ScreenView {
               SizedBox(
                 width: 291.w,
                 child: Form(
+                  key: formKey,
+                  autovalidateMode: autovalidateMode,
                   child: Column(
                     children: [
                       SizedBox(
                         height: 34.h,
                         child: TextInputField(
                           hint: 'First Name',
+                          validator: validateFirstName,
                           controller: firstNameController,
                           inputAction: TextInputAction.next,
                         ),
@@ -50,6 +61,7 @@ class RegisterPageOneView extends ScreenView {
                         height: 34.h,
                         child: TextInputField(
                           hint: 'Last Name',
+                          validator: validateLastName,
                           controller: lastNameController,
                         ),
                       ),
