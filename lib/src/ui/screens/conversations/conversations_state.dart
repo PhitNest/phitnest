@@ -4,7 +4,7 @@ import '../../../entities/entities.dart';
 import '../state.dart';
 
 class ConversationsState extends ScreenState {
-  List<Tuple2<PublicUserEntity, MessageEntity>> _conversations = [
+  List<Tuple2<PublicUserEntity, DirectMessageEntity>> _conversations = [
     Tuple2(
       PublicUserEntity(
         id: '1',
@@ -13,7 +13,8 @@ class ConversationsState extends ScreenState {
         lastName: 'S.',
         gymId: '1',
       ),
-      MessageEntity(
+      DirectMessageEntity(
+        id: "1",
         text: "Hello",
         conversationId: "1",
         userCognitoId: "1",
@@ -28,7 +29,8 @@ class ConversationsState extends ScreenState {
         lastName: 'H.',
         gymId: '1',
       ),
-      MessageEntity(
+      DirectMessageEntity(
+        id: "2",
         text:
             "Hello friend how are you doing today, I am going on vacation tomorrow to Egypt. Do you have plans this week?",
         conversationId: "2",
@@ -44,7 +46,8 @@ class ConversationsState extends ScreenState {
         lastName: 'W.',
         gymId: '1',
       ),
-      MessageEntity(
+      DirectMessageEntity(
+        id: "3",
         text:
             "Hello friend how are you doing today, I am going on vacation tomorrow to Peru. Do you have plans this week?",
         conversationId: "3",
@@ -60,7 +63,8 @@ class ConversationsState extends ScreenState {
         lastName: 'S.',
         gymId: '1',
       ),
-      MessageEntity(
+      DirectMessageEntity(
+        id: "1",
         text: "Hello",
         conversationId: "1",
         userCognitoId: "1",
@@ -75,7 +79,8 @@ class ConversationsState extends ScreenState {
         lastName: 'H.',
         gymId: '1',
       ),
-      MessageEntity(
+      DirectMessageEntity(
+        id: "2",
         text:
             "Hello friend how are you doing today, I am going on vacation tomorrow to Egypt. Do you have plans this week?",
         conversationId: "2",
@@ -91,7 +96,8 @@ class ConversationsState extends ScreenState {
         lastName: 'W.',
         gymId: '1',
       ),
-      MessageEntity(
+      DirectMessageEntity(
+        id: "3",
         text:
             "Hello friend how are you doing today, I am going on vacation tomorrow to Peru. Do you have plans this week?",
         conversationId: "3",
@@ -101,11 +107,11 @@ class ConversationsState extends ScreenState {
     ),
   ];
 
-  List<Tuple2<PublicUserEntity, MessageEntity>> get conversations =>
+  List<Tuple2<PublicUserEntity, DirectMessageEntity>> get conversations =>
       _conversations;
 
   set conversations(
-      List<Tuple2<PublicUserEntity, MessageEntity>> conversations) {
+      List<Tuple2<PublicUserEntity, DirectMessageEntity>> conversations) {
     _conversations = conversations;
     rebuildView();
   }

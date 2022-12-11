@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../common/validators.dart';
 import '../../../use-cases/use_cases.dart';
@@ -24,6 +25,17 @@ class LoginProvider extends ScreenProvider<LoginState, LoginView> {
           );
 
   const LoginProvider() : super();
+
+  @override
+  Widget buildLoading(BuildContext context, LoginState state) =>
+      AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
 
   @override
   LoginView build(BuildContext context, LoginState state) => LoginView(

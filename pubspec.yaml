@@ -27,8 +27,8 @@ dependencies:
   flutter_verification_code:
     git:
       url: https://github.com/avraham-mayer/flutter_verification_code.git
-
   jwt_decode: ^0.3.1
+  socket_io_client: ^1.0.2
 
 dev_dependencies:
   flutter_test:
