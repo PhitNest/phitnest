@@ -7,7 +7,7 @@ export class MockResponse<LocalsType = any> implements IResponse<LocalsType> {
 
   constructor(locals: LocalsType) {
     this.locals = locals;
-    this.code = 200;
+    this.code = statusOK;
   }
 
   send(content?: any) {

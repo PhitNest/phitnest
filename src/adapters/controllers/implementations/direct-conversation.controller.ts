@@ -3,6 +3,10 @@ import { UseCases } from "../../../common/dependency-injection";
 import { IGetRecentDirectConversationsUseCase } from "../../../use-cases/interfaces";
 import { AuthenticatedLocals, IRequest, IResponse } from "../../types";
 import { IDirectConversationController } from "../interfaces";
+import {
+  statusInternalServerError,
+  statusOK,
+} from "../../../constants/status_codes";
 
 @injectable()
 export class DirectConversationController
@@ -24,7 +28,7 @@ export class DirectConversationController
   ) {
     try {
       return res
-        .status(200)
+        .status(statusOK)
         .json(
           await this.getRecentDirectConversationsUseCase.execute(
             res.locals.cognitoId
@@ -32,9 +36,11 @@ export class DirectConversationController
         );
     } catch (err) {
       if (err instanceof Error) {
-        return res.status(500).json({ message: err.message });
+        return res
+          .status(statusInternalServerError)
+          .json({ message: err.message });
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }

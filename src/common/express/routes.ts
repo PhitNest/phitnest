@@ -37,7 +37,7 @@ class Response<LocalsType = any> implements IResponse<LocalsType> {
   constructor(expressResponse: express.Response) {
     this.expressResponse = expressResponse;
     this.locals = expressResponse.locals as LocalsType;
-    this.code = 200;
+    this.code = statusOK;
   }
 
   send(content?: any) {

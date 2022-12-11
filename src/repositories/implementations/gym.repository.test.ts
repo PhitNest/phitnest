@@ -100,7 +100,7 @@ test("Get the nearest gyms", async () => {
   expect(nearestGyms.length).toBe(0);
   nearestGyms = await gymRepo.getNearest(
     new LocationEntity(50.1, 40.1),
-    200000
+    statusOK000
   );
   expect(nearestGyms.length).toBe(1);
   compareGym(nearestGyms[0], gym1);
