@@ -6,7 +6,7 @@ import {
   statusCreated,
   statusInternalServerError,
   statusOK,
-} from "../../../constants/status_codes";
+} from "../../../constants/http_codes";
 import {
   IConfirmRegisterUseCase,
   IForgotPasswordSubmitUseCase,

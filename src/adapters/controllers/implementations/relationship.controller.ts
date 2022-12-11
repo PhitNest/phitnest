@@ -15,7 +15,7 @@ import {
   statusBadRequest,
   statusInternalServerError,
   statusOK,
-} from "../../../constants/status_codes";
+} from "../../../constants/http_codes";
 
 @injectable()
 export class RelationshipController implements IRelationshipController {
