@@ -100,7 +100,14 @@ class LoginProvider extends ScreenProvider<LoginState, LoginView> {
         onPressedRegister: () => Navigator.push(
           context,
           NoAnimationMaterialPageRoute(
-            builder: (context) => RegisterPageOneProvider(),
+            builder: (context) => RequestLocationProvider(
+              onFoundUsersGym: (context, location, gym) => Navigator.push(
+                context,
+                NoAnimationMaterialPageRoute(
+                  builder: (context) => RegisterPageOneProvider(),
+                ),
+              ),
+            ),
           ),
         ),
       );

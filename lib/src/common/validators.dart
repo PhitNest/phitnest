@@ -1,22 +1,21 @@
+import 'package:email_validator/email_validator.dart';
+
 /// Length for the first name and email address
-const int kMaxFirstNameLength = 24;
-const int kMaxEmailLength = 64;
+const int kMaxNameLength = 24;
 
 const int kMinPasswordLength = 8;
 
 /// Shows which characters are allowed in the first name and email address
 const String kNameRegex = r"/^[a-z ,.'-]+$/i";
-const String kEmailRegex =
-    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 
-/// Checks to see if the entered first name is valid
-String? validateFirstName(String? name) {
+/// Checks to see if the entered name is valid
+String? validateName(String? name) {
   if (name == null || name.isEmpty) {
     return 'You must enter a name.';
   }
 
-  if (name.length > kMaxFirstNameLength) {
-    return 'Must be less than $kMaxFirstNameLength characters.';
+  if (name.length > kMaxNameLength) {
+    return 'Must be less than $kMaxNameLength characters.';
   }
 
   if (RegExp(kNameRegex).hasMatch(name)) {
@@ -40,12 +39,12 @@ String? validatePassword(String? password) {
 
 /// Checks to see if the entered email address is valid
 String? validateEmail(String? email) {
-  if (email == null || email.isEmpty || !RegExp(kEmailRegex).hasMatch(email)) {
+  if (email == null || email.isEmpty) {
     return 'You must enter a valid email.';
   }
 
-  if (email.length > kMaxEmailLength) {
-    return 'Must be less than $kMaxEmailLength characters.';
+  if (!EmailValidator.validate(email)) {
+    return 'You must enter a valid email.';
   }
 
   return null;

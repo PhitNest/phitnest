@@ -12,32 +12,33 @@ import 'gym_search_view.dart';
 
 class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
   final GymEntity gym;
+  final LocationEntity userLocation;
+  final void Function(
+    BuildContext context,
+    LocationEntity location,
+    GymEntity gym,
+  ) onFoundUsersGym;
 
   @override
   Future<void> init(BuildContext context, GymSearchState state) async {
     state.currentlySelectedGym = gym;
     state.errorMessage = null;
     state.gymsAndDistances = null;
-    getLocationUseCase.get().then(
+    getNearestGymsUseCase
+        .get(
+          location: userLocation,
+          maxDistance: 30000,
+        )
+        .then(
           (either) => either.fold(
-            (location) => getNearestGymsUseCase
-                .get(
-                  location: location,
-                  maxDistance: 30000,
-                )
-                .then(
-                  (either) => either.fold(
-                    (gyms) => state.gymsAndDistances = gyms
-                        .map(
-                          (gym) => Tuple2(
-                            gym,
-                            location.distanceTo(gym.location),
-                          ),
-                        )
-                        .toList(),
-                    (failure) => onFailure(failure, state),
+            (gyms) => state.gymsAndDistances = gyms
+                .map(
+                  (gym) => Tuple2(
+                    gym,
+                    userLocation.distanceTo(gym.location),
                   ),
-                ),
+                )
+                .toList(),
             (failure) => onFailure(failure, state),
           ),
         );
@@ -49,6 +50,8 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
 
   const GymSearchProvider({
     required this.gym,
+    required this.userLocation,
+    required this.onFoundUsersGym,
   }) : super();
 
   @override
@@ -62,12 +65,18 @@ class GymSearchProvider extends ScreenProvider<GymSearchState, GymSearchView> {
         errorMessage: state.errorMessage,
         onEditSearch: state.editSearch,
         onPressedConfirm: () {
-          Navigator.of(context).pushAndRemoveUntil(
+          Navigator.of(context)
+            ..pop()
+            ..pop()
+            ..push(
               NoAnimationMaterialPageRoute(
-                builder: (_) =>
-                    FoundLocationProvider(gym: state.currentlySelectedGym),
+                builder: (_) => FoundLocationProvider(
+                  gym: state.currentlySelectedGym,
+                  userLocation: userLocation,
+                  onFoundUsersGym: onFoundUsersGym,
+                ),
               ),
-              (_) => false);
+            );
         },
         cards: state.gymsAndDistances != null
             ? state.gymsAndDistances!

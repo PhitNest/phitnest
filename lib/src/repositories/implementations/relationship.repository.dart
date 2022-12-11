@@ -31,7 +31,7 @@ class RelationshipRepository implements IRelationshipRepository {
                   }
                 }
                 return Right(
-                  Failure("Failed to get friends."),
+                  Failure(jsonDecode(response.body).toString()),
                 );
               },
               (failure) => Right(failure),

@@ -28,7 +28,9 @@ class ExploreView extends ScreenView {
 
   @override
   Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
+        value: errorMessage != null
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light,
         child: Scaffold(
           body: Column(
             children: [

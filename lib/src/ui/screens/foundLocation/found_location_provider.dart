@@ -11,31 +11,38 @@ import 'found_location_view.dart';
 class FoundLocationProvider
     extends ScreenProvider<FoundLocationState, FoundLocationView> {
   final GymEntity gym;
+  final LocationEntity userLocation;
+  final void Function(
+    BuildContext context,
+    LocationEntity location,
+    GymEntity gym,
+  ) onFoundUsersGym;
 
   const FoundLocationProvider({
     required this.gym,
+    required this.userLocation,
+    required this.onFoundUsersGym,
   }) : super();
 
   @override
   FoundLocationView build(BuildContext context, FoundLocationState state) =>
       FoundLocationView(
+        onPressedBack: () => Navigator.of(context)
+          ..pop()
+          ..pop(),
         onPressedNo: () => Navigator.push(
           context,
           NoAnimationMaterialPageRoute(
             builder: (_) => GymSearchProvider(
               gym: gym,
+              userLocation: userLocation,
+              onFoundUsersGym: onFoundUsersGym,
             ),
           ),
         ),
         onPressedYes: () {
           memoryCacheRepo.myGym = gym;
-          Navigator.pushAndRemoveUntil(
-            context,
-            NoAnimationMaterialPageRoute(
-              builder: (_) => ExploreTutorialProvider(),
-            ),
-            (_) => false,
-          );
+          onFoundUsersGym(context, userLocation, gym);
         },
         address: gym.address,
       );

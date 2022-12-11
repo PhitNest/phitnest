@@ -10,6 +10,16 @@ import 'request_location_view.dart';
 
 class RequestLocationProvider
     extends ScreenProvider<RequestLocationState, RequestLocationView> {
+  final void Function(
+    BuildContext context,
+    LocationEntity location,
+    GymEntity gym,
+  ) onFoundUsersGym;
+
+  const RequestLocationProvider({
+    required this.onFoundUsersGym,
+  }) : super();
+
   @override
   Future<void> init(BuildContext context, RequestLocationState state) async {
     state.errorMessage = null;
@@ -29,15 +39,16 @@ class RequestLocationProvider
                           ? {
                               if (!state.disposed)
                                 {
-                                  Navigator.pushAndRemoveUntil(
+                                  Navigator.push(
                                     context,
                                     NoAnimationMaterialPageRoute(
                                       builder: (context) =>
                                           FoundLocationProvider(
                                         gym: gyms[0],
+                                        userLocation: location,
+                                        onFoundUsersGym: onFoundUsersGym,
                                       ),
                                     ),
-                                    (_) => false,
                                   )
                                 }
                             }
@@ -59,20 +70,19 @@ class RequestLocationProvider
     state.errorMessage = failure.message;
   }
 
-  const RequestLocationProvider() : super();
-
   @override
   RequestLocationView build(BuildContext context, RequestLocationState state) =>
       RequestLocationView(
         errorMessage: state.errorMessage,
         searching: state.searching,
         onPressRetry: () => init(context, state),
-        onPressedExit: () => Navigator.of(context).pushAndRemoveUntil(
-          NoAnimationMaterialPageRoute(
-            builder: (context) => ApologyProvider(),
+        onPressedExit: () => Navigator.of(context)
+          ..pop()
+          ..push(
+            NoAnimationMaterialPageRoute(
+              builder: (context) => ApologyProvider(),
+            ),
           ),
-          (_) => false,
-        ),
       );
 
   @override

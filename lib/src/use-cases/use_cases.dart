@@ -14,6 +14,7 @@ void injectUseCases() {
   useCases.registerSingleton<IGetLocationUseCase>(GetLocationUseCase());
   useCases.registerSingleton<IExploreUseCase>(ExploreUseCase());
   useCases.registerSingleton<ILoginUseCase>(LoginUseCase());
+  useCases.registerSingleton<IRegisterUseCase>(RegisterUseCase());
 }
 
 ISkipOnBoardingUseCase get skipOnBoardingUseCase => useCases();
@@ -22,3 +23,4 @@ IGetNearestGymsUseCase get getNearestGymsUseCase => useCases();
 IGetLocationUseCase get getLocationUseCase => useCases();
 IExploreUseCase get exploreUseCase => useCases();
 ILoginUseCase get loginUseCase => useCases();
+IRegisterUseCase get registerUseCase => useCases();
