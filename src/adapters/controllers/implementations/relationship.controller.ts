@@ -11,6 +11,11 @@ import {
 } from "../../../use-cases/interfaces";
 import { AuthenticatedLocals, IRequest, IResponse } from "../../types";
 import { IRelationshipController } from "../interfaces";
+import {
+  statusBadRequest,
+  statusInternalServerError,
+  statusOK,
+} from "../../../constants/status_codes";
 
 @injectable()
 export class RelationshipController implements IRelationshipController {
@@ -49,12 +54,12 @@ export class RelationshipController implements IRelationshipController {
         await this.getReceivedFriendRequestsUseCase.execute(
           res.locals.cognitoId
         );
-      return res.status(200).json(friendRequests);
+      return res.status(statusOK).json(friendRequests);
     } catch (err) {
       if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -67,12 +72,12 @@ export class RelationshipController implements IRelationshipController {
       const friendRequests = await this.getSentFriendRequestsUseCase.execute(
         res.locals.cognitoId
       );
-      return res.status(200).json(friendRequests);
+      return res.status(statusOK).json(friendRequests);
     } catch (err) {
       if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -82,12 +87,12 @@ export class RelationshipController implements IRelationshipController {
       const friends = await this.getFriendsUseCase.execute(
         res.locals.cognitoId
       );
-      return res.status(200).json(friends);
+      return res.status(statusOK).json(friends);
     } catch (err) {
       if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -103,14 +108,14 @@ export class RelationshipController implements IRelationshipController {
         res.locals.cognitoId,
         recipientId
       );
-      return res.status(200).send();
+      return res.status(statusOK).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -121,14 +126,14 @@ export class RelationshipController implements IRelationshipController {
         .object({ recipientId: z.string() })
         .parse(req.content());
       await this.unblockUseCase.execute(res.locals.cognitoId, recipientId);
-      return res.status(200).send();
+      return res.status(statusOK).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -139,14 +144,14 @@ export class RelationshipController implements IRelationshipController {
         .object({ recipientId: z.string() })
         .parse(req.content());
       await this.blockUseCase.execute(res.locals.cognitoId, recipientId);
-      return res.status(200).send();
+      return res.status(statusOK).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }

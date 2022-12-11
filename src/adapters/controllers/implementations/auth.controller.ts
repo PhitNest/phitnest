@@ -2,6 +2,12 @@ import { injectable, inject } from "inversify";
 import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
 import {
+  statusBadRequest,
+  statusCreated,
+  statusInternalServerError,
+  statusOK,
+} from "../../../constants/status_codes";
+import {
   IConfirmRegisterUseCase,
   IForgotPasswordSubmitUseCase,
   IForgotPasswordUseCase,
@@ -56,14 +62,14 @@ export class AuthController implements IAuthController {
         .object({ allDevices: z.boolean() })
         .parse(req.content());
       await this.signOutUseCase.execute(res.locals.cognitoId, allDevices);
-      return res.status(200).send();
+      return res.status(statusOK).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -78,14 +84,14 @@ export class AuthController implements IAuthController {
         })
         .parse(req.content());
       await this.forgotPasswordSubmitUseCase.execute(email, code, newPassword);
-      return res.status(200).send();
+      return res.status(statusOK).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -96,14 +102,14 @@ export class AuthController implements IAuthController {
         .object({ email: z.string().trim().email() })
         .parse(req.content());
       await this.forgotPasswordUseCase.execute(email);
-      return res.status(200).send();
+      return res.status(statusOK).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -114,14 +120,14 @@ export class AuthController implements IAuthController {
         .object({ email: z.string().trim().email() })
         .parse(req.content());
       await this.resendConfirmationUseCase.execute(email);
-      return res.status(200).send();
+      return res.status(statusOK).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -135,14 +141,14 @@ export class AuthController implements IAuthController {
         })
         .parse(req.content());
       const tokens = await this.loginUseCase.execute(email, password);
-      return res.status(200).json(tokens);
+      return res.status(statusOK).json(tokens);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -165,14 +171,14 @@ export class AuthController implements IAuthController {
         firstName,
         lastName
       );
-      return res.status(201).send();
+      return res.status(statusCreated).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -186,14 +192,14 @@ export class AuthController implements IAuthController {
         })
         .parse(req.content());
       await this.confirmRegisterUseCase.execute(email, code);
-      return res.status(200).send();
+      return res.status(statusOK).send();
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -210,14 +216,14 @@ export class AuthController implements IAuthController {
         refreshToken,
         email
       );
-      return res.status(200).json(tokens);
+      return res.status(statusOK).json(tokens);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }

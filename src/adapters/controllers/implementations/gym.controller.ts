@@ -1,6 +1,12 @@
 import { inject, injectable } from "inversify";
 import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
+import {
+  statusBadRequest,
+  statusCreated,
+  statusInternalServerError,
+  statusOK,
+} from "../../../constants/status_codes";
 import { LocationEntity } from "../../../entities";
 import {
   ICreateGymUseCase,
@@ -40,14 +46,14 @@ export class GymController implements IGymController {
         .object({ name: z.string(), address: addressValidator })
         .parse(req.content());
       const gym = await this.createGymUseCase.execute(name, address);
-      return res.status(201).json(gym);
+      return res.status(statusCreated).json(gym);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -67,14 +73,14 @@ export class GymController implements IGymController {
         distance,
         amount
       );
-      return res.status(200).json(gyms);
+      return res.status(statusOK).json(gyms);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -82,12 +88,12 @@ export class GymController implements IGymController {
   async get(req: IRequest, res: IResponse<AuthenticatedLocals>) {
     try {
       const gym = await this.getGymUseCase.execute(res.locals.cognitoId);
-      return res.status(200).json(gym);
+      return res.status(statusOK).json(gym);
     } catch (err) {
       if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }

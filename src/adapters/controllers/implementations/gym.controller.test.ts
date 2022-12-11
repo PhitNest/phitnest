@@ -9,6 +9,12 @@ import { IGymEntity, IUserEntity, LocationEntity } from "../../../entities";
 import { GymModel } from "../../../repositories/implementations/gym.repository";
 import { UserModel } from "../../../repositories/implementations/user.repository";
 import {
+  statusBadRequest,
+  statusCreated,
+  statusInternalServerError,
+  statusOK,
+} from "../../../constants/status_codes";
+import {
   IGymRepository,
   IUserRepository,
 } from "../../../repositories/interfaces";
@@ -81,7 +87,7 @@ describe("Creating a new gym", () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse({});
     const res = await gymController.create(mockRequest, mockResponse);
-    expect(res.code).toBe(400);
+    expect(res.code).toBe(statusBadRequest);
     expect(res.content).toEqual([
       {
         code: "invalid_type",
@@ -97,7 +103,7 @@ describe("Creating a new gym", () => {
     let mockRequest = new MockRequest({});
     let mockResponse = new MockResponse({});
     let res = await gymController.create(mockRequest, mockResponse);
-    expect(res.code).toBe(400);
+    expect(res.code).toBe(statusBadRequest);
     expect(res.content).toEqual([
       {
         code: "invalid_type",
@@ -117,7 +123,7 @@ describe("Creating a new gym", () => {
     mockRequest = new MockRequest({ name: "test", address: "test" });
     mockResponse = new MockResponse({});
     res = await gymController.create(mockRequest, mockResponse);
-    expect(res.code).toBe(400);
+    expect(res.code).toBe(statusBadRequest);
     expect(res.content).toEqual([
       {
         code: "invalid_type",
@@ -133,7 +139,7 @@ describe("Creating a new gym", () => {
     });
     mockResponse = new MockResponse({});
     res = await gymController.create(mockRequest, mockResponse);
-    expect(res.code).toBe(400);
+    expect(res.code).toBe(statusBadRequest);
     expect(res.content).toEqual([
       {
         code: "invalid_type",
@@ -163,7 +169,7 @@ describe("Creating a new gym", () => {
     const mockRequest = new MockRequest(fakeGym);
     const mockResponse = new MockResponse({});
     const res = await gymController.create(mockRequest, mockResponse);
-    expect(res.code).toBe(500);
+    expect(res.code).toBe(statusInternalServerError);
     expect(res.content).toEqual("Address could not be located");
   });
 
@@ -174,7 +180,7 @@ describe("Creating a new gym", () => {
     });
     let mockResponse = new MockResponse({});
     let res = await gymController.create(mockRequest, mockResponse);
-    expect(res.code).toBe(201);
+    expect(res.code).toBe(statusCreated);
     const gym1 = res.content;
     compareGym(gym1, testGym1);
     mockRequest = new MockRequest({
@@ -183,7 +189,7 @@ describe("Creating a new gym", () => {
     });
     mockResponse = new MockResponse({});
     res = await gymController.create(mockRequest, mockResponse);
-    expect(res.code).toBe(201);
+    expect(res.code).toBe(statusCreated);
     const gym2 = res.content;
     compareGym(gym2, testGym2);
   });
@@ -208,7 +214,7 @@ describe("Get the nearest gyms", () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse({});
     const res = await gymController.getNearest(mockRequest, mockResponse);
-    expect(res.code).toBe(400);
+    expect(res.code).toBe(statusBadRequest);
     expect(res.content).toEqual([
       {
         code: "invalid_type",
@@ -224,7 +230,7 @@ describe("Get the nearest gyms", () => {
     let mockRequest = new MockRequest({});
     let mockResponse = new MockResponse({});
     let res = await gymController.getNearest(mockRequest, mockResponse);
-    expect(res.code).toBe(400);
+    expect(res.code).toBe(statusBadRequest);
     expect(res.content).toEqual([
       {
         code: "invalid_type",
@@ -256,7 +262,7 @@ describe("Get the nearest gyms", () => {
     });
     mockResponse = new MockResponse({});
     res = await gymController.getNearest(mockRequest, mockResponse);
-    expect(res.code).toBe(400);
+    expect(res.code).toBe(statusBadRequest);
     expect(res.content).toEqual([
       {
         code: "too_small",
@@ -299,7 +305,7 @@ describe("Get the nearest gyms", () => {
     });
     mockResponse = new MockResponse({});
     res = await gymController.getNearest(mockRequest, mockResponse);
-    expect(res.code).toBe(400);
+    expect(res.code).toBe(statusBadRequest);
     expect(res.content).toEqual([
       {
         code: "too_big",
@@ -328,7 +334,7 @@ describe("Get the nearest gyms", () => {
     });
     let mockResponse = new MockResponse({});
     let res = await gymController.getNearest(mockRequest, mockResponse);
-    expect(res.code).toBe(200);
+    expect(res.code).toBe(statusOK);
     expect(res.content).toEqual([]);
     mockRequest = new MockRequest({
       latitude: 1,
@@ -337,7 +343,7 @@ describe("Get the nearest gyms", () => {
     });
     mockResponse = new MockResponse({});
     res = await gymController.getNearest(mockRequest, mockResponse);
-    expect(res.code).toBe(200);
+    expect(res.code).toBe(statusOK);
     compareGym(res.content[0], testGym1);
     compareGym(res.content[1], testGym2);
     mockRequest = new MockRequest({
@@ -348,7 +354,7 @@ describe("Get the nearest gyms", () => {
     });
     mockResponse = new MockResponse({});
     res = await gymController.getNearest(mockRequest, mockResponse);
-    expect(res.code).toBe(200);
+    expect(res.code).toBe(statusOK);
     compareGym(res.content[0], testGym1);
   });
 });
@@ -377,11 +383,11 @@ describe("Get a gym by user cognito id", () => {
     const mockRequest = new MockRequest();
     let mockResponse = new MockResponse({ cognitoId: user1.cognitoId });
     let res = await gymController.get(mockRequest, mockResponse);
-    expect(res.code).toBe(200);
+    expect(res.code).toBe(statusOK);
     compareGym(res.content, testGym1);
     mockResponse = new MockResponse({ cognitoId: user2.cognitoId });
     res = await gymController.get(mockRequest, mockResponse);
-    expect(res.code).toBe(200);
+    expect(res.code).toBe(statusOK);
     compareGym(res.content, testGym2);
   });
 
@@ -389,7 +395,7 @@ describe("Get a gym by user cognito id", () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse({ cognitoId: "invalid" });
     const res = await gymController.get(mockRequest, mockResponse);
-    expect(res.code).toBe(500);
+    expect(res.code).toBe(statusInternalServerError);
     expect(res.content).toEqual("Could not get gym for user with id: invalid");
   });
 });

@@ -8,6 +8,11 @@ import {
 } from "../../../use-cases/interfaces";
 import { IResponse, AuthenticatedLocals, IRequest } from "../../types";
 import { IUserController } from "../interfaces";
+import {
+  statusBadRequest,
+  statusInternalServerError,
+  statusOK,
+} from "../../../constants/status_codes";
 
 @injectable()
 export class UserController implements IUserController {
@@ -39,14 +44,14 @@ export class UserController implements IUserController {
         skip,
         limit
       );
-      return res.status(200).json(users);
+      return res.status(statusOK).json(users);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       } else if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -65,15 +70,15 @@ export class UserController implements IUserController {
         skip,
         limit
       );
-      return res.status(200).json(users);
+      return res.status(statusOK).json(users);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json(err.issues);
+        return res.status(statusBadRequest).json(err.issues);
       }
       if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }
@@ -82,15 +87,17 @@ export class UserController implements IUserController {
     try {
       const user = await this.getUserUseCase.execute(res.locals.cognitoId);
       if (user) {
-        return res.status(200).json(user);
+        return res.status(statusOK).json(user);
       } else {
-        return res.status(500).json({ message: "Could not find a user" });
+        return res
+          .status(statusInternalServerError)
+          .json({ message: "Could not find a user" });
       }
     } catch (err) {
       if (err instanceof Error) {
-        return res.status(500).json(err.message);
+        return res.status(statusInternalServerError).json(err.message);
       } else {
-        return res.status(500).send(err);
+        return res.status(statusInternalServerError).send(err);
       }
     }
   }

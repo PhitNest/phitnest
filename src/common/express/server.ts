@@ -38,7 +38,7 @@ export function createServer() {
       res: express.Response,
       next: express.NextFunction
     ) => {
-      res.status(500).json({ message: err });
+      res.status(statusInternalServerError).json({ message: err });
     }
   );
   if (process.env.NODE_ENV != "production") {
@@ -55,7 +55,7 @@ export function createServer() {
     const apiSpec = `${root}/openapi/api.yml`;
     app.use("/spec", express.static(apiSpec));
   } else {
-    app.use("/", (req, res) => res.status(200).send());
+    app.use("/", (req, res) => res.status(statusOK).send());
   }
   server = http.createServer(app);
   return server;

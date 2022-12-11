@@ -65,7 +65,7 @@ export class AuthRouter implements IRouter {
         path: "/",
         method: HttpMethod.GET,
         middlewares: [authMiddleware],
-        controller: async (req, res) => res.status(200).send(),
+        controller: async (req, res) => res.status(statusOK).send(),
       },
     ];
   }
