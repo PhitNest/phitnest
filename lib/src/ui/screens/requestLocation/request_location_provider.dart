@@ -27,6 +27,7 @@ class RequestLocationProvider
     getLocationUseCase.get().then(
           (either) => either.fold(
             (location) {
+              if (state.disposed) return;
               getNearestGymsUseCase
                   .get(
                     location: location,

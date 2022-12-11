@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../repositories/repositories.dart';
 import '../../../use-cases/use_cases.dart';
 import '../../widgets/widgets.dart';
 import '../provider.dart';
@@ -36,6 +37,7 @@ class ConfirmPhotoProvider
           )
               .then(
             (failure) {
+              if (state.disposed) return;
               state.loading = false;
               if (failure != null) {
                 if (failure.message.toLowerCase().contains('email') ||
@@ -61,18 +63,36 @@ class ConfirmPhotoProvider
                 Navigator.of(context).pushAndRemoveUntil(
                   NoAnimationMaterialPageRoute(
                     builder: (context) => ConfirmEmailProvider(
-                      onCompletedVerification: (code) =>
-                          Navigator.of(context).pushAndRemoveUntil(
+                      onPressedBack: () => Navigator.pushAndRemoveUntil(
+                        context,
                         NoAnimationMaterialPageRoute(
-                          builder: (context) => ReviewingPhotoProvider(
-                            name: '$firstName $lastName',
-                          ),
+                          builder: (context) => LoginProvider(),
                         ),
                         (_) => false,
                       ),
-                      onPressedResend: () {
-                        print('resending');
-                      },
+                      confirmVerification: (code) => confirmRegisterUseCase
+                          .confirmRegister(email, code)
+                          .then(
+                        (value) {
+                          if (value == null) {
+                            deviceCacheRepo.setEmail(email);
+                            deviceCacheRepo.setPassword(password);
+                            memoryCacheRepo.email = email;
+                            memoryCacheRepo.password = password;
+                            Navigator.of(context).pushAndRemoveUntil(
+                              NoAnimationMaterialPageRoute(
+                                builder: (context) => ReviewingPhotoProvider(
+                                  name: '$firstName $lastName',
+                                ),
+                              ),
+                              (_) => false,
+                            );
+                          }
+                          return value;
+                        },
+                      ),
+                      resendConfirmation: () =>
+                          confirmRegisterUseCase.resendConfirmation(email),
                     ),
                   ),
                   (_) => false,

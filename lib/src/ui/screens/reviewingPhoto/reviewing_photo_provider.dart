@@ -19,7 +19,7 @@ class ReviewingPhotoProvider
         name: name,
         onPressedFinish: () => Navigator.of(context).pushAndRemoveUntil(
           NoAnimationMaterialPageRoute(
-            builder: (context) => const ExploreProvider(),
+            builder: (context) => const LoginProvider(),
           ),
           (_) => false,
         ),
