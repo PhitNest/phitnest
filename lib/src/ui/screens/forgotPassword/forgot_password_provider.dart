@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../widgets/widgets.dart';
+
+import '../../../common/validators.dart';
 import '../provider.dart';
-import '../screens.dart';
 import './forgot_password_state.dart';
 import './forgot_password_view.dart';
 
@@ -14,18 +14,28 @@ class ForgotPasswordProvider
       ForgotPasswordView(
         scrollController: state.scrollController,
         emailAddressController: state.emailAddressController,
-        onPressedsubmit: () => Navigator.pushAndRemoveUntil(
-          context,
-          NoAnimationMaterialPageRoute(
-            builder: (context) => const AfterForgotPasswordProvider(),
-          ),
-          (_) => false,
-        ),
+        errorMessage: state.errorMessage,
+        loading: state.loading,
+        formKey: state.formKey,
+        autovalidateMode: state.autovalidateMode,
+        validateEmail: (value) => validateEmail(value),
+        onPressedsubmit: () {
+          state.loading = true;
+          state.errorMessage = null;
+          if (state.formKey.currentState!.validate()) {
+            // Call use case
+          } else {
+            state.autovalidateMode = AutovalidateMode.always;
+          }
+        },
         emailFocus: state.emailFocus,
-        onTapEmail: () => Future.delayed(
-          const Duration(milliseconds: 600),
-          () => state.onFocusEmail(true),
-        ),
+        onTapEmail: () {
+          state.errorMessage = null;
+          Future.delayed(
+            const Duration(milliseconds: 600),
+            () => state.onFocusEmail(true),
+          );
+        },
       );
 
   @override

@@ -5,6 +5,7 @@ import '../state.dart';
 class ForgotPasswordState extends ScreenState {
   final emailAddressController = TextEditingController();
   final scrollController = ScrollController();
+  final formKey = GlobalKey<FormState>();
   late final FocusNode emailFocus = FocusNode()
     ..addListener(() => onFocusEmail(emailFocus.hasFocus));
 
@@ -16,6 +17,33 @@ class ForgotPasswordState extends ScreenState {
         curve: Curves.easeInOut,
       );
     }
+  }
+
+  String? _errorMessage;
+
+  String? get errorMessage => _errorMessage;
+
+  set errorMessage(String? message) {
+    _errorMessage = message;
+    rebuildView();
+  }
+
+  bool _loading = false;
+
+  bool get loading => _loading;
+
+  set loading(bool loading) {
+    _loading = loading;
+    rebuildView();
+  }
+
+  AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
+
+  AutovalidateMode get autovalidateMode => _autovalidateMode;
+
+  set autovalidateMode(AutovalidateMode mode) {
+    _autovalidateMode = mode;
+    rebuildView();
   }
 
   @override
