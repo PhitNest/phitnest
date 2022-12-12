@@ -60,6 +60,8 @@ class RegisterPageTwoView extends ScreenView {
               Expanded(
                 child: SingleChildScrollView(
                   controller: scrollController,
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   child: Column(
                     children: [
                       28.verticalSpace,
