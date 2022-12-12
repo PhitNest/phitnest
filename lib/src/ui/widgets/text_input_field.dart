@@ -11,6 +11,7 @@ class TextInputField extends StatelessWidget {
   final VoidCallback? onTap;
   final FocusNode? focusNode;
   final bool hide;
+  final TextInputType keyboardType;
 
   const TextInputField({
     Key? key,
@@ -20,6 +21,7 @@ class TextInputField extends StatelessWidget {
     this.onTap,
     this.inputAction,
     this.focusNode,
+    this.keyboardType = TextInputType.text,
     this.hide = false,
   }) : super(key: key);
 

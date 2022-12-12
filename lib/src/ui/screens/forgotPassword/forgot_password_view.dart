@@ -12,6 +12,11 @@ class ForgotPasswordView extends ScreenView {
   final ScrollController scrollController;
   final FocusNode emailFocus;
   final VoidCallback onTapEmail;
+  final AutovalidateMode autovalidateMode;
+  final GlobalKey<FormState> formKey;
+  final FormFieldValidator validateEmail;
+  final bool loading;
+  final String? errorMessage;
 
   const ForgotPasswordView({
     required this.emailAddressController,
@@ -19,6 +24,11 @@ class ForgotPasswordView extends ScreenView {
     required this.scrollController,
     required this.emailFocus,
     required this.onTapEmail,
+    required this.formKey,
+    required this.validateEmail,
+    required this.autovalidateMode,
+    required this.loading,
+    required this.errorMessage,
   }) : super();
 
   @override
@@ -48,23 +58,43 @@ class ForgotPasswordView extends ScreenView {
                       style: theme.textTheme.labelLarge,
                     ),
                     56.verticalSpace,
-                    SizedBox(
-                      height: 34.h,
-                      width: 291.w,
-                      child: TextInputField(
-                        focusNode: emailFocus,
-                        controller: emailAddressController,
-                        onTap: onTapEmail,
-                        hint: 'Email',
+                    Form(
+                      key: formKey,
+                      autovalidateMode: autovalidateMode,
+                      child: SizedBox(
+                        height: 34.h,
+                        width: 291.w,
+                        child: TextInputField(
+                          focusNode: emailFocus,
+                          controller: emailAddressController,
+                          keyboardType: TextInputType.emailAddress,
+                          validator: validateEmail,
+                          onTap: onTapEmail,
+                          hint: 'Email',
+                        ),
                       ),
                     ),
                     30.verticalSpace,
-                    StyledButton(
-                      onPressed: onPressedsubmit,
-                      child: Text(
-                        'SUBMIT',
+                    Visibility(
+                      visible: errorMessage != null,
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 20.h),
+                        child: Text(
+                          errorMessage ?? "",
+                          style: theme.textTheme.labelMedium!.copyWith(
+                            color: theme.errorColor,
+                          ),
+                        ),
                       ),
                     ),
+                    loading
+                        ? StyledButton(
+                            onPressed: onPressedsubmit,
+                            child: Text(
+                              errorMessage != null ? 'RETRY' : 'SUBMIT',
+                            ),
+                          )
+                        : CircularProgressIndicator(),
                   ],
                 ),
               ),
