@@ -73,39 +73,18 @@ class LoginProvider extends ScreenProvider<LoginState, LoginView> {
                   },
                   (failure) {
                     if (failure.message == "User is not confirmed.") {
-                      final email = state.emailController.text.trim();
-                      final password = state.passwordController.text;
                       Navigator.push(
                         context,
                         NoAnimationMaterialPageRoute(
                           builder: (context) => ConfirmEmailProvider(
                             onPressedBack: () => Navigator.pop(context),
+                            email: state.emailController.text.trim(),
+                            password: state.passwordController.text,
+                            confirmVerification:
+                                confirmRegisterUseCase.confirmRegister,
                             resendConfirmation: () =>
                                 confirmRegisterUseCase.resendConfirmation(
-                              email,
-                            ),
-                            confirmVerification: (code) =>
-                                confirmRegisterUseCase
-                                    .confirmRegister(
-                              email,
-                              code,
-                            )
-                                    .then(
-                              (value) {
-                                if (value == null) {
-                                  deviceCacheRepo.setEmail(email);
-                                  deviceCacheRepo.setPassword(password);
-                                  memoryCacheRepo.email = email;
-                                  memoryCacheRepo.password = password;
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    NoAnimationMaterialPageRoute(
-                                      builder: (context) => LoginProvider(),
-                                    ),
-                                    (_) => false,
-                                  );
-                                }
-                                return value;
-                              },
+                              state.emailController.text.trim(),
                             ),
                           ),
                         ),

@@ -70,27 +70,10 @@ class ConfirmPhotoProvider
                         ),
                         (_) => false,
                       ),
-                      confirmVerification: (code) => confirmRegisterUseCase
-                          .confirmRegister(email, code)
-                          .then(
-                        (value) {
-                          if (value == null) {
-                            deviceCacheRepo.setEmail(email);
-                            deviceCacheRepo.setPassword(password);
-                            memoryCacheRepo.email = email;
-                            memoryCacheRepo.password = password;
-                            Navigator.of(context).pushAndRemoveUntil(
-                              NoAnimationMaterialPageRoute(
-                                builder: (context) => ReviewingPhotoProvider(
-                                  name: '$firstName $lastName',
-                                ),
-                              ),
-                              (_) => false,
-                            );
-                          }
-                          return value;
-                        },
-                      ),
+                      email: email,
+                      password: password,
+                      confirmVerification:
+                          confirmRegisterUseCase.confirmRegister,
                       resendConfirmation: () =>
                           confirmRegisterUseCase.resendConfirmation(email),
                     ),

@@ -10,7 +10,17 @@ class RegisterUseCase implements IRegisterUseCase {
     String lastName,
   ) async =>
       memoryCacheRepo.myGym != null
-          ? await authRepo.register(
-              email, password, memoryCacheRepo.myGym!.id, firstName, lastName)
+          ? await authRepo
+              .register(email, password, memoryCacheRepo.myGym!.id, firstName,
+                  lastName)
+              .then((value) {
+              if (value == null) {
+                memoryCacheRepo.email = email;
+                memoryCacheRepo.password = password;
+                deviceCacheRepo.setEmail(email);
+                deviceCacheRepo.setPassword(password);
+              }
+              return value;
+            })
           : Failure("No gym selected.");
 }
