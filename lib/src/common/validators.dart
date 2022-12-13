@@ -4,9 +4,7 @@ import 'package:email_validator/email_validator.dart';
 const int kMaxNameLength = 24;
 
 const int kMinPasswordLength = 8;
-
-/// Shows which characters are allowed in the first name and email address
-const String kNameRegex = r"/^[a-z ,.'-]+$/i";
+const int kMaxPasswordLength = 256;
 
 /// Checks to see if the entered name is valid
 String? validateName(String? name) {
@@ -18,7 +16,7 @@ String? validateName(String? name) {
     return 'Must be less than $kMaxNameLength characters.';
   }
 
-  if (RegExp(kNameRegex).hasMatch(name)) {
+  if (RegExp(r"/^[a-z ,.'-]+$/i").hasMatch(name)) {
     return 'Please enter a valid name.';
   }
 
@@ -31,7 +29,28 @@ String? validatePassword(String? password) {
   }
 
   if (password.length < kMinPasswordLength) {
-    return 'Must be greater than $kMinPasswordLength characters.';
+    return 'Must be at least $kMinPasswordLength characters.';
+  }
+
+  if (password.length > kMaxPasswordLength) {
+    return 'Must be less than $kMaxPasswordLength characters.';
+  }
+
+  if (!RegExp(r'(?=.*[a-z])').hasMatch(password)) {
+    return 'Must contain at least one lowercase letter.';
+  }
+
+  if (!RegExp(r'(?=.*[A-Z])').hasMatch(password)) {
+    return 'Must contain at least one uppercase letter.';
+  }
+
+  if (!RegExp(r'(?=.*[0-9])').hasMatch(password)) {
+    return 'Must contain at least one number.';
+  }
+
+  if (!RegExp(r'''(?=.*[\^$*.[\]{}()?"!@#%&/\\,><':;|_~`=+\- ])''')
+      .hasMatch(password)) {
+    return 'Must contain at least one special character.';
   }
 
   return null;
