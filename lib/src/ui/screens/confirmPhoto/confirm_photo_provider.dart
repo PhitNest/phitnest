@@ -39,8 +39,7 @@ class ConfirmPhotoProvider
               if (state.disposed) return;
               state.loading = false;
               if (failure != null) {
-                if (failure.message.toLowerCase().contains('email') ||
-                    failure.message.toLowerCase().contains('password')) {
+                if (failure.message.toLowerCase().contains('email')) {
                   Navigator.of(context)
                     ..pop()
                     ..pop()
