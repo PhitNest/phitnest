@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../common/validators.dart';
+import '../../../use-cases/use_cases.dart';
 import '../provider.dart';
 import './forgot_password_state.dart';
 import './forgot_password_view.dart';
@@ -23,7 +24,18 @@ class ForgotPasswordProvider
           state.loading = true;
           state.errorMessage = null;
           if (state.formKey.currentState!.validate()) {
-            // Call use case
+            forgotPasswordUseCase
+                .forgotPassword(state.emailAddressController.text.trim())
+                .then(
+              (failure) {
+                state.loading = false;
+                if (failure != null) {
+                  state.errorMessage = failure.message;
+                } else if (!state.disposed) {
+                  // Navigate to the reset password screen
+                }
+              },
+            );
           } else {
             state.autovalidateMode = AutovalidateMode.always;
           }

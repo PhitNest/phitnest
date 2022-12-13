@@ -6,3 +6,4 @@ export 'explore.dart';
 export 'login.dart';
 export 'register.dart';
 export 'confirm_register.dart';
+export 'forgot_password.dart';

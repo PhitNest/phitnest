@@ -12,3 +12,5 @@ const kFriends = '/relationship/friends';
 const kRecentDirectConvos = '/directConversation/recents';
 const kConfirmRegister = '/auth/confirmRegister';
 const kResendConfirmation = '/auth/resendConfirmation';
+const kForgotPassword = '/auth/forgotPassword';
+const kResetPassword = '/auth/forgotPasswordSubmit';
