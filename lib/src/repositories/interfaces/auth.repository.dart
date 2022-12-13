@@ -28,4 +28,12 @@ abstract class IAuthRepository {
   Future<Failure?> confirmRegister(String email, String code);
 
   Future<Failure?> resendConfirmation(String email);
+
+  Future<Failure?> forgotPassword(String email);
+
+  Future<Failure?> resetPassword(
+    String email,
+    String code,
+    String newPassword,
+  );
 }

@@ -150,4 +150,39 @@ class AuthenticationRepository implements IAuthRepository {
           (failure) => failure,
         ),
       );
+
+  @override
+  Future<Failure?> forgotPassword(String email) =>
+      restService.post(kForgotPassword, body: {
+        'email': email,
+      }).then(
+        (either) => either.fold(
+          (res) => res.statusCode == kStatusOK
+              ? null
+              : Failure(jsonDecode(res.body).toString()),
+          (failure) => failure,
+        ),
+      );
+
+  @override
+  Future<Failure?> resetPassword(
+    String email,
+    String code,
+    String newPassword,
+  ) =>
+      restService.post(
+        kResetPassword,
+        body: {
+          'email': email,
+          'code': code,
+          'newPassword': newPassword,
+        },
+      ).then(
+        (either) => either.fold(
+          (res) => res.statusCode == kStatusOK
+              ? null
+              : Failure(jsonDecode(res.body).toString()),
+          (failure) => failure,
+        ),
+      );
 }

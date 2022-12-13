@@ -16,6 +16,7 @@ void injectUseCases() {
   useCases.registerSingleton<ILoginUseCase>(LoginUseCase());
   useCases.registerSingleton<IRegisterUseCase>(RegisterUseCase());
   useCases.registerSingleton<IConfirmRegisterUseCase>(ConfirmRegisterUseCase());
+  useCases.registerSingleton<IForgotPasswordUseCase>(ForgotPasswordUseCase());
 }
 
 ISkipOnBoardingUseCase get skipOnBoardingUseCase => useCases();
@@ -26,3 +27,4 @@ IExploreUseCase get exploreUseCase => useCases();
 ILoginUseCase get loginUseCase => useCases();
 IRegisterUseCase get registerUseCase => useCases();
 IConfirmRegisterUseCase get confirmRegisterUseCase => useCases();
+IForgotPasswordUseCase get forgotPasswordUseCase => useCases();
