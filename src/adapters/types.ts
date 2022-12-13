@@ -15,6 +15,8 @@ export interface IConnection {
   joinRoom(room: string): Promise<void>;
   leaveRoom(room: string): Promise<void>;
   send(event: string, data: any, room?: string): void;
+  error(data: any): void;
+  success(data: any): void;
 }
 
 export interface AuthenticatedLocals {

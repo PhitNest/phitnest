@@ -33,13 +33,14 @@ export class SendDirectMessageEventHandler
         text
       );
       connection.broadcast("directMessage", message, recipientId);
+      connection.success(message);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        connection.send("validation", err.issues);
+        connection.error(err.issues);
       } else if (err instanceof Error) {
-        connection.send("error", err.message);
+        connection.error(err.message);
       } else {
-        connection.send("error", err);
+        connection.error(err);
       }
     }
   }
