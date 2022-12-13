@@ -51,6 +51,14 @@ class Connection implements IConnection {
   disconnect() {
     this.socket.disconnect(true);
   }
+
+  error(data: any) {
+    this.send("error", data);
+  }
+
+  success(data: any) {
+    this.send("success", data);
+  }
 }
 
 class ConnectionRequest implements IRequest {
