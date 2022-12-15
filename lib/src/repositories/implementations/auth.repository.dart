@@ -14,13 +14,20 @@ class AuthenticationRepository implements IAuthRepository {
     if (!Jwt.isExpired(accessToken)) {
       return await restService
           .get(
-            kAuth,
+            kGetUser,
             accessToken: accessToken,
             timeout: const Duration(seconds: 1),
           )
           .then(
             (either) => either.fold(
-              (res) => res.statusCode == 200,
+              (res) {
+                if (res.statusCode == 200) {
+                  memoryCacheRepo.me =
+                      UserEntity.fromJson(jsonDecode(res.body));
+                  return true;
+                }
+                return false;
+              },
               (failure) => false,
             ),
           );
@@ -54,9 +61,7 @@ class AuthenticationRepository implements IAuthRepository {
                   : Right(
                       Failure(jsonDecode(res.body).toString()),
                     ),
-              (failure) => Right(
-                Failure("Invalid email or password."),
-              ),
+              (failure) => Right(failure),
             ),
           );
 

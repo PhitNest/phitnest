@@ -35,16 +35,16 @@ class MessageState extends ScreenState {
   ];
 
   final String myCognitoId = "1";
-  final DirectConversationEntity conversation = DirectConversationEntity(
+  final ConversationEntity conversation = ConversationEntity(
     id: "1",
-    userCognitoIds: ["1", "2"],
+    users: [],
   );
 
   void sendMessage() {
     if (messageController.text.length > 0) {
       _message.insert(
         0,
-        new DirectMessageEntity(
+        new MessageEntity(
           id: _message.length.toString(),
           conversationId: conversation.id,
           text: messageController.text,
@@ -58,15 +58,15 @@ class MessageState extends ScreenState {
     messageFocus.unfocus();
   }
 
-  final List<DirectMessageEntity> _message = [
-    DirectMessageEntity(
+  final List<MessageEntity> _message = [
+    MessageEntity(
       id: "1",
       conversationId: "1",
       text: 'Are you really sure?',
       userCognitoId: "1",
       createdAt: DateTime.now(),
     ),
-    DirectMessageEntity(
+    MessageEntity(
       id: "2",
       conversationId: "1",
       text:
@@ -74,7 +74,7 @@ class MessageState extends ScreenState {
       userCognitoId: "2",
       createdAt: DateTime.now(),
     ),
-    DirectMessageEntity(
+    MessageEntity(
       id: "3",
       conversationId: "1",
       text:
@@ -82,7 +82,7 @@ class MessageState extends ScreenState {
       userCognitoId: "1",
       createdAt: DateTime.now(),
     ),
-    DirectMessageEntity(
+    MessageEntity(
       id: "4",
       conversationId: "1",
       text:
@@ -90,7 +90,7 @@ class MessageState extends ScreenState {
       userCognitoId: "1",
       createdAt: DateTime.now(),
     ),
-    DirectMessageEntity(
+    MessageEntity(
       id: "5",
       conversationId: "1",
       text:
@@ -98,7 +98,7 @@ class MessageState extends ScreenState {
       userCognitoId: "2",
       createdAt: DateTime.now(),
     ),
-    DirectMessageEntity(
+    MessageEntity(
       id: "6",
       conversationId: "1",
       text:
@@ -106,7 +106,7 @@ class MessageState extends ScreenState {
       userCognitoId: "1",
       createdAt: DateTime.now(),
     ),
-    DirectMessageEntity(
+    MessageEntity(
       id: "7",
       conversationId: "1",
       text:
@@ -114,7 +114,7 @@ class MessageState extends ScreenState {
       userCognitoId: "2",
       createdAt: DateTime.now(),
     ),
-    DirectMessageEntity(
+    MessageEntity(
       id: "8",
       conversationId: "1",
       text:
@@ -122,7 +122,7 @@ class MessageState extends ScreenState {
       userCognitoId: "2",
       createdAt: DateTime.now(),
     ),
-    DirectMessageEntity(
+    MessageEntity(
       id: "9",
       conversationId: "1",
       text:
@@ -130,7 +130,7 @@ class MessageState extends ScreenState {
       userCognitoId: "2",
       createdAt: DateTime.now(),
     ),
-    DirectMessageEntity(
+    MessageEntity(
       id: "10",
       conversationId: "1",
       text:
@@ -140,7 +140,7 @@ class MessageState extends ScreenState {
     ),
   ];
 
-  List<DirectMessageEntity> get message => _message;
+  List<MessageEntity> get message => _message;
 
   @override
   void dispose() {
