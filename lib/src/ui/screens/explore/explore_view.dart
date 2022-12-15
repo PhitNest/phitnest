@@ -72,6 +72,7 @@ class ExploreView extends ScreenView {
                               children: [
                                 Text(
                                   errorMessage!,
+                                  textAlign: TextAlign.center,
                                   style: theme.textTheme.labelLarge!.copyWith(
                                     color: theme.colorScheme.error,
                                   ),

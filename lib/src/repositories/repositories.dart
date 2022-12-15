@@ -16,6 +16,11 @@ void injectRepositories() {
   repositories
       .registerSingleton<IDeviceCacheRepository>(DeviceCacheRepository());
   repositories.registerSingleton<IUserRepository>(UserRepository());
+  repositories
+      .registerSingleton<IConversationRepository>(ConversationRepository());
+  repositories.registerSingleton<IRelationshipRepository>(
+    RelationshipRepository(),
+  );
 }
 
 IGymRepository get gymRepo => repositories();
@@ -24,3 +29,5 @@ ILocationRepository get locationRepo => repositories();
 IMemoryCacheRepository get memoryCacheRepo => repositories();
 IDeviceCacheRepository get deviceCacheRepo => repositories();
 IUserRepository get userRepo => repositories();
+IConversationRepository get conversationRepo => repositories();
+IRelationshipRepository get relationshipRepo => repositories();

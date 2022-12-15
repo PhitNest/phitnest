@@ -22,6 +22,8 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
         }
       }
     }
+    memoryCacheRepo.accessToken = null;
+    await deviceCacheRepo.setAccessToken(null);
     // Check if we have a valid email cached
     String? email = memoryCacheRepo.email;
     if (email == null) {
@@ -34,7 +36,6 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
         );
       }
     }
-    // Check if we have a valid refresh token cached
     String? refreshToken = memoryCacheRepo.refreshToken;
     if (refreshToken == null) {
       refreshToken = await deviceCacheRepo.refreshToken();
@@ -50,7 +51,17 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
       );
       if (refreshResult.isLeft()) {
         return refreshResult.fold(
-          (session) => Left(session.accessToken),
+          (session) async {
+            if (await authRepo.validAccessToken(session.accessToken)) {
+              memoryCacheRepo.accessToken = session.accessToken;
+              await deviceCacheRepo.setAccessToken(session.accessToken);
+              return Left(session.accessToken);
+            } else {
+              memoryCacheRepo.refreshToken = null;
+              await deviceCacheRepo.setRefreshToken(null);
+              return await getAccessToken();
+            }
+          },
           (failure) => Right(failure),
         );
       }

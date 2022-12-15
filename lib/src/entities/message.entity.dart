@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-class DirectMessageEntity extends Equatable {
+class MessageEntity extends Equatable {
   final String id;
   final String text;
   final String conversationId;
   final String userCognitoId;
   final DateTime createdAt;
 
-  const DirectMessageEntity({
+  const MessageEntity({
     required this.id,
     required this.text,
     required this.conversationId,
@@ -23,8 +23,7 @@ class DirectMessageEntity extends Equatable {
         "createdAt": createdAt.toIso8601String(),
       };
 
-  factory DirectMessageEntity.fromJson(Map<String, dynamic> json) =>
-      DirectMessageEntity(
+  factory MessageEntity.fromJson(Map<String, dynamic> json) => MessageEntity(
         id: json["_id"],
         text: json["text"],
         conversationId: json["conversationId"],

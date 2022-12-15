@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 
 import '../../entities/entities.dart';
@@ -5,13 +7,15 @@ import '../../entities/entities.dart';
 abstract class IEventService {
   bool get connected;
 
-  Future<void> connect();
+  Future<void> connect(String accessToken);
 
-  Future<void> disconnect();
+  void disconnect();
 
-  Stream<Failure> errors();
+  Either<Stream<dynamic>, Failure> stream(String event);
 
-  Either<Stream<T>, Failure> stream<T>(String event);
-
-  Either<void, Failure> emit(String event, dynamic data);
+  Future<Either<dynamic, Failure>> emit(
+    String event,
+    dynamic data, {
+    Duration? timeout,
+  });
 }

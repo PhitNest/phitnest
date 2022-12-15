@@ -9,12 +9,14 @@ class ConversationCard extends StatelessWidget {
   final String title;
   final void Function(DismissDirection direction) onDismissed;
   final VoidCallback onTap;
+  final DateTime time;
 
   const ConversationCard({
     required this.message,
     required this.title,
     required this.onDismissed,
     required this.onTap,
+    required this.time,
   });
 
   @override

@@ -7,3 +7,5 @@ export 'login.dart';
 export 'register.dart';
 export 'confirm_register.dart';
 export 'forgot_password.dart';
+export 'get_conversations.dart';
+export 'get_friends.dart';

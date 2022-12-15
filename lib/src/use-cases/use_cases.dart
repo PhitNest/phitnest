@@ -17,6 +17,9 @@ void injectUseCases() {
   useCases.registerSingleton<IRegisterUseCase>(RegisterUseCase());
   useCases.registerSingleton<IConfirmRegisterUseCase>(ConfirmRegisterUseCase());
   useCases.registerSingleton<IForgotPasswordUseCase>(ForgotPasswordUseCase());
+  useCases
+      .registerSingleton<IGetConversationsUseCase>(GetConversationsUseCase());
+  useCases.registerSingleton<IGetFriendsUseCase>(GetFriendsUseCase());
 }
 
 ISkipOnBoardingUseCase get skipOnBoardingUseCase => useCases();
@@ -28,3 +31,5 @@ ILoginUseCase get loginUseCase => useCases();
 IRegisterUseCase get registerUseCase => useCases();
 IConfirmRegisterUseCase get confirmRegisterUseCase => useCases();
 IForgotPasswordUseCase get forgotPasswordUseCase => useCases();
+IGetConversationsUseCase get getConversationsUseCase => useCases();
+IGetFriendsUseCase get getFriendsUseCase => useCases();
