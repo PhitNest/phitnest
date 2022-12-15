@@ -8,7 +8,7 @@ import {
   IResponse,
   MiddlewareController,
 } from "../../adapters/types";
-import { SendDirectMessageEvent, SendFriendRequestEvent } from "../../events";
+import { SendMessageEvent, SendFriendRequestEvent } from "../../events";
 import { IEvent } from "../../events/types";
 import {
   dependencies,
@@ -105,7 +105,6 @@ function runEventHandler(
   socket: Socket,
   data: any
 ) {
-  l.info((typeof eventHandler).toString());
   return eventHandler.execute(new Connection(socket), data);
 }
 
@@ -134,7 +133,7 @@ export function runConnectionEvents(socket: Socket) {
 }
 
 export function bindIncomingEvents(socket: Socket) {
-  bindEvent(socket, dependencies.resolve(SendDirectMessageEvent));
+  bindEvent(socket, dependencies.resolve(SendMessageEvent));
   bindEvent(socket, dependencies.resolve(SendFriendRequestEvent));
 }
 

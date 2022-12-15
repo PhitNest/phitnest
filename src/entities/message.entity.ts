@@ -1,4 +1,4 @@
-export interface IDirectMessageEntity {
+export interface IMessageEntity {
   _id: string;
   text: string;
   userCognitoId: string;

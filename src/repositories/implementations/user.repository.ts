@@ -197,28 +197,12 @@ export class MongoUserRepository implements IUserRepository {
     const result = await UserModel.aggregate([
       {
         $match: {
-          cognitoId: cognitoId1,
-        },
-      },
-      {
-        $lookup: {
-          from: USER_COLLECTION_NAME,
-          localField: "gymId",
-          foreignField: "gymId",
-          pipeline: [{ $match: { cognitoId: cognitoId2 } }],
-          as: "recipient",
-        },
-      },
-      {
-        $project: {
-          recipient: 1,
+          cognitoId: {
+            $in: [cognitoId1, cognitoId2],
+          },
         },
       },
     ]);
-    if (result.length > 0) {
-      return result[0].recipient.length > 0;
-    } else {
-      return false;
-    }
+    return result.length === 2;
   }
 }

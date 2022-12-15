@@ -1,28 +1,28 @@
 import { inject, injectable } from "inversify";
 import { Repositories } from "../../common/dependency-injection";
 import {
-  IDirectConversationRepository,
-  IDirectMessageRepository,
+  IConversationRepository,
+  IMessageRepository,
   IRelationshipRepository,
 } from "../../repositories/interfaces";
 import { ISendDirectMessageUseCase } from "../interfaces";
 
 @injectable()
 export class SendDirectMessageUseCase implements ISendDirectMessageUseCase {
-  directMessageRepo: IDirectMessageRepository;
-  directConversationRepo: IDirectConversationRepository;
+  messageRepo: IMessageRepository;
+  conversationRepo: IConversationRepository;
   relationshipRepo: IRelationshipRepository;
 
   constructor(
-    @inject(Repositories.directMessage)
-    directMessageRepo: IDirectMessageRepository,
-    @inject(Repositories.directConversation)
-    directConversationRepo: IDirectConversationRepository,
+    @inject(Repositories.message)
+    messageRepo: IMessageRepository,
+    @inject(Repositories.conversation)
+    conversationRepo: IConversationRepository,
     @inject(Repositories.relationship)
     relationshipRepo: IRelationshipRepository
   ) {
-    this.directMessageRepo = directMessageRepo;
-    this.directConversationRepo = directConversationRepo;
+    this.messageRepo = messageRepo;
+    this.conversationRepo = conversationRepo;
     this.relationshipRepo = relationshipRepo;
   }
 
@@ -34,17 +34,17 @@ export class SendDirectMessageUseCase implements ISendDirectMessageUseCase {
     if (
       await this.relationshipRepo.isFriend(senderCognitoId, recipientCognitoId)
     ) {
-      let conversation = await this.directConversationRepo.getByUsers([
+      let conversation = await this.conversationRepo.getByUsers([
         senderCognitoId,
         recipientCognitoId,
       ]);
       if (!conversation) {
-        conversation = await this.directConversationRepo.create([
+        conversation = await this.conversationRepo.create([
           senderCognitoId,
           recipientCognitoId,
         ]);
       }
-      return await this.directMessageRepo.create({
+      return await this.messageRepo.create({
         conversationId: conversation._id,
         userCognitoId: senderCognitoId,
         text: text,

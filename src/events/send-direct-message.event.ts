@@ -4,14 +4,14 @@ import { EventHandlers } from "../common/dependency-injection";
 import { IEvent } from "./types";
 
 @injectable()
-export class SendDirectMessageEvent implements IEvent {
+export class SendMessageEvent implements IEvent {
   name = "directMessage";
   handler: ISendDirectMessageEventHandler;
 
   constructor(
     @inject(EventHandlers.sendDirectMessage)
-    sendDirectMessageHandler: ISendDirectMessageEventHandler
+    sendMessageHandler: ISendDirectMessageEventHandler
   ) {
-    this.handler = sendDirectMessageHandler;
+    this.handler = sendMessageHandler;
   }
 }

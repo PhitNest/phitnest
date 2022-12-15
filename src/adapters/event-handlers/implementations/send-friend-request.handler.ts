@@ -1,6 +1,7 @@
 import { inject, injectable } from "inversify";
 import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
+import { l } from "../../../common/logger";
 import { ISendFriendRequestUseCase } from "../../../use-cases/interfaces";
 import { IConnection } from "../../types";
 import { ISendFriendRequestEventHandler } from "../interfaces";
@@ -25,6 +26,8 @@ export class SendFriendRequestEventHandler
           recipientId: z.string(),
         })
         .parse(data);
+      l.info(connection.locals.cognitoId);
+      l.info(recipientId);
       await this.sendFriendRequestUseCase.execute(
         connection.locals.cognitoId,
         recipientId

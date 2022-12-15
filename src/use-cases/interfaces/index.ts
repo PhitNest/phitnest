@@ -21,4 +21,4 @@ export { IGetSentFriendRequestsUseCase } from "./get-sent-friend-requests";
 export { IGetReceivedFriendRequestsUseCase } from "./get-received-friend-requests";
 export { ISendDirectMessageUseCase } from "./send-direct-message";
 export { ITutorialExploreUseCase } from "./tutorial-explore";
-export { IGetRecentDirectConversationsUseCase } from "./get-recent-direct-conversations";
+export { IGetRecentConversationsUseCase } from "./get-conversations";
