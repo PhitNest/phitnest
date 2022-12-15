@@ -47,7 +47,9 @@ class ApologyView extends ScreenView {
               height: 1.sh,
               child: Column(
                 children: [
-                  110.verticalSpace,
+                  40.verticalSpace,
+                  BackArrowButton(),
+                  28.verticalSpace,
                   SizedBox(
                     child: Text(
                       "We apologize",
