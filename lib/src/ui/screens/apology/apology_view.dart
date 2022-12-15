@@ -42,13 +42,21 @@ class ApologyView extends ScreenView {
           body: SingleChildScrollView(
             controller: scrollController,
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            child: SizedBox(
-              width: double.infinity,
-              height: 1.sh,
-              child: Column(
-                children: [
-                  110.verticalSpace,
-                  SizedBox(
+            child: Column(
+              children: [
+                40.verticalSpace,
+                BackArrowButton(),
+                double.infinity.horizontalSpace,
+                28.verticalSpace,
+                SizedBox(
+                  child: Text(
+                    "We apologize",
+                    style: theme.textTheme.headlineLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                40.verticalSpace,
+                SizedBox(
                     child: Text(
                       "We apologize",
                       style: theme.textTheme.headlineLarge,
