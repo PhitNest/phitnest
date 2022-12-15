@@ -37,12 +37,11 @@ class OnBoardingProvider
           ),
           (_) => false,
         ),
-        onPressedNo: () => Navigator.pushAndRemoveUntil(
+        onPressedNo: () => Navigator.push(
           context,
           NoAnimationMaterialPageRoute(
             builder: (_) => ApologyProvider(),
           ),
-          (_) => false,
         ),
       );
 

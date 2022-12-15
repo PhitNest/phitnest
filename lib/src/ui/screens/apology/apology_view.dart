@@ -44,8 +44,10 @@ class ApologyView extends ScreenView {
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Column(
               children: [
+                40.verticalSpace,
+                BackArrowButton(),
                 double.infinity.horizontalSpace,
-                110.verticalSpace,
+                28.verticalSpace,
                 SizedBox(
                   child: Text(
                     "We apologize",
