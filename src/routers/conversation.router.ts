@@ -1,17 +1,17 @@
 import { inject, injectable } from "inversify";
-import { IDirectConversationController } from "../adapters/controllers/interfaces";
+import { IConversationController } from "../adapters/controllers/interfaces";
 import { IAuthMiddleware } from "../adapters/middleware/interfaces";
 import { Controllers, Middlewares } from "../common/dependency-injection";
 import { HttpMethod, IRoute } from "./types";
 
 @injectable()
-export class DirectConversationRouter {
+export class ConversationRouter {
   routes: IRoute[];
 
   constructor(
     @inject(Middlewares.authenticate) authMiddleware: IAuthMiddleware,
-    @inject(Controllers.directConversation)
-    directConversationController: IDirectConversationController
+    @inject(Controllers.conversation)
+    conversationController: IConversationController
   ) {
     this.routes = [
       {
@@ -19,7 +19,7 @@ export class DirectConversationRouter {
         method: HttpMethod.GET,
         middlewares: [authMiddleware],
         controller: (req, res) =>
-          directConversationController.getRecentDirectConversations(req, res),
+          conversationController.getRecentConversations(req, res),
       },
     ];
   }

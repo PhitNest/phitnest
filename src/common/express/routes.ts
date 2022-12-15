@@ -9,9 +9,9 @@ import {
 import { statusOK } from "../../constants/http_codes";
 import {
   AuthRouter,
-  DirectConversationRouter,
+  ConversationRouter,
   GymRouter,
-  DirectMessageRouter,
+  MessageRouter,
   RelationshipRouter,
   UserRouter,
 } from "../../routers";
@@ -24,8 +24,8 @@ export function buildRoutes() {
   buildRoute(router, "/user", UserRouter);
   buildRoute(router, "/auth", AuthRouter);
   buildRoute(router, "/relationship", RelationshipRouter);
-  buildRoute(router, "/directMessage", DirectMessageRouter);
-  buildRoute(router, "/directConversation", DirectConversationRouter);
+  buildRoute(router, "/message", MessageRouter);
+  buildRoute(router, "/conversation", ConversationRouter);
   return router;
 }
 

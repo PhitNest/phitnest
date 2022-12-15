@@ -7,8 +7,8 @@ export const Repositories = {
   gym: Symbol("gym.repository"),
   relationship: Symbol("relationship.repository"),
   location: Symbol("location.repository"),
-  directConversation: Symbol("directConversation.repository"),
-  directMessage: Symbol("directMessage.repository"),
+  conversation: Symbol("conversation.repository"),
+  message: Symbol("message.repository"),
 };
 
 export const UseCases = {
@@ -35,7 +35,7 @@ export const UseCases = {
   denyFriendRequest: Symbol("denyFriendRequest.use-case"),
   getFriends: Symbol("getFriends.use-case"),
   sendDirectMessage: Symbol("sendDirectMessage.use-case"),
-  getRecentDirectConversations: Symbol("getRecentDirectConversations.use-case"),
+  getRecentConversations: Symbol("getRecentConversations.use-case"),
 };
 
 export const Middlewares = {
@@ -47,13 +47,13 @@ export const Controllers = {
   user: Symbol("user.controller"),
   auth: Symbol("auth.controller"),
   relationship: Symbol("relationship.controller"),
-  directConversation: Symbol("directConversation.controller"),
+  conversation: Symbol("conversation.controller"),
 };
 
 export const EventHandlers = {
   onConnect: Symbol("onConnect.event-handler"),
   onDisconnect: Symbol("onDisconnect.event-handler"),
-  sendDirectMessage: Symbol("sendMessage.event-handler"),
+  sendDirectMessage: Symbol("sendDirectMessage.event-handler"),
   sendFriendRequest: Symbol("sendFriendRequest.event-handler"),
 };
 
@@ -65,8 +65,8 @@ import {
   MongoGymRepository,
   MongoRelationshipRepository,
   OSMLocationRepository,
-  MongoDirectMessageRepository,
-  MongoDirectConversationRepository,
+  MongoMessageRepository,
+  MongoConversationRepository,
 } from "../repositories/implementations";
 
 import {
@@ -93,7 +93,7 @@ import {
   GetReceivedFriendRequestsUseCase,
   SendDirectMessageUseCase,
   TutorialExploreUseCase,
-  GetRecentDirectConversationsUseCase,
+  GetRecentConversationsUseCase,
 } from "../use-cases/implementations";
 
 import { AuthMiddleware } from "../adapters/middleware/implementations";
@@ -103,7 +103,7 @@ import {
   UserController,
   AuthController,
   RelationshipController,
-  DirectConversationController,
+  ConversationController,
 } from "../adapters/controllers/implementations";
 
 import { l } from "./logger";
@@ -136,11 +136,8 @@ function injectRepositories() {
   injectRepository(Repositories.auth, CognitoAuthRepository);
   injectRepository(Repositories.relationship, MongoRelationshipRepository);
   injectRepository(Repositories.location, OSMLocationRepository);
-  injectRepository(
-    Repositories.directConversation,
-    MongoDirectConversationRepository
-  );
-  injectRepository(Repositories.directMessage, MongoDirectMessageRepository);
+  injectRepository(Repositories.conversation, MongoConversationRepository);
+  injectRepository(Repositories.message, MongoMessageRepository);
 }
 
 export function injectUseCases() {
@@ -170,10 +167,7 @@ export function injectUseCases() {
   injectUseCase(UseCases.getFriends, GetFriendsUseCase);
   injectUseCase(UseCases.sendDirectMessage, SendDirectMessageUseCase);
   injectUseCase(UseCases.tutorialExplore, TutorialExploreUseCase);
-  injectUseCase(
-    UseCases.getRecentDirectConversations,
-    GetRecentDirectConversationsUseCase
-  );
+  injectUseCase(UseCases.getRecentConversations, GetRecentConversationsUseCase);
 }
 
 export function injectAdapters() {
@@ -182,10 +176,7 @@ export function injectAdapters() {
   injectController(Controllers.auth, AuthController);
   injectController(Middlewares.authenticate, AuthMiddleware);
   injectController(Controllers.relationship, RelationshipController);
-  injectController(
-    Controllers.directConversation,
-    DirectConversationController
-  );
+  injectController(Controllers.conversation, ConversationController);
 }
 
 export function injectEventHandlers() {

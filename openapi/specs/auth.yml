@@ -213,13 +213,13 @@ paths:
             schema:
               required:
                 - email
-                - password
+                - newPassword
                 - code
               type: object
               properties:
                 email:
                   $ref: "#/components/schemas/Email"
-                password:
+                newPassword:
                   $ref: "#/components/schemas/Password"
                 code:
                   type: string

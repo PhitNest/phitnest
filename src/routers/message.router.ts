@@ -2,7 +2,7 @@ import { injectable } from "inversify";
 import { IRoute } from "./types";
 
 @injectable()
-export class DirectMessageRouter {
+export class MessageRouter {
   routes: IRoute[];
 
   constructor() {
