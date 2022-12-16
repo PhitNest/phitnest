@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import mongoose from "mongoose";
-import { IFriendEntity, IUserEntity, RelationshipType } from "../../entities";
+import { IUserEntity, RelationshipType } from "../../entities";
 import { IUserRepository } from "../interfaces";
 import { GYM_MODEL_NAME } from "./gym.repository";
 import { RELATIONSHIP_COLLECTION_NAME } from "./relationship.repository";
