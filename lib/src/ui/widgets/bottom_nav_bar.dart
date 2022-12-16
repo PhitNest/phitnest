@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phitnest_mobile/src/ui/screens/comingSoon/coming_soon_provider.dart';
 
 import '../screens/screens.dart';
 import '../theme.dart';
@@ -154,7 +155,7 @@ class _StyledNavBarState extends State<StyledNavBar>
                       () => Navigator.pushAndRemoveUntil(
                           context,
                           NoAnimationMaterialPageRoute(
-                            builder: (context) => NewsProvider(),
+                            builder: (context) => ComingSoonProvider(pageIndex: 0),
                           ),
                           (route) => false),
                       0),
@@ -185,7 +186,7 @@ class _StyledNavBarState extends State<StyledNavBar>
                     () => Navigator.pushAndRemoveUntil(
                         context,
                         NoAnimationMaterialPageRoute(
-                          builder: (context) => OptionsProvider(),
+                          builder: (context) => ComingSoonProvider(pageIndex: 3),
                         ),
                         (route) => false),
                     3,

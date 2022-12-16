@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phitnest_mobile/src/ui/screens/comingSoon/coming_soon_provider.dart';
 
 import 'ui/screens/screens.dart';
 import 'ui/theme.dart';
