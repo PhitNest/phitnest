@@ -1,7 +1,7 @@
 import { compareLocation } from "../../../test/helpers/comparisons";
 import { dependencies, Repositories } from "../../common/dependency-injection";
 import { LocationEntity } from "../../entities";
-import { ILocationRepository } from "../interfaces";
+import { ILocationRepository } from ".";
 
 const testAddress1 = {
   street: "522 Pine Song Ln",

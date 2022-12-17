@@ -37,6 +37,10 @@ export const UserModel = mongoose.model<IUserEntity>(USER_MODEL_NAME, schema);
 
 @injectable()
 export class MongoUserRepository implements IUserRepository {
+  async deleteAll() {
+    await UserModel.deleteMany({}).exec();
+  }
+
   tutorialExploreUsers(gymId: string, skip?: number, limit?: number) {
     const pipeline: mongoose.PipelineStage[] = [
       {

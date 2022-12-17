@@ -1,7 +1,7 @@
 import { compareGym } from "../../../test/helpers/comparisons";
 import { dependencies, UseCases } from "../../common/dependency-injection";
 import { LocationEntity } from "../../entities";
-import { ICreateGymUseCase } from "../interfaces";
+import { ICreateGymUseCase } from ".";
 
 const testGym1 = {
   name: "Planet Fitness",

@@ -1,13 +1,11 @@
 import { IMessageEntity } from "../../entities";
+import { IUseCase } from "../types";
 
-export interface IMessageRepository {
-  create(message: Omit<IMessageEntity, "_id">): Promise<IMessageEntity>;
-
-  get(
+export interface IGetMessagesUseCase extends IUseCase {
+  execute(
+    userCognitoId: string,
     conversationId: string,
     offset?: number,
     limit?: number
   ): Promise<IMessageEntity[]>;
-
-  deleteAll(): Promise<void>;
 }

@@ -15,4 +15,11 @@ export interface IConversationRepository {
       message: IMessageEntity;
     }[]
   >;
+
+  isUserInConversation(
+    userCognitoId: string,
+    conversationId: string
+  ): Promise<boolean>;
+
+  deleteAll(): Promise<void>;
 }

@@ -6,8 +6,6 @@ import {
   Repositories,
 } from "../../../common/dependency-injection";
 import { IGymEntity, IUserEntity, LocationEntity } from "../../../entities";
-import { GymModel } from "../../../repositories/implementations/gym.repository";
-import { UserModel } from "../../../repositories/implementations/user.repository";
 import {
   statusBadRequest,
   statusCreated,
@@ -18,7 +16,7 @@ import {
   IGymRepository,
   IUserRepository,
 } from "../../../repositories/interfaces";
-import { IGymController } from "../interfaces";
+import { IGymController } from ".";
 
 const testUser1 = {
   cognitoId: "TestCognitoId",
@@ -80,7 +78,7 @@ beforeAll(() => {
 
 describe("Creating a new gym", () => {
   afterAll(async () => {
-    await GymModel.deleteMany({});
+    await gymRepo.deleteAll();
   });
 
   test("With empty request body", async () => {
@@ -207,7 +205,7 @@ describe("Get the nearest gyms", () => {
   });
 
   afterAll(async () => {
-    await GymModel.deleteMany({});
+    await gymRepo.deleteAll();
   });
 
   test("With empty request body", async () => {
@@ -375,8 +373,8 @@ describe("Get a gym by user cognito id", () => {
   });
 
   afterAll(async () => {
-    await UserModel.deleteMany({});
-    await GymModel.deleteMany({});
+    await userRepo.deleteAll();
+    await gymRepo.deleteAll();
   });
 
   test("Get gym for two distinct users", async () => {

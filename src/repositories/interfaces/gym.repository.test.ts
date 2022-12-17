@@ -1,7 +1,7 @@
 import { compareGym } from "../../../test/helpers/comparisons";
 import { dependencies, Repositories } from "../../common/dependency-injection";
 import { IGymEntity, IUserEntity, LocationEntity } from "../../entities";
-import { IGymRepository, IUserRepository } from "../interfaces";
+import { IGymRepository, IUserRepository } from ".";
 
 const testGym1 = {
   name: "TestGym1",
