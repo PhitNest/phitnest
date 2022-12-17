@@ -14,3 +14,4 @@ const kConfirmRegister = '/auth/confirmRegister';
 const kResendConfirmation = '/auth/resendConfirmation';
 const kForgotPassword = '/auth/forgotPassword';
 const kResetPassword = '/auth/forgotPasswordSubmit';
+const kGetMessages = '/message';

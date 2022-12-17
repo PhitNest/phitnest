@@ -6,3 +6,4 @@ export 'gym.repository.dart';
 export 'user.repository.dart';
 export 'relationship.repository.dart';
 export 'conversations.repository.dart';
+export 'message.repository.dart';
