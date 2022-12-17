@@ -6,7 +6,7 @@ import {
   injectAdapters,
   injectRepository,
 } from "../../../common/dependency-injection";
-import { IAuthMiddleware } from "../interfaces";
+import { IAuthMiddleware } from ".";
 import {
   MockResponse,
   MockRequest,

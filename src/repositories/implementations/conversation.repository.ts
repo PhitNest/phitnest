@@ -25,6 +25,18 @@ const ConversationModel = mongoose.model<IConversationEntity>(
 );
 
 export class MongoConversationRepository implements IConversationRepository {
+  async deleteAll() {
+    await ConversationModel.deleteMany({}).exec();
+  }
+
+  async isUserInConversation(userCognitoId: string, conversationId: string) {
+    return (
+      (await ConversationModel.findById(conversationId))?.users.includes(
+        userCognitoId
+      ) ?? false
+    );
+  }
+
   getRecentMessages(cognitoId: string) {
     return ConversationModel.aggregate([
       {

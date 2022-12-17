@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
-import { SendDirectMessageUseCase } from "../../../use-cases/implementations";
+import { ISendDirectMessageUseCase } from "../../../use-cases/interfaces";
 import { IConnection } from "../../types";
 import { ISendDirectMessageEventHandler } from "../interfaces";
 
@@ -9,11 +9,11 @@ import { ISendDirectMessageEventHandler } from "../interfaces";
 export class SendDirectMessageEventHandler
   implements ISendDirectMessageEventHandler
 {
-  sendDirectMessageUseCase: SendDirectMessageUseCase;
+  sendDirectMessageUseCase: ISendDirectMessageUseCase;
 
   constructor(
     @inject(UseCases.sendDirectMessage)
-    sendDirectMessageUseCase: SendDirectMessageUseCase
+    sendDirectMessageUseCase: ISendDirectMessageUseCase
   ) {
     this.sendDirectMessageUseCase = sendDirectMessageUseCase;
   }

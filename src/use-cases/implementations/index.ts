@@ -22,3 +22,4 @@ export { GetReceivedFriendRequestsUseCase } from "./get-received-friend-requests
 export { SendDirectMessageUseCase } from "./send-direct-message";
 export { TutorialExploreUseCase } from "./tutorial-explore";
 export { GetRecentConversationsUseCase } from "./get-conversations";
+export { GetMessagesUseCase } from "./get-messages";

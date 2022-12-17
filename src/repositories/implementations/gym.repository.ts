@@ -32,6 +32,10 @@ export const GymModel = mongoose.model<IGymEntity>(GYM_MODEL_NAME, schema);
 
 @injectable()
 export class MongoGymRepository implements IGymRepository {
+  async deleteAll() {
+    await GymModel.deleteMany({}).exec();
+  }
+
   create(gym: Omit<IGymEntity, "_id">) {
     return GymModel.create(gym);
   }

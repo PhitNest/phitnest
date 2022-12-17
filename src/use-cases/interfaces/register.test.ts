@@ -8,7 +8,7 @@ import {
 } from "../../common/dependency-injection";
 import { IGymEntity, LocationEntity } from "../../entities";
 import { IGymRepository } from "../../repositories/interfaces";
-import { IRegisterUseCase } from "../interfaces";
+import { IRegisterUseCase } from ".";
 
 const testGym1 = {
   name: "Planet Fitness",

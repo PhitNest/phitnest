@@ -1,11 +1,7 @@
 import { comparePublicUserData } from "../../../test/helpers/comparisons";
 import { dependencies, Repositories } from "../../common/dependency-injection";
 import { IGymEntity, IUserEntity, LocationEntity } from "../../entities";
-import {
-  IGymRepository,
-  IRelationshipRepository,
-  IUserRepository,
-} from "../interfaces";
+import { IGymRepository, IRelationshipRepository, IUserRepository } from ".";
 
 const testGym1 = {
   name: "Test Gym",

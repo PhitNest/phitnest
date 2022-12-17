@@ -27,7 +27,20 @@ schema.index({ conversationId: 1 });
 const MessageModel = mongoose.model<IMessageEntity>(MESSAGE_MODEL_NAME, schema);
 
 export class MongoMessageRepository implements IMessageRepository {
+  async deleteAll() {
+    await MessageModel.deleteMany({}).exec();
+  }
+
   create(message: Omit<IMessageEntity, "_id">) {
     return MessageModel.create(message);
+  }
+
+  get(conversationId: string, offset?: number, limit?: number) {
+    return MessageModel.find({
+      conversationId: new mongoose.Types.ObjectId(conversationId),
+    })
+      .skip(offset ?? 0)
+      .limit(limit ?? 0)
+      .exec();
   }
 }
