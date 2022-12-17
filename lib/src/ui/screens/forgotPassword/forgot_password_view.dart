@@ -8,11 +8,13 @@ import '../view.dart';
 
 class ForgotPasswordView extends ScreenView {
   final TextEditingController emailAddressController;
-  final VoidCallback onPressedsubmit;
+  final TextEditingController newPassController;
+  final TextEditingController rewriteNewPassController;
+  final VoidCallback onPressedSubmit;
   final ScrollController scrollController;
   final FocusNode emailFocus;
   final VoidCallback onTapEmail;
-  final AutovalidateMode autovalidateMode;
+  final AutovalidateMode autoValidateMode;
   final GlobalKey<FormState> formKey;
   final FormFieldValidator validateEmail;
   final bool loading;
@@ -20,13 +22,15 @@ class ForgotPasswordView extends ScreenView {
 
   const ForgotPasswordView({
     required this.emailAddressController,
-    required this.onPressedsubmit,
+    required this.newPassController,
+    required this.rewriteNewPassController,
+    required this.onPressedSubmit,
     required this.scrollController,
     required this.emailFocus,
     required this.onTapEmail,
     required this.formKey,
     required this.validateEmail,
-    required this.autovalidateMode,
+    required this.autoValidateMode,
     required this.loading,
     required this.errorMessage,
   }) : super();
@@ -46,7 +50,7 @@ class ForgotPasswordView extends ScreenView {
                   children: [
                     40.verticalSpace,
                     BackArrowButton(),
-                    110.verticalSpace,
+                    30.verticalSpace,
                     Text(
                       'Forgot the password?',
                       style: theme.textTheme.headlineLarge,
@@ -58,43 +62,67 @@ class ForgotPasswordView extends ScreenView {
                       style: theme.textTheme.labelLarge,
                     ),
                     56.verticalSpace,
-                    Form(
-                      key: formKey,
-                      autovalidateMode: autovalidateMode,
-                      child: SizedBox(
-                        height: 34.h,
-                        width: 291.w,
-                        child: TextInputField(
-                          focusNode: emailFocus,
-                          controller: emailAddressController,
-                          keyboardType: TextInputType.emailAddress,
-                          validator: validateEmail,
-                          onTap: onTapEmail,
-                          hint: 'Email',
-                        ),
-                      ),
-                    ),
-                    30.verticalSpace,
-                    Visibility(
-                      visible: errorMessage != null,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 20.h),
-                        child: Text(
-                          errorMessage ?? "",
-                          style: theme.textTheme.labelMedium!.copyWith(
-                            color: theme.errorColor,
+                    SizedBox(
+                      width: 291.w,
+                      child: Form(
+                        key: formKey,
+                        autovalidateMode: autoValidateMode,
+                        child: SizedBox(
+                          child: Column(
+                            children: [
+                              TextInputField(
+                                focusNode: emailFocus,
+                                controller: emailAddressController,
+                                keyboardType: TextInputType.emailAddress,
+                                validator: validateEmail,
+                                onTap: onTapEmail,
+                                hint: 'Email',
+                              ),
+                              TextInputField(
+                                focusNode: emailFocus,
+                                controller: newPassController,
+                                keyboardType: TextInputType.emailAddress,
+                                validator: validateEmail,
+                                onTap: onTapEmail,
+                                hint: 'New Password',
+                              ),
+                              TextInputField(
+                                focusNode: emailFocus,
+                                controller: rewriteNewPassController,
+                                keyboardType: TextInputType.emailAddress,
+                                validator: validateEmail,
+                                onTap: onTapEmail,
+                                hint: 'Re-write New Password',
+                              ),
+                              30.verticalSpace,
+                              Visibility(
+                                visible: errorMessage != null,
+                                child: Padding(
+                                  padding: EdgeInsets.only(bottom: 20.h),
+                                  child: Text(
+                                    errorMessage ?? "",
+                                    style:
+                                        theme.textTheme.labelMedium!.copyWith(
+                                      color: theme.errorColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              loading
+                                  ? StyledButton(
+                                      onPressed: onPressedSubmit,
+                                      child: Text(
+                                        errorMessage != null
+                                            ? 'RETRY'
+                                            : 'SUBMIT',
+                                      ),
+                                    )
+                                  : CircularProgressIndicator(),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                    loading
-                        ? StyledButton(
-                            onPressed: onPressedsubmit,
-                            child: Text(
-                              errorMessage != null ? 'RETRY' : 'SUBMIT',
-                            ),
-                          )
-                        : CircularProgressIndicator(),
                   ],
                 ),
               ),
