@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_mobile/src/ui/widgets/bottom_nav_bar.dart';
 
+import '../../widgets/widgets.dart';
 import '../view.dart';
 
 class OptionsView extends ScreenView {
@@ -49,7 +49,7 @@ class OptionsView extends ScreenView {
                 indent: 32.w,
                 endIndent: 32.w,
               ),
-              Expanded(child: Container()),
+              Spacer(),
               StyledNavBar(
                 navigationEnabled: true,
                 pageIndex: 3,

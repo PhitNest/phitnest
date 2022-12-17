@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
+import './forgot_password_state.dart';
+import './forgot_password_view.dart';
 import '../../../common/validators.dart';
 import '../../../use-cases/use_cases.dart';
 import '../provider.dart';
-import './forgot_password_state.dart';
-import './forgot_password_view.dart';
 
 class ForgotPasswordProvider
     extends ScreenProvider<ForgotPasswordState, ForgotPasswordView> {
@@ -15,12 +15,14 @@ class ForgotPasswordProvider
       ForgotPasswordView(
         scrollController: state.scrollController,
         emailAddressController: state.emailAddressController,
+        newPassController: state.newPassController,
+        rewriteNewPassController: state.rewriteNewPassController,
         errorMessage: state.errorMessage,
         loading: state.loading,
         formKey: state.formKey,
-        autovalidateMode: state.autovalidateMode,
+        autoValidateMode: state.autoValidateMode,
         validateEmail: (value) => validateEmail(value),
-        onPressedsubmit: () {
+        onPressedSubmit: () {
           state.loading = true;
           state.errorMessage = null;
           if (state.formKey.currentState!.validate()) {
@@ -37,7 +39,7 @@ class ForgotPasswordProvider
               },
             );
           } else {
-            state.autovalidateMode = AutovalidateMode.always;
+            state.autoValidateMode = AutovalidateMode.always;
           }
         },
         emailFocus: state.emailFocus,
