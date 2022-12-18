@@ -186,7 +186,7 @@ class _StyledNavBarState extends State<StyledNavBar>
                     () => Navigator.pushAndRemoveUntil(
                         context,
                         NoAnimationMaterialPageRoute(
-                          builder: (context) => ComingSoonProvider(pageIndex: 3),
+                          builder: (context) => OptionsProvider(),
                         ),
                         (route) => false),
                     3,

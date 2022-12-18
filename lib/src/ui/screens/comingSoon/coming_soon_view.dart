@@ -23,9 +23,15 @@ class ComingSoonView extends ScreenView {
             children: [
               200.verticalSpace,
                 Text(
-                  'This feature is coming in the next update!',
+                  'Coming Soon!',
                   textAlign: TextAlign.center,
                   style: theme.textTheme.headlineLarge,
+                ),
+              50.verticalSpace,
+                Text(
+                  'We will have newsfeed ready \n for you in version 2.0.',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.labelLarge,
                 ),
               Expanded(child: Container()),
               StyledNavBar(
