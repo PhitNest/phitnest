@@ -1,6 +1,5 @@
 import { inject, injectable } from "inversify";
 import { Repositories } from "../../common/dependency-injection";
-import { IMessageEntity } from "../../entities";
 import {
   IConversationRepository,
   IMessageRepository,
