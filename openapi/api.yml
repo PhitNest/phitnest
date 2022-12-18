@@ -60,6 +60,9 @@ paths:
   /conversation/recents:
     $ref: "specs/conversation.yml#/paths/recents"
 
+  /message:
+    $ref: "specs/message.yml#/paths/root"
+
 components:
   securitySchemes:
     AccessToken:

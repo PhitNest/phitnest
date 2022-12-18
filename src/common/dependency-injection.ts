@@ -49,6 +49,7 @@ export const Controllers = {
   auth: Symbol("auth.controller"),
   relationship: Symbol("relationship.controller"),
   conversation: Symbol("conversation.controller"),
+  message: Symbol("message.controller"),
 };
 
 export const EventHandlers = {
@@ -106,6 +107,7 @@ import {
   AuthController,
   RelationshipController,
   ConversationController,
+  MessageController,
 } from "../adapters/controllers/implementations";
 
 import { l } from "./logger";
@@ -180,6 +182,7 @@ export function injectAdapters() {
   injectController(Middlewares.authenticate, AuthMiddleware);
   injectController(Controllers.relationship, RelationshipController);
   injectController(Controllers.conversation, ConversationController);
+  injectController(Controllers.message, MessageController);
 }
 
 export function injectEventHandlers() {

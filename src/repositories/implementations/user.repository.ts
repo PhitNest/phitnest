@@ -1,5 +1,6 @@
 import { injectable } from "inversify";
 import mongoose from "mongoose";
+import { l } from "../../common/logger";
 import { IUserEntity, RelationshipType } from "../../entities";
 import { IUserRepository } from "../interfaces";
 import { GYM_MODEL_NAME } from "./gym.repository";
@@ -198,15 +199,38 @@ export class MongoUserRepository implements IUserRepository {
   }
 
   async haveSameGym(cognitoId1: string, cognitoId2: string) {
-    const result = await UserModel.aggregate([
-      {
-        $match: {
-          cognitoId: {
-            $in: [cognitoId1, cognitoId2],
+    return (
+      (
+        await UserModel.aggregate([
+          {
+            $match: {
+              cognitoId: {
+                $in: [cognitoId1, cognitoId2],
+              },
+            },
           },
-        },
-      },
-    ]);
-    return result.length === 2;
+          {
+            $group: {
+              _id: "$gymId",
+              users: {
+                $push: "$$ROOT",
+              },
+            },
+          },
+          {
+            $match: {
+              $expr: {
+                $eq: [
+                  {
+                    $size: "$users",
+                  },
+                  2,
+                ],
+              },
+            },
+          },
+        ]).exec()
+      ).length === 1
+    );
   }
 }
