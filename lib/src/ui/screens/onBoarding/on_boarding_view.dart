@@ -6,11 +6,9 @@ import 'widgets/widgets.dart';
 
 class OnBoardingView extends ScreenView {
   final VoidCallback onPressedYes;
-  final VoidCallback onPressedNo;
 
   const OnBoardingView({
     required this.onPressedYes,
-    required this.onPressedNo,
   }) : super();
 
   @override
@@ -23,7 +21,6 @@ class OnBoardingView extends ScreenView {
               SecondPage(),
               ThirdPage(
                 onPressedYes: onPressedYes,
-                onPressedNo: onPressedNo,
               )
             ],
           ),

@@ -4,6 +4,7 @@ import '../use_cases.dart';
 class SkipOnBoardingUseCase implements ISkipOnBoardingUseCase {
   @override
   Future<bool> shouldSkip() async {
+    return false;
     return deviceCacheRepo.shouldSkipOnBoarding();
   }
 

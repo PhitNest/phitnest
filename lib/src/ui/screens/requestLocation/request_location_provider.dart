@@ -77,13 +77,6 @@ class RequestLocationProvider
         errorMessage: state.errorMessage,
         searching: state.searching,
         onPressRetry: () => init(context, state),
-        onPressedExit: () => Navigator.of(context)
-          ..pop()
-          ..push(
-            NoAnimationMaterialPageRoute(
-              builder: (context) => ApologyProvider(),
-            ),
-          ),
       );
 
   @override

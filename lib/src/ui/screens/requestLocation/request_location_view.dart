@@ -7,13 +7,11 @@ import '../../widgets/widgets.dart';
 import '../view.dart';
 
 class RequestLocationView extends ScreenView {
-  final VoidCallback onPressedExit;
   final String? errorMessage;
   final bool searching;
   final VoidCallback onPressRetry;
 
   const RequestLocationView({
-    required this.onPressedExit,
     required this.errorMessage,
     required this.searching,
     required this.onPressRetry,
@@ -72,11 +70,6 @@ class RequestLocationView extends ScreenView {
                     ),
                   ),
                   Expanded(child: Container()),
-                  TextButtonWidget(
-                    onPressed: onPressedExit,
-                    text: 'EXIT',
-                  ),
-                  37.verticalSpace
                 ],
               ),
             ),
