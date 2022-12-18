@@ -6,11 +6,9 @@ import '../../../widgets/widgets.dart';
 
 class ThirdPage extends StatelessWidget {
   final Function() onPressedYes;
-  final Function() onPressedNo;
 
   const ThirdPage({
     required this.onPressedYes,
-    required this.onPressedNo,
   }) : super();
 
   @override
@@ -36,12 +34,6 @@ class ThirdPage extends StatelessWidget {
           ),
           35.verticalSpace,
           StyledButton(child: Text('YES'), onPressed: onPressedYes),
-          Expanded(child: Container()),
-          TextButtonWidget(
-            text: 'NO, I DON\'T',
-            onPressed: onPressedNo,
-          ),
-          37.verticalSpace,
         ],
       );
 }

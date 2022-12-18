@@ -46,12 +46,6 @@ class OnBoardingProvider
           ),
           (_) => false,
         ),
-        onPressedNo: () => Navigator.push(
-          context,
-          NoAnimationMaterialPageRoute(
-            builder: (_) => ApologyProvider(),
-          ),
-        ),
       );
 
   @override
