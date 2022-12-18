@@ -55,12 +55,13 @@ class ConversationsProvider
       return ConversationCard(
         message: entry.value.value2.text,
         title: entry.value.value1.chatName(memoryCacheRepo.me!.id),
-        onDismissed: (_) => state.removeConversation(entry.key),
+        onDismissed: (_) {}, //=> state.removeConversation(entry.key),
         time: entry.value.value2.createdAt,
         onTap: () => Navigator.push(
           context,
           NoAnimationMaterialPageRoute(
-            builder: (context) => const MessageProvider(),
+            builder: (context) =>
+                MessageProvider(conversation: entry.value.value1),
           ),
         ),
       );
@@ -72,7 +73,7 @@ class ConversationsProvider
         onTap: () => Navigator.push(
           context,
           NoAnimationMaterialPageRoute(
-            builder: (context) => const MessageProvider(),
+            builder: (context) => MessageProvider(friend: state.friends[i]),
           ),
         ),
         time: state.friends[i].since,

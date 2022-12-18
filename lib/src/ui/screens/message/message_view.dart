@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../common/styled_app_bar.dart';
-import '../../common/widgets.dart';
+import '../../theme.dart';
+import '../../widgets/widgets.dart';
 import '../view.dart';
 import 'model/message.dart';
 
@@ -12,15 +12,25 @@ class MessageView extends ScreenView {
   final Function() sendMsg;
   final TextEditingController messageController;
 
+  final String? errorMessage;
+  final VoidCallback onPressedRetry;
+  final ScrollController scrollController;
+  final FocusNode messageFocus;
+
   MessageView({
-    required this.msg,
     required this.messageController,
-    required this.sendMsg,
+    required this.onPressSend,
+    required this.name,
+    required this.loading,
+    required this.messages,
+    required this.errorMessage,
+    required this.onPressedRetry,
+    required this.scrollController,
+    required this.messageFocus,
   });
 
   @override
   Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
         child: Scaffold(
           body: Column(
             children: [
@@ -41,31 +51,53 @@ class MessageView extends ScreenView {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Flexible(
-                      child: ShaderMask(
-                        shaderCallback: (Rect bounds) => LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.white.withOpacity(0.05),
-                            Colors.white,
-                          ],
-                          stops: [0, 0.008],
-                          tileMode: TileMode.mirror,
-                        ).createShader(bounds),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          reverse: true,
-                          padding: EdgeInsets.zero,
-                          keyboardDismissBehavior:
-                              ScrollViewKeyboardDismissBehavior.onDrag,
-                          physics: BouncingScrollPhysics(),
-                          controller: scrollController,
-                          itemCount: messages.length,
-                          itemBuilder: (context, index) => messages[index],
-                        ),
-                      ),
-                    ),
+                    messages != null
+                        ? messages!.length > 0
+                            ? Flexible(
+                                child: ListView.builder(
+                                  controller: scrollController,
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  reverse: true,
+                                  keyboardDismissBehavior:
+                                      ScrollViewKeyboardDismissBehavior.onDrag,
+                                  physics: ClampingScrollPhysics(),
+                                  itemCount: messages!.length,
+                                  itemBuilder: (context, index) =>
+                                      messages![index],
+                                ),
+                              )
+                            : Expanded(
+                                child: Center(
+                                  child: Text(
+                                    'Say Hello!',
+                                    style: theme.textTheme.headlineLarge,
+                                  ),
+                                ),
+                              )
+                        : Expanded(
+                            child: loading
+                                ? Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        errorMessage ?? "",
+                                        style: theme.textTheme.labelMedium!
+                                            .copyWith(
+                                          color: theme.colorScheme.error,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      StyledButton(
+                                        onPressed: onPressedRetry,
+                                        child: Text('RETRY'),
+                                      ),
+                                    ],
+                                  ),
+                          ),
                     Container(
                       decoration: BoxDecoration(
                         color: Color(0xFFF8F7F7),
@@ -82,10 +114,12 @@ class MessageView extends ScreenView {
                           children: [
                             Expanded(
                               child: TextFormField(
-                                focusNode: messageFocus,
                                 controller: messageController,
                                 maxLines: 12,
                                 minLines: 1,
+                                textInputAction: TextInputAction.send,
+                                onFieldSubmitted: (value) => onPressSend(),
+                                focusNode: messageFocus,
                                 decoration: InputDecoration(
                                   hintText: 'Write a message...',
                                   hintStyle:

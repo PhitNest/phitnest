@@ -20,6 +20,7 @@ void injectUseCases() {
   useCases
       .registerSingleton<IGetConversationsUseCase>(GetConversationsUseCase());
   useCases.registerSingleton<IGetFriendsUseCase>(GetFriendsUseCase());
+  useCases.registerSingleton<IGetMessagesUseCase>(GetMessagesUseCase());
 }
 
 ISkipOnBoardingUseCase get skipOnBoardingUseCase => useCases();
@@ -33,3 +34,4 @@ IConfirmRegisterUseCase get confirmRegisterUseCase => useCases();
 IForgotPasswordUseCase get forgotPasswordUseCase => useCases();
 IGetConversationsUseCase get getConversationsUseCase => useCases();
 IGetFriendsUseCase get getFriendsUseCase => useCases();
+IGetMessagesUseCase get getMessagesUseCase => useCases();
