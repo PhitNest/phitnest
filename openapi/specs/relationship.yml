@@ -136,7 +136,7 @@ paths:
     get:
       tags:
         - User Relationship
-      summary: Get all of my friends public data
+      summary: Get all of my friends public data sorted by friendship date
       security:
         - AccessToken: []
       responses:
