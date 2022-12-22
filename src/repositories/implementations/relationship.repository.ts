@@ -307,6 +307,11 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
           },
         },
       },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
     ]).exec();
   }
 }
