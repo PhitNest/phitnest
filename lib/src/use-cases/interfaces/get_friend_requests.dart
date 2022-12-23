@@ -5,5 +5,5 @@ import '../../entities/entities.dart';
 abstract class IGetFriendRequestsUseCase {
   Future<Either<Stream<PublicUserEntity>, Failure>> friendRequestStream();
 
-  Future<Either<List<PublicUserEntity>, Failure>> getFriendRequests();
+  Future<Either<List<PublicUserEntity>, Failure>> getIncomingFriendRequests();
 }
