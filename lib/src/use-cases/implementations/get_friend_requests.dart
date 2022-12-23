@@ -4,25 +4,21 @@ import '../../entities/entities.dart';
 import '../../repositories/repositories.dart';
 import '../use_cases.dart';
 
-class GetMessagesUseCase implements IGetMessagesUseCase {
-  @override
-  Future<Either<List<MessageEntity>, Failure>> getMessages(
-          String conversationId) =>
+class GetFriendRequestsUseCase implements IGetFriendRequestsUseCase {
+  Future<Either<Stream<PublicUserEntity>, Failure>> friendRequestStream() =>
       getAuthTokenUseCase.getAccessToken().then(
             (either) => either.fold(
               (accessToken) =>
-                  messageRepo.getMessages(accessToken, conversationId),
+                  relationshipRepo.friendRequestStream(accessToken),
               (failure) => Right(failure),
             ),
           );
 
-  @override
-  Future<Either<Stream<MessageEntity>, Failure>> messageStream(
-          String conversationId) =>
+  Future<Either<List<PublicUserEntity>, Failure>> getFriendRequests() =>
       getAuthTokenUseCase.getAccessToken().then(
             (either) => either.fold(
               (accessToken) =>
-                  messageRepo.messageStream(accessToken, conversationId),
+                  relationshipRepo.getIncomingFriendRequests(accessToken),
               (failure) => Right(failure),
             ),
           );

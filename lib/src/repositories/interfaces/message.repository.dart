@@ -7,4 +7,15 @@ abstract class IMessageRepository {
     String accessToken,
     String conversationId,
   );
+
+  Future<Either<Stream<MessageEntity>, Failure>> messageStream(
+    String accessToken,
+    String conversationId,
+  );
+
+  Future<Either<MessageEntity, Failure>> sendDirectMessage(
+    String accessToken,
+    String recipientCognitoId,
+    String text,
+  );
 }

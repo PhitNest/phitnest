@@ -1,4 +1,4 @@
-/// These are the HTTP routes for the backend
+// These are the HTTP routes for the backend
 const kNearestGymsRoute = '/gym/nearest';
 const kLogin = '/auth/login';
 const kRegister = '/auth/register';
@@ -15,3 +15,9 @@ const kResendConfirmation = '/auth/resendConfirmation';
 const kForgotPassword = '/auth/forgotPassword';
 const kResetPassword = '/auth/forgotPasswordSubmit';
 const kGetMessages = '/message';
+const kGetIncomingFriendRequests = '/relationship/receivedFriendRequests';
+
+// These are socket io events
+const kReceiveMessage = 'message';
+const kSendDirectMessage = 'directMessage';
+const kFriendRequest = 'friendRequest';

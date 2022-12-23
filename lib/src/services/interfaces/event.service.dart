@@ -7,15 +7,19 @@ import '../../entities/entities.dart';
 abstract class IEventService {
   bool get connected;
 
-  Future<void> connect(String accessToken);
+  Future<Failure?> connect(String accessToken);
 
   void disconnect();
 
-  Either<Stream<dynamic>, Failure> stream(String event);
+  Future<Either<Stream<dynamic>, Failure>> stream(
+    String event,
+    String accessToken,
+  );
 
   Future<Either<dynamic, Failure>> emit(
     String event,
-    dynamic data, {
+    dynamic data,
+    String accessToken, {
     Duration? timeout,
   });
 }

@@ -23,26 +23,14 @@ class FriendsProvider extends ScreenProvider<FriendsCubit, FriendsState> {
       Future.wait(
         [
           getFriendsUseCase.friends(),
-          Future.value(
-            Left(
-              [
-                PublicUserEntity(
-                  id: '0',
-                  cognitoId: '0',
-                  firstName: 'Joe',
-                  lastName: 'Doe',
-                  gymId: '0',
-                ),
-              ],
-            ),
-          )
+          getFriendRequestsUseCase.getFriendRequests(),
         ],
       ).then(
-        (responses) => (responses[0] as Either).fold(
-          (friends) => (responses[1] as Either).fold(
+        (responses) => responses[0].fold(
+          (friends) => responses[1].fold(
             (requests) => cubit.transitionToLoaded(
               friends: friends as List<FriendEntity>,
-              requests: requests as List<PublicUserEntity>,
+              requests: requests,
               searchQuery: '',
             ),
             (failure) => cubit.transitionToError(failure.message),
