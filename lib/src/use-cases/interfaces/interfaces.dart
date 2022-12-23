@@ -10,3 +10,4 @@ export 'forgot_password.dart';
 export 'get_conversations.dart';
 export 'get_friends.dart';
 export 'get_messages.dart';
+export 'get_friend_requests.dart';

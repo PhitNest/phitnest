@@ -15,23 +15,33 @@ class EventService implements IEventService {
   bool get connected => _socket != null && _socket!.connected;
 
   @override
-  Future<void> connect(String accessToken) async {
-    _socket = IO.io(
-      '${environmentService.backendHost}:${environmentService.backendPort}',
-      {
-        "extraHeaders": {
-          "token": "Bearer $accessToken",
+  Future<Failure?> connect(String accessToken) async {
+    try {
+      _socket = IO.io(
+        '${environmentService.backendHost}:${environmentService.backendPort}',
+        {
+          "extraHeaders": {
+            "token": "Bearer $accessToken",
+          },
         },
-      },
-    );
-    final completer = Completer();
-    _socket!.onConnect(
-      (_) => completer.complete(),
-    );
-    _socket!.onDisconnect(
-      (_) => _socket = null,
-    );
-    return completer.future;
+      );
+      final completer = Completer();
+      _socket!.onConnect(
+        (_) => completer.complete(),
+      );
+      _socket!.onDisconnect(
+        (_) => _socket = null,
+      );
+
+      await completer.future.timeout(requestTimeout);
+      if (!connected) {
+        return Failure("Failed to connect to the server.");
+      } else {
+        return null;
+      }
+    } catch (error) {
+      return Failure("Failed to connect to the network.");
+    }
   }
 
   @override
@@ -42,8 +52,11 @@ class EventService implements IEventService {
   }
 
   @override
-  Either<Stream<dynamic>, Failure> stream(String event) {
-    if (connected) {
+  Future<Either<Stream<dynamic>, Failure>> stream(
+    String event,
+    String accessToken,
+  ) async {
+    final streamMessages = () {
       final streamController = StreamController<dynamic>();
       final handler = (data) => streamController.add(data);
       final disconnectHandler = (_) => streamController.close();
@@ -67,21 +80,30 @@ class EventService implements IEventService {
         }
         streamController.close();
       };
-      return Left(streamController.stream);
+      return streamController.stream;
+    };
+    if (connected) {
+      return Left(streamMessages());
     } else {
-      return Right(
-        Failure("Not connected to the server."),
-      );
+      await connect(accessToken);
+      if (connected) {
+        return Left(streamMessages());
+      } else {
+        return Right(
+          Failure("Not connected to the server."),
+        );
+      }
     }
   }
 
   @override
   Future<Either<dynamic, Failure>> emit(
     String event,
-    dynamic data, {
+    dynamic data,
+    String accessToken, {
     Duration? timeout,
   }) async {
-    if (connected) {
+    final emitMessage = () {
       _socket!.emit(event, data);
       final completer = Completer<Either<dynamic, Failure>>();
       _socket!.once(
@@ -103,10 +125,18 @@ class EventService implements IEventService {
             : () {},
       );
       return completer.future.timeout(requestTimeout);
+    };
+    if (connected) {
+      return await emitMessage();
     } else {
-      return Right(
-        Failure("Not connected to the server."),
-      );
+      await connect(accessToken);
+      if (connected) {
+        return await emitMessage();
+      } else {
+        return Right(
+          Failure("Not connected to the server."),
+        );
+      }
     }
   }
 }

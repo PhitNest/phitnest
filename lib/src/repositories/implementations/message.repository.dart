@@ -43,4 +43,39 @@ class MessageRepository implements IMessageRepository {
           (failure) => Right(failure),
         ),
       );
+
+  @override
+  Future<Either<Stream<MessageEntity>, Failure>> messageStream(
+    String accessToken,
+    String conversationId,
+  ) async =>
+      (await eventService.stream(kReceiveMessage, accessToken)).fold(
+        (stream) => Left(
+          stream.map(
+            (event) => MessageEntity.fromJson(event),
+          ),
+        ),
+        (failure) => Right(failure),
+      );
+
+  @override
+  Future<Either<MessageEntity, Failure>> sendDirectMessage(
+    String accessToken,
+    String recipientCognitoId,
+    String text,
+  ) async =>
+      (await eventService.emit(
+        kSendDirectMessage,
+        {
+          "recipientId": recipientCognitoId,
+          "text": text,
+        },
+        accessToken,
+      ))
+          .fold(
+        (json) => Left(
+          MessageEntity.fromJson(json),
+        ),
+        (failure) => Right(failure),
+      );
 }

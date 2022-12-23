@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:phitnest_mobile/src/ui/widgets/no_animation_page_route.dart';
 
 import '../../../use-cases/use_cases.dart';
+import '../../widgets/widgets.dart';
 import '../screen_provider.dart';
 import '../screens.dart';
 import 'explore_state.dart';
