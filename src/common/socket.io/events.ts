@@ -15,7 +15,6 @@ import {
   EventHandlers,
   Middlewares,
 } from "../dependency-injection";
-import { l } from "../logger";
 
 class Connection implements IConnection {
   socket: Socket;

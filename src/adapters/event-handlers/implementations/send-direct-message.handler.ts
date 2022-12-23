@@ -31,7 +31,7 @@ export class SendDirectMessageEventHandler
         recipientId,
         text
       );
-      connection.broadcast("directMessage", message, recipientId);
+      connection.broadcast("message", message, recipientId);
       connection.success(message);
     } catch (err) {
       if (err instanceof z.ZodError) {
