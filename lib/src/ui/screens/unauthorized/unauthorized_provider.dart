@@ -1,31 +1,43 @@
 import 'package:flutter/material.dart';
 
 import '../../widgets/widgets.dart';
-import '../provider.dart';
+import '../screen_provider.dart';
 import '../screens.dart';
 import 'unauthorized_state.dart';
 import 'unauthorized_view.dart';
 
 class UnauthorizedProvider
-    extends ScreenProvider<UnauthorizedState, UnauthorizedView> {
+    extends ScreenProvider<UnauthorizedCubit, UnauthorizedState> {
   const UnauthorizedProvider() : super();
 
   @override
-  UnauthorizedView build(BuildContext context, UnauthorizedState state) =>
+  UnauthorizedCubit buildCubit() => UnauthorizedCubit();
+
+  @override
+  Widget builder(
+    BuildContext context,
+    UnauthorizedCubit cubit,
+    UnauthorizedState state,
+  ) =>
       UnauthorizedView(
-        onRegister: () => Navigator.of(context).push(
-          NoAnimationMaterialPageRoute(
-            builder: (context) => const RegisterPageOneProvider(),
+        onPressedRegister: () => Navigator.of(context)
+          ..pushAndRemoveUntil(
+            NoAnimationMaterialPageRoute(
+              builder: (context) => LoginProvider(),
+            ),
+            (_) => false,
+          )
+          ..push(
+            NoAnimationMaterialPageRoute(
+              builder: (context) => RegisterPageOneProvider(),
+            ),
           ),
-        ),
-        onSignIn: () => Navigator.of(context).pushAndRemoveUntil(
+        onPressedLogin: () => Navigator.pushAndRemoveUntil(
+          context,
           NoAnimationMaterialPageRoute(
-            builder: (context) => const LoginProvider(),
+            builder: (context) => LoginProvider(),
           ),
           (_) => false,
         ),
       );
-
-  @override
-  UnauthorizedState buildState() => UnauthorizedState();
 }

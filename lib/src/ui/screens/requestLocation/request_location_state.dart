@@ -1,21 +1,41 @@
-import '../state.dart';
+import '../../../entities/entities.dart';
+import '../screen_state.dart';
 
-class RequestLocationState extends ScreenState {
-  bool _searching = false;
+abstract class RequestLocationState extends ScreenState {
+  const RequestLocationState() : super();
+}
 
-  bool get searching => _searching;
+class FetchingLocationState extends RequestLocationState {
+  const FetchingLocationState() : super();
+}
 
-  set searching(bool searching) {
-    _searching = searching;
-    rebuildView();
-  }
+class FetchingGymState extends FetchingLocationState {
+  final LocationEntity location;
 
-  String? _errorMessage;
+  const FetchingGymState({required this.location}) : super();
 
-  String? get errorMessage => _errorMessage;
+  @override
+  List<Object> get props => [location];
+}
 
-  set errorMessage(String? errorMessage) {
-    _errorMessage = errorMessage;
-    rebuildView();
-  }
+class ErrorState extends RequestLocationState {
+  final String message;
+
+  const ErrorState({required this.message}) : super();
+
+  @override
+  List<Object> get props => [message];
+}
+
+class RequestLocationCubit extends ScreenCubit<RequestLocationState> {
+  RequestLocationCubit() : super(const FetchingLocationState());
+
+  void transitionToFetchingGym(LocationEntity location) =>
+      setState(FetchingGymState(location: location));
+
+  void transitionToError(String message) =>
+      setState(ErrorState(message: message));
+
+  void transitionToFetchingLocation() =>
+      setState(const FetchingLocationState());
 }

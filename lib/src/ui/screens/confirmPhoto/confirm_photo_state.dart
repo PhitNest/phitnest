@@ -1,21 +1,30 @@
-import '../state.dart';
+import '../screen_state.dart';
 
-class ConfirmPhotoState extends ScreenState {
-  String? _errorMessage;
+abstract class ConfirmPhotoState extends ScreenState {
+  const ConfirmPhotoState() : super();
+}
 
-  String? get errorMessage => _errorMessage;
+class LoadingState extends ConfirmPhotoState {
+  const LoadingState() : super();
+}
 
-  set errorMessage(String? value) {
-    _errorMessage = value;
-    rebuildView();
-  }
+class ErrorState extends ConfirmPhotoState {
+  final String message;
 
-  bool _loading = false;
+  const ErrorState(this.message) : super();
 
-  bool get loading => _loading;
+  @override
+  List<Object> get props => [message];
+}
 
-  set loading(bool value) {
-    _loading = value;
-    rebuildView();
-  }
+class InitialState extends ConfirmPhotoState {
+  const InitialState() : super();
+}
+
+class ConfirmPhotoCubit extends ScreenCubit<ConfirmPhotoState> {
+  ConfirmPhotoCubit() : super(const InitialState());
+
+  void transitionToLoading() => setState(const LoadingState());
+
+  void transitionToError(String message) => setState(ErrorState(message));
 }

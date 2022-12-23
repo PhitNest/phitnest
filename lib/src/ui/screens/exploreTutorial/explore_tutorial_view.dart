@@ -1,21 +1,61 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../theme.dart';
 import '../../widgets/widgets.dart';
-import '../view.dart';
 
-class ExploreTutorialView extends ScreenView {
-  final bool holding;
+class InitialView extends StatelessWidget {
+  final VoidCallback onPressLogo;
+  final GlobalKey navbarKey;
+
+  const InitialView({
+    required this.navbarKey,
+    required this.onPressLogo,
+  }) : super();
+
+  @override
+  Widget build(BuildContext context) => BetterScaffold(
+        body: Column(
+          children: [
+            200.verticalSpace,
+            Text(
+              'Great!',
+              style: theme.textTheme.headlineLarge,
+            ),
+            40.verticalSpace,
+            Text(
+              'Let’s meet friends in your Nest',
+              style: theme.textTheme.labelLarge,
+            ),
+            Spacer(),
+            Text(
+              'Press and hold logo to send friend request',
+              style: theme.textTheme.bodySmall,
+            ),
+            20.verticalSpace,
+            StyledNavBar(
+              gestureKey: navbarKey,
+              navigationEnabled: false,
+              page: NavbarPage.explore,
+              animateLogo: true,
+              colorful: true,
+              onPressDownLogo: onPressLogo,
+            )
+          ],
+        ),
+      );
+}
+
+class HoldingView extends StatelessWidget {
   final int countdown;
-  final VoidCallback onLogoTap;
   final VoidCallback onLogoRelease;
+  final GlobalKey navbarKey;
 
-  const ExploreTutorialView({
-    required this.holding,
+  const HoldingView({
+    required this.navbarKey,
     required this.countdown,
-    required this.onLogoTap,
     required this.onLogoRelease,
   }) : super();
 
@@ -31,52 +71,29 @@ class ExploreTutorialView extends ScreenView {
   }
 
   @override
-  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
-        child: Scaffold(
-          body: SizedBox(
-            child: Column(
-              children: [
-                (holding ? 120 : 200).verticalSpace,
-                holding
-                    ? CountdownRing(
-                        countdownNum: countdown,
-                      )
-                    : Text(
-                        'Great!',
-                        style: theme.textTheme.headlineLarge,
-                      ),
-                (holding ? 20 : 40).verticalSpace,
-                holding
-                    ? Text(
-                        _countdownText,
-                        style: theme.textTheme.bodySmall!.copyWith(
-                          color: Color(0xFF707070),
-                        ),
-                      )
-                    : Text(
-                        'Let’s meet friends in your Nest',
-                        style: theme.textTheme.labelLarge,
-                      ),
-                Expanded(child: Container()),
-                holding
-                    ? Container()
-                    : Text(
-                        'Press and hold logo to send friend request',
-                        style: theme.textTheme.bodySmall,
-                      ),
-                20.verticalSpace,
-                StyledNavBar(
-                  navigationEnabled: false,
-                  pageIndex: 1,
-                  animateLogo: !holding,
-                  colorful: true,
-                  onTapDownLogo: onLogoTap,
-                  onTapUpLogo: onLogoRelease,
-                )
-              ],
+  Widget build(BuildContext context) => BetterScaffold(
+        body: Column(
+          children: [
+            120.verticalSpace,
+            CountdownRing(
+              countdownNum: max(countdown, 1),
             ),
-          ),
+            20.verticalSpace,
+            Text(
+              _countdownText,
+              style: theme.textTheme.bodySmall!.copyWith(
+                color: Color(0xFF707070),
+              ),
+            ),
+            Spacer(),
+            StyledNavBar(
+              gestureKey: navbarKey,
+              navigationEnabled: false,
+              page: NavbarPage.explore,
+              colorful: true,
+              onReleaseLogo: onLogoRelease,
+            )
+          ],
         ),
       );
 }

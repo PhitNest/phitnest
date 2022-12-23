@@ -1,78 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../state.dart';
+import '../screen_state.dart';
 
-class RegisterPageTwoState extends ScreenState {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  late final FocusNode emailFocus = FocusNode()
-    ..addListener(() => onFocusEmail(emailFocus.hasFocus));
-  late final FocusNode passwordFocus = FocusNode()
-    ..addListener(() => onFocusPassword(passwordFocus.hasFocus));
-  late final FocusNode confirmPasswordFocus = FocusNode()
-    ..addListener(() => onFocusConfirmPassword(confirmPasswordFocus.hasFocus));
-  final scrollController = ScrollController();
-  final formKey = GlobalKey<FormState>();
+abstract class RegisterPageTwoState extends ScreenState {
+  final AutovalidateMode autovalidateMode;
 
-  void onFocusEmail(bool focused) {
-    if (focused) {
-      scrollController.animateTo(
-        20.h,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
-  void onFocusPassword(bool focused) {
-    if (focused) {
-      scrollController.animateTo(
-        40.h,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
-  void onFocusConfirmPassword(bool focused) {
-    if (focused) {
-      scrollController.animateTo(
-        60.h,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
-  AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
-
-  AutovalidateMode get autovalidateMode => _autovalidateMode;
-
-  set autovalidateMode(AutovalidateMode autovalidateMode) {
-    _autovalidateMode = autovalidateMode;
-    rebuildView();
-  }
-
-  String? _errorMessage;
-
-  String? get errorMessage => _errorMessage;
-
-  set errorMessage(String? errorMessage) {
-    _errorMessage = errorMessage;
-    rebuildView();
-  }
+  const RegisterPageTwoState({
+    required this.autovalidateMode,
+  }) : super();
 
   @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    emailFocus.dispose();
-    passwordFocus.dispose();
-    confirmPasswordFocus.dispose();
-    scrollController.dispose();
-    super.dispose();
+  List<Object> get props => [autovalidateMode];
+}
+
+class InitialState extends RegisterPageTwoState {
+  const InitialState({required super.autovalidateMode}) : super();
+}
+
+class ErrorState extends RegisterPageTwoState {
+  final String errorMessage;
+
+  const ErrorState({
+    required this.errorMessage,
+    required super.autovalidateMode,
+  }) : super();
+
+  @override
+  List<Object> get props => [...super.props, errorMessage];
+}
+
+class RegisterPageTwoCubit extends ScreenCubit<RegisterPageTwoState> {
+  RegisterPageTwoCubit()
+      : super(const InitialState(autovalidateMode: AutovalidateMode.disabled));
+
+  void enableAutovalidateMode() {
+    if (state is InitialState) {
+      setState(InitialState(autovalidateMode: AutovalidateMode.always));
+    } else if (state is ErrorState) {
+      setState(
+        ErrorState(
+          autovalidateMode: AutovalidateMode.always,
+          errorMessage: (state as ErrorState).errorMessage,
+        ),
+      );
+    } else {
+      throw Exception('Cannot apply autovalidation to state: $state');
+    }
   }
+
+  void transitionToError(String message) => setState(ErrorState(
+      autovalidateMode: state.autovalidateMode, errorMessage: message));
+
+  void transitionToInitial() => setState(
+        InitialState(autovalidateMode: state.autovalidateMode),
+      );
 }

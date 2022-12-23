@@ -1,61 +1,67 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../state.dart';
+import '../screen_state.dart';
 
-class ForgotPasswordState extends ScreenState {
-  final emailAddressController = TextEditingController();
-  final newPassController = TextEditingController();
-  final rewriteNewPassController = TextEditingController();
-  final scrollController = ScrollController();
-  final formKey = GlobalKey<FormState>();
-  late final FocusNode emailFocus = FocusNode()
-    ..addListener(() => onFocusEmail(emailFocus.hasFocus));
+abstract class ForgotPasswordState extends ScreenState {
+  final AutovalidateMode autovalidateMode;
 
-  void onFocusEmail(bool focused) {
-    if (focused) {
-      scrollController.animateTo(
-        70.h,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
+  const ForgotPasswordState({
+    required this.autovalidateMode,
+  }) : super();
+
+  @override
+  List<Object> get props => [autovalidateMode];
+}
+
+class InitialState extends ForgotPasswordState {
+  const InitialState({
+    required super.autovalidateMode,
+  }) : super();
+}
+
+class ErrorState extends ForgotPasswordState {
+  final String errorMessage;
+
+  const ErrorState({
+    required this.errorMessage,
+    required super.autovalidateMode,
+  }) : super();
+
+  @override
+  List<Object> get props => [...super.props, errorMessage];
+}
+
+class LoadingState extends ForgotPasswordState {
+  const LoadingState({
+    required super.autovalidateMode,
+  }) : super();
+}
+
+class ForgotPasswordCubit extends ScreenCubit<ForgotPasswordState> {
+  ForgotPasswordCubit()
+      : super(const InitialState(autovalidateMode: AutovalidateMode.disabled));
+
+  void enableAutovalidateMode() {
+    if (state is InitialState) {
+      setState(InitialState(autovalidateMode: AutovalidateMode.always));
+    } else if (state is ErrorState) {
+      setState(
+        ErrorState(
+          autovalidateMode: AutovalidateMode.always,
+          errorMessage: (state as ErrorState).errorMessage,
+        ),
       );
+    } else {
+      throw Exception('Cannot apply autovalidation to state: $state');
     }
   }
 
-  String? _errorMessage;
+  void transitionToError(String message) => setState(ErrorState(
+      autovalidateMode: state.autovalidateMode, errorMessage: message));
 
-  String? get errorMessage => _errorMessage;
+  void transitionToInitial() =>
+      setState(InitialState(autovalidateMode: state.autovalidateMode));
 
-  set errorMessage(String? message) {
-    _errorMessage = message;
-    rebuildView();
-  }
-
-  bool _loading = false;
-
-  bool get loading => _loading;
-
-  set loading(bool loading) {
-    _loading = loading;
-    rebuildView();
-  }
-
-  AutovalidateMode _autoValidateMode = AutovalidateMode.disabled;
-
-  AutovalidateMode get autoValidateMode => _autoValidateMode;
-
-  set autoValidateMode(AutovalidateMode mode) {
-    _autoValidateMode = mode;
-    rebuildView();
-  }
-
-  @override
-  void dispose() {
-    emailAddressController.dispose();
-    newPassController.dispose();
-    rewriteNewPassController.dispose();
-    scrollController.dispose();
-    emailFocus.dispose();
-    super.dispose();
-  }
+  void transitionToLoading() =>
+      setState(LoadingState(autovalidateMode: state.autovalidateMode));
 }

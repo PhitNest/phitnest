@@ -6,48 +6,35 @@ import '../theme.dart';
 import 'no_animation_page_route.dart';
 import 'widgets.dart';
 
+/// These are the pages on the nav bar.
+enum NavbarPage { news, explore, chat, options }
+
 class StyledNavBar extends StatefulWidget {
   static double get kHeight => 66.h;
 
-  final int pageIndex;
+  final NavbarPage page;
   final bool animateLogo;
-  final VoidCallback onTapDownLogo;
-  final VoidCallback? onTapUpLogo;
-  final bool reversed;
+  final VoidCallback? onPressDownLogo;
+  final VoidCallback? onReleaseLogo;
+  final bool darkMode;
   final bool navigationEnabled;
   final bool colorful;
+  final GlobalKey? gestureKey;
 
   static const String kColoredLogoPath = 'assets/images/logo_color.png';
   static const String kLogoPath = 'assets/images/logo.png';
-  static const String kReversedLogoPath = 'assets/images/logo_reversed.png';
+  static const String kDarkLogoPath = 'assets/images/logo_reversed.png';
 
   const StyledNavBar({
-    Key? key,
-    required this.navigationEnabled,
-    required this.pageIndex,
-    required this.onTapDownLogo,
+    required this.page,
+    this.gestureKey,
+    this.onReleaseLogo,
+    this.onPressDownLogo,
+    this.navigationEnabled = true,
     this.colorful = false,
-    this.reversed = false,
+    this.darkMode = false,
     this.animateLogo = false,
-    this.onTapUpLogo,
-  }) : super(key: key);
-
-  StyledNavBar copyWith({
-    bool? navigationEnabled,
-    int? pageIndex,
-    Function()? onTapDownLogo,
-    bool? reversed,
-    bool? animateLogo,
-    Function()? onTapUpLogo,
-  }) =>
-      StyledNavBar(
-        navigationEnabled: navigationEnabled ?? this.navigationEnabled,
-        pageIndex: pageIndex ?? this.pageIndex,
-        reversed: reversed ?? this.reversed,
-        animateLogo: animateLogo ?? this.animateLogo,
-        onTapDownLogo: onTapDownLogo ?? this.onTapDownLogo,
-        onTapUpLogo: onTapUpLogo ?? this.onTapUpLogo,
-      );
+  }) : super();
 
   @override
   State<StatefulWidget> createState() => _StyledNavBarState();
@@ -72,13 +59,23 @@ class _StyledNavBarState extends State<StyledNavBar>
   }
 
   Widget get logoButton => GestureDetector(
-      onTapCancel: widget.onTapUpLogo,
-      onTapDown: (_) => widget.onTapDownLogo(),
-      onTapUp: widget.onTapUpLogo == null ? null : (_) => widget.onTapUpLogo!(),
+      key: widget.gestureKey,
+      onTapCancel: widget.onReleaseLogo,
+      onTapDown: (_) => widget.onPressDownLogo != null
+          ? widget.onPressDownLogo!()
+          : Navigator.pushAndRemoveUntil(
+              context,
+              NoAnimationMaterialPageRoute(
+                builder: (context) => ExploreProvider(),
+              ),
+              (route) => false,
+            ),
+      onTapUp:
+          widget.onReleaseLogo != null ? (_) => widget.onReleaseLogo!() : null,
       child: Image.asset(
         widget.colorful
-            ? widget.reversed
-                ? StyledNavBar.kReversedLogoPath
+            ? widget.darkMode
+                ? StyledNavBar.kDarkLogoPath
                 : StyledNavBar.kColoredLogoPath
             : StyledNavBar.kLogoPath,
         width:
@@ -86,7 +83,11 @@ class _StyledNavBarState extends State<StyledNavBar>
       ));
 
   Widget createButton(
-          BuildContext context, String text, Function() onPressed, int index) =>
+    BuildContext context,
+    String text,
+    VoidCallback onPressed,
+    NavbarPage page,
+  ) =>
       TextButton(
         style: ButtonStyle(
             maximumSize: MaterialStateProperty.all(
@@ -100,20 +101,19 @@ class _StyledNavBarState extends State<StyledNavBar>
             )),
         child: Text(
           text,
-          style: index == widget.pageIndex
+          style: page == widget.page
               ? theme.textTheme.bodySmall!.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: widget.reversed ? Colors.white : Colors.black)
+                  color: widget.darkMode ? Colors.white : Colors.black)
               : theme.textTheme.bodySmall!.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: widget.reversed
+                  color: widget.darkMode
                       ? Color.fromARGB((0.7 * 255).round(), 255, 255, 255)
                       : Color.fromARGB((0.4 * 255).round(), 0, 0, 0),
                 ),
         ),
-        onPressed: widget.navigationEnabled && index != widget.pageIndex
-            ? onPressed
-            : null,
+        onPressed:
+            widget.navigationEnabled && page != widget.page ? onPressed : null,
       );
 
   @override
@@ -121,7 +121,7 @@ class _StyledNavBarState extends State<StyledNavBar>
         height: StyledNavBar.kHeight,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: widget.reversed ? Colors.black : Colors.white,
+          color: widget.darkMode ? Colors.black : Colors.white,
           boxShadow: [
             BoxShadow(
               blurRadius: 8.5,
@@ -136,59 +136,69 @@ class _StyledNavBarState extends State<StyledNavBar>
           child: Stack(
             children: [
               Center(
-                  child: Padding(
-                      padding: EdgeInsets.only(left: 12.w),
-                      child: controller != null
-                          ? AnimatedBuilder(
-                              animation: controller!,
-                              builder: (context, child) => logoButton,
-                            )
-                          : logoButton)),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 12.w),
+                  child: controller != null
+                      ? AnimatedBuilder(
+                          animation: controller!,
+                          builder: (context, child) => logoButton,
+                        )
+                      : logoButton,
+                ),
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   createButton(
-                      context,
-                      'NEWS',
-                      () => Navigator.pushAndRemoveUntil(
-                          context,
-                          NoAnimationMaterialPageRoute(
-                            builder: (context) => NewsProvider(),
-                          ),
-                          (route) => false),
-                      0),
+                    context,
+                    'NEWS',
+                    () {},
+                    // () => Navigator.pushAndRemoveUntil(
+                    //   context,
+                    //   NoAnimationMaterialPageRoute(
+                    //     builder: (context) => const NewsProvider(),
+                    //   ),
+                    //   (route) => false,
+                    // ),
+                    NavbarPage.news,
+                  ),
                   createButton(
+                    context,
+                    'EXPLORE',
+                    () => Navigator.pushAndRemoveUntil(
                       context,
-                      'EXPLORE',
-                      () => Navigator.pushAndRemoveUntil(
-                          context,
-                          NoAnimationMaterialPageRoute(
-                            builder: (context) => ExploreProvider(),
-                          ),
-                          (route) => false),
-                      1),
+                      NoAnimationMaterialPageRoute(
+                        builder: (context) => ExploreProvider(),
+                      ),
+                      (route) => false,
+                    ),
+                    NavbarPage.explore,
+                  ),
                   60.horizontalSpace,
                   createButton(
+                    context,
+                    'CHAT',
+                    () => Navigator.pushAndRemoveUntil(
                       context,
-                      'CHAT',
-                      () => Navigator.pushAndRemoveUntil(
-                          context,
-                          NoAnimationMaterialPageRoute(
-                            builder: (context) => ConversationsProvider(),
-                          ),
-                          (route) => false),
-                      2),
+                      NoAnimationMaterialPageRoute(
+                        builder: (context) => ConversationsProvider(),
+                      ),
+                      (route) => false,
+                    ),
+                    NavbarPage.chat,
+                  ),
                   createButton(
                     context,
                     'OPTIONS',
                     () => Navigator.pushAndRemoveUntil(
-                        context,
-                        NoAnimationMaterialPageRoute(
-                          builder: (context) => OptionsProvider(),
-                        ),
-                        (route) => false),
-                    3,
+                      context,
+                      NoAnimationMaterialPageRoute(
+                        builder: (context) => OptionsProvider(),
+                      ),
+                      (route) => false,
+                    ),
+                    NavbarPage.options,
                   ),
                 ],
               ),

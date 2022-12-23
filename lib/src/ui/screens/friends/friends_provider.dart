@@ -1,50 +1,146 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
-import '../provider.dart';
+import '../../../entities/entities.dart';
+import '../../../use-cases/use_cases.dart';
+import '../screen_provider.dart';
 import 'friends_state.dart';
 import 'friends_view.dart';
-import 'widgets/widgets.dart';
 
-class FriendsProvider extends ScreenProvider<FriendsState, FriendsView> {
-  const FriendsProvider() : super();
+class FriendsProvider extends ScreenProvider<FriendsCubit, FriendsState> {
+  final searchController = TextEditingController();
+  final searchBoxKey = GlobalKey();
+
+  FriendsProvider() : super();
 
   @override
-  FriendsView build(BuildContext context, FriendsState state) => FriendsView(
-        searchController: state.searchController,
-        onEditSearch: state.onEditSearch,
+  Future<void> listener(
+    BuildContext context,
+    FriendsCubit cubit,
+    FriendsState state,
+  ) async {
+    if (state is LoadingState) {
+      Future.wait(
+        [
+          getFriendsUseCase.friends(),
+          Future.value(
+            Left(
+              [
+                PublicUserEntity(
+                  id: '0',
+                  cognitoId: '0',
+                  firstName: 'Joe',
+                  lastName: 'Doe',
+                  gymId: '0',
+                ),
+              ],
+            ),
+          )
+        ],
+      ).then(
+        (responses) => (responses[0] as Either).fold(
+          (friends) => (responses[1] as Either).fold(
+            (requests) => cubit.transitionToLoaded(
+              friends: friends as List<FriendEntity>,
+              requests: requests as List<PublicUserEntity>,
+              searchQuery: '',
+            ),
+            (failure) => cubit.transitionToError(failure.message),
+          ),
+          (failure) => cubit.transitionToError(failure.message),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget builder(
+    BuildContext context,
+    FriendsCubit cubit,
+    FriendsState state,
+  ) {
+    final onAddFriend = (PublicUserEntity user, int index) {
+      cubit.removeRequest(index);
+      cubit.addFriend(
+        FriendEntity(
+          id: user.id,
+          cognitoId: user.cognitoId,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          gymId: user.gymId,
+          since: DateTime.now(),
+        ),
+      );
+    };
+    final onRemoveFriend =
+        (FriendEntity friend, int index) => cubit.removeFriend(index);
+    final onDenyFriend =
+        (PublicUserEntity user, int index) => cubit.removeRequest(index);
+    if (state is LoadingState) {
+      return LoadingView();
+    } else if (state is ErrorState) {
+      return ErrorView(
+        message: state.message,
+        onPressedRetry: () => cubit.transitionToLoading(),
+      );
+    } else if (state is LoadedState) {
+      return LoadedView(
+        searchBoxKey: searchBoxKey,
         friends: state.friends
-            .asMap()
-            .entries
             .where(
-              (entry) => entry.value.fullName.toLowerCase().contains(
-                    state.searchController.text.toLowerCase(),
+              (friend) => friend.fullName.toLowerCase().contains(
+                    state.searchQuery.toLowerCase(),
                   ),
-            )
-            .map(
-              (entry) => FriendCard(
-                name: entry.value.fullName,
-                onRemove: () => state.removeFriend(entry.key),
-              ),
             )
             .toList(),
         requests: state.requests
-            .asMap()
-            .entries
             .where(
-              (entry) => entry.value.fullName.toLowerCase().contains(
-                    state.searchController.text.toLowerCase(),
+              (request) => request.fullName.toLowerCase().contains(
+                    state.searchQuery.toLowerCase(),
                   ),
             )
-            .map(
-              (entry) => RequestCard(
-                user: entry.value,
-                onAdd: () => state.removeRequest(entry.key),
-                onIgnore: () => state.removeRequest(entry.key),
-              ),
+            .toList(),
+        searchController: searchController,
+        onRemoveFriend: onRemoveFriend,
+        onAddFriend: onAddFriend,
+        onDenyFriend: onDenyFriend,
+        onTapSearch: () => cubit.transitionToTyping(),
+      );
+    } else if (state is TypingState) {
+      return TypingView(
+        searchBoxKey: searchBoxKey,
+        friends: state.friends
+            .where(
+              (friend) => friend.fullName.toLowerCase().contains(
+                    state.searchQuery.toLowerCase(),
+                  ),
             )
             .toList(),
+        requests: state.requests
+            .where(
+              (request) => request.fullName.toLowerCase().contains(
+                    state.searchQuery.toLowerCase(),
+                  ),
+            )
+            .toList(),
+        searchController: searchController,
+        onRemoveFriend: onRemoveFriend,
+        onAddFriend: onAddFriend,
+        onDenyFriend: onDenyFriend,
+        onEditSearch: () => cubit.setSearchQuery(searchController.text.trim()),
+        onSubmitSearch: () => cubit.transitionTypingToLoaded(),
       );
+    } else {
+      throw Exception('Unknown state: $state');
+    }
+  }
 
   @override
-  FriendsState buildState() => FriendsState();
+  FriendsCubit buildCubit() => FriendsCubit();
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 }

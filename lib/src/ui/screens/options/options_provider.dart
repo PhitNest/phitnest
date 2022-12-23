@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 
-import '../provider.dart';
+import '../screen_provider.dart';
 import 'options_state.dart';
 import 'options_view.dart';
 
-class OptionsProvider extends ScreenProvider<OptionsState, OptionsView> {
-  const OptionsProvider() : super();
+class OptionsProvider extends ScreenProvider<OptionsCubit, OptionsState> {
+  OptionsProvider() : super();
 
   @override
-  OptionsView build(BuildContext context, OptionsState state) => OptionsView();
+  Widget builder(
+    BuildContext context,
+    OptionsCubit cubit,
+    OptionsState state,
+  ) =>
+      OptionsView();
 
   @override
-  OptionsState buildState() => OptionsState();
+  OptionsCubit buildCubit() => OptionsCubit();
 }

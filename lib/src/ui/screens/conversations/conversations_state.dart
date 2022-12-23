@@ -1,54 +1,71 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../entities/entities.dart';
-import '../state.dart';
+import '../screen_state.dart';
 
-class ConversationsState extends ScreenState {
-  String? _errorMessage;
+abstract class ConversationsState extends ScreenState {
+  const ConversationsState() : super();
+}
 
-  String? get errorMessage => _errorMessage;
+class LoadingState extends ConversationsState {
+  const LoadingState() : super();
+}
 
-  set errorMessage(String? errorMessage) {
-    _errorMessage = errorMessage;
-    rebuildView();
+class ErrorState extends ConversationsState {
+  final String message;
+
+  const ErrorState(this.message) : super();
+
+  @override
+  List<Object> get props => [message];
+}
+
+class LoadedState extends ConversationsState {
+  final List<Either<FriendEntity, Tuple2<ConversationEntity, MessageEntity>>>
+      conversations;
+
+  const LoadedState(this.conversations) : super();
+
+  @override
+  List<Object> get props => [conversations];
+}
+
+class NoConversationsState extends ConversationsState {
+  const NoConversationsState() : super();
+}
+
+class ConversationsCubit extends ScreenCubit<ConversationsState> {
+  ConversationsCubit() : super(const LoadingState());
+
+  void transitionToLoading() => setState(const LoadingState());
+
+  void transitionToError(String message) => setState(ErrorState(message));
+
+  void transitionToLoaded(
+    List<Either<FriendEntity, Tuple2<ConversationEntity, MessageEntity>>>
+        conversations,
+  ) =>
+      setState(LoadedState(conversations));
+
+  void transitionToNoConversations() => setState(const NoConversationsState());
+
+  void addConversation(
+      Either<FriendEntity, Tuple2<ConversationEntity, MessageEntity>>
+          conversation) {
+    final loadedState = state as LoadedState;
+    setState(
+      LoadedState(
+        loadedState.conversations..insert(0, conversation),
+      ),
+    );
   }
 
-  bool _loading = true;
-
-  bool get loading => _loading;
-
-  set loading(bool loading) {
-    _loading = loading;
-    rebuildView();
-  }
-
-  List<FriendEntity> _friends = [];
-
-  List<FriendEntity> get friends => _friends;
-
-  set friends(List<FriendEntity> friends) {
-    _friends = friends;
-    rebuildView();
-  }
-
-  void removeFriend(int index) {
-    _friends.removeAt(index);
-    rebuildView();
-  }
-
-  List<Tuple2<ConversationEntity, MessageEntity>> _conversations = [];
-
-  List<Tuple2<ConversationEntity, MessageEntity>> get conversations =>
-      _conversations;
-
-  set conversations(
-      List<Tuple2<ConversationEntity, MessageEntity>> conversations) {
-    _conversations = conversations;
-    rebuildView();
-  }
-
-  void removeConversation(int index) {
-    _conversations.removeAt(index);
-    rebuildView();
+  void removeConversation(int conversationIndex) {
+    final loadedState = state as LoadedState;
+    setState(
+      LoadedState(
+        loadedState.conversations..removeAt(conversationIndex),
+      ),
+    );
   }
 }

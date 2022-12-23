@@ -6,18 +6,19 @@ import 'package:google_fonts/google_fonts.dart';
 ThemeData theme = ThemeData(
   // Color scheme
   colorScheme: ColorScheme(
-      brightness: Brightness.light,
-      primary: Colors.black,
-      onPrimary: Color.fromARGB(255, 117, 116, 116),
-      secondary: Colors.white,
-      onSecondary: Color.fromARGB(255, 118, 119, 118),
-      tertiary: Color.fromARGB(255, 193, 28, 28),
-      error: Colors.red,
-      onError: Colors.red,
-      background: Colors.white,
-      onBackground: Colors.white,
-      surface: Colors.black,
-      onSurface: Colors.black),
+    brightness: Brightness.light,
+    primary: Colors.black,
+    onPrimary: Color.fromARGB(255, 117, 116, 116),
+    secondary: Colors.white,
+    onSecondary: Color.fromARGB(255, 118, 119, 118),
+    tertiary: Color.fromARGB(255, 193, 28, 28),
+    error: Colors.red,
+    onError: Colors.red,
+    background: Colors.white,
+    onBackground: Colors.white,
+    surface: Colors.black,
+    onSurface: Colors.black,
+  ),
   // Text themes
   textTheme: TextTheme(
     // Headline

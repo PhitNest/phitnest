@@ -1,106 +1,213 @@
+import 'package:dartz/dartz.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../entities/entities.dart';
 import '../../theme.dart';
 import '../../widgets/widgets.dart';
-import '../view.dart';
-import 'widgets/conversation_card.dart';
 
-class ConversationsView extends ScreenView {
-  final List<ConversationCard> conversations;
-  final VoidCallback onClickFriends;
-  final VoidCallback onTapLogoButton;
-  final VoidCallback onPressedRetry;
-  final bool loading;
-  final String? errorMessage;
+class LoadedView extends _BaseWidget {
+  final List<Either<FriendEntity, Tuple2<ConversationEntity, MessageEntity>>>
+      conversations;
+  final void Function(FriendEntity friend, int index) onDismissFriend;
+  final void Function(
+          Tuple2<ConversationEntity, MessageEntity> conversation, int index)
+      onDismissConversation;
+  final void Function(FriendEntity friend) onTapFriend;
+  final void Function(ConversationEntity conversation) onTapConversation;
+  final String Function(ConversationEntity conversation) getChatName;
 
-  ConversationsView({
+  LoadedView({
     required this.conversations,
-    required this.onClickFriends,
-    required this.onTapLogoButton,
-    required this.onPressedRetry,
-    required this.loading,
+    required super.onPressedFriends,
+    required this.onDismissFriend,
+    required this.onDismissConversation,
+    required this.onTapFriend,
+    required this.onTapConversation,
+    required this.getChatName,
+  }) : super(
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            itemCount: conversations.length,
+            itemBuilder: (context, index) => conversations[index].fold(
+              (friend) => _ConversationCard(
+                message:
+                    "You have just connected with ${friend.fullName}, say hello!",
+                title: friend.fullName,
+                onDismissed: (_) => onDismissFriend(friend, index),
+                onTap: () => onTapFriend(friend),
+              ),
+              (conversationMessagePair) => _ConversationCard(
+                message: conversationMessagePair.value2.text,
+                title: getChatName(conversationMessagePair.value1),
+                onDismissed: (_) =>
+                    onDismissConversation(conversationMessagePair, index),
+                onTap: () => onTapConversation(conversationMessagePair.value1),
+              ),
+            ),
+          ),
+        );
+}
+
+class LoadingView extends _BaseWidget {
+  const LoadingView({
+    required super.onPressedFriends,
+  }) : super(
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+}
+
+class ErrorView extends _BaseWidget {
+  final String errorMessage;
+  final VoidCallback onPressedRetry;
+
+  ErrorView({
     required this.errorMessage,
-  });
+    required this.onPressedRetry,
+    required super.onPressedFriends,
+  }) : super(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                errorMessage,
+                style: theme.textTheme.labelLarge!.copyWith(
+                  color: theme.errorColor,
+                ),
+              ),
+              20.verticalSpace,
+              StyledButton(
+                onPressed: onPressedRetry,
+                child: Text('RETRY'),
+              ),
+            ],
+          ),
+        );
+}
+
+class NoConversationsView extends _BaseWidget {
+  NoConversationsView({
+    required super.onPressedFriends,
+  }) : super(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              100.verticalSpace,
+              Text(
+                "You have no messages",
+                style: theme.textTheme.headlineLarge,
+                textAlign: TextAlign.center,
+              ),
+              40.verticalSpace,
+              Text(
+                "Go explore and meet new friends!",
+                style: theme.textTheme.labelLarge,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        );
+}
+
+class _BaseWidget extends StatelessWidget {
+  final Widget child;
+  final VoidCallback onPressedFriends;
+
+  const _BaseWidget({
+    required this.child,
+    required this.onPressedFriends,
+  }) : super();
 
   @override
-  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
-        child: Scaffold(
-          body: Column(
-            children: [
-              40.verticalSpace,
-              Container(
-                width: 0.9.sw,
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: onClickFriends,
-                  child: Text(
-                    'FRIENDS',
-                    style: theme.textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
+  Widget build(BuildContext context) => BetterScaffold(
+        body: Column(
+          children: [
+            40.verticalSpace,
+            Container(
+              width: 0.9.sw,
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: onPressedFriends,
+                child: Text(
+                  'FRIENDS',
+                  style: theme.textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 ),
               ),
-              Expanded(
-                child: loading || errorMessage != null
-                    ? Center(
-                        child: loading
-                            ? CircularProgressIndicator()
-                            : Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    errorMessage ?? "",
-                                    textAlign: TextAlign.center,
-                                    style: theme.textTheme.labelMedium!
-                                        .copyWith(color: Colors.red),
-                                  ),
-                                  20.verticalSpace,
-                                  StyledButton(
-                                    onPressed: onPressedRetry,
-                                    child: Text(
-                                      "RETRY",
-                                    ),
-                                  )
-                                ],
-                              ),
-                      )
-                    : conversations.length > 0
-                        ? ListView.builder(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            itemCount: conversations.length,
-                            itemBuilder: (context, index) =>
-                                conversations[index],
-                          )
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              100.verticalSpace,
-                              Text(
-                                "You have no messages",
-                                style: theme.textTheme.headlineLarge,
-                                textAlign: TextAlign.center,
-                              ),
-                              40.verticalSpace,
-                              Text(
-                                "Go explore and meet new friends!",
-                                style: theme.textTheme.labelLarge,
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
+            ),
+            Expanded(child: child),
+            StyledNavBar(page: NavbarPage.chat),
+          ],
+        ),
+      );
+}
+
+class _ConversationCard extends StatelessWidget {
+  final String message;
+  final String title;
+  final void Function(DismissDirection direction) onDismissed;
+  final VoidCallback onTap;
+
+  const _ConversationCard({
+    required this.message,
+    required this.title,
+    required this.onDismissed,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: 14.h,
+        ),
+        child: Dismissible(
+          dragStartBehavior: DragStartBehavior.down,
+          background: Container(
+            color: Colors.red,
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(left: 12.w),
+            child: const Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+          ),
+          key: UniqueKey(),
+          onDismissed: onDismissed,
+          direction: DismissDirection.startToEnd,
+          child: InkWell(
+            onTap: onTap,
+            highlightColor: Color(0xFFFFE3E3),
+            borderRadius: BorderRadius.circular(8.0),
+            child: Container(
+              width: 0.9.sw,
+              padding: EdgeInsets.symmetric(
+                horizontal: 18.w,
+                vertical: 16.h,
               ),
-              StyledNavBar(
-                pageIndex: 2,
-                onTapDownLogo: onTapLogoButton,
-                navigationEnabled: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.headlineSmall,
+                  ),
+                  8.44.verticalSpace,
+                  Text(
+                    message,
+                    style: theme.textTheme.bodySmall,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       );

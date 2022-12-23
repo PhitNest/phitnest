@@ -1,21 +1,29 @@
-import '../state.dart';
+import '../screen_state.dart';
 
-class ConfirmEmailState extends ScreenState {
-  String? _errorMessage;
+abstract class ConfirmEmailState extends ScreenState {
+  const ConfirmEmailState() : super();
+}
 
-  String? get errorMessage => _errorMessage;
+class InitialState extends ConfirmEmailState {
+  const InitialState() : super();
+}
 
-  set errorMessage(String? errorMessage) {
-    _errorMessage = errorMessage;
-    rebuildView();
-  }
+class LoadingState extends ConfirmEmailState {
+  const LoadingState() : super();
+}
 
-  bool _loading = false;
+class ErrorState extends ConfirmEmailState {
+  final String message;
 
-  bool get loading => _loading;
+  const ErrorState(this.message) : super();
+}
 
-  set loading(bool loading) {
-    _loading = loading;
-    rebuildView();
-  }
+class ConfirmEmailCubit extends ScreenCubit<ConfirmEmailState> {
+  ConfirmEmailCubit() : super(const InitialState());
+
+  void transitionToLoading() => setState(const LoadingState());
+
+  void transitionToError(String message) => setState(ErrorState(message));
+
+  void transitionToInitial() => setState(const InitialState());
 }
