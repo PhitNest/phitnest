@@ -1,8 +1,11 @@
 import { inject, injectable } from "inversify";
 import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
-import { l } from "../../../common/logger";
-import { ISendFriendRequestUseCase } from "../../../use-cases/interfaces";
+import { IPublicUserEntity } from "../../../entities";
+import {
+  IGetUserUseCase,
+  ISendFriendRequestUseCase,
+} from "../../../use-cases/interfaces";
 import { IConnection } from "../../types";
 import { ISendFriendRequestEventHandler } from "../interfaces";
 
@@ -11,11 +14,14 @@ export class SendFriendRequestEventHandler
   implements ISendFriendRequestEventHandler
 {
   sendFriendRequestUseCase: ISendFriendRequestUseCase;
+  getUserUseCase: IGetUserUseCase;
 
   constructor(
     @inject(UseCases.sendFriendRequest)
-    sendFriendRequestUseCase: ISendFriendRequestUseCase
+    sendFriendRequestUseCase: ISendFriendRequestUseCase,
+    getUserUseCase: IGetUserUseCase
   ) {
+    this.getUserUseCase = getUserUseCase;
     this.sendFriendRequestUseCase = sendFriendRequestUseCase;
   }
 
@@ -26,15 +32,16 @@ export class SendFriendRequestEventHandler
           recipientId: z.string(),
         })
         .parse(data);
-      l.info(connection.locals.cognitoId);
-      l.info(recipientId);
-      await this.sendFriendRequestUseCase.execute(
-        connection.locals.cognitoId,
-        recipientId
-      );
+      const [user, _] = await Promise.all([
+        this.getUserUseCase.execute(connection.locals.cognitoId),
+        this.sendFriendRequestUseCase.execute(
+          connection.locals.cognitoId,
+          recipientId
+        ),
+      ]);
       connection.broadcast(
         "friendRequest",
-        connection.locals.cognitoId,
+        user as IPublicUserEntity,
         recipientId
       );
       connection.success(null);
