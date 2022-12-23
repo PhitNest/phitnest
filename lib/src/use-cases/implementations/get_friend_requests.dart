@@ -14,7 +14,7 @@ class GetFriendRequestsUseCase implements IGetFriendRequestsUseCase {
             ),
           );
 
-  Future<Either<List<PublicUserEntity>, Failure>> getFriendRequests() =>
+  Future<Either<List<PublicUserEntity>, Failure>> getIncomingFriendRequests() =>
       getAuthTokenUseCase.getAccessToken().then(
             (either) => either.fold(
               (accessToken) =>

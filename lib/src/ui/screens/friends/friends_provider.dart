@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 import '../../../entities/entities.dart';
@@ -23,7 +22,7 @@ class FriendsProvider extends ScreenProvider<FriendsCubit, FriendsState> {
       Future.wait(
         [
           getFriendsUseCase.friends(),
-          getFriendRequestsUseCase.getFriendRequests(),
+          getFriendRequestsUseCase.getIncomingFriendRequests(),
         ],
       ).then(
         (responses) => responses[0].fold(
@@ -58,6 +57,13 @@ class FriendsProvider extends ScreenProvider<FriendsCubit, FriendsState> {
           gymId: user.gymId,
           since: DateTime.now(),
         ),
+      );
+      sendFriendRequestUseCase.sendFriendRequest(user.cognitoId).then(
+        (failure) {
+          if (failure != null) {
+            cubit.transitionToError(failure.message);
+          }
+        },
       );
     };
     final onRemoveFriend =

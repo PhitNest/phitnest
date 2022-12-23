@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phitnest_mobile/src/entities/entities.dart';
 
 import '../../../use-cases/use_cases.dart';
 import '../../widgets/widgets.dart';
@@ -23,23 +24,44 @@ class ExploreProvider extends ScreenProvider<ExploreCubit, ExploreState> {
         final user = state.users[state.pageIndex % state.users.length];
         cubit.removeUser(state.pageIndex);
         cubit.transitionStopHolding();
-        Navigator.push(
-          context,
-          NoAnimationMaterialPageRoute(
-            builder: (context) => MatchProvider(user),
-          ),
+        sendFriendRequestUseCase.sendFriendRequest(user.cognitoId).then(
+          (failure) {
+            if (failure != null) {
+              cubit.transitionToError(failure.message);
+            } else {
+              final requestIndex = state.incomingRequests.indexWhere(
+                (request) => request.cognitoId == user.cognitoId,
+              );
+              if (requestIndex != -1) {
+                cubit.removeRequest(requestIndex);
+                Navigator.push(
+                  context,
+                  NoAnimationMaterialPageRoute(
+                    builder: (context) => MatchProvider(user),
+                  ),
+                );
+              }
+            }
+          },
         );
       }
     } else if (state is LoadingState) {
-      exploreUseCase.exploreUsers().then(
-            (either) => either.fold(
-              (users) => cubit.transitionToLoaded(
-                users: users,
-                pageIndex: 0,
-              ),
-              (failure) => cubit.transitionToError(failure.message),
+      Future.wait([
+        exploreUseCase.exploreUsers(),
+        getFriendRequestsUseCase.getIncomingFriendRequests(),
+      ]).then(
+        (eithers) => eithers[0].fold(
+          (users) => eithers[1].fold(
+            (requests) => cubit.transitionToLoaded(
+              users,
+              requests as List<PublicUserEntity>,
+              0,
             ),
-          );
+            (failure) => cubit.transitionToError(failure.message),
+          ),
+          (failure) => cubit.transitionToError(failure.message),
+        ),
+      );
     } else if (state is LoadedState) {
       if (state.users.isEmpty) {
         cubit.transitionToEmpty();

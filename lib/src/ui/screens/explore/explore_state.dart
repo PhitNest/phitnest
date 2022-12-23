@@ -13,19 +13,22 @@ class LoadingState extends ExploreState {
 
 class LoadedState extends ExploreState {
   final List<ExploreUserEntity> users;
+  final List<PublicUserEntity> incomingRequests;
   final int pageIndex;
 
   const LoadedState({
     required this.users,
+    required this.incomingRequests,
     required this.pageIndex,
   }) : super();
 
   @override
-  List<Object> get props => [users, pageIndex];
+  List<Object> get props => [users, pageIndex, incomingRequests];
 }
 
 class HoldingState extends ExploreState {
   final List<ExploreUserEntity> users;
+  final List<PublicUserEntity> incomingRequests;
   final int pageIndex;
   final int countdown;
   final Timer timer;
@@ -35,10 +38,11 @@ class HoldingState extends ExploreState {
     required this.pageIndex,
     required this.countdown,
     required this.timer,
+    required this.incomingRequests,
   }) : super();
 
   @override
-  List<Object> get props => [users, pageIndex, countdown];
+  List<Object> get props => [users, pageIndex, countdown, incomingRequests];
 }
 
 class ErrorState extends ExploreState {
@@ -57,13 +61,15 @@ class EmptyNestState extends ExploreState {
 class ExploreCubit extends ScreenCubit<ExploreState> {
   ExploreCubit() : super(const LoadingState());
 
-  void transitionToLoaded({
-    required List<ExploreUserEntity> users,
-    required int pageIndex,
-  }) =>
+  void transitionToLoaded(
+    List<ExploreUserEntity> users,
+    List<PublicUserEntity> incomingRequests,
+    int pageIndex,
+  ) =>
       setState(
         LoadedState(
           users: users,
+          incomingRequests: incomingRequests,
           pageIndex: pageIndex,
         ),
       );
@@ -78,6 +84,7 @@ class ExploreCubit extends ScreenCubit<ExploreState> {
       HoldingState(
         users: holdingState.users,
         pageIndex: holdingState.pageIndex,
+        incomingRequests: holdingState.incomingRequests,
         countdown: holdingState.countdown - 1,
         timer: holdingState.timer,
       ),
@@ -89,6 +96,7 @@ class ExploreCubit extends ScreenCubit<ExploreState> {
       final loadedState = state as LoadedState;
       setState(
         LoadedState(
+          incomingRequests: loadedState.incomingRequests,
           users: loadedState.users,
           pageIndex: pageIndex,
         ),
@@ -97,6 +105,7 @@ class ExploreCubit extends ScreenCubit<ExploreState> {
       final holdingState = state as HoldingState;
       setState(
         HoldingState(
+          incomingRequests: holdingState.incomingRequests,
           users: holdingState.users,
           pageIndex: pageIndex,
           countdown: holdingState.countdown,
@@ -115,7 +124,8 @@ class ExploreCubit extends ScreenCubit<ExploreState> {
       final loadedState = state as LoadedState;
       setState(
         LoadedState(
-          users: loadedState.users..removeAt(index),
+          incomingRequests: loadedState.incomingRequests,
+          users: loadedState.users..removeAt(index % loadedState.users.length),
           pageIndex: loadedState.pageIndex,
         ),
       );
@@ -123,8 +133,63 @@ class ExploreCubit extends ScreenCubit<ExploreState> {
       final holdingState = state as HoldingState;
       setState(
         HoldingState(
+          incomingRequests: holdingState.incomingRequests,
           users: holdingState.users
             ..removeAt(index % holdingState.users.length),
+          pageIndex: holdingState.pageIndex,
+          countdown: holdingState.countdown,
+          timer: holdingState.timer,
+        ),
+      );
+    } else {
+      throw Exception('Cannot remove user on state: $state');
+    }
+  }
+
+  void addRequest(PublicUserEntity request) {
+    if (state is LoadedState) {
+      final loadedState = state as LoadedState;
+      setState(
+        LoadedState(
+          incomingRequests: loadedState.incomingRequests..insert(0, request),
+          users: loadedState.users,
+          pageIndex: loadedState.pageIndex,
+        ),
+      );
+    } else if (state is HoldingState) {
+      final holdingState = state as HoldingState;
+      setState(
+        HoldingState(
+          incomingRequests: holdingState.incomingRequests..insert(0, request),
+          users: holdingState.users,
+          pageIndex: holdingState.pageIndex,
+          countdown: holdingState.countdown,
+          timer: holdingState.timer,
+        ),
+      );
+    } else {
+      throw Exception('Cannot remove user on state: $state');
+    }
+  }
+
+  void removeRequest(int index) {
+    if (state is LoadedState) {
+      final loadedState = state as LoadedState;
+      setState(
+        LoadedState(
+          incomingRequests: loadedState.incomingRequests
+            ..removeAt(index % loadedState.incomingRequests.length),
+          users: loadedState.users,
+          pageIndex: loadedState.pageIndex,
+        ),
+      );
+    } else if (state is HoldingState) {
+      final holdingState = state as HoldingState;
+      setState(
+        HoldingState(
+          incomingRequests: holdingState.incomingRequests
+            ..removeAt(index % holdingState.incomingRequests.length),
+          users: holdingState.users,
           pageIndex: holdingState.pageIndex,
           countdown: holdingState.countdown,
           timer: holdingState.timer,
@@ -141,6 +206,7 @@ class ExploreCubit extends ScreenCubit<ExploreState> {
       holdingState.timer.cancel();
       setState(
         LoadedState(
+          incomingRequests: holdingState.incomingRequests,
           users: holdingState.users,
           pageIndex: holdingState.pageIndex,
         ),
@@ -152,6 +218,7 @@ class ExploreCubit extends ScreenCubit<ExploreState> {
     final loadedState = state as LoadedState;
     setState(
       HoldingState(
+        incomingRequests: loadedState.incomingRequests,
         users: loadedState.users,
         pageIndex: loadedState.pageIndex,
         countdown: 3,
