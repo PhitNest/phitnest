@@ -1,73 +1,80 @@
-import 'package:flutter/cupertino.dart';
-
 import '../../../entities/entities.dart';
-import '../state.dart';
+import '../screen_state.dart';
 
-class MessageState extends ScreenState {
-  final messageController = TextEditingController();
-  final scrollController = ScrollController();
-  late final FocusNode messageFocus = FocusNode()
-    ..addListener(
-      () {
-        if (scrollController.hasClients) {
-          scrollController.animateTo(
-            0,
-            duration: const Duration(
-              milliseconds: 300,
-            ),
-            curve: Curves.easeInOut,
-          );
-        }
-      },
-    );
+abstract class MessageState extends ScreenState {
+  const MessageState() : super();
+}
 
-  void addMessage(MessageEntity message) {
-    if (_messages != null) {
-      _messages!.insert(0, message);
-      rebuildView();
-    }
-  }
+class InitialState extends MessageState {
+  const InitialState() : super();
+}
 
-  bool _loading = false;
+class NewFriendState extends MessageState {
+  final FriendEntity friend;
 
-  bool get loading => _loading;
-
-  set loading(bool loading) {
-    _loading = loading;
-    rebuildView();
-  }
-
-  ConversationEntity? _conversation;
-
-  ConversationEntity? get conversation => _conversation;
-
-  set conversation(ConversationEntity? conversation) {
-    _conversation = conversation;
-    rebuildView();
-  }
-
-  String? _errorMessage;
-
-  String? get errorMessage => _errorMessage;
-
-  set errorMessage(String? errorMessage) {
-    _errorMessage = errorMessage;
-    rebuildView();
-  }
-
-  List<MessageEntity>? _messages;
-
-  List<MessageEntity>? get messages => _messages;
-
-  set messages(List<MessageEntity>? messages) {
-    _messages = messages;
-    rebuildView();
-  }
+  const NewFriendState({
+    required this.friend,
+  }) : super();
 
   @override
-  void dispose() {
-    messageController.dispose();
-    scrollController.dispose();
-    super.dispose();
+  List<Object> get props => [friend];
+}
+
+class LoadingConversationState extends MessageState {
+  final ConversationEntity conversation;
+
+  const LoadingConversationState({
+    required this.conversation,
+  }) : super();
+
+  @override
+  List<Object> get props => [conversation];
+}
+
+class ErrorState extends MessageState {
+  final String message;
+
+  const ErrorState({
+    required this.message,
+  }) : super();
+
+  @override
+  List<Object> get props => [message];
+}
+
+class LoadedState extends MessageState {
+  final ConversationEntity conversation;
+  final List<MessageEntity> messages;
+
+  const LoadedState({
+    required this.conversation,
+    required this.messages,
+  }) : super();
+
+  @override
+  List<Object> get props => [conversation, messages];
+}
+
+class MessageCubit extends ScreenCubit<MessageState> {
+  MessageCubit() : super(const InitialState());
+
+  void transitionToNewFriend(FriendEntity friend) =>
+      setState(NewFriendState(friend: friend));
+
+  void transitionToLoading(ConversationEntity conversation) =>
+      setState(LoadingConversationState(conversation: conversation));
+
+  void transitionToLoaded(
+          ConversationEntity conversation, List<MessageEntity> messages) =>
+      setState(LoadedState(conversation: conversation, messages: messages));
+
+  void transitionToError(String message) =>
+      setState(ErrorState(message: message));
+
+  void addMessage(MessageEntity newMessage) {
+    final loadedState = state as LoadedState;
+    setState(LoadedState(
+        conversation: loadedState.conversation,
+        messages: [newMessage, ...loadedState.messages]));
   }
 }

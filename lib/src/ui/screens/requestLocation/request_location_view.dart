@@ -1,79 +1,83 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../theme.dart';
 import '../../widgets/widgets.dart';
-import '../view.dart';
 
-class RequestLocationView extends ScreenView {
-  final String? errorMessage;
-  final bool searching;
-  final VoidCallback onPressRetry;
+class _BaseWidget extends StatelessWidget {
+  final List<Widget> children;
+  final String headingText;
 
-  const RequestLocationView({
-    required this.errorMessage,
-    required this.searching,
-    required this.onPressRetry,
+  const _BaseWidget({
+    required this.children,
+    required this.headingText,
   }) : super();
 
   @override
-  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
-        child: Scaffold(
-          body: SingleChildScrollView(
-            child: SizedBox(
-              height: 1.sh,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  200.verticalSpace,
-                  SizedBox(
-                    child: Text(
-                      'Where is your\nfitness club?',
-                      style: theme.textTheme.headlineLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  42.verticalSpace,
-                  SizedBox(
-                    child: Text(
-                      'Please allow location permissions\nin your phone settings',
-                      style: theme.textTheme.labelLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  40.verticalSpace,
-                  Visibility(
-                    child: CircularProgressIndicator(),
-                    visible: searching,
-                  ),
-                  Visibility(
-                    visible: errorMessage != null,
-                    child: SizedBox(
-                      width: 0.9.sw,
-                      child: Column(
-                        children: [
-                          Text(
-                            errorMessage ?? '',
-                            style: theme.textTheme.labelLarge!
-                                .copyWith(color: theme.colorScheme.error),
-                            textAlign: TextAlign.center,
-                          ),
-                          30.verticalSpace,
-                          StyledButton(
-                            onPressed: onPressRetry,
-                            child: Text('RETRY'),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(child: Container()),
-                ],
+  Widget build(BuildContext context) => BetterScaffold(
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            200.verticalSpace,
+            SizedBox(
+              child: Text(
+                headingText,
+                style: theme.textTheme.headlineLarge,
+                textAlign: TextAlign.center,
               ),
             ),
-          ),
+            42.verticalSpace,
+            ...children,
+          ],
         ),
       );
+}
+
+class FetchingLocationView extends _BaseWidget {
+  FetchingLocationView()
+      : super(
+          headingText: '',
+          children: [
+            Text(
+              'Please allow location permissions\nin your phone settings',
+              style: theme.textTheme.labelLarge,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        );
+}
+
+class FetchingGymView extends _BaseWidget {
+  FetchingGymView()
+      : super(
+          headingText: 'Finding your\nfitness club...',
+          children: [
+            CircularProgressIndicator(),
+          ],
+        );
+}
+
+class ErrorView extends _BaseWidget {
+  final String errorMessage;
+  final VoidCallback onPressedRetry;
+
+  ErrorView({
+    required this.errorMessage,
+    required this.onPressedRetry,
+  }) : super(
+          headingText: 'Could not find\nyour fitness club',
+          children: [
+            Text(
+              errorMessage,
+              style:
+                  theme.textTheme.labelLarge!.copyWith(color: theme.errorColor),
+              textAlign: TextAlign.center,
+            ),
+            30.verticalSpace,
+            StyledButton(
+              onPressed: onPressedRetry,
+              child: Text('RETRY'),
+            ),
+          ],
+        );
 }

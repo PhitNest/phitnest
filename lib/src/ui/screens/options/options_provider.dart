@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/widgets.dart';
-import '../provider.dart';
-import '../screens.dart';
+import '../screen_provider.dart';
 import 'options_state.dart';
 import 'options_view.dart';
 
-class OptionsProvider extends ScreenProvider<OptionsState, OptionsView> {
-  const OptionsProvider() : super();
+class OptionsProvider extends ScreenProvider<OptionsCubit, OptionsState> {
+  OptionsProvider() : super();
 
   @override
-  OptionsView build(BuildContext context, OptionsState state) => OptionsView(
-        onPressedLogo: () => Navigator.of(context).pushAndRemoveUntil(
-          NoAnimationMaterialPageRoute(
-            builder: (context) => const ExploreProvider(),
-          ),
-          (_) => false,
-        ),
-      );
+  Widget builder(
+    BuildContext context,
+    OptionsCubit cubit,
+    OptionsState state,
+  ) =>
+      OptionsView();
 
   @override
-  OptionsState buildState() => OptionsState();
+  OptionsCubit buildCubit() => OptionsCubit();
 }

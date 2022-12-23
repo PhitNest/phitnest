@@ -3,9 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../theme.dart';
 import '../../widgets/widgets.dart';
-import '../view.dart';
 
-class MatchView extends ScreenView {
+class MatchView extends StatelessWidget {
   final VoidCallback onPressedSayHello;
   final VoidCallback onPressedMeetMore;
   final String fullName;
@@ -19,7 +18,8 @@ class MatchView extends ScreenView {
   }) : super();
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => BetterScaffold(
+        darkMode: false,
         body: Container(
           color: Colors.black,
           child: Column(
@@ -57,9 +57,9 @@ class MatchView extends ScreenView {
               28.verticalSpace,
               StyledNavBar(
                 navigationEnabled: true,
-                pageIndex: 1,
-                onTapDownLogo: onPressedLogo,
-                reversed: true,
+                page: NavbarPage.explore,
+                onPressDownLogo: onPressedLogo,
+                darkMode: true,
                 colorful: true,
               ),
             ],

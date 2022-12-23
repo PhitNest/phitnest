@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 
 import '../../../entities/entities.dart';
-import '../provider.dart';
+import '../screen_provider.dart';
 import 'match_state.dart';
 import 'match_view.dart';
 
-class MatchProvider extends ScreenProvider<MatchState, MatchView> {
-  final ExploreUserEntity user;
+class MatchProvider extends ScreenProvider<MatchCubit, MatchState> {
+  final ExploreUserEntity friend;
 
-  const MatchProvider(this.user) : super();
+  MatchProvider(this.friend) : super();
 
   @override
-  MatchView build(BuildContext context, MatchState state) => MatchView(
-        fullName: user.fullName,
-        onPressedSayHello: () {},
+  MatchView builder(
+    BuildContext context,
+    MatchCubit cubit,
+    MatchState state,
+  ) =>
+      MatchView(
+        fullName: friend.fullName,
+        onPressedSayHello: () => Navigator.of(context).pop(),
         onPressedMeetMore: () => Navigator.of(context).pop(),
         onPressedLogo: () => Navigator.of(context).pop(),
       );
 
   @override
-  MatchState buildState() => MatchState();
+  MatchCubit buildCubit() => MatchCubit();
 }

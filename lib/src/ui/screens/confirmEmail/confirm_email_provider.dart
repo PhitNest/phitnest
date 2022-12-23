@@ -1,86 +1,87 @@
 import 'package:flutter/material.dart';
 
 import '../../../entities/entities.dart';
-import '../../../use-cases/use_cases.dart';
 import '../../widgets/widgets.dart';
-import '../provider.dart';
+import '../screen_provider.dart';
 import '../screens.dart';
 import 'confirm_email_state.dart';
 import 'confirm_email_view.dart';
 
 class ConfirmEmailProvider
-    extends ScreenProvider<ConfirmEmailState, ConfirmEmailView> {
-  final Future<Failure?> Function(String email, String code)
-      confirmVerification;
+    extends ScreenProvider<ConfirmEmailCubit, ConfirmEmailState> {
+  final Future<Failure?> Function(String code) confirmVerification;
   final Future<Failure?> Function() resendConfirmation;
-  final VoidCallback onPressedBack;
-  final String email;
-  final String password;
 
   const ConfirmEmailProvider({
     required this.confirmVerification,
     required this.resendConfirmation,
-    required this.onPressedBack,
-    required this.email,
-    required this.password,
   }) : super();
 
-  @override
-  ConfirmEmailView build(BuildContext context, ConfirmEmailState state) =>
-      ConfirmEmailView(
-        onPressedBack: onPressedBack,
-        onCompletedVerification: (code) {
-          if (state.disposed) return;
-          if (!state.loading) {
-            state.loading = true;
-            state.errorMessage = null;
-            confirmVerification(email, code)
-                .then(
-              (value) async => !state.disposed && value == null
-                  ? await loginUseCase
-                      .login(email: email, password: password)
-                      .then(
-                        (either) => either.fold(
-                          (session) => null,
-                          (failure) => failure,
-                        ),
-                      )
-                  : value,
-            )
-                .then(
-              (result) {
-                state.loading = false;
-                if (result != null) {
-                  state.errorMessage = result.message;
-                } else if (!state.disposed) {
-                  Navigator.of(context).pushAndRemoveUntil(
-                    NoAnimationMaterialPageRoute(
-                      builder: (context) => LoginProvider(),
-                    ),
-                    (_) => false,
-                  );
-                }
-              },
-            );
-          }
-        },
-        onPressedResend: () {
-          if (!state.loading) {
-            state.loading = true;
-            resendConfirmation().then(
-              (result) {
-                state.loading = false;
-                if (result != null) {
-                  state.errorMessage = result.message;
-                }
-              },
-            );
-          }
-        },
-        errorMessage: state.errorMessage,
-        loading: state.loading,
-      );
+  void onResend(
+    ConfirmEmailCubit cubit,
+    BuildContext context,
+  ) {
+    cubit.transitionToLoading();
+    resendConfirmation().then(
+      (failure) {
+        if (failure != null) {
+          cubit.transitionToError(failure.message);
+        } else {
+          cubit.transitionToInitial();
+        }
+      },
+    );
+  }
+
+  void onCompleteVerification(
+    String code,
+    ConfirmEmailCubit cubit,
+    BuildContext context,
+  ) {
+    cubit.transitionToLoading();
+    confirmVerification(code).then(
+      (failure) {
+        if (failure != null) {
+          cubit.transitionToError(failure.message);
+        } else {
+          Navigator.pushAndRemoveUntil(
+            context,
+            NoAnimationMaterialPageRoute(
+              builder: (context) => ExploreProvider(),
+            ),
+            (_) => false,
+          );
+        }
+      },
+    );
+  }
 
   @override
-  ConfirmEmailState buildState() => ConfirmEmailState();
+  Widget builder(
+    BuildContext context,
+    ConfirmEmailCubit cubit,
+    ConfirmEmailState state,
+  ) {
+    if (state is LoadingState) {
+      return LoadingView();
+    } else if (state is ErrorState) {
+      return ErrorView(
+        errorMessage: state.message,
+        onPressedResend: () => onResend(cubit, context),
+        onCompletedVerification: (code) =>
+            onCompleteVerification(code, cubit, context),
+      );
+    } else if (state is InitialState) {
+      return InitialView(
+        onPressedResend: () => onResend(cubit, context),
+        onCompletedVerification: (code) =>
+            onCompleteVerification(code, cubit, context),
+      );
+    } else {
+      throw Exception('Unknown state: $state');
+    }
+  }
+
+  @override
+  ConfirmEmailCubit buildCubit() => ConfirmEmailCubit();
 }

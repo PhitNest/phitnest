@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
-import '../provider.dart';
+import '../screen_provider.dart';
 import './photo_accepted_state.dart';
 import './photo_accepted_view.dart';
 
 class PhotoAcceptedProvider
-    extends ScreenProvider<PhotoAcceptState, PhotoAcceptedView> {
+    extends ScreenProvider<PhotoAcceptedCubit, PhotoAcceptedState> {
   const PhotoAcceptedProvider() : super();
 
   @override
-  PhotoAcceptedView build(BuildContext context, PhotoAcceptState state) =>
+  Widget builder(
+    BuildContext context,
+    PhotoAcceptedCubit cubit,
+    PhotoAcceptedState state,
+  ) =>
       PhotoAcceptedView(
         onPressedStart: () {},
       );
 
   @override
-  PhotoAcceptState buildState() => PhotoAcceptState();
+  PhotoAcceptedCubit buildCubit() => PhotoAcceptedCubit();
 }

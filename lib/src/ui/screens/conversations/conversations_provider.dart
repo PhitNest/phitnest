@@ -5,113 +5,152 @@ import '../../../entities/entities.dart';
 import '../../../repositories/repositories.dart';
 import '../../../use-cases/use_cases.dart';
 import '../../widgets/widgets.dart';
-import '../provider.dart';
+import '../screen_provider.dart';
 import '../screens.dart';
 import 'conversations_state.dart';
 import 'conversations_view.dart';
-import 'widgets/widgets.dart';
 
 class ConversationsProvider
-    extends ScreenProvider<ConversationsState, ConversationsView> {
-  @override
-  Future<void> init(BuildContext context, ConversationsState state) async {
-    state.loading = true;
-    state.errorMessage = null;
-    Future.wait(
-        [getConversationsUseCase.recents(), getFriendsUseCase.friends()]).then(
-      (eithers) {
-        state.loading = false;
-        if (eithers[0].isRight() && eithers[1].isRight()) {
-          state.errorMessage = 'Something went wrong';
-        } else if (eithers[0].isRight()) {
-          state.errorMessage = eithers[0]
-              .getOrElse(() => Failure('Something went wrong'))
-              .message;
-        } else if (eithers[1].isRight()) {
-          state.errorMessage = eithers[1]
-              .getOrElse(() => Failure('Something went wrong'))
-              .message;
-        } else {
-          state.conversations = List.castFrom(eithers[0].swap().getOrElse(
-              () => [] as List<Tuple2<ConversationEntity, MessageEntity>>));
-          state.friends = List.castFrom(
-              eithers[1].swap().getOrElse(() => [] as List<FriendEntity>));
-        }
-      },
-    );
-  }
-
-  const ConversationsProvider() : super();
+    extends ScreenProvider<ConversationsCubit, ConversationsState> {
+  ConversationsProvider()
+      : assert(memoryCacheRepo.me != null),
+        super();
 
   @override
-  ConversationsView build(BuildContext context, ConversationsState state) {
-    final conversationCards = state.conversations.asMap().entries.map((entry) {
-      if (!entry.value.value1.isGroup) {
-        state.friends.removeAt(state.friends.indexWhere((friend) =>
-            entry.value.value1.users
-                .indexWhere((user) => friend.cognitoId == user.cognitoId) !=
-            -1));
-      }
-      return ConversationCard(
-        message: entry.value.value2.text,
-        title: entry.value.value1.chatName(memoryCacheRepo.me!.id),
-        onDismissed: (_) {}, //=> state.removeConversation(entry.key),
-        time: entry.value.value2.createdAt,
-        onTap: () => Navigator.push(
-          context,
-          NoAnimationMaterialPageRoute(
-            builder: (context) =>
-                MessageProvider(conversation: entry.value.value1),
-          ),
-        ),
-      );
-    }).toList();
-    for (int i = 0; i < state.friends.length; i++) {
-      final friendCard = ConversationCard(
-        title: state.friends[i].fullName,
-        onDismissed: (_) => state.removeFriend(i),
-        onTap: () => Navigator.push(
-          context,
-          NoAnimationMaterialPageRoute(
-            builder: (context) => MessageProvider(friend: state.friends[i]),
-          ),
-        ),
-        time: state.friends[i].since,
-        message:
-            "You have just connected with ${state.friends[i].fullName}, say hello!",
-      );
-      bool inserted = false;
-      for (int j = 0; j < conversationCards.length; j++) {
-        if (state.friends[i].since.isBefore(conversationCards[j].time)) {
-          conversationCards.insert(j, friendCard);
-          inserted = true;
-          break;
-        }
-      }
-      if (!inserted) {
-        conversationCards.add(friendCard);
+  Future<void> listener(
+    BuildContext context,
+    ConversationsCubit cubit,
+    ConversationsState state,
+  ) async {
+    if (state is LoadingState) {
+      getConversationsUseCase.recents().then(
+            (conversationEither) => conversationEither.fold(
+              (conversations) => getFriendsUseCase.friends().then(
+                    (friendsEither) => friendsEither.fold(
+                      (friends) {
+                        // Remove friends that are already in a direct conversation
+                        friends.removeWhere(
+                          (friend) =>
+                              conversations.indexWhere(
+                                (conversation) =>
+                                    conversation.value1.users.indexWhere(
+                                          (user) => user.id == friend.id,
+                                        ) !=
+                                        -1 &&
+                                    !conversation.value1.isGroup,
+                              ) !=
+                              -1,
+                        );
+                        final List<
+                                Either<FriendEntity,
+                                    Tuple2<ConversationEntity, MessageEntity>>>
+                            recents = [];
+                        int friendIndex = 0;
+                        int conversationIndex = 0;
+                        while (friendIndex < friends.length ||
+                            conversationIndex < conversations.length) {
+                          if (conversationIndex != conversations.length &&
+                              conversations[conversationIndex]
+                                  .value2
+                                  .createdAt
+                                  .isBefore(friends[friendIndex].since)) {
+                            recents.add(
+                              Right(
+                                conversations[conversationIndex],
+                              ),
+                            );
+                            conversationIndex++;
+                          } else {
+                            recents.add(
+                              Left(
+                                friends[friendIndex],
+                              ),
+                            );
+                            friendIndex++;
+                          }
+                        }
+                        cubit.transitionToLoaded(recents);
+                      },
+                      (failure) => cubit.transitionToError(failure.message),
+                    ),
+                  ),
+              (failure) => cubit.transitionToError(failure.message),
+            ),
+          );
+    } else if (state is LoadedState) {
+      if (state.conversations.length == 0) {
+        cubit.transitionToNoConversations();
       }
     }
-    return ConversationsView(
-      onClickFriends: () => Navigator.push(
-        context,
-        NoAnimationMaterialPageRoute(
-          builder: (context) => const FriendsProvider(),
-        ),
-      ),
-      onTapLogoButton: () => Navigator.push(
-        context,
-        NoAnimationMaterialPageRoute(
-          builder: (context) => const ExploreProvider(),
-        ),
-      ),
-      conversations: conversationCards,
-      loading: state.loading,
-      errorMessage: state.errorMessage,
-      onPressedRetry: () => init(context, state),
-    );
   }
 
   @override
-  ConversationsState buildState() => ConversationsState();
+  Widget builder(
+    BuildContext context,
+    ConversationsCubit cubit,
+    ConversationsState state,
+  ) {
+    if (state is LoadingState) {
+      return LoadingView(
+        onPressedFriends: () => Navigator.push(
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (context) => FriendsProvider(),
+          ),
+        ),
+      );
+    } else if (state is LoadedState) {
+      return LoadedView(
+        conversations: state.conversations,
+        onPressedFriends: () => Navigator.push(
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (context) => FriendsProvider(),
+          ),
+        ),
+        onDismissFriend: (friend, index) => cubit.removeConversation(index),
+        onDismissConversation: (conversation, index) =>
+            cubit.removeConversation(index),
+        onTapFriend: (friend) => Navigator.push(
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (context) => MessageProvider(friend: friend),
+          ),
+        ),
+        onTapConversation: (conversation) => Navigator.push(
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (context) => MessageProvider(conversation: conversation),
+          ),
+        ),
+        getChatName: (conversation) =>
+            conversation.chatName(memoryCacheRepo.me!.id),
+      );
+    } else if (state is ErrorState) {
+      return ErrorView(
+        onPressedFriends: () => Navigator.push(
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (context) => FriendsProvider(),
+          ),
+        ),
+        errorMessage: state.message,
+        onPressedRetry: () => cubit.transitionToLoading(),
+      );
+    } else if (state is NoConversationsState) {
+      return NoConversationsView(
+        onPressedFriends: () => Navigator.push(
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (context) => FriendsProvider(),
+          ),
+        ),
+      );
+    } else {
+      throw Exception('Unknown state: $state');
+    }
+  }
+
+  @override
+  ConversationsCubit buildCubit() => ConversationsCubit();
 }

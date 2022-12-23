@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
 
-import '../state.dart';
+import '../screen_state.dart';
 
 class RegisterPageOneState extends ScreenState {
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
+  final AutovalidateMode autovalidateMode;
 
-  AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
-
-  AutovalidateMode get autovalidateMode => _autovalidateMode;
-
-  set autovalidateMode(AutovalidateMode autovalidateMode) {
-    _autovalidateMode = autovalidateMode;
-    rebuildView();
-  }
+  const RegisterPageOneState({required this.autovalidateMode}) : super();
 
   @override
-  void dispose() {
-    firstNameController.dispose();
-    lastNameController.dispose();
-    super.dispose();
-  }
+  List<Object> get props => [autovalidateMode];
+}
+
+class RegisterPageOneCubit extends ScreenCubit<RegisterPageOneState> {
+  RegisterPageOneCubit()
+      : super(const RegisterPageOneState(
+            autovalidateMode: AutovalidateMode.disabled));
+
+  void enableAutovalidateMode() =>
+      setState(RegisterPageOneState(autovalidateMode: AutovalidateMode.always));
 }

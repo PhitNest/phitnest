@@ -1,57 +1,129 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter/material.dart';
 
+import '../screen_state.dart';
 import '../../../entities/entities.dart';
-import '../state.dart';
 
-class GymSearchState extends ScreenState {
-  final searchController = TextEditingController();
-  late final FocusNode searchFocus = FocusNode()
-    ..addListener(
-      () => showConfirmButton = !searchFocus.hasFocus,
-    );
+abstract class GymSearchState extends ScreenState {
+  const GymSearchState() : super();
+}
 
-  void editSearch() => rebuildView();
+class LoadingState extends GymSearchState {
+  const LoadingState() : super();
+}
 
-  bool _showConfirmButton = true;
+class LoadedState extends GymSearchState {
+  final List<Tuple2<GymEntity, double>> gymsAndDistances;
+  final GymEntity currentlySelectedGym;
+  final String searchQuery;
 
-  bool get showConfirmButton => _showConfirmButton;
-
-  set showConfirmButton(bool showConfirmButton) {
-    _showConfirmButton = showConfirmButton;
-    rebuildView();
-  }
-
-  String? _errorMessage;
-
-  String? get errorMessage => _errorMessage;
-
-  set errorMessage(String? errorMessage) {
-    _errorMessage = errorMessage;
-    rebuildView();
-  }
-
-  late GymEntity _currentlySelectedGym;
-
-  GymEntity get currentlySelectedGym => _currentlySelectedGym;
-
-  set currentlySelectedGym(GymEntity currentlySelectedGym) {
-    _currentlySelectedGym = currentlySelectedGym;
-    rebuildView();
-  }
-
-  List<Tuple2<GymEntity, double>>? _gymsAndDistances;
-
-  List<Tuple2<GymEntity, double>>? get gymsAndDistances => _gymsAndDistances;
-
-  set gymsAndDistances(List<Tuple2<GymEntity, double>>? gymsAndDistances) {
-    _gymsAndDistances = gymsAndDistances;
-    rebuildView();
-  }
+  const LoadedState({
+    required this.gymsAndDistances,
+    required this.currentlySelectedGym,
+    required this.searchQuery,
+  }) : super();
 
   @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
+  List<Object> get props =>
+      [gymsAndDistances, currentlySelectedGym, searchQuery];
+}
+
+class TypingState extends GymSearchState {
+  final List<Tuple2<GymEntity, double>> gymsAndDistances;
+  final GymEntity currentlySelectedGym;
+  final String searchQuery;
+
+  const TypingState({
+    required this.gymsAndDistances,
+    required this.currentlySelectedGym,
+    required this.searchQuery,
+  }) : super();
+
+  @override
+  List<Object> get props =>
+      [gymsAndDistances, currentlySelectedGym, searchQuery];
+}
+
+class ErrorState extends GymSearchState {
+  final String message;
+
+  const ErrorState({required this.message}) : super();
+
+  @override
+  List<Object> get props => [message];
+}
+
+class GymSearchCubit extends ScreenCubit<GymSearchState> {
+  GymSearchCubit() : super(const LoadingState());
+
+  void transitionToLoading() => setState(const LoadingState());
+
+  void transitionToLoaded(
+    List<Tuple2<GymEntity, double>> gymsAndDistances,
+    GymEntity currentlySelectedGym,
+    String searchQuery,
+  ) =>
+      setState(
+        LoadedState(
+          gymsAndDistances: gymsAndDistances,
+          currentlySelectedGym: currentlySelectedGym,
+          searchQuery: searchQuery,
+        ),
+      );
+
+  void transitionTypingToLoaded() {
+    final typingState = state as TypingState;
+    setState(
+      LoadedState(
+        gymsAndDistances: typingState.gymsAndDistances,
+        currentlySelectedGym: typingState.currentlySelectedGym,
+        searchQuery: typingState.searchQuery,
+      ),
+    );
+  }
+
+  void transitionToTyping() {
+    final loadedState = state as LoadedState;
+    setState(
+      TypingState(
+        gymsAndDistances: loadedState.gymsAndDistances,
+        currentlySelectedGym: loadedState.currentlySelectedGym,
+        searchQuery: loadedState.searchQuery,
+      ),
+    );
+  }
+
+  void transitionToError(String message) =>
+      setState(ErrorState(message: message));
+
+  void setSearchQuery(String query) {
+    setState(
+      TypingState(
+        gymsAndDistances: (state as TypingState).gymsAndDistances,
+        currentlySelectedGym: (state as TypingState).currentlySelectedGym,
+        searchQuery: query,
+      ),
+    );
+  }
+
+  void setCurrentlySelectedGym(GymEntity gym) {
+    if (state is LoadedState) {
+      setState(
+        LoadedState(
+          gymsAndDistances: (state as LoadedState).gymsAndDistances,
+          currentlySelectedGym: gym,
+          searchQuery: (state as LoadedState).searchQuery,
+        ),
+      );
+    } else if (state is TypingState) {
+      setState(
+        TypingState(
+          gymsAndDistances: (state as TypingState).gymsAndDistances,
+          currentlySelectedGym: gym,
+          searchQuery: (state as TypingState).searchQuery,
+        ),
+      );
+    } else {
+      throw Exception('Cannot set currently selected gym to state: $state');
+    }
   }
 }

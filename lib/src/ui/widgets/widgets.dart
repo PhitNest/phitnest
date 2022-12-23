@@ -8,3 +8,4 @@ export 'text_input_field.dart';
 export 'no_animation_page_route.dart';
 export 'text_button.dart';
 export 'search_box.dart';
+export 'better_scaffold.dart';

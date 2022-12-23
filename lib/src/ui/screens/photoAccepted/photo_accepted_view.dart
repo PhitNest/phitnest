@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../theme.dart';
-import '../view.dart';
 import '../../widgets/widgets.dart';
 
-class PhotoAcceptedView extends ScreenView {
+class PhotoAcceptedView extends StatelessWidget {
   final VoidCallback onPressedStart;
 
   const PhotoAcceptedView({
@@ -13,34 +12,26 @@ class PhotoAcceptedView extends ScreenView {
   }) : super();
 
   @override
-  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
-        child: Scaffold(
-          body: Container(
-            width: double.infinity,
-            child: Column(
-              children: [
-                200.verticalSpace,
-                Text(
-                  'Congratulations!',
-                  style: theme.textTheme.headlineLarge,
-                ),
-                40.verticalSpace,
-                Text(
-                  'Your profile photo was approved.\nYou’re ready to meet new\nfriends.',
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.labelLarge!.copyWith(height: 1.7),
-                ),
-                40.verticalSpace,
-                StyledButton(
-                  onPressed: onPressedStart,
-                  child: Text(
-                    'START',
-                  ),
-                )
-              ],
+  Widget build(BuildContext context) => BetterScaffold(
+        body: Column(
+          children: [
+            200.verticalSpace,
+            Text(
+              'Congratulations!',
+              style: theme.textTheme.headlineLarge,
             ),
-          ),
+            40.verticalSpace,
+            Text(
+              'Your profile photo was approved.\nYou’re ready to meet new\nfriends.',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.labelLarge!.copyWith(height: 1.7),
+            ),
+            40.verticalSpace,
+            StyledButton(
+              onPressed: onPressedStart,
+              child: Text('START'),
+            )
+          ],
         ),
       );
 }

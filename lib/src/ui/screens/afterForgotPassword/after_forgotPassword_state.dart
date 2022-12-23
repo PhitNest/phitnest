@@ -1,3 +1,9 @@
-import '../state.dart';
+import '../screen_state.dart';
 
-class AfterForgotPasswordState extends ScreenState {}
+class AfterForgotPasswordState extends ScreenState {
+  const AfterForgotPasswordState() : super();
+}
+
+class AfterForgotPasswordCubit extends ScreenCubit<AfterForgotPasswordState> {
+  AfterForgotPasswordCubit() : super(const AfterForgotPasswordState());
+}

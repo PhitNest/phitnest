@@ -1,30 +1,34 @@
 import 'package:flutter/material.dart';
+
 import '../../widgets/widgets.dart';
-import '../provider.dart';
+import '../screen_provider.dart';
 import '../screens.dart';
-import './reviewing_photo_state.dart';
-import './reviewing_photo_view.dart';
+import 'reviewing_photo_state.dart';
+import 'reviewing_photo_view.dart';
 
 class ReviewingPhotoProvider
-    extends ScreenProvider<ReviewingPhotoState, ReviewingPhotoView> {
+    extends ScreenProvider<ReviewingPhotoCubit, ReviewingPhotoState> {
   final String name;
 
-  const ReviewingPhotoProvider({
-    required this.name,
-  }) : super();
+  const ReviewingPhotoProvider({required this.name}) : super();
 
   @override
-  ReviewingPhotoView build(BuildContext context, ReviewingPhotoState state) =>
+  ReviewingPhotoCubit buildCubit() => ReviewingPhotoCubit();
+
+  @override
+  Widget builder(
+    BuildContext context,
+    ReviewingPhotoCubit cubit,
+    ReviewingPhotoState state,
+  ) =>
       ReviewingPhotoView(
         name: name,
-        onPressedFinish: () => Navigator.of(context).pushAndRemoveUntil(
+        onPressedFinish: () => Navigator.pushAndRemoveUntil(
+          context,
           NoAnimationMaterialPageRoute(
-            builder: (context) => const LoginProvider(),
+            builder: (context) => LoginProvider(),
           ),
           (_) => false,
         ),
       );
-
-  @override
-  ReviewingPhotoState buildState() => ReviewingPhotoState();
 }

@@ -11,44 +11,44 @@ class SearchBox extends StatelessWidget {
   final FocusNode? focusNode;
   final VoidCallback? onTap;
   final TextInputType? keyboardType;
+  final GlobalKey? textFieldKey;
 
   const SearchBox({
-    Key? key,
     required this.hintText,
+    this.textFieldKey,
     this.controller,
     this.onChanged,
     this.onSubmitted,
     this.focusNode,
     this.onTap,
     this.keyboardType,
-  }) : super(key: key);
+  }) : super();
 
   @override
   Widget build(BuildContext context) => SizedBox(
         width: 343.w,
         height: 32.h,
-        child: GestureDetector(
+        child: TextField(
+          key: textFieldKey,
           onTap: onTap,
-          child: TextField(
-            focusNode: focusNode,
-            textAlignVertical: TextAlignVertical.center,
-            style: theme.textTheme.labelMedium,
-            controller: controller,
-            keyboardType: keyboardType,
-            onChanged: onChanged,
-            onSubmitted: onSubmitted,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.only(left: 16.w),
-              hintText: hintText,
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                  borderRadius: BorderRadius.circular(8)),
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                  borderRadius: BorderRadius.circular(8)),
-              hintStyle: theme.textTheme.labelMedium!.copyWith(
-                color: Color(0xFF999999),
-              ),
+          focusNode: focusNode,
+          textAlignVertical: TextAlignVertical.center,
+          style: theme.textTheme.labelMedium,
+          controller: controller,
+          keyboardType: keyboardType,
+          onChanged: onChanged,
+          onSubmitted: onSubmitted,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.only(left: 16.w),
+            hintText: hintText,
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+                borderRadius: BorderRadius.circular(8)),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+                borderRadius: BorderRadius.circular(8)),
+            hintStyle: theme.textTheme.labelMedium!.copyWith(
+              color: Color(0xFF999999),
             ),
           ),
         ),

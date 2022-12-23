@@ -3,50 +3,47 @@ import 'package:flutter/material.dart';
 import '../../../entities/entities.dart';
 import '../../../repositories/repositories.dart';
 import '../../widgets/widgets.dart';
-import '../provider.dart';
+import '../screen_provider.dart';
 import '../screens.dart';
 import 'found_location_state.dart';
 import 'found_location_view.dart';
 
 class FoundLocationProvider
-    extends ScreenProvider<FoundLocationState, FoundLocationView> {
+    extends ScreenProvider<FoundLocationCubit, FoundLocationState> {
   final GymEntity gym;
-  final LocationEntity userLocation;
-  final void Function(
-    BuildContext context,
-    LocationEntity location,
-    GymEntity gym,
-  ) onFoundUsersGym;
+  final LocationEntity location;
+  final void Function(GymEntity gym) onFoundNearestGym;
 
   const FoundLocationProvider({
     required this.gym,
-    required this.userLocation,
-    required this.onFoundUsersGym,
+    required this.location,
+    required this.onFoundNearestGym,
   }) : super();
 
   @override
-  FoundLocationView build(BuildContext context, FoundLocationState state) =>
+  FoundLocationView builder(
+    BuildContext context,
+    FoundLocationCubit cubit,
+    FoundLocationState state,
+  ) =>
       FoundLocationView(
-        onPressedBack: () => Navigator.of(context)
-          ..pop()
-          ..pop(),
         onPressedNo: () => Navigator.push(
           context,
           NoAnimationMaterialPageRoute(
             builder: (_) => GymSearchProvider(
-              gym: gym,
-              userLocation: userLocation,
-              onFoundUsersGym: onFoundUsersGym,
+              currentlySelectedGym: gym,
+              userLocation: location,
+              onFoundNearestGym: onFoundNearestGym,
             ),
           ),
         ),
         onPressedYes: () {
           memoryCacheRepo.myGym = gym;
-          onFoundUsersGym(context, userLocation, gym);
+          onFoundNearestGym(gym);
         },
         address: gym.address,
       );
 
   @override
-  FoundLocationState buildState() => FoundLocationState();
+  FoundLocationCubit buildCubit() => FoundLocationCubit();
 }

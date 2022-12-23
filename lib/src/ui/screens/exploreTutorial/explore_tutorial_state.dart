@@ -1,28 +1,65 @@
 import 'dart:async';
 
-import '../state.dart';
+import '../screen_state.dart';
 
-class ExploreTutorialState extends ScreenState {
-  int _countdown = 3;
-  bool _holding = false;
-  Timer? counter;
+abstract class ExploreTutorialState extends ScreenState {
+  const ExploreTutorialState();
+}
 
-  int get countdown => _countdown;
-  bool get holding => _holding;
+class InitialState extends ExploreTutorialState {
+  const InitialState() : super();
+}
 
-  set countdown(int countdown) {
-    _countdown = countdown;
-    rebuildView();
+class HoldingState extends ExploreTutorialState {
+  final int countdown;
+  final Timer timer;
+
+  const HoldingState({
+    required this.countdown,
+    required this.timer,
+  }) : super();
+
+  @override
+  List<Object> get props => [countdown];
+}
+
+class ExploreTutorialCubit extends ScreenCubit<ExploreTutorialState> {
+  ExploreTutorialCubit() : super(const InitialState());
+
+  void transitionToHolding() => setState(
+        HoldingState(
+          countdown: 3,
+          timer: Timer.periodic(
+            const Duration(seconds: 1),
+            (timer) => decrementCounter(),
+          ),
+        ),
+      );
+
+  void decrementCounter() {
+    final holdingState = state as HoldingState;
+    setState(
+      HoldingState(
+        countdown: holdingState.countdown - 1,
+        timer: holdingState.timer,
+      ),
+    );
   }
 
-  set holding(bool holding) {
-    _holding = holding;
-    rebuildView();
+  void transitionToInitial() {
+    if (state is HoldingState) {
+      final holdingState = state as HoldingState;
+      holdingState.timer.cancel();
+      setState(const InitialState());
+    }
   }
 
   @override
-  dispose() {
-    counter?.cancel();
-    super.dispose();
+  Future<void> close() {
+    if (state is HoldingState) {
+      final holdingState = state as HoldingState;
+      holdingState.timer.cancel();
+    }
+    return super.close();
   }
 }

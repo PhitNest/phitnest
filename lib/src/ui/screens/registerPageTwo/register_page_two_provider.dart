@@ -1,113 +1,149 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../common/utils.dart';
 import '../../../common/validators.dart';
 import '../../widgets/widgets.dart';
-import '../provider.dart';
+import '../screen_provider.dart';
 import '../screens.dart';
 import 'register_page_two_state.dart';
 import 'register_page_two_view.dart';
 
 class RegisterPageTwoProvider
-    extends ScreenProvider<RegisterPageTwoState, RegisterPageTwoView> {
+    extends ScreenProvider<RegisterPageTwoCubit, RegisterPageTwoState> {
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final confirmPasswordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final scrollController = ScrollController();
   final String firstName;
   final String lastName;
-  final String? email;
-  final String? password;
-  final String? errorMessage;
+  final String? initialEmail;
+  final String? initialPassword;
+  final String? initialErrorMessage;
+  late final FocusNode emailFocus = FocusNode()
+    ..addListener(
+      () {
+        if (emailFocus.hasFocus) {
+          scrollToEmail();
+        }
+      },
+    );
+  late final FocusNode passwordFocus = FocusNode()
+    ..addListener(
+      () {
+        if (passwordFocus.hasFocus) {
+          scrollToPassword();
+        }
+      },
+    );
+  late final FocusNode confirmPasswordFocus = FocusNode()
+    ..addListener(
+      () {
+        if (confirmPasswordFocus.hasFocus) {
+          scrollToConfirmPassword();
+        }
+      },
+    );
 
-  const RegisterPageTwoProvider({
+  void scrollToEmail() => scroll(scrollController, 10.h);
+
+  void scrollToPassword() => scroll(scrollController, 20.h);
+
+  void scrollToConfirmPassword() => scroll(scrollController, 30.h);
+
+  RegisterPageTwoProvider({
     required this.firstName,
     required this.lastName,
-    this.email,
-    this.password,
-    this.errorMessage,
-  }) : super();
+    this.initialEmail,
+    this.initialPassword,
+    this.initialErrorMessage,
+  })  : emailController = TextEditingController(text: initialEmail),
+        passwordController = TextEditingController(text: initialPassword),
+        super();
 
   @override
-  Future<void> init(BuildContext context, RegisterPageTwoState state) async {
-    if (email != null) {
-      state.emailController.text = email!;
-    }
-    if (password != null) {
-      state.passwordController.text = password!;
-    }
-    if (errorMessage != null) {
-      state.errorMessage = errorMessage;
-      state.autovalidateMode = AutovalidateMode.always;
+  RegisterPageTwoCubit buildCubit() => RegisterPageTwoCubit();
+
+  @override
+  Future<void> listener(
+    BuildContext context,
+    RegisterPageTwoCubit cubit,
+    RegisterPageTwoState state,
+  ) async {
+    if (initialErrorMessage != null) {
+      cubit.transitionToError(initialErrorMessage!);
     }
   }
 
   @override
-  RegisterPageTwoView build(BuildContext context, RegisterPageTwoState state) =>
+  Widget builder(
+    BuildContext context,
+    RegisterPageTwoCubit cubit,
+    RegisterPageTwoState state,
+  ) =>
       RegisterPageTwoView(
+        scrollController: scrollController,
+        formKey: formKey,
+        autovalidateMode: state.autovalidateMode,
+        emailController: emailController,
+        passwordController: passwordController,
+        confirmPasswordController: confirmPasswordController,
+        validateEmail: (value) => validateEmail(value),
+        validatePassword: (value) => validatePassword(value),
+        validateConfirmPassword: (value) =>
+            value == passwordController.text ? null : 'Passwords do not match',
+        onTapEmail: () {
+          cubit.transitionToInitial();
+          onTappedTextField(scrollToEmail);
+        },
+        onTapPassword: () {
+          cubit.transitionToInitial();
+          onTappedTextField(scrollToPassword);
+        },
+        onTapConfirmPassword: () {
+          cubit.transitionToInitial();
+          onTappedTextField(scrollToConfirmPassword);
+        },
+        emailFocus: emailFocus,
+        passwordFocus: passwordFocus,
+        confirmPasswordFocus: confirmPasswordFocus,
+        onPressedNext: () {
+          if (formKey.currentState!.validate()) {
+            Navigator.of(context).push(
+              NoAnimationMaterialPageRoute(
+                builder: (context) => PhotoInstructionProvider(
+                  email: emailController.text,
+                  password: passwordController.text,
+                  firstName: firstName,
+                  lastName: lastName,
+                ),
+              ),
+            );
+          } else {
+            cubit.enableAutovalidateMode();
+          }
+        },
         onPressedBack: () => Navigator.of(context)
           ..pop()
           ..pop()
           ..push(
             NoAnimationMaterialPageRoute(
-              builder: (context) => RegisterPageOneProvider(
-                email: state.emailController.text,
-                password: state.passwordController.text,
-                firstName: firstName,
-                lastName: lastName,
-              ),
+              builder: (context) => RegisterPageOneProvider(),
             ),
           ),
-        onTapEmail: () {
-          state.errorMessage = null;
-          Future.delayed(
-            const Duration(milliseconds: 600),
-            () => state.onFocusEmail(true),
-          );
-        },
-        onTapPassword: () {
-          state.errorMessage = null;
-          Future.delayed(
-            const Duration(milliseconds: 600),
-            () => state.onFocusPassword(true),
-          );
-        },
-        onTapConfirmPassword: () {
-          state.errorMessage = null;
-          Future.delayed(
-            const Duration(milliseconds: 600),
-            () => state.onFocusConfirmPassword(true),
-          );
-        },
-        emailFocus: state.emailFocus,
-        passwordFocus: state.passwordFocus,
-        confirmPasswordFocus: state.confirmPasswordFocus,
-        scrollController: state.scrollController,
-        formKey: state.formKey,
-        autovalidateMode: state.autovalidateMode,
-        validateEmail: (value) => validateEmail(value),
-        validatePassword: (value) => validatePassword(value),
-        validateConfirmPassword: (value) =>
-            state.passwordController.text == value
-                ? null
-                : "Passwords don't match.",
-        emailController: state.emailController,
-        passwordController: state.passwordController,
-        confirmPasswordController: state.confirmPasswordController,
-        errorMessage: state.errorMessage,
-        onPressedNext: () {
-          if (state.formKey.currentState!.validate()) {
-            Navigator.of(context).push(
-              NoAnimationMaterialPageRoute(
-                builder: (context) => PhotoInstructionProvider(
-                  firstName: firstName,
-                  lastName: lastName,
-                  email: state.emailController.text,
-                  password: state.passwordController.text,
-                ),
-              ),
-            );
-          } else {
-            state.autovalidateMode = AutovalidateMode.always;
-          }
-        },
+        initialErrorMessage: state is ErrorState ? state.errorMessage : null,
       );
 
   @override
-  RegisterPageTwoState buildState() => RegisterPageTwoState();
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    emailFocus.dispose();
+    passwordFocus.dispose();
+    confirmPasswordFocus.dispose();
+    scrollController.dispose();
+    super.dispose();
+  }
 }

@@ -1,84 +1,82 @@
 import 'package:flutter/material.dart';
+import 'package:phitnest_mobile/src/ui/screens/foundLocation/found_location_provider.dart';
 
 import '../../../entities/entities.dart';
 import '../../../use-cases/use_cases.dart';
 import '../../widgets/widgets.dart';
-import '../screens.dart';
-import '../provider.dart';
+import '../screen_provider.dart';
 import 'request_location_state.dart';
 import 'request_location_view.dart';
 
 class RequestLocationProvider
-    extends ScreenProvider<RequestLocationState, RequestLocationView> {
-  final void Function(
-    BuildContext context,
-    LocationEntity location,
-    GymEntity gym,
-  ) onFoundUsersGym;
+    extends ScreenProvider<RequestLocationCubit, RequestLocationState> {
+  final Future<void> Function(GymEntity gym) onFoundNearestGym;
 
   const RequestLocationProvider({
-    required this.onFoundUsersGym,
+    required this.onFoundNearestGym,
   }) : super();
 
   @override
-  Future<void> init(BuildContext context, RequestLocationState state) async {
-    state.errorMessage = null;
-    state.searching = true;
-    getLocationUseCase.get().then(
-          (either) => either.fold(
-            (location) {
-              if (state.disposed) return;
-              getNearestGymsUseCase
-                  .get(
-                    location: location,
-                    maxDistance: 30000,
-                    limit: 1,
-                  )
-                  .then(
-                    (either) => either.fold(
-                      (gyms) => gyms.length > 0
-                          ? {
-                              if (!state.disposed)
-                                {
-                                  Navigator.push(
-                                    context,
-                                    NoAnimationMaterialPageRoute(
-                                      builder: (context) =>
-                                          FoundLocationProvider(
-                                        gym: gyms[0],
-                                        userLocation: location,
-                                        onFoundUsersGym: onFoundUsersGym,
-                                      ),
-                                    ),
-                                  )
-                                }
-                            }
-                          : {
-                              state.searching = false,
-                              state.errorMessage = 'No gyms found',
-                            },
-                      (failure) => onFailure(failure, state),
-                    ),
-                  );
-            },
-            (failure) => onFailure(failure, state),
-          ),
-        );
-  }
+  RequestLocationCubit buildCubit() => RequestLocationCubit();
 
-  void onFailure(Failure failure, RequestLocationState state) {
-    state.searching = false;
-    state.errorMessage = failure.message;
+  @override
+  Future<void> listener(
+    BuildContext context,
+    RequestLocationCubit cubit,
+    RequestLocationState state,
+  ) async {
+    if (state is FetchingLocationState) {
+      getLocationUseCase.get().then(
+            (either) => either.fold(
+              (location) => cubit.transitionToFetchingGym(location),
+              (failure) => cubit.transitionToError(failure.message),
+            ),
+          );
+    } else if (state is FetchingGymState) {
+      getNearestGymsUseCase
+          .get(location: state.location, maxDistance: 30000, limit: 1)
+          .then(
+            (either) => either.fold(
+              (gyms) {
+                if (gyms.length > 0) {
+                  Navigator.of(context)
+                    ..pop()
+                    ..push(
+                      NoAnimationMaterialPageRoute(
+                        builder: (context) => FoundLocationProvider(
+                          gym: gyms.first,
+                          location: state.location,
+                          onFoundNearestGym: onFoundNearestGym,
+                        ),
+                      ),
+                    );
+                } else {
+                  cubit.transitionToError("No gyms found.");
+                }
+              },
+              (failure) => cubit.transitionToError(failure.message),
+            ),
+          );
+    }
   }
 
   @override
-  RequestLocationView build(BuildContext context, RequestLocationState state) =>
-      RequestLocationView(
-        errorMessage: state.errorMessage,
-        searching: state.searching,
-        onPressRetry: () => init(context, state),
+  Widget builder(
+    BuildContext context,
+    RequestLocationCubit cubit,
+    RequestLocationState state,
+  ) {
+    if (state is FetchingLocationState) {
+      return FetchingLocationView();
+    } else if (state is FetchingGymState) {
+      return FetchingGymView();
+    } else if (state is ErrorState) {
+      return ErrorView(
+        errorMessage: state.message,
+        onPressedRetry: () => cubit.transitionToFetchingLocation(),
       );
-
-  @override
-  RequestLocationState buildState() => RequestLocationState();
+    } else {
+      throw Exception('Unknown state: $state');
+    }
+  }
 }
