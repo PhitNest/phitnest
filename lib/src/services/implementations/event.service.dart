@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dartz/dartz.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart';
 
 import '../../constants/constants.dart';
 import '../../entities/entities.dart';
@@ -18,12 +19,12 @@ class EventService implements IEventService {
   Future<Failure?> connect(String accessToken) async {
     try {
       _socket = IO.io(
-        '${environmentService.backendHost}:${environmentService.backendPort}',
-        {
-          "extraHeaders": {
+        'http://10.0.2.2:3000',
+        OptionBuilder().setTransports(['websocket']).setExtraHeaders(
+          {
             "token": "Bearer $accessToken",
           },
-        },
+        ).build(),
       );
       final completer = Completer();
       _socket!.onConnect(
@@ -32,13 +33,11 @@ class EventService implements IEventService {
       _socket!.onDisconnect(
         (_) => _socket = null,
       );
-
       await completer.future.timeout(requestTimeout);
       if (!connected) {
-        return Failure("Failed to connect to the server.");
-      } else {
-        return null;
+        return Failure("Failed to connect to the network.");
       }
+      return null;
     } catch (error) {
       return Failure("Failed to connect to the network.");
     }
