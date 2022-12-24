@@ -19,6 +19,7 @@ export class SendFriendRequestEventHandler
   constructor(
     @inject(UseCases.sendFriendRequest)
     sendFriendRequestUseCase: ISendFriendRequestUseCase,
+    @inject(UseCases.getUser)
     getUserUseCase: IGetUserUseCase
   ) {
     this.getUserUseCase = getUserUseCase;
