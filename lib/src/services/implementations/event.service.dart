@@ -19,7 +19,7 @@ class EventService implements IEventService {
   Future<Failure?> connect(String accessToken) async {
     try {
       _socket = IO.io(
-        'http://10.0.2.2:3000',
+        '${environmentService.useHttps ? "https" : "http"}://${environmentService.backendHost}:${environmentService.backendPort}',
         OptionBuilder().setTransports(['websocket']).setExtraHeaders(
           {
             "token": "Bearer $accessToken",

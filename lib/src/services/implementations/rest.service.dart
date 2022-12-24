@@ -10,11 +10,17 @@ import '../services.dart';
 
 class RestService implements IRestService {
   Uri _getBackendAddress(String route, {Map<String, dynamic>? params}) =>
-      Uri.http(
-        '${environmentService.backendHost}:${environmentService.backendPort}',
-        route,
-        params,
-      );
+      environmentService.useHttps
+          ? Uri.https(
+              '${environmentService.backendHost}:${environmentService.backendPort}',
+              route,
+              params,
+            )
+          : Uri.http(
+              '${environmentService.backendHost}:${environmentService.backendPort}',
+              route,
+              params,
+            );
 
   Future<Either<http.Response, Failure>> get(
     String route, {

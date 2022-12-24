@@ -12,3 +12,4 @@ export 'get_friends.dart';
 export 'get_messages.dart';
 export 'get_friend_requests.dart';
 export 'send_friend_request.dart';
+export 'send_direct_message.dart';
