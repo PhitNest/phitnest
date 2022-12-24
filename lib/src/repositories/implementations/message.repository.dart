@@ -59,23 +59,27 @@ class MessageRepository implements IMessageRepository {
       );
 
   @override
-  Future<Either<MessageEntity, Failure>> sendDirectMessage(
+  Future<Either<Tuple2<ConversationEntity, MessageEntity>, Failure>>
+      sendDirectMessage(
     String accessToken,
     String recipientCognitoId,
     String text,
   ) async =>
-      (await eventService.emit(
-        kSendDirectMessage,
-        {
-          "recipientId": recipientCognitoId,
-          "text": text,
-        },
-        accessToken,
-      ))
-          .fold(
-        (json) => Left(
-          MessageEntity.fromJson(json),
-        ),
-        (failure) => Right(failure),
-      );
+          (await eventService.emit(
+            kSendDirectMessage,
+            {
+              "recipientId": recipientCognitoId,
+              "text": text,
+            },
+            accessToken,
+          ))
+              .fold(
+            (json) => Left(
+              Tuple2(
+                ConversationEntity.fromJson(json['conversation']),
+                MessageEntity.fromJson(json['message']),
+              ),
+            ),
+            (failure) => Right(failure),
+          );
 }

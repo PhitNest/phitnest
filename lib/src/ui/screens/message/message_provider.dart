@@ -90,22 +90,17 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
         name: state.friend.fullName,
         onPressedSend: () {
           messageFocus.unfocus();
-          scrollController.animateTo(0,
-              duration: const Duration(milliseconds: 400),
-              curve: Curves.easeInOut);
           if (messageController.text.trim().length > 0) {
-            ConversationEntity conversation = ConversationEntity(
-              id: '',
-              users: [state.friend, memoryCacheRepo.me!],
-            );
-            MessageEntity newMessage = MessageEntity(
-              id: '',
-              conversationId: conversation.id,
-              userCognitoId: memoryCacheRepo.me!.id,
-              text: messageController.text.trim(),
-              createdAt: DateTime.now(),
-            );
-            cubit.transitionToLoaded(conversation, [newMessage]);
+            sendDirectMessageUseCase
+                .sendDirectMessage(
+                    state.friend.cognitoId, messageController.text.trim())
+                .then(
+                  (either) => either.fold(
+                    (pair) =>
+                        cubit.transitionToLoaded(pair.value1, [pair.value2]),
+                    (failure) => cubit.transitionToError(failure.message),
+                  ),
+                );
           }
           messageController.clear();
         },

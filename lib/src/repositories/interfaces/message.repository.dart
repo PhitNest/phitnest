@@ -13,7 +13,8 @@ abstract class IMessageRepository {
     String conversationId,
   );
 
-  Future<Either<MessageEntity, Failure>> sendDirectMessage(
+  Future<Either<Tuple2<ConversationEntity, MessageEntity>, Failure>>
+      sendDirectMessage(
     String accessToken,
     String recipientCognitoId,
     String text,
