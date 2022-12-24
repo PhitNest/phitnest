@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
 import { Repositories } from "../../common/dependency-injection";
+import { IConversationEntity, IMessageEntity } from "../../entities";
 import {
   IConversationRepository,
   IMessageRepository,
@@ -44,11 +45,12 @@ export class SendDirectMessageUseCase implements ISendDirectMessageUseCase {
           recipientCognitoId,
         ]);
       }
-      return await this.messageRepo.create({
+      const message = await this.messageRepo.create({
         conversationId: conversation._id,
         userCognitoId: senderCognitoId,
         text: text,
       });
+      return [conversation, message] as [IConversationEntity, IMessageEntity];
     } else {
       throw new Error("You can only send messages to friends");
     }

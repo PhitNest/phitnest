@@ -26,13 +26,14 @@ export class SendDirectMessageEventHandler
           text: z.string(),
         })
         .parse(data);
-      const message = await this.sendDirectMessageUseCase.execute(
-        connection.locals.cognitoId,
-        recipientId,
-        text
-      );
+      const [conversation, message] =
+        await this.sendDirectMessageUseCase.execute(
+          connection.locals.cognitoId,
+          recipientId,
+          text
+        );
       connection.broadcast("message", message, recipientId);
-      connection.success(message);
+      connection.success(conversation);
     } catch (err) {
       if (err instanceof z.ZodError) {
         connection.error(err.issues);
