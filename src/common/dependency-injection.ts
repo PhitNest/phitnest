@@ -37,6 +37,8 @@ export const UseCases = {
   sendDirectMessage: Symbol("sendDirectMessage.use-case"),
   getRecentConversations: Symbol("getRecentConversations.use-case"),
   getMessages: Symbol("getMessages.use-case"),
+  sendMessage: Symbol("sendMessage.use-case"),
+  getConversations: Symbol("getConversations.use-case"),
 };
 
 export const Middlewares = {
@@ -57,6 +59,7 @@ export const EventHandlers = {
   onDisconnect: Symbol("onDisconnect.event-handler"),
   sendDirectMessage: Symbol("sendDirectMessage.event-handler"),
   sendFriendRequest: Symbol("sendFriendRequest.event-handler"),
+  sendMessage: Symbol("sendMessage.event-handler"),
 };
 
 // Make sure to export repositories, use cases, and controllers symbols before importing the following
@@ -97,6 +100,8 @@ import {
   TutorialExploreUseCase,
   GetRecentConversationsUseCase,
   GetMessagesUseCase,
+  SendMessageUseCase,
+  GetConversationsUseCase,
 } from "../use-cases/implementations";
 
 import { AuthMiddleware } from "../adapters/middleware/implementations";
@@ -119,6 +124,7 @@ import {
   OnDisconnectEventHandler,
   SendDirectMessageEventHandler,
   SendFriendRequestEventHandler,
+  SendMessageEventHandler,
 } from "../adapters/event-handlers/implementations";
 
 export let dependencies: Container;
@@ -173,6 +179,8 @@ export function injectUseCases() {
   injectUseCase(UseCases.tutorialExplore, TutorialExploreUseCase);
   injectUseCase(UseCases.getRecentConversations, GetRecentConversationsUseCase);
   injectUseCase(UseCases.getMessages, GetMessagesUseCase);
+  injectUseCase(UseCases.sendMessage, SendMessageUseCase);
+  injectUseCase(UseCases.getConversations, GetConversationsUseCase);
 }
 
 export function injectAdapters() {
@@ -196,6 +204,7 @@ export function injectEventHandlers() {
     EventHandlers.sendFriendRequest,
     SendFriendRequestEventHandler
   );
+  injectEventHandler(EventHandlers.sendMessage, SendMessageEventHandler);
 }
 
 export function injectUseCase<Type extends IUseCase>(
