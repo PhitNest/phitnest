@@ -1,4 +1,8 @@
-import { IConversationEntity, IMessageEntity } from "../../entities";
+import {
+  IConversationEntity,
+  IMessageEntity,
+  IPopulatedConversationEntity,
+} from "../../entities";
 
 export interface IConversationRepository {
   create(userCognitoIds: string[]): Promise<IConversationEntity>;
@@ -11,7 +15,7 @@ export interface IConversationRepository {
 
   getRecentMessages(cognitoId: string): Promise<
     {
-      conversation: IConversationEntity;
+      conversation: IPopulatedConversationEntity;
       message: IMessageEntity;
     }[]
   >;
