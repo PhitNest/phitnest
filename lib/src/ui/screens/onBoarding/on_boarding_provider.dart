@@ -27,7 +27,9 @@ class OnBoardingProvider
                     ),
                     (_) => false,
                   )
-                : skipOnBoardingUseCase.setShouldSkip(),
+                : skipOnBoardingUseCase
+                    .setShouldSkip()
+                    .then((_) => cubit.transitionToLoaded()),
           );
     }
   }
