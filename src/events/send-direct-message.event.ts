@@ -4,7 +4,7 @@ import { EventHandlers } from "../common/dependency-injection";
 import { IEvent } from "./types";
 
 @injectable()
-export class SendMessageEvent implements IEvent {
+export class SendDirectMessageEvent implements IEvent {
   name = "directMessage";
   handler: ISendDirectMessageEventHandler;
 

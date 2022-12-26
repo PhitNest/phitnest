@@ -1,10 +1,12 @@
 import { inject, injectable } from "inversify";
 import { Repositories } from "../../common/dependency-injection";
 import { IConversationRepository } from "../../repositories/interfaces";
-import { IGetConversationsUseCase } from "../interfaces";
+import { IGetRecentConversationsUseCase } from "../interfaces";
 
 @injectable()
-export class GetConversationsUseCase implements IGetConversationsUseCase {
+export class GetRecentConversationsUseCase
+  implements IGetRecentConversationsUseCase
+{
   conversationRepo: IConversationRepository;
 
   constructor(
@@ -15,6 +17,6 @@ export class GetConversationsUseCase implements IGetConversationsUseCase {
   }
 
   execute(cognitoId: string) {
-    return this.conversationRepo.getByUser(cognitoId);
+    return this.conversationRepo.getRecentMessages(cognitoId);
   }
 }

@@ -32,7 +32,7 @@ export class SendDirectMessageEventHandler
           recipientId,
           text
         );
-      connection.broadcast("message", message, recipientId);
+      connection.broadcast(`${conversation._id}:message`, message, recipientId);
       connection.success({
         conversation: conversation,
         message: message,
