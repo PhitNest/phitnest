@@ -14,4 +14,6 @@ class LoadedState extends OnBoardingState {
 
 class OnBoardingCubit extends ScreenCubit<OnBoardingState> {
   OnBoardingCubit() : super(const InitialState());
+
+  void transitionToLoaded() => setState(const LoadedState());
 }
