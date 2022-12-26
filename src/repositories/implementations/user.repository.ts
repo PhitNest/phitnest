@@ -1,7 +1,10 @@
 import { injectable } from "inversify";
 import mongoose from "mongoose";
-import { l } from "../../common/logger";
-import { IUserEntity, RelationshipType } from "../../entities";
+import {
+  IConversationEntity,
+  IUserEntity,
+  RelationshipType,
+} from "../../entities";
 import { IUserRepository } from "../interfaces";
 import { GYM_MODEL_NAME } from "./gym.repository";
 import { RELATIONSHIP_COLLECTION_NAME } from "./relationship.repository";
@@ -182,6 +185,13 @@ export class MongoUserRepository implements IUserRepository {
       });
     }
     return UserModel.aggregate(pipeline).exec();
+  }
+
+  async populateConversationMembers(conversation: IConversationEntity) {
+    return {
+      ...conversation,
+      users: await UserModel.find({ cognitoId: { $in: conversation.users } }),
+    };
   }
 
   async delete(cognitoId: string) {

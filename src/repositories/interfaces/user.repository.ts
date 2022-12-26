@@ -1,4 +1,9 @@
-import { IPublicUserEntity, IUserEntity } from "../../entities";
+import {
+  IConversationEntity,
+  IPopulatedConversationEntity,
+  IPublicUserEntity,
+  IUserEntity,
+} from "../../entities";
 
 export interface IUserRepository {
   create(user: Omit<IUserEntity, "_id">): Promise<IUserEntity>;
@@ -20,6 +25,10 @@ export interface IUserRepository {
   get(cognitoId: string): Promise<IUserEntity | null>;
 
   haveSameGym(cognitoId1: string, cognitoId2: string): Promise<boolean>;
+
+  populateConversationMembers(
+    conversation: IConversationEntity
+  ): Promise<IPopulatedConversationEntity>;
 
   deleteAll(): Promise<void>;
 }

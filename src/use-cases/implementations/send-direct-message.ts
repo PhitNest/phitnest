@@ -1,10 +1,11 @@
 import { inject, injectable } from "inversify";
 import { Repositories } from "../../common/dependency-injection";
-import { IConversationEntity, IMessageEntity } from "../../entities";
+import { IMessageEntity, IPopulatedConversationEntity } from "../../entities";
 import {
   IConversationRepository,
   IMessageRepository,
   IRelationshipRepository,
+  IUserRepository,
 } from "../../repositories/interfaces";
 import { ISendDirectMessageUseCase } from "../interfaces";
 
@@ -13,6 +14,7 @@ export class SendDirectMessageUseCase implements ISendDirectMessageUseCase {
   messageRepo: IMessageRepository;
   conversationRepo: IConversationRepository;
   relationshipRepo: IRelationshipRepository;
+  userRepo: IUserRepository;
 
   constructor(
     @inject(Repositories.message)
@@ -20,11 +22,14 @@ export class SendDirectMessageUseCase implements ISendDirectMessageUseCase {
     @inject(Repositories.conversation)
     conversationRepo: IConversationRepository,
     @inject(Repositories.relationship)
-    relationshipRepo: IRelationshipRepository
+    relationshipRepo: IRelationshipRepository,
+    @inject(Repositories.user)
+    userRepo: IUserRepository
   ) {
     this.messageRepo = messageRepo;
     this.conversationRepo = conversationRepo;
     this.relationshipRepo = relationshipRepo;
+    this.userRepo = userRepo;
   }
 
   async execute(
@@ -45,12 +50,19 @@ export class SendDirectMessageUseCase implements ISendDirectMessageUseCase {
           recipientCognitoId,
         ]);
       }
+
+      const populatedConversation =
+        await this.userRepo.populateConversationMembers(conversation);
+
       const message = await this.messageRepo.create({
         conversationId: conversation._id,
         userCognitoId: senderCognitoId,
         text: text,
       });
-      return [conversation, message] as [IConversationEntity, IMessageEntity];
+      return [populatedConversation, message] as [
+        IPopulatedConversationEntity,
+        IMessageEntity
+      ];
     } else {
       throw new Error("You can only send messages to friends");
     }
