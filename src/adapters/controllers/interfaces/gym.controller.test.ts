@@ -261,40 +261,6 @@ describe("Get the nearest gyms", () => {
     mockResponse = new MockResponse({});
     res = await gymController.getNearest(mockRequest, mockResponse);
     expect(res.code).toBe(statusBadRequest);
-    expect(res.content).toEqual([
-      {
-        code: "too_small",
-        inclusive: true,
-        message: "Number must be greater than or equal to -180",
-        minimum: -180,
-        path: ["longitude"],
-        type: "number",
-      },
-      {
-        code: "too_small",
-        inclusive: true,
-        message: "Number must be greater than or equal to -90",
-        minimum: -90,
-        path: ["latitude"],
-        type: "number",
-      },
-      {
-        code: "too_small",
-        inclusive: false,
-        message: "Number must be greater than 0",
-        minimum: 0,
-        path: ["distance"],
-        type: "number",
-      },
-      {
-        code: "too_small",
-        inclusive: false,
-        message: "Number must be greater than 0",
-        minimum: 0,
-        path: ["amount"],
-        type: "number",
-      },
-    ]);
     mockRequest = new MockRequest({
       latitude: 91,
       longitude: 181,
