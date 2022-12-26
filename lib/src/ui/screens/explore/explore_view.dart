@@ -18,7 +18,7 @@ class LoadingView extends StatelessWidget {
   Widget build(BuildContext context) => BetterScaffold(
         body: Column(
           children: [
-            200.verticalSpace,
+            220.verticalSpace,
             CircularProgressIndicator(),
             Spacer(),
             StyledNavBar(

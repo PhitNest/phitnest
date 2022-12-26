@@ -97,4 +97,24 @@ class RelationshipRepository implements IRelationshipRepository {
               (failure) => Right(failure),
             ),
           );
+
+  @override
+  Future<Failure?> denyFriendRequest(
+          String accessToken, String recipientCognitoId) =>
+      restService
+          .post(
+            kDenyFriendRequest,
+            body: {
+              "recipientId": recipientCognitoId,
+            },
+            accessToken: accessToken,
+          )
+          .then(
+            (either) => either.fold(
+              (response) => response.statusCode == kStatusOK
+                  ? null
+                  : Failure(jsonDecode(response.body).toString()),
+              (failure) => failure,
+            ),
+          );
 }

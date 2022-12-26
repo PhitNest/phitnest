@@ -120,17 +120,19 @@ class ConversationsProvider
         onDismissFriend: (friend, index) => cubit.removeConversation(index),
         onDismissConversation: (conversation, index) =>
             cubit.removeConversation(index),
-        onTapFriend: (friend) => Navigator.push(
+        onTapFriend: (friend) => Navigator.pushAndRemoveUntil(
           context,
           NoAnimationMaterialPageRoute(
             builder: (context) => MessageProvider(friend: friend),
           ),
+          (_) => false,
         ),
-        onTapConversation: (conversation) => Navigator.push(
+        onTapConversation: (conversation) => Navigator.pushAndRemoveUntil(
           context,
           NoAnimationMaterialPageRoute(
             builder: (context) => MessageProvider(conversation: conversation),
           ),
+          (_) => false,
         ),
         getChatName: (conversation) =>
             conversation.chatName(memoryCacheRepo.me!.id),

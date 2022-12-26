@@ -13,4 +13,7 @@ abstract class IRelationshipRepository {
 
   Future<Either<List<PublicUserEntity>, Failure>> getIncomingFriendRequests(
       String accessToken);
+
+  Future<Failure?> denyFriendRequest(
+      String accessToken, String recipientCognitoId);
 }

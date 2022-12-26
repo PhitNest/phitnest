@@ -27,6 +27,12 @@ void injectUseCases() {
       .registerSingleton<ISendFriendRequestUseCase>(SendFriendRequestUseCase());
   useCases
       .registerSingleton<ISendDirectMessageUseCase>(SendDirectMessageUseCase());
+  useCases
+      .registerSingleton<IDenyFriendRequestUseCase>(DenyFriendRequestUseCase());
+  useCases.registerSingleton<IStreamFriendRequestsUseCase>(
+      StreamFriendRequestsUseCase());
+  useCases.registerSingleton<ISendMessageUseCase>(SendMessageUseCase());
+  useCases.registerSingleton<IStreamMessagesUseCase>(StreamMessagesUseCase());
 }
 
 ISkipOnBoardingUseCase get skipOnBoardingUseCase => useCases();
@@ -44,3 +50,7 @@ IGetMessagesUseCase get getMessagesUseCase => useCases();
 IGetFriendRequestsUseCase get getFriendRequestsUseCase => useCases();
 ISendFriendRequestUseCase get sendFriendRequestUseCase => useCases();
 ISendDirectMessageUseCase get sendDirectMessageUseCase => useCases();
+IDenyFriendRequestUseCase get denyFriendRequestUseCase => useCases();
+IStreamFriendRequestsUseCase get streamFriendRequestsUseCase => useCases();
+ISendMessageUseCase get sendMessageUseCase => useCases();
+IStreamMessagesUseCase get streamMessagesUseCase => useCases();

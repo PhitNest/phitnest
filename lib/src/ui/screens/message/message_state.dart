@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../../../entities/entities.dart';
 import '../screen_state.dart';
 
@@ -45,14 +47,16 @@ class ErrorState extends MessageState {
 class LoadedState extends MessageState {
   final ConversationEntity conversation;
   final List<MessageEntity> messages;
+  final StreamSubscription<MessageEntity> messageStream;
 
   const LoadedState({
     required this.conversation,
     required this.messages,
+    required this.messageStream,
   }) : super();
 
   @override
-  List<Object> get props => [conversation, messages];
+  List<Object> get props => [conversation, messages, messageStream];
 }
 
 class MessageCubit extends ScreenCubit<MessageState> {
@@ -65,16 +69,29 @@ class MessageCubit extends ScreenCubit<MessageState> {
       setState(LoadingConversationState(conversation: conversation));
 
   void transitionToLoaded(
-          ConversationEntity conversation, List<MessageEntity> messages) =>
-      setState(LoadedState(conversation: conversation, messages: messages));
+    ConversationEntity conversation,
+    List<MessageEntity> messages,
+    StreamSubscription<MessageEntity> messageStream,
+  ) =>
+      setState(
+        LoadedState(
+          conversation: conversation,
+          messages: messages,
+          messageStream: messageStream,
+        ),
+      );
 
   void transitionToError(String message) =>
       setState(ErrorState(message: message));
 
   void addMessage(MessageEntity newMessage) {
     final loadedState = state as LoadedState;
-    setState(LoadedState(
+    setState(
+      LoadedState(
         conversation: loadedState.conversation,
-        messages: [newMessage, ...loadedState.messages]));
+        messages: [newMessage, ...loadedState.messages],
+        messageStream: loadedState.messageStream,
+      ),
+    );
   }
 }
