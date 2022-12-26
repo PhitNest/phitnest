@@ -58,8 +58,8 @@ class LoadingView extends StatelessWidget {
       );
 }
 
-class LoadedView extends _BaseWidget {
-  const LoadedView({
+class NotTypingView extends _BaseWidget {
+  const NotTypingView({
     required super.searchController,
     required super.friends,
     required super.requests,

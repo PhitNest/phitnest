@@ -23,14 +23,22 @@ class FriendsProvider extends ScreenProvider<FriendsCubit, FriendsState> {
         [
           getFriendsUseCase.friends(),
           getFriendRequestsUseCase.getIncomingFriendRequests(),
+          streamFriendRequestsUseCase.streamFriendRequests(),
         ],
       ).then(
         (responses) => responses[0].fold(
           (friends) => responses[1].fold(
-            (requests) => cubit.transitionToLoaded(
-              friends: friends as List<FriendEntity>,
-              requests: requests,
-              searchQuery: '',
+            (requests) => responses[2].fold(
+              (friendRequestSteam) => cubit.transitionToLoaded(
+                friends: friends as List<FriendEntity>,
+                requests: requests as List<PublicUserEntity>,
+                searchQuery: '',
+                friendRequestStream:
+                    (friendRequestSteam as Stream<PublicUserEntity>).listen(
+                  (friendRequest) => cubit.addRequest(friendRequest),
+                ),
+              ),
+              (failure) => cubit.transitionToError(failure.message),
             ),
             (failure) => cubit.transitionToError(failure.message),
           ),
@@ -66,10 +74,26 @@ class FriendsProvider extends ScreenProvider<FriendsCubit, FriendsState> {
         },
       );
     };
-    final onRemoveFriend =
-        (FriendEntity friend, int index) => cubit.removeFriend(index);
-    final onDenyFriend =
-        (PublicUserEntity user, int index) => cubit.removeRequest(index);
+    final onRemoveFriend = (FriendEntity friend, int index) {
+      cubit.removeFriend(index);
+      denyFriendRequestUseCase.denyFriendRequest(friend.cognitoId).then(
+        (failure) {
+          if (failure != null) {
+            cubit.transitionToError(failure.message);
+          }
+        },
+      );
+    };
+    final onDenyFriend = (PublicUserEntity user, int index) {
+      cubit.removeRequest(index);
+      denyFriendRequestUseCase.denyFriendRequest(user.cognitoId).then(
+        (failure) {
+          if (failure != null) {
+            cubit.transitionToError(failure.message);
+          }
+        },
+      );
+    };
     if (state is LoadingState) {
       return LoadingView();
     } else if (state is ErrorState) {
@@ -77,8 +101,8 @@ class FriendsProvider extends ScreenProvider<FriendsCubit, FriendsState> {
         message: state.message,
         onPressedRetry: () => cubit.transitionToLoading(),
       );
-    } else if (state is LoadedState) {
-      return LoadedView(
+    } else if (state is NotTypingState) {
+      return NotTypingView(
         searchBoxKey: searchBoxKey,
         friends: state.friends
             .where(
@@ -122,7 +146,7 @@ class FriendsProvider extends ScreenProvider<FriendsCubit, FriendsState> {
         onAddFriend: onAddFriend,
         onDenyFriend: onDenyFriend,
         onEditSearch: () => cubit.setSearchQuery(searchController.text.trim()),
-        onSubmitSearch: () => cubit.transitionTypingToLoaded(),
+        onSubmitSearch: () => cubit.transitionStopTyping(),
       );
     } else {
       throw Exception('Unknown state: $state');

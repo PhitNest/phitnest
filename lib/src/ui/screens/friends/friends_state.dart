@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../../../entities/entities.dart';
 import '../screen_state.dart';
 
@@ -20,34 +22,40 @@ class ErrorState extends FriendsState {
   List<Object> get props => [message];
 }
 
-class LoadedState extends FriendsState {
+abstract class LoadedState extends FriendsState {
   final List<FriendEntity> friends;
   final List<PublicUserEntity> requests;
   final String searchQuery;
+  final StreamSubscription<PublicUserEntity> friendRequestStream;
 
   const LoadedState({
     required this.friends,
     required this.requests,
     required this.searchQuery,
+    required this.friendRequestStream,
   }) : super();
 
   @override
-  List<Object> get props => [friends, requests, searchQuery];
+  List<Object> get props =>
+      [friends, requests, searchQuery, friendRequestStream];
 }
 
-class TypingState extends FriendsState {
-  final List<FriendEntity> friends;
-  final List<PublicUserEntity> requests;
-  final String searchQuery;
+class NotTypingState extends LoadedState {
+  const NotTypingState({
+    required super.friends,
+    required super.requests,
+    required super.searchQuery,
+    required super.friendRequestStream,
+  });
+}
 
+class TypingState extends LoadedState {
   const TypingState({
-    required this.friends,
-    required this.requests,
-    required this.searchQuery,
-  }) : super();
-
-  @override
-  List<Object> get props => [friends, requests, searchQuery];
+    required super.friends,
+    required super.requests,
+    required super.searchQuery,
+    required super.friendRequestStream,
+  });
 }
 
 class FriendsCubit extends ScreenCubit<FriendsState> {
@@ -62,55 +70,62 @@ class FriendsCubit extends ScreenCubit<FriendsState> {
     required List<FriendEntity> friends,
     required List<PublicUserEntity> requests,
     required String searchQuery,
+    required StreamSubscription<PublicUserEntity> friendRequestStream,
   }) =>
       setState(
-        LoadedState(
+        NotTypingState(
           friends: friends,
           requests: requests,
           searchQuery: searchQuery,
+          friendRequestStream: friendRequestStream,
         ),
       );
 
-  void transitionTypingToLoaded() {
+  void transitionStopTyping() {
     final typingState = state as TypingState;
     setState(
-      LoadedState(
+      NotTypingState(
         friends: typingState.friends,
         requests: typingState.requests,
         searchQuery: typingState.searchQuery,
+        friendRequestStream: typingState.friendRequestStream,
       ),
     );
   }
 
   void transitionToTyping() {
-    final loadedState = state as LoadedState;
+    final notTypingState = state as NotTypingState;
     setState(
       TypingState(
-        friends: loadedState.friends,
-        requests: loadedState.requests,
-        searchQuery: loadedState.searchQuery,
+        friends: notTypingState.friends,
+        requests: notTypingState.requests,
+        searchQuery: notTypingState.searchQuery,
+        friendRequestStream: notTypingState.friendRequestStream,
       ),
     );
   }
 
   void setSearchQuery(String searchQuery) {
+    final typingState = state as TypingState;
     setState(
       TypingState(
-        friends: (state as TypingState).friends,
-        requests: (state as TypingState).requests,
+        friends: typingState.friends,
+        requests: typingState.requests,
         searchQuery: searchQuery,
+        friendRequestStream: typingState.friendRequestStream,
       ),
     );
   }
 
   void removeFriend(int index) {
-    if (state is LoadedState) {
-      final loadedState = state as LoadedState;
+    if (state is NotTypingState) {
+      final notTypingState = state as NotTypingState;
       setState(
-        LoadedState(
-          friends: List.from(loadedState.friends)..removeAt(index),
-          requests: loadedState.requests,
-          searchQuery: loadedState.searchQuery,
+        NotTypingState(
+          friends: List.from(notTypingState.friends)..removeAt(index),
+          requests: notTypingState.requests,
+          searchQuery: notTypingState.searchQuery,
+          friendRequestStream: notTypingState.friendRequestStream,
         ),
       );
     } else if (state is TypingState) {
@@ -120,19 +135,21 @@ class FriendsCubit extends ScreenCubit<FriendsState> {
           friends: List.from(typingState.friends)..removeAt(index),
           requests: typingState.requests,
           searchQuery: typingState.searchQuery,
+          friendRequestStream: typingState.friendRequestStream,
         ),
       );
     }
   }
 
   void removeRequest(int index) {
-    if (state is LoadedState) {
-      final loadedState = state as LoadedState;
+    if (state is NotTypingState) {
+      final notTypingState = state as NotTypingState;
       setState(
-        LoadedState(
-          friends: loadedState.friends,
-          requests: List.from(loadedState.requests)..removeAt(index),
-          searchQuery: loadedState.searchQuery,
+        NotTypingState(
+          friends: notTypingState.friends,
+          requests: List.from(notTypingState.requests)..removeAt(index),
+          searchQuery: notTypingState.searchQuery,
+          friendRequestStream: notTypingState.friendRequestStream,
         ),
       );
     } else if (state is TypingState) {
@@ -142,19 +159,21 @@ class FriendsCubit extends ScreenCubit<FriendsState> {
           friends: typingState.friends,
           requests: List.from(typingState.requests)..removeAt(index),
           searchQuery: typingState.searchQuery,
+          friendRequestStream: typingState.friendRequestStream,
         ),
       );
     }
   }
 
   void addFriend(FriendEntity friend) {
-    if (state is LoadedState) {
-      final loadedState = state as LoadedState;
+    if (state is NotTypingState) {
+      final notTypingState = state as NotTypingState;
       setState(
-        LoadedState(
-          friends: List.from(loadedState.friends)..insert(0, friend),
-          requests: loadedState.requests,
-          searchQuery: loadedState.searchQuery,
+        NotTypingState(
+          friends: List.from(notTypingState.friends)..insert(0, friend),
+          requests: notTypingState.requests,
+          searchQuery: notTypingState.searchQuery,
+          friendRequestStream: notTypingState.friendRequestStream,
         ),
       );
     } else if (state is TypingState) {
@@ -164,19 +183,21 @@ class FriendsCubit extends ScreenCubit<FriendsState> {
           friends: List.from(typingState.friends)..insert(0, friend),
           requests: typingState.requests,
           searchQuery: typingState.searchQuery,
+          friendRequestStream: typingState.friendRequestStream,
         ),
       );
     }
   }
 
   void addRequest(PublicUserEntity request) {
-    if (state is LoadedState) {
-      final loadedState = state as LoadedState;
+    if (state is NotTypingState) {
+      final notTypingState = state as NotTypingState;
       setState(
-        LoadedState(
-          friends: loadedState.friends,
-          requests: List.from(loadedState.requests)..insert(0, request),
-          searchQuery: loadedState.searchQuery,
+        NotTypingState(
+          friends: notTypingState.friends,
+          requests: List.from(notTypingState.requests)..insert(0, request),
+          searchQuery: notTypingState.searchQuery,
+          friendRequestStream: notTypingState.friendRequestStream,
         ),
       );
     } else if (state is TypingState) {
@@ -186,8 +207,18 @@ class FriendsCubit extends ScreenCubit<FriendsState> {
           friends: typingState.friends,
           requests: List.from(typingState.requests)..insert(0, request),
           searchQuery: typingState.searchQuery,
+          friendRequestStream: typingState.friendRequestStream,
         ),
       );
     }
+  }
+
+  @override
+  Future<void> close() {
+    if (state is LoadedState) {
+      final loadedState = state as LoadedState;
+      loadedState.friendRequestStream.cancel();
+    }
+    return super.close();
   }
 }

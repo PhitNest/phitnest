@@ -49,7 +49,8 @@ class MessageRepository implements IMessageRepository {
     String accessToken,
     String conversationId,
   ) async =>
-      (await eventService.stream(kReceiveMessage, accessToken)).fold(
+      (await eventService.stream('$conversationId:$kMessage', accessToken))
+          .fold(
         (stream) => Left(
           stream.map(
             (event) => MessageEntity.fromJson(event),
@@ -82,4 +83,22 @@ class MessageRepository implements IMessageRepository {
             ),
             (failure) => Right(failure),
           );
+
+  @override
+  Future<Either<MessageEntity, Failure>> sendMessage(
+          String accessToken, String conversationId, String text) async =>
+      (await eventService.emit(
+        kMessage,
+        {
+          "conversationId": conversationId,
+          "text": text,
+        },
+        accessToken,
+      ))
+          .fold(
+        (json) => Left(
+          MessageEntity.fromJson(json),
+        ),
+        (failure) => Right(failure),
+      );
 }

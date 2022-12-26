@@ -19,4 +19,10 @@ abstract class IMessageRepository {
     String recipientCognitoId,
     String text,
   );
+
+  Future<Either<MessageEntity, Failure>> sendMessage(
+    String accessToken,
+    String conversationId,
+    String text,
+  );
 }

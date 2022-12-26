@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -118,7 +119,7 @@ class EventService implements IEventService {
         (error) => !completer.isCompleted
             ? completer.complete(
                 Right(
-                  Failure(error),
+                  Failure(error.toString()),
                 ),
               )
             : () {},

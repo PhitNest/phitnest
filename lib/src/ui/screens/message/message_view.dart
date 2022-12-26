@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../entities/entities.dart';
 import '../../theme.dart';
 import '../../widgets/widgets.dart';
+import '../screens.dart';
 
 class MessageView extends _BaseWidget {
   final List<MessageEntity> messages;
@@ -140,7 +141,15 @@ abstract class _BaseWidget extends StatelessWidget {
             40.verticalSpace,
             Stack(
               children: [
-                BackArrowButton(),
+                BackArrowButton(
+                  onPressed: () => Navigator.pushAndRemoveUntil(
+                    context,
+                    NoAnimationMaterialPageRoute(
+                      builder: (context) => ConversationsProvider(),
+                    ),
+                    (_) => false,
+                  ),
+                ),
                 Container(
                   alignment: Alignment.center,
                   child: Text(

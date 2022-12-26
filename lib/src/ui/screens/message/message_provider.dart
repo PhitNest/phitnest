@@ -32,15 +32,24 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
         cubit.transitionToNewFriend(friend!);
       }
     } else if (state is LoadingConversationState) {
-      getMessagesUseCase.getMessages(state.conversation.id).then(
-            (either) => either.fold(
-              (messages) => cubit.transitionToLoaded(
-                state.conversation,
-                messages,
+      Future.wait([
+        getMessagesUseCase.getMessages(state.conversation.id),
+        streamMessagesUseCase.streamMessages(state.conversation.id)
+      ]).then(
+        (eithers) => eithers[0].fold(
+          (messages) => eithers[1].fold(
+            (messageStream) => cubit.transitionToLoaded(
+              state.conversation,
+              (messages as List<MessageEntity>).reversed.toList(),
+              (messageStream as Stream<MessageEntity>).listen(
+                (message) => cubit.addMessage(message),
               ),
-              (failure) => cubit.transitionToError(failure.message),
             ),
-          );
+            (failure) => cubit.transitionToError(failure.message),
+          ),
+          (failure) => cubit.transitionToError(failure.message),
+        ),
+      );
     }
   }
 
@@ -70,14 +79,15 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
               duration: const Duration(milliseconds: 400),
               curve: Curves.easeInOut);
           if (messageController.text.trim().length > 0) {
-            MessageEntity newMessage = MessageEntity(
-              id: '',
-              conversationId: state.conversation.id,
-              userCognitoId: memoryCacheRepo.me!.id,
-              text: messageController.text.trim(),
-              createdAt: DateTime.now(),
-            );
-            cubit.addMessage(newMessage);
+            sendMessageUseCase
+                .sendMessage(
+                    state.conversation.id, messageController.text.trim())
+                .then(
+                  (either) => either.fold(
+                    (message) => cubit.addMessage(message),
+                    (failure) => cubit.transitionToError(failure.message),
+                  ),
+                );
           }
           messageController.clear();
         },
@@ -97,8 +107,21 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
                     state.friend.cognitoId, messageController.text.trim())
                 .then(
                   (either) => either.fold(
-                    (pair) =>
-                        cubit.transitionToLoaded(pair.value1, [pair.value2]),
+                    (pair) => streamMessagesUseCase
+                        .streamMessages(pair.value1.id)
+                        .then(
+                          (either) => either.fold(
+                            (messageStream) => cubit.transitionToLoaded(
+                              pair.value1,
+                              [pair.value2],
+                              messageStream.listen(
+                                (message) => cubit.addMessage(message),
+                              ),
+                            ),
+                            (failure) =>
+                                cubit.transitionToError(failure.message),
+                          ),
+                        ),
                     (failure) => cubit.transitionToError(failure.message),
                   ),
                 );
