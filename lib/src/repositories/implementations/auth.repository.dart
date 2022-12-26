@@ -16,7 +16,6 @@ class AuthenticationRepository implements IAuthRepository {
           .get(
             kGetUser,
             accessToken: accessToken,
-            timeout: const Duration(seconds: 2),
           )
           .then(
             (either) => either.fold(

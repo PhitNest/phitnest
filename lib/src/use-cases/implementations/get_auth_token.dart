@@ -47,7 +47,6 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
       final refreshResult = await authRepo.refreshSession(
         email,
         refreshToken,
-        timeout: const Duration(seconds: 2),
       );
       if (refreshResult.isLeft()) {
         return refreshResult.fold(
@@ -78,7 +77,6 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
       final loginResult = await authRepo.login(
         email,
         password,
-        timeout: const Duration(seconds: 2),
       );
       if (loginResult.isLeft()) {
         return loginResult.fold(

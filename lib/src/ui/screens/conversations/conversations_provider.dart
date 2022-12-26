@@ -34,7 +34,9 @@ class ConversationsProvider
                               conversations.indexWhere(
                                 (conversation) =>
                                     conversation.value1.users.indexWhere(
-                                          (user) => user.id == friend.id,
+                                          (user) =>
+                                              user.cognitoId ==
+                                              friend.cognitoId,
                                         ) !=
                                         -1 &&
                                     !conversation.value1.isGroup,
@@ -49,11 +51,18 @@ class ConversationsProvider
                         int conversationIndex = 0;
                         while (friendIndex < friends.length ||
                             conversationIndex < conversations.length) {
-                          if (conversationIndex != conversations.length &&
+                          if (conversationIndex == conversations.length) {
+                            recents.add(
+                              Left(
+                                friends[friendIndex],
+                              ),
+                            );
+                            friendIndex++;
+                          } else if (friendIndex == friends.length ||
                               conversations[conversationIndex]
                                   .value2
                                   .createdAt
-                                  .isBefore(friends[friendIndex].since)) {
+                                  .isAfter(friends[friendIndex].since)) {
                             recents.add(
                               Right(
                                 conversations[conversationIndex],

@@ -62,7 +62,8 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
     } else if (state is LoadedState) {
       return MessageView(
         messages: state.messages,
-        isMe: (message) => message.userCognitoId == memoryCacheRepo.me!.id,
+        isMe: (message) =>
+            message.userCognitoId == memoryCacheRepo.me!.cognitoId,
         onPressedSend: () {
           messageFocus.unfocus();
           scrollController.animateTo(0,
