@@ -55,7 +55,14 @@ class ErrorState extends ExploreState {
 }
 
 class EmptyNestState extends ExploreState {
-  const EmptyNestState() : super();
+  final List<PublicUserEntity> incomingRequests;
+
+  const EmptyNestState({
+    required this.incomingRequests,
+  }) : super();
+
+  @override
+  List<Object> get props => [incomingRequests];
 }
 
 class ExploreCubit extends ScreenCubit<ExploreState> {
@@ -117,7 +124,10 @@ class ExploreCubit extends ScreenCubit<ExploreState> {
     }
   }
 
-  void transitionToEmpty() => setState(const EmptyNestState());
+  void transitionToEmpty(
+    List<PublicUserEntity> incomingRequests,
+  ) =>
+      setState(EmptyNestState(incomingRequests: incomingRequests));
 
   void removeUser(int index) {
     if (state is LoadedState) {
@@ -193,6 +203,16 @@ class ExploreCubit extends ScreenCubit<ExploreState> {
           pageIndex: holdingState.pageIndex,
           countdown: holdingState.countdown,
           timer: holdingState.timer,
+        ),
+      );
+    } else if (state is EmptyNestState) {
+      final emptyNestState = state as EmptyNestState;
+      setState(
+        EmptyNestState(
+          incomingRequests: emptyNestState.incomingRequests
+            ..removeAt(
+              index % emptyNestState.incomingRequests.length,
+            ),
         ),
       );
     } else {

@@ -28,9 +28,9 @@ class ErrorView extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             20.verticalSpace,
-            TextButtonWidget(
+            StyledButton(
               onPressed: onPressedRetry,
-              text: 'RETRY',
+              child: Text('RETRY'),
             ),
           ],
         ),
@@ -45,11 +45,8 @@ class LoadingView extends StatelessWidget {
         useBackButton: true,
         body: Column(
           children: [
-            Expanded(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
+            120.verticalSpace,
+            CircularProgressIndicator(),
           ],
         ),
       );

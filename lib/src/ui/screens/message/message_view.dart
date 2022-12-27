@@ -151,6 +151,7 @@ abstract class _BaseWidget extends StatelessWidget {
                   ),
                 ),
                 Container(
+                  padding: EdgeInsets.only(top: 8.h),
                   alignment: Alignment.center,
                   child: Text(
                     name,

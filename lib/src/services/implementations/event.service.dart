@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -29,7 +28,7 @@ class EventService implements IEventService {
       );
       final completer = Completer();
       _socket!.onConnect(
-        (_) => completer.complete(),
+        (_) => completer.isCompleted ? () {} : completer.complete(),
       );
       _socket!.onDisconnect(
         (_) => _socket = null,
