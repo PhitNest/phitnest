@@ -86,7 +86,7 @@ class _BaseWidget extends StatelessWidget {
               children: [
                 BackArrowButton(),
                 Container(
-                  padding: EdgeInsets.only(top: 10.h),
+                  padding: EdgeInsets.only(top: 8.h),
                   alignment: Alignment.center,
                   child: Text(
                     "Confirm Photo",

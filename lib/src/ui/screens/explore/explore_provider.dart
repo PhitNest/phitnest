@@ -74,7 +74,7 @@ class ExploreProvider extends ScreenProvider<ExploreCubit, ExploreState> {
       }
     } else if (state is LoadedState) {
       if (state.users.isEmpty) {
-        cubit.transitionToEmpty();
+        cubit.transitionToEmpty(state.incomingRequests);
       }
     }
   }

@@ -60,7 +60,7 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
     MessageState state,
   ) {
     if (state is InitialState) {
-      return const InitialView();
+      return InitialView();
     } else if (state is LoadingConversationState) {
       return LoadingConversationView(
         onPressedSend: () => messageFocus.unfocus(),
