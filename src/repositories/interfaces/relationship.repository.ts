@@ -17,5 +17,7 @@ export interface IRelationshipRepository {
 
   isFriend(cognitoId1: string, cognitoId2: string): Promise<boolean>;
 
+  deleteFriendship(senderId: string, recipientId: string): Promise<boolean>;
+
   deleteAll(): Promise<void>;
 }

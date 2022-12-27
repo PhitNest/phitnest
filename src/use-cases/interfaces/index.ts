@@ -25,3 +25,4 @@ export { IGetRecentConversationsUseCase } from "./get-recent-conversations";
 export { IGetMessagesUseCase } from "./get-messages";
 export { ISendMessageUseCase } from "./send-message";
 export { IGetConversationsUseCase } from "./get-conversations";
+export { IRemoveFriendUseCase } from "./remove-friend";

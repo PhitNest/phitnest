@@ -39,6 +39,7 @@ export const UseCases = {
   getMessages: Symbol("getMessages.use-case"),
   sendMessage: Symbol("sendMessage.use-case"),
   getConversations: Symbol("getConversations.use-case"),
+  removeFriend: Symbol("removeFriend.use-case"),
 };
 
 export const Middlewares = {
@@ -102,6 +103,7 @@ import {
   GetMessagesUseCase,
   SendMessageUseCase,
   GetConversationsUseCase,
+  RemoveFriendUseCase,
 } from "../use-cases/implementations";
 
 import { AuthMiddleware } from "../adapters/middleware/implementations";
@@ -181,6 +183,7 @@ export function injectUseCases() {
   injectUseCase(UseCases.getMessages, GetMessagesUseCase);
   injectUseCase(UseCases.sendMessage, SendMessageUseCase);
   injectUseCase(UseCases.getConversations, GetConversationsUseCase);
+  injectUseCase(UseCases.removeFriend, RemoveFriendUseCase);
 }
 
 export function injectAdapters() {

@@ -8,6 +8,7 @@ import {
   IUnblockUseCase,
   IGetSentFriendRequestsUseCase,
   IGetReceivedFriendRequestsUseCase,
+  IRemoveFriendUseCase,
 } from "../../../use-cases/interfaces";
 import { AuthenticatedLocals, IRequest, IResponse } from "../../types";
 import { IRelationshipController } from "../interfaces";
@@ -25,6 +26,7 @@ export class RelationshipController implements IRelationshipController {
   denyFriendRequestUseCase: IDenyFriendRequestUseCase;
   getFriendsUseCase: IGetFriendsUseCase;
   getSentFriendRequestsUseCase: IGetSentFriendRequestsUseCase;
+  removeFriendUseCase: IRemoveFriendUseCase;
 
   constructor(
     @inject(UseCases.block) blockUseCase: IBlockUseCase,
@@ -35,7 +37,8 @@ export class RelationshipController implements IRelationshipController {
     @inject(UseCases.getSentFriendRequests)
     getSentFriendRequestsUseCase: IGetSentFriendRequestsUseCase,
     @inject(UseCases.getReceivedFriendRequests)
-    getReceivedFriendRequestsUseCase: IGetReceivedFriendRequestsUseCase
+    getReceivedFriendRequestsUseCase: IGetReceivedFriendRequestsUseCase,
+    @inject(UseCases.removeFriend) removeFriendUseCase: IRemoveFriendUseCase
   ) {
     this.blockUseCase = blockUseCase;
     this.unblockUseCase = unblockUseCase;
@@ -43,6 +46,7 @@ export class RelationshipController implements IRelationshipController {
     this.getFriendsUseCase = getFriendsUseCase;
     this.getSentFriendRequestsUseCase = getSentFriendRequestsUseCase;
     this.getReceivedFriendRequestsUseCase = getReceivedFriendRequestsUseCase;
+    this.removeFriendUseCase = removeFriendUseCase;
   }
 
   async getReceivedFriendRequests(
@@ -57,6 +61,26 @@ export class RelationshipController implements IRelationshipController {
       return res.status(statusOK).json(friendRequests);
     } catch (err) {
       if (err instanceof Error) {
+        return res.status(statusInternalServerError).json(err.message);
+      } else {
+        return res.status(statusInternalServerError).send(err);
+      }
+    }
+  }
+
+  async removeFriend(req: IRequest, res: IResponse<AuthenticatedLocals>) {
+    try {
+      const { recipientId } = z
+        .object({
+          recipientId: z.string(),
+        })
+        .parse(req.content());
+      await this.removeFriendUseCase.execute(res.locals.cognitoId, recipientId);
+      return res.status(statusOK).send();
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(statusBadRequest).json(err.issues);
+      } else if (err instanceof Error) {
         return res.status(statusInternalServerError).json(err.message);
       } else {
         return res.status(statusInternalServerError).send(err);

@@ -3,6 +3,34 @@ tags:
     description: User relationship database endpoint
 
 paths:
+  # /relationship/removeFriend
+  removeFriend:
+    post:
+      tags:
+        - User Relationship
+      summary: Remove a friend
+      security:
+        - AccessToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - recipientId
+              properties:
+                recipientId:
+                  type: string
+                  example: fgd9s033n-f42fdnskfrlkg-fdg431ffgf-f4wsdf4yh
+      responses:
+        200:
+          description: The friend was removed
+        400:
+          description: Validation error
+        500:
+          description: An internal error occurred
+
   # /relationship/denyFriendRequest
   denyFriendRequest:
     post:

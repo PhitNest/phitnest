@@ -56,6 +56,8 @@ paths:
     $ref: "specs/relationship.yml#/paths/sentFriendRequests"
   /relationship/receivedFriendRequests:
     $ref: "specs/relationship.yml#/paths/receivedFriendRequests"
+  /relationship/removeFriend:
+    $ref: "specs/relationship.yml#/paths/removeFriend"
 
   /conversation/recents:
     $ref: "specs/conversation.yml#/paths/recents"
