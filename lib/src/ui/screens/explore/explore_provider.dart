@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phitnest_mobile/src/entities/entities.dart';
 
+import '../../../repositories/repositories.dart';
 import '../../../use-cases/use_cases.dart';
 import '../../widgets/widgets.dart';
 import '../screen_provider.dart';
@@ -46,22 +47,31 @@ class ExploreProvider extends ScreenProvider<ExploreCubit, ExploreState> {
         );
       }
     } else if (state is LoadingState) {
-      Future.wait([
-        exploreUseCase.exploreUsers(),
-        getFriendRequestsUseCase.getIncomingFriendRequests(),
-      ]).then(
-        (eithers) => eithers[0].fold(
-          (users) => eithers[1].fold(
-            (requests) => cubit.transitionToLoaded(
-              users,
-              requests as List<PublicUserEntity>,
-              0,
+      if (memoryCacheRepo.me != null) {
+        Future.wait([
+          exploreUseCase.exploreUsers(),
+          getFriendRequestsUseCase.getIncomingFriendRequests(),
+        ]).then(
+          (eithers) => eithers[0].fold(
+            (users) => eithers[1].fold(
+              (requests) => cubit.transitionToLoaded(
+                users,
+                requests as List<PublicUserEntity>,
+                0,
+              ),
+              (failure) => cubit.transitionToError(failure.message),
             ),
             (failure) => cubit.transitionToError(failure.message),
           ),
-          (failure) => cubit.transitionToError(failure.message),
-        ),
-      );
+        );
+      } else {
+        exploreUseCase.exploreUsers().then(
+              (either) => either.fold(
+                (users) => cubit.transitionToLoaded(users, [], 0),
+                (failure) => cubit.transitionToError(failure.message),
+              ),
+            );
+      }
     } else if (state is LoadedState) {
       if (state.users.isEmpty) {
         cubit.transitionToEmpty();

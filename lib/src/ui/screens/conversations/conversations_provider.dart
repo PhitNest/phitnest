@@ -12,9 +12,7 @@ import 'conversations_view.dart';
 
 class ConversationsProvider
     extends ScreenProvider<ConversationsCubit, ConversationsState> {
-  ConversationsProvider()
-      : assert(memoryCacheRepo.me != null),
-        super();
+  ConversationsProvider() : super();
 
   @override
   Future<void> listener(
@@ -23,69 +21,80 @@ class ConversationsProvider
     ConversationsState state,
   ) async {
     if (state is LoadingState) {
-      getConversationsUseCase.recents().then(
-            (conversationEither) => conversationEither.fold(
-              (conversations) => getFriendsUseCase.friends().then(
-                    (friendsEither) => friendsEither.fold(
-                      (friends) {
-                        // Remove friends that are already in a direct conversation
-                        friends.removeWhere(
-                          (friend) =>
-                              conversations.indexWhere(
-                                (conversation) =>
-                                    conversation.value1.users.indexWhere(
-                                          (user) =>
-                                              user.cognitoId ==
-                                              friend.cognitoId,
-                                        ) !=
-                                        -1 &&
-                                    !conversation.value1.isGroup,
-                              ) !=
-                              -1,
-                        );
-                        final List<
-                                Either<FriendEntity,
-                                    Tuple2<ConversationEntity, MessageEntity>>>
-                            recents = [];
-                        int friendIndex = 0;
-                        int conversationIndex = 0;
-                        while (friendIndex < friends.length ||
-                            conversationIndex < conversations.length) {
-                          if (conversationIndex == conversations.length) {
-                            recents.add(
-                              Left(
-                                friends[friendIndex],
-                              ),
-                            );
-                            friendIndex++;
-                          } else if (friendIndex == friends.length ||
-                              conversations[conversationIndex]
-                                  .value2
-                                  .createdAt
-                                  .isAfter(friends[friendIndex].since)) {
-                            recents.add(
-                              Right(
-                                conversations[conversationIndex],
-                              ),
-                            );
-                            conversationIndex++;
-                          } else {
-                            recents.add(
-                              Left(
-                                friends[friendIndex],
-                              ),
-                            );
-                            friendIndex++;
+      if (memoryCacheRepo.me == null) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (context) => UnauthorizedProvider(),
+          ),
+          (route) => false,
+        );
+      } else {
+        getConversationsUseCase.recents().then(
+              (conversationEither) => conversationEither.fold(
+                (conversations) => getFriendsUseCase.friends().then(
+                      (friendsEither) => friendsEither.fold(
+                        (friends) {
+                          // Remove friends that are already in a direct conversation
+                          friends.removeWhere(
+                            (friend) =>
+                                conversations.indexWhere(
+                                  (conversation) =>
+                                      conversation.value1.users.indexWhere(
+                                            (user) =>
+                                                user.cognitoId ==
+                                                friend.cognitoId,
+                                          ) !=
+                                          -1 &&
+                                      !conversation.value1.isGroup,
+                                ) !=
+                                -1,
+                          );
+                          final List<
+                              Either<
+                                  FriendEntity,
+                                  Tuple2<ConversationEntity,
+                                      MessageEntity>>> recents = [];
+                          int friendIndex = 0;
+                          int conversationIndex = 0;
+                          while (friendIndex < friends.length ||
+                              conversationIndex < conversations.length) {
+                            if (conversationIndex == conversations.length) {
+                              recents.add(
+                                Left(
+                                  friends[friendIndex],
+                                ),
+                              );
+                              friendIndex++;
+                            } else if (friendIndex == friends.length ||
+                                conversations[conversationIndex]
+                                    .value2
+                                    .createdAt
+                                    .isAfter(friends[friendIndex].since)) {
+                              recents.add(
+                                Right(
+                                  conversations[conversationIndex],
+                                ),
+                              );
+                              conversationIndex++;
+                            } else {
+                              recents.add(
+                                Left(
+                                  friends[friendIndex],
+                                ),
+                              );
+                              friendIndex++;
+                            }
                           }
-                        }
-                        cubit.transitionToLoaded(recents);
-                      },
-                      (failure) => cubit.transitionToError(failure.message),
+                          cubit.transitionToLoaded(recents);
+                        },
+                        (failure) => cubit.transitionToError(failure.message),
+                      ),
                     ),
-                  ),
-              (failure) => cubit.transitionToError(failure.message),
-            ),
-          );
+                (failure) => cubit.transitionToError(failure.message),
+              ),
+            );
+      }
     } else if (state is LoadedState) {
       if (state.conversations.length == 0) {
         cubit.transitionToNoConversations();

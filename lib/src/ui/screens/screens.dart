@@ -19,3 +19,4 @@ export 'gymSearch/gym_search_provider.dart';
 export 'confirmEmail/confirm_email_provider.dart';
 export 'match/match_provider.dart';
 export 'friends/friends_provider.dart';
+export 'unauthorized/unauthorized_provider.dart';

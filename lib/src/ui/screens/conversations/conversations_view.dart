@@ -74,8 +74,8 @@ class ErrorView extends _BaseWidget {
     required super.onPressedFriends,
   }) : super(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              120.verticalSpace,
               Text(
                 errorMessage,
                 style: theme.textTheme.labelLarge!.copyWith(
