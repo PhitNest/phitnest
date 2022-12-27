@@ -85,7 +85,11 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
             await deviceCacheRepo.setRefreshToken(session.refreshToken);
             memoryCacheRepo.accessToken = session.accessToken;
             memoryCacheRepo.refreshToken = session.refreshToken;
-            return Left(session.accessToken);
+            if (await authRepo.validAccessToken(session.accessToken)) {
+              return Left(session.accessToken);
+            } else {
+              return Right(Failure("Invalid access token"));
+            }
           },
           (failure) => Right(failure),
         );

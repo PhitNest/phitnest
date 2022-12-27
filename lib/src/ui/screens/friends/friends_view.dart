@@ -32,8 +32,6 @@ class ErrorView extends StatelessWidget {
               onPressed: onPressedRetry,
               text: 'RETRY',
             ),
-            Spacer(),
-            StyledNavBar(page: NavbarPage.chat),
           ],
         ),
       );
@@ -52,7 +50,6 @@ class LoadingView extends StatelessWidget {
                 child: CircularProgressIndicator(),
               ),
             ),
-            StyledNavBar(page: NavbarPage.chat),
           ],
         ),
       );

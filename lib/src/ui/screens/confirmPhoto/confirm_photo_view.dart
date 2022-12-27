@@ -41,7 +41,9 @@ class ErrorView extends _BaseWidget {
 class LoadingView extends _BaseWidget {
   LoadingView()
       : super(
-          child: CircularProgressIndicator(),
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
         );
 }
 

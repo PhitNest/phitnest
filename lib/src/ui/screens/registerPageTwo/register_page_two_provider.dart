@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/utils.dart';
 import '../../../common/validators.dart';
+import '../../../repositories/repositories.dart';
 import '../../widgets/widgets.dart';
 import '../screen_provider.dart';
 import '../screens.dart';
@@ -112,11 +113,21 @@ class RegisterPageTwoProvider
           if (formKey.currentState!.validate()) {
             Navigator.of(context).push(
               NoAnimationMaterialPageRoute(
-                builder: (context) => PhotoInstructionProvider(
-                  email: emailController.text,
-                  password: passwordController.text,
-                  firstName: firstName,
-                  lastName: lastName,
+                builder: (context) => RequestLocationProvider(
+                  onFoundNearestGym: (context, gym) async {
+                    memoryCacheRepo.myGym = gym;
+                    Navigator.push(
+                      context,
+                      NoAnimationMaterialPageRoute(
+                        builder: (context) => PhotoInstructionProvider(
+                          email: emailController.text,
+                          password: passwordController.text,
+                          firstName: firstName,
+                          lastName: lastName,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             );

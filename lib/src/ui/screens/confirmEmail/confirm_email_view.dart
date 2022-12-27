@@ -33,14 +33,15 @@ class ErrorView extends _BaseWidget {
   }) : super(
           child: Column(
             children: [
-              Spacer(),
+              20.verticalSpace,
               Text(
                 errorMessage,
+                textAlign: TextAlign.center,
                 style: theme.textTheme.labelLarge!.copyWith(
                   color: theme.errorColor,
                 ),
               ),
-              20.verticalSpace,
+              Spacer(),
               TextButtonWidget(
                 onPressed: onPressedResend,
                 text: 'RESEND CODE',

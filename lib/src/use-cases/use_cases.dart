@@ -33,6 +33,7 @@ void injectUseCases() {
       StreamFriendRequestsUseCase());
   useCases.registerSingleton<ISendMessageUseCase>(SendMessageUseCase());
   useCases.registerSingleton<IStreamMessagesUseCase>(StreamMessagesUseCase());
+  useCases.registerSingleton<IRemoveFriendUseCase>(RemoveFriendUseCase());
 }
 
 ISkipOnBoardingUseCase get skipOnBoardingUseCase => useCases();
@@ -54,3 +55,4 @@ IDenyFriendRequestUseCase get denyFriendRequestUseCase => useCases();
 IStreamFriendRequestsUseCase get streamFriendRequestsUseCase => useCases();
 ISendMessageUseCase get sendMessageUseCase => useCases();
 IStreamMessagesUseCase get streamMessagesUseCase => useCases();
+IRemoveFriendUseCase get removeFriendUseCase => useCases();
