@@ -35,7 +35,7 @@ class FriendsProvider extends ScreenProvider<FriendsCubit, FriendsState> {
                 searchQuery: '',
                 friendRequestStream:
                     (friendRequestSteam as Stream<PublicUserEntity>).listen(
-                  (friendRequest) => cubit.addRequest(friendRequest),
+                  (friendRequest) => cubit.transitionToLoading(),
                 ),
               ),
               (failure) => cubit.transitionToError(failure.message),
@@ -76,7 +76,7 @@ class FriendsProvider extends ScreenProvider<FriendsCubit, FriendsState> {
     };
     final onRemoveFriend = (FriendEntity friend, int index) {
       cubit.removeFriend(index);
-      denyFriendRequestUseCase.denyFriendRequest(friend.cognitoId).then(
+      removeFriendUseCase.removeFriend(friend.cognitoId).then(
         (failure) {
           if (failure != null) {
             cubit.transitionToError(failure.message);

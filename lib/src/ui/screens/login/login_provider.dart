@@ -104,15 +104,6 @@ class LoginProvider extends ScreenProvider<LoginCubit, LoginState> {
     LoginCubit cubit,
     LoginState state,
   ) {
-    final onFoundGym = (context, gym) async {
-      memoryCacheRepo.myGym = gym;
-      Navigator.push(
-        context,
-        NoAnimationMaterialPageRoute(
-          builder: (context) => RegisterPageOneProvider(),
-        ),
-      );
-    };
     if (state is LoadingState) {
       return LoadingView(
         autovalidateMode: state.autovalidateMode,
@@ -121,9 +112,7 @@ class LoginProvider extends ScreenProvider<LoginCubit, LoginState> {
         onPressedRegister: () => Navigator.push(
           context,
           NoAnimationMaterialPageRoute(
-            builder: (context) => RequestLocationProvider(
-              onFoundNearestGym: onFoundGym,
-            ),
+            builder: (context) => RegisterPageOneProvider(),
           ),
         ),
         onPressedForgotPassword: () => Navigator.push(
@@ -158,9 +147,7 @@ class LoginProvider extends ScreenProvider<LoginCubit, LoginState> {
         onPressedRegister: () => Navigator.push(
           context,
           NoAnimationMaterialPageRoute(
-            builder: (context) => RequestLocationProvider(
-              onFoundNearestGym: onFoundGym,
-            ),
+            builder: (context) => RegisterPageOneProvider(),
           ),
         ),
         onPressedForgotPassword: () => Navigator.push(
@@ -187,9 +174,7 @@ class LoginProvider extends ScreenProvider<LoginCubit, LoginState> {
         onPressedRegister: () => Navigator.push(
           context,
           NoAnimationMaterialPageRoute(
-            builder: (context) => RequestLocationProvider(
-              onFoundNearestGym: onFoundGym,
-            ),
+            builder: (context) => RegisterPageOneProvider(),
           ),
         ),
         onPressedForgotPassword: () => Navigator.push(

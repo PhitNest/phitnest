@@ -63,6 +63,7 @@ class ConfirmPhotoProvider
         Navigator.of(context)
           ..pop()
           ..pop()
+          ..pop()
           ..push(
             NoAnimationMaterialPageRoute(
               builder: (context) => RegisterPageTwoProvider(

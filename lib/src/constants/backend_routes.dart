@@ -17,6 +17,7 @@ const kResetPassword = '/auth/forgotPasswordSubmit';
 const kGetMessages = '/message';
 const kGetIncomingFriendRequests = '/relationship/receivedFriendRequests';
 const kDenyFriendRequest = '/relationship/denyFriendRequest';
+const kRemoveFriend = '/relationship/removeFriend';
 
 // These are socket io events
 const kMessage = 'message';

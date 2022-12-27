@@ -17,3 +17,4 @@ export 'deny_friend_request.dart';
 export 'stream_friend_requests.dart';
 export 'send_message.dart';
 export 'stream_messages.dart';
+export 'remove_friend.dart';

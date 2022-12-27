@@ -13,12 +13,12 @@ class RegisterUseCase implements IRegisterUseCase {
           ? await authRepo
               .register(email, password, memoryCacheRepo.myGym!.id, firstName,
                   lastName)
-              .then((value) {
+              .then((value) async {
               if (value == null) {
                 memoryCacheRepo.email = email;
                 memoryCacheRepo.password = password;
-                deviceCacheRepo.setEmail(email);
-                deviceCacheRepo.setPassword(password);
+                await deviceCacheRepo.setEmail(email);
+                await deviceCacheRepo.setPassword(password);
               }
               return value;
             })

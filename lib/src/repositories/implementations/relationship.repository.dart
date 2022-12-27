@@ -117,4 +117,24 @@ class RelationshipRepository implements IRelationshipRepository {
               (failure) => failure,
             ),
           );
+
+  @override
+  Future<Failure?> removeFriend(
+          String accessToken, String recipientCognitoId) =>
+      restService
+          .post(
+            kRemoveFriend,
+            body: {
+              "recipientId": recipientCognitoId,
+            },
+            accessToken: accessToken,
+          )
+          .then(
+            (either) => either.fold(
+              (response) => response.statusCode == kStatusOK
+                  ? null
+                  : Failure(jsonDecode(response.body).toString()),
+              (failure) => failure,
+            ),
+          );
 }

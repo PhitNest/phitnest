@@ -16,4 +16,6 @@ abstract class IRelationshipRepository {
 
   Future<Failure?> denyFriendRequest(
       String accessToken, String recipientCognitoId);
+
+  Future<Failure?> removeFriend(String accessToken, String recipientCognitoId);
 }
