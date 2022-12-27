@@ -83,6 +83,18 @@ export class MongoRelationshipRepository implements IRelationshipRepository {
     });
   }
 
+  async deleteFriendship(senderId: string, recipientId: string) {
+    return (
+      (
+        await RelationshipModel.deleteOne({
+          sender: senderId,
+          recipient: recipientId,
+          type: RelationshipType.Requested,
+        })
+      ).deletedCount > 0
+    );
+  }
+
   async createRequest(senderId: string, recipientId: string) {
     await RelationshipModel.findOneAndUpdate(
       {

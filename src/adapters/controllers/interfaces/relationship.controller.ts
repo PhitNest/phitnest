@@ -7,4 +7,5 @@ export interface IRelationshipController {
   getFriends: Controller<AuthenticatedLocals>;
   getSentFriendRequests: Controller<AuthenticatedLocals>;
   getReceivedFriendRequests: Controller<AuthenticatedLocals>;
+  removeFriend: Controller<AuthenticatedLocals>;
 }

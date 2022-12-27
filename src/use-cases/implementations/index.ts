@@ -25,3 +25,4 @@ export { GetRecentConversationsUseCase } from "./get-recent-conversations";
 export { GetMessagesUseCase } from "./get-messages";
 export { SendMessageUseCase } from "./send-message";
 export { GetConversationsUseCase } from "./get-conversations";
+export { RemoveFriendUseCase } from "./remove-friend";

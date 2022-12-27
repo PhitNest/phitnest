@@ -53,6 +53,12 @@ export class RelationshipRouter implements IRouter {
         controller: (req, res) =>
           relationshipController.getReceivedFriendRequests(req, res),
       },
+      {
+        path: "/removeFriend",
+        method: HttpMethod.POST,
+        middlewares: [authMiddleware],
+        controller: (req, res) => relationshipController.removeFriend(req, res),
+      },
     ];
   }
 }
