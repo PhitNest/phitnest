@@ -85,7 +85,7 @@ class ConfirmPhotoProvider
     ConfirmPhotoState state,
   ) {
     if (state is LoadingState) {
-      return const LoadingView();
+      return LoadingView();
     } else if (state is ErrorState) {
       return ErrorView(
         errorMessage: state.message,

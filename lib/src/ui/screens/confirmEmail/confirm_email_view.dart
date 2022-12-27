@@ -4,6 +4,7 @@ import 'package:flutter_verification_code/flutter_verification_code.dart';
 
 import '../../theme.dart';
 import '../../widgets/widgets.dart';
+import '../screens.dart';
 
 class LoadingView extends _BaseWidget {
   LoadingView()
@@ -44,7 +45,7 @@ class ErrorView extends _BaseWidget {
                 onPressed: onPressedResend,
                 text: 'RESEND CODE',
               ),
-              100.verticalSpace,
+              37.verticalSpace,
             ],
           ),
         );
@@ -64,7 +65,7 @@ class InitialView extends _BaseWidget {
                 onPressed: onPressedResend,
                 text: 'RESEND CODE',
               ),
-              100.verticalSpace,
+              37.verticalSpace,
             ],
           ),
         );
@@ -81,6 +82,14 @@ class _BaseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BetterScaffold(
+        useBackButton: true,
+        onPressedBack: () => Navigator.pushAndRemoveUntil(
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (context) => LoginProvider(),
+          ),
+          (_) => false,
+        ),
         body: Column(
           children: [
             30.verticalSpace,
@@ -104,7 +113,7 @@ class _BaseWidget extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 2.w),
               itemSize: 40.w,
             ),
-            child,
+            Expanded(child: child),
           ],
         ),
       );

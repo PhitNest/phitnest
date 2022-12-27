@@ -52,11 +52,14 @@ class LoadedView extends _BaseWidget {
 }
 
 class LoadingView extends _BaseWidget {
-  const LoadingView({
+  LoadingView({
     required super.onPressedFriends,
   }) : super(
-          child: const Center(
-            child: CircularProgressIndicator(),
+          child: Column(
+            children: [
+              120.verticalSpace,
+              CircularProgressIndicator(),
+            ],
           ),
         );
 }
@@ -96,7 +99,7 @@ class NoConversationsView extends _BaseWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              100.verticalSpace,
+              120.verticalSpace,
               Text(
                 "You have no messages",
                 style: theme.textTheme.headlineLarge,

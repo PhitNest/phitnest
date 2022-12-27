@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phitnest_mobile/src/repositories/repositories.dart';
 
 import '../../../use-cases/use_cases.dart';
 import '../../widgets/widgets.dart';
@@ -46,13 +47,16 @@ class OnBoardingProvider
           context,
           NoAnimationMaterialPageRoute(
             builder: (_) => RequestLocationProvider(
-              onFoundNearestGym: (context, gym) => Navigator.pushAndRemoveUntil(
-                context,
-                NoAnimationMaterialPageRoute(
-                  builder: (context) => ExploreTutorialProvider(),
-                ),
-                (_) => false,
-              ),
+              onFoundNearestGym: (context, gym) async {
+                memoryCacheRepo.myGym = gym;
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  NoAnimationMaterialPageRoute(
+                    builder: (context) => ExploreTutorialProvider(),
+                  ),
+                  (_) => false,
+                );
+              },
             ),
           ),
           (_) => false,

@@ -60,7 +60,7 @@ class ForgotPasswordProvider
       forgotPasswordUseCase.forgotPassword(emailController.text.trim()).then(
             (failure) => failure != null
                 ? cubit.transitionToError(failure.message)
-                : Navigator.push(
+                : Navigator.pushAndRemoveUntil(
                     context,
                     NoAnimationMaterialPageRoute(
                       builder: (context) => ConfirmEmailProvider(
@@ -74,6 +74,7 @@ class ForgotPasswordProvider
                             .forgotPassword(emailController.text.trim()),
                       ),
                     ),
+                    (_) => false,
                   ),
           );
     }
