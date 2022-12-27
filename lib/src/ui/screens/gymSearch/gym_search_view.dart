@@ -26,7 +26,6 @@ class LoadedView extends _GymSearchWidget {
         body: Column(
           children: [
             super.build(context),
-            Spacer(),
             StyledButton(
               child: Text('CONFIRM'),
               onPressed: onPressedConfirm,
@@ -75,50 +74,52 @@ class _GymSearchWidget extends StatelessWidget {
   }) : super();
 
   @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          SearchBox(
-            textFieldKey: searchBoxKey,
-            onTap: onTapSearch,
-            hintText: 'Search',
-            controller: searchController,
-            keyboardType: TextInputType.streetAddress,
-            onChanged: onEditSearch != null ? (_) => onEditSearch!() : null,
-            onSubmitted:
-                onSubmitSearch != null ? (_) => onSubmitSearch!() : null,
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: ShaderMask(
-                shaderCallback: (Rect bounds) => LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.white.withOpacity(0.05),
-                    Colors.white,
-                    Colors.white,
-                    Colors.white.withOpacity(0.05)
-                  ],
-                  stops: [0, 0.02, 0.95, 1],
-                  tileMode: TileMode.mirror,
-                ).createShader(bounds),
-                child: ListView.builder(
-                  keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
-                  itemCount: gymsAndDistances.length,
-                  itemBuilder: (context, index) => _GymCard(
-                    onPressed: () =>
-                        onPressedGymCard(gymsAndDistances[index].value1),
-                    selected: isSelected(gymsAndDistances[index].value1),
-                    gym: gymsAndDistances[index].value1,
-                    distance: gymsAndDistances[index].value2,
+  Widget build(BuildContext context) => Expanded(
+        child: Column(
+          children: [
+            SearchBox(
+              textFieldKey: searchBoxKey,
+              onTap: onTapSearch,
+              hintText: 'Search',
+              controller: searchController,
+              keyboardType: TextInputType.streetAddress,
+              onChanged: onEditSearch != null ? (_) => onEditSearch!() : null,
+              onSubmitted:
+                  onSubmitSearch != null ? (_) => onSubmitSearch!() : null,
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 16.w),
+                child: ShaderMask(
+                  shaderCallback: (Rect bounds) => LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white.withOpacity(0.05),
+                      Colors.white,
+                      Colors.white,
+                      Colors.white.withOpacity(0.05)
+                    ],
+                    stops: [0, 0.02, 0.95, 1],
+                    tileMode: TileMode.mirror,
+                  ).createShader(bounds),
+                  child: ListView.builder(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    itemCount: gymsAndDistances.length,
+                    itemBuilder: (context, index) => _GymCard(
+                      onPressed: () =>
+                          onPressedGymCard(gymsAndDistances[index].value1),
+                      selected: isSelected(gymsAndDistances[index].value1),
+                      gym: gymsAndDistances[index].value1,
+                      distance: gymsAndDistances[index].value2,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
 }
 
@@ -128,8 +129,11 @@ class LoadingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BetterScaffold(
         useBackButton: true,
-        body: Center(
-          child: CircularProgressIndicator(),
+        body: Column(
+          children: [
+            200.verticalSpace,
+            CircularProgressIndicator(),
+          ],
         ),
       );
 }
@@ -146,22 +150,24 @@ class ErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BetterScaffold(
         useBackButton: true,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              errorMessage,
-              style: theme.textTheme.labelLarge!.copyWith(
-                color: theme.errorColor,
+        body: Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                errorMessage,
+                style: theme.textTheme.labelLarge!.copyWith(
+                  color: theme.errorColor,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            30.verticalSpace,
-            StyledButton(
-              child: Text('RETRY'),
-              onPressed: onPressedRetry,
-            ),
-          ],
+              30.verticalSpace,
+              StyledButton(
+                child: Text('RETRY'),
+                onPressed: onPressedRetry,
+              ),
+            ],
+          ),
         ),
       );
 }

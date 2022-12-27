@@ -12,7 +12,7 @@ class FoundLocationProvider
     extends ScreenProvider<FoundLocationCubit, FoundLocationState> {
   final GymEntity gym;
   final LocationEntity location;
-  final void Function(GymEntity gym) onFoundNearestGym;
+  final void Function(BuildContext context, GymEntity gym) onFoundNearestGym;
 
   const FoundLocationProvider({
     required this.gym,
@@ -37,10 +37,7 @@ class FoundLocationProvider
             ),
           ),
         ),
-        onPressedYes: () {
-          memoryCacheRepo.myGym = gym;
-          onFoundNearestGym(gym);
-        },
+        onPressedYes: () => onFoundNearestGym(context, gym),
         address: gym.address,
       );
 

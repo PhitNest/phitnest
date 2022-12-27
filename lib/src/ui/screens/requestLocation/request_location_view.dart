@@ -43,6 +43,8 @@ class FetchingLocationView extends _BaseWidget {
               style: theme.textTheme.labelLarge,
               textAlign: TextAlign.center,
             ),
+            20.verticalSpace,
+            CircularProgressIndicator(),
           ],
         );
 }
