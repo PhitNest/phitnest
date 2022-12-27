@@ -174,7 +174,7 @@ class _BaseWidget extends StatelessWidget {
                         keyboardType: TextInputType.emailAddress,
                         validator: validateEmail,
                         inputAction: TextInputAction.next,
-                        onTap: onTapEmail,
+                        onTap: onTapPassword,
                         hint: 'New Password',
                       ),
                       TextInputField(
@@ -182,7 +182,7 @@ class _BaseWidget extends StatelessWidget {
                         controller: confirmPasswordController,
                         keyboardType: TextInputType.emailAddress,
                         validator: validateEmail,
-                        onTap: onTapEmail,
+                        onTap: onTapConfirmPassword,
                         hint: 'Confirm Password',
                       ),
                       30.verticalSpace,
