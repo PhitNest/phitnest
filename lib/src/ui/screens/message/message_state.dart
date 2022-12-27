@@ -94,4 +94,13 @@ class MessageCubit extends ScreenCubit<MessageState> {
       ),
     );
   }
+
+  @override
+  Future<void> close() {
+    if (state is LoadedState) {
+      final loadedState = state as LoadedState;
+      loadedState.messageStream.cancel();
+    }
+    return super.close();
+  }
 }
