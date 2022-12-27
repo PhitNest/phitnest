@@ -30,7 +30,7 @@ class BetterScaffold extends StatelessWidget {
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         controller: scrollController,
         child: SizedBox(
-          height: 1.sh,
+          height: 1.sh - (useBackButton ? 91.7.h : 0),
           width: 1.sw,
           child: body,
         ),

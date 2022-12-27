@@ -46,7 +46,7 @@ class OnBoardingProvider
           context,
           NoAnimationMaterialPageRoute(
             builder: (_) => RequestLocationProvider(
-              onFoundNearestGym: (gym) => Navigator.pushAndRemoveUntil(
+              onFoundNearestGym: (context, gym) => Navigator.pushAndRemoveUntil(
                 context,
                 NoAnimationMaterialPageRoute(
                   builder: (context) => ExploreTutorialProvider(),

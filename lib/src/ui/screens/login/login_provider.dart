@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/utils.dart';
 import '../../../common/validators.dart';
+import '../../../repositories/repositories.dart';
 import '../../../use-cases/use_cases.dart';
 import '../../widgets/widgets.dart';
 import '../screen_provider.dart';
@@ -83,6 +84,15 @@ class LoginProvider extends ScreenProvider<LoginCubit, LoginState> {
     LoginCubit cubit,
     LoginState state,
   ) {
+    final onFoundGym = (context, gym) async {
+      memoryCacheRepo.myGym = gym;
+      Navigator.push(
+        context,
+        NoAnimationMaterialPageRoute(
+          builder: (context) => RegisterPageOneProvider(),
+        ),
+      );
+    };
     if (state is LoadingState) {
       return LoadingView(
         autovalidateMode: state.autovalidateMode,
@@ -91,7 +101,9 @@ class LoginProvider extends ScreenProvider<LoginCubit, LoginState> {
         onPressedRegister: () => Navigator.push(
           context,
           NoAnimationMaterialPageRoute(
-            builder: (context) => RegisterPageOneProvider(),
+            builder: (context) => RequestLocationProvider(
+              onFoundNearestGym: onFoundGym,
+            ),
           ),
         ),
         onPressedForgotPassword: () => Navigator.push(
@@ -126,7 +138,9 @@ class LoginProvider extends ScreenProvider<LoginCubit, LoginState> {
         onPressedRegister: () => Navigator.push(
           context,
           NoAnimationMaterialPageRoute(
-            builder: (context) => RegisterPageOneProvider(),
+            builder: (context) => RequestLocationProvider(
+              onFoundNearestGym: onFoundGym,
+            ),
           ),
         ),
         onPressedForgotPassword: () => Navigator.push(
@@ -153,7 +167,9 @@ class LoginProvider extends ScreenProvider<LoginCubit, LoginState> {
         onPressedRegister: () => Navigator.push(
           context,
           NoAnimationMaterialPageRoute(
-            builder: (context) => RegisterPageOneProvider(),
+            builder: (context) => RequestLocationProvider(
+              onFoundNearestGym: onFoundGym,
+            ),
           ),
         ),
         onPressedForgotPassword: () => Navigator.push(

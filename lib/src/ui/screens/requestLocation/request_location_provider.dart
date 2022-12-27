@@ -10,7 +10,8 @@ import 'request_location_view.dart';
 
 class RequestLocationProvider
     extends ScreenProvider<RequestLocationCubit, RequestLocationState> {
-  final Future<void> Function(GymEntity gym) onFoundNearestGym;
+  final Future<void> Function(BuildContext context, GymEntity gym)
+      onFoundNearestGym;
 
   const RequestLocationProvider({
     required this.onFoundNearestGym,

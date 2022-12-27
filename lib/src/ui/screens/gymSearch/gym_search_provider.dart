@@ -13,7 +13,7 @@ class GymSearchProvider extends ScreenProvider<GymSearchCubit, GymSearchState> {
   final searchController = TextEditingController();
   final GymEntity currentlySelectedGym;
   final LocationEntity userLocation;
-  final void Function(GymEntity gym) onFoundNearestGym;
+  final void Function(BuildContext context, GymEntity gym) onFoundNearestGym;
   final searchBoxKey = GlobalKey();
 
   GymSearchProvider({

@@ -9,7 +9,7 @@ class FetchingLocationState extends RequestLocationState {
   const FetchingLocationState() : super();
 }
 
-class FetchingGymState extends FetchingLocationState {
+class FetchingGymState extends RequestLocationState {
   final LocationEntity location;
 
   const FetchingGymState({required this.location}) : super();
