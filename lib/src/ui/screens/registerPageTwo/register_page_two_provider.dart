@@ -129,7 +129,12 @@ class RegisterPageTwoProvider
           ..pop()
           ..push(
             NoAnimationMaterialPageRoute(
-              builder: (context) => RegisterPageOneProvider(),
+              builder: (context) => RegisterPageOneProvider(
+                initialFirstName: firstName,
+                initialLastName: lastName,
+                email: emailController.text,
+                password: passwordController.text,
+              ),
             ),
           ),
         initialErrorMessage: state is ErrorState ? state.errorMessage : null,

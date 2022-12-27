@@ -75,6 +75,26 @@ class LoginProvider extends ScreenProvider<LoginCubit, LoginState> {
               (failure) => cubit.transitionToError(failure.message),
             ),
           );
+    } else if (state is ErrorState) {
+      if (state.message.contains("is not confirmed")) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (context) => ConfirmEmailProvider(
+              confirmVerification: (code) =>
+                  confirmRegisterUseCase.confirmRegister(
+                emailController.text.trim(),
+                code,
+              ),
+              resendConfirmation: () =>
+                  confirmRegisterUseCase.resendConfirmation(
+                emailController.text.trim(),
+              ),
+            ),
+          ),
+          (_) => false,
+        );
+      }
     }
   }
 
@@ -127,9 +147,9 @@ class LoginProvider extends ScreenProvider<LoginCubit, LoginState> {
         emailController: emailController,
         passwordController: passwordController,
         onPressedSignIn: () {
+          emailFocus.unfocus();
+          passwordFocus.unfocus();
           if (formKey.currentState!.validate()) {
-            emailFocus.unfocus();
-            passwordFocus.unfocus();
             cubit.transitionToLoading();
           } else {
             cubit.enableAutovalidateMode();
@@ -182,6 +202,8 @@ class LoginProvider extends ScreenProvider<LoginCubit, LoginState> {
         onTapPassword: () => onTappedTextField(scrollToPassword),
         formKey: formKey,
         onPressedSignIn: () {
+          emailFocus.unfocus();
+          passwordFocus.unfocus();
           if (formKey.currentState!.validate()) {
             cubit.transitionToLoading();
           } else {

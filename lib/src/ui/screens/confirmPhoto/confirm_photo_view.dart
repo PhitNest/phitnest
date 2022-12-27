@@ -39,11 +39,9 @@ class ErrorView extends _BaseWidget {
 }
 
 class LoadingView extends _BaseWidget {
-  const LoadingView()
+  LoadingView()
       : super(
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
+          child: CircularProgressIndicator(),
         );
 }
 
@@ -86,6 +84,7 @@ class _BaseWidget extends StatelessWidget {
               children: [
                 BackArrowButton(),
                 Container(
+                  padding: EdgeInsets.only(top: 10.h),
                   alignment: Alignment.center,
                   child: Text(
                     "Confirm Photo",
@@ -101,7 +100,7 @@ class _BaseWidget extends StatelessWidget {
               child: Image.asset('assets/images/phitnestSelfie.png'),
             ),
             20.verticalSpace,
-            child,
+            Expanded(child: child),
           ],
         ),
       );
