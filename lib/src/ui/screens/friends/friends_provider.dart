@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:phitnest_mobile/src/ui/widgets/no_animation_page_route.dart';
 
 import '../../../entities/entities.dart';
 import '../../../use-cases/use_cases.dart';
 import '../screen_provider.dart';
+import '../screens.dart';
 import 'friends_state.dart';
 import 'friends_view.dart';
 
@@ -103,6 +105,13 @@ class FriendsProvider extends ScreenProvider<FriendsCubit, FriendsState> {
       );
     } else if (state is NotTypingState) {
       return NotTypingView(
+        onPressedBack: () => Navigator.pushAndRemoveUntil(
+          context,
+          NoAnimationMaterialPageRoute(
+            builder: (context) => ConversationsProvider(),
+          ),
+          (_) => false,
+        ),
         searchBoxKey: searchBoxKey,
         friends: state.friends
             .where(
