@@ -60,6 +60,25 @@ class MessageRepository implements IMessageRepository {
       );
 
   @override
+  Future<Either<Stream<Tuple2<ConversationEntity, MessageEntity>>, Failure>>
+      directMessageStream(
+    String accessToken,
+    String friendCognitoId,
+  ) async =>
+          (await eventService.stream('$friendCognitoId:$kMessage', accessToken))
+              .fold(
+            (stream) => Left(
+              stream.map(
+                (json) => Tuple2(
+                  ConversationEntity.fromJson(json['conversation']),
+                  MessageEntity.fromJson(json['message']),
+                ),
+              ),
+            ),
+            (failure) => Right(failure),
+          );
+
+  @override
   Future<Either<Tuple2<ConversationEntity, MessageEntity>, Failure>>
       sendDirectMessage(
     String accessToken,

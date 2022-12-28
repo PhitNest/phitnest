@@ -63,8 +63,13 @@ class FriendsCubit extends ScreenCubit<FriendsState> {
 
   void transitionToLoading() => setState(const LoadingState());
 
-  void transitionToError(String message) =>
-      setState(ErrorState(message: message));
+  void transitionToError(String message) {
+    if (state is LoadedState) {
+      final loadedState = state as LoadedState;
+      loadedState.friendRequestStream.cancel();
+    }
+    setState(ErrorState(message: message));
+  }
 
   void transitionToLoaded({
     required List<FriendEntity> friends,

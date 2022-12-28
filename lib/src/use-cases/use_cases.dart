@@ -35,6 +35,8 @@ void injectUseCases() {
   useCases.registerSingleton<IStreamMessagesUseCase>(StreamMessagesUseCase());
   useCases.registerSingleton<IRemoveFriendUseCase>(RemoveFriendUseCase());
   useCases.registerSingleton<IGetGymUseCase>(GetGymUseCase());
+  useCases.registerSingleton<IStreamDirectMessageUseCase>(
+      StreamDirectMessageUseCase());
 }
 
 ISkipOnBoardingUseCase get skipOnBoardingUseCase => useCases();
@@ -58,3 +60,4 @@ ISendMessageUseCase get sendMessageUseCase => useCases();
 IStreamMessagesUseCase get streamMessagesUseCase => useCases();
 IRemoveFriendUseCase get removeFriendUseCase => useCases();
 IGetGymUseCase get getGymUseCase => useCases();
+IStreamDirectMessageUseCase get streamDirectMessageUseCase => useCases();
