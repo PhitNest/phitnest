@@ -32,7 +32,11 @@ export class SendDirectMessageEventHandler
           recipientId,
           text
         );
-      connection.broadcast(`${conversation._id}:message`, message, recipientId);
+      connection.broadcast(
+        `${connection.locals.cognitoId}:message`,
+        message,
+        recipientId
+      );
       connection.success({
         conversation: conversation,
         message: message,
