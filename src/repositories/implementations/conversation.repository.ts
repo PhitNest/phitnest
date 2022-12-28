@@ -17,7 +17,7 @@ const schema = new mongoose.Schema(
   }
 );
 
-schema.index({ userCognitoIds: 1 }, { unique: true });
+schema.index({ users: 1 });
 
 const ConversationModel = mongoose.model<IConversationEntity>(
   CONVERSATION_MODEL_NAME,
@@ -104,9 +104,13 @@ export class MongoConversationRepository implements IConversationRepository {
   }
 
   getByUser(cognitoId: string) {
-    return ConversationModel.find({
-      users: cognitoId,
-    }).exec();
+    return ConversationModel.aggregate([
+      {
+        $match: {
+          users: cognitoId,
+        },
+      },
+    ]).exec();
   }
 
   getByUsers(cognitoIds: string[]) {

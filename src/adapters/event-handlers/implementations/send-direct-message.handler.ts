@@ -1,6 +1,7 @@
 import { injectable, inject } from "inversify";
 import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
+import { l } from "../../../common/logger";
 import { ISendDirectMessageUseCase } from "../../../use-cases/interfaces";
 import { IConnection } from "../../types";
 import { ISendDirectMessageEventHandler } from "../interfaces";
