@@ -136,8 +136,11 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
         onPressedSend: () => messageFocus.unfocus(),
         messageController: messageController,
         messageFocus: messageFocus,
-        name: conversation!.chatName(memoryCacheRepo.me!.id),
-        onPressedRetry: () => cubit.transitionToLoading(conversation!),
+        name:
+            conversation?.chatName(memoryCacheRepo.me!.id) ?? friend!.fullName,
+        onPressedRetry: () => conversation != null
+            ? cubit.transitionToLoading(conversation!)
+            : cubit.transitionToNewFriend(friend!),
         message: state.message,
       );
     } else {

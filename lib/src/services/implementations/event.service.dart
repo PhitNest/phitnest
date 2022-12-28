@@ -33,7 +33,7 @@ class EventService implements IEventService {
       _socket!.onDisconnect(
         (_) => _socket = null,
       );
-      await completer.future.timeout(requestTimeout);
+      await completer.future.timeout(requestTimeout * 2);
       if (!connected) {
         return Failure("Failed to connect to the network.");
       }
