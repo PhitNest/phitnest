@@ -18,3 +18,4 @@ export 'stream_friend_requests.dart';
 export 'send_message.dart';
 export 'stream_messages.dart';
 export 'remove_friend.dart';
+export 'get_gym.dart';

@@ -87,10 +87,9 @@ class ExploreProvider extends ScreenProvider<ExploreCubit, ExploreState> {
     ExploreState state,
   ) {
     if (state is LoadingState) {
-      return LoadingView(navbarKey: navbarKey);
+      return const LoadingView();
     } else if (state is ErrorState) {
       return ErrorView(
-        navbarKey: navbarKey,
         errorMessage: state.message,
         onPressedRetry: () => cubit.transitionToLoading(),
       );

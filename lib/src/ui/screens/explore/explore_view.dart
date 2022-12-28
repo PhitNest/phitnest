@@ -8,11 +8,7 @@ import '../../theme.dart';
 import '../../widgets/widgets.dart';
 
 class LoadingView extends StatelessWidget {
-  final GlobalKey navbarKey;
-
-  const LoadingView({
-    required this.navbarKey,
-  }) : super();
+  const LoadingView() : super();
 
   @override
   Widget build(BuildContext context) => BetterScaffold(
@@ -21,10 +17,7 @@ class LoadingView extends StatelessWidget {
             220.verticalSpace,
             CircularProgressIndicator(),
             Spacer(),
-            StyledNavBar(
-              page: NavbarPage.explore,
-              gestureKey: navbarKey,
-            )
+            StyledNavBar(page: NavbarPage.explore)
           ],
         ),
       );
@@ -33,12 +26,10 @@ class LoadingView extends StatelessWidget {
 class ErrorView extends StatelessWidget {
   final String errorMessage;
   final VoidCallback onPressedRetry;
-  final GlobalKey navbarKey;
 
   const ErrorView({
     required this.errorMessage,
     required this.onPressedRetry,
-    required this.navbarKey,
   }) : super();
 
   @override
@@ -59,10 +50,7 @@ class ErrorView extends StatelessWidget {
               child: Text('RETRY'),
             ),
             Spacer(),
-            StyledNavBar(
-              page: NavbarPage.explore,
-              gestureKey: navbarKey,
-            )
+            StyledNavBar(page: NavbarPage.explore)
           ],
         ),
       );
