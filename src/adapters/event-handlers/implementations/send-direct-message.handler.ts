@@ -34,7 +34,10 @@ export class SendDirectMessageEventHandler
         );
       connection.broadcast(
         `${connection.locals.cognitoId}:message`,
-        message,
+        {
+          conversation: conversation,
+          message: message,
+        },
         recipientId
       );
       connection.success({
