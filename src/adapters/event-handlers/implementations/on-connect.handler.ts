@@ -21,9 +21,9 @@ export class OnConnectEventHandler implements IOnConnectEventHandler {
     const conversations = await this.getConversationsUseCase.execute(
       connection.locals.cognitoId
     );
-    for (let i = 0; i < conversations.length; i++) {
-      connection.joinRoom(conversations[i]._id);
-    }
+    conversations.forEach((conversation) => {
+      connection.joinRoom(conversation._id.toString());
+    });
     l.info(`User ${connection.locals.cognitoId} connected`);
   }
 }

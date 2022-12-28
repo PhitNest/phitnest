@@ -1,7 +1,6 @@
 import { inject, injectable } from "inversify";
 import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
-import { IPublicUserEntity } from "../../../entities";
 import {
   IGetUserUseCase,
   ISendFriendRequestUseCase,
@@ -42,7 +41,13 @@ export class SendFriendRequestEventHandler
       ]);
       connection.broadcast(
         "friendRequest",
-        user as IPublicUserEntity,
+        {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          cognitoId: user.cognitoId,
+          _id: user._id,
+          gymId: user.gymId,
+        },
         recipientId
       );
       connection.success(null);
