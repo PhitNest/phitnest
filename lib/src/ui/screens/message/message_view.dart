@@ -75,8 +75,8 @@ class ErrorView extends _BaseWidget {
         );
 }
 
-class LoadingConversationView extends _BaseWidget {
-  LoadingConversationView({
+class LoadingView extends _BaseWidget {
+  LoadingView({
     required super.onPressedSend,
     required super.messageController,
     required super.messageFocus,

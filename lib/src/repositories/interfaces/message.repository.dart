@@ -13,6 +13,12 @@ abstract class IMessageRepository {
     String conversationId,
   );
 
+  Future<Either<Stream<Tuple2<ConversationEntity, MessageEntity>>, Failure>>
+      directMessageStream(
+    String accessToken,
+    String friendCognitoId,
+  );
+
   Future<Either<Tuple2<ConversationEntity, MessageEntity>, Failure>>
       sendDirectMessage(
     String accessToken,

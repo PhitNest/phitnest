@@ -27,10 +27,36 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
   ) async {
     if (state is InitialState) {
       if (conversation != null) {
-        cubit.transitionToLoading(conversation!);
+        cubit.transitionToLoadingConversation(conversation!);
       } else {
-        cubit.transitionToNewFriend(friend!);
+        cubit.transitionToLoadingNewFriend(friend!);
       }
+    } else if (state is LoadingNewFriendState) {
+      streamDirectMessageUseCase
+          .streamDirectMessage(state.friend.cognitoId)
+          .then(
+            (either) => either.fold(
+              (stream) => cubit.transitionToNewFriend(
+                stream.listen(
+                  (event) => streamMessagesUseCase
+                      .streamMessages(event.value1.id)
+                      .then(
+                        (either) => either.fold(
+                          (messageStream) => cubit.transitionToLoaded(
+                            event.value1,
+                            [event.value2],
+                            messageStream.listen(
+                              (message) => cubit.addMessage(message),
+                            ),
+                          ),
+                          (failure) => cubit.transitionToError(failure.message),
+                        ),
+                      ),
+                ),
+              ),
+              (failure) => cubit.transitionToError(failure.message),
+            ),
+          );
     } else if (state is LoadingConversationState) {
       Future.wait([
         getMessagesUseCase.getMessages(state.conversation.id),
@@ -62,11 +88,18 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
     if (state is InitialState) {
       return InitialView();
     } else if (state is LoadingConversationState) {
-      return LoadingConversationView(
+      return LoadingView(
         onPressedSend: () => messageFocus.unfocus(),
         messageController: messageController,
         messageFocus: messageFocus,
         name: state.conversation.chatName(memoryCacheRepo.me!.id),
+      );
+    } else if (state is LoadingNewFriendState) {
+      return LoadingView(
+        messageController: messageController,
+        messageFocus: messageFocus,
+        name: state.friend.fullName,
+        onPressedSend: () => messageFocus.unfocus(),
       );
     } else if (state is LoadedState) {
       return MessageView(
@@ -139,8 +172,8 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
         name:
             conversation?.chatName(memoryCacheRepo.me!.id) ?? friend!.fullName,
         onPressedRetry: () => conversation != null
-            ? cubit.transitionToLoading(conversation!)
-            : cubit.transitionToNewFriend(friend!),
+            ? cubit.transitionToLoadingConversation(conversation!)
+            : cubit.transitionToLoadingNewFriend(friend!),
         message: state.message,
       );
     } else {

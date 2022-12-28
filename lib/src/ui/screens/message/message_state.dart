@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:dartz/dartz.dart';
+
 import '../../../entities/entities.dart';
 import '../screen_state.dart';
 
@@ -13,8 +15,21 @@ class InitialState extends MessageState {
 
 class NewFriendState extends MessageState {
   final FriendEntity friend;
+  final StreamSubscription<Tuple2<ConversationEntity, MessageEntity>> stream;
 
   const NewFriendState({
+    required this.friend,
+    required this.stream,
+  }) : super();
+
+  @override
+  List<Object> get props => [friend, stream];
+}
+
+class LoadingNewFriendState extends MessageState {
+  final FriendEntity friend;
+
+  const LoadingNewFriendState({
     required this.friend,
   }) : super();
 
@@ -62,27 +77,50 @@ class LoadedState extends MessageState {
 class MessageCubit extends ScreenCubit<MessageState> {
   MessageCubit() : super(const InitialState());
 
-  void transitionToNewFriend(FriendEntity friend) =>
-      setState(NewFriendState(friend: friend));
+  void transitionToLoadingNewFriend(FriendEntity friend) =>
+      setState(LoadingNewFriendState(friend: friend));
 
-  void transitionToLoading(ConversationEntity conversation) =>
+  void transitionToNewFriend(
+          StreamSubscription<Tuple2<ConversationEntity, MessageEntity>>
+              stream) =>
+      setState(
+        NewFriendState(
+          friend: (state as LoadingNewFriendState).friend,
+          stream: stream,
+        ),
+      );
+
+  void transitionToLoadingConversation(ConversationEntity conversation) =>
       setState(LoadingConversationState(conversation: conversation));
 
   void transitionToLoaded(
     ConversationEntity conversation,
     List<MessageEntity> messages,
     StreamSubscription<MessageEntity> messageStream,
-  ) =>
-      setState(
-        LoadedState(
-          conversation: conversation,
-          messages: messages,
-          messageStream: messageStream,
-        ),
-      );
+  ) {
+    if (state is NewFriendState) {
+      final newFriendState = state as NewFriendState;
+      newFriendState.stream.cancel();
+    }
+    setState(
+      LoadedState(
+        conversation: conversation,
+        messages: messages,
+        messageStream: messageStream,
+      ),
+    );
+  }
 
-  void transitionToError(String message) =>
-      setState(ErrorState(message: message));
+  void transitionToError(String message) {
+    if (state is NewFriendState) {
+      final newFriendState = state as NewFriendState;
+      newFriendState.stream.cancel();
+    } else if (state is LoadedState) {
+      final loadedState = state as LoadedState;
+      loadedState.messageStream.cancel();
+    }
+    setState(ErrorState(message: message));
+  }
 
   void addMessage(MessageEntity newMessage) {
     final loadedState = state as LoadedState;
@@ -100,6 +138,9 @@ class MessageCubit extends ScreenCubit<MessageState> {
     if (state is LoadedState) {
       final loadedState = state as LoadedState;
       loadedState.messageStream.cancel();
+    } else if (state is NewFriendState) {
+      final newFriendState = state as NewFriendState;
+      newFriendState.stream.cancel();
     }
     return super.close();
   }
