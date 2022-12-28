@@ -53,6 +53,8 @@ class LoadingView extends StatelessWidget {
 }
 
 class NotTypingView extends _BaseWidget {
+  final VoidCallback onPressedBack;
+
   const NotTypingView({
     required super.searchController,
     required super.friends,
@@ -62,11 +64,15 @@ class NotTypingView extends _BaseWidget {
     required super.onDenyFriend,
     required super.onTapSearch,
     required super.searchBoxKey,
+    required this.onPressedBack,
   }) : super();
 
   @override
-  Widget build(BuildContext context) =>
-      BetterScaffold(useBackButton: true, body: super.build(context));
+  Widget build(BuildContext context) => BetterScaffold(
+        useBackButton: true,
+        onPressedBack: onPressedBack,
+        body: super.build(context),
+      );
 }
 
 class TypingView extends _BaseWidget {

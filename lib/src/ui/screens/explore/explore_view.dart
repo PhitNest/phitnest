@@ -75,6 +75,7 @@ class HoldingView extends _BaseWidget {
     required super.onReleaseLogo,
     required super.countdown,
     required super.navbarKey,
+    required super.pageViewKey,
   }) : super(animateLogo: false);
 }
 
@@ -84,6 +85,7 @@ class LoadedView extends _BaseWidget {
     required super.onChangePage,
     required super.onPressedLogo,
     required super.navbarKey,
+    required super.pageViewKey,
   }) : super(animateLogo: true);
 }
 
@@ -95,12 +97,14 @@ class _BaseWidget extends StatelessWidget {
   final bool animateLogo;
   final int? countdown;
   final GlobalKey navbarKey;
+  final GlobalKey pageViewKey;
 
   const _BaseWidget({
     required this.users,
     required this.onChangePage,
     required this.animateLogo,
     required this.navbarKey,
+    required this.pageViewKey,
     this.countdown,
     this.onPressedLogo,
     this.onReleaseLogo,
@@ -113,6 +117,7 @@ class _BaseWidget extends StatelessWidget {
           children: [
             Flexible(
               child: PageView.builder(
+                key: pageViewKey,
                 onPageChanged: onChangePage,
                 itemBuilder: (context, index) => _ExploreCard(
                   countdown: countdown,

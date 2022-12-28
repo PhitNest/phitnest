@@ -11,6 +11,7 @@ import 'explore_view.dart';
 
 class ExploreProvider extends ScreenProvider<ExploreCubit, ExploreState> {
   final navbarKey = GlobalKey();
+  final pageViewKey = GlobalKey();
 
   ExploreProvider() : super();
 
@@ -95,6 +96,7 @@ class ExploreProvider extends ScreenProvider<ExploreCubit, ExploreState> {
       );
     } else if (state is LoadedState) {
       return LoadedView(
+        pageViewKey: pageViewKey,
         navbarKey: navbarKey,
         users: state.users,
         onChangePage: (index) => cubit.setPageIndex(index),
@@ -102,6 +104,7 @@ class ExploreProvider extends ScreenProvider<ExploreCubit, ExploreState> {
       );
     } else if (state is HoldingState) {
       return HoldingView(
+        pageViewKey: pageViewKey,
         navbarKey: navbarKey,
         countdown: state.countdown,
         onReleaseLogo: () => cubit.transitionStopHolding(),
