@@ -82,6 +82,8 @@ class FriendsProvider extends ScreenProvider<FriendsCubit, FriendsState> {
         (failure) {
           if (failure != null) {
             cubit.transitionToError(failure.message);
+          } else {
+            cubit.addRequest(friend);
           }
         },
       );
