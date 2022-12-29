@@ -7,7 +7,7 @@ import {
   CognitoUserPool,
   CognitoUserSession,
 } from "amazon-cognito-identity-js";
-import { CognitoIdentityServiceProvider } from "aws-sdk";
+import { CognitoIdentityProvider } from "@aws-sdk/client-cognito-identity-provider";
 import { IAuthRepository } from "../interfaces";
 import { injectable } from "inversify";
 import { IAuthEntity } from "../../entities";
@@ -17,7 +17,7 @@ const userPool = new CognitoUserPool({
   ClientId: process.env.COGNITO_APP_CLIENT_ID ?? "",
 });
 
-const identityServiceProvider = new CognitoIdentityServiceProvider({
+const identityServiceProvider = new CognitoIdentityProvider({
   region: process.env.COGNITO_REGION ?? "",
 });
 
@@ -187,9 +187,13 @@ export class CognitoAuthRepository implements IAuthRepository {
   }
 
   async getCognitoId(accessToken: string) {
-    const rawUser = await identityServiceProvider
-      .getUser({ AccessToken: accessToken })
-      .promise();
-    return rawUser.UserAttributes.find((attr) => attr.Name === "sub")?.Value!;
+    const rawUser = await identityServiceProvider.getUser({
+      AccessToken: accessToken,
+    });
+    if (rawUser.UserAttributes) {
+      return rawUser.UserAttributes.find((attr) => attr.Name === "sub")?.Value!;
+    } else {
+      throw new Error("Invalid access token.");
+    }
   }
 }
