@@ -33,7 +33,7 @@ export class SendDirectMessageEventHandler
           text
         );
       connection.broadcast(
-        `${connection.locals.cognitoId}:message`,
+        "directMessage",
         {
           conversation: conversation,
           message: message,
