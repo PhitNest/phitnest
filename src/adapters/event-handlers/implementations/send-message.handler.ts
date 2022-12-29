@@ -29,11 +29,7 @@ export class SendMessageEventHandler implements ISendMessageEventHandler {
         conversationId,
         text
       );
-      connection.broadcast(
-        `${conversationId}:message`,
-        message,
-        conversationId
-      );
+      connection.broadcast("message", message, conversationId);
       connection.success(message);
     } catch (err) {
       if (err instanceof z.ZodError) {
