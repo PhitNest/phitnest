@@ -30,19 +30,31 @@ class RestService implements IRestService {
     String? accessToken,
   }) async {
     try {
+      print("Sending a GET request to $route\nData: $params");
+      print(accessToken);
       return Left(
-        await http.get(
-          _getBackendAddress(route, params: params),
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            ...(headers ?? {}),
-            ...(accessToken != null
-                ? {"authorization": "Bearer $accessToken"}
-                : {})
-          },
-        ).timeout(timeout ?? requestTimeout),
+        await http
+            .get(
+              _getBackendAddress(route, params: params),
+              headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                ...(headers ?? {}),
+                ...(accessToken != null
+                    ? {"authorization": "Bearer $accessToken"}
+                    : {})
+              },
+            )
+            .timeout(timeout ?? requestTimeout)
+            .then(
+              (response) {
+                print(
+                    "Response from $route:\n\tStatus code: ${response.statusCode}\n\tBody: ${response.body}");
+                return response;
+              },
+            ),
       );
     } catch (error) {
+      print("Request error: $error");
       return Right(
         Failure("Failed to connect to the network."),
       );
@@ -57,6 +69,7 @@ class RestService implements IRestService {
     String? accessToken,
   }) async {
     try {
+      print("Sending a POST request to $route\nData: $body");
       return Left(
         await http
             .post(
@@ -70,9 +83,17 @@ class RestService implements IRestService {
               },
               body: jsonEncode(body),
             )
-            .timeout(timeout ?? requestTimeout),
+            .timeout(timeout ?? requestTimeout)
+            .then(
+          (response) {
+            print(
+                "Response from $route:\n\tStatus code: ${response.statusCode}\n\tBody: ${response.body}");
+            return response;
+          },
+        ),
       );
     } catch (error) {
+      print("Request error: $error");
       return Right(
         Failure("Failed to connect to the network."),
       );
@@ -87,6 +108,7 @@ class RestService implements IRestService {
     String? accessToken,
   }) async {
     try {
+      print("Sending a DELETE request to $route\nData: $body");
       return Left(
         await http
             .delete(
@@ -100,9 +122,17 @@ class RestService implements IRestService {
               },
               body: jsonEncode(body),
             )
-            .timeout(timeout ?? requestTimeout),
+            .timeout(timeout ?? requestTimeout)
+            .then(
+          (response) {
+            print(
+                "Response from $route:\n\tStatus code: ${response.statusCode}\n\tBody: ${response.body}");
+            return response;
+          },
+        ),
       );
     } catch (error) {
+      print("Request error: $error");
       return Right(
         Failure("Failed to connect to the network."),
       );

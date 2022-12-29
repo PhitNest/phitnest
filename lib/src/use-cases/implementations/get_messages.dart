@@ -15,15 +15,4 @@ class GetMessagesUseCase implements IGetMessagesUseCase {
               (failure) => Right(failure),
             ),
           );
-
-  @override
-  Future<Either<Stream<MessageEntity>, Failure>> messageStream(
-          String conversationId) =>
-      getAuthTokenUseCase.getAccessToken().then(
-            (either) => either.fold(
-              (accessToken) =>
-                  messageRepo.messageStream(accessToken, conversationId),
-              (failure) => Right(failure),
-            ),
-          );
 }

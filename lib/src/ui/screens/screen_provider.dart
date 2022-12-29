@@ -29,6 +29,7 @@ class _ScreenProviderState<C extends ScreenCubit<S>, S extends ScreenState>
   Widget build(BuildContext context) => BlocProvider(
         create: (context) {
           C cubit = widget.buildCubit();
+          // This should happen after the first build
           Future.delayed(Duration.zero,
               () => widget.listener(context, cubit, cubit.state));
           return cubit;

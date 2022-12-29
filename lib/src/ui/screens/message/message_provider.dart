@@ -36,8 +36,8 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
           .streamDirectMessage(state.friend.cognitoId)
           .then(
             (either) => either.fold(
-              (stream) => cubit.transitionToNewFriend(
-                stream.listen(
+              (directMessageStream) => cubit.transitionToNewFriend(
+                directMessageStream.listen(
                   (event) => streamMessagesUseCase
                       .streamMessages(event.value1.id)
                       .then(
