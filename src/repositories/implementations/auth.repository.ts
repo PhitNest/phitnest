@@ -1,20 +1,24 @@
+import "cross-fetch/polyfill";
 import {
   AuthenticationDetails,
-  CognitoAccessToken,
   CognitoRefreshToken,
   CognitoUser,
   CognitoUserAttribute,
   CognitoUserPool,
   CognitoUserSession,
 } from "amazon-cognito-identity-js";
+import { CognitoIdentityServiceProvider } from "aws-sdk";
 import { IAuthRepository } from "../interfaces";
 import { injectable } from "inversify";
-import "cross-fetch/polyfill";
 import { IAuthEntity } from "../../entities";
 
 const userPool = new CognitoUserPool({
   UserPoolId: process.env.COGNITO_POOL_ID ?? "",
   ClientId: process.env.COGNITO_APP_CLIENT_ID ?? "",
+});
+
+const identityServiceProvider = new CognitoIdentityServiceProvider({
+  region: process.env.COGNITO_REGION ?? "",
 });
 
 @injectable()
@@ -182,22 +186,10 @@ export class CognitoAuthRepository implements IAuthRepository {
     });
   }
 
-  getCognitoId(accessToken: string) {
-    const cognitoAccessToken = new CognitoAccessToken({
-      AccessToken: accessToken,
-    });
-    const user = new CognitoUser({
-      Username: cognitoAccessToken.payload.username,
-      Pool: userPool,
-    });
-    return new Promise<string>((resolve, reject) => {
-      user.getSession((err: Error | null) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(user.getUsername());
-        }
-      });
-    });
+  async getCognitoId(accessToken: string) {
+    const rawUser = await identityServiceProvider
+      .getUser({ AccessToken: accessToken })
+      .promise();
+    return rawUser.UserAttributes.find((attr) => attr.Name === "sub")?.Value!;
   }
 }
