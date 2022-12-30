@@ -132,11 +132,7 @@ class _BaseWidget extends StatelessWidget {
 }
 
 class EmptyNestView extends StatelessWidget {
-  final GlobalKey navbarKey;
-
-  const EmptyNestView({
-    required this.navbarKey,
-  }) : super();
+  const EmptyNestView() : super();
 
   @override
   Widget build(BuildContext context) => BetterScaffold(
@@ -155,10 +151,7 @@ class EmptyNestView extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             Spacer(),
-            StyledNavBar(
-              page: NavbarPage.explore,
-              gestureKey: navbarKey,
-            ),
+            StyledNavBar(page: NavbarPage.explore),
           ],
         ),
       );

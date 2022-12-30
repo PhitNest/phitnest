@@ -7,14 +7,12 @@ import '../use_cases.dart';
 class StreamDirectMessageUseCase implements IStreamDirectMessageUseCase {
   @override
   Future<Either<Stream<Tuple2<ConversationEntity, MessageEntity>>, Failure>>
-      streamDirectMessage(String friendCognitoId) =>
-          getAuthTokenUseCase.getAccessToken().then(
-                (either) => either.fold(
-                  (accessToken) => messageRepo.directMessageStream(
-                    accessToken,
-                    friendCognitoId,
-                  ),
-                  (failure) => Right(failure),
-                ),
-              );
+      streamDirectMessage() => getAuthTokenUseCase.getAccessToken().then(
+            (either) => either.fold(
+              (accessToken) => messageRepo.directMessageStream(
+                accessToken,
+              ),
+              (failure) => Right(failure),
+            ),
+          );
 }

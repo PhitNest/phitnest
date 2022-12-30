@@ -111,9 +111,7 @@ class ExploreProvider extends ScreenProvider<ExploreCubit, ExploreState> {
         onChangePage: (index) => cubit.setPageIndex(index),
       );
     } else if (state is EmptyNestState) {
-      return EmptyNestView(
-        navbarKey: navbarKey,
-      );
+      return const EmptyNestView();
     } else {
       throw Exception('Unknown state: $state');
     }

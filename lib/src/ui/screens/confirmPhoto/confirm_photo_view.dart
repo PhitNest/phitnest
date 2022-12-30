@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../theme.dart';
 import '../../widgets/widgets.dart';
 
-class ErrorView extends _BaseWidget {
+class ErrorView extends StatelessWidget {
   final String errorMessage;
   final VoidCallback onPressedRetry;
   final VoidCallback onPressedRetake;
@@ -13,63 +13,87 @@ class ErrorView extends _BaseWidget {
     required this.errorMessage,
     required this.onPressedRetry,
     required this.onPressedRetake,
-  }) : super(
-          child: Column(
-            children: [
-              Text(
-                errorMessage,
-                style: theme.textTheme.labelLarge!.copyWith(
-                  color: theme.errorColor,
-                ),
+  }) : super();
+
+  @override
+  Widget build(BuildContext context) => _BaseWidget(
+        child: Column(
+          children: [
+            Text(
+              errorMessage,
+              style: theme.textTheme.labelLarge!.copyWith(
+                color: theme.errorColor,
               ),
-              20.verticalSpace,
-              StyledButton(
-                onPressed: onPressedRetry,
-                child: Text('RETRY'),
+            ),
+            20.verticalSpace,
+            StyledButton(
+              onPressed: onPressedRetry,
+              child: Text('RETRY'),
+            ),
+            Expanded(
+              child: _RetakeWidget(
+                onPressedRetake: onPressedRetake,
               ),
-              Spacer(),
-              TextButtonWidget(
-                onPressed: onPressedRetake,
-                text: 'RETAKE',
-              ),
-              37.verticalSpace,
-            ],
-          ),
-        );
+            ),
+          ],
+        ),
+      );
 }
 
-class LoadingView extends _BaseWidget {
-  LoadingView()
-      : super(
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+class LoadingView extends StatelessWidget {
+  const LoadingView() : super();
+
+  @override
+  Widget build(BuildContext context) => _BaseWidget(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
 }
 
-class InitialView extends _BaseWidget {
+class InitialView extends StatelessWidget {
   final VoidCallback onPressedConfirm;
   final VoidCallback onPressedRetake;
 
-  InitialView({
+  const InitialView({
     required this.onPressedConfirm,
     required this.onPressedRetake,
-  }) : super(
-          child: Column(
-            children: [
-              StyledButton(
-                onPressed: onPressedConfirm,
-                child: Text('CONFIRM'),
+  }) : super();
+
+  @override
+  Widget build(BuildContext context) => _BaseWidget(
+        child: Column(
+          children: [
+            StyledButton(
+              onPressed: onPressedConfirm,
+              child: Text('CONFIRM'),
+            ),
+            Expanded(
+              child: _RetakeWidget(
+                onPressedRetake: onPressedRetake,
               ),
-              Spacer(),
-              TextButtonWidget(
-                onPressed: onPressedRetake,
-                text: 'RETAKE',
-              ),
-              37.verticalSpace,
-            ],
+            ),
+          ],
+        ),
+      );
+}
+
+class _RetakeWidget extends StatelessWidget {
+  final VoidCallback onPressedRetake;
+
+  const _RetakeWidget({required this.onPressedRetake}) : super();
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          Spacer(),
+          TextButtonWidget(
+            onPressed: onPressedRetake,
+            text: 'RETAKE',
           ),
-        );
+          37.verticalSpace,
+        ],
+      );
 }
 
 class _BaseWidget extends StatelessWidget {

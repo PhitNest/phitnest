@@ -47,35 +47,25 @@ class MessageRepository implements IMessageRepository {
   @override
   Future<Either<Stream<MessageEntity>, Failure>> messageStream(
     String accessToken,
-    String conversationId,
   ) async =>
-      (await eventService.stream('$conversationId:$kMessage', accessToken))
-          .fold(
-        (stream) => Left(
-          stream.map(
-            (event) => MessageEntity.fromJson(event),
-          ),
+      (await eventService.stream(kMessage, accessToken)).leftMap(
+        (stream) => stream.map(
+          (event) => MessageEntity.fromJson(event),
         ),
-        (failure) => Right(failure),
       );
 
   @override
   Future<Either<Stream<Tuple2<ConversationEntity, MessageEntity>>, Failure>>
       directMessageStream(
     String accessToken,
-    String friendCognitoId,
   ) async =>
-          (await eventService.stream('$friendCognitoId:$kMessage', accessToken))
-              .fold(
-            (stream) => Left(
-              stream.map(
-                (json) => Tuple2(
-                  ConversationEntity.fromJson(json['conversation']),
-                  MessageEntity.fromJson(json['message']),
-                ),
+          (await eventService.stream(kDirectMessage, accessToken)).leftMap(
+            (stream) => stream.map(
+              (json) => Tuple2(
+                ConversationEntity.fromJson(json['conversation']),
+                MessageEntity.fromJson(json['message']),
               ),
             ),
-            (failure) => Right(failure),
           );
 
   @override
@@ -86,7 +76,7 @@ class MessageRepository implements IMessageRepository {
     String text,
   ) async =>
           (await eventService.emit(
-            kSendDirectMessage,
+            kDirectMessage,
             {
               "recipientId": recipientCognitoId,
               "text": text,
@@ -114,10 +104,7 @@ class MessageRepository implements IMessageRepository {
         },
         accessToken,
       ))
-          .fold(
-        (json) => Left(
-          MessageEntity.fromJson(json),
-        ),
-        (failure) => Right(failure),
+          .leftMap(
+        (json) => MessageEntity.fromJson(json),
       );
 }

@@ -161,7 +161,8 @@ class ExploreCubit extends ScreenCubit<ExploreState> {
       final loadedState = state as LoadedState;
       setState(
         LoadedState(
-          incomingRequests: loadedState.incomingRequests..insert(0, request),
+          incomingRequests: List.from(loadedState.incomingRequests)
+            ..insert(0, request),
           users: loadedState.users,
           pageIndex: loadedState.pageIndex,
         ),
@@ -170,7 +171,8 @@ class ExploreCubit extends ScreenCubit<ExploreState> {
       final holdingState = state as HoldingState;
       setState(
         HoldingState(
-          incomingRequests: holdingState.incomingRequests..insert(0, request),
+          incomingRequests: List.from(holdingState.incomingRequests)
+            ..insert(0, request),
           users: holdingState.users,
           pageIndex: holdingState.pageIndex,
           countdown: holdingState.countdown,

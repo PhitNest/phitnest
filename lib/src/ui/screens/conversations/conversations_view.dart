@@ -7,113 +7,126 @@ import '../../../entities/entities.dart';
 import '../../theme.dart';
 import '../../widgets/widgets.dart';
 
-class LoadedView extends _BaseWidget {
+class LoadedView extends StatelessWidget {
   final List<Either<FriendEntity, Tuple2<ConversationEntity, MessageEntity>>>
       conversations;
-  final void Function(FriendEntity friend, int index) onDismissFriend;
-  final void Function(
-          Tuple2<ConversationEntity, MessageEntity> conversation, int index)
-      onDismissConversation;
   final void Function(FriendEntity friend) onTapFriend;
   final void Function(ConversationEntity conversation) onTapConversation;
   final String Function(ConversationEntity conversation) getChatName;
+  final VoidCallback onPressedFriends;
 
   LoadedView({
     required this.conversations,
-    required super.onPressedFriends,
-    required this.onDismissFriend,
-    required this.onDismissConversation,
+    required this.onPressedFriends,
     required this.onTapFriend,
     required this.onTapConversation,
     required this.getChatName,
-  }) : super(
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            itemCount: conversations.length,
-            itemBuilder: (context, index) => conversations[index].fold(
-              (friend) => _ConversationCard(
-                message:
-                    "You have just connected with ${friend.fullName}, say hello!",
-                title: friend.fullName,
-                onDismissed: (_) => onDismissFriend(friend, index),
-                onTap: () => onTapFriend(friend),
-              ),
-              (conversationMessagePair) => _ConversationCard(
-                message: conversationMessagePair.value2.text,
-                title: getChatName(conversationMessagePair.value1),
-                onDismissed: (_) =>
-                    onDismissConversation(conversationMessagePair, index),
-                onTap: () => onTapConversation(conversationMessagePair.value1),
-              ),
+  }) : super();
+
+  @override
+  Widget build(BuildContext context) => _BaseWidget(
+        onPressedFriends: onPressedFriends,
+        child: ListView.builder(
+          padding: EdgeInsets.zero,
+          shrinkWrap: true,
+          itemCount: conversations.length,
+          itemBuilder: (context, index) => conversations[index].fold(
+            (friend) => _ConversationCard(
+              message:
+                  "You have just connected with ${friend.fullName}, say hello!",
+              title: friend.fullName,
+              onTap: () => onTapFriend(friend),
+            ),
+            (conversationMessagePair) => _ConversationCard(
+              message: conversationMessagePair.value2.text,
+              title: getChatName(conversationMessagePair.value1),
+              onTap: () => onTapConversation(conversationMessagePair.value1),
             ),
           ),
-        );
+        ),
+      );
 }
 
-class LoadingView extends _BaseWidget {
+class LoadingView extends StatelessWidget {
+  final VoidCallback onPressedFriends;
+
   LoadingView({
-    required super.onPressedFriends,
-  }) : super(
-          child: Column(
-            children: [
-              120.verticalSpace,
-              CircularProgressIndicator(),
-            ],
-          ),
-        );
+    required this.onPressedFriends,
+  }) : super();
+
+  @override
+  Widget build(BuildContext context) => _BaseWidget(
+        onPressedFriends: onPressedFriends,
+        child: Column(
+          children: [
+            120.verticalSpace,
+            CircularProgressIndicator(),
+          ],
+        ),
+      );
 }
 
-class ErrorView extends _BaseWidget {
+class ErrorView extends StatelessWidget {
   final String errorMessage;
   final VoidCallback onPressedRetry;
+  final VoidCallback onPressedFriends;
 
   ErrorView({
     required this.errorMessage,
     required this.onPressedRetry,
-    required super.onPressedFriends,
-  }) : super(
-          child: Column(
-            children: [
-              120.verticalSpace,
-              Text(
-                errorMessage,
-                style: theme.textTheme.labelLarge!.copyWith(
-                  color: theme.errorColor,
-                ),
+    required this.onPressedFriends,
+  }) : super();
+
+  @override
+  Widget build(BuildContext context) => _BaseWidget(
+        onPressedFriends: onPressedFriends,
+        child: Column(
+          children: [
+            120.verticalSpace,
+            Text(
+              errorMessage,
+              style: theme.textTheme.labelLarge!.copyWith(
+                color: theme.errorColor,
               ),
-              20.verticalSpace,
-              StyledButton(
-                onPressed: onPressedRetry,
-                child: Text('RETRY'),
-              ),
-            ],
-          ),
-        );
+            ),
+            20.verticalSpace,
+            StyledButton(
+              onPressed: onPressedRetry,
+              child: Text('RETRY'),
+            ),
+          ],
+        ),
+      );
 }
 
-class NoConversationsView extends _BaseWidget {
+class NoConversationsView extends StatelessWidget {
+  final VoidCallback onPressedFriends;
+
   NoConversationsView({
-    required super.onPressedFriends,
-  }) : super(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              120.verticalSpace,
-              Text(
-                "You have no messages",
-                style: theme.textTheme.headlineLarge,
-                textAlign: TextAlign.center,
-              ),
-              40.verticalSpace,
-              Text(
-                "Go explore and meet new friends!",
-                style: theme.textTheme.labelLarge,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        );
+    required this.onPressedFriends,
+  }) : super();
+
+  @override
+  Widget build(BuildContext context) => _BaseWidget(
+        onPressedFriends: onPressedFriends,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            120.verticalSpace,
+            Text(
+              "You have no messages",
+              style: theme.textTheme.headlineLarge,
+              textAlign: TextAlign.center,
+            ),
+            40.verticalSpace,
+            Text(
+              "Go explore and meet new friends!",
+              style: theme.textTheme.labelLarge,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
 }
 
 class _BaseWidget extends StatelessWidget {
@@ -154,13 +167,11 @@ class _BaseWidget extends StatelessWidget {
 class _ConversationCard extends StatelessWidget {
   final String message;
   final String title;
-  final void Function(DismissDirection direction) onDismissed;
   final VoidCallback onTap;
 
   const _ConversationCard({
     required this.message,
     required this.title,
-    required this.onDismissed,
     required this.onTap,
   });
 
@@ -169,20 +180,9 @@ class _ConversationCard extends StatelessWidget {
         padding: EdgeInsets.only(
           bottom: 14.h,
         ),
-        child: Dismissible(
-          dragStartBehavior: DragStartBehavior.down,
-          background: Container(
-            color: Colors.red,
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(left: 12.w),
-            child: const Icon(
-              Icons.delete,
-              color: Colors.white,
-            ),
-          ),
-          key: UniqueKey(),
-          onDismissed: onDismissed,
-          direction: DismissDirection.startToEnd,
+        child: Container(
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.only(left: 12.w),
           child: InkWell(
             onTap: onTap,
             highlightColor: Color(0xFFFFE3E3),

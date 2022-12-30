@@ -6,12 +6,10 @@ import '../use_cases.dart';
 
 class StreamMessagesUseCase implements IStreamMessagesUseCase {
   @override
-  Future<Either<Stream<MessageEntity>, Failure>> streamMessages(
-          String conversationId) =>
+  Future<Either<Stream<MessageEntity>, Failure>> streamMessages() =>
       getAuthTokenUseCase.getAccessToken().then(
             (either) => either.fold(
-              (accessToken) =>
-                  messageRepo.messageStream(accessToken, conversationId),
+              (accessToken) => messageRepo.messageStream(accessToken),
               (failure) => Right(failure),
             ),
           );

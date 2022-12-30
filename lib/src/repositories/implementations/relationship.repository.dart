@@ -41,13 +41,10 @@ class RelationshipRepository implements IRelationshipRepository {
   @override
   Future<Either<Stream<PublicUserEntity>, Failure>> friendRequestStream(
           String accessToken) async =>
-      (await eventService.stream(kFriendRequest, accessToken)).fold(
-        (stream) => Left(
-          stream.map(
-            (json) => PublicUserEntity.fromJson(json),
-          ),
+      (await eventService.stream(kFriendRequest, accessToken)).leftMap(
+        (stream) => stream.map(
+          (json) => PublicUserEntity.fromJson(json),
         ),
-        (failure) => Right(failure),
       );
 
   @override
