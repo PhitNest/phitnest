@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 
 import '../../../entities/entities.dart';
@@ -23,11 +25,19 @@ class ErrorState extends ConversationsState {
 class LoadedState extends ConversationsState {
   final List<Either<FriendEntity, Tuple2<ConversationEntity, MessageEntity>>>
       conversations;
+  final StreamSubscription<MessageEntity> messageSubscription;
+  final StreamSubscription<Tuple2<ConversationEntity, MessageEntity>>
+      newConversationSubscription;
 
-  const LoadedState(this.conversations) : super();
+  const LoadedState(
+    this.conversations,
+    this.messageSubscription,
+    this.newConversationSubscription,
+  ) : super();
 
   @override
-  List<Object> get props => [conversations];
+  List<Object> get props =>
+      [conversations, messageSubscription, newConversationSubscription];
 }
 
 class NoConversationsState extends ConversationsState {
@@ -44,28 +54,75 @@ class ConversationsCubit extends ScreenCubit<ConversationsState> {
   void transitionToLoaded(
     List<Either<FriendEntity, Tuple2<ConversationEntity, MessageEntity>>>
         conversations,
+    StreamSubscription<MessageEntity> messageSubscription,
+    StreamSubscription<Tuple2<ConversationEntity, MessageEntity>>
+        newConversationSubscription,
   ) =>
-      setState(LoadedState(conversations));
+      setState(LoadedState(
+        conversations,
+        messageSubscription,
+        newConversationSubscription,
+      ));
 
   void transitionToNoConversations() => setState(const NoConversationsState());
 
-  void addConversation(
-      Either<FriendEntity, Tuple2<ConversationEntity, MessageEntity>>
-          conversation) {
+  void addNewConversation(
+    Tuple2<ConversationEntity, MessageEntity> newConversation,
+  ) {
     final loadedState = state as LoadedState;
+    final conversationIndex = loadedState.conversations.indexWhere(
+      (conversation) => conversation.fold(
+        (friend) => friend.cognitoId == newConversation.value2.userCognitoId,
+        (conversation) => false,
+      ),
+    );
+    if (conversationIndex != -1) {
+      loadedState.conversations.removeAt(conversationIndex);
+    }
     setState(
       LoadedState(
-        loadedState.conversations..insert(0, conversation),
+        List.from(loadedState.conversations)..insert(0, Right(newConversation)),
+        loadedState.messageSubscription,
+        loadedState.newConversationSubscription,
       ),
     );
   }
 
-  void removeConversation(int conversationIndex) {
+  void updateExistingConversation(
+    MessageEntity message,
+  ) {
     final loadedState = state as LoadedState;
-    setState(
-      LoadedState(
-        loadedState.conversations..removeAt(conversationIndex),
+    final conversationIndex = loadedState.conversations.indexWhere(
+      (conversation) => conversation.fold(
+        (friend) => false,
+        (conversation) => conversation.value1.id == message.conversationId,
       ),
     );
+    final conversation = loadedState.conversations[conversationIndex].fold(
+      (friend) => throw Exception('Cannot update a non-existing conversation'),
+      (conversation) => Tuple2(
+        conversation.value1,
+        message,
+      ),
+    );
+    setState(
+      LoadedState(
+        List.from(loadedState.conversations)
+          ..removeAt(conversationIndex)
+          ..insert(0, Right(conversation)),
+        loadedState.messageSubscription,
+        loadedState.newConversationSubscription,
+      ),
+    );
+  }
+
+  @override
+  Future<void> close() {
+    if (state is LoadedState) {
+      final loadedState = state as LoadedState;
+      loadedState.messageSubscription.cancel();
+      loadedState.newConversationSubscription.cancel();
+    }
+    return super.close();
   }
 }

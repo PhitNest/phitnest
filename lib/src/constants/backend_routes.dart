@@ -21,5 +21,5 @@ const kRemoveFriend = '/relationship/removeFriend';
 
 // These are socket io events
 const kMessage = 'message';
-const kSendDirectMessage = 'directMessage';
+const kDirectMessage = 'directMessage';
 const kFriendRequest = 'friendRequest';

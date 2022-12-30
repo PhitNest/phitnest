@@ -30,8 +30,7 @@ class RestService implements IRestService {
     String? accessToken,
   }) async {
     try {
-      print("Sending a GET request to $route\nData: $params");
-      print(accessToken);
+      print("Sending a GET request to $route\n\tData: $params");
       return Left(
         await http
             .get(
@@ -69,7 +68,7 @@ class RestService implements IRestService {
     String? accessToken,
   }) async {
     try {
-      print("Sending a POST request to $route\nData: $body");
+      print("Sending a POST request to $route\n\tData: $body");
       return Left(
         await http
             .post(
@@ -108,7 +107,7 @@ class RestService implements IRestService {
     String? accessToken,
   }) async {
     try {
-      print("Sending a DELETE request to $route\nData: $body");
+      print("Sending a DELETE request to $route\n\tData: $body");
       return Left(
         await http
             .delete(

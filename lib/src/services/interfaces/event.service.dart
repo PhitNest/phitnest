@@ -7,8 +7,6 @@ import '../../entities/entities.dart';
 abstract class IEventService {
   bool get connected;
 
-  Future<Failure?> connect(String accessToken);
-
   void disconnect();
 
   Future<Either<Stream<dynamic>, Failure>> stream(

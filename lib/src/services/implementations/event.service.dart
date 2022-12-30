@@ -16,7 +16,7 @@ class EventService implements IEventService {
   bool get connected => _socket != null && _socket!.connected;
 
   @override
-  Future<Failure?> connect(String accessToken) async {
+  Future<Failure?> _connect(String accessToken) async {
     try {
       print("Connecting to the websocket server...");
       _socket = IO.io(
@@ -48,6 +48,7 @@ class EventService implements IEventService {
       }
       return null;
     } catch (error) {
+      print("Failed to connect to the websocket: $error");
       return Failure("Failed to connect to the network.");
     }
   }
@@ -101,7 +102,7 @@ class EventService implements IEventService {
     if (connected) {
       return Left(streamMessages());
     } else {
-      final failure = await connect(accessToken);
+      final failure = await _connect(accessToken);
       if (failure == null) {
         if (connected) {
           return Left(streamMessages());
@@ -149,7 +150,7 @@ class EventService implements IEventService {
     if (connected) {
       return await emitMessage();
     } else {
-      final failure = await connect(accessToken);
+      final failure = await _connect(accessToken);
       if (failure == null) {
         if (connected) {
           return Left(emitMessage());

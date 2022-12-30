@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 import '../../../entities/entities.dart';
@@ -32,26 +33,32 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
         cubit.transitionToLoadingNewFriend(friend!);
       }
     } else if (state is LoadingNewFriendState) {
-      streamDirectMessageUseCase
-          .streamDirectMessage(state.friend.cognitoId)
-          .then(
+      streamDirectMessageUseCase.streamDirectMessage().then(
             (either) => either.fold(
               (directMessageStream) => cubit.transitionToNewFriend(
                 directMessageStream.listen(
-                  (event) => streamMessagesUseCase
-                      .streamMessages(event.value1.id)
-                      .then(
-                        (either) => either.fold(
-                          (messageStream) => cubit.transitionToLoaded(
-                            event.value1,
-                            [event.value2],
-                            messageStream.listen(
-                              (message) => cubit.addMessage(message),
+                  (event) {
+                    if (event.value2.userCognitoId == state.friend.cognitoId) {
+                      streamMessagesUseCase.streamMessages().then(
+                            (either) => either.fold(
+                              (messageStream) => cubit.transitionToLoaded(
+                                event.value1,
+                                [event.value2],
+                                messageStream.listen(
+                                  (message) {
+                                    if (message.conversationId ==
+                                        event.value1.id) {
+                                      cubit.addMessage(message);
+                                    }
+                                  },
+                                ),
+                              ),
+                              (failure) =>
+                                  cubit.transitionToError(failure.message),
                             ),
-                          ),
-                          (failure) => cubit.transitionToError(failure.message),
-                        ),
-                      ),
+                          );
+                    }
+                  },
                 ),
               ),
               (failure) => cubit.transitionToError(failure.message),
@@ -60,7 +67,7 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
     } else if (state is LoadingConversationState) {
       Future.wait([
         getMessagesUseCase.getMessages(state.conversation.id),
-        streamMessagesUseCase.streamMessages(state.conversation.id)
+        streamMessagesUseCase.streamMessages()
       ]).then(
         (eithers) => eithers[0].fold(
           (messages) => eithers[1].fold(
@@ -68,7 +75,11 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
               state.conversation,
               (messages as List<MessageEntity>).reversed.toList(),
               (messageStream as Stream<MessageEntity>).listen(
-                (message) => cubit.addMessage(message),
+                (message) {
+                  if (message.conversationId == state.conversation.id) {
+                    cubit.addMessage(message);
+                  }
+                },
               ),
             ),
             (failure) => cubit.transitionToError(failure.message),
@@ -135,29 +146,35 @@ class MessageProvider extends ScreenProvider<MessageCubit, MessageState> {
         onPressedSend: () {
           messageFocus.unfocus();
           if (messageController.text.trim().length > 0) {
-            sendDirectMessageUseCase
-                .sendDirectMessage(
-                    state.friend.cognitoId, messageController.text.trim())
-                .then(
-                  (either) => either.fold(
-                    (pair) => streamMessagesUseCase
-                        .streamMessages(pair.value1.id)
-                        .then(
-                          (either) => either.fold(
-                            (messageStream) => cubit.transitionToLoaded(
-                              pair.value1,
-                              [pair.value2],
-                              messageStream.listen(
-                                (message) => cubit.addMessage(message),
-                              ),
-                            ),
-                            (failure) =>
-                                cubit.transitionToError(failure.message),
-                          ),
-                        ),
-                    (failure) => cubit.transitionToError(failure.message),
-                  ),
-                );
+            Future.wait([
+              sendDirectMessageUseCase.sendDirectMessage(
+                  state.friend.cognitoId, messageController.text.trim()),
+              streamMessagesUseCase.streamMessages(),
+            ]).then(
+              (eithers) => eithers[0].fold(
+                (sendResult) => eithers[1].fold(
+                  (messageStreamResult) {
+                    final pair =
+                        sendResult as Tuple2<ConversationEntity, MessageEntity>;
+                    final messageStream =
+                        messageStreamResult as Stream<MessageEntity>;
+                    cubit.transitionToLoaded(
+                      pair.value1,
+                      [pair.value2],
+                      messageStream.listen(
+                        (message) {
+                          if (message.conversationId == pair.value1.id) {
+                            cubit.addMessage(message);
+                          }
+                        },
+                      ),
+                    );
+                  },
+                  (failure) => cubit.transitionToError(failure.message),
+                ),
+                (failure) => cubit.transitionToError(failure.message),
+              ),
+            );
           }
           messageController.clear();
         },

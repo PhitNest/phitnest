@@ -17,7 +17,7 @@ class ConfirmEmailProvider
     required this.resendConfirmation,
   }) : super();
 
-  void onResend(
+  void onPressedResend(
     ConfirmEmailCubit cubit,
     BuildContext context,
   ) {
@@ -63,17 +63,17 @@ class ConfirmEmailProvider
     ConfirmEmailState state,
   ) {
     if (state is LoadingState) {
-      return LoadingView();
+      return const LoadingView();
     } else if (state is ErrorState) {
       return ErrorView(
         errorMessage: state.message,
-        onPressedResend: () => onResend(cubit, context),
+        onPressedResend: () => onPressedResend(cubit, context),
         onCompletedVerification: (code) =>
             onCompleteVerification(code, cubit, context),
       );
     } else if (state is InitialState) {
       return InitialView(
-        onPressedResend: () => onResend(cubit, context),
+        onPressedResend: () => onPressedResend(cubit, context),
         onCompletedVerification: (code) =>
             onCompleteVerification(code, cubit, context),
       );
