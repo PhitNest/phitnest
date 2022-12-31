@@ -171,8 +171,8 @@ class _BaseWidget extends StatelessWidget {
                       TextInputField(
                         focusNode: focusPassword,
                         controller: passwordController,
-                        keyboardType: TextInputType.emailAddress,
-                        validator: validateEmail,
+                        validator: validatePassword,
+                        hide: true,
                         inputAction: TextInputAction.next,
                         onTap: onTapPassword,
                         hint: 'New Password',
@@ -180,8 +180,8 @@ class _BaseWidget extends StatelessWidget {
                       TextInputField(
                         focusNode: focusConfirmPassword,
                         controller: confirmPasswordController,
-                        keyboardType: TextInputType.emailAddress,
-                        validator: validateEmail,
+                        validator: validateConfirmPassword,
+                        hide: true,
                         onTap: onTapConfirmPassword,
                         hint: 'Confirm Password',
                       ),
