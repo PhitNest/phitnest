@@ -49,7 +49,7 @@ export class MongoConversationRepository implements IConversationRepository {
           from: MESSAGE_COLLECTION_NAME,
           localField: "_id",
           foreignField: "conversationId",
-          as: "recentMessage"
+          as: "recentMessage",
         },
       },
       { $unwind: "$recentMessage" },
@@ -87,6 +87,11 @@ export class MongoConversationRepository implements IConversationRepository {
           message: 1,
           "conversation._id": "$conversation._id",
           "conversation.users": "$users",
+        },
+      },
+      {
+        $sort: {
+          "message.createdAt": -1,
         },
       },
     ]).exec();
