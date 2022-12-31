@@ -47,9 +47,9 @@ export class MongoConversationRepository implements IConversationRepository {
       {
         $lookup: {
           from: MESSAGE_COLLECTION_NAME,
-          let: { conversationId: "$conversationId" },
-          pipeline: [{ $match: { $expr: [{ _id: "$$conversationId" }] } }],
-          as: "recentMessage",
+          localField: "_id",
+          foreignField: "conversationId",
+          as: "recentMessage"
         },
       },
       { $unwind: "$recentMessage" },
