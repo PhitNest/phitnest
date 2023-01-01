@@ -7,16 +7,19 @@ import '../../widgets/widgets.dart';
 
 class ErrorView extends StatelessWidget {
   final String message;
+  final VoidCallback onPressedBack;
   final VoidCallback onPressedRetry;
 
   const ErrorView({
     required this.message,
     required this.onPressedRetry,
+    required this.onPressedBack,
   }) : super();
 
   @override
   Widget build(BuildContext context) => BetterScaffold(
         useBackButton: true,
+        onPressedBack: onPressedBack,
         body: Column(
           children: [
             200.verticalSpace,
@@ -38,11 +41,16 @@ class ErrorView extends StatelessWidget {
 }
 
 class LoadingView extends StatelessWidget {
-  const LoadingView() : super();
+  final VoidCallback onPressedBack;
+
+  const LoadingView({
+    required this.onPressedBack,
+  }) : super();
 
   @override
   Widget build(BuildContext context) => BetterScaffold(
         useBackButton: true,
+        onPressedBack: onPressedBack,
         body: Column(
           children: [
             120.verticalSpace,

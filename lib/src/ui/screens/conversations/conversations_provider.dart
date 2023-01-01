@@ -87,6 +87,9 @@ class ConversationsProvider
   ) async {
     if (state is LoadingState) {
       if (memoryCacheRepo.me == null) {
+        await getUserUseCase.getUser();
+      }
+      if (memoryCacheRepo.me == null) {
         Navigator.pushAndRemoveUntil(
           context,
           NoAnimationMaterialPageRoute(

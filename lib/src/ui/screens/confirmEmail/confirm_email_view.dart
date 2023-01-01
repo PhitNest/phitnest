@@ -6,70 +6,61 @@ import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../screens.dart';
 
-class LoadingView extends StatelessWidget {
-  const LoadingView() : super();
-
-  @override
-  Widget build(BuildContext context) => _BaseWidget(
-        child: Column(
-          children: [
-            Spacer(),
-            CircularProgressIndicator(),
-            100.verticalSpace,
-          ],
-        ),
-        onCompletedVerification: (_) {},
-      );
+class LoadingView extends _BaseWidget {
+  LoadingView({
+    required super.email,
+  }) : super(
+          child: Column(
+            children: [
+              Spacer(),
+              CircularProgressIndicator(),
+              100.verticalSpace,
+            ],
+          ),
+          onCompletedVerification: (_) {},
+        );
 }
 
-class ErrorView extends StatelessWidget {
+class ErrorView extends _BaseWidget {
   final String errorMessage;
   final VoidCallback onPressedResend;
-  final void Function(String code) onCompletedVerification;
 
-  const ErrorView({
+  ErrorView({
     required this.errorMessage,
     required this.onPressedResend,
-    required this.onCompletedVerification,
-  }) : super();
-
-  @override
-  Widget build(BuildContext context) => _BaseWidget(
-        onCompletedVerification: onCompletedVerification,
-        child: Column(
-          children: [
-            20.verticalSpace,
-            Text(
-              errorMessage,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.labelLarge!.copyWith(
-                color: theme.errorColor,
+    required super.email,
+    required super.onCompletedVerification,
+  }) : super(
+          child: Column(
+            children: [
+              20.verticalSpace,
+              Text(
+                errorMessage,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.labelLarge!.copyWith(
+                  color: theme.errorColor,
+                ),
               ),
-            ),
-            Expanded(
-              child: _ResendWidget(onPressedResend: onPressedResend),
-            ),
-          ],
-        ),
-      );
+              Expanded(
+                child: _ResendWidget(onPressedResend: onPressedResend),
+              ),
+            ],
+          ),
+        );
 }
 
-class InitialView extends StatelessWidget {
+class InitialView extends _BaseWidget {
   final VoidCallback onPressedResend;
-  final void Function(String code) onCompletedVerification;
 
-  const InitialView({
+  InitialView({
     required this.onPressedResend,
-    required this.onCompletedVerification,
-  }) : super();
-
-  @override
-  Widget build(BuildContext context) => _BaseWidget(
-        child: _ResendWidget(
-          onPressedResend: onPressedResend,
-        ),
-        onCompletedVerification: onCompletedVerification,
-      );
+    required super.email,
+    required super.onCompletedVerification,
+  }) : super(
+          child: _ResendWidget(
+            onPressedResend: onPressedResend,
+          ),
+        );
 }
 
 class _ResendWidget extends StatelessWidget {
@@ -95,9 +86,11 @@ class _ResendWidget extends StatelessWidget {
 class _BaseWidget extends StatelessWidget {
   final Widget child;
   final void Function(String code) onCompletedVerification;
+  final String email;
 
   const _BaseWidget({
     required this.child,
+    required this.email,
     required this.onCompletedVerification,
   }) : super();
 
@@ -121,7 +114,7 @@ class _BaseWidget extends StatelessWidget {
             ),
             40.verticalSpace,
             Text(
-              "Check your email for a verification\ncode from us and enter it below",
+              "Check $email for a verification\ncode from us and enter it below",
               textAlign: TextAlign.center,
               style: theme.textTheme.labelLarge,
             ),

@@ -11,28 +11,7 @@ import '../repositories.dart';
 
 class AuthenticationRepository implements IAuthRepository {
   Future<bool> validAccessToken(String accessToken) async {
-    if (!Jwt.isExpired(accessToken)) {
-      return await restService
-          .get(
-            kGetUser,
-            accessToken: accessToken,
-          )
-          .then(
-            (either) => either.fold(
-              (res) {
-                if (res.statusCode == 200) {
-                  memoryCacheRepo.me =
-                      UserEntity.fromJson(jsonDecode(res.body));
-                  return true;
-                }
-                return false;
-              },
-              (failure) => false,
-            ),
-          );
-    } else {
-      return false;
-    }
+    return !Jwt.isExpired(accessToken);
   }
 
   Future<Either<AuthTokensEntity, Failure>> login(
@@ -183,9 +162,17 @@ class AuthenticationRepository implements IAuthRepository {
         },
       ).then(
         (either) => either.fold(
-          (res) => res.statusCode == kStatusOK
-              ? null
-              : Failure(jsonDecode(res.body).toString()),
+          (res) async {
+            if (res.statusCode == kStatusOK) {
+              memoryCacheRepo.email = email;
+              memoryCacheRepo.password = newPassword;
+              await deviceCacheRepo.setEmail(email);
+              await deviceCacheRepo.setPassword(newPassword);
+              return null;
+            } else {
+              return Failure(jsonDecode(res.body).toString());
+            }
+          },
           (failure) => failure,
         ),
       );

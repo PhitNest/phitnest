@@ -47,9 +47,10 @@ class ConfirmPhotoProvider
               context,
               NoAnimationMaterialPageRoute(
                 builder: (context) => ConfirmEmailProvider(
-                  confirmVerification: (code) => confirmRegisterUseCase
+                  email: email,
+                  confirmVerification: (code, email) => confirmRegisterUseCase
                       .confirmRegister(email.trim(), code),
-                  resendConfirmation: () =>
+                  resendConfirmation: (email) =>
                       confirmRegisterUseCase.resendConfirmation(email.trim()),
                 ),
               ),
@@ -61,9 +62,22 @@ class ConfirmPhotoProvider
     } else if (state is ErrorState) {
       if (state.message.toLowerCase().contains('email')) {
         Navigator.of(context)
-          ..pop()
-          ..pop()
-          ..pop()
+          ..pushAndRemoveUntil(
+            NoAnimationMaterialPageRoute(
+              builder: (context) => LoginProvider(),
+            ),
+            (_) => false,
+          )
+          ..push(
+            NoAnimationMaterialPageRoute(
+              builder: (context) => RegisterPageOneProvider(
+                initialFirstName: firstName,
+                initialLastName: lastName,
+                email: email,
+                password: password,
+              ),
+            ),
+          )
           ..push(
             NoAnimationMaterialPageRoute(
               builder: (context) => RegisterPageTwoProvider(

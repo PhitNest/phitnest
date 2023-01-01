@@ -111,26 +111,40 @@ class RegisterPageTwoProvider
         confirmPasswordFocus: confirmPasswordFocus,
         onPressedNext: () {
           if (formKey.currentState!.validate()) {
-            Navigator.of(context).push(
-              NoAnimationMaterialPageRoute(
-                builder: (context) => RequestLocationProvider(
-                  onFoundNearestGym: (context, gym) async {
-                    memoryCacheRepo.myGym = gym;
-                    Navigator.push(
-                      context,
-                      NoAnimationMaterialPageRoute(
-                        builder: (context) => PhotoInstructionProvider(
-                          email: emailController.text,
-                          password: passwordController.text,
-                          firstName: firstName,
-                          lastName: lastName,
+            if (memoryCacheRepo.myGym == null) {
+              Navigator.of(context).push(
+                NoAnimationMaterialPageRoute(
+                  builder: (context) => RequestLocationProvider(
+                    onFoundNearestGym: (context, gym) async {
+                      memoryCacheRepo.myGym = gym;
+                      Navigator.push(
+                        context,
+                        NoAnimationMaterialPageRoute(
+                          builder: (context) => PhotoInstructionProvider(
+                            email: emailController.text,
+                            password: passwordController.text,
+                            firstName: firstName,
+                            lastName: lastName,
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            );
+              );
+            } else {
+              Navigator.push(
+                context,
+                NoAnimationMaterialPageRoute(
+                  builder: (context) => PhotoInstructionProvider(
+                    email: emailController.text,
+                    password: passwordController.text,
+                    firstName: firstName,
+                    lastName: lastName,
+                  ),
+                ),
+              );
+            }
           } else {
             cubit.enableAutovalidateMode();
           }

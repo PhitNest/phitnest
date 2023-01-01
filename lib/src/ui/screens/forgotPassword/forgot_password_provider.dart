@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/utils.dart';
 import '../../../common/validators.dart';
+import '../../../repositories/repositories.dart';
 import '../../../use-cases/use_cases.dart';
 import '../../widgets/widgets.dart';
 import '../screen_provider.dart';
@@ -44,11 +45,22 @@ class ForgotPasswordProvider
 
   ForgotPasswordProvider() : super();
 
-  void scrollToEmail() => scroll(scrollController, 30.h);
+  void scrollToEmail() => scroll(scrollController, 40.h);
 
-  void scrollToPassword() => scroll(scrollController, 50.h);
+  void scrollToPassword() => scroll(scrollController, 60.h);
 
-  void scrollToConfirmPassword() => scroll(scrollController, 70.h);
+  void scrollToConfirmPassword() => scroll(scrollController, 80.h);
+
+  void onPressedSubmit(ForgotPasswordCubit cubit) {
+    focusConfirmPassword.unfocus();
+    focusPassword.unfocus();
+    focusEmail.unfocus();
+    if (formKey.currentState!.validate()) {
+      cubit.transitionToLoading();
+    } else {
+      cubit.enableAutovalidateMode();
+    }
+  }
 
   @override
   Future<void> listener(
@@ -57,26 +69,53 @@ class ForgotPasswordProvider
     ForgotPasswordState state,
   ) async {
     if (state is LoadingState) {
-      forgotPasswordUseCase.forgotPassword(emailController.text.trim()).then(
-            (failure) => failure != null
-                ? cubit.transitionToError(failure.message)
-                : Navigator.pushAndRemoveUntil(
-                    context,
-                    NoAnimationMaterialPageRoute(
-                      builder: (context) => ConfirmEmailProvider(
-                        confirmVerification: (code) =>
-                            forgotPasswordUseCase.resetPassword(
-                          emailController.text.trim(),
-                          code,
-                          passwordController.text,
+      if (emailController.text.trim() == memoryCacheRepo.email &&
+          memoryCacheRepo.triedConfirmRegister) {
+        confirmRegisterUseCase.resendConfirmation(memoryCacheRepo.email!).then(
+              (failure) => failure != null
+                  ? cubit.transitionToError(failure.message)
+                  : Navigator.pushAndRemoveUntil(
+                      context,
+                      NoAnimationMaterialPageRoute(
+                        builder: (context) => ConfirmEmailProvider(
+                          email: memoryCacheRepo.email!,
+                          confirmVerification: (code, email) =>
+                              confirmRegisterUseCase.confirmRegister(
+                            email,
+                            code,
+                          ),
+                          resendConfirmation: (email) =>
+                              confirmRegisterUseCase.resendConfirmation(
+                            email,
+                          ),
                         ),
-                        resendConfirmation: () => forgotPasswordUseCase
-                            .forgotPassword(emailController.text.trim()),
                       ),
+                      (_) => false,
                     ),
-                    (_) => false,
-                  ),
-          );
+            );
+      } else {
+        forgotPasswordUseCase.forgotPassword(emailController.text.trim()).then(
+              (failure) => failure != null
+                  ? cubit.transitionToError(failure.message)
+                  : Navigator.pushAndRemoveUntil(
+                      context,
+                      NoAnimationMaterialPageRoute(
+                        builder: (context) => ConfirmEmailProvider(
+                          email: emailController.text.trim(),
+                          confirmVerification: (code, email) =>
+                              forgotPasswordUseCase.resetPassword(
+                            email,
+                            code,
+                            passwordController.text,
+                          ),
+                          resendConfirmation: (email) =>
+                              forgotPasswordUseCase.forgotPassword(email),
+                        ),
+                      ),
+                      (_) => false,
+                    ),
+            );
+      }
     }
   }
 
@@ -123,13 +162,7 @@ class ForgotPasswordProvider
         onTapEmail: () => onTappedTextField(scrollToEmail),
         onTapPassword: () => onTappedTextField(scrollToPassword),
         onTapConfirmPassword: () => onTappedTextField(scrollToConfirmPassword),
-        onPressedSubmit: () {
-          if (formKey.currentState!.validate()) {
-            cubit.transitionToLoading();
-          } else {
-            cubit.enableAutovalidateMode();
-          }
-        },
+        onPressedSubmit: () => onPressedSubmit(cubit),
       );
     } else if (state is ErrorState) {
       return ErrorView(
@@ -150,7 +183,7 @@ class ForgotPasswordProvider
         onTapPassword: () => onTappedTextField(scrollToPassword),
         onTapConfirmPassword: () => onTappedTextField(scrollToConfirmPassword),
         message: state.errorMessage,
-        onPressedRetry: () => cubit.transitionToLoading(),
+        onPressedRetry: () => onPressedSubmit(cubit),
       );
     } else {
       throw Exception('Unknown state: $state');

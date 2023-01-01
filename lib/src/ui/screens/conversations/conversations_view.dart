@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -7,126 +6,104 @@ import '../../../entities/entities.dart';
 import '../../theme.dart';
 import '../../widgets/widgets.dart';
 
-class LoadedView extends StatelessWidget {
+class LoadedView extends _BaseWidget {
   final List<Either<FriendEntity, Tuple2<ConversationEntity, MessageEntity>>>
       conversations;
   final void Function(FriendEntity friend) onTapFriend;
   final void Function(ConversationEntity conversation) onTapConversation;
   final String Function(ConversationEntity conversation) getChatName;
-  final VoidCallback onPressedFriends;
 
   LoadedView({
     required this.conversations,
-    required this.onPressedFriends,
     required this.onTapFriend,
     required this.onTapConversation,
     required this.getChatName,
-  }) : super();
-
-  @override
-  Widget build(BuildContext context) => _BaseWidget(
-        onPressedFriends: onPressedFriends,
-        child: ListView.builder(
-          padding: EdgeInsets.zero,
-          shrinkWrap: true,
-          itemCount: conversations.length,
-          itemBuilder: (context, index) => conversations[index].fold(
-            (friend) => _ConversationCard(
-              message:
-                  "You have just connected with ${friend.fullName}, say hello!",
-              title: friend.fullName,
-              onTap: () => onTapFriend(friend),
-            ),
-            (conversationMessagePair) => _ConversationCard(
-              message: conversationMessagePair.value2.text,
-              title: getChatName(conversationMessagePair.value1),
-              onTap: () => onTapConversation(conversationMessagePair.value1),
+    required super.onPressedFriends,
+  }) : super(
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            itemCount: conversations.length,
+            itemBuilder: (context, index) => conversations[index].fold(
+              (friend) => _ConversationCard(
+                message:
+                    "You have just connected with ${friend.fullName}, say hello!",
+                title: friend.fullName,
+                onTap: () => onTapFriend(friend),
+              ),
+              (conversationMessagePair) => _ConversationCard(
+                message: conversationMessagePair.value2.text,
+                title: getChatName(conversationMessagePair.value1),
+                onTap: () => onTapConversation(conversationMessagePair.value1),
+              ),
             ),
           ),
-        ),
-      );
+        );
 }
 
-class LoadingView extends StatelessWidget {
-  final VoidCallback onPressedFriends;
-
+class LoadingView extends _BaseWidget {
   LoadingView({
-    required this.onPressedFriends,
-  }) : super();
-
-  @override
-  Widget build(BuildContext context) => _BaseWidget(
-        onPressedFriends: onPressedFriends,
-        child: Column(
-          children: [
-            120.verticalSpace,
-            CircularProgressIndicator(),
-          ],
-        ),
-      );
+    required super.onPressedFriends,
+  }) : super(
+          child: Column(
+            children: [
+              120.verticalSpace,
+              CircularProgressIndicator(),
+            ],
+          ),
+        );
 }
 
-class ErrorView extends StatelessWidget {
+class ErrorView extends _BaseWidget {
   final String errorMessage;
   final VoidCallback onPressedRetry;
-  final VoidCallback onPressedFriends;
 
   ErrorView({
     required this.errorMessage,
     required this.onPressedRetry,
-    required this.onPressedFriends,
-  }) : super();
-
-  @override
-  Widget build(BuildContext context) => _BaseWidget(
-        onPressedFriends: onPressedFriends,
-        child: Column(
-          children: [
-            120.verticalSpace,
-            Text(
-              errorMessage,
-              style: theme.textTheme.labelLarge!.copyWith(
-                color: theme.errorColor,
+    required super.onPressedFriends,
+  }) : super(
+          child: Column(
+            children: [
+              120.verticalSpace,
+              Text(
+                errorMessage,
+                style: theme.textTheme.labelLarge!.copyWith(
+                  color: theme.errorColor,
+                ),
               ),
-            ),
-            20.verticalSpace,
-            StyledButton(
-              onPressed: onPressedRetry,
-              child: Text('RETRY'),
-            ),
-          ],
-        ),
-      );
+              20.verticalSpace,
+              StyledButton(
+                onPressed: onPressedRetry,
+                child: Text('RETRY'),
+              ),
+            ],
+          ),
+        );
 }
 
-class NoConversationsView extends StatelessWidget {
-  final VoidCallback onPressedFriends;
-
+class NoConversationsView extends _BaseWidget {
   NoConversationsView({
-    required this.onPressedFriends,
-  }) : super();
-
-  @override
-  Widget build(BuildContext context) => _BaseWidget(
-        onPressedFriends: onPressedFriends,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            120.verticalSpace,
-            Text(
-              "You have no messages",
-              style: theme.textTheme.headlineLarge,
-              textAlign: TextAlign.center,
-            ),
-            40.verticalSpace,
-            Text(
-              "Go explore and meet new friends!",
-              style: theme.textTheme.labelLarge,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      );
+    required super.onPressedFriends,
+  }) : super(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              120.verticalSpace,
+              Text(
+                "You have no messages",
+                style: theme.textTheme.headlineLarge,
+                textAlign: TextAlign.center,
+              ),
+              40.verticalSpace,
+              Text(
+                "Go explore and meet new friends!",
+                style: theme.textTheme.labelLarge,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        );
 }
 
 class _BaseWidget extends StatelessWidget {

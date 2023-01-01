@@ -19,7 +19,7 @@ class UserRepository implements IUserRepository {
           (response) {
             if (response.statusCode == kStatusOK) {
               return Left(
-                UserEntity.fromJson(
+                memoryCacheRepo.me = UserEntity.fromJson(
                   jsonDecode(response.body),
                 ),
               );

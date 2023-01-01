@@ -14,6 +14,14 @@ class FriendsProvider extends ScreenProvider<FriendsCubit, FriendsState> {
 
   FriendsProvider() : super();
 
+  void onPressedBack(BuildContext context) => Navigator.pushAndRemoveUntil(
+        context,
+        NoAnimationMaterialPageRoute(
+          builder: (context) => ConversationsProvider(),
+        ),
+        (_) => false,
+      );
+
   @override
   Future<void> listener(
     BuildContext context,
@@ -99,21 +107,18 @@ class FriendsProvider extends ScreenProvider<FriendsCubit, FriendsState> {
       );
     };
     if (state is LoadingState) {
-      return LoadingView();
+      return LoadingView(
+        onPressedBack: () => onPressedBack(context),
+      );
     } else if (state is ErrorState) {
       return ErrorView(
         message: state.message,
+        onPressedBack: () => onPressedBack(context),
         onPressedRetry: () => cubit.transitionToLoading(),
       );
     } else if (state is NotTypingState) {
       return NotTypingView(
-        onPressedBack: () => Navigator.pushAndRemoveUntil(
-          context,
-          NoAnimationMaterialPageRoute(
-            builder: (context) => ConversationsProvider(),
-          ),
-          (_) => false,
-        ),
+        onPressedBack: () => onPressedBack(context),
         searchBoxKey: searchBoxKey,
         friends: state.friends
             .where(

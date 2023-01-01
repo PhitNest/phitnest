@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../entities/entities.dart';
+import '../../../repositories/repositories.dart';
 import '../../widgets/widgets.dart';
 import '../screen_provider.dart';
 import '../screens.dart';
@@ -9,11 +10,14 @@ import 'confirm_email_view.dart';
 
 class ConfirmEmailProvider
     extends ScreenProvider<ConfirmEmailCubit, ConfirmEmailState> {
-  final Future<Failure?> Function(String code) confirmVerification;
-  final Future<Failure?> Function() resendConfirmation;
+  final Future<Failure?> Function(String code, String email)
+      confirmVerification;
+  final Future<Failure?> Function(String email) resendConfirmation;
+  final String email;
 
   const ConfirmEmailProvider({
     required this.confirmVerification,
+    required this.email,
     required this.resendConfirmation,
   }) : super();
 
@@ -22,7 +26,7 @@ class ConfirmEmailProvider
     BuildContext context,
   ) {
     cubit.transitionToLoading();
-    resendConfirmation().then(
+    resendConfirmation(email).then(
       (failure) {
         if (failure != null) {
           cubit.transitionToError(failure.message);
@@ -39,7 +43,7 @@ class ConfirmEmailProvider
     BuildContext context,
   ) {
     cubit.transitionToLoading();
-    confirmVerification(code).then(
+    confirmVerification(code, email).then(
       (failure) {
         if (failure != null) {
           cubit.transitionToError(failure.message);
@@ -57,15 +61,24 @@ class ConfirmEmailProvider
   }
 
   @override
+  Future<void> listener(BuildContext context, ConfirmEmailCubit cubit,
+      ConfirmEmailState state) async {
+    if (state is InitialState) {
+      memoryCacheRepo.triedConfirmRegister = true;
+    }
+  }
+
+  @override
   Widget builder(
     BuildContext context,
     ConfirmEmailCubit cubit,
     ConfirmEmailState state,
   ) {
     if (state is LoadingState) {
-      return const LoadingView();
+      return LoadingView(email: email);
     } else if (state is ErrorState) {
       return ErrorView(
+        email: email,
         errorMessage: state.message,
         onPressedResend: () => onPressedResend(cubit, context),
         onCompletedVerification: (code) =>
@@ -73,6 +86,7 @@ class ConfirmEmailProvider
       );
     } else if (state is InitialState) {
       return InitialView(
+        email: email,
         onPressedResend: () => onPressedResend(cubit, context),
         onCompletedVerification: (code) =>
             onCompleteVerification(code, cubit, context),

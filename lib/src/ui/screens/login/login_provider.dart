@@ -37,6 +37,29 @@ class LoginProvider extends ScreenProvider<LoginCubit, LoginState> {
 
   void scrollToPassword() => scroll(scrollController, 40.h);
 
+  bool isUnconfirmed(String errorMessage) {
+    return errorMessage.contains("is not confirmed");
+  }
+
+  void goToConfirmEmail(BuildContext context) => Navigator.pushAndRemoveUntil(
+        context,
+        NoAnimationMaterialPageRoute(
+          builder: (context) => ConfirmEmailProvider(
+            email: emailController.text.trim(),
+            confirmVerification: (code, email) =>
+                confirmRegisterUseCase.confirmRegister(
+              email,
+              code,
+            ),
+            resendConfirmation: (email) =>
+                confirmRegisterUseCase.resendConfirmation(
+              email,
+            ),
+          ),
+        ),
+        (_) => false,
+      );
+
   LoginProvider() : super();
 
   @override
@@ -54,7 +77,14 @@ class LoginProvider extends ScreenProvider<LoginCubit, LoginState> {
                 ),
                 (_) => false,
               ),
-              (failure) => cubit.transitionToLoaded(),
+              (failure) {
+                if (!memoryCacheRepo.triedConfirmRegister &&
+                    isUnconfirmed(failure.message)) {
+                  goToConfirmEmail(context);
+                } else {
+                  cubit.transitionToLoaded();
+                }
+              },
             ),
           );
     } else if (state is LoadingState) {
@@ -76,24 +106,8 @@ class LoginProvider extends ScreenProvider<LoginCubit, LoginState> {
             ),
           );
     } else if (state is ErrorState) {
-      if (state.message.contains("is not confirmed")) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          NoAnimationMaterialPageRoute(
-            builder: (context) => ConfirmEmailProvider(
-              confirmVerification: (code) =>
-                  confirmRegisterUseCase.confirmRegister(
-                emailController.text.trim(),
-                code,
-              ),
-              resendConfirmation: () =>
-                  confirmRegisterUseCase.resendConfirmation(
-                emailController.text.trim(),
-              ),
-            ),
-          ),
-          (_) => false,
-        );
+      if (isUnconfirmed(state.message)) {
+        goToConfirmEmail(context);
       }
     }
   }
