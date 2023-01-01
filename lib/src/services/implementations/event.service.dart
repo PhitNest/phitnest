@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
 
+import '../../common/logger.dart';
 import '../../constants/constants.dart';
 import '../../entities/entities.dart';
 import '../interfaces/interfaces.dart';
@@ -15,10 +16,9 @@ class EventService implements IEventService {
   @override
   bool get connected => _socket != null && _socket!.connected;
 
-  @override
   Future<Failure?> _connect(String accessToken) async {
     try {
-      print("Connecting to the websocket server...");
+      logger.d("Connecting to the websocket server...");
       _socket = IO.io(
         '${environmentService.useHttps ? "wss" : "ws"}://${environmentService.backendHost}:${environmentService.backendPort}',
         OptionBuilder().setTransports(['websocket']).setExtraHeaders(
@@ -31,14 +31,14 @@ class EventService implements IEventService {
       _socket!.onConnect(
         (_) {
           if (!completer.isCompleted) {
-            print("Connected to the websocket server.");
+            logger.d("Connected to the websocket server.");
             completer.complete();
           }
         },
       );
       _socket!.onDisconnect(
         (_) {
-          print("Disconnected from the websocket server.");
+          logger.d("Disconnected from the websocket server.");
           _socket = null;
         },
       );
@@ -48,7 +48,7 @@ class EventService implements IEventService {
       }
       return null;
     } catch (error) {
-      print("Failed to connect to the websocket: $error");
+      logger.e("Failed to connect to the websocket: $error");
       return Failure("Failed to connect to the network.");
     }
   }
@@ -67,13 +67,13 @@ class EventService implements IEventService {
   ) async {
     final streamMessages = () {
       final streamController = StreamController<dynamic>();
-      print("Opening stream for event: $event");
+      logger.d("Opening stream for event: $event");
       final handler = (data) {
-        print("Received event: $event\n\tData: $data");
+        logger.d("Received event: $event\n\tData: $data");
         streamController.add(data);
       };
       final disconnectHandler = (_) {
-        print("Closing event stream due to disconnection: $event");
+        logger.d("Closing event stream due to disconnection: $event");
         streamController.close();
       };
       _socket!.on(
@@ -84,7 +84,7 @@ class EventService implements IEventService {
         disconnectHandler,
       );
       streamController.onCancel = () {
-        print("Closing event stream: $event");
+        logger.d("Closing event stream: $event");
         if (connected) {
           _socket!.off(
             event,
@@ -123,14 +123,15 @@ class EventService implements IEventService {
     Duration? timeout,
   }) async {
     final emitMessage = () {
-      print("Emitting event: $event\n\tData: $data");
+      logger.d("Emitting event: $event\n\tData: $data");
       _socket!.emit(event, data);
       final completer = Completer<Either<dynamic, Failure>>();
       _socket!.once(
         'success',
         (data) {
           if (!completer.isCompleted) {
-            print("Successfully emitted event: $event\n\tReturned data: $data");
+            logger.d(
+                "Successfully emitted event: $event\n\tReturned data: $data");
             completer.complete(Left(data));
           }
         },

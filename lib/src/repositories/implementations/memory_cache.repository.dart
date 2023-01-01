@@ -8,6 +8,7 @@ class MemoryCacheRepository implements IMemoryCacheRepository {
   String? _refreshToken;
   String? _email;
   String? _password;
+  bool _triedConfirmRegister = false;
 
   @override
   UserEntity? get me => _me;
@@ -44,4 +45,11 @@ class MemoryCacheRepository implements IMemoryCacheRepository {
 
   @override
   set refreshToken(String? refreshToken) => _refreshToken = refreshToken;
+
+  @override
+  bool get triedConfirmRegister => _triedConfirmRegister;
+
+  @override
+  set triedConfirmRegister(bool triedConfirmRegister) =>
+      _triedConfirmRegister = triedConfirmRegister;
 }

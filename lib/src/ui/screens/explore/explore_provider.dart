@@ -48,6 +48,9 @@ class ExploreProvider extends ScreenProvider<ExploreCubit, ExploreState> {
         );
       }
     } else if (state is LoadingState) {
+      if (memoryCacheRepo.me == null) {
+        await getUserUseCase.getUser();
+      }
       if (memoryCacheRepo.me != null) {
         Future.wait([
           exploreUseCase.exploreUsers(),

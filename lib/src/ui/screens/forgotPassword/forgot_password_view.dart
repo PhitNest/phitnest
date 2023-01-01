@@ -159,31 +159,42 @@ class _BaseWidget extends StatelessWidget {
                 child: SizedBox(
                   child: Column(
                     children: [
-                      TextInputField(
-                        focusNode: focusEmail,
-                        controller: emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        inputAction: TextInputAction.next,
-                        validator: validateEmail,
-                        onTap: onTapEmail,
-                        hint: 'Email',
+                      SizedBox(
+                        height: 40.h,
+                        child: TextInputField(
+                          focusNode: focusEmail,
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          inputAction: TextInputAction.next,
+                          validator: validateEmail,
+                          onTap: onTapEmail,
+                          hint: 'Email',
+                        ),
                       ),
-                      TextInputField(
-                        focusNode: focusPassword,
-                        controller: passwordController,
-                        validator: validatePassword,
-                        hide: true,
-                        inputAction: TextInputAction.next,
-                        onTap: onTapPassword,
-                        hint: 'New Password',
+                      16.verticalSpace,
+                      SizedBox(
+                        height: 40.h,
+                        child: TextInputField(
+                          focusNode: focusPassword,
+                          controller: passwordController,
+                          validator: validatePassword,
+                          hide: true,
+                          inputAction: TextInputAction.next,
+                          onTap: onTapPassword,
+                          hint: 'New Password',
+                        ),
                       ),
-                      TextInputField(
-                        focusNode: focusConfirmPassword,
-                        controller: confirmPasswordController,
-                        validator: validateConfirmPassword,
-                        hide: true,
-                        onTap: onTapConfirmPassword,
-                        hint: 'Confirm Password',
+                      16.verticalSpace,
+                      SizedBox(
+                        height: 40.h,
+                        child: TextInputField(
+                          focusNode: focusConfirmPassword,
+                          controller: confirmPasswordController,
+                          validator: validateConfirmPassword,
+                          hide: true,
+                          onTap: onTapConfirmPassword,
+                          hint: 'Confirm Password',
+                        ),
                       ),
                       30.verticalSpace,
                       child,

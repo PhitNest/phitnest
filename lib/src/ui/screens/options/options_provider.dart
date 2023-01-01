@@ -15,6 +15,9 @@ class OptionsProvider extends ScreenProvider<OptionsCubit, OptionsState> {
   Future<void> listener(
       BuildContext context, OptionsCubit cubit, OptionsState state) async {
     if (state is InitialState) {
+      if (memoryCacheRepo.me == null) {
+        await getUserUseCase.getUser();
+      }
       if (memoryCacheRepo.me != null) {
         getGymUseCase.getGym().then(
               (either) => either.fold(

@@ -78,22 +78,20 @@ class GetAuthTokenUseCase implements IGetAuthTokenUseCase {
         email,
         password,
       );
-      if (loginResult.isLeft()) {
-        return loginResult.fold(
-          (session) async {
-            await deviceCacheRepo.setAccessToken(session.accessToken);
-            await deviceCacheRepo.setRefreshToken(session.refreshToken);
-            memoryCacheRepo.accessToken = session.accessToken;
-            memoryCacheRepo.refreshToken = session.refreshToken;
-            if (await authRepo.validAccessToken(session.accessToken)) {
-              return Left(session.accessToken);
-            } else {
-              return Right(Failure("Invalid access token"));
-            }
-          },
-          (failure) => Right(failure),
-        );
-      }
+      return loginResult.fold(
+        (session) async {
+          await deviceCacheRepo.setAccessToken(session.accessToken);
+          await deviceCacheRepo.setRefreshToken(session.refreshToken);
+          memoryCacheRepo.accessToken = session.accessToken;
+          memoryCacheRepo.refreshToken = session.refreshToken;
+          if (await authRepo.validAccessToken(session.accessToken)) {
+            return Left(session.accessToken);
+          } else {
+            return Right(Failure("Invalid access token"));
+          }
+        },
+        (failure) => Right(failure),
+      );
     }
     return Right(
       Failure("No auth credentials in the cache"),

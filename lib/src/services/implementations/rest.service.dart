@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 
+import '../../common/logger.dart';
 import '../../constants/constants.dart';
 import '../../entities/entities.dart';
 import '../interfaces/interfaces.dart';
@@ -30,7 +31,7 @@ class RestService implements IRestService {
     String? accessToken,
   }) async {
     try {
-      print("Sending a GET request to $route\n\tData: $params");
+      logger.d("Sending a GET request to $route\n\tData: $params");
       return Left(
         await http
             .get(
@@ -46,14 +47,14 @@ class RestService implements IRestService {
             .timeout(timeout ?? requestTimeout)
             .then(
               (response) {
-                print(
+                logger.d(
                     "Response from $route:\n\tStatus code: ${response.statusCode}\n\tBody: ${response.body}");
                 return response;
               },
             ),
       );
     } catch (error) {
-      print("Request error: $error");
+      logger.e("Request error: $error");
       return Right(
         Failure("Failed to connect to the network."),
       );
@@ -68,7 +69,7 @@ class RestService implements IRestService {
     String? accessToken,
   }) async {
     try {
-      print("Sending a POST request to $route\n\tData: $body");
+      logger.d("Sending a POST request to $route\n\tData: $body");
       return Left(
         await http
             .post(
@@ -85,14 +86,14 @@ class RestService implements IRestService {
             .timeout(timeout ?? requestTimeout)
             .then(
           (response) {
-            print(
+            logger.d(
                 "Response from $route:\n\tStatus code: ${response.statusCode}\n\tBody: ${response.body}");
             return response;
           },
         ),
       );
     } catch (error) {
-      print("Request error: $error");
+      logger.e("Request error: $error");
       return Right(
         Failure("Failed to connect to the network."),
       );
@@ -107,7 +108,7 @@ class RestService implements IRestService {
     String? accessToken,
   }) async {
     try {
-      print("Sending a DELETE request to $route\n\tData: $body");
+      logger.d("Sending a DELETE request to $route\n\tData: $body");
       return Left(
         await http
             .delete(
@@ -124,14 +125,14 @@ class RestService implements IRestService {
             .timeout(timeout ?? requestTimeout)
             .then(
           (response) {
-            print(
+            logger.d(
                 "Response from $route:\n\tStatus code: ${response.statusCode}\n\tBody: ${response.body}");
             return response;
           },
         ),
       );
     } catch (error) {
-      print("Request error: $error");
+      logger.e("Request error: $error");
       return Right(
         Failure("Failed to connect to the network."),
       );

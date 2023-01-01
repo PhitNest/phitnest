@@ -30,6 +30,7 @@ dependencies:
   socket_io_client: ^2.0.0
   email_validator: ^2.1.17
   flutter_bloc: ^8.1.1
+  logger: ^1.1.0
 
 dev_dependencies:
   flutter_test:
