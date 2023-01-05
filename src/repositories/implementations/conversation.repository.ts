@@ -11,6 +11,7 @@ import { USER_COLLECTION_NAME } from "./user.repository";
 const schema = new mongoose.Schema(
   {
     users: { type: [String], required: true },
+    archived: { type: Boolean, default: false },
   },
   {
     collection: CONVERSATION_COLLECTION_NAME,
@@ -29,6 +30,12 @@ export class MongoConversationRepository implements IConversationRepository {
     await ConversationModel.deleteMany({}).exec();
   }
 
+  async archive(conversationId: string) {
+    await ConversationModel.findByIdAndUpdate(conversationId, {
+      archived: true,
+    });
+  }
+
   async isUserInConversation(userCognitoId: string, conversationId: string) {
     return (
       (await ConversationModel.findById(conversationId))?.users.includes(
@@ -42,6 +49,7 @@ export class MongoConversationRepository implements IConversationRepository {
       {
         $match: {
           users: cognitoId,
+          archived: false,
         },
       },
       {
@@ -101,18 +109,12 @@ export class MongoConversationRepository implements IConversationRepository {
     return ConversationModel.create({ users: userCognitoIds });
   }
 
-  async delete(conversationId: string) {
-    return (
-      (await ConversationModel.deleteOne({ _id: conversationId }).exec())
-        .deletedCount > 0
-    );
-  }
-
   getByUser(cognitoId: string) {
     return ConversationModel.aggregate([
       {
         $match: {
           users: cognitoId,
+          archived: false,
         },
       },
     ]).exec();
@@ -123,6 +125,7 @@ export class MongoConversationRepository implements IConversationRepository {
       users: {
         $all: cognitoIds,
       },
+      archived: false,
     }).exec();
   }
 }

@@ -9,6 +9,7 @@ export const Repositories = {
   location: Symbol("location.repository"),
   conversation: Symbol("conversation.repository"),
   message: Symbol("message.repository"),
+  profilePicture: Symbol("profile-picture.repository"),
 };
 
 export const UseCases = {
@@ -73,6 +74,7 @@ import {
   OSMLocationRepository,
   MongoMessageRepository,
   MongoConversationRepository,
+  S3ProfilePictureRepository,
 } from "../repositories/implementations";
 
 import {
@@ -150,6 +152,7 @@ function injectRepositories() {
   injectRepository(Repositories.location, OSMLocationRepository);
   injectRepository(Repositories.conversation, MongoConversationRepository);
   injectRepository(Repositories.message, MongoMessageRepository);
+  injectRepository(Repositories.profilePicture, S3ProfilePictureRepository);
 }
 
 export function injectUseCases() {
