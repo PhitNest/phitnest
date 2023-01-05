@@ -5,8 +5,6 @@ import { queryParser } from "express-query-parser";
 import morgan from "morgan";
 import { l } from "../logger";
 import { buildRoutes } from "./routes";
-import path from "path";
-import fs from "fs";
 import {
   statusInternalServerError,
   statusOK,
@@ -45,22 +43,7 @@ export function createServer() {
       res.status(statusInternalServerError).json({ message: err });
     }
   );
-  if (process.env.NODE_ENV != "production") {
-    const root = path.normalize(__dirname + "/../../..");
-    app.set("appPath", root + "client");
-    app.use(express.static(`${root}/public`));
-    const files = fs.readdirSync(`${root}/openapi/specs`);
-    for (let i = 0; i < files.length; i++) {
-      app.use(
-        `/specs/${files[i]}`,
-        express.static(`${root}/openapi/specs/${files[i]}`)
-      );
-    }
-    const apiSpec = `${root}/openapi/api.yml`;
-    app.use("/spec", express.static(apiSpec));
-  } else {
-    app.use("/", (req, res) => res.status(statusOK).send());
-  }
+  app.get("/", (req, res) => res.status(statusOK).send());
   server = http.createServer(app);
   return server;
 }
