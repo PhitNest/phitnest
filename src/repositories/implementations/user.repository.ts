@@ -190,6 +190,7 @@ export class MongoUserRepository implements IUserRepository {
   async populateConversationMembers(conversation: IConversationEntity) {
     return {
       _id: conversation._id,
+      archived: conversation.archived,
       users: await UserModel.aggregate([
         { $match: { cognitoId: { $in: conversation.users } } },
         { $project: { gymId: 1, cognitoId: 1, firstName: 1, lastName: 1 } },

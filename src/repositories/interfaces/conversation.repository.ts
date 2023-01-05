@@ -11,7 +11,7 @@ export interface IConversationRepository {
 
   getByUsers(cognitoIds: string[]): Promise<IConversationEntity | null>;
 
-  delete(conversationId: string): Promise<boolean>;
+  archive(conversationId: string): Promise<void>;
 
   getRecentMessages(cognitoId: string): Promise<
     {
