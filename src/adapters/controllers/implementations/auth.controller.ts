@@ -166,7 +166,7 @@ export class AuthController implements IAuthController {
     res: IResponse<{ uploadProfilePicture: string }>
   ) {
     try {
-      const { email, cognitoId } = z
+      const { email } = z
         .object({
           email: z.string().trim().email(),
           cognitoId: z.string().trim(),
@@ -180,7 +180,9 @@ export class AuthController implements IAuthController {
       } else {
         return res.status(statusOK).json({
           uploadProfilePicture:
-            await this.getUploadProfilePictureURLUseCase.execute(cognitoId),
+            await this.getUploadProfilePictureURLUseCase.execute(
+              user.cognitoId
+            ),
         });
       }
     } catch (err) {
