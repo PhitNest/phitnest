@@ -68,7 +68,7 @@ class _FirstPage extends _BaseWidget {
   _FirstPage()
       : super(
           header: 'Welcome to the Nest.',
-          subText: 'This is the beginning of a beautiful friendship.',
+          subText: 'This is the beginning of\na beautiful friendship.',
           children: [
             Spacer(),
             RedArrowWidget(),
@@ -82,7 +82,7 @@ class _SecondPage extends _BaseWidget {
       : super(
           header: 'Nest = fitness club',
           subText:
-              'This is a positive space for you to explore your health & wellness goals through genuine connections in your community.',
+              'This is a positive space for you to\nexplore your health & wellness\ngoals through genuine\nconnections in your community.',
           children: [
             Spacer(),
             RedArrowWidget(),
@@ -97,16 +97,10 @@ class _ThirdPage extends _BaseWidget {
   _ThirdPage({
     required this.onPressedYes,
   }) : super(
-          header: 'Nest = fitness club',
+          header: "Let's get started",
           subText:
-              'This is a positive space for you to explore your health & wellness goals through genuine connections in your community.',
-          children: [
-            35.verticalSpace,
-            Text(
               'Do you belong to a fitness club?',
-              style: theme.textTheme.labelLarge!.copyWith(height: 1.56),
-              textAlign: TextAlign.center,
-            ),
+          children: [
             35.verticalSpace,
             StyledButton(
               child: Text('YES'),
