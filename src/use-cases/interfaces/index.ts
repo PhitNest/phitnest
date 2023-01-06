@@ -26,3 +26,6 @@ export { IGetMessagesUseCase } from "./get-messages";
 export { ISendMessageUseCase } from "./send-message";
 export { IGetConversationsUseCase } from "./get-conversations";
 export { IRemoveFriendUseCase } from "./remove-friend";
+export { IGetProfilePictureUseCase } from "./get-profile-picture";
+export { IGetUploadProfilePictureURLUseCase } from "./get-upload-profile-picture-url";
+export { IGetUserByEmailUseCase } from "./get-user-by-email";

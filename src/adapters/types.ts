@@ -23,27 +23,37 @@ export interface AuthenticatedLocals {
   cognitoId: string;
 }
 
-export type Controller<LocalsType = any> = (
+export type AuthenticatedController<ResType = null> = Controller<
+  ResType,
+  AuthenticatedLocals
+>;
+
+export type Controller<ResType = null, LocalsType = any> = (
   req: IRequest,
-  res: IResponse<LocalsType>
-) => Promise<IResponse<LocalsType>>;
+  res: IResponse<ResType, LocalsType>
+) => Promise<IResponse<ResType, LocalsType>>;
 
 export interface MiddlewareController<LocalsType = any> {
   execute: (
     req: IRequest,
-    res: IResponse<LocalsType>,
+    res: IResponse<any, LocalsType>,
     next: (err?: string) => void
   ) => Promise<void>;
 }
 
-export interface IResponse<LocalsType = any> {
+export type IAuthenticatedResponse<ResType = null> = IResponse<
+  ResType,
+  AuthenticatedLocals
+>;
+
+export interface IResponse<ResType = null, LocalsType = any> {
   locals: LocalsType;
   code: number;
-  content: any;
+  content: ResType;
 
   send(content?: any): this;
   status(code: number): this;
-  json(content: any): this;
+  json(content: ResType): this;
 }
 
 export interface IRequest {

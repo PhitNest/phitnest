@@ -1,9 +1,10 @@
-import { AuthenticatedLocals, Controller } from "../../types";
+import { IGymEntity } from "../../../entities";
+import { AuthenticatedController, Controller } from "../../types";
 
 export interface IGymController {
   // TODO: SECURE THIS WITH ADMIN AUTH FOR PROD
-  create: Controller;
+  create: Controller<IGymEntity>;
 
-  get: Controller<AuthenticatedLocals>;
-  getNearest: Controller;
+  get: AuthenticatedController<IGymEntity>;
+  getNearest: Controller<IGymEntity[]>;
 }

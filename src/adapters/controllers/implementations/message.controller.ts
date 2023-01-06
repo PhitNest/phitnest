@@ -2,10 +2,10 @@ import { inject, injectable } from "inversify";
 import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
 import {
-  statusBadRequest,
   statusInternalServerError,
   statusOK,
 } from "../../../constants/http_codes";
+import { IMessageEntity } from "../../../entities";
 import { IGetMessagesUseCase } from "../../../use-cases/interfaces";
 import { IRequest, IResponse } from "../../types";
 import { IMessageController } from "../interfaces";
@@ -20,13 +20,11 @@ export class MessageController implements IMessageController {
     this.getMessagesUseCase = getMessagesUseCase;
   }
 
-  async getMessages(req: IRequest, res: IResponse) {
+  async getMessages(req: IRequest, res: IResponse<IMessageEntity[]>) {
     try {
-      const { conversationId, skip, limit } = z
+      const { conversationId } = z
         .object({
           conversationId: z.string(),
-          skip: z.number().min(0).optional(),
-          limit: z.number().min(0).max(100).optional(),
         })
         .parse(req.content());
       return res
@@ -38,13 +36,7 @@ export class MessageController implements IMessageController {
           )
         );
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 }

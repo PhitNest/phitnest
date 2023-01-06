@@ -78,7 +78,7 @@ class ConnectionRequest implements IRequest {
   }
 }
 
-class ConnectionResponse implements IResponse<any> {
+class ConnectionResponse implements IResponse<any, any> {
   socket: Socket;
   locals: any;
   code: any;

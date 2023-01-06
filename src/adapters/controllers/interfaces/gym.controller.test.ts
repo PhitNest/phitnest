@@ -7,7 +7,6 @@ import {
 } from "../../../common/dependency-injection";
 import { IGymEntity, IUserEntity, LocationEntity } from "../../../entities";
 import {
-  statusBadRequest,
   statusCreated,
   statusInternalServerError,
   statusOK,
@@ -85,7 +84,7 @@ describe("Creating a new gym", () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse({});
     const res = await gymController.create(mockRequest, mockResponse);
-    expect(res.code).toBe(statusBadRequest);
+    expect(res.code).toBe(statusInternalServerError);
     expect(res.content).toEqual([
       {
         code: "invalid_type",
@@ -101,7 +100,7 @@ describe("Creating a new gym", () => {
     let mockRequest = new MockRequest({});
     let mockResponse = new MockResponse({});
     let res = await gymController.create(mockRequest, mockResponse);
-    expect(res.code).toBe(statusBadRequest);
+    expect(res.code).toBe(statusInternalServerError);
     expect(res.content).toEqual([
       {
         code: "invalid_type",
@@ -121,7 +120,7 @@ describe("Creating a new gym", () => {
     mockRequest = new MockRequest({ name: "test", address: "test" });
     mockResponse = new MockResponse({});
     res = await gymController.create(mockRequest, mockResponse);
-    expect(res.code).toBe(statusBadRequest);
+    expect(res.code).toBe(statusInternalServerError);
     expect(res.content).toEqual([
       {
         code: "invalid_type",
@@ -137,7 +136,7 @@ describe("Creating a new gym", () => {
     });
     mockResponse = new MockResponse({});
     res = await gymController.create(mockRequest, mockResponse);
-    expect(res.code).toBe(statusBadRequest);
+    expect(res.code).toBe(statusInternalServerError);
     expect(res.content).toEqual([
       {
         code: "invalid_type",
@@ -212,7 +211,7 @@ describe("Get the nearest gyms", () => {
     const mockRequest = new MockRequest();
     const mockResponse = new MockResponse({});
     const res = await gymController.getNearest(mockRequest, mockResponse);
-    expect(res.code).toBe(statusBadRequest);
+    expect(res.code).toBe(statusInternalServerError);
     expect(res.content).toEqual([
       {
         code: "invalid_type",
@@ -228,7 +227,7 @@ describe("Get the nearest gyms", () => {
     let mockRequest = new MockRequest({});
     let mockResponse = new MockResponse({});
     let res = await gymController.getNearest(mockRequest, mockResponse);
-    expect(res.code).toBe(statusBadRequest);
+    expect(res.code).toBe(statusInternalServerError);
     expect(res.content).toEqual([
       {
         code: "invalid_type",
@@ -260,7 +259,7 @@ describe("Get the nearest gyms", () => {
     });
     mockResponse = new MockResponse({});
     res = await gymController.getNearest(mockRequest, mockResponse);
-    expect(res.code).toBe(statusBadRequest);
+    expect(res.code).toBe(statusInternalServerError);
     mockRequest = new MockRequest({
       latitude: 91,
       longitude: 181,
@@ -269,7 +268,7 @@ describe("Get the nearest gyms", () => {
     });
     mockResponse = new MockResponse({});
     res = await gymController.getNearest(mockRequest, mockResponse);
-    expect(res.code).toBe(statusBadRequest);
+    expect(res.code).toBe(statusInternalServerError);
   });
 
   test("With valid request body", async () => {

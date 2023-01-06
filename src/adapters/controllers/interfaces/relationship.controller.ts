@@ -1,11 +1,13 @@
-import { AuthenticatedLocals, Controller } from "../../types";
+import { z } from "zod";
+import { IFriendEntity, IPublicUserEntity } from "../../../entities";
+import { AuthenticatedController } from "../../types";
 
 export interface IRelationshipController {
-  block: Controller<AuthenticatedLocals>;
-  unblock: Controller<AuthenticatedLocals>;
-  denyFriendRequest: Controller<AuthenticatedLocals>;
-  getFriends: Controller<AuthenticatedLocals>;
-  getSentFriendRequests: Controller<AuthenticatedLocals>;
-  getReceivedFriendRequests: Controller<AuthenticatedLocals>;
-  removeFriend: Controller<AuthenticatedLocals>;
+  block: AuthenticatedController;
+  unblock: AuthenticatedController;
+  denyFriendRequest: AuthenticatedController;
+  getFriends: AuthenticatedController<IFriendEntity[]>;
+  getSentFriendRequests: AuthenticatedController<IPublicUserEntity[]>;
+  getReceivedFriendRequests: AuthenticatedController<IPublicUserEntity[]>;
+  removeFriend: AuthenticatedController;
 }

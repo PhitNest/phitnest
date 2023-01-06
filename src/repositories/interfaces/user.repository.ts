@@ -2,6 +2,7 @@ import {
   IConversationEntity,
   IPopulatedConversationEntity,
   IPublicUserEntity,
+  IRegisteredUser,
   IUserEntity,
 } from "../../entities";
 
@@ -9,6 +10,10 @@ export interface IUserRepository {
   create(user: Omit<IUserEntity, "_id">): Promise<IUserEntity>;
 
   delete(cognitoId: string): Promise<boolean>;
+
+  confirmUser(cognitoId: string): Promise<void>;
+
+  getByEmail(email: string): Promise<IRegisteredUser | null>;
 
   exploreUsers(
     cognitoId: string,

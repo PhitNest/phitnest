@@ -1,4 +1,4 @@
-import { IPublicUserEntity } from "../../entities";
+import { IProfilePictureExploreUserEntity } from "../../entities";
 import { IUseCase } from "../types";
 
 export interface ITutorialExploreUseCase extends IUseCase {
@@ -6,5 +6,5 @@ export interface ITutorialExploreUseCase extends IUseCase {
     gymId: string,
     offset?: number,
     limit?: number
-  ) => Promise<Omit<IPublicUserEntity, "gymId">[]>;
+  ) => Promise<IProfilePictureExploreUserEntity[]>;
 }

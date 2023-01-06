@@ -2,7 +2,6 @@ import { inject, injectable } from "inversify";
 import { IAuthController } from "../adapters/controllers/interfaces";
 import { IAuthMiddleware } from "../adapters/middleware/interfaces";
 import { Controllers, Middlewares } from "../common/dependency-injection";
-import { statusOK } from "../constants/http_codes";
 import { HttpMethod, IRoute, IRouter } from "./types";
 
 @injectable()
@@ -63,10 +62,11 @@ export class AuthRouter implements IRouter {
         controller: (req, res) => authController.signOut(req, res),
       },
       {
-        path: "/",
+        path: "/getUploadProfilePictureURL",
         method: HttpMethod.GET,
-        middlewares: [authMiddleware],
-        controller: async (req, res) => res.status(statusOK).send(),
+        middlewares: [],
+        controller: (req, res) =>
+          authController.getUploadProfilePictureUrlUnconfirmed(req, res),
       },
     ];
   }

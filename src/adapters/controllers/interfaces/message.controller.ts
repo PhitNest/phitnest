@@ -1,5 +1,6 @@
-import { AuthenticatedLocals, Controller } from "../../types";
+import { IMessageEntity } from "../../../entities";
+import { AuthenticatedController } from "../../types";
 
 export interface IMessageController {
-  getMessages: Controller<AuthenticatedLocals>;
+  getMessages: AuthenticatedController<IMessageEntity[]>;
 }

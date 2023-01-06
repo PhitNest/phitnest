@@ -2,22 +2,24 @@ import { injectable, inject } from "inversify";
 import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
 import {
-  statusBadRequest,
   statusCreated,
   statusInternalServerError,
   statusOK,
 } from "../../../constants/http_codes";
+import { IAuthEntity } from "../../../entities";
 import {
   IConfirmRegisterUseCase,
   IForgotPasswordSubmitUseCase,
   IForgotPasswordUseCase,
+  IGetUploadProfilePictureURLUseCase,
+  IGetUserByEmailUseCase,
   ILoginUseCase,
   IRefreshSessionUseCase,
   IRegisterUseCase,
   IResendConfirmationUseCase,
   ISignOutUseCase,
 } from "../../../use-cases/interfaces";
-import { AuthenticatedLocals, IRequest, IResponse } from "../../types";
+import { IAuthenticatedResponse, IRequest, IResponse } from "../../types";
 import { IAuthController } from "../interfaces";
 
 @injectable()
@@ -30,6 +32,8 @@ export class AuthController implements IAuthController {
   forgotPasswordUseCase: IForgotPasswordUseCase;
   signOutUseCase: ISignOutUseCase;
   forgotPasswordSubmitUseCase: IForgotPasswordSubmitUseCase;
+  getUploadProfilePictureURLUseCase: IGetUploadProfilePictureURLUseCase;
+  getUserByEmailUseCase: IGetUserByEmailUseCase;
 
   constructor(
     @inject(UseCases.login) loginUseCase: ILoginUseCase,
@@ -44,7 +48,11 @@ export class AuthController implements IAuthController {
     forgotPasswordUseCase: IForgotPasswordUseCase,
     @inject(UseCases.forgotPasswordSubmit)
     forgotPasswordSubmitUseCase: IForgotPasswordSubmitUseCase,
-    @inject(UseCases.signOut) signOutUseCase: ISignOutUseCase
+    @inject(UseCases.signOut) signOutUseCase: ISignOutUseCase,
+    @inject(UseCases.getUploadProfilePictureURL)
+    getUploadProfilePictureURLUseCase: IGetUploadProfilePictureURLUseCase,
+    @inject(UseCases.getUserByEmail)
+    getUserByEmailUseCase: IGetUserByEmailUseCase
   ) {
     this.loginUseCase = loginUseCase;
     this.registerUseCase = registerUseCase;
@@ -54,9 +62,11 @@ export class AuthController implements IAuthController {
     this.forgotPasswordUseCase = forgotPasswordUseCase;
     this.forgotPasswordSubmitUseCase = forgotPasswordSubmitUseCase;
     this.signOutUseCase = signOutUseCase;
+    this.getUploadProfilePictureURLUseCase = getUploadProfilePictureURLUseCase;
+    this.getUserByEmailUseCase = getUserByEmailUseCase;
   }
 
-  async signOut(req: IRequest, res: IResponse<AuthenticatedLocals>) {
+  async signOut(req: IRequest, res: IAuthenticatedResponse) {
     try {
       const { allDevices } = z
         .object({ allDevices: z.boolean() })
@@ -64,13 +74,7 @@ export class AuthController implements IAuthController {
       await this.signOutUseCase.execute(res.locals.cognitoId, allDevices);
       return res.status(statusOK).send();
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
@@ -86,13 +90,7 @@ export class AuthController implements IAuthController {
       await this.forgotPasswordSubmitUseCase.execute(email, code, newPassword);
       return res.status(statusOK).send();
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
@@ -104,13 +102,7 @@ export class AuthController implements IAuthController {
       await this.forgotPasswordUseCase.execute(email);
       return res.status(statusOK).send();
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
@@ -122,17 +114,11 @@ export class AuthController implements IAuthController {
       await this.resendConfirmationUseCase.execute(email);
       return res.status(statusOK).send();
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
-  async login(req: IRequest, res: IResponse) {
+  async login(req: IRequest, res: IResponse<IAuthEntity>) {
     try {
       const { email, password } = z
         .object({
@@ -143,17 +129,14 @@ export class AuthController implements IAuthController {
       const tokens = await this.loginUseCase.execute(email, password);
       return res.status(statusOK).json(tokens);
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
-  async register(req: IRequest, res: IResponse) {
+  async register(
+    req: IRequest,
+    res: IResponse<{ uploadProfilePicture: string }>
+  ) {
     try {
       const { email, password, gymId, firstName, lastName } = z
         .object({
@@ -164,22 +147,44 @@ export class AuthController implements IAuthController {
           lastName: z.string().trim().min(1),
         })
         .parse(req.content());
-      await this.registerUseCase.execute(
-        email,
-        password,
-        gymId,
-        firstName,
-        lastName
-      );
-      return res.status(statusCreated).send();
+      return res.status(statusCreated).json({
+        uploadProfilePicture: await this.registerUseCase.execute(
+          email,
+          password,
+          gymId,
+          firstName,
+          lastName
+        ),
+      });
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
+      return res.status(statusInternalServerError).send(err);
+    }
+  }
+
+  async getUploadProfilePictureUrlUnconfirmed(
+    req: IRequest,
+    res: IResponse<{ uploadProfilePicture: string }>
+  ) {
+    try {
+      const { email, cognitoId } = z
+        .object({
+          email: z.string().trim().email(),
+          cognitoId: z.string().trim(),
+        })
+        .parse(req.content());
+      const user = await this.getUserByEmailUseCase.execute(email);
+      if (user.confirmed) {
+        return res
+          .status(statusInternalServerError)
+          .send("User already confirmed");
       } else {
-        return res.status(statusInternalServerError).send(err);
+        return res.status(statusOK).json({
+          uploadProfilePicture:
+            await this.getUploadProfilePictureURLUseCase.execute(cognitoId),
+        });
       }
+    } catch (err) {
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
@@ -194,17 +199,14 @@ export class AuthController implements IAuthController {
       await this.confirmRegisterUseCase.execute(email, code);
       return res.status(statusOK).send();
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
-  async refreshSession(req: IRequest, res: IResponse) {
+  async refreshSession(
+    req: IRequest,
+    res: IResponse<Omit<IAuthEntity, "refreshToken">>
+  ) {
     try {
       const { refreshToken, email } = z
         .object({
@@ -218,13 +220,7 @@ export class AuthController implements IAuthController {
       );
       return res.status(statusOK).json(tokens);
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 }

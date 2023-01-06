@@ -1,4 +1,4 @@
-import { MockAuthRepo } from "../../../test/mocks";
+import { MockAuthRepo, MockProfilePictureRepo } from "../../../test/mocks";
 import {
   dependencies,
   injectRepository,
@@ -27,6 +27,7 @@ let gymRepo: IGymRepository;
 beforeAll(async () => {
   gymRepo = dependencies.get(Repositories.gym);
   injectRepository(Repositories.auth, MockAuthRepo);
+  injectRepository(Repositories.profilePicture, MockProfilePictureRepo);
   injectUseCases();
   registerUseCase = dependencies.get(UseCases.register);
 });

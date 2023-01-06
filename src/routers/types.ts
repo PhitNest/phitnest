@@ -11,7 +11,7 @@ export interface IRoute {
   method: HttpMethod;
   path: string;
   middlewares: MiddlewareController[];
-  controller: Controller;
+  controller: Controller<any>;
 }
 
 export interface IRouter {

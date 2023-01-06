@@ -2,18 +2,17 @@ import { inject, injectable } from "inversify";
 import { z } from "zod";
 import { UseCases } from "../../../common/dependency-injection";
 import {
-  statusBadRequest,
   statusCreated,
   statusInternalServerError,
   statusOK,
 } from "../../../constants/http_codes";
-import { LocationEntity } from "../../../entities";
+import { IGymEntity, LocationEntity } from "../../../entities";
 import {
   ICreateGymUseCase,
   IGetGymUseCase,
   IGetNearestGymsUseCase,
 } from "../../../use-cases/interfaces";
-import { AuthenticatedLocals, IRequest, IResponse } from "../../types";
+import { IAuthenticatedResponse, IRequest, IResponse } from "../../types";
 import { IGymController } from "../interfaces";
 
 const addressValidator = z.object({
@@ -40,7 +39,7 @@ export class GymController implements IGymController {
     this.createGymUseCase = createGymUseCase;
   }
 
-  async create(req: IRequest, res: IResponse) {
+  async create(req: IRequest, res: IResponse<IGymEntity>) {
     try {
       const { name, address } = z
         .object({ name: z.string(), address: addressValidator })
@@ -48,17 +47,11 @@ export class GymController implements IGymController {
       const gym = await this.createGymUseCase.execute(name, address);
       return res.status(statusCreated).json(gym);
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
-  async getNearest(req: IRequest, res: IResponse) {
+  async getNearest(req: IRequest, res: IResponse<IGymEntity[]>) {
     try {
       const { longitude, latitude, distance, amount } = z
         .object({
@@ -75,26 +68,16 @@ export class GymController implements IGymController {
       );
       return res.status(statusOK).json(gyms);
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
-  async get(req: IRequest, res: IResponse<AuthenticatedLocals>) {
+  async get(req: IRequest, res: IAuthenticatedResponse<IGymEntity>) {
     try {
       const gym = await this.getGymUseCase.execute(res.locals.cognitoId);
       return res.status(statusOK).json(gym);
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 }

@@ -7,5 +7,5 @@ export interface IRegisterUseCase extends IUseCase {
     gymId: string,
     firstName: string,
     lastName: string
-  ) => Promise<void>;
+  ) => Promise<string>;
 }

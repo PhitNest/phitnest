@@ -10,13 +10,13 @@ import {
   IGetReceivedFriendRequestsUseCase,
   IRemoveFriendUseCase,
 } from "../../../use-cases/interfaces";
-import { AuthenticatedLocals, IRequest, IResponse } from "../../types";
+import { IAuthenticatedResponse, IRequest } from "../../types";
 import { IRelationshipController } from "../interfaces";
 import {
-  statusBadRequest,
   statusInternalServerError,
   statusOK,
 } from "../../../constants/http_codes";
+import { IFriendEntity, IPublicUserEntity } from "../../../entities";
 
 @injectable()
 export class RelationshipController implements IRelationshipController {
@@ -51,7 +51,7 @@ export class RelationshipController implements IRelationshipController {
 
   async getReceivedFriendRequests(
     req: IRequest,
-    res: IResponse<AuthenticatedLocals>
+    res: IAuthenticatedResponse<IPublicUserEntity[]>
   ) {
     try {
       const friendRequests =
@@ -60,15 +60,11 @@ export class RelationshipController implements IRelationshipController {
         );
       return res.status(statusOK).json(friendRequests);
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
-  async removeFriend(req: IRequest, res: IResponse<AuthenticatedLocals>) {
+  async removeFriend(req: IRequest, res: IAuthenticatedResponse) {
     try {
       const { recipientId } = z
         .object({
@@ -78,19 +74,13 @@ export class RelationshipController implements IRelationshipController {
       await this.removeFriendUseCase.execute(res.locals.cognitoId, recipientId);
       return res.status(statusOK).send();
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
   async getSentFriendRequests(
     req: IRequest,
-    res: IResponse<AuthenticatedLocals>
+    res: IAuthenticatedResponse<IPublicUserEntity[]>
   ) {
     try {
       const friendRequests = await this.getSentFriendRequestsUseCase.execute(
@@ -98,30 +88,25 @@ export class RelationshipController implements IRelationshipController {
       );
       return res.status(statusOK).json(friendRequests);
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
-  async getFriends(req: IRequest, res: IResponse<AuthenticatedLocals>) {
+  async getFriends(
+    req: IRequest,
+    res: IAuthenticatedResponse<IFriendEntity[]>
+  ) {
     try {
       const friends = await this.getFriendsUseCase.execute(
         res.locals.cognitoId
       );
       return res.status(statusOK).json(friends);
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
-  async denyFriendRequest(req: IRequest, res: IResponse<AuthenticatedLocals>) {
+  async denyFriendRequest(req: IRequest, res: IAuthenticatedResponse) {
     try {
       const { recipientId } = z
         .object({
@@ -134,17 +119,11 @@ export class RelationshipController implements IRelationshipController {
       );
       return res.status(statusOK).send();
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
-  async unblock(req: IRequest, res: IResponse<AuthenticatedLocals>) {
+  async unblock(req: IRequest, res: IAuthenticatedResponse) {
     try {
       const { recipientId } = z
         .object({ recipientId: z.string() })
@@ -152,17 +131,11 @@ export class RelationshipController implements IRelationshipController {
       await this.unblockUseCase.execute(res.locals.cognitoId, recipientId);
       return res.status(statusOK).send();
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 
-  async block(req: IRequest, res: IResponse<AuthenticatedLocals>) {
+  async block(req: IRequest, res: IAuthenticatedResponse) {
     try {
       const { recipientId } = z
         .object({ recipientId: z.string() })
@@ -170,13 +143,7 @@ export class RelationshipController implements IRelationshipController {
       await this.blockUseCase.execute(res.locals.cognitoId, recipientId);
       return res.status(statusOK).send();
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        return res.status(statusBadRequest).json(err.issues);
-      } else if (err instanceof Error) {
-        return res.status(statusInternalServerError).json(err.message);
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 }
