@@ -7,4 +7,20 @@ export interface IUserEntity {
   lastName: string;
 }
 
+export type IRegisteredUser = IUserEntity & { confirmed: boolean };
+
 export type IPublicUserEntity = Omit<IUserEntity, "email">;
+
+export type IExploreUserEntity = Omit<IPublicUserEntity, "gymId">;
+
+export type IProfilePictureUserEntity = IUserEntity & {
+  profilePicture: string;
+};
+
+export type IProfilePicturePublicUserEntity = IPublicUserEntity & {
+  profilePicture: string;
+};
+
+export type IProfilePictureExploreUserEntity = IExploreUserEntity & {
+  profilePicture: string;
+};

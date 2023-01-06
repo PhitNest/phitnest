@@ -26,3 +26,6 @@ export { GetMessagesUseCase } from "./get-messages";
 export { SendMessageUseCase } from "./send-message";
 export { GetConversationsUseCase } from "./get-conversations";
 export { RemoveFriendUseCase } from "./remove-friend";
+export { GetProfilePictureUseCase } from "./get-profile-picture";
+export { GetUploadProfilePictureURLUseCase } from "./get-upload-profile-picture-url";
+export { GetUserByEmailUseCase } from "./get-user-by-email";

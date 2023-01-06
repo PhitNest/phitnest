@@ -2,6 +2,7 @@ import { injectable } from "inversify";
 import mongoose from "mongoose";
 import {
   IConversationEntity,
+  IRegisteredUser,
   IUserEntity,
   RelationshipType,
 } from "../../entities";
@@ -29,6 +30,7 @@ const schema = new mongoose.Schema(
     },
     firstName: { type: String, required: true, trim: true },
     lastName: { type: String, required: true, trim: true },
+    confirmed: { type: Boolean, default: false },
   },
   {
     collection: USER_COLLECTION_NAME,
@@ -37,7 +39,10 @@ const schema = new mongoose.Schema(
 
 schema.index({ gymId: 1 });
 
-export const UserModel = mongoose.model<IUserEntity>(USER_MODEL_NAME, schema);
+export const UserModel = mongoose.model<IRegisteredUser>(
+  USER_MODEL_NAME,
+  schema
+);
 
 @injectable()
 export class MongoUserRepository implements IUserRepository {
@@ -50,6 +55,7 @@ export class MongoUserRepository implements IUserRepository {
       {
         $match: {
           gymId: new mongoose.Types.ObjectId(gymId),
+          confirmed: true,
         },
       },
       {
@@ -73,6 +79,14 @@ export class MongoUserRepository implements IUserRepository {
     return UserModel.aggregate(pipeline).exec();
   }
 
+  async confirmUser(cognitoId: string) {
+    await UserModel.updateOne({ cognitoId: cognitoId }, { confirmed: true });
+  }
+
+  getByEmail(email: string) {
+    return UserModel.findOne({ email: email }).exec();
+  }
+
   exploreUsers(cognitoId: string, skip?: number, limit?: number) {
     const pipeline: mongoose.PipelineStage[] = [
       {
@@ -94,6 +108,7 @@ export class MongoUserRepository implements IUserRepository {
                     $eq: cognitoId,
                   },
                 },
+                confirmed: true,
               },
             },
             {
@@ -193,7 +208,14 @@ export class MongoUserRepository implements IUserRepository {
       archived: conversation.archived,
       users: await UserModel.aggregate([
         { $match: { cognitoId: { $in: conversation.users } } },
-        { $project: { gymId: 1, cognitoId: 1, firstName: 1, lastName: 1 } },
+        {
+          $project: {
+            gymId: 1,
+            cognitoId: 1,
+            firstName: 1,
+            lastName: 1,
+          },
+        },
       ]),
     };
   }

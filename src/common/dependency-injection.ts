@@ -41,6 +41,9 @@ export const UseCases = {
   sendMessage: Symbol("sendMessage.use-case"),
   getConversations: Symbol("getConversations.use-case"),
   removeFriend: Symbol("removeFriend.use-case"),
+  getProfilePicture: Symbol("getProfilePicture.use-case"),
+  getUploadProfilePictureURL: Symbol("getUploadProfilePictureURL.use-case"),
+  getUserByEmail: Symbol("getUserByEmail.use-case"),
 };
 
 export const Middlewares = {
@@ -106,6 +109,9 @@ import {
   SendMessageUseCase,
   GetConversationsUseCase,
   RemoveFriendUseCase,
+  GetUploadProfilePictureURLUseCase,
+  GetProfilePictureUseCase,
+  GetUserByEmailUseCase,
 } from "../use-cases/implementations";
 
 import { AuthMiddleware } from "../adapters/middleware/implementations";
@@ -187,6 +193,12 @@ export function injectUseCases() {
   injectUseCase(UseCases.sendMessage, SendMessageUseCase);
   injectUseCase(UseCases.getConversations, GetConversationsUseCase);
   injectUseCase(UseCases.removeFriend, RemoveFriendUseCase);
+  injectUseCase(UseCases.getProfilePicture, GetProfilePictureUseCase);
+  injectUseCase(
+    UseCases.getUploadProfilePictureURL,
+    GetUploadProfilePictureURLUseCase
+  );
+  injectUseCase(UseCases.getUserByEmail, GetUserByEmailUseCase);
 }
 
 export function injectAdapters() {

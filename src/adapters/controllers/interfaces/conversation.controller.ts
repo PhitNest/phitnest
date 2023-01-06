@@ -1,5 +1,11 @@
-import { AuthenticatedLocals, Controller } from "../../types";
+import {
+  IMessageEntity,
+  IPopulatedConversationEntity,
+} from "../../../entities";
+import { AuthenticatedController } from "../../types";
 
 export interface IConversationController {
-  getRecentConversations: Controller<AuthenticatedLocals>;
+  getRecentConversations: AuthenticatedController<
+    { conversation: IPopulatedConversationEntity; message: IMessageEntity }[]
+  >;
 }

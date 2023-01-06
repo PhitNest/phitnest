@@ -1,12 +1,16 @@
 import { inject, injectable } from "inversify";
 import { UseCases } from "../../../common/dependency-injection";
 import { IGetRecentConversationsUseCase } from "../../../use-cases/interfaces";
-import { AuthenticatedLocals, IRequest, IResponse } from "../../types";
+import { IAuthenticatedResponse, IRequest } from "../../types";
 import { IConversationController } from "../interfaces";
 import {
   statusInternalServerError,
   statusOK,
 } from "../../../constants/http_codes";
+import {
+  IMessageEntity,
+  IPopulatedConversationEntity,
+} from "../../../entities";
 
 @injectable()
 export class ConversationController implements IConversationController {
@@ -21,7 +25,9 @@ export class ConversationController implements IConversationController {
 
   async getRecentConversations(
     req: IRequest,
-    res: IResponse<AuthenticatedLocals>
+    res: IAuthenticatedResponse<
+      { conversation: IPopulatedConversationEntity; message: IMessageEntity }[]
+    >
   ) {
     try {
       return res
@@ -30,13 +36,7 @@ export class ConversationController implements IConversationController {
           await this.getRecentConversationsUseCase.execute(res.locals.cognitoId)
         );
     } catch (err) {
-      if (err instanceof Error) {
-        return res
-          .status(statusInternalServerError)
-          .json({ message: err.message });
-      } else {
-        return res.status(statusInternalServerError).send(err);
-      }
+      return res.status(statusInternalServerError).send(err);
     }
   }
 }

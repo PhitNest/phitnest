@@ -31,6 +31,13 @@ export class UserRouter implements IRouter {
         middlewares: [],
         controller: (req, res) => userController.tutorialExplore(req, res),
       },
+      {
+        path: "/getProfilePictureUploadURL",
+        method: HttpMethod.GET,
+        middlewares: [authMiddleware],
+        controller: (req, res) =>
+          userController.getProfilePictureUploadUrl(req, res),
+      },
     ];
   }
 }
