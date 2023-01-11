@@ -1,4 +1,6 @@
-import { IGymEntity, LocationEntity } from "../../entities";
+import { Either } from "typescript-monads";
+import { kGymNotFound } from "../../common/failures";
+import { IGymEntity, IUserEntity, LocationEntity } from "../../entities";
 
 export interface IGymRepository {
   create(gym: Omit<IGymEntity, "_id">): Promise<IGymEntity>;
@@ -9,9 +11,11 @@ export interface IGymRepository {
     amount?: number
   ): Promise<IGymEntity[]>;
 
-  getByUser(cognitoId: string): Promise<IGymEntity | null>;
+  getByUser(
+    user: IUserEntity
+  ): Promise<Either<IGymEntity, typeof kGymNotFound>>;
 
-  get(gymId: string): Promise<IGymEntity | null>;
+  get(gymId: string): Promise<Either<IGymEntity, typeof kGymNotFound>>;
 
   deleteAll(): Promise<void>;
 }

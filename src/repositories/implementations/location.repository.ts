@@ -1,30 +1,25 @@
 import { IAddressEntity, LocationEntity } from "../../entities";
-import axios from "axios";
 import { ILocationRepository } from "../interfaces/location.repository";
-import { injectable } from "inversify";
+import { kLocationNotFound } from "../../common/failures";
+import { Either } from "typescript-monads";
 
-@injectable()
 export class OSMLocationRepository implements ILocationRepository {
   async get(address: IAddressEntity) {
-    const response = await axios.get(
-      "https://nominatim.openstreetmap.org/search",
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${address.street},+${address.city},+${address.state}+${address.zipCode}&format=json&polygon=1&addressdetails=1`,
       {
-        params: {
-          q: `${address.street}, ${address.city}, ${address.state} ${address.zipCode}`.replace(
-            /%20/g,
-            "+"
-          ),
-          format: "json",
-          polygon: 1,
-          addressdetails: 1,
-        },
+        method: "GET",
       }
     );
-    if (response.data && response.data.length > 0) {
-      const { lon, lat } = response.data[0];
+    const data = await response.json();
+    if (data && data.length > 0) {
+      const { lon, lat } = data[0];
       const location = new LocationEntity(parseFloat(lon), parseFloat(lat));
-      return location;
+      return new Either<LocationEntity, typeof kLocationNotFound>(location);
     }
-    return null;
+    return new Either<LocationEntity, typeof kLocationNotFound>(
+      undefined,
+      kLocationNotFound
+    );
   }
 }

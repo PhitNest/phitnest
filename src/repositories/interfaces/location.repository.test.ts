@@ -1,7 +1,6 @@
-import { compareLocation } from "../../../test/helpers/comparisons";
-import { dependencies, Repositories } from "../../common/dependency-injection";
-import { LocationEntity } from "../../entities";
-import { ILocationRepository } from ".";
+import { fail } from "assert";
+import { kLocationNotFound } from "../../common/failures";
+import { locationRepository } from "../injection";
 
 const testAddress1 = {
   street: "522 Pine Song Ln",
@@ -24,16 +23,50 @@ const fakeAddress = {
   zipCode: "25060",
 };
 
-let locationRepo: ILocationRepository;
+const expectedLocation1 = {
+  type: "Point",
+  coordinates: [-75.99618967933559, 36.8497312] as [number, number],
+};
+
+const expectedLocation2 = {
+  type: "Point",
+  coordinates: [-80.4138162, 37.2294115] as [number, number],
+};
 
 test("Get location from address", async () => {
-  locationRepo = dependencies.get(Repositories.location);
+  const locationRepo = locationRepository();
   let location = await locationRepo.get(testAddress1);
-  expect(location).not.toBeNull();
-  compareLocation(location!, new LocationEntity(-75.996, 36.85));
+  location.tap({
+    left: (location) => {
+      expect(location).toEqual(expectedLocation1);
+    },
+    right: (failure) => {
+      console.log(`Unexpected failure: ${failure}`);
+      fail(
+        `testAddress1 failed with address:\n${JSON.stringify(testAddress1)}`
+      );
+    },
+  });
   location = await locationRepo.get(testAddress2);
-  expect(location).not.toBeNull();
-  compareLocation(location!, new LocationEntity(-80.413, 37.229));
+  location.tap({
+    left: (location) => {
+      expect(location).toEqual(expectedLocation2);
+    },
+    right: (failure) => {
+      console.log(`Unexpected failure: ${failure}`);
+      fail(
+        `testAddress2 failed with address:\n${JSON.stringify(testAddress2)}`
+      );
+    },
+  });
   location = await locationRepo.get(fakeAddress);
-  expect(location).toBeNull();
+  location.tap({
+    left: (location) => {
+      console.log(`Unexpected success: ${location.coordinates}`);
+      fail(`An invalid address did not fail:\n${JSON.stringify(fakeAddress)}`);
+    },
+    right: (failure) => {
+      expect(failure).toBe(kLocationNotFound);
+    },
+  });
 });

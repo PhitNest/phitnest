@@ -1,16 +1,22 @@
-import { closeSocket, openSocket } from "./common/socket.io";
-import { connect, disconnect } from "./common/database";
-import { injectDependencies, unbind } from "./common/dependency-injection";
-import { createServer, listen, stopServer } from "./common/express";
+import { getDatabase, getServer, injectAdapters } from "./adapters/injection";
+import { injectRepositories } from "./repositories/injection";
+import { buildRouter } from "./router";
 
 export async function start() {
-  return connect()
-    .then(injectDependencies)
-    .then(createServer)
-    .then(openSocket)
-    .then(listen);
+  injectAdapters();
+  injectRepositories();
+  const database = getDatabase();
+  await database.connect(
+    process.env.MONGODB_CONN_STRING ?? "mongodb://localhost:27017"
+  );
+  const server = getServer();
+  buildRouter(server);
+  await server.listen(parseInt(process.env.PORT ?? "3000"));
 }
 
 export async function stop() {
-  return disconnect().then(unbind).then(closeSocket).then(stopServer);
+  const server = getServer();
+  const database = getDatabase();
+  await server.close();
+  await database.disconnect();
 }

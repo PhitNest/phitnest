@@ -3,3 +3,5 @@ export interface IAuthEntity {
   refreshToken: string;
   idToken: string;
 }
+
+export type IRefreshSessionEntity = Omit<IAuthEntity, "refreshToken">;

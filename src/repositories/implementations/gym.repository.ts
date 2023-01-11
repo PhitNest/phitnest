@@ -1,8 +1,8 @@
-import { injectable } from "inversify";
 import mongoose from "mongoose";
-import { IGymEntity, LocationEntity } from "../../entities";
+import { Either } from "typescript-monads";
+import { kGymNotFound } from "../../common/failures";
+import { IGymEntity, IUserEntity, LocationEntity } from "../../entities";
 import { IGymRepository } from "../interfaces";
-import { UserModel } from "./user.repository";
 
 export const GYM_COLLECTION_NAME = "gyms";
 export const GYM_MODEL_NAME = "Gym";
@@ -28,42 +28,27 @@ const schema = new mongoose.Schema(
 
 schema.index({ location: "2dsphere" });
 
-export const GymModel = mongoose.model<IGymEntity>(GYM_MODEL_NAME, schema);
+const GymModel = mongoose.model<IGymEntity>(GYM_MODEL_NAME, schema);
 
-@injectable()
 export class MongoGymRepository implements IGymRepository {
+  async getByUser(user: IUserEntity) {
+    const gym = await GymModel.findById(user.gymId);
+    if (gym) {
+      return new Either<IGymEntity, typeof kGymNotFound>(gym);
+    } else {
+      return new Either<IGymEntity, typeof kGymNotFound>(
+        undefined,
+        kGymNotFound
+      );
+    }
+  }
+
   async deleteAll() {
     await GymModel.deleteMany({}).exec();
   }
 
   create(gym: Omit<IGymEntity, "_id">) {
     return GymModel.create(gym);
-  }
-
-  async getByUser(cognitoId: string) {
-    const results = await UserModel.aggregate([
-      {
-        $match: { cognitoId: cognitoId },
-      },
-      {
-        $lookup: {
-          from: GYM_COLLECTION_NAME,
-          localField: "gymId",
-          foreignField: "_id",
-          as: "gym",
-        },
-      },
-      {
-        $project: {
-          gym: 1,
-        },
-      },
-    ]);
-    if (results.length > 0) {
-      return results[0].gym[0];
-    } else {
-      return null;
-    }
   }
 
   async getNearest(location: LocationEntity, meters: number, amount?: number) {
@@ -83,6 +68,14 @@ export class MongoGymRepository implements IGymRepository {
   }
 
   async get(gymId: string) {
-    return GymModel.findById(gymId);
+    const gym = await GymModel.findById(gymId);
+    if (gym) {
+      return new Either<IGymEntity, typeof kGymNotFound>(gym);
+    } else {
+      return new Either<IGymEntity, typeof kGymNotFound>(
+        undefined,
+        kGymNotFound
+      );
+    }
   }
 }

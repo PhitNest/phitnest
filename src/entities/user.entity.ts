@@ -5,22 +5,27 @@ export interface IUserEntity {
   email: string;
   firstName: string;
   lastName: string;
+  confirmed: boolean;
 }
 
-export type IRegisteredUser = IUserEntity & { confirmed: boolean };
+export type ICognitoUser = Omit<IUserEntity, "_id" | "confirmed">;
 
 export type IPublicUserEntity = Omit<IUserEntity, "email">;
 
+export type IFriendEntity = IPublicUserEntity & {
+  since: Date;
+};
+
 export type IExploreUserEntity = Omit<IPublicUserEntity, "gymId">;
 
-export type IProfilePictureUserEntity = IUserEntity & {
+type IProfilePictureEntity<UserType> = UserType & {
   profilePicture: string;
 };
 
-export type IProfilePicturePublicUserEntity = IPublicUserEntity & {
-  profilePicture: string;
-};
+export type IProfilePictureUserEntity = IProfilePictureEntity<IUserEntity>;
 
-export type IProfilePictureExploreUserEntity = IExploreUserEntity & {
-  profilePicture: string;
-};
+export type IProfilePicturePublicUserEntity =
+  IProfilePictureEntity<IPublicUserEntity>;
+
+export type IProfilePictureExploreUserEntity =
+  IProfilePictureEntity<IExploreUserEntity>;
