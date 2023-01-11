@@ -4,3 +4,4 @@ export { MongoGymRepository } from "./gym.repository";
 export { MongoFriendRequestRepository } from "./friend-request.repository";
 export { OSMLocationRepository } from "./location.repository";
 export { MongoFriendshipRepository } from "./friendship.repository";
+export { MongoDirectMessageRepository } from "./direct-message.repository";

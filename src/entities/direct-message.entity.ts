@@ -1,5 +1,3 @@
-import { IPublicUserEntity } from "./user.entity";
-
 export interface IDirectMessageEntity {
   _id: string;
   text: string;
@@ -7,7 +5,3 @@ export interface IDirectMessageEntity {
   friendshipId: string;
   createdAt: Date;
 }
-
-export type IPopulatedDirectMessageEntity = IDirectMessageEntity & {
-  sender: IPublicUserEntity;
-};
