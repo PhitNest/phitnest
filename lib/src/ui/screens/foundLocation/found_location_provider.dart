@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../entities/entities.dart';
-import '../../../repositories/repositories.dart';
 import '../../widgets/widgets.dart';
 import '../screen_provider.dart';
 import '../screens.dart';
