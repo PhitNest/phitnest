@@ -9,9 +9,9 @@ export interface IUserRepository {
 
   setConfirmed(cognitoId: string): Promise<void | typeof kUserNotFound>;
 
-  getByEmail(email: string): Promise<Either<IUserEntity, typeof kUserNotFound>>;
+  getByEmail(email: string): Promise<Either<typeof kUserNotFound, IUserEntity>>;
 
-  get(cognitoId: string): Promise<Either<IUserEntity, typeof kUserNotFound>>;
+  get(cognitoId: string): Promise<Either<typeof kUserNotFound, IUserEntity>>;
 
   haveSameGym(cognitoId1: string, cognitoId2: string): Promise<boolean>;
 

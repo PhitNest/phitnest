@@ -206,7 +206,7 @@ test("Get friend requests by fromCognitoId and toCognitoId", async () => {
     testUser2.cognitoId
   );
   friendRequest.tap({
-    left: (friendRequest) => {
+    right: (friendRequest) => {
       compareFriendRequests(friendRequest, {
         ...testFriendRequest1,
         _id: friendRequest._id,

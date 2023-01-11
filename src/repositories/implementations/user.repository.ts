@@ -21,9 +21,9 @@ export class MongoUserRepository implements IUserRepository {
   async getByEmail(email: string) {
     const user = await UserModel.findOne({ email: email });
     if (user) {
-      return new Either<IUserEntity, typeof kUserNotFound>(user);
+      return new Either<typeof kUserNotFound, IUserEntity>(user);
     } else {
-      return new Either<IUserEntity, typeof kUserNotFound>(
+      return new Either<typeof kUserNotFound, IUserEntity>(
         undefined,
         kUserNotFound
       );
@@ -39,9 +39,9 @@ export class MongoUserRepository implements IUserRepository {
   async get(cognitoId: string) {
     const user = await UserModel.findOne({ cognitoId: cognitoId });
     if (user) {
-      return new Either<IUserEntity, typeof kUserNotFound>(user);
+      return new Either<typeof kUserNotFound, IUserEntity>(user);
     } else {
-      return new Either<IUserEntity, typeof kUserNotFound>(
+      return new Either<typeof kUserNotFound, IUserEntity>(
         undefined,
         kUserNotFound
       );

@@ -13,9 +13,9 @@ export interface IGymRepository {
 
   getByUser(
     user: IUserEntity
-  ): Promise<Either<IGymEntity, typeof kGymNotFound>>;
+  ): Promise<Either<typeof kGymNotFound, IGymEntity>>;
 
-  get(gymId: string): Promise<Either<IGymEntity, typeof kGymNotFound>>;
+  get(gymId: string): Promise<Either<typeof kGymNotFound, IGymEntity>>;
 
   deleteAll(): Promise<void>;
 }

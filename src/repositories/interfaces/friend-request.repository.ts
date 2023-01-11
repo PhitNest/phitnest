@@ -15,7 +15,7 @@ export interface IFriendRequestRepository {
   getByCognitoIds(
     fromCognitoId: string,
     toCognitoId: string
-  ): Promise<Either<IFriendRequestEntity, typeof kFriendRequestNotFound>>;
+  ): Promise<Either<typeof kFriendRequestNotFound, IFriendRequestEntity>>;
 
   delete(
     fromCognitoId: string,

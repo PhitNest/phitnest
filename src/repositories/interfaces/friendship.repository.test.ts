@@ -112,10 +112,10 @@ test("Create friendship with unsorted cognito IDs", async () => {
     testUser1.cognitoId,
   ]);
   result.tap({
-    left: (friendship) => {
+    right: (friendship) => {
       compareFriendships(friendship, friendship);
     },
-    right: (failure) => {
+    left: (failure) => {
       fail(`Expected to find friendship, but got ${failure}`);
     },
   });
@@ -198,49 +198,49 @@ test("Get friendship by cognito IDs", async () => {
   const friendship1 = await friendshipRepo.create(testFriendship1);
   let result = await friendshipRepo.getByUsers(testFriendship1);
   result.tap({
-    left: (friendship) => {
+    right: (friendship) => {
       compareFriendships(friendship, friendship1);
     },
-    right: (failure) => {
+    left: (failure) => {
       fail(`Expected to find friendship, but got ${failure}`);
     },
   });
   const friendship2 = await friendshipRepo.create(testFriendship2);
   result = await friendshipRepo.getByUsers(testFriendship2);
   result.tap({
-    left: (friendship) => {
+    right: (friendship) => {
       compareFriendships(friendship, friendship2);
     },
-    right: (failure) => {
+    left: (failure) => {
       fail(`Expected to find friendship, but got ${failure}`);
     },
   });
   const friendship3 = await friendshipRepo.create(testFriendship3);
   result = await friendshipRepo.getByUsers(testFriendship3);
   result.tap({
-    left: (friendship) => {
+    right: (friendship) => {
       compareFriendships(friendship, friendship3);
     },
-    right: (failure) => {
+    left: (failure) => {
       fail(`Expected to find friendship, but got ${failure}`);
     },
   });
   const friendship4 = await friendshipRepo.create(testFriendship4);
   result = await friendshipRepo.getByUsers(testFriendship4);
   result.tap({
-    left: (friendship) => {
+    right: (friendship) => {
       compareFriendships(friendship, friendship4);
     },
-    right: (failure) => {
+    left: (failure) => {
       fail(`Expected to find friendship, but got ${failure}`);
     },
   });
   result = await friendshipRepo.getByUsers(["fakeId", "fakeId2"]);
   result.tap({
-    left: (friendship) => {
+    right: (friendship) => {
       fail(`Expected to find friendship, but got ${friendship}`);
     },
-    right: (failure) => {
+    left: (failure) => {
       expect(failure).toBe(kFriendshipNotFound);
     },
   });
@@ -261,40 +261,40 @@ test("Delete friendships", async () => {
   expect(await friendshipRepo.delete(testFriendship1)).toBeUndefined();
   let check = await friendshipRepo.getByUsers(testFriendship1);
   check.tap({
-    left: (friendship) => {
+    right: (friendship) => {
       fail(`Expected to delete friendship, but got ${friendship}`);
     },
-    right: (failure) => {
+    left: (failure) => {
       expect(failure).toBe(kFriendshipNotFound);
     },
   });
   expect(await friendshipRepo.delete(testFriendship2)).toBeUndefined();
   check = await friendshipRepo.getByUsers(testFriendship2);
   check.tap({
-    left: (friendship) => {
+    right: (friendship) => {
       fail(`Expected to delete friendship, but got ${friendship}`);
     },
-    right: (failure) => {
+    left: (failure) => {
       expect(failure).toBe(kFriendshipNotFound);
     },
   });
   expect(await friendshipRepo.delete(testFriendship3)).toBeUndefined();
   check = await friendshipRepo.getByUsers(testFriendship3);
   check.tap({
-    left: (friendship) => {
+    right: (friendship) => {
       fail(`Expected to delete friendship, but got ${friendship}`);
     },
-    right: (failure) => {
+    left: (failure) => {
       expect(failure).toBe(kFriendshipNotFound);
     },
   });
   expect(await friendshipRepo.delete(testFriendship4)).toBeUndefined();
   check = await friendshipRepo.getByUsers(testFriendship4);
   check.tap({
-    left: (friendship) => {
+    right: (friendship) => {
       fail(`Expected to delete friendship, but got ${friendship}`);
     },
-    right: (failure) => {
+    left: (failure) => {
       expect(failure).toBe(kFriendshipNotFound);
     },
   });

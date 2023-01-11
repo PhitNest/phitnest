@@ -11,7 +11,7 @@ export interface IFriendshipRepository {
 
   getByUsers(
     userCognitoIds: [string, string]
-  ): Promise<Either<IFriendshipEntity, typeof kFriendshipNotFound>>;
+  ): Promise<Either<typeof kFriendshipNotFound, IFriendshipEntity>>;
 
   delete(
     userCognitoIds: [string, string]

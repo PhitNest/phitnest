@@ -24,11 +24,11 @@ export class MongoFriendshipRepository implements IFriendshipRepository {
       userCognitoIds: userCognitoIds.sort(),
     });
     if (friendship) {
-      return new Either<IFriendshipEntity, typeof kFriendshipNotFound>(
+      return new Either<typeof kFriendshipNotFound, IFriendshipEntity>(
         friendship
       );
     } else {
-      return new Either<IFriendshipEntity, typeof kFriendshipNotFound>(
+      return new Either<typeof kFriendshipNotFound, IFriendshipEntity>(
         undefined,
         kFriendshipNotFound
       );
