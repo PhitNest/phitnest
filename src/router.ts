@@ -1,4 +1,9 @@
 import { IServer } from "./adapters/interfaces";
-import { HttpMethod } from "./common/types";
+import { LoginController } from "./controllers/auth";
 
-export function buildRouter(server: IServer) {}
+export function buildRouter(server: IServer) {
+  server.bind({
+    route: "/auth/login",
+    controller: new LoginController(),
+  });
+}

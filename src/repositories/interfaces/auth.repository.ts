@@ -1,21 +1,24 @@
 import { Either } from "typescript-monads";
-import { kLoginFailed, kUserNotFound } from "../../common/failures";
+import { kUserNotFound } from "../../common/failures";
 import { Failure } from "../../common/types";
 import { IAuthEntity, IRefreshSessionEntity } from "../../entities";
 
 export interface IAuthRepository {
   getCognitoId(
     accessToken: string
-  ): Promise<Either<string, typeof kUserNotFound>>;
+  ): Promise<Either<typeof kUserNotFound, string>>;
 
   refreshSession(
     refreshToken: string,
     email: string
-  ): Promise<Either<IRefreshSessionEntity, Failure>>;
+  ): Promise<Either<Failure, IRefreshSessionEntity>>;
 
   deleteUser(cognitoId: string): Promise<void | Failure>;
 
-  registerUser(email: string, password: string): Promise<void | Failure>;
+  registerUser(
+    email: string,
+    password: string
+  ): Promise<Either<string, Failure>>;
 
   signOut(cognitoId: string, allDevices: boolean): Promise<void | Failure>;
 
@@ -29,10 +32,7 @@ export interface IAuthRepository {
 
   confirmRegister(email: string, code: string): Promise<void | Failure>;
 
-  login(
-    email: string,
-    password: string
-  ): Promise<Either<IAuthEntity, typeof kLoginFailed>>;
+  login(email: string, password: string): Promise<Either<Failure, IAuthEntity>>;
 
   resendConfirmationCode(email: string): Promise<void | Failure>;
 }

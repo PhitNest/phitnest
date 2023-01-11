@@ -8,9 +8,9 @@ export class MongoGymRepository implements IGymRepository {
   async getByUser(user: IUserEntity) {
     const gym = await GymModel.findById(user.gymId);
     if (gym) {
-      return new Either<IGymEntity, typeof kGymNotFound>(gym);
+      return new Either<typeof kGymNotFound, IGymEntity>(gym);
     } else {
-      return new Either<IGymEntity, typeof kGymNotFound>(
+      return new Either<typeof kGymNotFound, IGymEntity>(
         undefined,
         kGymNotFound
       );
@@ -45,9 +45,9 @@ export class MongoGymRepository implements IGymRepository {
   async get(gymId: string) {
     const gym = await GymModel.findById(gymId);
     if (gym) {
-      return new Either<IGymEntity, typeof kGymNotFound>(gym);
+      return new Either<typeof kGymNotFound, IGymEntity>(gym);
     } else {
-      return new Either<IGymEntity, typeof kGymNotFound>(
+      return new Either<typeof kGymNotFound, IGymEntity>(
         undefined,
         kGymNotFound
       );

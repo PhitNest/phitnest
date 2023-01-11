@@ -15,9 +15,9 @@ export class OSMLocationRepository implements ILocationRepository {
     if (data && data.length > 0) {
       const { lon, lat } = data[0];
       const location = new LocationEntity(parseFloat(lon), parseFloat(lat));
-      return new Either<LocationEntity, typeof kLocationNotFound>(location);
+      return new Either<typeof kLocationNotFound, LocationEntity>(location);
     }
-    return new Either<LocationEntity, typeof kLocationNotFound>(
+    return new Either<typeof kLocationNotFound, LocationEntity>(
       undefined,
       kLocationNotFound
     );

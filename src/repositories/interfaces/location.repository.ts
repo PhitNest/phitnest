@@ -5,5 +5,5 @@ import { IAddressEntity, LocationEntity } from "../../entities";
 export interface ILocationRepository {
   get(
     address: IAddressEntity
-  ): Promise<Either<LocationEntity, typeof kLocationNotFound>>;
+  ): Promise<Either<typeof kLocationNotFound, LocationEntity>>;
 }

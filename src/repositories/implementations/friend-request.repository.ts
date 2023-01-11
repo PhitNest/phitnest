@@ -23,11 +23,11 @@ export class MongoFriendRequestRepository implements IFriendRequestRepository {
       toCognitoId: toCognitoId,
     });
     if (friendRequest) {
-      return new Either<IFriendRequestEntity, typeof kFriendRequestNotFound>(
+      return new Either<typeof kFriendRequestNotFound, IFriendRequestEntity>(
         friendRequest
       );
     } else {
-      return new Either<IFriendRequestEntity, typeof kFriendRequestNotFound>(
+      return new Either<typeof kFriendRequestNotFound, IFriendRequestEntity>(
         undefined,
         kFriendRequestNotFound
       );

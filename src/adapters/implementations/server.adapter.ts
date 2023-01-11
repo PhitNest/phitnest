@@ -1,9 +1,8 @@
 import express from "express";
 import http from "http";
 import { Either } from "typescript-monads";
-import { Failure, HttpMethod, IRequest, IResponse } from "../../common/types";
-import { Controller } from "../../controllers/types";
-import { Validator } from "../../validators/types";
+import { Failure, IRequest, IResponse } from "../../common/types";
+import { Controller, HttpMethod } from "../../controllers/types";
 import { Middleware } from "../../middleware/types";
 import { IServer } from "../interfaces";
 import bodyParser from "body-parser";
@@ -41,10 +40,14 @@ class ExpressResponse<ResType, LocalsType>
     return new ExpressResponse<ResType, LocalsType>(this.expressResponse);
   }
 
-  json(body: Either<ResType, Failure>) {
-    this.expressResponse.json(
-      body.match({ left: (x) => x as ResType | Failure, right: (x) => x })
-    );
+  json(body: Either<ResType, Failure> | ResType | Failure) {
+    if (body instanceof Either) {
+      this.expressResponse.json(
+        body.match({ left: (x) => x as ResType | Failure, right: (x) => x })
+      );
+    } else {
+      this.expressResponse.json(body);
+    }
     return new ExpressResponse<ResType, LocalsType>(this.expressResponse);
   }
 
@@ -89,11 +92,9 @@ export class ExpressServer implements IServer {
   }
 
   bind<BodyType, ResType, LocalsType>(options: {
-    method: HttpMethod;
     route: string;
-    validator: Validator<BodyType>;
-    middleware: Middleware<BodyType, ResType, any>[];
     controller: Controller<BodyType, ResType, LocalsType>;
+    middleware?: Middleware<BodyType, ResType, any>[];
   }) {
     const validationMiddleware = (
       req: express.Request,
@@ -101,7 +102,7 @@ export class ExpressServer implements IServer {
       next: express.NextFunction
     ) => {
       try {
-        options.validator({
+        options.controller.validate({
           ...req.body,
           ...req.query,
           ...req.params,
@@ -124,7 +125,7 @@ export class ExpressServer implements IServer {
       expressResponse: express.Response
     ) => {
       try {
-        return options.controller(
+        return options.controller.execute(
           new ExpressRequest(expressRequest),
           new ExpressResponse(expressResponse)
         );
@@ -132,7 +133,7 @@ export class ExpressServer implements IServer {
         return expressResponse.status(500).send(err);
       }
     };
-    const expressMiddlewares = options.middleware.map(
+    const expressMiddlewares = options.middleware?.map(
       (m) =>
         async (
           expressRequest: express.Request,
@@ -152,11 +153,11 @@ export class ExpressServer implements IServer {
     );
     const stack = [
       validationMiddleware,
-      ...expressMiddlewares,
+      ...(expressMiddlewares ?? []),
       errorHandler,
       expressController,
     ];
-    switch (options.method) {
+    switch (options.controller.method) {
       case HttpMethod.GET:
         this.expressApp.get(options.route, stack);
         break;
