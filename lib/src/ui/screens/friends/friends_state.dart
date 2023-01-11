@@ -38,6 +38,12 @@ abstract class LoadedState extends FriendsState {
   @override
   List<Object> get props =>
       [friends, requests, searchQuery, friendRequestStream];
+
+  @override
+  Future<void> dispose() {
+    friendRequestStream.cancel();
+    return super.dispose();
+  }
 }
 
 class NotTypingState extends LoadedState {
@@ -216,14 +222,5 @@ class FriendsCubit extends ScreenCubit<FriendsState> {
         ),
       );
     }
-  }
-
-  @override
-  Future<void> close() {
-    if (state is LoadedState) {
-      final loadedState = state as LoadedState;
-      loadedState.friendRequestStream.cancel();
-    }
-    return super.close();
   }
 }

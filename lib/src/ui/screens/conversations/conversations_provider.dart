@@ -14,7 +14,7 @@ import 'conversations_view.dart';
 
 class ConversationsProvider
     extends ScreenProvider<ConversationsCubit, ConversationsState> {
-  ConversationsProvider() : super();
+  const ConversationsProvider() : super();
 
   /// This is a helper function that takes a list of conversations and friends and combines
   /// them into a single list sorted by the most recent message or friend request.
