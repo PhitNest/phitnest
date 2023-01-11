@@ -24,6 +24,12 @@ class NewFriendState extends MessageState {
 
   @override
   List<Object> get props => [friend, stream];
+
+  @override
+  Future<void> dispose() {
+    stream.cancel();
+    return super.dispose();
+  }
 }
 
 class LoadingNewFriendState extends MessageState {
@@ -72,6 +78,12 @@ class LoadedState extends MessageState {
 
   @override
   List<Object> get props => [conversation, messages, messageStream];
+
+  @override
+  Future<void> dispose() {
+    messageStream.cancel();
+    return super.dispose();
+  }
 }
 
 class MessageCubit extends ScreenCubit<MessageState> {
@@ -131,17 +143,5 @@ class MessageCubit extends ScreenCubit<MessageState> {
         messageStream: loadedState.messageStream,
       ),
     );
-  }
-
-  @override
-  Future<void> close() {
-    if (state is LoadedState) {
-      final loadedState = state as LoadedState;
-      loadedState.messageStream.cancel();
-    } else if (state is NewFriendState) {
-      final newFriendState = state as NewFriendState;
-      newFriendState.stream.cancel();
-    }
-    return super.close();
   }
 }

@@ -20,6 +20,12 @@ class HoldingState extends ExploreTutorialState {
   }) : super();
 
   @override
+  Future<void> dispose() {
+    timer.cancel();
+    return super.dispose();
+  }
+
+  @override
   List<Object> get props => [countdown];
 }
 
@@ -52,14 +58,5 @@ class ExploreTutorialCubit extends ScreenCubit<ExploreTutorialState> {
       holdingState.timer.cancel();
       setState(const InitialState());
     }
-  }
-
-  @override
-  Future<void> close() {
-    if (state is HoldingState) {
-      final holdingState = state as HoldingState;
-      holdingState.timer.cancel();
-    }
-    return super.close();
   }
 }

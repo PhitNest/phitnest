@@ -36,6 +36,13 @@ class LoadedState extends ConversationsState {
   ) : super();
 
   @override
+  Future<void> dispose() {
+    messageSubscription.cancel();
+    newConversationSubscription.cancel();
+    return super.dispose();
+  }
+
+  @override
   List<Object> get props =>
       [conversations, messageSubscription, newConversationSubscription];
 }
@@ -114,15 +121,5 @@ class ConversationsCubit extends ScreenCubit<ConversationsState> {
         loadedState.newConversationSubscription,
       ),
     );
-  }
-
-  @override
-  Future<void> close() {
-    if (state is LoadedState) {
-      final loadedState = state as LoadedState;
-      loadedState.messageSubscription.cancel();
-      loadedState.newConversationSubscription.cancel();
-    }
-    return super.close();
   }
 }
