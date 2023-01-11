@@ -1,14 +1,9 @@
-import { injectable } from "inversify";
 import mongoose from "mongoose";
-import {
-  IConversationEntity,
-  IRegisteredUser,
-  IUserEntity,
-  RelationshipType,
-} from "../../entities";
+import { Either } from "typescript-monads";
+import { kUserNotFound } from "../../common/failures";
+import { ICognitoUser, IUserEntity } from "../../entities";
 import { IUserRepository } from "../interfaces";
 import { GYM_MODEL_NAME } from "./gym.repository";
-import { RELATIONSHIP_COLLECTION_NAME } from "./relationship.repository";
 
 export const USER_COLLECTION_NAME = "users";
 export const USER_MODEL_NAME = "User";
@@ -39,198 +34,53 @@ const schema = new mongoose.Schema(
 
 schema.index({ gymId: 1 });
 
-export const UserModel = mongoose.model<IRegisteredUser>(
-  USER_MODEL_NAME,
-  schema
-);
+const UserModel = mongoose.model<IUserEntity>(USER_MODEL_NAME, schema);
 
-@injectable()
 export class MongoUserRepository implements IUserRepository {
   async deleteAll() {
-    await UserModel.deleteMany({}).exec();
+    await UserModel.deleteMany({});
   }
 
-  tutorialExploreUsers(gymId: string, skip?: number, limit?: number) {
-    const pipeline: mongoose.PipelineStage[] = [
-      {
-        $match: {
-          gymId: new mongoose.Types.ObjectId(gymId),
-          confirmed: true,
-        },
-      },
-      {
-        $project: {
-          cognitoId: 1,
-          firstName: 1,
-          lastName: 1,
-        },
-      },
-    ];
-    if (skip && skip > 0) {
-      pipeline.push({
-        $skip: skip,
-      });
+  async setConfirmed(cognitoId: string) {
+    if (
+      (await UserModel.updateOne({ cognitoId: cognitoId }, { confirmed: true }))
+        .matchedCount !== 1
+    ) {
+      return kUserNotFound;
     }
-    if (limit && limit > 0) {
-      pipeline.push({
-        $limit: limit,
-      });
+  }
+
+  async getByEmail(email: string) {
+    const user = await UserModel.findOne({ email: email });
+    if (user) {
+      return new Either<IUserEntity, typeof kUserNotFound>(user);
+    } else {
+      return new Either<IUserEntity, typeof kUserNotFound>(
+        undefined,
+        kUserNotFound
+      );
     }
-    return UserModel.aggregate(pipeline).exec();
-  }
-
-  async confirmUser(cognitoId: string) {
-    await UserModel.updateOne({ cognitoId: cognitoId }, { confirmed: true });
-  }
-
-  getByEmail(email: string) {
-    return UserModel.findOne({ email: email }).exec();
-  }
-
-  exploreUsers(cognitoId: string, skip?: number, limit?: number) {
-    const pipeline: mongoose.PipelineStage[] = [
-      {
-        $match: {
-          cognitoId: cognitoId,
-        },
-      },
-      {
-        $lookup: {
-          from: USER_COLLECTION_NAME,
-          localField: "gymId",
-          foreignField: "gymId",
-          as: "users",
-          pipeline: [
-            {
-              $match: {
-                cognitoId: {
-                  $not: {
-                    $eq: cognitoId,
-                  },
-                },
-                confirmed: true,
-              },
-            },
-            {
-              $lookup: {
-                from: RELATIONSHIP_COLLECTION_NAME,
-                localField: "cognitoId",
-                foreignField: "recipient",
-                as: "sent",
-                pipeline: [
-                  {
-                    $match: {
-                      sender: cognitoId,
-                    },
-                  },
-                ],
-              },
-            },
-            {
-              $lookup: {
-                from: RELATIONSHIP_COLLECTION_NAME,
-                localField: "cognitoId",
-                foreignField: "sender",
-                as: "blocks",
-                pipeline: [
-                  {
-                    $match: {
-                      recipient: cognitoId,
-                      type: RelationshipType.Blocked,
-                    },
-                  },
-                ],
-              },
-            },
-            {
-              $match: {
-                $expr: {
-                  $not: {
-                    $or: [
-                      {
-                        $gt: [
-                          {
-                            $size: "$sent",
-                          },
-                          0,
-                        ],
-                      },
-                      {
-                        $gt: [
-                          {
-                            $size: "$blocks",
-                          },
-                          0,
-                        ],
-                      },
-                    ],
-                  },
-                },
-              },
-            },
-          ],
-        },
-      },
-      {
-        $unwind: {
-          path: "$users",
-        },
-      },
-      {
-        $replaceRoot: {
-          newRoot: "$users",
-        },
-      },
-      {
-        $project: {
-          cognitoId: 1,
-          firstName: 1,
-          lastName: 1,
-        },
-      },
-    ];
-    if (skip && skip > 0) {
-      pipeline.push({
-        $skip: skip,
-      });
-    }
-    if (limit && limit > 0) {
-      pipeline.push({
-        $limit: limit,
-      });
-    }
-    return UserModel.aggregate(pipeline).exec();
-  }
-
-  async populateConversationMembers(conversation: IConversationEntity) {
-    return {
-      _id: conversation._id,
-      archived: conversation.archived,
-      users: await UserModel.aggregate([
-        { $match: { cognitoId: { $in: conversation.users } } },
-        {
-          $project: {
-            gymId: 1,
-            cognitoId: 1,
-            firstName: 1,
-            lastName: 1,
-          },
-        },
-      ]),
-    };
   }
 
   async delete(cognitoId: string) {
-    return (
-      (await UserModel.deleteOne({ cognitoId: cognitoId })).deletedCount > 0
-    );
+    if (!(await UserModel.findOneAndDelete({ cognitoId: cognitoId }))) {
+      return kUserNotFound;
+    }
   }
 
-  get(cognitoId: string) {
-    return UserModel.findOne({ cognitoId: cognitoId }).exec();
+  async get(cognitoId: string) {
+    const user = await UserModel.findOne({ cognitoId: cognitoId });
+    if (user) {
+      return new Either<IUserEntity, typeof kUserNotFound>(user);
+    } else {
+      return new Either<IUserEntity, typeof kUserNotFound>(
+        undefined,
+        kUserNotFound
+      );
+    }
   }
 
-  create(user: Omit<IUserEntity, "_id">) {
+  create(user: ICognitoUser) {
     return UserModel.create(user);
   }
 

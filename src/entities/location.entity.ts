@@ -1,5 +1,5 @@
 export class LocationEntity {
-  type = "Point" as const;
+  type = "Point";
   coordinates: [number, number];
 
   constructor(longitude: number, latitude: number) {

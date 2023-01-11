@@ -1,8 +1,6 @@
-export { IGymRepository } from "./gym.repository";
-export { IUserRepository } from "./user.repository";
 export { IAuthRepository } from "./auth.repository";
-export { IRelationshipRepository } from "./relationship.repository";
+export { IUserRepository } from "./user.repository";
+export { IGymRepository } from "./gym.repository";
+export { IFriendRequestRepository } from "./friend-request.repository";
 export { ILocationRepository } from "./location.repository";
-export { IConversationRepository } from "./conversation.repository";
-export { IMessageRepository } from "./message.repository";
-export { IProfilePictureRepository } from "./profile-picture.repository";
+export { IFriendshipRepository } from "./friendship.repository";

@@ -1,20 +1,23 @@
-export { IGymEntity } from "./gym.entity";
 export { IAddressEntity } from "./address.entity";
+export { IGymEntity } from "./gym.entity";
 export { LocationEntity } from "./location.entity";
 export {
   IUserEntity,
-  IPublicUserEntity,
   IExploreUserEntity,
+  IPublicUserEntity,
+  IFriendEntity,
   IProfilePictureExploreUserEntity,
   IProfilePicturePublicUserEntity,
   IProfilePictureUserEntity,
-  IRegisteredUser,
+  ICognitoUser,
 } from "./user.entity";
-export { IRelationshipEntity, RelationshipType } from "./relationship.entity";
-export { IAuthEntity } from "./auth.entity";
+export { IDirectMessageEntity } from "./direct-message.entity";
+export { IAuthEntity, IRefreshSessionEntity } from "./auth.entity";
 export {
-  IConversationEntity,
-  IPopulatedConversationEntity,
-} from "./conversation.entity";
-export { IMessageEntity } from "./message.entity";
-export { IFriendEntity } from "./friend.entity";
+  IFriendRequestEntity,
+  IPopulatedFriendRequestEntity,
+} from "./friend-request.entity";
+export {
+  IFriendshipEntity,
+  IPopulatedFriendshipEntity,
+} from "./friendship.entity";

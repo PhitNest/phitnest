@@ -1,60 +1,42 @@
 import {
-  IAddressEntity,
+  IFriendRequestEntity,
+  IFriendshipEntity,
   IGymEntity,
-  LocationEntity,
-  IPublicUserEntity,
   IUserEntity,
 } from "../../src/entities";
 
-export function compareGym(gym1: IGymEntity, ref: Omit<IGymEntity, "_id">) {
-  expect(gym1.name).toBe(ref.name);
-  compareLocation(gym1.location, ref.location);
-  compareAddress(gym1.address, ref.address);
+export function compareGyms(left: IGymEntity, right: IGymEntity) {
+  expect(left._id).toEqual(right._id);
+  expect(left.name).toBe(right.name);
+  expect(left.location).toEqual(right.location);
+  expect(left.address).toEqual(right.address);
 }
 
-export function compareAddress(
-  address1: IAddressEntity,
-  address2: IAddressEntity
+export function compareUsers(left: IUserEntity, right: IUserEntity) {
+  expect(left._id).toEqual(right._id);
+  expect(left.firstName).toBe(right.firstName);
+  expect(left.lastName).toBe(right.lastName);
+  expect(left.email).toBe(right.email);
+  expect(left.gymId).toEqual(right.gymId);
+  expect(left.cognitoId).toBe(right.cognitoId);
+  expect(left.confirmed).toBe(right.confirmed);
+}
+
+export function compareFriendRequests(
+  left: IFriendRequestEntity,
+  right: IFriendRequestEntity
 ) {
-  expect(address1.street).toEqual(address2.street);
-  expect(address1.city).toEqual(address2.city);
-  expect(address1.state).toEqual(address2.state);
-  expect(address1.zipCode).toEqual(address2.zipCode);
+  expect(left._id).toEqual(right._id);
+  expect(left.fromCognitoId).toEqual(right.fromCognitoId);
+  expect(left.toCognitoId).toEqual(right.toCognitoId);
+  expect(left.createdAt).toEqual(right.createdAt);
 }
 
-export function compareLocation(loc1: LocationEntity, loc2: LocationEntity) {
-  expect(loc1.coordinates.length).toBe(2);
-  expect(loc2.coordinates.length).toBe(2);
-  expect(loc1.coordinates[0]).toBeCloseTo(loc2.coordinates[0]);
-  expect(loc1.coordinates[1]).toBeCloseTo(loc2.coordinates[1]);
-}
-
-export function compareExploreUserData(
-  user: Omit<IPublicUserEntity, "gymId">,
-  other: IUserEntity
+export function compareFriendships(
+  left: IFriendshipEntity,
+  right: IFriendshipEntity
 ) {
-  expect(user.cognitoId).toEqual(other.cognitoId);
-  expect(user.firstName).toEqual(other.firstName);
-  expect(user.lastName).toEqual(other.lastName);
-}
-
-export function comparePublicUserData(
-  user: IPublicUserEntity,
-  other: IUserEntity
-) {
-  expect(user.cognitoId).toEqual(other.cognitoId);
-  expect(user.gymId).toEqual(other.gymId);
-  expect(user.firstName).toEqual(other.firstName);
-  expect(user.lastName).toEqual(other.lastName);
-}
-
-export function compareUserData(
-  user: IUserEntity,
-  ref: Omit<IUserEntity, "_id">
-) {
-  expect(user.cognitoId).toEqual(ref.cognitoId);
-  expect(user.email).toEqual(ref.email);
-  expect(user.gymId).toEqual(ref.gymId);
-  expect(user.firstName).toEqual(ref.firstName);
-  expect(user.lastName).toEqual(ref.lastName);
+  expect(left._id).toEqual(right._id);
+  expect(left.userCognitoIds).toEqual(right.userCognitoIds);
+  expect(left.createdAt).toEqual(right.createdAt);
 }

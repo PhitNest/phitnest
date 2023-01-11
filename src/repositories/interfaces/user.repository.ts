@@ -1,39 +1,19 @@
-import {
-  IConversationEntity,
-  IPopulatedConversationEntity,
-  IPublicUserEntity,
-  IRegisteredUser,
-  IUserEntity,
-} from "../../entities";
+import { Either } from "typescript-monads";
+import { kUserNotFound } from "../../common/failures";
+import { ICognitoUser, IUserEntity } from "../../entities";
 
 export interface IUserRepository {
-  create(user: Omit<IUserEntity, "_id">): Promise<IUserEntity>;
+  create(user: ICognitoUser): Promise<IUserEntity>;
 
-  delete(cognitoId: string): Promise<boolean>;
+  delete(cognitoId: string): Promise<void | typeof kUserNotFound>;
 
-  confirmUser(cognitoId: string): Promise<void>;
+  setConfirmed(cognitoId: string): Promise<void | typeof kUserNotFound>;
 
-  getByEmail(email: string): Promise<IRegisteredUser | null>;
+  getByEmail(email: string): Promise<Either<IUserEntity, typeof kUserNotFound>>;
 
-  exploreUsers(
-    cognitoId: string,
-    skip?: number,
-    limit?: number
-  ): Promise<Omit<IPublicUserEntity, "gymId">[]>;
-
-  tutorialExploreUsers(
-    gymId: string,
-    skip?: number,
-    limit?: number
-  ): Promise<Omit<IPublicUserEntity, "gymId">[]>;
-
-  get(cognitoId: string): Promise<IUserEntity | null>;
+  get(cognitoId: string): Promise<Either<IUserEntity, typeof kUserNotFound>>;
 
   haveSameGym(cognitoId1: string, cognitoId2: string): Promise<boolean>;
-
-  populateConversationMembers(
-    conversation: IConversationEntity
-  ): Promise<IPopulatedConversationEntity>;
 
   deleteAll(): Promise<void>;
 }
