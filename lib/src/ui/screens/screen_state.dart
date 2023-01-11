@@ -19,8 +19,9 @@ abstract class ScreenCubit<S extends ScreenState> extends Cubit<S> {
 
   @mustCallSuper
   @override
-  Future<void> close() {
+  Future<void> close() async {
     _disposed = true;
+    await state.dispose();
     return super.close();
   }
 }
@@ -30,4 +31,7 @@ abstract class ScreenState extends Equatable {
 
   @override
   List<Object> get props => [];
+
+  @mustCallSuper
+  Future<void> dispose() async {}
 }
