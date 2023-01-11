@@ -1,5 +1,6 @@
 import {
   CognitoAuthRepository,
+  MongoDirectMessageRepository,
   MongoFriendRequestRepository,
   MongoFriendshipRepository,
   MongoGymRepository,
@@ -13,6 +14,7 @@ import {
   ILocationRepository,
   IUserRepository,
   IFriendshipRepository,
+  IDirectMessageRepository,
 } from "./interfaces";
 
 let authRepo: IAuthRepository;
@@ -21,6 +23,7 @@ let userRepo: IUserRepository;
 let friendRequestRepo: IFriendRequestRepository;
 let locationRepo: ILocationRepository;
 let friendshipRepo: IFriendshipRepository;
+let directMessageRepo: IDirectMessageRepository;
 
 export function authRepository() {
   return authRepo;
@@ -46,6 +49,10 @@ export function friendshipRepository() {
   return friendshipRepo;
 }
 
+export function directMessageRepository() {
+  return directMessageRepo;
+}
+
 export function injectRepositories() {
   authRepo = new CognitoAuthRepository();
   gymRepo = new MongoGymRepository();
@@ -53,4 +60,5 @@ export function injectRepositories() {
   friendRequestRepo = new MongoFriendRequestRepository();
   locationRepo = new OSMLocationRepository();
   friendshipRepo = new MongoFriendshipRepository();
+  directMessageRepo = new MongoDirectMessageRepository();
 }

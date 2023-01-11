@@ -6,6 +6,8 @@ import { Controller } from "../../controllers/types";
 import { Validator } from "../../validators/types";
 import { Middleware } from "../../middleware/types";
 import { IServer } from "../interfaces";
+import bodyParser from "body-parser";
+import morgan from "morgan";
 
 class ExpressRequest<BodyType> implements IRequest<BodyType> {
   expressRequest: express.Request;
@@ -58,6 +60,9 @@ export class ExpressServer implements IServer {
 
   constructor() {
     this.expressApp = express();
+    this.expressApp.use(bodyParser.json());
+    this.expressApp.use(morgan("dev"));
+    this.expressApp.get("/", (req, res) => res.status(200).send());
   }
 
   listen(port: number) {

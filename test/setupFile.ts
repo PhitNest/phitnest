@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
 import { start, stop } from "../src/app";
+import { dropDatabase } from "./helpers/mock-mongo";
 
 beforeAll(start);
 
 afterAll(async () => {
-  await mongoose.connection.db.dropDatabase();
+  await dropDatabase();
   await stop();
 });

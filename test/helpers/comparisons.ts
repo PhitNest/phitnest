@@ -1,4 +1,5 @@
 import {
+  IDirectMessageEntity,
   IFriendRequestEntity,
   IFriendshipEntity,
   IGymEntity,
@@ -38,5 +39,16 @@ export function compareFriendships(
 ) {
   expect(left._id).toEqual(right._id);
   expect(left.userCognitoIds).toEqual(right.userCognitoIds);
+  expect(left.createdAt).toEqual(right.createdAt);
+}
+
+export function compareDirectMessages(
+  left: IDirectMessageEntity,
+  right: IDirectMessageEntity
+) {
+  expect(left._id).toEqual(right._id);
+  expect(left.friendshipId).toEqual(right.friendshipId);
+  expect(left.senderCognitoId).toEqual(right.senderCognitoId);
+  expect(left.text).toEqual(right.text);
   expect(left.createdAt).toEqual(right.createdAt);
 }

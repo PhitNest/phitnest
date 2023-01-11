@@ -1,6 +1,5 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
+import { stopMockServer } from "./helpers/mock-mongo";
 
 export default async function () {
-  const memoryDb: MongoMemoryServer = (global as any).__MONGOINSTANCE;
-  await memoryDb.stop();
+  stopMockServer();
 }
