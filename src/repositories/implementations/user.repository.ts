@@ -1,6 +1,5 @@
-import { Either } from "typescript-monads";
 import { kUserNotFound } from "../../common/failures";
-import { ICognitoUser, IUserEntity } from "../../entities";
+import { ICognitoUser } from "../../entities";
 import { UserModel } from "../../mongo";
 import { IUserRepository } from "../interfaces";
 
@@ -21,12 +20,9 @@ export class MongoUserRepository implements IUserRepository {
   async getByEmail(email: string) {
     const user = await UserModel.findOne({ email: email });
     if (user) {
-      return new Either<typeof kUserNotFound, IUserEntity>(user);
+      return user;
     } else {
-      return new Either<typeof kUserNotFound, IUserEntity>(
-        undefined,
-        kUserNotFound
-      );
+      return kUserNotFound;
     }
   }
 
@@ -39,12 +35,9 @@ export class MongoUserRepository implements IUserRepository {
   async get(cognitoId: string) {
     const user = await UserModel.findOne({ cognitoId: cognitoId });
     if (user) {
-      return new Either<typeof kUserNotFound, IUserEntity>(user);
+      return user;
     } else {
-      return new Either<typeof kUserNotFound, IUserEntity>(
-        undefined,
-        kUserNotFound
-      );
+      return kUserNotFound;
     }
   }
 

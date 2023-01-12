@@ -1,6 +1,5 @@
-import { fail } from "assert";
 import { kLocationNotFound } from "../../common/failures";
-import { locationRepository } from "../injection";
+import repositories from "../injection";
 
 const testAddress1 = {
   street: "522 Pine Song Ln",
@@ -34,39 +33,8 @@ const expectedLocation2 = {
 };
 
 test("Get location from address", async () => {
-  const locationRepo = locationRepository();
-  let location = await locationRepo.get(testAddress1);
-  location.tap({
-    left: (location) => {
-      expect(location).toEqual(expectedLocation1);
-    },
-    right: (failure) => {
-      console.log(`Unexpected failure: ${failure}`);
-      fail(
-        `testAddress1 failed with address:\n${JSON.stringify(testAddress1)}`
-      );
-    },
-  });
-  location = await locationRepo.get(testAddress2);
-  location.tap({
-    left: (location) => {
-      expect(location).toEqual(expectedLocation2);
-    },
-    right: (failure) => {
-      console.log(`Unexpected failure: ${failure}`);
-      fail(
-        `testAddress2 failed with address:\n${JSON.stringify(testAddress2)}`
-      );
-    },
-  });
-  location = await locationRepo.get(fakeAddress);
-  location.tap({
-    left: (location) => {
-      console.log(`Unexpected success: ${location.coordinates}`);
-      fail(`An invalid address did not fail:\n${JSON.stringify(fakeAddress)}`);
-    },
-    right: (failure) => {
-      expect(failure).toBe(kLocationNotFound);
-    },
-  });
+  const { locationRepo } = repositories();
+  expect(await locationRepo.get(testAddress1)).toEqual(expectedLocation1);
+  expect(await locationRepo.get(testAddress2)).toEqual(expectedLocation2);
+  expect(await locationRepo.get(fakeAddress)).toBe(kLocationNotFound);
 });

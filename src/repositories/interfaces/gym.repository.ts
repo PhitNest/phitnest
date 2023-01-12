@@ -1,5 +1,4 @@
-import { Either } from "typescript-monads";
-import { kGymNotFound } from "../../common/failures";
+import { Failure } from "../../common/types";
 import { IGymEntity, IUserEntity, LocationEntity } from "../../entities";
 
 export interface IGymRepository {
@@ -11,11 +10,9 @@ export interface IGymRepository {
     amount?: number
   ): Promise<IGymEntity[]>;
 
-  getByUser(
-    user: IUserEntity
-  ): Promise<Either<typeof kGymNotFound, IGymEntity>>;
+  getByUser(user: IUserEntity): Promise<IGymEntity | Failure>;
 
-  get(gymId: string): Promise<Either<typeof kGymNotFound, IGymEntity>>;
+  get(gymId: string): Promise<IGymEntity | Failure>;
 
   deleteAll(): Promise<void>;
 }

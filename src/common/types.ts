@@ -1,14 +1,11 @@
-import { Either } from "typescript-monads";
-
-export class Either3<A, B, C> extends Either<Either<A, B>, C> {
-  constructor(left?: A, middle?: B, right?: C) {
-    super(new Either(left, middle), right);
-  }
-}
-
-export interface Failure {
+export class Failure {
   code: string;
   message: string;
+
+  constructor(code: string, message: string) {
+    this.code = code;
+    this.message = message;
+  }
 }
 
 export interface IRequest<BodyType> {
@@ -19,8 +16,6 @@ export interface IRequest<BodyType> {
 export interface IResponse<ResType, LocalsType = {}> {
   locals: LocalsType;
   status(code: number): IResponse<ResType, LocalsType>;
-  json(
-    data: Either<ResType, Failure> | ResType | Failure
-  ): IResponse<ResType, LocalsType>;
+  json(data: ResType | Failure): IResponse<ResType, LocalsType>;
   setLocals<NewLocals>(newLocals: NewLocals): IResponse<ResType, NewLocals>;
 }

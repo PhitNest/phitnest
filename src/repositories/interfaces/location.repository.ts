@@ -1,9 +1,6 @@
-import { Either } from "typescript-monads";
-import { kLocationNotFound } from "../../common/failures";
+import { Failure } from "../../common/types";
 import { IAddressEntity, LocationEntity } from "../../entities";
 
 export interface ILocationRepository {
-  get(
-    address: IAddressEntity
-  ): Promise<Either<typeof kLocationNotFound, LocationEntity>>;
+  get(address: IAddressEntity): Promise<LocationEntity | Failure>;
 }

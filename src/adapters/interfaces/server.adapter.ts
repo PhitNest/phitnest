@@ -9,6 +9,5 @@ export interface IServer {
   bind<BodyType, ResType, LocalsType>(options: {
     route: string;
     controller: Controller<BodyType, ResType, LocalsType>;
-    middleware?: Middleware<BodyType, ResType, LocalsType>[];
   }): void;
 }

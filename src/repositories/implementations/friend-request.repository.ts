@@ -1,6 +1,4 @@
-import { Either } from "typescript-monads";
 import { kFriendRequestNotFound } from "../../common/failures";
-import { IFriendRequestEntity } from "../../entities";
 import { FriendRequestModel } from "../../mongo";
 import { IFriendRequestRepository } from "../interfaces";
 
@@ -23,14 +21,9 @@ export class MongoFriendRequestRepository implements IFriendRequestRepository {
       toCognitoId: toCognitoId,
     });
     if (friendRequest) {
-      return new Either<typeof kFriendRequestNotFound, IFriendRequestEntity>(
-        friendRequest
-      );
+      return friendRequest;
     } else {
-      return new Either<typeof kFriendRequestNotFound, IFriendRequestEntity>(
-        undefined,
-        kFriendRequestNotFound
-      );
+      return kFriendRequestNotFound;
     }
   }
 

@@ -1,5 +1,4 @@
-import { Either } from "typescript-monads";
-import { kFriendshipNotFound } from "../../common/failures";
+import { Failure } from "../../common/types";
 import { IFriendshipEntity } from "../../entities";
 
 export interface IFriendshipRepository {
@@ -11,9 +10,7 @@ export interface IFriendshipRepository {
 
   getByUsers(
     userCognitoIds: [string, string]
-  ): Promise<Either<typeof kFriendshipNotFound, IFriendshipEntity>>;
+  ): Promise<IFriendshipEntity | Failure>;
 
-  delete(
-    userCognitoIds: [string, string]
-  ): Promise<void | typeof kFriendshipNotFound>;
+  delete(userCognitoIds: [string, string]): Promise<void | Failure>;
 }

@@ -1,4 +1,5 @@
 import { IRequest, IResponse } from "../common/types";
+import { Middleware } from "../middleware/types";
 
 type Validator<BodyType> = (body: any) => BodyType;
 
@@ -12,6 +13,8 @@ export enum HttpMethod {
 
 export interface Controller<BodyType, ResType, LocalsType = {}> {
   method: HttpMethod;
+
+  middleware?: Middleware<BodyType, ResType, any>[];
 
   execute(
     req: IRequest<BodyType>,

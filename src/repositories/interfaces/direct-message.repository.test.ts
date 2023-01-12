@@ -1,11 +1,6 @@
 import { compareDirectMessages } from "../../../test/helpers/comparisons";
 import { kDirectMessageNotFound } from "../../common/failures";
-import {
-  directMessageRepository,
-  friendshipRepository,
-  gymRepository,
-  userRepository,
-} from "../injection";
+import repositories from "../injection";
 
 const testGym1 = {
   name: "testGym1",
@@ -105,123 +100,117 @@ const testMessage7 = {
 };
 
 afterEach(async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
-  const friendshipRepo = friendshipRepository();
-  const messageRepo = directMessageRepository();
+  const { gymRepo, userRepo, friendshipRepo, directMessageRepo } =
+    repositories();
   await gymRepo.deleteAll();
   await userRepo.deleteAll();
   await friendshipRepo.deleteAll();
-  await messageRepo.deleteAll();
+  await directMessageRepo.deleteAll();
 });
 
 test("Create and get direct messages", async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
-  const friendshipRepo = friendshipRepository();
-  const messageRepo = directMessageRepository();
+  const { gymRepo, userRepo, friendshipRepo, directMessageRepo } =
+    repositories();
   const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym._id });
-  const user3 = await userRepo.create({ ...testUser3, gymId: gym._id });
-  const user4 = await userRepo.create({ ...testUser4, gymId: gym._id });
+  await userRepo.create({ ...testUser1, gymId: gym._id });
+  await userRepo.create({ ...testUser2, gymId: gym._id });
+  await userRepo.create({ ...testUser3, gymId: gym._id });
+  await userRepo.create({ ...testUser4, gymId: gym._id });
   const friendship1 = await friendshipRepo.create(testFriendship1);
   const friendship2 = await friendshipRepo.create(testFriendship2);
   const friendship3 = await friendshipRepo.create(testFriendship3);
   const friendship4 = await friendshipRepo.create(testFriendship4);
-  const message1 = await messageRepo.create({
+  const message1 = await directMessageRepo.create({
     ...testMessage1,
     friendshipId: friendship1._id,
   });
-  let messages = await messageRepo.get(friendship1._id);
+  let messages = await directMessageRepo.get(friendship1._id);
   expect(messages.length).toBe(1);
   compareDirectMessages(messages[0], message1);
-  const message2 = await messageRepo.create({
+  const message2 = await directMessageRepo.create({
     ...testMessage2,
     friendshipId: friendship1._id,
   });
-  messages = await messageRepo.get(friendship1._id);
+  messages = await directMessageRepo.get(friendship1._id);
   expect(messages.length).toBe(2);
   compareDirectMessages(messages[0], message2);
   compareDirectMessages(messages[1], message1);
-  const message3 = await messageRepo.create({
+  const message3 = await directMessageRepo.create({
     ...testMessage3,
     friendshipId: friendship2._id,
   });
-  messages = await messageRepo.get(friendship2._id);
+  messages = await directMessageRepo.get(friendship2._id);
   expect(messages.length).toBe(1);
   compareDirectMessages(messages[0], message3);
-  const message4 = await messageRepo.create({
+  const message4 = await directMessageRepo.create({
     ...testMessage4,
     friendshipId: friendship3._id,
   });
-  messages = await messageRepo.get(friendship3._id);
+  messages = await directMessageRepo.get(friendship3._id);
   expect(messages.length).toBe(1);
   compareDirectMessages(messages[0], message4);
-  const message5 = await messageRepo.create({
+  const message5 = await directMessageRepo.create({
     ...testMessage5,
     friendshipId: friendship4._id,
   });
-  messages = await messageRepo.get(friendship4._id);
+  messages = await directMessageRepo.get(friendship4._id);
   expect(messages.length).toBe(1);
   compareDirectMessages(messages[0], message5);
-  const message6 = await messageRepo.create({
+  const message6 = await directMessageRepo.create({
     ...testMessage6,
     friendshipId: friendship4._id,
   });
-  messages = await messageRepo.get(friendship4._id);
+  messages = await directMessageRepo.get(friendship4._id);
   expect(messages.length).toBe(2);
   compareDirectMessages(messages[0], message6);
   compareDirectMessages(messages[1], message5);
-  const message7 = await messageRepo.create({
+  const message7 = await directMessageRepo.create({
     ...testMessage7,
     friendshipId: friendship4._id,
   });
-  messages = await messageRepo.get(friendship4._id);
+  messages = await directMessageRepo.get(friendship4._id);
   expect(messages.length).toBe(3);
   compareDirectMessages(messages[0], message7);
   compareDirectMessages(messages[1], message6);
   compareDirectMessages(messages[2], message5);
-  messages = await messageRepo.get(friendship4._id, 0);
+  messages = await directMessageRepo.get(friendship4._id, 0);
   expect(messages.length).toBe(0);
-  messages = await messageRepo.get(friendship4._id, -2);
+  messages = await directMessageRepo.get(friendship4._id, -2);
   expect(messages.length).toBe(2);
   compareDirectMessages(messages[0], message7);
   compareDirectMessages(messages[1], message6);
-  messages = await messageRepo.get(friendship4._id, 2);
+  messages = await directMessageRepo.get(friendship4._id, 2);
   expect(messages.length).toBe(2);
   compareDirectMessages(messages[0], message7);
   compareDirectMessages(messages[1], message6);
 });
 
 test("Delete direct messages", async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
-  const friendshipRepo = friendshipRepository();
-  const messageRepo = directMessageRepository();
+  const { gymRepo, userRepo, friendshipRepo, directMessageRepo } =
+    repositories();
   const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym._id });
-  const user3 = await userRepo.create({ ...testUser3, gymId: gym._id });
-  const user4 = await userRepo.create({ ...testUser4, gymId: gym._id });
+  await userRepo.create({ ...testUser1, gymId: gym._id });
+  await userRepo.create({ ...testUser2, gymId: gym._id });
+  await userRepo.create({ ...testUser3, gymId: gym._id });
+  await userRepo.create({ ...testUser4, gymId: gym._id });
   const friendship1 = await friendshipRepo.create(testFriendship1);
-  const friendship2 = await friendshipRepo.create(testFriendship2);
-  const friendship3 = await friendshipRepo.create(testFriendship3);
-  const friendship4 = await friendshipRepo.create(testFriendship4);
-  const message1 = await messageRepo.create({
+  await friendshipRepo.create(testFriendship2);
+  const message1 = await directMessageRepo.create({
     ...testMessage1,
     friendshipId: friendship1._id,
   });
-  const message2 = await messageRepo.create({
+  const message2 = await directMessageRepo.create({
     ...testMessage2,
     friendshipId: friendship1._id,
   });
-  expect(await messageRepo.delete(message1._id)).toBeUndefined();
-  let messages = await messageRepo.get(friendship1._id);
+  expect(await directMessageRepo.delete(message1._id)).toBeUndefined();
+  let messages = await directMessageRepo.get(friendship1._id);
   expect(messages.length).toBe(1);
   compareDirectMessages(messages[0], message2);
-  expect(await messageRepo.delete(message2._id)).toBeUndefined();
-  messages = await messageRepo.get(friendship1._id);
+  expect(await directMessageRepo.delete(message2._id)).toBeUndefined();
+  messages = await directMessageRepo.get(friendship1._id);
   expect(messages.length).toBe(0);
-  expect(await messageRepo.delete(message1._id)).toBe(kDirectMessageNotFound);
+  expect(await directMessageRepo.delete(message1._id)).toBe(
+    kDirectMessageNotFound
+  );
 });

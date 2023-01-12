@@ -1,4 +1,4 @@
-import { kDirectMessageNotFound } from "../../common/failures";
+import { Failure } from "../../common/types";
 import { IDirectMessageEntity } from "../../entities";
 
 export interface IDirectMessageRepository {
@@ -10,5 +10,5 @@ export interface IDirectMessageRepository {
 
   get(friendshipId: string, amount?: number): Promise<IDirectMessageEntity[]>;
 
-  delete(messageId: string): Promise<void | typeof kDirectMessageNotFound>;
+  delete(messageId: string): Promise<void | Failure>;
 }

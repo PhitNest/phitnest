@@ -1,5 +1,4 @@
-import { Either } from "typescript-monads";
-import { kFriendRequestNotFound } from "../../common/failures";
+import { Failure } from "../../common/types";
 import { IFriendRequestEntity } from "../../entities";
 
 export interface IFriendRequestRepository {
@@ -15,12 +14,9 @@ export interface IFriendRequestRepository {
   getByCognitoIds(
     fromCognitoId: string,
     toCognitoId: string
-  ): Promise<Either<typeof kFriendRequestNotFound, IFriendRequestEntity>>;
+  ): Promise<IFriendRequestEntity | Failure>;
 
-  delete(
-    fromCognitoId: string,
-    toCognitoId: string
-  ): Promise<void | typeof kFriendRequestNotFound>;
+  delete(fromCognitoId: string, toCognitoId: string): Promise<void | Failure>;
 
   deleteAll(): Promise<void>;
 }

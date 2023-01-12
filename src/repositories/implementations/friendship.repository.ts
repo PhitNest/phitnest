@@ -1,6 +1,4 @@
-import { Either } from "typescript-monads";
 import { kFriendshipNotFound } from "../../common/failures";
-import { IFriendshipEntity } from "../../entities";
 import { FriendshipModel } from "../../mongo";
 import { IFriendshipRepository } from "../interfaces";
 
@@ -24,14 +22,9 @@ export class MongoFriendshipRepository implements IFriendshipRepository {
       userCognitoIds: userCognitoIds.sort(),
     });
     if (friendship) {
-      return new Either<typeof kFriendshipNotFound, IFriendshipEntity>(
-        friendship
-      );
+      return friendship;
     } else {
-      return new Either<typeof kFriendshipNotFound, IFriendshipEntity>(
-        undefined,
-        kFriendshipNotFound
-      );
+      return kFriendshipNotFound;
     }
   }
 
