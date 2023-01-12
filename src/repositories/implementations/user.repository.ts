@@ -80,4 +80,10 @@ export class MongoUserRepository implements IUserRepository {
       ).length === 1
     );
   }
+
+  async getByGym(gymId: string) {
+    return (await UserModel.find({ gymId: gymId })).map((user) =>
+      user.toObject()
+    );
+  }
 }

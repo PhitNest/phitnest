@@ -15,7 +15,7 @@ import {
 } from "./controllers/friendRequest";
 import { RemoveFriendController } from "./controllers/friendship";
 import { NearestGymsController } from "./controllers/gym";
-import { GetUserController } from "./controllers/user";
+import { ExploreController, GetUserController } from "./controllers/user";
 
 export function buildRouter(server: IServer) {
   server.bind({
@@ -69,5 +69,9 @@ export function buildRouter(server: IServer) {
   server.bind({
     route: "/friendship",
     controller: new RemoveFriendController(),
+  });
+  server.bind({
+    route: "/user/explore",
+    controller: new ExploreController(),
   });
 }
