@@ -3,16 +3,20 @@ import { FriendRequestModel } from "../../mongo";
 import { IFriendRequestRepository } from "../interfaces";
 
 export class MongoFriendRequestRepository implements IFriendRequestRepository {
-  getByFromCognitoId(fromCognitoId: string) {
-    return FriendRequestModel.find({ fromCognitoId: fromCognitoId })
-      .sort({ createdAt: -1 })
-      .exec();
+  async getByFromCognitoId(fromCognitoId: string) {
+    return (
+      await FriendRequestModel.find({ fromCognitoId: fromCognitoId }).sort({
+        createdAt: -1,
+      })
+    ).map((request) => request.toObject());
   }
 
-  getByToCognitoId(toCognitoId: string) {
-    return FriendRequestModel.find({ toCognitoId: toCognitoId })
-      .sort({ createdAt: -1 })
-      .exec();
+  async getByToCognitoId(toCognitoId: string) {
+    return (
+      await FriendRequestModel.find({ toCognitoId: toCognitoId }).sort({
+        createdAt: -1,
+      })
+    ).map((request) => request.toObject());
   }
 
   async getByCognitoIds(fromCognitoId: string, toCognitoId: string) {
@@ -21,8 +25,23 @@ export class MongoFriendRequestRepository implements IFriendRequestRepository {
       toCognitoId: toCognitoId,
     });
     if (friendRequest) {
-      return friendRequest;
+      return friendRequest.toObject();
     } else {
+      return kFriendRequestNotFound;
+    }
+  }
+
+  async deny(fromCognitoId: string, toCognitoId: string) {
+    if (
+      !(await FriendRequestModel.findOneAndUpdate(
+        {
+          fromCognitoId: fromCognitoId,
+          toCognitoId: toCognitoId,
+          denied: false,
+        },
+        { denied: true }
+      ))
+    ) {
       return kFriendRequestNotFound;
     }
   }
@@ -42,10 +61,12 @@ export class MongoFriendRequestRepository implements IFriendRequestRepository {
     await FriendRequestModel.deleteMany({});
   }
 
-  create(fromCognitoId: string, toCognitoId: string) {
-    return FriendRequestModel.create({
-      fromCognitoId: fromCognitoId,
-      toCognitoId: toCognitoId,
-    });
+  async create(fromCognitoId: string, toCognitoId: string) {
+    return (
+      await FriendRequestModel.create({
+        fromCognitoId: fromCognitoId,
+        toCognitoId: toCognitoId,
+      })
+    ).toObject();
   }
 }

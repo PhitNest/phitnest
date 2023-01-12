@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 import { compareUsers } from "../../test/helpers/comparisons";
-import { MockAuthRepository } from "../../test/helpers/mock-cognito";
+import {
+  kMockAuthError,
+  MockAuthRepository,
+} from "../../test/helpers/mock-cognito";
 import { kGymNotFound, kUserNotFound } from "../common/failures";
 import { IUserEntity } from "../entities";
 import repositories, {
@@ -65,6 +68,6 @@ test("Register user", async () => {
       gymId: gym._id,
       email: "invalid",
     })
-  ).toBe(kUserNotFound);
+  ).toBe(kMockAuthError);
   injectRepositories();
 });

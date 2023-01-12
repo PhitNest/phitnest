@@ -16,6 +16,8 @@ export interface IFriendRequestRepository {
     toCognitoId: string
   ): Promise<IFriendRequestEntity | Failure>;
 
+  deny(fromCognitoId: string, toCognitoId: string): Promise<void | Failure>;
+
   delete(fromCognitoId: string, toCognitoId: string): Promise<void | Failure>;
 
   deleteAll(): Promise<void>;

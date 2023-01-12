@@ -9,6 +9,11 @@ import {
   ResendConfirmationController,
   SignOutController,
 } from "./controllers/auth";
+import {
+  DenyFriendRequestController,
+  SendFriendRequestController,
+} from "./controllers/friendRequest";
+import { RemoveFriendController } from "./controllers/friendship";
 import { NearestGymsController } from "./controllers/gym";
 import { GetUserController } from "./controllers/user";
 
@@ -52,5 +57,17 @@ export function buildRouter(server: IServer) {
   server.bind({
     route: "/gym/nearest",
     controller: new NearestGymsController(),
+  });
+  server.bind({
+    route: "/friendRequest",
+    controller: new SendFriendRequestController(),
+  });
+  server.bind({
+    route: "/friendRequest/deny",
+    controller: new DenyFriendRequestController(),
+  });
+  server.bind({
+    route: "/friendship",
+    controller: new RemoveFriendController(),
   });
 }

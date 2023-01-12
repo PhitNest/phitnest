@@ -3,6 +3,7 @@ import {
   IFriendRequestEntity,
   IFriendshipEntity,
   IGymEntity,
+  IPublicUserEntity,
   IUserEntity,
 } from "../../src/entities";
 
@@ -14,13 +15,20 @@ export function compareGyms(left: IGymEntity, right: IGymEntity) {
 }
 
 export function compareUsers(left: IUserEntity, right: IUserEntity) {
+  expect(left.email).toBe(right.email);
+  expect(left.confirmed).toBe(right.confirmed);
+  comparePublicUsers(left, right);
+}
+
+export function comparePublicUsers(
+  left: IPublicUserEntity,
+  right: IPublicUserEntity
+) {
   expect(left._id).toEqual(right._id);
   expect(left.firstName).toBe(right.firstName);
   expect(left.lastName).toBe(right.lastName);
-  expect(left.email).toBe(right.email);
   expect(left.gymId).toEqual(right.gymId);
   expect(left.cognitoId).toBe(right.cognitoId);
-  expect(left.confirmed).toBe(right.confirmed);
 }
 
 export function compareFriendRequests(
@@ -31,6 +39,7 @@ export function compareFriendRequests(
   expect(left.fromCognitoId).toEqual(right.fromCognitoId);
   expect(left.toCognitoId).toEqual(right.toCognitoId);
   expect(left.createdAt).toEqual(right.createdAt);
+  expect(left.denied).toBe(right.denied);
 }
 
 export function compareFriendships(

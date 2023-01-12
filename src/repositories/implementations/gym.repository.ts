@@ -4,35 +4,26 @@ import { GymModel } from "../../mongo";
 import { IGymRepository } from "../interfaces";
 
 export class MongoGymRepository implements IGymRepository {
-  async getByUser(user: IUserEntity) {
-    const gym = await GymModel.findById(user.gymId);
-    if (gym) {
-      return gym;
-    } else {
-      return kGymNotFound;
-    }
-  }
-
   async deleteAll() {
-    await GymModel.deleteMany({}).exec();
+    await GymModel.deleteMany({});
   }
 
-  create(gym: Omit<IGymEntity, "_id">) {
-    return GymModel.create(gym);
+  async create(gym: Omit<IGymEntity, "_id">) {
+    return (await GymModel.create(gym)).toObject();
   }
 
   async getNearest(location: LocationEntity, meters: number, amount?: number) {
     if (amount != 0) {
-      return GymModel.find({
-        location: {
-          $near: {
-            $maxDistance: meters,
-            $geometry: location,
+      return (
+        await GymModel.find({
+          location: {
+            $near: {
+              $maxDistance: meters,
+              $geometry: location,
+            },
           },
-        },
-      })
-        .limit(amount ?? 0)
-        .exec();
+        }).limit(amount ?? 0)
+      ).map((gym) => gym.toObject());
     } else {
       return [];
     }
@@ -41,7 +32,7 @@ export class MongoGymRepository implements IGymRepository {
   async get(gymId: string) {
     const gym = await GymModel.findById(gymId);
     if (gym) {
-      return gym;
+      return gym.toObject();
     } else {
       return kGymNotFound;
     }

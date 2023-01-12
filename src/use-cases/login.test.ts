@@ -1,5 +1,8 @@
 import { compareUsers } from "../../test/helpers/comparisons";
-import { MockAuthRepository } from "../../test/helpers/mock-cognito";
+import {
+  kMockAuthError,
+  MockAuthRepository,
+} from "../../test/helpers/mock-cognito";
 import { kUserNotFound } from "../common/failures";
 import { IAuthEntity, IUserEntity } from "../entities";
 import repositories, {
@@ -36,6 +39,13 @@ const testUser2 = {
   email: "abc2@email.com",
 };
 
+const invalidUser = {
+  cognitoId: "invalid",
+  firstName: "firstName1",
+  lastName: "lastName1",
+  email: "invalid",
+};
+
 afterEach(async () => {
   const { gymRepo, userRepo } = repositories();
   await gymRepo.deleteAll();
@@ -56,6 +66,10 @@ test("Login", async () => {
     ...testUser2,
     gymId: gym._id,
   });
+  await userRepo.create({
+    ...invalidUser,
+    gymId: gym._id,
+  });
   let result = (await login(user1.email, "password1")) as {
     session: IAuthEntity;
     user: IUserEntity;
@@ -66,7 +80,7 @@ test("Login", async () => {
     user: IUserEntity;
   };
   compareUsers(result.user, user2);
-  expect(await login("invalid", "password1")).toBe(kUserNotFound);
+  expect(await login("invalid", "password1")).toBe(kMockAuthError);
   expect(await login("test", "password1")).toBe(kUserNotFound);
   injectRepositories();
 });

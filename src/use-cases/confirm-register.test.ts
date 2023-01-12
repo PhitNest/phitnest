@@ -1,6 +1,10 @@
 import { compareUsers } from "../../test/helpers/comparisons";
-import { MockAuthRepository } from "../../test/helpers/mock-cognito";
+import {
+  kMockAuthError,
+  MockAuthRepository,
+} from "../../test/helpers/mock-cognito";
 import { kUserNotFound } from "../common/failures";
+import { Failure } from "../common/types";
 import { IUserEntity } from "../entities";
 import { MongoUserRepository } from "../repositories/implementations";
 import repositories, {
@@ -31,20 +35,32 @@ const testUser1 = {
   password: "password1",
 };
 
-const testUser2 = {
+const cognitoFailingUser = {
+  cognitoId: "cognitoId2",
+  firstName: "firstName1",
+  lastName: "lastName1",
+  email: "invalid",
+  password: "password1",
+};
+
+const failingUser = {
   cognitoId: "invalidSetConfirmed",
   firstName: "firstName1",
   lastName: "lastName1",
   email: "abc2@email.com",
-  password: "password1",
 };
 
-class MockUserRepo extends MongoUserRepository {
-  async setConfirmed(email: string) {
-    if (email == "invalidSetConfirmed") {
-      return kUserNotFound;
+const kMockFailingUserRepo = new Failure(
+  "MockFailingUserRepo",
+  "Mock failing user repo"
+);
+
+class FailingUserRepo extends MongoUserRepository {
+  async setConfirmed(cognitoId: string) {
+    if (cognitoId == "invalidSetConfirmed") {
+      return kMockFailingUserRepo;
     } else {
-      return super.setConfirmed(email);
+      return super.setConfirmed(cognitoId);
     }
   }
 }
@@ -58,20 +74,29 @@ afterEach(async () => {
 test("Confirm registration", async () => {
   rebindRepositories({
     authRepo: new MockAuthRepository(),
-    userRepo: new MockUserRepo(),
+    userRepo: new FailingUserRepo(),
   });
   const { gymRepo, userRepo } = repositories();
   const gym = await gymRepo.create(testGym1);
   const user1 = await userRepo.create({ ...testUser1, gymId: gym._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym._id });
+  const user2 = await userRepo.create({
+    ...cognitoFailingUser,
+    gymId: gym._id,
+  });
+  const user3 = await userRepo.create({
+    ...failingUser,
+    gymId: gym._id,
+  });
   const result = (await confirmRegister(
     testUser1.email,
     "123456"
   )) as IUserEntity;
   user1.confirmed = true;
   compareUsers(result, user1);
-  expect(await confirmRegister("invalid", "123456")).toBe(kUserNotFound);
-  expect(await confirmRegister("test", "123456")).toBe(kUserNotFound);
-  expect(await confirmRegister(user2.email, "123456")).toBe(kUserNotFound);
+  expect(await confirmRegister("invalidUser", "123456")).toBe(kUserNotFound);
+  expect(await confirmRegister(user2.email, "123456")).toBe(kMockAuthError);
+  expect(await confirmRegister(user3.email, "123456")).toBe(
+    kMockFailingUserRepo
+  );
   injectRepositories();
 });
