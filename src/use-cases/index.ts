@@ -1,0 +1,1 @@
+export { registerUser } from "./register";

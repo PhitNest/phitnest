@@ -1,4 +1,3 @@
-import { Either } from "typescript-monads";
 import { kGymNotFound } from "../../common/failures";
 import { IGymEntity, IUserEntity, LocationEntity } from "../../entities";
 import { GymModel } from "../../mongo";
@@ -8,12 +7,9 @@ export class MongoGymRepository implements IGymRepository {
   async getByUser(user: IUserEntity) {
     const gym = await GymModel.findById(user.gymId);
     if (gym) {
-      return new Either<typeof kGymNotFound, IGymEntity>(gym);
+      return gym;
     } else {
-      return new Either<typeof kGymNotFound, IGymEntity>(
-        undefined,
-        kGymNotFound
-      );
+      return kGymNotFound;
     }
   }
 
@@ -45,12 +41,9 @@ export class MongoGymRepository implements IGymRepository {
   async get(gymId: string) {
     const gym = await GymModel.findById(gymId);
     if (gym) {
-      return new Either<typeof kGymNotFound, IGymEntity>(gym);
+      return gym;
     } else {
-      return new Either<typeof kGymNotFound, IGymEntity>(
-        undefined,
-        kGymNotFound
-      );
+      return kGymNotFound;
     }
   }
 }

@@ -17,48 +17,41 @@ import {
   IDirectMessageRepository,
 } from "./interfaces";
 
-let authRepo: IAuthRepository;
-let gymRepo: IGymRepository;
-let userRepo: IUserRepository;
-let friendRequestRepo: IFriendRequestRepository;
-let locationRepo: ILocationRepository;
-let friendshipRepo: IFriendshipRepository;
-let directMessageRepo: IDirectMessageRepository;
+type Repositories = {
+  authRepo: IAuthRepository;
+  gymRepo: IGymRepository;
+  userRepo: IUserRepository;
+  friendRequestRepo: IFriendRequestRepository;
+  locationRepo: ILocationRepository;
+  friendshipRepo: IFriendshipRepository;
+  directMessageRepo: IDirectMessageRepository;
+};
 
-export function authRepository() {
-  return authRepo;
+const kDefaultRepositories: Repositories = {
+  authRepo: new CognitoAuthRepository(),
+  gymRepo: new MongoGymRepository(),
+  userRepo: new MongoUserRepository(),
+  friendRequestRepo: new MongoFriendRequestRepository(),
+  locationRepo: new OSMLocationRepository(),
+  friendshipRepo: new MongoFriendshipRepository(),
+  directMessageRepo: new MongoDirectMessageRepository(),
+};
+
+let repos: Repositories;
+
+export default function repositories() {
+  return repos;
 }
 
-export function gymRepository() {
-  return gymRepo;
-}
-
-export function userRepository() {
-  return userRepo;
-}
-
-export function friendRequestRepository() {
-  return friendRequestRepo;
-}
-
-export function locationRepository() {
-  return locationRepo;
-}
-
-export function friendshipRepository() {
-  return friendshipRepo;
-}
-
-export function directMessageRepository() {
-  return directMessageRepo;
+export function rebindRepositories(repositories: Partial<Repositories>) {
+  repos = {
+    ...repos,
+    ...repositories,
+  };
 }
 
 export function injectRepositories() {
-  authRepo = new CognitoAuthRepository();
-  gymRepo = new MongoGymRepository();
-  userRepo = new MongoUserRepository();
-  friendRequestRepo = new MongoFriendRequestRepository();
-  locationRepo = new OSMLocationRepository();
-  friendshipRepo = new MongoFriendshipRepository();
-  directMessageRepo = new MongoDirectMessageRepository();
+  repos = {
+    ...kDefaultRepositories,
+  };
 }

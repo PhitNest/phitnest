@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { fail } from "assert";
 import { compareGyms } from "../../../test/helpers/comparisons";
 import { kGymNotFound } from "../../common/failures";
-import { gymRepository, userRepository } from "../injection";
+import repositories from "../injection";
+import { IGymEntity } from "../../entities";
 
 const testGym1 = {
   name: "testGym1",
@@ -73,14 +73,13 @@ const testUser3 = {
 };
 
 afterEach(async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
+  const { gymRepo, userRepo } = repositories();
   await gymRepo.deleteAll();
   await userRepo.deleteAll();
 });
 
 test("Create a gym", async () => {
-  const gymRepo = gymRepository();
+  const { gymRepo } = repositories();
   const gym1 = await gymRepo.create(testGym1);
   compareGyms(gym1, {
     ...testGym1,
@@ -94,8 +93,7 @@ test("Create a gym", async () => {
 });
 
 test("Get by user", async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
+  const { gymRepo, userRepo } = repositories();
   const gym1 = await gymRepo.create(testGym1);
   const gym2 = await gymRepo.create(testGym2);
   const gym3 = await gymRepo.create(testGym3);
@@ -111,94 +109,38 @@ test("Get by user", async () => {
     ...testUser3,
     gymId: gym3._id,
   });
-  let gyms = await gymRepo.getByUser(user1);
-  gyms.tap({
-    left: (gym) => {
-      compareGyms(gym, gym1);
-    },
-    right: (failure) => {
-      fail(`Expected testGym1, got failure: ${failure.message}`);
-    },
-  });
-  gyms = await gymRepo.getByUser(user2);
-  gyms.tap({
-    left: (gym) => {
-      compareGyms(gym, gym2);
-    },
-    right: (failure) => {
-      fail(`Expected testGym2, got failure: ${failure.message}`);
-    },
-  });
-  gyms = await gymRepo.getByUser({
+  let gym = (await gymRepo.getByUser(user1)) as IGymEntity;
+  compareGyms(gym, gym1);
+  gym = (await gymRepo.getByUser(user2)) as IGymEntity;
+  compareGyms(gym, gym2);
+  const failure = await gymRepo.getByUser({
     ...testUser3,
     confirmed: true,
     _id: new mongoose.Types.ObjectId().toString(),
     gymId: new mongoose.Types.ObjectId().toString(),
   });
-  gyms.tap({
-    left: (gym) => {
-      fail(`Expected failure, got gym: ${gym}`);
-    },
-    right: (failure) => {
-      expect(failure).toBe(kGymNotFound);
-    },
-  });
-  gyms = await gymRepo.getByUser(user3);
-  gyms.tap({
-    left: (gym) => {
-      compareGyms(gym, gym3);
-    },
-    right: (failure) => {
-      fail(`Expected testGym3, got failure: ${failure.message}`);
-    },
-  });
+  expect(failure).toBe(kGymNotFound);
+  gym = (await gymRepo.getByUser(user3)) as IGymEntity;
+  compareGyms(gym, gym3);
 });
 
 test("Get by id", async () => {
-  const gymRepo = gymRepository();
+  const { gymRepo } = repositories();
   const gym1 = await gymRepo.create(testGym1);
   const gym2 = await gymRepo.create(testGym2);
   const gym3 = await gymRepo.create(testGym3);
-  let gym = await gymRepo.get(gym1._id);
-  gym.tap({
-    left: (gym) => {
-      compareGyms(gym, gym1);
-    },
-    right: (failure) => {
-      fail(`Expected testGym1, got failure: ${failure.message}`);
-    },
-  });
-  gym = await gymRepo.get(gym2._id);
-  gym.tap({
-    left: (gym) => {
-      compareGyms(gym, gym2);
-    },
-    right: (failure) => {
-      fail(`Expected testGym2, got failure: ${failure.message}`);
-    },
-  });
-  gym = await gymRepo.get(gym3._id);
-  gym.tap({
-    left: (gym) => {
-      compareGyms(gym, gym3);
-    },
-    right: (failure) => {
-      fail(`Expected testGym3, got failure: ${failure.message}`);
-    },
-  });
-  gym = await gymRepo.get(new mongoose.Types.ObjectId().toString());
-  gym.tap({
-    left: (gym) => {
-      fail(`Expected failure, got gym: ${gym}`);
-    },
-    right: (failure) => {
-      expect(failure).toBe(kGymNotFound);
-    },
-  });
+  let gym = (await gymRepo.get(gym1._id)) as IGymEntity;
+  compareGyms(gym, gym1);
+  gym = (await gymRepo.get(gym2._id)) as IGymEntity;
+  compareGyms(gym, gym2);
+  gym = (await gymRepo.get(gym3._id)) as IGymEntity;
+  compareGyms(gym, gym3);
+  const failure = await gymRepo.get(new mongoose.Types.ObjectId().toString());
+  expect(failure).toBe(kGymNotFound);
 });
 
 test("Get nearest gyms", async () => {
-  const gymRepo = gymRepository();
+  const { gymRepo } = repositories();
   const gym1 = await gymRepo.create(testGym1);
   const gym2 = await gymRepo.create(testGym2);
   const gym3 = await gymRepo.create(testGym3);

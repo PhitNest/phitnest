@@ -1,17 +1,16 @@
-import { Either } from "typescript-monads";
-import { kUserNotFound } from "../../common/failures";
+import { Failure } from "../../common/types";
 import { ICognitoUser, IUserEntity } from "../../entities";
 
 export interface IUserRepository {
   create(user: ICognitoUser): Promise<IUserEntity>;
 
-  delete(cognitoId: string): Promise<void | typeof kUserNotFound>;
+  delete(cognitoId: string): Promise<void | Failure>;
 
-  setConfirmed(cognitoId: string): Promise<void | typeof kUserNotFound>;
+  setConfirmed(cognitoId: string): Promise<void | Failure>;
 
-  getByEmail(email: string): Promise<Either<typeof kUserNotFound, IUserEntity>>;
+  getByEmail(email: string): Promise<IUserEntity | Failure>;
 
-  get(cognitoId: string): Promise<Either<typeof kUserNotFound, IUserEntity>>;
+  get(cognitoId: string): Promise<IUserEntity | Failure>;
 
   haveSameGym(cognitoId1: string, cognitoId2: string): Promise<boolean>;
 

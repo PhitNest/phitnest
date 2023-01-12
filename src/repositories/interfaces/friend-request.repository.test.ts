@@ -1,11 +1,7 @@
-import { fail } from "assert";
 import { compareFriendRequests } from "../../../test/helpers/comparisons";
 import { kFriendRequestNotFound } from "../../common/failures";
-import {
-  friendRequestRepository,
-  gymRepository,
-  userRepository,
-} from "../injection";
+import { IFriendRequestEntity } from "../../entities";
+import repositories from "../injection";
 
 const testGym1 = {
   name: "testGym1",
@@ -63,22 +59,18 @@ const testFriendRequest4 = {
 };
 
 afterEach(async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
-  const friendRequestRepo = friendRequestRepository();
+  const { gymRepo, userRepo, friendRequestRepo } = repositories();
   await gymRepo.deleteAll();
   await userRepo.deleteAll();
   await friendRequestRepo.deleteAll();
 });
 
 test("Create friend request", async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
-  const friendRequestRepo = friendRequestRepository();
+  const { gymRepo, userRepo, friendRequestRepo } = repositories();
   const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym._id });
-  const user3 = await userRepo.create({ ...testUser3, gymId: gym._id });
+  await userRepo.create({ ...testUser1, gymId: gym._id });
+  await userRepo.create({ ...testUser2, gymId: gym._id });
+  await userRepo.create({ ...testUser3, gymId: gym._id });
   let friendRequest = await friendRequestRepo.create(
     testFriendRequest1.fromCognitoId,
     testFriendRequest1.toCognitoId
@@ -118,13 +110,11 @@ test("Create friend request", async () => {
 });
 
 test("Get friend requests by fromCognitoId and toCognitoId", async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
-  const friendRequestRepo = friendRequestRepository();
+  const { gymRepo, userRepo, friendRequestRepo } = repositories();
   const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym._id });
-  const user3 = await userRepo.create({ ...testUser3, gymId: gym._id });
+  await userRepo.create({ ...testUser1, gymId: gym._id });
+  await userRepo.create({ ...testUser2, gymId: gym._id });
+  await userRepo.create({ ...testUser3, gymId: gym._id });
   await friendRequestRepo.create(
     testFriendRequest1.fromCognitoId,
     testFriendRequest1.toCognitoId
@@ -201,80 +191,50 @@ test("Get friend requests by fromCognitoId and toCognitoId", async () => {
     _id: friendRequests[0]._id,
     createdAt: friendRequests[0].createdAt,
   });
-  let friendRequest = await friendRequestRepo.getByCognitoIds(
+  let friendRequest = (await friendRequestRepo.getByCognitoIds(
     testUser1.cognitoId,
     testUser2.cognitoId
-  );
-  friendRequest.tap({
-    right: (friendRequest) => {
-      compareFriendRequests(friendRequest, {
-        ...testFriendRequest1,
-        _id: friendRequest._id,
-        createdAt: friendRequest.createdAt,
-      });
-    },
-    right: (failure) => {
-      fail(`Expected friend request, got ${failure}`);
-    },
+  )) as IFriendRequestEntity;
+  compareFriendRequests(friendRequest, {
+    ...testFriendRequest1,
+    _id: friendRequest._id,
+    createdAt: friendRequest.createdAt,
   });
-  friendRequest = await friendRequestRepo.getByCognitoIds(
+  friendRequest = (await friendRequestRepo.getByCognitoIds(
     testUser2.cognitoId,
     testUser1.cognitoId
-  );
-  friendRequest.tap({
-    left: (friendRequest) => {
-      compareFriendRequests(friendRequest, {
-        ...testFriendRequest2,
-        _id: friendRequest._id,
-        createdAt: friendRequest.createdAt,
-      });
-    },
-    right: (failure) => {
-      fail(`Expected friend request, got ${failure}`);
-    },
+  )) as IFriendRequestEntity;
+  compareFriendRequests(friendRequest, {
+    ...testFriendRequest2,
+    _id: friendRequest._id,
+    createdAt: friendRequest.createdAt,
   });
-  friendRequest = await friendRequestRepo.getByCognitoIds(
+  friendRequest = (await friendRequestRepo.getByCognitoIds(
     testUser1.cognitoId,
     testUser3.cognitoId
-  );
-  friendRequest.tap({
-    left: (friendRequest) => {
-      compareFriendRequests(friendRequest, {
-        ...testFriendRequest3,
-        _id: friendRequest._id,
-        createdAt: friendRequest.createdAt,
-      });
-    },
-    right: (failure) => {
-      fail(`Expected friend request, got ${failure}`);
-    },
+  )) as IFriendRequestEntity;
+  compareFriendRequests(friendRequest, {
+    ...testFriendRequest3,
+    _id: friendRequest._id,
+    createdAt: friendRequest.createdAt,
   });
-  friendRequest = await friendRequestRepo.getByCognitoIds(
+  friendRequest = (await friendRequestRepo.getByCognitoIds(
     testUser3.cognitoId,
     testUser2.cognitoId
-  );
-  friendRequest.tap({
-    left: (friendRequest) => {
-      compareFriendRequests(friendRequest, {
-        ...testFriendRequest4,
-        _id: friendRequest._id,
-        createdAt: friendRequest.createdAt,
-      });
-    },
-    right: (failure) => {
-      fail(`Expected friend request, got ${failure}`);
-    },
+  )) as IFriendRequestEntity;
+  compareFriendRequests(friendRequest, {
+    ...testFriendRequest4,
+    _id: friendRequest._id,
+    createdAt: friendRequest.createdAt,
   });
 });
 
 test("Delete friend request", async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
-  const friendRequestRepo = friendRequestRepository();
+  const { gymRepo, userRepo, friendRequestRepo } = repositories();
   const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym._id });
-  const user3 = await userRepo.create({ ...testUser3, gymId: gym._id });
+  await userRepo.create({ ...testUser1, gymId: gym._id });
+  await userRepo.create({ ...testUser2, gymId: gym._id });
+  await userRepo.create({ ...testUser3, gymId: gym._id });
   await friendRequestRepo.create(
     testFriendRequest1.fromCognitoId,
     testFriendRequest1.toCognitoId
@@ -295,66 +255,42 @@ test("Delete friend request", async () => {
     testFriendRequest1.fromCognitoId,
     testFriendRequest1.toCognitoId
   );
-  let friendRequests = await friendRequestRepo.getByCognitoIds(
-    testFriendRequest1.fromCognitoId,
-    testFriendRequest1.toCognitoId
-  );
-  friendRequests.tap({
-    left: (friendRequest) => {
-      fail(`Expected failure, but got ${friendRequest}`);
-    },
-    right: (failure) => {
-      expect(failure).toBe(kFriendRequestNotFound);
-    },
-  });
+  expect(
+    await friendRequestRepo.getByCognitoIds(
+      testFriendRequest1.fromCognitoId,
+      testFriendRequest1.toCognitoId
+    )
+  ).toBe(kFriendRequestNotFound);
   await friendRequestRepo.delete(
     testFriendRequest2.fromCognitoId,
     testFriendRequest2.toCognitoId
   );
-  friendRequests = await friendRequestRepo.getByCognitoIds(
-    testFriendRequest2.fromCognitoId,
-    testFriendRequest2.toCognitoId
-  );
-  friendRequests.tap({
-    left: (friendRequest) => {
-      fail(`Expected failure, but got ${friendRequest}`);
-    },
-    right: (failure) => {
-      expect(failure).toBe(kFriendRequestNotFound);
-    },
-  });
+  expect(
+    await friendRequestRepo.getByCognitoIds(
+      testFriendRequest2.fromCognitoId,
+      testFriendRequest2.toCognitoId
+    )
+  ).toBe(kFriendRequestNotFound);
   await friendRequestRepo.delete(
     testFriendRequest3.fromCognitoId,
     testFriendRequest3.toCognitoId
   );
-  friendRequests = await friendRequestRepo.getByCognitoIds(
-    testFriendRequest3.fromCognitoId,
-    testFriendRequest3.toCognitoId
-  );
-  friendRequests.tap({
-    left: (friendRequest) => {
-      fail(`Expected failure, but got ${friendRequest}`);
-    },
-    right: (failure) => {
-      expect(failure).toBe(kFriendRequestNotFound);
-    },
-  });
+  expect(
+    await friendRequestRepo.getByCognitoIds(
+      testFriendRequest3.fromCognitoId,
+      testFriendRequest3.toCognitoId
+    )
+  ).toBe(kFriendRequestNotFound);
   await friendRequestRepo.delete(
     testFriendRequest4.fromCognitoId,
     testFriendRequest4.toCognitoId
   );
-  friendRequests = await friendRequestRepo.getByCognitoIds(
-    testFriendRequest4.fromCognitoId,
-    testFriendRequest4.toCognitoId
-  );
-  friendRequests.tap({
-    left: (friendRequest) => {
-      fail(`Expected failure, but got ${friendRequest}`);
-    },
-    right: (failure) => {
-      expect(failure).toBe(kFriendRequestNotFound);
-    },
-  });
+  expect(
+    await friendRequestRepo.getByCognitoIds(
+      testFriendRequest4.fromCognitoId,
+      testFriendRequest4.toCognitoId
+    )
+  ).toBe(kFriendRequestNotFound);
   expect(
     await friendRequestRepo.delete(
       testFriendRequest1.fromCognitoId,

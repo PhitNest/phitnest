@@ -1,7 +1,6 @@
 import { IAddressEntity, LocationEntity } from "../../entities";
 import { ILocationRepository } from "../interfaces/location.repository";
 import { kLocationNotFound } from "../../common/failures";
-import { Either } from "typescript-monads";
 
 export class OSMLocationRepository implements ILocationRepository {
   async get(address: IAddressEntity) {
@@ -14,12 +13,8 @@ export class OSMLocationRepository implements ILocationRepository {
     const data = await response.json();
     if (data && data.length > 0) {
       const { lon, lat } = data[0];
-      const location = new LocationEntity(parseFloat(lon), parseFloat(lat));
-      return new Either<typeof kLocationNotFound, LocationEntity>(location);
+      return new LocationEntity(parseFloat(lon), parseFloat(lat));
     }
-    return new Either<typeof kLocationNotFound, LocationEntity>(
-      undefined,
-      kLocationNotFound
-    );
+    return kLocationNotFound;
   }
 }

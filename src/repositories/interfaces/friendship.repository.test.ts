@@ -1,11 +1,7 @@
-import { fail } from "assert";
 import { compareFriendships } from "../../../test/helpers/comparisons";
 import { kFriendshipNotFound } from "../../common/failures";
-import {
-  friendshipRepository,
-  gymRepository,
-  userRepository,
-} from "../injection";
+import { IFriendshipEntity } from "../../entities";
+import repositories from "../injection";
 
 const testGym1 = {
   name: "testGym1",
@@ -70,21 +66,17 @@ const testFriendship4 = [testUser1.cognitoId, testUser4.cognitoId] as [
 ];
 
 afterEach(async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
-  const friendshipRepo = friendshipRepository();
+  const { gymRepo, userRepo, friendshipRepo } = repositories();
   await gymRepo.deleteAll();
   await userRepo.deleteAll();
   await friendshipRepo.deleteAll();
 });
 
 test("Create friendship", async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
-  const friendshipRepo = friendshipRepository();
+  const { gymRepo, userRepo, friendshipRepo } = repositories();
   const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym._id });
+  await userRepo.create({ ...testUser1, gymId: gym._id });
+  await userRepo.create({ ...testUser2, gymId: gym._id });
   let friendship = await friendshipRepo.create(testFriendship1);
   expect(friendship.userCognitoIds).toEqual(testFriendship1);
   friendship = await friendshipRepo.create(testFriendship2);
@@ -96,39 +88,28 @@ test("Create friendship", async () => {
 });
 
 test("Create friendship with unsorted cognito IDs", async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
-  const friendshipRepo = friendshipRepository();
+  const { gymRepo, userRepo, friendshipRepo } = repositories();
   const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym._id });
+  await userRepo.create({ ...testUser1, gymId: gym._id });
+  await userRepo.create({ ...testUser2, gymId: gym._id });
   const friendship = await friendshipRepo.create([
     testUser2.cognitoId,
     testUser1.cognitoId,
   ]);
   expect(friendship.userCognitoIds).toEqual(testFriendship1);
-  const result = await friendshipRepo.getByUsers([
+  const result = (await friendshipRepo.getByUsers([
     testUser2.cognitoId,
     testUser1.cognitoId,
-  ]);
-  result.tap({
-    right: (friendship) => {
-      compareFriendships(friendship, friendship);
-    },
-    left: (failure) => {
-      fail(`Expected to find friendship, but got ${failure}`);
-    },
-  });
+  ])) as IFriendshipEntity;
+  compareFriendships(result, friendship);
 });
 
 test("Get friends by cognito ID", async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
-  const friendshipRepo = friendshipRepository();
+  const { gymRepo, userRepo, friendshipRepo } = repositories();
   const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym._id });
-  const user3 = await userRepo.create({ ...testUser3, gymId: gym._id });
+  await userRepo.create({ ...testUser1, gymId: gym._id });
+  await userRepo.create({ ...testUser2, gymId: gym._id });
+  await userRepo.create({ ...testUser3, gymId: gym._id });
   const friendship1 = await friendshipRepo.create(testFriendship1);
   let friendships = await friendshipRepo.get(testUser1.cognitoId);
   expect(friendships.length).toEqual(1);
@@ -188,116 +169,62 @@ test("Get friends by cognito ID", async () => {
 });
 
 test("Get friendship by cognito IDs", async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
-  const friendshipRepo = friendshipRepository();
+  const { gymRepo, userRepo, friendshipRepo } = repositories();
   const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym._id });
-  const user3 = await userRepo.create({ ...testUser3, gymId: gym._id });
+  await userRepo.create({ ...testUser1, gymId: gym._id });
+  await userRepo.create({ ...testUser2, gymId: gym._id });
+  await userRepo.create({ ...testUser3, gymId: gym._id });
   const friendship1 = await friendshipRepo.create(testFriendship1);
-  let result = await friendshipRepo.getByUsers(testFriendship1);
-  result.tap({
-    right: (friendship) => {
-      compareFriendships(friendship, friendship1);
-    },
-    left: (failure) => {
-      fail(`Expected to find friendship, but got ${failure}`);
-    },
-  });
+  let result = (await friendshipRepo.getByUsers(
+    testFriendship1
+  )) as IFriendshipEntity;
+  compareFriendships(result, friendship1);
   const friendship2 = await friendshipRepo.create(testFriendship2);
-  result = await friendshipRepo.getByUsers(testFriendship2);
-  result.tap({
-    right: (friendship) => {
-      compareFriendships(friendship, friendship2);
-    },
-    left: (failure) => {
-      fail(`Expected to find friendship, but got ${failure}`);
-    },
-  });
+  result = (await friendshipRepo.getByUsers(
+    testFriendship2
+  )) as IFriendshipEntity;
+  compareFriendships(result, friendship2);
   const friendship3 = await friendshipRepo.create(testFriendship3);
-  result = await friendshipRepo.getByUsers(testFriendship3);
-  result.tap({
-    right: (friendship) => {
-      compareFriendships(friendship, friendship3);
-    },
-    left: (failure) => {
-      fail(`Expected to find friendship, but got ${failure}`);
-    },
-  });
+  result = (await friendshipRepo.getByUsers(
+    testFriendship3
+  )) as IFriendshipEntity;
+  compareFriendships(result, friendship3);
   const friendship4 = await friendshipRepo.create(testFriendship4);
-  result = await friendshipRepo.getByUsers(testFriendship4);
-  result.tap({
-    right: (friendship) => {
-      compareFriendships(friendship, friendship4);
-    },
-    left: (failure) => {
-      fail(`Expected to find friendship, but got ${failure}`);
-    },
-  });
-  result = await friendshipRepo.getByUsers(["fakeId", "fakeId2"]);
-  result.tap({
-    right: (friendship) => {
-      fail(`Expected to find friendship, but got ${friendship}`);
-    },
-    left: (failure) => {
-      expect(failure).toBe(kFriendshipNotFound);
-    },
-  });
+  result = (await friendshipRepo.getByUsers(
+    testFriendship4
+  )) as IFriendshipEntity;
+  compareFriendships(result, friendship4);
+  expect(await friendshipRepo.getByUsers(["fakeId", "fakeId2"])).toBe(
+    kFriendshipNotFound
+  );
 });
 
 test("Delete friendships", async () => {
-  const gymRepo = gymRepository();
-  const userRepo = userRepository();
-  const friendshipRepo = friendshipRepository();
+  const { gymRepo, userRepo, friendshipRepo } = repositories();
   const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym._id });
-  const user3 = await userRepo.create({ ...testUser3, gymId: gym._id });
-  const friendship1 = await friendshipRepo.create(testFriendship1);
-  const friendship2 = await friendshipRepo.create(testFriendship2);
-  const friendship3 = await friendshipRepo.create(testFriendship3);
-  const friendship4 = await friendshipRepo.create(testFriendship4);
+  await userRepo.create({ ...testUser1, gymId: gym._id });
+  await userRepo.create({ ...testUser2, gymId: gym._id });
+  await userRepo.create({ ...testUser3, gymId: gym._id });
+  await friendshipRepo.create(testFriendship1);
+  await friendshipRepo.create(testFriendship2);
+  await friendshipRepo.create(testFriendship3);
+  await friendshipRepo.create(testFriendship4);
   expect(await friendshipRepo.delete(testFriendship1)).toBeUndefined();
-  let check = await friendshipRepo.getByUsers(testFriendship1);
-  check.tap({
-    right: (friendship) => {
-      fail(`Expected to delete friendship, but got ${friendship}`);
-    },
-    left: (failure) => {
-      expect(failure).toBe(kFriendshipNotFound);
-    },
-  });
+  expect(await friendshipRepo.getByUsers(testFriendship1)).toBe(
+    kFriendshipNotFound
+  );
   expect(await friendshipRepo.delete(testFriendship2)).toBeUndefined();
-  check = await friendshipRepo.getByUsers(testFriendship2);
-  check.tap({
-    right: (friendship) => {
-      fail(`Expected to delete friendship, but got ${friendship}`);
-    },
-    left: (failure) => {
-      expect(failure).toBe(kFriendshipNotFound);
-    },
-  });
+  expect(await friendshipRepo.getByUsers(testFriendship2)).toBe(
+    kFriendshipNotFound
+  );
   expect(await friendshipRepo.delete(testFriendship3)).toBeUndefined();
-  check = await friendshipRepo.getByUsers(testFriendship3);
-  check.tap({
-    right: (friendship) => {
-      fail(`Expected to delete friendship, but got ${friendship}`);
-    },
-    left: (failure) => {
-      expect(failure).toBe(kFriendshipNotFound);
-    },
-  });
+  expect(await friendshipRepo.getByUsers(testFriendship3)).toBe(
+    kFriendshipNotFound
+  );
   expect(await friendshipRepo.delete(testFriendship4)).toBeUndefined();
-  check = await friendshipRepo.getByUsers(testFriendship4);
-  check.tap({
-    right: (friendship) => {
-      fail(`Expected to delete friendship, but got ${friendship}`);
-    },
-    left: (failure) => {
-      expect(failure).toBe(kFriendshipNotFound);
-    },
-  });
+  expect(await friendshipRepo.getByUsers(testFriendship4)).toBe(
+    kFriendshipNotFound
+  );
   expect(await friendshipRepo.delete(["fakeId", "fakeId2"])).toBe(
     kFriendshipNotFound
   );

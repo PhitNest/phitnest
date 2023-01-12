@@ -7,7 +7,6 @@ import {
   CognitoUserPool,
   CognitoUserSession,
 } from "amazon-cognito-identity-js";
-import { Either } from "typescript-monads";
 import { kUserNotFound } from "../../common/failures";
 import { Failure } from "../../common/types";
 import { IRefreshSessionEntity, IAuthEntity } from "../../entities";
@@ -28,36 +27,30 @@ export class CognitoAuthRepository implements IAuthRepository {
       AccessToken: accessToken,
     });
     if (rawUser.UserAttributes) {
-      return new Either<typeof kUserNotFound, string>(
-        rawUser.UserAttributes.find((attr) => attr.Name === "sub")?.Value!
-      );
+      return rawUser.UserAttributes.find((attr) => attr.Name === "sub")?.Value!;
     } else {
-      return new Either<typeof kUserNotFound, string>(undefined, kUserNotFound);
+      return kUserNotFound;
     }
   }
 
   refreshSession(refreshToken: string, email: string) {
     const user = new CognitoUser({ Username: email, Pool: userPool });
-    return new Promise<Either<Failure, IRefreshSessionEntity>>((resolve) => {
+    return new Promise<IRefreshSessionEntity | Failure>((resolve) => {
       user.refreshSession(
         new CognitoRefreshToken({
           RefreshToken: refreshToken,
         }),
         (err: Error | null, session: CognitoUserSession) => {
           if (err) {
-            resolve(
-              new Either<Failure, IRefreshSessionEntity>(undefined, {
-                code: err!.name,
-                message: err!.message,
-              })
-            );
+            resolve({
+              code: err!.name,
+              message: err!.message,
+            });
           } else {
-            resolve(
-              new Either({
-                accessToken: session.getAccessToken().getJwtToken(),
-                idToken: session.getIdToken().getJwtToken(),
-              })
-            );
+            resolve({
+              accessToken: session.getAccessToken().getJwtToken(),
+              idToken: session.getIdToken().getJwtToken(),
+            });
           }
         }
       );
@@ -81,7 +74,7 @@ export class CognitoAuthRepository implements IAuthRepository {
   }
 
   registerUser(email: string, password: string) {
-    return new Promise<Either<string, Failure>>((resolve) => {
+    return new Promise<string | Failure>((resolve) => {
       userPool.signUp(
         email,
         password,
@@ -94,14 +87,12 @@ export class CognitoAuthRepository implements IAuthRepository {
         [],
         (err, result) => {
           if (err) {
-            resolve(
-              new Either<string, Failure>(undefined, {
-                code: err.name,
-                message: err.message,
-              })
-            );
+            resolve({
+              code: err.name,
+              message: err.message,
+            });
           } else {
-            resolve(new Either<string, Failure>(result!.userSub));
+            resolve(result!.userSub);
           }
         }
       );
@@ -155,18 +146,16 @@ export class CognitoAuthRepository implements IAuthRepository {
 
   forgotPasswordSubmit(email: string, code: string, newPassword: string) {
     const user = new CognitoUser({ Username: email, Pool: userPool });
-    return new Promise<Either<null, Failure>>((resolve) => {
+    return new Promise<void | Failure>((resolve) => {
       user.confirmPassword(code, newPassword, {
         onSuccess: () => {
-          resolve(new Either(null));
+          resolve();
         },
         onFailure: (err) => {
-          resolve(
-            new Either<null, Failure>(undefined, {
-              code: err.name,
-              message: err.message,
-            })
-          );
+          resolve({
+            code: err.name,
+            message: err.message,
+          });
         },
       });
     });
@@ -193,7 +182,7 @@ export class CognitoAuthRepository implements IAuthRepository {
       Username: email,
       Pool: userPool,
     });
-    return new Promise<Either<Failure, IAuthEntity>>((resolve) => {
+    return new Promise<IAuthEntity | Failure>((resolve) => {
       user.authenticateUser(
         new AuthenticationDetails({
           Username: email,
@@ -201,21 +190,17 @@ export class CognitoAuthRepository implements IAuthRepository {
         }),
         {
           onSuccess: (session) => {
-            resolve(
-              new Either({
-                accessToken: session.getAccessToken().getJwtToken(),
-                refreshToken: session.getRefreshToken().getToken(),
-                idToken: session.getIdToken().getJwtToken(),
-              })
-            );
+            resolve({
+              accessToken: session.getAccessToken().getJwtToken(),
+              refreshToken: session.getRefreshToken().getToken(),
+              idToken: session.getIdToken().getJwtToken(),
+            });
           },
           onFailure: (err) => {
-            resolve(
-              new Either<Failure, IAuthEntity>(undefined, {
-                code: err.name,
-                message: err.message,
-              })
-            );
+            resolve({
+              code: err.name,
+              message: err.message,
+            });
           },
         }
       );

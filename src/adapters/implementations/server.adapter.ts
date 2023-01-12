@@ -1,9 +1,7 @@
 import express from "express";
 import http from "http";
-import { Either } from "typescript-monads";
 import { Failure, IRequest, IResponse } from "../../common/types";
 import { Controller, HttpMethod } from "../../controllers/types";
-import { Middleware } from "../../middleware/types";
 import { IServer } from "../interfaces";
 import bodyParser from "body-parser";
 import morgan from "morgan";
@@ -40,13 +38,11 @@ class ExpressResponse<ResType, LocalsType>
     return new ExpressResponse<ResType, LocalsType>(this.expressResponse);
   }
 
-  json(body: Either<ResType, Failure> | ResType | Failure) {
-    if (body instanceof Either) {
-      this.expressResponse.json(
-        body.match({ left: (x) => x as ResType | Failure, right: (x) => x })
-      );
-    } else {
+  json(body: ResType | Failure) {
+    if (body) {
       this.expressResponse.json(body);
+    } else {
+      this.expressResponse.send();
     }
     return new ExpressResponse<ResType, LocalsType>(this.expressResponse);
   }
@@ -94,7 +90,6 @@ export class ExpressServer implements IServer {
   bind<BodyType, ResType, LocalsType>(options: {
     route: string;
     controller: Controller<BodyType, ResType, LocalsType>;
-    middleware?: Middleware<BodyType, ResType, any>[];
   }) {
     const validationMiddleware = (
       req: express.Request,
@@ -133,7 +128,7 @@ export class ExpressServer implements IServer {
         return expressResponse.status(500).send(err);
       }
     };
-    const expressMiddlewares = options.middleware?.map(
+    const expressMiddlewares = options.controller.middleware?.map(
       (m) =>
         async (
           expressRequest: express.Request,

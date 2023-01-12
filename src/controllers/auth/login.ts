@@ -1,8 +1,8 @@
-import { IRequest, IResponse } from "../../common/types";
+import { Failure, IRequest, IResponse } from "../../common/types";
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import { IAuthEntity } from "../../entities";
-import { authRepository } from "../../repositories/injection";
+import repositories from "../../repositories/injection";
 
 const login = z.object({
   email: z.string().trim().email(),
@@ -19,11 +19,12 @@ export class LoginController implements Controller<LoginRequest, IAuthEntity> {
   }
 
   async execute(req: IRequest<LoginRequest>, res: IResponse<IAuthEntity>) {
-    const authRepo = authRepository();
+    const { authRepo } = repositories();
     const result = await authRepo.login(req.body.email, req.body.password);
-    return result.match({
-      left: (session) => res.status(200).json(session),
-      right: (failure) => res.status(500).json(failure),
-    });
+    if (result instanceof Failure) {
+      return res.status(500).json(result);
+    } else {
+      return res.status(200).json(result);
+    }
   }
 }
