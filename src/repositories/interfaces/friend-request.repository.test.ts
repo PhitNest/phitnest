@@ -79,6 +79,7 @@ test("Create friend request", async () => {
     ...testFriendRequest1,
     _id: friendRequest._id,
     createdAt: friendRequest.createdAt,
+    denied: false,
   });
   friendRequest = await friendRequestRepo.create(
     testFriendRequest2.fromCognitoId,
@@ -88,6 +89,7 @@ test("Create friend request", async () => {
     ...testFriendRequest2,
     _id: friendRequest._id,
     createdAt: friendRequest.createdAt,
+    denied: false,
   });
   friendRequest = await friendRequestRepo.create(
     testFriendRequest3.fromCognitoId,
@@ -97,6 +99,7 @@ test("Create friend request", async () => {
     ...testFriendRequest3,
     _id: friendRequest._id,
     createdAt: friendRequest.createdAt,
+    denied: false,
   });
   friendRequest = await friendRequestRepo.create(
     testFriendRequest4.fromCognitoId,
@@ -106,7 +109,34 @@ test("Create friend request", async () => {
     ...testFriendRequest4,
     _id: friendRequest._id,
     createdAt: friendRequest.createdAt,
+    denied: false,
   });
+});
+
+test("Deny friend request", async () => {
+  const { gymRepo, userRepo, friendRequestRepo } = repositories();
+  const gym = await gymRepo.create(testGym1);
+  await userRepo.create({ ...testUser1, gymId: gym._id });
+  await userRepo.create({ ...testUser2, gymId: gym._id });
+  expect(await friendRequestRepo.deny("", "")).toBe(kFriendRequestNotFound);
+  const friendRequest = (await friendRequestRepo.create(
+    testFriendRequest1.fromCognitoId,
+    testFriendRequest1.toCognitoId
+  )) as IFriendRequestEntity;
+  expect(
+    await friendRequestRepo.deny(
+      testFriendRequest1.fromCognitoId,
+      testFriendRequest1.toCognitoId
+    )
+  ).toBeUndefined();
+  friendRequest.denied = true;
+  compareFriendRequests(
+    friendRequest,
+    (await friendRequestRepo.getByCognitoIds(
+      testFriendRequest1.fromCognitoId,
+      testFriendRequest1.toCognitoId
+    )) as IFriendRequestEntity
+  );
 });
 
 test("Get friend requests by fromCognitoId and toCognitoId", async () => {
@@ -139,11 +169,13 @@ test("Get friend requests by fromCognitoId and toCognitoId", async () => {
     ...testFriendRequest3,
     _id: friendRequests[0]._id,
     createdAt: friendRequests[0].createdAt,
+    denied: false,
   });
   compareFriendRequests(friendRequests[1], {
     ...testFriendRequest1,
     _id: friendRequests[1]._id,
     createdAt: friendRequests[1].createdAt,
+    denied: false,
   });
   friendRequests = await friendRequestRepo.getByFromCognitoId(
     testUser2.cognitoId
@@ -153,6 +185,7 @@ test("Get friend requests by fromCognitoId and toCognitoId", async () => {
     ...testFriendRequest2,
     _id: friendRequests[0]._id,
     createdAt: friendRequests[0].createdAt,
+    denied: false,
   });
   friendRequests = await friendRequestRepo.getByFromCognitoId(
     testUser3.cognitoId
@@ -167,6 +200,7 @@ test("Get friend requests by fromCognitoId and toCognitoId", async () => {
     ...testFriendRequest2,
     _id: friendRequests[0]._id,
     createdAt: friendRequests[0].createdAt,
+    denied: false,
   });
   friendRequests = await friendRequestRepo.getByToCognitoId(
     testUser2.cognitoId
@@ -176,11 +210,13 @@ test("Get friend requests by fromCognitoId and toCognitoId", async () => {
     ...testFriendRequest4,
     _id: friendRequests[0]._id,
     createdAt: friendRequests[0].createdAt,
+    denied: false,
   });
   compareFriendRequests(friendRequests[1], {
     ...testFriendRequest1,
     _id: friendRequests[1]._id,
     createdAt: friendRequests[1].createdAt,
+    denied: false,
   });
   friendRequests = await friendRequestRepo.getByToCognitoId(
     testUser3.cognitoId
@@ -190,6 +226,7 @@ test("Get friend requests by fromCognitoId and toCognitoId", async () => {
     ...testFriendRequest3,
     _id: friendRequests[0]._id,
     createdAt: friendRequests[0].createdAt,
+    denied: false,
   });
   let friendRequest = (await friendRequestRepo.getByCognitoIds(
     testUser1.cognitoId,
@@ -199,6 +236,7 @@ test("Get friend requests by fromCognitoId and toCognitoId", async () => {
     ...testFriendRequest1,
     _id: friendRequest._id,
     createdAt: friendRequest.createdAt,
+    denied: false,
   });
   friendRequest = (await friendRequestRepo.getByCognitoIds(
     testUser2.cognitoId,
@@ -208,6 +246,7 @@ test("Get friend requests by fromCognitoId and toCognitoId", async () => {
     ...testFriendRequest2,
     _id: friendRequest._id,
     createdAt: friendRequest.createdAt,
+    denied: false,
   });
   friendRequest = (await friendRequestRepo.getByCognitoIds(
     testUser1.cognitoId,
@@ -217,6 +256,7 @@ test("Get friend requests by fromCognitoId and toCognitoId", async () => {
     ...testFriendRequest3,
     _id: friendRequest._id,
     createdAt: friendRequest.createdAt,
+    denied: false,
   });
   friendRequest = (await friendRequestRepo.getByCognitoIds(
     testUser3.cognitoId,
@@ -226,6 +266,7 @@ test("Get friend requests by fromCognitoId and toCognitoId", async () => {
     ...testFriendRequest4,
     _id: friendRequest._id,
     createdAt: friendRequest.createdAt,
+    denied: false,
   });
 });
 

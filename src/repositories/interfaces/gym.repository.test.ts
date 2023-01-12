@@ -92,38 +92,6 @@ test("Create a gym", async () => {
   });
 });
 
-test("Get by user", async () => {
-  const { gymRepo, userRepo } = repositories();
-  const gym1 = await gymRepo.create(testGym1);
-  const gym2 = await gymRepo.create(testGym2);
-  const gym3 = await gymRepo.create(testGym3);
-  const user1 = await userRepo.create({
-    ...testUser1,
-    gymId: gym1._id,
-  });
-  const user2 = await userRepo.create({
-    ...testUser2,
-    gymId: gym2._id,
-  });
-  const user3 = await userRepo.create({
-    ...testUser3,
-    gymId: gym3._id,
-  });
-  let gym = (await gymRepo.getByUser(user1)) as IGymEntity;
-  compareGyms(gym, gym1);
-  gym = (await gymRepo.getByUser(user2)) as IGymEntity;
-  compareGyms(gym, gym2);
-  const failure = await gymRepo.getByUser({
-    ...testUser3,
-    confirmed: true,
-    _id: new mongoose.Types.ObjectId().toString(),
-    gymId: new mongoose.Types.ObjectId().toString(),
-  });
-  expect(failure).toBe(kGymNotFound);
-  gym = (await gymRepo.getByUser(user3)) as IGymEntity;
-  compareGyms(gym, gym3);
-});
-
 test("Get by id", async () => {
   const { gymRepo } = repositories();
   const gym1 = await gymRepo.create(testGym1);

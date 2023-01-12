@@ -10,8 +10,6 @@ export interface IGymRepository {
     amount?: number
   ): Promise<IGymEntity[]>;
 
-  getByUser(user: IUserEntity): Promise<IGymEntity | Failure>;
-
   get(gymId: string): Promise<IGymEntity | Failure>;
 
   deleteAll(): Promise<void>;

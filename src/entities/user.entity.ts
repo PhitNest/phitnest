@@ -9,3 +9,5 @@ export interface IUserEntity {
 }
 
 export type ICognitoUser = Omit<IUserEntity, "_id" | "confirmed">;
+
+export type IPublicUserEntity = Omit<IUserEntity, "email">;

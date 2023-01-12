@@ -8,6 +8,7 @@ const schema = new mongoose.Schema(
   {
     fromCognitoId: { type: String, required: true },
     toCognitoId: { type: String, required: true },
+    denied: { type: Boolean, default: false },
   },
   {
     collection: FRIEND_REQUEST_COLLECTION_NAME,

@@ -1,12 +1,16 @@
 import { randomUUID } from "crypto";
-import { kUserNotFound } from "../../src/common/failures";
 import { Failure } from "../../src/common/types";
 import { IAuthRepository } from "../../src/repositories/interfaces";
+
+export const kMockAuthError = new Failure(
+  "MockAuthError",
+  "Error in mock cognito"
+);
 
 export class MockAuthRepository implements IAuthRepository {
   async getCognitoId(accessToken: string) {
     if (accessToken == "invalid") {
-      return kUserNotFound;
+      return kMockAuthError;
     } else {
       return accessToken.repeat(2);
     }
@@ -23,7 +27,7 @@ export class MockAuthRepository implements IAuthRepository {
 
   async registerUser(email: string, password: string) {
     if (email == "invalid") {
-      return kUserNotFound;
+      return kMockAuthError;
     } else {
       return randomUUID();
     }
@@ -41,13 +45,13 @@ export class MockAuthRepository implements IAuthRepository {
 
   async confirmRegister(email: string, code: string) {
     if (email == "invalid") {
-      return kUserNotFound;
+      return kMockAuthError;
     }
   }
 
   async login(email: string, password: string) {
     if (email == "invalid") {
-      return kUserNotFound;
+      return kMockAuthError;
     } else {
       return {
         accessToken: randomUUID(),

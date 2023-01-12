@@ -20,7 +20,7 @@ export class MongoUserRepository implements IUserRepository {
   async getByEmail(email: string) {
     const user = await UserModel.findOne({ email: email });
     if (user) {
-      return user;
+      return user.toObject();
     } else {
       return kUserNotFound;
     }
@@ -35,14 +35,14 @@ export class MongoUserRepository implements IUserRepository {
   async get(cognitoId: string) {
     const user = await UserModel.findOne({ cognitoId: cognitoId });
     if (user) {
-      return user;
+      return user.toObject();
     } else {
       return kUserNotFound;
     }
   }
 
-  create(user: ICognitoUser) {
-    return UserModel.create(user);
+  async create(user: ICognitoUser) {
+    return (await UserModel.create(user)).toObject();
   }
 
   async haveSameGym(cognitoId1: string, cognitoId2: string) {
