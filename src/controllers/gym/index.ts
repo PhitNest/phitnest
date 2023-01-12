@@ -1,0 +1,1 @@
+export { NearestGymsController } from "./nearest";

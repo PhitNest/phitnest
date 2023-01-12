@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import { kUserNotFound } from "../../src/common/failures";
+import { Failure } from "../../src/common/types";
 import { IAuthRepository } from "../../src/repositories/interfaces";
 
 export class MockAuthRepository implements IAuthRepository {
@@ -38,14 +39,22 @@ export class MockAuthRepository implements IAuthRepository {
     newPassword: string
   ) {}
 
-  async confirmRegister(email: string, code: string) {}
+  async confirmRegister(email: string, code: string) {
+    if (email == "invalid") {
+      return kUserNotFound;
+    }
+  }
 
   async login(email: string, password: string) {
-    return {
-      accessToken: randomUUID(),
-      idToken: randomUUID(),
-      refreshToken: randomUUID(),
-    };
+    if (email == "invalid") {
+      return kUserNotFound;
+    } else {
+      return {
+        accessToken: randomUUID(),
+        idToken: randomUUID(),
+        refreshToken: randomUUID(),
+      };
+    }
   }
 
   async resendConfirmationCode(email: string) {}

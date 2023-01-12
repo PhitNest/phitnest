@@ -1,30 +1,30 @@
-import { Failure, IRequest, IResponse } from "../../common/types";
+import { IRequest, IResponse } from "../../common/types";
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
-import { IAuthEntity } from "../../entities";
-import repositories from "../../repositories/injection";
+import { IAuthEntity, IUserEntity } from "../../entities";
+import { login } from "../../use-cases";
 
-const login = z.object({
+const loginValidator = z.object({
   email: z.string().trim().email(),
   password: z.string().min(8),
 });
 
-type LoginRequest = z.infer<typeof login>;
+type LoginRequest = z.infer<typeof loginValidator>;
+type LoginResponse = {
+  session: IAuthEntity;
+  user: IUserEntity;
+};
 
-export class LoginController implements Controller<LoginRequest, IAuthEntity> {
+export class LoginController
+  implements Controller<LoginRequest, LoginResponse>
+{
   method = HttpMethod.POST;
 
   validate(body: any) {
-    return login.parse(body);
+    return loginValidator.parse(body);
   }
 
-  async execute(req: IRequest<LoginRequest>, res: IResponse<IAuthEntity>) {
-    const { authRepo } = repositories();
-    const result = await authRepo.login(req.body.email, req.body.password);
-    if (result instanceof Failure) {
-      return res.status(500).json(result);
-    } else {
-      return res.status(200).json(result);
-    }
+  execute(req: IRequest<LoginRequest>, res: IResponse<LoginResponse>) {
+    return login(req.body.email, req.body.password);
   }
 }

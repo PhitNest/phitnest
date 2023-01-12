@@ -1,4 +1,4 @@
-import { Failure, IRequest, IResponse } from "../../common/types";
+import { IRequest, IResponse } from "../../common/types";
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import { registerUser } from "../../use-cases";
@@ -23,12 +23,7 @@ export class RegisterController
     return register.parse(body);
   }
 
-  async execute(req: IRequest<RegisterRequest>, res: IResponse<IUserEntity>) {
-    const registration = await registerUser(req.body);
-    if (registration instanceof Failure) {
-      return res.status(500).json(registration);
-    } else {
-      return res.status(200).json(registration);
-    }
+  execute(req: IRequest<RegisterRequest>, res: IResponse<IUserEntity>) {
+    return registerUser(req.body);
   }
 }
