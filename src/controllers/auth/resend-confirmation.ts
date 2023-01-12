@@ -18,16 +18,8 @@ export class ResendConfirmationController
     return resendConfirmation.parse(body);
   }
 
-  async execute(
-    req: IRequest<ResendConfirmationRequest>,
-    res: IResponse<void>
-  ) {
+  execute(req: IRequest<ResendConfirmationRequest>, res: IResponse<void>) {
     const { authRepo } = repositories();
-    const result = await authRepo.resendConfirmationCode(req.body.email);
-    if (result) {
-      return res.status(500).json(result);
-    } else {
-      return res.status(200).json();
-    }
+    return authRepo.resendConfirmationCode(req.body.email);
   }
 }

@@ -33,20 +33,6 @@ class ExpressResponse<ResType, LocalsType>
     this.locals = this.expressResponse.locals as LocalsType;
   }
 
-  status(status: number) {
-    this.expressResponse.status(status);
-    return new ExpressResponse<ResType, LocalsType>(this.expressResponse);
-  }
-
-  json(body: ResType | Failure) {
-    if (body) {
-      this.expressResponse.json(body);
-    } else {
-      this.expressResponse.send();
-    }
-    return new ExpressResponse<ResType, LocalsType>(this.expressResponse);
-  }
-
   setLocals<NewLocals>(newLocals: NewLocals) {
     this.expressResponse.locals = newLocals as Record<string, any>;
     return new ExpressResponse<ResType, NewLocals>(this.expressResponse);
@@ -120,10 +106,15 @@ export class ExpressServer implements IServer {
       expressResponse: express.Response
     ) => {
       try {
-        return options.controller.execute(
+        const result = await options.controller.execute(
           new ExpressRequest(expressRequest),
           new ExpressResponse(expressResponse)
         );
+        if (result instanceof Failure) {
+          return expressResponse.status(500).json(result);
+        } else {
+          return expressResponse.status(200).json(result);
+        }
       } catch (err) {
         return expressResponse.status(500).send(err);
       }

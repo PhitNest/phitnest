@@ -1,0 +1,1 @@
+export { GetUserController } from "./get";

@@ -1,4 +1,4 @@
-import { IRequest, IResponse } from "../common/types";
+import { Failure, IRequest, IResponse } from "../common/types";
 import { Middleware } from "../middleware/types";
 
 type Validator<BodyType> = (body: any) => BodyType;
@@ -19,7 +19,7 @@ export interface Controller<BodyType, ResType, LocalsType = {}> {
   execute(
     req: IRequest<BodyType>,
     res: IResponse<ResType, LocalsType>
-  ): Promise<IResponse<ResType, LocalsType>>;
+  ): Promise<ResType | Failure>;
 
   validate: Validator<BodyType>;
 }
