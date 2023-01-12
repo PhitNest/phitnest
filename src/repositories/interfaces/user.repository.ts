@@ -1,5 +1,5 @@
 import { Failure } from "../../common/types";
-import { ICognitoUser, IUserEntity } from "../../entities";
+import { ICognitoUser, IPublicUserEntity, IUserEntity } from "../../entities";
 
 export interface IUserRepository {
   create(user: ICognitoUser): Promise<IUserEntity>;
@@ -11,6 +11,8 @@ export interface IUserRepository {
   getByEmail(email: string): Promise<IUserEntity | Failure>;
 
   get(cognitoId: string): Promise<IUserEntity | Failure>;
+
+  getByGym(gymId: string): Promise<IPublicUserEntity[]>;
 
   haveSameGym(cognitoId1: string, cognitoId2: string): Promise<boolean>;
 

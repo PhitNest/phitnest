@@ -1,4 +1,7 @@
-import { compareUsers } from "../../../test/helpers/comparisons";
+import {
+  comparePublicUsers,
+  compareUsers,
+} from "../../../test/helpers/comparisons";
 import { kUserNotFound } from "../../common/failures";
 import { IUserEntity } from "../../entities";
 import repositories from "../injection";
@@ -126,6 +129,31 @@ test("Get user by email", async () => {
   user = (await userRepo.getByEmail(testUser3.email)) as IUserEntity;
   compareUsers(user, user3);
   expect(await userRepo.getByEmail("fakeEmail")).toBe(kUserNotFound);
+});
+
+test("Get users by gym", async () => {
+  const { gymRepo, userRepo } = repositories();
+  const gym1 = await gymRepo.create(testGym1);
+  const gym2 = await gymRepo.create(testGym2);
+  const user1 = await userRepo.create({
+    ...testUser1,
+    gymId: gym1._id,
+  });
+  const user2 = await userRepo.create({
+    ...testUser2,
+    gymId: gym1._id,
+  });
+  const user3 = await userRepo.create({
+    ...testUser3,
+    gymId: gym2._id,
+  });
+  let users = await userRepo.getByGym(gym1._id);
+  expect(users.length).toBe(2);
+  comparePublicUsers(users[0], user1);
+  comparePublicUsers(users[1], user2);
+  users = await userRepo.getByGym(gym2._id);
+  expect(users.length).toBe(1);
+  comparePublicUsers(users[0], user3);
 });
 
 test("Get user by cognito id", async () => {
