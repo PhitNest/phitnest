@@ -28,6 +28,6 @@ export class SignOutController
   ) {
     const { authRepo } = repositories();
     getSocketServer().kickUser(res.locals.cognitoId);
-    return authRepo.signOut(res.locals.cognitoId, req.body.allDevices);
+    return authRepo.signOut(req.authorization);
   }
 }

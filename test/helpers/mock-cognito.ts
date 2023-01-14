@@ -33,7 +33,7 @@ export class MockAuthRepository implements IAuthRepository {
     }
   }
 
-  async signOut(cognitoId: string, allDevices: boolean) {}
+  async signOut(cognitoId: string) {}
 
   async forgotPassword(email: string) {}
 

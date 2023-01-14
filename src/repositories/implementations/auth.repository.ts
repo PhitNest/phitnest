@@ -90,25 +90,21 @@ export class CognitoAuthRepository implements IAuthRepository {
     });
   }
 
-  signOut(cognitoId: string, allDevices: boolean) {
-    const user = new CognitoUser({ Username: cognitoId, Pool: userPool });
-    return new Promise<void | Failure>((resolve) => {
-      if (allDevices) {
-        user.globalSignOut({
-          onSuccess: () => {
-            resolve();
-          },
-          onFailure: (err) => {
+  async signOut(accessToken: string) {
+    await new Promise<void | Failure>((resolve) => {
+      identityServiceProvider.globalSignOut(
+        {
+          AccessToken: accessToken,
+        },
+        {},
+        (err, data) => {
+          if (err) {
             resolve(new Failure(err.name, err.message));
-          },
-        });
-      } else {
-        /**
-         * TODO: Add refresh token and access token to a blacklisted set in redis cache
-         */
-        user.signOut();
-        resolve();
-      }
+          } else {
+            resolve();
+          }
+        }
+      );
     });
   }
 

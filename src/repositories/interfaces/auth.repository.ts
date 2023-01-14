@@ -14,7 +14,7 @@ export interface IAuthRepository {
 
   registerUser(email: string, password: string): Promise<string | Failure>;
 
-  signOut(cognitoId: string, allDevices: boolean): Promise<void | Failure>;
+  signOut(accessToken: string): Promise<void | Failure>;
 
   forgotPassword(email: string): Promise<void | Failure>;
 
