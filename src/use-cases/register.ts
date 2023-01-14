@@ -9,7 +9,7 @@ export async function registerUser(user: {
   gymId: string;
   password: string;
 }) {
-  const { authRepo, userRepo, gymRepo } = repositories();
+  const { authRepo, userRepo, gymRepo, profilePictureRepo } = repositories();
   const gym = await gymRepo.get(user.gymId);
   if (gym instanceof Failure) {
     return kGymNotFound;
@@ -20,10 +20,21 @@ export async function registerUser(user: {
         if (cognitoRegistration instanceof Failure) {
           return cognitoRegistration;
         } else {
-          return userRepo.create({
-            ...user,
-            cognitoId: cognitoRegistration,
-          });
+          const profilePictureUrl =
+            await profilePictureRepo.getProfilePictureUploadUrl(
+              cognitoRegistration
+            );
+          if (profilePictureUrl instanceof Failure) {
+            return profilePictureUrl;
+          } else {
+            return {
+              ...(await userRepo.create({
+                ...user,
+                cognitoId: cognitoRegistration,
+              })),
+              profilePictureUrl: profilePictureUrl,
+            };
+          }
         }
       });
   }

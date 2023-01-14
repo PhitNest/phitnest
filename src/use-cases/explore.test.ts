@@ -1,8 +1,13 @@
 import {
   compareFriendRequests,
+  compareProfilePicturePublicUsers,
   comparePublicUsers,
 } from "../../test/helpers/comparisons";
-import repositories from "../repositories/injection";
+import { MockProfilePictureRepo } from "../../test/helpers/mock-s3";
+import repositories, {
+  injectRepositories,
+  rebindRepositories,
+} from "../repositories/injection";
 import { explore } from "./explore";
 
 const testGym1 = {
@@ -87,6 +92,9 @@ test("Explore users", async () => {
   const user3 = await userRepo.create({ ...testUser3, gymId: gym1._id });
   const user4 = await userRepo.create({ ...testUser4, gymId: gym1._id });
   const user5 = await userRepo.create({ ...testUser5, gymId: gym2._id });
+  rebindRepositories({
+    profilePictureRepo: new MockProfilePictureRepo(user4.cognitoId),
+  });
   let result = await explore(user1.cognitoId, user1.gymId);
   expect(result.users.length).toBe(0);
   expect(result.requests.length).toBe(0);
@@ -95,6 +103,20 @@ test("Explore users", async () => {
   await userRepo.setConfirmed(user3.cognitoId);
   await userRepo.setConfirmed(user4.cognitoId);
   await userRepo.setConfirmed(user5.cognitoId);
+  result = await explore(user1.cognitoId, user1.gymId);
+  expect(result.users.length).toBe(2);
+  compareProfilePicturePublicUsers(result.users[0], {
+    ...user2,
+    profilePictureUrl: "get",
+  });
+  compareProfilePicturePublicUsers(result.users[1], {
+    ...user3,
+    profilePictureUrl: "get",
+  });
+  expect(result.requests.length).toBe(0);
+  rebindRepositories({
+    profilePictureRepo: new MockProfilePictureRepo(""),
+  });
   result = await explore(user1.cognitoId, user1.gymId);
   expect(result.users.length).toBe(3);
   comparePublicUsers(result.users[0], user2);
@@ -140,4 +162,5 @@ test("Explore users", async () => {
   expect(result.users.length).toBe(1);
   comparePublicUsers(result.users[0], user3);
   expect(result.requests.length).toBe(0);
+  injectRepositories();
 });

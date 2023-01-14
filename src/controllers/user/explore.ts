@@ -2,7 +2,10 @@ import { AuthenticatedLocals, IRequest, IResponse } from "../../common/types";
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import { authMiddleware } from "../../middleware";
-import { IFriendRequestEntity, IPublicUserEntity } from "../../entities";
+import {
+  IFriendRequestEntity,
+  IProfilePicturePublicUserEntity,
+} from "../../entities";
 import { explore } from "../../use-cases";
 
 const exploreValidator = z.object({
@@ -12,7 +15,7 @@ const exploreValidator = z.object({
 type ExploreRequest = z.infer<typeof exploreValidator>;
 
 type ExploreResponse = {
-  users: IPublicUserEntity[];
+  users: IProfilePicturePublicUserEntity[];
   requests: IFriendRequestEntity[];
 };
 

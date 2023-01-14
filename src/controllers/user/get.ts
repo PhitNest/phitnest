@@ -1,10 +1,10 @@
 import { AuthenticatedLocals, IRequest, IResponse } from "../../common/types";
 import { Controller, HttpMethod } from "../types";
 import { authMiddleware } from "../../middleware";
-import { IGymEntity, IUserEntity } from "../../entities";
+import { IGymEntity, IProfilePictureUserEntity } from "../../entities";
 import { getUserPopulated } from "../../use-cases";
 
-type GetUserResponse = IUserEntity & {
+type GetUserResponse = IProfilePictureUserEntity & {
   gym: IGymEntity;
 };
 
