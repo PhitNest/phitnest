@@ -99,8 +99,10 @@ export class ExpressServer implements IServer {
         );
         if (result instanceof Failure) {
           return expressResponse.status(500).json(result);
-        } else {
+        } else if (result) {
           return expressResponse.status(200).json(result);
+        } else {
+          return expressResponse.status(200).send();
         }
       } catch (err) {
         return expressResponse.status(500).send(err);
