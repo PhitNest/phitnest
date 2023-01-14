@@ -1,4 +1,3 @@
-import { Failure } from "../../common/types";
 import { IDirectMessageEntity } from "../../entities";
 
 export interface IDirectMessageRepository {

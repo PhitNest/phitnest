@@ -1,4 +1,3 @@
-import { kDirectMessageNotFound } from "../../common/failures";
 import { IDirectMessageEntity } from "../../entities";
 import { DirectMessageModel } from "../../mongo";
 import { IDirectMessageRepository } from "../interfaces";

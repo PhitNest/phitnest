@@ -12,11 +12,11 @@ import {
 import {
   GetDirectMessagesController,
   SendDirectMessageController,
-} from "./controllers/direct-message";
+} from "./controllers/directMessage";
 import {
   DenyFriendRequestController,
   SendFriendRequestController,
-} from "./controllers/friend-request";
+} from "./controllers/friendRequest";
 import {
   FriendsAndMessagesController,
   FriendsAndRequestsController,

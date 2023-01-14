@@ -1,4 +1,3 @@
-import { kUserNotFound } from "../../common/failures";
 import { Failure } from "../../common/types";
 import { IAuthEntity, IRefreshSessionEntity } from "../../entities";
 
