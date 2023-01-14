@@ -6,6 +6,7 @@ import {
   MongoGymRepository,
   MongoUserRepository,
   OSMLocationRepository,
+  S3ProfilePictureRepository,
 } from "./implementations";
 import {
   IAuthRepository,
@@ -15,6 +16,7 @@ import {
   IUserRepository,
   IFriendshipRepository,
   IDirectMessageRepository,
+  IProfilePictureRepository,
 } from "./interfaces";
 
 type Repositories = {
@@ -25,6 +27,7 @@ type Repositories = {
   locationRepo: ILocationRepository;
   friendshipRepo: IFriendshipRepository;
   directMessageRepo: IDirectMessageRepository;
+  profilePictureRepo: IProfilePictureRepository;
 };
 
 const kDefaultRepositories: Repositories = {
@@ -35,6 +38,7 @@ const kDefaultRepositories: Repositories = {
   locationRepo: new OSMLocationRepository(),
   friendshipRepo: new MongoFriendshipRepository(),
   directMessageRepo: new MongoDirectMessageRepository(),
+  profilePictureRepo: new S3ProfilePictureRepository(),
 };
 
 let repos: Repositories;

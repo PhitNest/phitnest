@@ -1,10 +1,12 @@
 export class Failure {
   code: string;
   message: string;
+  details: any;
 
-  constructor(code: string, message: string) {
+  constructor(code: string, message: string, details?: any) {
     this.code = code;
     this.message = message;
+    this.details = details;
   }
 }
 

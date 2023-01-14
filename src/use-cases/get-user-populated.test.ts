@@ -1,8 +1,18 @@
 import mongoose from "mongoose";
-import { compareGyms } from "../../test/helpers/comparisons";
+import {
+  compareGyms,
+  compareProfilePictureUsers,
+} from "../../test/helpers/comparisons";
+import {
+  kMockProfilePictureError,
+  MockProfilePictureRepo,
+} from "../../test/helpers/mock-s3";
 import { kGymNotFound, kUserNotFound } from "../common/failures";
-import { IGymEntity, IUserEntity } from "../entities";
-import repositories from "../repositories/injection";
+import { IGymEntity, IProfilePictureUserEntity } from "../entities";
+import repositories, {
+  injectRepositories,
+  rebindRepositories,
+} from "../repositories/injection";
 import { getUserPopulated } from "./get-user-populated";
 
 const testGym1 = {
@@ -46,11 +56,24 @@ test("Get user populated", async () => {
     ...testUser1,
     gymId: gym._id,
   });
+  rebindRepositories({
+    profilePictureRepo: new MockProfilePictureRepo(user1.cognitoId),
+  });
+  expect(await getUserPopulated(user1.cognitoId)).toBe(
+    kMockProfilePictureError
+  );
+  rebindRepositories({
+    profilePictureRepo: new MockProfilePictureRepo(""),
+  });
   const populatedUser = (await getUserPopulated(
     user1.cognitoId
-  )) as IUserEntity & {
+  )) as IProfilePictureUserEntity & {
     gym: IGymEntity;
   };
+  compareProfilePictureUsers(populatedUser, {
+    ...user1,
+    profilePictureUrl: "get",
+  });
   compareGyms(populatedUser.gym, gym);
   const user2 = await userRepo.create({
     ...testUser2,
@@ -58,4 +81,5 @@ test("Get user populated", async () => {
   });
   expect(await getUserPopulated(user2.cognitoId)).toBe(kGymNotFound);
   expect(await getUserPopulated("cognitoId3")).toBe(kUserNotFound);
+  injectRepositories();
 });

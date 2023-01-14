@@ -29,7 +29,7 @@ export class MockAuthRepository implements IAuthRepository {
     if (email === "invalid") {
       return kMockAuthError;
     } else {
-      return randomUUID();
+      return "cognitoId";
     }
   }
 

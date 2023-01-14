@@ -2,7 +2,7 @@ import { IRequest, IResponse } from "../../common/types";
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import { registerUser } from "../../use-cases";
-import { IUserEntity } from "../../entities";
+import { IProfilePictureUserEntity } from "../../entities";
 
 const register = z.object({
   email: z.string().trim().email(),
@@ -15,7 +15,7 @@ const register = z.object({
 type RegisterRequest = z.infer<typeof register>;
 
 export class RegisterController
-  implements Controller<RegisterRequest, IUserEntity>
+  implements Controller<RegisterRequest, IProfilePictureUserEntity>
 {
   method = HttpMethod.POST;
 
@@ -23,7 +23,10 @@ export class RegisterController
     return register.parse(body);
   }
 
-  execute(req: IRequest<RegisterRequest>, res: IResponse<IUserEntity>) {
+  execute(
+    req: IRequest<RegisterRequest>,
+    res: IResponse<IProfilePictureUserEntity>
+  ) {
     return registerUser(req.body);
   }
 }

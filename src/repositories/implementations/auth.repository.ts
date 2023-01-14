@@ -42,10 +42,7 @@ export class CognitoAuthRepository implements IAuthRepository {
         }),
         (err: Error | null, session: CognitoUserSession) => {
           if (err) {
-            resolve({
-              code: err!.name,
-              message: err!.message,
-            });
+            resolve(new Failure(err!.name, err!.message));
           } else {
             resolve({
               accessToken: session.getAccessToken().getJwtToken(),
@@ -62,10 +59,7 @@ export class CognitoAuthRepository implements IAuthRepository {
     return new Promise<void | Failure>((resolve) => {
       user.deleteUser((err) => {
         if (err) {
-          resolve({
-            code: err.name,
-            message: err.message,
-          });
+          resolve(new Failure(err.name, err.message));
         } else {
           resolve();
         }
@@ -87,10 +81,7 @@ export class CognitoAuthRepository implements IAuthRepository {
         [],
         (err, result) => {
           if (err) {
-            resolve({
-              code: err.name,
-              message: err.message,
-            });
+            resolve(new Failure(err.name, err.message));
           } else {
             resolve(result!.userSub);
           }
@@ -108,10 +99,7 @@ export class CognitoAuthRepository implements IAuthRepository {
             resolve();
           },
           onFailure: (err) => {
-            resolve({
-              code: err.name,
-              message: err.message,
-            });
+            resolve(new Failure(err.name, err.message));
           },
         });
       } else {
@@ -135,10 +123,7 @@ export class CognitoAuthRepository implements IAuthRepository {
           resolve();
         },
         onFailure: (err) => {
-          resolve({
-            code: err.name,
-            message: err.message,
-          });
+          resolve(new Failure(err.name, err.message));
         },
       });
     });
@@ -152,10 +137,7 @@ export class CognitoAuthRepository implements IAuthRepository {
           resolve();
         },
         onFailure: (err) => {
-          resolve({
-            code: err.name,
-            message: err.message,
-          });
+          resolve(new Failure(err.name, err.message));
         },
       });
     });
@@ -166,10 +148,7 @@ export class CognitoAuthRepository implements IAuthRepository {
     return new Promise<void | Failure>((resolve) => {
       user.confirmRegistration(code, true, (err) => {
         if (err) {
-          resolve({
-            code: err.name,
-            message: err.message,
-          });
+          resolve(new Failure(err.name, err.message));
         } else {
           resolve();
         }
@@ -197,10 +176,7 @@ export class CognitoAuthRepository implements IAuthRepository {
             });
           },
           onFailure: (err) => {
-            resolve({
-              code: err.name,
-              message: err.message,
-            });
+            resolve(new Failure(err.name, err.message));
           },
         }
       );
@@ -212,10 +188,7 @@ export class CognitoAuthRepository implements IAuthRepository {
     return new Promise<void | Failure>((resolve) => {
       user.resendConfirmationCode((err) => {
         if (err) {
-          resolve({
-            code: err.name,
-            message: err.message,
-          });
+          resolve(new Failure(err.name, err.message));
         } else {
           resolve();
         }

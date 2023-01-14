@@ -1,11 +1,15 @@
 import mongoose from "mongoose";
-import { compareUsers } from "../../test/helpers/comparisons";
+import { compareProfilePictureUsers } from "../../test/helpers/comparisons";
 import {
   kMockAuthError,
   MockAuthRepository,
 } from "../../test/helpers/mock-cognito";
-import { kGymNotFound, kUserNotFound } from "../common/failures";
-import { IUserEntity } from "../entities";
+import {
+  kMockProfilePictureError,
+  MockProfilePictureRepo,
+} from "../../test/helpers/mock-s3";
+import { kGymNotFound } from "../common/failures";
+import { IProfilePictureUserEntity } from "../entities";
 import repositories, {
   injectRepositories,
   rebindRepositories,
@@ -42,19 +46,30 @@ afterEach(async () => {
 test("Register user", async () => {
   rebindRepositories({
     authRepo: new MockAuthRepository(),
+    profilePictureRepo: new MockProfilePictureRepo("cognitoId"),
   });
   const { gymRepo } = repositories();
   const gym = await gymRepo.create(testGym1);
+  expect(
+    await registerUser({
+      ...testUser1,
+      gymId: gym._id,
+    })
+  ).toBe(kMockProfilePictureError);
+  rebindRepositories({
+    profilePictureRepo: new MockProfilePictureRepo(""),
+  });
   const registration = (await registerUser({
     ...testUser1,
     gymId: gym._id,
-  })) as IUserEntity;
-  compareUsers(registration, {
+  })) as IProfilePictureUserEntity;
+  compareProfilePictureUsers(registration, {
     ...testUser1,
     gymId: gym._id,
     _id: registration._id,
     cognitoId: registration.cognitoId,
     confirmed: false,
+    profilePictureUrl: "upload",
   });
   expect(
     await registerUser({

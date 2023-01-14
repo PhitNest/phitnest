@@ -5,3 +5,4 @@ export { IFriendRequestRepository } from "./friend-request.repository";
 export { ILocationRepository } from "./location.repository";
 export { IFriendshipRepository } from "./friendship.repository";
 export { IDirectMessageRepository } from "./direct-message.repository";
+export { IProfilePictureRepository } from "./profile-picture.repository";

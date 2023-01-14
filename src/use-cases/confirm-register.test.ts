@@ -1,11 +1,15 @@
-import { compareUsers } from "../../test/helpers/comparisons";
+import { compareProfilePictureUsers } from "../../test/helpers/comparisons";
 import {
   kMockAuthError,
   MockAuthRepository,
 } from "../../test/helpers/mock-cognito";
+import {
+  kMockProfilePictureError,
+  MockProfilePictureRepo,
+} from "../../test/helpers/mock-s3";
 import { kUserNotFound } from "../common/failures";
 import { Failure } from "../common/types";
-import { IUserEntity } from "../entities";
+import { IProfilePictureUserEntity } from "../entities";
 import { MongoUserRepository } from "../repositories/implementations";
 import repositories, {
   injectRepositories,
@@ -75,6 +79,7 @@ test("Confirm registration", async () => {
   rebindRepositories({
     authRepo: new MockAuthRepository(),
     userRepo: new FailingUserRepo(),
+    profilePictureRepo: new MockProfilePictureRepo(testUser1.cognitoId),
   });
   const { gymRepo, userRepo } = repositories();
   const gym = await gymRepo.create(testGym1);
@@ -87,12 +92,18 @@ test("Confirm registration", async () => {
     ...failingUser,
     gymId: gym._id,
   });
+  expect(await confirmRegister(testUser1.email, "123456")).toBe(
+    kMockProfilePictureError
+  );
+  rebindRepositories({
+    profilePictureRepo: new MockProfilePictureRepo(""),
+  });
   const result = (await confirmRegister(
     testUser1.email,
     "123456"
-  )) as IUserEntity;
+  )) as IProfilePictureUserEntity;
   user1.confirmed = true;
-  compareUsers(result, user1);
+  compareProfilePictureUsers(result, { ...user1, profilePictureUrl: "get" });
   expect(await confirmRegister("invalidUser", "123456")).toBe(kUserNotFound);
   expect(await confirmRegister(user2.email, "123456")).toBe(kMockAuthError);
   expect(await confirmRegister(user3.email, "123456")).toBe(

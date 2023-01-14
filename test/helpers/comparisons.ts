@@ -3,6 +3,8 @@ import {
   IFriendRequestEntity,
   IFriendshipEntity,
   IGymEntity,
+  IProfilePicturePublicUserEntity,
+  IProfilePictureUserEntity,
   IPublicUserEntity,
   IUserEntity,
 } from "../../src/entities";
@@ -60,4 +62,20 @@ export function compareDirectMessages(
   expect(left.senderCognitoId).toEqual(right.senderCognitoId);
   expect(left.text).toEqual(right.text);
   expect(left.createdAt).toEqual(right.createdAt);
+}
+
+export function compareProfilePicturePublicUsers(
+  left: IProfilePicturePublicUserEntity,
+  right: IProfilePicturePublicUserEntity
+) {
+  comparePublicUsers(left, right);
+  expect(left.profilePictureUrl).toEqual(right.profilePictureUrl);
+}
+
+export function compareProfilePictureUsers(
+  left: IProfilePictureUserEntity,
+  right: IProfilePictureUserEntity
+) {
+  compareUsers(left, right);
+  expect(left.profilePictureUrl).toEqual(right.profilePictureUrl);
 }

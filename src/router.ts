@@ -23,6 +23,10 @@ import {
   RemoveFriendController,
 } from "./controllers/friendship";
 import { NearestGymsController } from "./controllers/gym";
+import {
+  ProfilePictureUploadController,
+  UnauthorizedProfilePictureUploadController,
+} from "./controllers/profilePicture";
 import { ExploreController, GetUserController } from "./controllers/user";
 
 export function buildRouter(server: IServer) {
@@ -97,5 +101,13 @@ export function buildRouter(server: IServer) {
   server.bind({
     route: "/directMessage/list",
     controller: new GetDirectMessagesController(),
+  });
+  server.bind({
+    route: "/profilePicture/unauthorized",
+    controller: new UnauthorizedProfilePictureUploadController(),
+  });
+  server.bind({
+    route: "/profilePicture/upload",
+    controller: new ProfilePictureUploadController(),
   });
 }
