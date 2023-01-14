@@ -3,6 +3,7 @@ import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import repositories from "../../repositories/injection";
 import { authMiddleware } from "../../middleware";
+import { getSocketServer } from "../../adapters/injection";
 
 const signOut = z.object({
   allDevices: z.boolean(),
@@ -26,6 +27,7 @@ export class SignOutController
     res: IResponse<void, AuthenticatedLocals>
   ) {
     const { authRepo } = repositories();
+    getSocketServer().kickUser(res.locals.cognitoId);
     return authRepo.signOut(res.locals.cognitoId, req.body.allDevices);
   }
 }

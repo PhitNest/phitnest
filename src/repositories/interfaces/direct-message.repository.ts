@@ -9,6 +9,4 @@ export interface IDirectMessageRepository {
   deleteAll(): Promise<void>;
 
   get(friendshipId: string, amount?: number): Promise<IDirectMessageEntity[]>;
-
-  delete(messageId: string): Promise<void | Failure>;
 }

@@ -184,33 +184,3 @@ test("Create and get direct messages", async () => {
   compareDirectMessages(messages[0], message7);
   compareDirectMessages(messages[1], message6);
 });
-
-test("Delete direct messages", async () => {
-  const { gymRepo, userRepo, friendshipRepo, directMessageRepo } =
-    repositories();
-  const gym = await gymRepo.create(testGym1);
-  await userRepo.create({ ...testUser1, gymId: gym._id });
-  await userRepo.create({ ...testUser2, gymId: gym._id });
-  await userRepo.create({ ...testUser3, gymId: gym._id });
-  await userRepo.create({ ...testUser4, gymId: gym._id });
-  const friendship1 = await friendshipRepo.create(testFriendship1);
-  await friendshipRepo.create(testFriendship2);
-  const message1 = await directMessageRepo.create({
-    ...testMessage1,
-    friendshipId: friendship1._id,
-  });
-  const message2 = await directMessageRepo.create({
-    ...testMessage2,
-    friendshipId: friendship1._id,
-  });
-  expect(await directMessageRepo.delete(message1._id)).toBeUndefined();
-  let messages = await directMessageRepo.get(friendship1._id);
-  expect(messages.length).toBe(1);
-  compareDirectMessages(messages[0], message2);
-  expect(await directMessageRepo.delete(message2._id)).toBeUndefined();
-  messages = await directMessageRepo.get(friendship1._id);
-  expect(messages.length).toBe(0);
-  expect(await directMessageRepo.delete(message1._id)).toBe(
-    kDirectMessageNotFound
-  );
-});

@@ -197,6 +197,12 @@ test("Get friendship by cognito IDs", async () => {
   expect(await friendshipRepo.getByUsers(["fakeId", "fakeId2"])).toBe(
     kFriendshipNotFound
   );
+  expect(await friendshipRepo.getByUsers(["fakeId", testUser1.cognitoId])).toBe(
+    kFriendshipNotFound
+  );
+  expect(await friendshipRepo.getByUsers([testUser1.cognitoId, "fakeId"])).toBe(
+    kFriendshipNotFound
+  );
 });
 
 test("Delete friendships", async () => {

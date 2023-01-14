@@ -11,4 +11,9 @@ export class MongooseDatabase implements IDatabase {
     await mongoose.disconnect();
     console.log("Disconnected from MongoDB");
   }
+
+  async dropDatabase() {
+    await mongoose.connection.db.dropDatabase();
+    console.log("Dropped MongoDB database");
+  }
 }

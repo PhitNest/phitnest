@@ -15,7 +15,3 @@ export async function stopMockServer() {
   const memoryDb: MongoMemoryServer = (global as any).__MONGOINSTANCE;
   await memoryDb.stop();
 }
-
-export async function dropDatabase() {
-  await mongoose.connection.db.dropDatabase();
-}

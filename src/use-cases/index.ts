@@ -6,3 +6,6 @@ export { sendFriendRequest } from "./send-friend-request";
 export { removeFriend } from "./remove-friend";
 export { getFriendsAndFriendRequests } from "./friends-and-requests";
 export { explore } from "./explore";
+export { getFriendsAndMessages } from "./friends-and-messages";
+export { getDirectMessages } from "./get-direct-messages";
+export { sendDirectMessage } from "./send-direct-message";

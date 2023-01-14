@@ -1,9 +1,14 @@
-import { start, stop } from "../src/app";
-import { dropDatabase } from "./helpers/mock-mongo";
+import { getDatabase, injectAdapters } from "../src/adapters/injection";
+import { injectRepositories } from "../src/repositories/injection";
 
-beforeAll(start);
+beforeAll(async () => {
+  injectAdapters();
+  injectRepositories();
+  await getDatabase().connect(process.env.MONGODB_CONN_STRING ?? "");
+});
 
 afterAll(async () => {
-  await dropDatabase();
-  await stop();
+  const db = getDatabase();
+  await db.dropDatabase();
+  await db.disconnect();
 });
