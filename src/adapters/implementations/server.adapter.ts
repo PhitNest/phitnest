@@ -52,25 +52,12 @@ export class ExpressServer implements IServer {
 
   listen(port: number) {
     this.server = http.createServer(this.expressApp);
-    return new Promise<void>((resolve) =>
+    return new Promise<http.Server>((resolve) =>
       this.server!.listen(port, () => {
         console.log(`Server listening on port ${port}`);
-        resolve();
+        resolve(this.server!);
       })
     );
-  }
-
-  close() {
-    if (this.server) {
-      return new Promise<void>((resolve) =>
-        this.server!.close(() => {
-          console.log("Server closed");
-          resolve();
-        })
-      );
-    } else {
-      throw new Error("Server is not running");
-    }
   }
 
   bind<BodyType, ResType, LocalsType>(options: {

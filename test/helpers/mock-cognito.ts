@@ -9,7 +9,7 @@ export const kMockAuthError = new Failure(
 
 export class MockAuthRepository implements IAuthRepository {
   async getCognitoId(accessToken: string) {
-    if (accessToken == "invalid") {
+    if (accessToken === "invalid") {
       return kMockAuthError;
     } else {
       return accessToken.repeat(2);
@@ -26,7 +26,7 @@ export class MockAuthRepository implements IAuthRepository {
   async deleteUser(cognitoId: string) {}
 
   async registerUser(email: string, password: string) {
-    if (email == "invalid") {
+    if (email === "invalid") {
       return kMockAuthError;
     } else {
       return randomUUID();
@@ -44,13 +44,13 @@ export class MockAuthRepository implements IAuthRepository {
   ) {}
 
   async confirmRegister(email: string, code: string) {
-    if (email == "invalid") {
+    if (email === "invalid") {
       return kMockAuthError;
     }
   }
 
   async login(email: string, password: string) {
-    if (email == "invalid") {
+    if (email === "invalid") {
       return kMockAuthError;
     } else {
       return {

@@ -17,7 +17,6 @@ const schema = new mongoose.Schema(
       type: String,
       format: "email",
       required: true,
-      unique: true,
     },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -29,5 +28,6 @@ const schema = new mongoose.Schema(
 );
 
 schema.index({ gymId: 1 });
+schema.index({ email: 1 });
 
 export const UserModel = mongoose.model<IUserEntity>(USER_MODEL_NAME, schema);

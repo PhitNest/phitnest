@@ -1,10 +1,8 @@
 import { Controller } from "../../controllers/types";
-import { Middleware } from "../../middleware/types";
+import http from "http";
 
 export interface IServer {
-  listen(port: number): Promise<void>;
-
-  close(): Promise<void>;
+  listen(port: number): Promise<http.Server>;
 
   bind<BodyType, ResType, LocalsType>(options: {
     route: string;

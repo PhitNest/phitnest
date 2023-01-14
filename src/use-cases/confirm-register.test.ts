@@ -57,7 +57,7 @@ const kMockFailingUserRepo = new Failure(
 
 class FailingUserRepo extends MongoUserRepository {
   async setConfirmed(cognitoId: string) {
-    if (cognitoId == "invalidSetConfirmed") {
+    if (cognitoId === "invalidSetConfirmed") {
       return kMockFailingUserRepo;
     } else {
       return super.setConfirmed(cognitoId);

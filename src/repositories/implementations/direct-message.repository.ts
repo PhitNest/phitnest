@@ -23,10 +23,4 @@ export class MongoDirectMessageRepository implements IDirectMessageRepository {
       return [];
     }
   }
-
-  async delete(messageId: string) {
-    if (!(await DirectMessageModel.findByIdAndDelete(messageId))) {
-      return kDirectMessageNotFound;
-    }
-  }
 }

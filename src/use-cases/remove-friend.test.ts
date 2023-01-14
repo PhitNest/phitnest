@@ -40,7 +40,7 @@ const kFailedFriendshipDeletion = new Failure(
 
 class FailingFriendshipRepo extends MongoFriendshipRepository {
   async delete(cognitoIds: [string, string]) {
-    if (cognitoIds[0] == "invalid") {
+    if (cognitoIds[0] === "invalid") {
       return kFailedFriendshipDeletion;
     } else {
       return super.delete(cognitoIds);

@@ -10,10 +10,18 @@ import {
   SignOutController,
 } from "./controllers/auth";
 import {
+  GetDirectMessagesController,
+  SendDirectMessageController,
+} from "./controllers/direct-message";
+import {
   DenyFriendRequestController,
   SendFriendRequestController,
-} from "./controllers/friendRequest";
-import { RemoveFriendController } from "./controllers/friendship";
+} from "./controllers/friend-request";
+import {
+  FriendsAndMessagesController,
+  FriendsAndRequestsController,
+  RemoveFriendController,
+} from "./controllers/friendship";
 import { NearestGymsController } from "./controllers/gym";
 import { ExploreController, GetUserController } from "./controllers/user";
 
@@ -55,6 +63,10 @@ export function buildRouter(server: IServer) {
     controller: new GetUserController(),
   });
   server.bind({
+    route: "/user/explore",
+    controller: new ExploreController(),
+  });
+  server.bind({
     route: "/gym/nearest",
     controller: new NearestGymsController(),
   });
@@ -71,7 +83,19 @@ export function buildRouter(server: IServer) {
     controller: new RemoveFriendController(),
   });
   server.bind({
-    route: "/user/explore",
-    controller: new ExploreController(),
+    route: "/friendship/requests",
+    controller: new FriendsAndRequestsController(),
+  });
+  server.bind({
+    route: "/friendship/messages",
+    controller: new FriendsAndMessagesController(),
+  });
+  server.bind({
+    route: "/directMessage",
+    controller: new SendDirectMessageController(),
+  });
+  server.bind({
+    route: "/directMessage/list",
+    controller: new GetDirectMessagesController(),
   });
 }
