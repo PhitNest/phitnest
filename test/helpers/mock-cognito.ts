@@ -1,13 +1,13 @@
 import { randomUUID } from "crypto";
 import { Failure } from "../../src/common/types";
-import { IAuthRepository } from "../../src/repositories/interfaces";
+import { IAuthDatabase } from "../../src/data/data-sources/interfaces";
 
 export const kMockAuthError = new Failure(
   "MockAuthError",
   "Error in mock cognito"
 );
 
-export class MockAuthRepository implements IAuthRepository {
+export class MockAuthDatabase implements IAuthDatabase {
   async getCognitoId(accessToken: string) {
     if (accessToken === "invalid") {
       return kMockAuthError;
