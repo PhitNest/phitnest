@@ -9,9 +9,9 @@ import {
   kFailedToGetProfilePictureUploadUrl,
   kFailedToGetProfilePictureUrl,
   kInvalidProfilePicture,
-} from "../../../common/failures";
+} from "../../../../common/failures";
 import { IProfilePictureDatabase } from "../interfaces";
-import { Failure } from "../../../common/types";
+import { Failure } from "../../../../common/types";
 
 const BUCKET_NAME = process.env.S3_BUCKET_NAME ?? "";
 

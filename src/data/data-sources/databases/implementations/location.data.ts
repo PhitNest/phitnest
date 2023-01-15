@@ -1,6 +1,6 @@
-import { IAddressEntity, LocationEntity } from "../../../domain/entities";
+import { IAddressEntity, LocationEntity } from "../../../../domain/entities";
 import { ILocationDatabase } from "../interfaces/location.data";
-import { kLocationNotFound } from "../../../common/failures";
+import { kLocationNotFound } from "../../../../common/failures";
 
 export class OSMLocationDatabase implements ILocationDatabase {
   async get(address: IAddressEntity) {

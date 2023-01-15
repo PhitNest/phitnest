@@ -1,6 +1,6 @@
-import { kGymNotFound } from "../../../common/failures";
-import { IGymEntity, LocationEntity } from "../../../domain/entities";
-import { GymModel } from "../../mongo";
+import { kGymNotFound } from "../../../../common/failures";
+import { IGymEntity, LocationEntity } from "../../../../domain/entities";
+import { GymModel } from "../../../mongo";
 import { IGymDatabase } from "../interfaces";
 
 export class MongoGymDatabase implements IGymDatabase {

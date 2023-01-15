@@ -8,8 +8,8 @@ import { IAuthEntity, IUserEntity } from "../entities";
 import { login } from "./login";
 import { gymRepo, userRepo } from "../repositories";
 import {
-  injectDataSources,
-  rebindDataSources,
+  injectDatabases,
+  rebindDatabases,
 } from "../../data/data-sources/injection";
 
 const testGym1 = {
@@ -53,7 +53,7 @@ afterEach(async () => {
 });
 
 test("Login", async () => {
-  rebindDataSources({
+  rebindDatabases({
     authDatabase: new MockAuthDatabase(),
   });
   const gym = await gymRepo.create(testGym1);
@@ -81,5 +81,5 @@ test("Login", async () => {
   compareUsers(result.user, user2);
   expect(await login("invalid", "password1")).toBe(kMockAuthError);
   expect(await login("test", "password1")).toBe(kUserNotFound);
-  injectDataSources();
+  injectDatabases();
 });

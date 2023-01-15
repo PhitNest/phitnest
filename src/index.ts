@@ -6,11 +6,12 @@ import {
   getDatabase,
   injectAdapters,
 } from "./framework/adapters/injection";
-import { injectDataSources } from "./data/data-sources/injection";
+import { injectCaches, injectDatabases } from "./data/data-sources/injection";
 import { buildRouter } from "./framework/router";
 
 injectAdapters();
-injectDataSources();
+injectDatabases();
+injectCaches();
 getDatabase()
   .connect(process.env.MONGODB_CONN_STRING ?? "mongodb://localhost:27017")
   .then(() => {
