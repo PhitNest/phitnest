@@ -7,9 +7,12 @@ import {
   CognitoUserPool,
   CognitoUserSession,
 } from "amazon-cognito-identity-js";
-import { kUserNotFound } from "../../../common/failures";
-import { Failure } from "../../../common/types";
-import { IRefreshSessionEntity, IAuthEntity } from "../../../domain/entities";
+import { kUserNotFound } from "../../../../common/failures";
+import { Failure } from "../../../../common/types";
+import {
+  IRefreshSessionEntity,
+  IAuthEntity,
+} from "../../../../domain/entities";
 import { IAuthDatabase } from "../interfaces";
 
 const userPool = new CognitoUserPool({

@@ -12,8 +12,8 @@ import { IGymEntity, IProfilePictureUserEntity } from "../entities";
 import { getUserPopulated } from "./get-user-populated";
 import { gymRepo, userRepo } from "../repositories";
 import {
-  injectDataSources,
-  rebindDataSources,
+  injectDatabases,
+  rebindDatabases,
 } from "../../data/data-sources/injection";
 
 const testGym1 = {
@@ -55,13 +55,13 @@ test("Get user populated", async () => {
     ...testUser1,
     gymId: gym._id,
   });
-  rebindDataSources({
+  rebindDatabases({
     profilePictureDatabase: new MockProfilePictureDatabase(user1.cognitoId),
   });
   expect(await getUserPopulated(user1.cognitoId)).toBe(
     kMockProfilePictureError
   );
-  rebindDataSources({
+  rebindDatabases({
     profilePictureDatabase: new MockProfilePictureDatabase(""),
   });
   const populatedUser = (await getUserPopulated(
@@ -80,5 +80,5 @@ test("Get user populated", async () => {
   });
   expect(await getUserPopulated(user2.cognitoId)).toBe(kGymNotFound);
   expect(await getUserPopulated("cognitoId3")).toBe(kUserNotFound);
-  injectDataSources();
+  injectDatabases();
 });

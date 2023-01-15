@@ -1,5 +1,5 @@
-import { kFriendRequestNotFound } from "../../../common/failures";
-import { FriendRequestModel } from "../../mongo";
+import { kFriendRequestNotFound } from "../../../../common/failures";
+import { FriendRequestModel } from "../../../mongo";
 import { IFriendRequestDatabase } from "../interfaces";
 
 export class MongoFriendRequestDatabase implements IFriendRequestDatabase {

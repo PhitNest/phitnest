@@ -1,6 +1,6 @@
-import { kUserNotFound } from "../../../common/failures";
-import { ICognitoUser } from "../../../domain/entities";
-import { UserModel } from "../../mongo";
+import { kUserNotFound } from "../../../../common/failures";
+import { ICognitoUser } from "../../../../domain/entities";
+import { UserModel } from "../../../mongo";
 import { IUserDatabase } from "../interfaces";
 
 export class MongoUserDatabase implements IUserDatabase {

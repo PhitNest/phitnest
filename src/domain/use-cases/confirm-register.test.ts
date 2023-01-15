@@ -9,13 +9,13 @@ import {
 } from "../../../test/helpers/mock-s3";
 import { kUserNotFound } from "../../common/failures";
 import { Failure } from "../../common/types";
-import { MongoUserDatabase } from "../../data/data-sources/implementations";
+import { MongoUserDatabase } from "../../data/data-sources/databases/implementations";
 import { IProfilePictureUserEntity } from "../entities";
 import { confirmRegister } from "./confirm-register";
 import { gymRepo, userRepo } from "../repositories";
 import {
-  injectDataSources,
-  rebindDataSources,
+  injectDatabases,
+  rebindDatabases,
 } from "../../data/data-sources/injection";
 
 const testGym1 = {
@@ -76,7 +76,7 @@ afterEach(async () => {
 });
 
 test("Confirm registration", async () => {
-  rebindDataSources({
+  rebindDatabases({
     authDatabase: new MockAuthDatabase(),
     userDatabase: new FailingUserDatabase(),
     profilePictureDatabase: new MockProfilePictureDatabase(testUser1.cognitoId),
@@ -94,7 +94,7 @@ test("Confirm registration", async () => {
   expect(await confirmRegister(testUser1.email, "123456")).toBe(
     kMockProfilePictureError
   );
-  rebindDataSources({
+  rebindDatabases({
     profilePictureDatabase: new MockProfilePictureDatabase(""),
   });
   const result = (await confirmRegister(
@@ -108,5 +108,5 @@ test("Confirm registration", async () => {
   expect(await confirmRegister(user3.email, "123456")).toBe(
     kMockFailingUserRepo
   );
-  injectDataSources();
+  injectDatabases();
 });

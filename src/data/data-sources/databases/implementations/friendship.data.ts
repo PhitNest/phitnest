@@ -1,7 +1,7 @@
-import { kFriendshipNotFound } from "../../../common/failures";
-import { Failure } from "../../../common/types";
-import { IFriendshipEntity } from "../../../domain/entities";
-import { FriendshipModel } from "../../mongo";
+import { kFriendshipNotFound } from "../../../../common/failures";
+import { Failure } from "../../../../common/types";
+import { IFriendshipEntity } from "../../../../domain/entities";
+import { FriendshipModel } from "../../../mongo";
 import { IFriendshipDatabase } from "../interfaces";
 
 export class MongoFriendshipDatabase implements IFriendshipDatabase {

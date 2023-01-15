@@ -1,7 +1,7 @@
 import { compareFriendRequests } from "../../../test/helpers/comparisons";
 import { Failure } from "../../common/types";
-import { MongoFriendshipDatabase } from "../../data/data-sources/implementations";
-import { rebindDataSources } from "../../data/data-sources/injection";
+import { MongoFriendshipDatabase } from "../../data/data-sources/databases/implementations";
+import { rebindDatabases } from "../../data/data-sources/injection";
 import { IFriendRequestEntity } from "../entities";
 import { removeFriend } from "./remove-friend";
 import {
@@ -55,7 +55,7 @@ class FailingFriendshipDatabase extends MongoFriendshipDatabase {
 }
 
 test("Remove friend", async () => {
-  rebindDataSources({
+  rebindDatabases({
     friendshipDatabase: new FailingFriendshipDatabase(),
   });
   const gym = await gymRepo.create(testGym1);

@@ -11,8 +11,8 @@ import {
   friendshipRepo,
 } from "../repositories";
 import {
-  injectDataSources,
-  rebindDataSources,
+  injectDatabases,
+  rebindDatabases,
 } from "../../data/data-sources/injection";
 import { MockProfilePictureDatabase } from "../../../test/helpers/mock-s3";
 
@@ -94,7 +94,7 @@ test("Explore users", async () => {
   const user3 = await userRepo.create({ ...testUser3, gymId: gym1._id });
   const user4 = await userRepo.create({ ...testUser4, gymId: gym1._id });
   const user5 = await userRepo.create({ ...testUser5, gymId: gym2._id });
-  rebindDataSources({
+  rebindDatabases({
     profilePictureDatabase: new MockProfilePictureDatabase(user4.cognitoId),
   });
   let result = await explore(user1.cognitoId, user1.gymId);
@@ -116,7 +116,7 @@ test("Explore users", async () => {
     profilePictureUrl: "get",
   });
   expect(result.requests.length).toBe(0);
-  rebindDataSources({
+  rebindDatabases({
     profilePictureDatabase: new MockProfilePictureDatabase(""),
   });
   result = await explore(user1.cognitoId, user1.gymId);
@@ -164,5 +164,5 @@ test("Explore users", async () => {
   expect(result.users.length).toBe(1);
   comparePublicUsers(result.users[0], user3);
   expect(result.requests.length).toBe(0);
-  injectDataSources();
+  injectDatabases();
 });

@@ -13,8 +13,8 @@ import { IProfilePictureUserEntity } from "../entities";
 import { registerUser } from "./register";
 import { gymRepo, userRepo } from "../repositories";
 import {
-  injectDataSources,
-  rebindDataSources,
+  injectDatabases,
+  rebindDatabases,
 } from "../../data/data-sources/injection";
 
 const testGym1 = {
@@ -44,7 +44,7 @@ afterEach(async () => {
 });
 
 test("Register user", async () => {
-  rebindDataSources({
+  rebindDatabases({
     authDatabase: new MockAuthDatabase(),
     profilePictureDatabase: new MockProfilePictureDatabase("cognitoId"),
   });
@@ -55,7 +55,7 @@ test("Register user", async () => {
       gymId: gym._id,
     })
   ).toBe(kMockProfilePictureError);
-  rebindDataSources({
+  rebindDatabases({
     profilePictureDatabase: new MockProfilePictureDatabase(""),
   });
   const registration = (await registerUser({
@@ -83,5 +83,5 @@ test("Register user", async () => {
       email: "invalid",
     })
   ).toBe(kMockAuthError);
-  injectDataSources();
+  injectDatabases();
 });

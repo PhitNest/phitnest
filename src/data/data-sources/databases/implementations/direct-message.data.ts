@@ -1,5 +1,5 @@
-import { IDirectMessageEntity } from "../../../domain/entities";
-import { DirectMessageModel } from "../../mongo";
+import { IDirectMessageEntity } from "../../../../domain/entities";
+import { DirectMessageModel } from "../../../mongo";
 import { IDirectMessageDatabase } from "../interfaces";
 
 export class MongoDirectMessageDatabase implements IDirectMessageDatabase {

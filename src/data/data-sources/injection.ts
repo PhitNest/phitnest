@@ -7,7 +7,7 @@ import {
   MongoUserDatabase,
   OSMLocationDatabase,
   S3ProfilePictureDatabase,
-} from "./implementations";
+} from "./databases/implementations";
 import {
   IAuthDatabase,
   IFriendRequestDatabase,
@@ -17,9 +17,9 @@ import {
   IFriendshipDatabase,
   IDirectMessageDatabase,
   IProfilePictureDatabase,
-} from "./interfaces";
+} from "./databases/interfaces";
 
-type DataSources = {
+type Databases = {
   authDatabase: IAuthDatabase;
   gymDatabase: IGymDatabase;
   userDatabase: IUserDatabase;
@@ -30,7 +30,9 @@ type DataSources = {
   profilePictureDatabase: IProfilePictureDatabase;
 };
 
-const kDefaultDataSources: DataSources = {
+type Caches = {};
+
+const kDefaultDatabases: Databases = {
   authDatabase: new CognitoAuthDatabase(),
   gymDatabase: new MongoGymDatabase(),
   userDatabase: new MongoUserDatabase(),
@@ -41,21 +43,41 @@ const kDefaultDataSources: DataSources = {
   profilePictureDatabase: new S3ProfilePictureDatabase(),
 };
 
-let sources: DataSources;
+const kDefaultCaches: Caches = {};
 
-export default function dataSources() {
-  return sources;
+let dataMap: Databases;
+let cacheMap: Caches;
+
+export default function databases() {
+  return dataMap;
 }
 
-export function rebindDataSources(inject: Partial<DataSources>) {
-  sources = {
-    ...dataSources(),
+export function caches() {
+  return cacheMap;
+}
+
+export function rebindDatabases(inject: Partial<Databases>) {
+  dataMap = {
+    ...databases(),
     ...inject,
   };
 }
 
-export function injectDataSources() {
-  sources = {
-    ...kDefaultDataSources,
+export function rebindCaches(inject: Partial<Caches>) {
+  cacheMap = {
+    ...caches(),
+    ...inject,
+  };
+}
+
+export function injectDatabases() {
+  dataMap = {
+    ...kDefaultDatabases,
+  };
+}
+
+export function injectCaches() {
+  cacheMap = {
+    ...kDefaultCaches,
   };
 }

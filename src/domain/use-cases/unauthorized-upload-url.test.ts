@@ -7,7 +7,7 @@ import {
   kUserAlreadyConfirmed,
   kUserNotFound,
 } from "../../common/failures";
-import { rebindDataSources } from "../../data/data-sources/injection";
+import { rebindDatabases } from "../../data/data-sources/injection";
 import { userRepo, gymRepo } from "../repositories";
 import { unauthorizedProfilePictureUploadUrl } from "./unauthorized-upload-url";
 
@@ -40,13 +40,13 @@ afterEach(async () => {
 test("Unauthorized get upload url", async () => {
   const gym1 = await gymRepo.create(testGym1);
   const user1 = await userRepo.create({ ...testUser1, gymId: gym1._id });
-  rebindDataSources({
+  rebindDatabases({
     profilePictureDatabase: new MockProfilePictureDatabase(user1.cognitoId),
   });
   expect(
     await unauthorizedProfilePictureUploadUrl(testUser1.email, user1.cognitoId)
   ).toBe(kMockProfilePictureError);
-  rebindDataSources({
+  rebindDatabases({
     profilePictureDatabase: new MockProfilePictureDatabase(""),
   });
   expect(
