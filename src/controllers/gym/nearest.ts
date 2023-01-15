@@ -19,7 +19,12 @@ export class NearestGymsController
   method = HttpMethod.GET;
 
   validate(body: any) {
-    return nearestGyms.parse(body);
+    return nearestGyms.parse({
+      longitude: parseFloat(body.longitude),
+      latitude: parseFloat(body.latitude),
+      meters: parseFloat(body.meters),
+      ...(body.amount ? { amount: parseInt(body.amount) } : {}),
+    });
   }
 
   execute(req: IRequest<NearestGymsRequest>, res: IResponse<IGymEntity[]>) {
