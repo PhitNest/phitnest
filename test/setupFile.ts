@@ -1,9 +1,12 @@
-import { getDatabase, injectAdapters } from "../src/adapters/injection";
-import { injectRepositories } from "../src/repositories/injection";
+import {
+  getDatabase,
+  injectAdapters,
+} from "../src/framework/adapters/injection";
+import { injectDataSources } from "../src/data/data-sources/injection";
 
 beforeAll(async () => {
   injectAdapters();
-  injectRepositories();
+  injectDataSources();
   await getDatabase().connect(process.env.MONGODB_CONN_STRING ?? "");
 });
 

@@ -7,7 +7,7 @@ import {
   IProfilePictureUserEntity,
   IPublicUserEntity,
   IUserEntity,
-} from "../../src/entities";
+} from "../../src/domain/entities";
 
 export function compareGyms(left: IGymEntity, right: IGymEntity) {
   expect(left._id).toEqual(right._id);

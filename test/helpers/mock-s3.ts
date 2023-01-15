@@ -1,12 +1,12 @@
 import { Failure } from "../../src/common/types";
-import { IProfilePictureRepository } from "../../src/repositories/interfaces";
+import { IProfilePictureDatabase } from "../../src/data/data-sources/interfaces";
 
 export const kMockProfilePictureError = new Failure(
   "MockProfilePictureError",
   "Mock profile picture error"
 );
 
-export class MockProfilePictureRepo implements IProfilePictureRepository {
+export class MockProfilePictureDatabase implements IProfilePictureDatabase {
   failingId: string;
 
   constructor(failingId: string) {
