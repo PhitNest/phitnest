@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_mobile/src/ui/screens/onBoarding/on_boarding_provider.dart';
 
-import 'ui/theme.dart';
+import 'common/theme.dart';
+import 'presentation/pages/pages.dart';
 
 class App extends StatelessWidget {
   @override
@@ -13,7 +14,7 @@ class App extends StatelessWidget {
           title: 'PhitNest',
           theme: theme,
           debugShowCheckedModeBanner: false,
-          home: OnBoardingProvider(),
+          home: OnBoarding(),
         ),
       );
 }
