@@ -13,7 +13,7 @@ class GymEntity extends Equatable {
     required this.address,
     required this.name,
     required this.location,
-  });
+  }) : super();
 
   factory GymEntity.fromJson(Map<String, dynamic> json) => GymEntity(
       id: json['_id'],

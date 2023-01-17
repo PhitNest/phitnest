@@ -17,7 +17,7 @@ class StyledTextField extends StatelessWidget {
   final double? height;
   final TextCapitalization textCapitalization;
   final int? maxLines;
-  final void Function(String)? onFieldSubmitted;
+  final ValueChanged<String>? onFieldSubmitted;
 
   const StyledTextField({
     Key? key,

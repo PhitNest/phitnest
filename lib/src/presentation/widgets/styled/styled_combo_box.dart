@@ -6,7 +6,7 @@ import '../../../common/theme.dart';
 class StyledComboBox<ItemType> extends StatelessWidget {
   final List<ItemType> items;
   final String? Function(ItemType item) labelBuilder;
-  final void Function(ItemType? item) onChanged;
+  final ValueChanged<ItemType?> onChanged;
   final ItemType? initialValue;
   final String? hint;
   final double? width;

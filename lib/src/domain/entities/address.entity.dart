@@ -11,7 +11,7 @@ class AddressEntity extends Equatable {
     required this.city,
     required this.state,
     required this.zipCode,
-  });
+  }) : super();
 
   factory AddressEntity.fromJson(Map<String, dynamic> json) => AddressEntity(
         street: json['street'],
