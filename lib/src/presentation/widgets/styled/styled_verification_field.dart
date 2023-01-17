@@ -6,8 +6,8 @@ import '../../../common/theme.dart';
 
 class StyledVerificationField extends StatelessWidget {
   final TextEditingController? controller;
-  final void Function(String val) onChanged;
-  final void Function(String val) onCompleted;
+  final ValueChanged<String> onChanged;
+  final ValueChanged<String> onCompleted;
   final FocusNode? focusNode;
 
   const StyledVerificationField({

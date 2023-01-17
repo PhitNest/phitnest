@@ -2,68 +2,56 @@ import 'package:flutter/material.dart';
 
 import '../bloc_state.dart';
 
-abstract class OnBoardingState extends BlocState {
-  const OnBoardingState() : super();
-
-  @override
-  List<Object> get props => [];
-}
-
-class OnBoardingIntroState extends OnBoardingState {
-  const OnBoardingIntroState() : super();
-}
-
-class OnBoardingRegistrationState extends OnBoardingState {
-  final PageController pageController;
-  final int pageIndex;
-  final bool scrollEnabled;
-  final GlobalKey<FormState> pageOneFormKey;
-  final GlobalKey<FormState> pageTwoFormKey;
-  final AutovalidateMode autovalidateMode;
+abstract class RegistrationState extends BlocState {
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
+  final PageController pageController;
+  final GlobalKey<FormState> pageOneFormKey;
+  final GlobalKey<FormState> pageTwoFormKey;
+  final AutovalidateMode autovalidateMode;
   final FocusNode firstNameFocusNode;
   final FocusNode lastNameFocusNode;
   final FocusNode emailFocusNode;
   final FocusNode passwordFocusNode;
   final FocusNode confirmPasswordFocusNode;
+  final bool scrollEnabled;
+  final int pageIndex;
 
-  const OnBoardingRegistrationState({
-    required this.pageController,
-    required this.pageIndex,
-    required this.scrollEnabled,
-    required this.pageOneFormKey,
-    required this.pageTwoFormKey,
+  const RegistrationState({
     required this.firstNameController,
     required this.lastNameController,
     required this.emailController,
     required this.passwordController,
     required this.confirmPasswordController,
+    required this.pageController,
+    required this.pageOneFormKey,
+    required this.pageTwoFormKey,
+    required this.autovalidateMode,
+    required this.pageIndex,
+    required this.scrollEnabled,
     required this.firstNameFocusNode,
     required this.lastNameFocusNode,
     required this.emailFocusNode,
     required this.passwordFocusNode,
     required this.confirmPasswordFocusNode,
-    this.autovalidateMode = AutovalidateMode.disabled,
   }) : super();
 
   @override
   List<Object> get props => [
-        ...super.props,
-        autovalidateMode,
-        pageController,
-        pageIndex,
-        scrollEnabled,
-        pageOneFormKey,
-        pageTwoFormKey,
         firstNameController,
         lastNameController,
         emailController,
         passwordController,
         confirmPasswordController,
+        pageController,
+        pageOneFormKey,
+        pageTwoFormKey,
+        autovalidateMode,
+        pageIndex,
+        scrollEnabled,
         firstNameFocusNode,
         lastNameFocusNode,
         emailFocusNode,
@@ -71,48 +59,8 @@ class OnBoardingRegistrationState extends OnBoardingState {
         confirmPasswordFocusNode,
       ];
 
-  OnBoardingRegistrationState copyWith({
-    AutovalidateMode? autovalidateMode,
-    PageController? pageController,
-    int? pageIndex,
-    bool? scrollEnabled,
-    GlobalKey<FormState>? pageOneFormKey,
-    GlobalKey<FormState>? pageTwoFormKey,
-    TextEditingController? firstNameController,
-    TextEditingController? lastNameController,
-    TextEditingController? emailController,
-    TextEditingController? passwordController,
-    TextEditingController? confirmPasswordController,
-    FocusNode? firstNameFocusNode,
-    FocusNode? lastNameFocusNode,
-    FocusNode? emailFocusNode,
-    FocusNode? passwordFocusNode,
-    FocusNode? confirmPasswordFocusNode,
-  }) =>
-      OnBoardingRegistrationState(
-        autovalidateMode: autovalidateMode ?? this.autovalidateMode,
-        pageController: pageController ?? this.pageController,
-        pageIndex: pageIndex ?? this.pageIndex,
-        scrollEnabled: scrollEnabled ?? this.scrollEnabled,
-        pageOneFormKey: pageOneFormKey ?? this.pageOneFormKey,
-        pageTwoFormKey: pageTwoFormKey ?? this.pageTwoFormKey,
-        firstNameController: firstNameController ?? this.firstNameController,
-        lastNameController: lastNameController ?? this.lastNameController,
-        emailController: emailController ?? this.emailController,
-        passwordController: passwordController ?? this.passwordController,
-        confirmPasswordController:
-            confirmPasswordController ?? this.confirmPasswordController,
-        firstNameFocusNode: firstNameFocusNode ?? this.firstNameFocusNode,
-        lastNameFocusNode: lastNameFocusNode ?? this.lastNameFocusNode,
-        emailFocusNode: emailFocusNode ?? this.emailFocusNode,
-        passwordFocusNode: passwordFocusNode ?? this.passwordFocusNode,
-        confirmPasswordFocusNode:
-            confirmPasswordFocusNode ?? this.confirmPasswordFocusNode,
-      );
-
   @override
-  Future<void> dispose() async {
-    pageController.dispose();
+  Future<void> dispose() {
     firstNameController.dispose();
     lastNameController.dispose();
     emailController.dispose();
@@ -123,6 +71,67 @@ class OnBoardingRegistrationState extends OnBoardingState {
     emailFocusNode.dispose();
     passwordFocusNode.dispose();
     confirmPasswordFocusNode.dispose();
-    await super.dispose();
+    pageController.dispose();
+    return super.dispose();
   }
+}
+
+class RegistrationInitial extends RegistrationState {
+  const RegistrationInitial({
+    required super.autovalidateMode,
+    required super.confirmPasswordController,
+    required super.emailController,
+    required super.firstNameController,
+    required super.lastNameController,
+    required super.passwordController,
+    required super.pageIndex,
+    required super.pageOneFormKey,
+    required super.pageTwoFormKey,
+    required super.scrollEnabled,
+    required super.firstNameFocusNode,
+    required super.lastNameFocusNode,
+    required super.emailFocusNode,
+    required super.passwordFocusNode,
+    required super.confirmPasswordFocusNode,
+    required super.pageController,
+  }) : super();
+
+  RegistrationInitial copyWith({
+    TextEditingController? firstNameController,
+    TextEditingController? lastNameController,
+    TextEditingController? emailController,
+    TextEditingController? passwordController,
+    TextEditingController? confirmPasswordController,
+    AutovalidateMode? autovalidateMode,
+    int? pageIndex,
+    GlobalKey<FormState>? pageOneFormKey,
+    GlobalKey<FormState>? pageTwoFormKey,
+    bool? scrollEnabled,
+    FocusNode? firstNameFocusNode,
+    FocusNode? lastNameFocusNode,
+    FocusNode? emailFocusNode,
+    FocusNode? passwordFocusNode,
+    FocusNode? confirmPasswordFocusNode,
+    PageController? pageController,
+  }) =>
+      RegistrationInitial(
+        firstNameController: firstNameController ?? this.firstNameController,
+        lastNameController: lastNameController ?? this.lastNameController,
+        emailController: emailController ?? this.emailController,
+        passwordController: passwordController ?? this.passwordController,
+        confirmPasswordController:
+            confirmPasswordController ?? this.confirmPasswordController,
+        autovalidateMode: autovalidateMode ?? this.autovalidateMode,
+        pageIndex: pageIndex ?? this.pageIndex,
+        pageOneFormKey: pageOneFormKey ?? this.pageOneFormKey,
+        pageTwoFormKey: pageTwoFormKey ?? this.pageTwoFormKey,
+        scrollEnabled: scrollEnabled ?? this.scrollEnabled,
+        firstNameFocusNode: firstNameFocusNode ?? this.firstNameFocusNode,
+        lastNameFocusNode: lastNameFocusNode ?? this.lastNameFocusNode,
+        emailFocusNode: emailFocusNode ?? this.emailFocusNode,
+        passwordFocusNode: passwordFocusNode ?? this.passwordFocusNode,
+        confirmPasswordFocusNode:
+            confirmPasswordFocusNode ?? this.confirmPasswordFocusNode,
+        pageController: pageController ?? this.pageController,
+      );
 }

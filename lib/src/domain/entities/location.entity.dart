@@ -8,7 +8,7 @@ class LocationEntity extends Equatable {
   const LocationEntity({
     required this.longitude,
     required this.latitude,
-  });
+  }) : super();
 
   factory LocationEntity.fromJson(Map<String, dynamic> json) => LocationEntity(
         longitude: json['coordinates'][0],

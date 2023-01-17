@@ -16,7 +16,7 @@ class StyledUnderlinedTextField extends StatelessWidget {
   final double? width;
   final TextCapitalization textCapitalization;
   final FormFieldValidator? validator;
-  final void Function(String)? onFieldSubmitted;
+  final ValueChanged<String>? onFieldSubmitted;
 
   const StyledUnderlinedTextField({
     Key? key,
