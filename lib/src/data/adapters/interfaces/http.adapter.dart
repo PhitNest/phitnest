@@ -10,7 +10,7 @@ enum HttpMethod {
 }
 
 abstract class IHttpAdapter {
-  Future<Either<Map<String, dynamic>, Failure>> request(
+  Future<Either<Either<Map<String, dynamic>, List<dynamic>>, Failure>> request(
     HttpMethod method,
     String path, {
     Map<String, dynamic>? data,

@@ -5,3 +5,5 @@ export './styled_text_field.dart';
 export './styled_verification_field.dart';
 export './styled_page_indicator.dart';
 export './styled_underlined_text_button.dart';
+export './styled_back_button.dart';
+export './styled_password_field.dart';

@@ -18,6 +18,7 @@ class StyledTextField extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final int? maxLines;
   final ValueChanged<String>? onFieldSubmitted;
+  final int? errorMaxLines;
 
   const StyledTextField({
     Key? key,
@@ -35,6 +36,7 @@ class StyledTextField extends StatelessWidget {
     this.onFieldSubmitted,
     this.height,
     this.textCapitalization = TextCapitalization.none,
+    this.errorMaxLines,
   }) : super(key: key);
 
   @override
@@ -59,7 +61,7 @@ class StyledTextField extends StatelessWidget {
             helperText: ' ',
             hintText: hint,
             errorText: error,
-            errorMaxLines: 4,
+            errorMaxLines: errorMaxLines,
             helperStyle: theme.textTheme.labelMedium,
             errorStyle:
                 theme.textTheme.labelMedium!.copyWith(color: Colors.red),

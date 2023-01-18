@@ -6,6 +6,8 @@ import '../bloc_state.dart';
 abstract class LoginState extends BlocState {
   final TextEditingController emailController;
   final TextEditingController passwordController;
+  final FocusNode emailFocusNode;
+  final FocusNode passwordFocusNode;
   final AutovalidateMode autovalidateMode;
   final GlobalKey<FormState> formKey;
   final String? error;
@@ -15,6 +17,8 @@ abstract class LoginState extends BlocState {
     required this.passwordController,
     required this.autovalidateMode,
     required this.formKey,
+    required this.emailFocusNode,
+    required this.passwordFocusNode,
     this.error,
   }) : super();
 
@@ -24,6 +28,8 @@ abstract class LoginState extends BlocState {
         passwordController,
         autovalidateMode,
         formKey,
+        emailFocusNode,
+        passwordFocusNode,
         error ?? '',
       ];
 
@@ -31,6 +37,8 @@ abstract class LoginState extends BlocState {
   Future<void> dispose() {
     emailController.dispose();
     passwordController.dispose();
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
     return super.dispose();
   }
 }
@@ -41,6 +49,8 @@ class LoginInitial extends LoginState {
     required super.emailController,
     required super.formKey,
     required super.passwordController,
+    required super.emailFocusNode,
+    required super.passwordFocusNode,
     super.error,
   }) : super();
 
@@ -50,6 +60,8 @@ class LoginInitial extends LoginState {
     AutovalidateMode? autovalidateMode,
     GlobalKey<FormState>? formKey,
     String? error,
+    FocusNode? emailFocusNode,
+    FocusNode? passwordFocusNode,
   }) =>
       LoginInitial(
         emailController: emailController ?? this.emailController,
@@ -57,6 +69,8 @@ class LoginInitial extends LoginState {
         autovalidateMode: autovalidateMode ?? this.autovalidateMode,
         formKey: formKey ?? this.formKey,
         error: error ?? this.error,
+        emailFocusNode: emailFocusNode ?? this.emailFocusNode,
+        passwordFocusNode: passwordFocusNode ?? this.passwordFocusNode,
       );
 }
 
@@ -69,6 +83,8 @@ class LoginLoading extends LoginInitial {
     required super.emailController,
     required super.formKey,
     required super.passwordController,
+    required super.emailFocusNode,
+    required super.passwordFocusNode,
     super.error,
   }) : super();
 
@@ -78,6 +94,8 @@ class LoginLoading extends LoginInitial {
     AutovalidateMode? autovalidateMode,
     GlobalKey<FormState>? formKey,
     String? error,
+    FocusNode? emailFocusNode,
+    FocusNode? passwordFocusNode,
     CancelableOperation? operation,
   }) =>
       LoginLoading(
@@ -86,6 +104,8 @@ class LoginLoading extends LoginInitial {
         autovalidateMode: autovalidateMode ?? this.autovalidateMode,
         formKey: formKey ?? this.formKey,
         error: error ?? this.error,
+        emailFocusNode: emailFocusNode ?? this.emailFocusNode,
+        passwordFocusNode: passwordFocusNode ?? this.passwordFocusNode,
         operation: operation ?? this.operation,
       );
 

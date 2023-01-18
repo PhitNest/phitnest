@@ -41,8 +41,11 @@ class AuthDatabase {
         },
       ).then(
         (either) => either.fold(
-          (response) => Left(
-            LoginResponse.fromJson(response),
+          (response) => response.fold(
+            (json) => Left(
+              LoginResponse.fromJson(json),
+            ),
+            (list) => Right(kInvalidBackendResponse),
           ),
           (failure) => Right(failure),
         ),

@@ -36,18 +36,32 @@ class StyledComboBox<ItemType> extends StatelessWidget {
               : null,
           value: initialValue,
           borderRadius: BorderRadius.circular(8),
-          icon: Image.asset('assets/images/dropdown_icon.png',
-              width: 16.w, height: 16.h),
+          icon: Image.asset(
+            'assets/images/dropdown_icon.png',
+            width: 16.w,
+            height: 16.h,
+          ),
           decoration: InputDecoration(
             contentPadding:
                 EdgeInsets.symmetric(vertical: 8.w, horizontal: 16.w),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.black),
+              borderSide: BorderSide(
+                color: Colors.black,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(
+                color: Colors.black,
+                width: 1,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.black),
+              borderSide: BorderSide(
+                color: Colors.black,
+              ),
             ),
           ),
           items: items
