@@ -1,5 +1,5 @@
-import { Failure } from "../../../common/types";
-import { IFriendshipEntity } from "../../../domain/entities";
+import { Failure } from "../../../../common/types";
+import { IFriendshipEntity } from "../../../../domain/entities";
 
 export interface IFriendshipDatabase {
   create(userCognitoIds: [string, string]): Promise<IFriendshipEntity>;

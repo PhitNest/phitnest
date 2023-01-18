@@ -1,4 +1,4 @@
-import { IDirectMessageEntity } from "../../../domain/entities";
+import { IDirectMessageEntity } from "../../../../domain/entities";
 
 export interface IDirectMessageDatabase {
   create(

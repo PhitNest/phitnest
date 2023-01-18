@@ -1,4 +1,4 @@
-import { Failure } from "../../../common/types";
+import { Failure } from "../../../../common/types";
 
 export interface IProfilePictureDatabase {
   getProfilePictureUploadUrl(userCognitoId: string): Promise<string | Failure>;

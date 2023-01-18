@@ -1,7 +1,7 @@
-import { compareFriendRequests } from "../../../../test/helpers/comparisons";
-import { kFriendRequestNotFound } from "../../../common/failures";
-import { IFriendRequestEntity } from "../../../domain/entities";
-import dataSources from "../injection";
+import { compareFriendRequests } from "../../../../../test/helpers/comparisons";
+import { kFriendRequestNotFound } from "../../../../common/failures";
+import { IFriendRequestEntity } from "../../../../domain/entities";
+import dataSources from "../../injection";
 
 const testGym1 = {
   name: "testGym1",

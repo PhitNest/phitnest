@@ -1,5 +1,5 @@
-import { kLocationNotFound } from "../../../common/failures";
-import dataSources from "../injection";
+import { kLocationNotFound } from "../../../../common/failures";
+import dataSources from "../../injection";
 
 const testAddress1 = {
   street: "522 Pine Song Ln",
