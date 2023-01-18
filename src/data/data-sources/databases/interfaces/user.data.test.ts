@@ -1,10 +1,10 @@
 import {
   comparePublicUsers,
   compareUsers,
-} from "../../../../test/helpers/comparisons";
-import { kUserNotFound } from "../../../common/failures";
-import { IUserEntity } from "../../../domain/entities";
-import dataSources from "../injection";
+} from "../../../../../test/helpers/comparisons";
+import { kUserNotFound } from "../../../../common/failures";
+import { IUserEntity } from "../../../../domain/entities";
+import dataSources from "../../injection";
 
 const testGym1 = {
   name: "testGym1",

@@ -1,9 +1,9 @@
-import { Failure } from "../../../common/types";
+import { Failure } from "../../../../common/types";
 import {
   ICognitoUser,
   IPublicUserEntity,
   IUserEntity,
-} from "../../../domain/entities";
+} from "../../../../domain/entities";
 
 export interface IUserDatabase {
   create(user: ICognitoUser): Promise<IUserEntity>;

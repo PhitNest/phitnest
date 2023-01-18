@@ -1,5 +1,5 @@
-import { Failure } from "../../../common/types";
-import { IFriendRequestEntity } from "../../../domain/entities";
+import { Failure } from "../../../../common/types";
+import { IFriendRequestEntity } from "../../../../domain/entities";
 
 export interface IFriendRequestDatabase {
   create(

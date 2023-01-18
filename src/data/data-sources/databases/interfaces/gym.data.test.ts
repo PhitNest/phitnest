@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { compareGyms } from "../../../../test/helpers/comparisons";
-import { kGymNotFound } from "../../../common/failures";
-import { IGymEntity } from "../../../domain/entities";
-import dataSources from "../injection";
+import { compareGyms } from "../../../../../test/helpers/comparisons";
+import { kGymNotFound } from "../../../../common/failures";
+import { IGymEntity } from "../../../../domain/entities";
+import dataSources from "../../injection";
 
 const testGym1 = {
   name: "testGym1",

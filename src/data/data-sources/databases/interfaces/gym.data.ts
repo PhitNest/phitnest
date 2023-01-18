@@ -1,5 +1,5 @@
-import { Failure } from "../../../common/types";
-import { IGymEntity, LocationEntity } from "../../../domain/entities";
+import { Failure } from "../../../../common/types";
+import { IGymEntity, LocationEntity } from "../../../../domain/entities";
 
 export interface IGymDatabase {
   create(gym: Omit<IGymEntity, "_id">): Promise<IGymEntity>;

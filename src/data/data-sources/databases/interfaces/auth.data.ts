@@ -1,5 +1,8 @@
-import { Failure } from "../../../common/types";
-import { IAuthEntity, IRefreshSessionEntity } from "../../../domain/entities";
+import { Failure } from "../../../../common/types";
+import {
+  IAuthEntity,
+  IRefreshSessionEntity,
+} from "../../../../domain/entities";
 
 export interface IAuthDatabase {
   getCognitoId(accessToken: string): Promise<string | Failure>;

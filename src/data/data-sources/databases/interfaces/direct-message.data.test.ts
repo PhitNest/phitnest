@@ -1,5 +1,5 @@
-import { compareDirectMessages } from "../../../../test/helpers/comparisons";
-import dataSources from "../injection";
+import { compareDirectMessages } from "../../../../../test/helpers/comparisons";
+import dataSources from "../../injection";
 
 const testGym1 = {
   name: "testGym1",
