@@ -10,6 +10,8 @@ class LoginBloc extends PageBloc<LoginEvent, LoginState> {
   LoginBloc()
       : super(
           LoginInitial(
+            emailFocusNode: FocusNode(),
+            passwordFocusNode: FocusNode(),
             emailController: TextEditingController(),
             passwordController: TextEditingController(),
             autovalidateMode: AutovalidateMode.disabled,
@@ -20,6 +22,8 @@ class LoginBloc extends PageBloc<LoginEvent, LoginState> {
       (event, emit) {
         emit(
           LoginInitial(
+            emailFocusNode: state.emailFocusNode,
+            passwordFocusNode: state.passwordFocusNode,
             autovalidateMode: AutovalidateMode.always,
             emailController: state.emailController,
             formKey: state.formKey,
@@ -33,22 +37,26 @@ class LoginBloc extends PageBloc<LoginEvent, LoginState> {
       (event, emit) {
         final initialState = state as LoginInitial;
         if (state.formKey.currentState!.validate()) {
+          state.emailFocusNode.unfocus();
+          state.passwordFocusNode.unfocus();
           emit(
             LoginLoading(
+              emailFocusNode: state.emailFocusNode,
+              passwordFocusNode: state.passwordFocusNode,
               autovalidateMode: AutovalidateMode.disabled,
               emailController: state.emailController,
               passwordController: state.passwordController,
               formKey: state.formKey,
               operation: CancelableOperation.fromFuture(
-                authRepository
-                    .login(state.emailController.text.trim(),
-                        state.passwordController.text)
-                    .then(
-                      (res) => res.fold(
-                        (res) {},
-                        (failure) => add(LoginError(message: failure.message)),
-                      ),
-                    ),
+                authRepository.login(
+                  state.emailController.text.trim(),
+                  state.passwordController.text,
+                ),
+              ).then(
+                (res) => res.fold(
+                  (res) {},
+                  (failure) => add(LoginError(message: failure.message)),
+                ),
               ),
             ),
           );
@@ -67,6 +75,8 @@ class LoginBloc extends PageBloc<LoginEvent, LoginState> {
         await loadingState.operation.cancel();
         emit(
           LoginInitial(
+            emailFocusNode: loadingState.emailFocusNode,
+            passwordFocusNode: loadingState.passwordFocusNode,
             autovalidateMode: AutovalidateMode.disabled,
             emailController: loadingState.emailController,
             passwordController: loadingState.passwordController,

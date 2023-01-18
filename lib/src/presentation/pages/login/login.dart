@@ -1,10 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/theme.dart';
 import '../../../common/validators.dart';
-import '../../transitions/transitions.dart';
 import '../../widgets/styled/styled.dart';
 import '../pages.dart';
 import 'login_bloc.dart';
@@ -41,45 +41,46 @@ class LoginPage extends StatelessWidget {
                       'PhitNest is Better Together',
                       style: theme.textTheme.headlineMedium,
                     ),
-                    50.verticalSpace,
-                    Form(
-                      key: state.formKey,
-                      autovalidateMode: state.autovalidateMode,
-                      child: Column(
-                        children: [
-                          StyledUnderlinedTextField(
-                            controller: state.emailController,
-                            hint: 'Email',
-                            width: 291.w,
-                            error: state.error,
-                            keyboardType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.next,
-                            onChanged: (value) =>
-                                context.read<LoginBloc>().textEdited(),
-                            validator: (value) => validateEmail(value),
-                          ),
-                          8.verticalSpace,
-                          StyledUnderlinedTextField(
-                            controller: state.passwordController,
-                            hint: 'Password',
-                            width: 291.w,
-                            error: state.error,
-                            keyboardType: TextInputType.visiblePassword,
-                            textInputAction: TextInputAction.done,
-                            validator: (value) => validatePassword(value),
-                            obscureText: true,
-                            onChanged: (value) =>
-                                context.read<LoginBloc>().textEdited(),
-                            onFieldSubmitted: (value) {
-                              if (!(state is LoginLoading)) {
-                                context.read<LoginBloc>().submit();
-                              }
-                            },
-                          ),
-                        ],
+                    40.verticalSpace,
+                    SizedBox(
+                      width: 291.w,
+                      child: Form(
+                        key: state.formKey,
+                        autovalidateMode: state.autovalidateMode,
+                        child: Column(
+                          children: [
+                            StyledUnderlinedTextField(
+                              controller: state.emailController,
+                              hint: 'Email',
+                              error: state.error,
+                              errorMaxLines: 1,
+                              focusNode: state.emailFocusNode,
+                              keyboardType: TextInputType.emailAddress,
+                              textInputAction: TextInputAction.next,
+                              onChanged: (value) =>
+                                  context.read<LoginBloc>().textEdited(),
+                              validator: (value) => validateEmail(value),
+                            ),
+                            StyledPasswordField(
+                              controller: state.passwordController,
+                              hint: 'Password',
+                              error: state.error,
+                              focusNode: state.passwordFocusNode,
+                              textInputAction: TextInputAction.done,
+                              validator: (value) => validatePassword(value),
+                              onChanged: (value) =>
+                                  context.read<LoginBloc>().textEdited(),
+                              onFieldSubmitted: (value) {
+                                if (!(state is LoginLoading)) {
+                                  context.read<LoginBloc>().submit();
+                                }
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    8.verticalSpace,
+                    16.verticalSpace,
                     Builder(
                       builder: (context) {
                         if (state is LoginLoading) {
@@ -101,8 +102,8 @@ class LoginPage extends StatelessWidget {
                         }
                         Navigator.push(
                           context,
-                          SlideLeftTransition(
-                            page: ForgotPasswordPage(),
+                          CupertinoPageRoute(
+                            builder: (context) => ForgotPasswordPage(),
                           ),
                         );
                       },
@@ -115,8 +116,8 @@ class LoginPage extends StatelessWidget {
                         }
                         Navigator.push(
                           context,
-                          SlideLeftTransition(
-                            page: RegistrationPage(),
+                          CupertinoPageRoute(
+                            builder: (context) => RegistrationPage(),
                           ),
                         );
                       },

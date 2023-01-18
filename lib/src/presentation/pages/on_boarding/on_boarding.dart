@@ -1,8 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/theme.dart';
-import '../../transitions/transitions.dart';
 import '../../widgets/styled/styled.dart';
 import '../pages.dart';
 
@@ -34,8 +34,8 @@ class OnBoardingPage extends StatelessWidget {
             StyledButton(
               onPressed: () => Navigator.pushReplacement(
                 context,
-                SlideLeftTransition(
-                  page: LoginPage(),
+                CupertinoPageRoute(
+                  builder: (context) => LoginPage(),
                 ),
               ),
               text: "LET'S GET STARTED",

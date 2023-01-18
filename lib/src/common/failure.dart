@@ -19,3 +19,8 @@ class Failure extends Equatable {
 
 const kNetworkFailure =
     Failure("NetworkFailure", "Failed to connect to the network.");
+
+const kInvalidBackendResponse = Failure(
+  "InvalidBackendResponse",
+  "The backend returned an invalid response.",
+);

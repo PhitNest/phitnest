@@ -11,7 +11,7 @@ String get _backendUrl =>
     '${dotenv.get('BACKEND_HOST')}:${dotenv.get('BACKEND_PORT')}';
 
 class DioHttpAdapter implements IHttpAdapter {
-  Future<Either<Map<String, dynamic>, Failure>> request(
+  Future<Either<Either<Map<String, dynamic>, List<dynamic>>, Failure>> request(
     HttpMethod method,
     String path, {
     Map<String, dynamic>? data,
@@ -26,7 +26,9 @@ class DioHttpAdapter implements IHttpAdapter {
           ? {'authorization': authorization}
           : Map<String, dynamic>.from({}),
     };
-    final options = BaseOptions(headers: headerMap);
+    final options = BaseOptions(
+        headers: headerMap,
+        validateStatus: (status) => status == 200 || status == 500);
     if (method == HttpMethod.get || method == HttpMethod.delete) {
       options.queryParameters = data ?? Map<String, dynamic>.from({});
     }
@@ -76,7 +78,11 @@ class DioHttpAdapter implements IHttpAdapter {
               (success) {
                 logger.d(
                     "Response success:\n\tmethod: $method\n\tpath: $path\n\tdata: $success");
-                return Left(success);
+                if (success is List) {
+                  return Left(Right(success));
+                } else {
+                  return Left(Left(success));
+                }
               },
               (failure) {
                 logger.e(
@@ -86,8 +92,13 @@ class DioHttpAdapter implements IHttpAdapter {
             ),
           );
     } catch (e) {
-      final failure =
-          Failure("NetworkError", "Failed to connect to the network.");
+      print(e);
+      final failure;
+      if (e is DioError) {
+        failure = Failure.fromJson(e.response!.data);
+      } else {
+        failure = Failure("NetworkError", "Failed to connect to the network.");
+      }
       logger.e(
           "Response failure:\n\tmethod: $method\n\tpath: $path\n\tdata: $failure");
       return Future.value(
