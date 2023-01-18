@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../common/failure.dart';
 import '../../../domain/entities/entities.dart';
@@ -85,4 +86,16 @@ class SubmitPageThree extends RegistrationEvent {
 
 class SubmitPageFour extends RegistrationEvent {
   const SubmitPageFour() : super();
+}
+
+class SubmitPageFive extends RegistrationEvent {
+  final XFile? image;
+
+  const SubmitPageFive(this.image) : super();
+
+  @override
+  List<Object> get props => [
+        ...super.props,
+        ...(image != null ? [image!] : [])
+      ];
 }

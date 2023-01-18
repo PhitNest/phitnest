@@ -1,4 +1,5 @@
 import 'package:async/async.dart';
+import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +28,7 @@ class RegistrationBloc extends PageBloc<RegistrationEvent, RegistrationState> {
   RegistrationBloc()
       : super(
           RegistrationInitial(
-            totalPages: 1,
+            pageScrollLimit: 1,
             firstNameController: TextEditingController(),
             lastNameController: TextEditingController(),
             emailController: TextEditingController(),
@@ -65,7 +66,7 @@ class RegistrationBloc extends PageBloc<RegistrationEvent, RegistrationState> {
       (event, emit) {
         emit(
           GymsLoadingError(
-            totalPages: state.totalPages,
+            pageScrollLimit: state.pageScrollLimit,
             autovalidateMode: state.autovalidateMode,
             confirmPasswordController: state.confirmPasswordController,
             emailController: state.emailController,
@@ -88,9 +89,14 @@ class RegistrationBloc extends PageBloc<RegistrationEvent, RegistrationState> {
       },
     );
     on<GymsLoadedEvent>(
-      (event, emit) {
+      (event, emit) async {
         emit(
           GymsLoaded(
+            cameraController: CameraController(
+              (await availableCameras()).first,
+              ResolutionPreset.max,
+              enableAudio: false,
+            ),
             autovalidateMode: state.autovalidateMode,
             gyms: event.gyms,
             firstNameController: state.firstNameController,
@@ -107,7 +113,7 @@ class RegistrationBloc extends PageBloc<RegistrationEvent, RegistrationState> {
             pageTwoFormKey: state.pageTwoFormKey,
             pageController: state.pageController,
             loadGyms: state.loadGyms,
-            totalPages: state.totalPages,
+            pageScrollLimit: state.pageScrollLimit,
             pageIndex: state.pageIndex,
             showMustSelectGymError: false,
             location: event.location,
@@ -146,14 +152,14 @@ class RegistrationBloc extends PageBloc<RegistrationEvent, RegistrationState> {
             initialState.copyWith(
               pageIndex: 1,
               autovalidateMode: AutovalidateMode.disabled,
-              totalPages: 3,
+              pageScrollLimit: 3,
             ),
           );
         } else {
           emit(
             initialState.copyWith(
               autovalidateMode: AutovalidateMode.always,
-              totalPages: 1,
+              pageScrollLimit: 1,
             ),
           );
         }
@@ -204,7 +210,7 @@ class RegistrationBloc extends PageBloc<RegistrationEvent, RegistrationState> {
       (event, emit) {
         emit(
           (state as GymsLoaded).copyWith(
-            totalPages: 5,
+            pageScrollLimit: 5,
           ),
         );
         state.pageController.nextPage(
@@ -216,11 +222,53 @@ class RegistrationBloc extends PageBloc<RegistrationEvent, RegistrationState> {
         );
       },
     );
+    on<SubmitPageFive>(
+      (event, emit) async {
+        final gymsLoadedState = state as GymsLoaded;
+        await gymsLoadedState.cameraController.initialize();
+        state.pageController.nextPage(
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOut);
+        if (event.image != null) {
+          emit(
+            ProfilePictureUploaded(
+              cameraController: gymsLoadedState.cameraController,
+              autovalidateMode: state.autovalidateMode,
+              confirmPasswordController: state.confirmPasswordController,
+              emailController: state.emailController,
+              firstNameController: state.firstNameController,
+              lastNameController: state.lastNameController,
+              passwordController: state.passwordController,
+              firstNameFocusNode: state.firstNameFocusNode,
+              lastNameFocusNode: state.lastNameFocusNode,
+              emailFocusNode: state.emailFocusNode,
+              passwordFocusNode: state.passwordFocusNode,
+              confirmPasswordFocusNode: state.confirmPasswordFocusNode,
+              pageOneFormKey: state.pageOneFormKey,
+              pageTwoFormKey: state.pageTwoFormKey,
+              pageController: state.pageController,
+              loadGyms: state.loadGyms,
+              pageScrollLimit: 6,
+              pageIndex: 5,
+              showMustSelectGymError: false,
+              location: gymsLoadedState.location,
+              gym: gymsLoadedState.gym,
+              gyms: gymsLoadedState.gyms,
+              profilePicture: event.image!,
+            ),
+          );
+        } else {
+          emit(
+            gymsLoadedState.copyWith(pageScrollLimit: 6, pageIndex: 5),
+          );
+        }
+      },
+    );
     on<PageOneTextEdited>(
       (event, emit) {
         emit(
           (state as RegistrationInitial).copyWith(
-            totalPages: 1,
+            pageScrollLimit: 1,
           ),
         );
       },
@@ -252,7 +300,7 @@ class RegistrationBloc extends PageBloc<RegistrationEvent, RegistrationState> {
             pageIndex: state.pageIndex,
             pageOneFormKey: state.pageOneFormKey,
             pageTwoFormKey: state.pageTwoFormKey,
-            totalPages: state.totalPages,
+            pageScrollLimit: state.pageScrollLimit,
             firstNameFocusNode: state.firstNameFocusNode,
             lastNameFocusNode: state.lastNameFocusNode,
             emailFocusNode: state.emailFocusNode,
@@ -270,7 +318,7 @@ class RegistrationBloc extends PageBloc<RegistrationEvent, RegistrationState> {
           (state as GymsLoaded).copyWith(
             gym: event.gym,
             showMustSelectGymError: false,
-            totalPages: 4,
+            pageScrollLimit: 4,
           ),
         );
       },
@@ -292,4 +340,6 @@ class RegistrationBloc extends PageBloc<RegistrationEvent, RegistrationState> {
   void submitPageThree() => add(const SubmitPageThree());
 
   void submitPageFour() => add(const SubmitPageFour());
+
+  void submitPageFive(XFile? image) => add(SubmitPageFive(image));
 }

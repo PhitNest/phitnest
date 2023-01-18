@@ -56,6 +56,7 @@ class StyledTextField extends StatelessWidget {
           style: theme.textTheme.labelMedium,
           textCapitalization: textCapitalization,
           decoration: InputDecoration(
+            fillColor: Colors.white,
             contentPadding:
                 EdgeInsets.symmetric(vertical: 14.w, horizontal: 14.w),
             helperText: ' ',

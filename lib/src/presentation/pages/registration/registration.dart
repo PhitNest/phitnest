@@ -1,9 +1,9 @@
-import 'dart:math';
-
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/utils.dart';
@@ -29,7 +29,7 @@ class _GymCard extends StatelessWidget {
 
   @override
   build(BuildContext context) => Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
         child: OutlinedButton(
           style: ButtonStyle(
             side: MaterialStateProperty.all(
@@ -40,7 +40,7 @@ class _GymCard extends StatelessWidget {
               ),
             ),
             backgroundColor: MaterialStateProperty.all(
-              selected ? Color(0xFFFFE3E3) : Colors.transparent,
+              selected ? Color(0xFFFFE3E3) : Colors.grey.shade50,
             ),
           ),
           onPressed: onPressed,
@@ -105,6 +105,7 @@ class _GymSearchWidget extends StatelessWidget {
   Widget build(BuildContext context) => ChangeNotifierProvider<_GymSearchState>(
         create: (context) => _GymSearchState(initialGym),
         builder: (context, child) => Scaffold(
+          backgroundColor: Colors.white,
           body: Column(
             children: [
               40.verticalSpace,
@@ -211,7 +212,7 @@ class RegistrationPage extends StatelessWidget {
                           controller: state.pageController,
                           onPageChanged: (value) =>
                               context.read<RegistrationBloc>().swipe(value),
-                          itemCount: state.totalPages,
+                          itemCount: state.pageScrollLimit,
                           itemBuilder: (context, index) {
                             switch (index) {
                               case 0:
@@ -391,23 +392,19 @@ class RegistrationPage extends StatelessWidget {
                                                 StyledComboBox<GymEntity>(
                                                   width: 311.w,
                                                   height: 34.h,
-                                                  items: () {
-                                                    var gyms = state.gyms
-                                                        .where(
-                                                          (element) =>
-                                                              state.gyms
-                                                                  .where((innerLoop) =>
-                                                                      innerLoop
-                                                                          .name ==
-                                                                      element
-                                                                          .name)
-                                                                  .length ==
-                                                              1,
-                                                        )
-                                                        .toList();
-                                                    return gyms.sublist(
-                                                        0, min(8, gyms.length));
-                                                  }(),
+                                                  items: state.gyms
+                                                      .where(
+                                                        (element) =>
+                                                            state.gyms
+                                                                .where((innerLoop) =>
+                                                                    innerLoop
+                                                                        .name ==
+                                                                    element
+                                                                        .name)
+                                                                .length ==
+                                                            1,
+                                                      )
+                                                      .toList(),
                                                   hint:
                                                       'Select your fitness club',
                                                   labelBuilder: (item) =>
@@ -504,7 +501,7 @@ class RegistrationPage extends StatelessWidget {
                                       style: theme.textTheme.labelLarge,
                                       textAlign: TextAlign.center,
                                     ),
-                                    162.verticalSpace,
+                                    134.verticalSpace,
                                     StyledButton(
                                       onPressed: () => context
                                           .read<RegistrationBloc>()
@@ -537,6 +534,63 @@ class RegistrationPage extends StatelessWidget {
                                     32.verticalSpace,
                                   ],
                                 );
+                              case 4:
+                                return Column(
+                                  children: [
+                                    96.verticalSpace,
+                                    Text(
+                                      "Let's put a face\nto your name",
+                                      style: theme.textTheme.headlineLarge,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    30.verticalSpace,
+                                    Text(
+                                      "Add a photo of yourself\n**from the SHOULDERS UP**\n\nJust enough for your gym buddies\nto recognize you!",
+                                      style: theme.textTheme.labelLarge,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    12.verticalSpace,
+                                    Container(
+                                      width: 160.h,
+                                      child: Image.asset(
+                                        'assets/images/pfp_meme.png',
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                    30.verticalSpace,
+                                    StyledButton(
+                                      onPressed: () => context
+                                          .read<RegistrationBloc>()
+                                          .submitPageFive(null),
+                                      text: 'TAKE PHOTO',
+                                    ),
+                                    Spacer(),
+                                    StyledUnderlinedTextButton(
+                                      onPressed: () => ImagePicker()
+                                          .pickImage(
+                                              source: ImageSource.gallery)
+                                          .then(
+                                        (image) {
+                                          if (image != null) {
+                                            context
+                                                .read<RegistrationBloc>()
+                                                .submitPageFive(image);
+                                          }
+                                        },
+                                      ),
+                                      text: 'UPLOAD FROM ALBUMS',
+                                    ),
+                                    32.verticalSpace,
+                                  ],
+                                );
+                              case 5:
+                                return Column(
+                                  children: [
+                                    CameraPreview(
+                                      (state as GymsLoaded).cameraController,
+                                    ),
+                                  ],
+                                );
                             }
                             return Container();
                           },
@@ -544,7 +598,7 @@ class RegistrationPage extends StatelessWidget {
                       ),
                       StyledPageIndicator(
                         currentPage: state.pageIndex,
-                        totalPages: 5,
+                        totalPages: 6,
                       ),
                       48.verticalSpace,
                     ],

@@ -73,7 +73,7 @@ class DioHttpAdapter implements IHttpAdapter {
         break;
     }
     try {
-      return await result.timeout(const Duration(seconds: 5)).then(
+      return await result.timeout(const Duration(seconds: 15)).then(
             (res) => res.fold(
               (success) {
                 logger.d(
@@ -92,7 +92,6 @@ class DioHttpAdapter implements IHttpAdapter {
             ),
           );
     } catch (e) {
-      print(e);
       final failure;
       if (e is DioError) {
         failure = Failure.fromJson(e.response!.data);

@@ -1,6 +1,8 @@
 import 'package:async/async.dart';
+import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../common/failure.dart';
 import '../../../domain/entities/entities.dart';
@@ -22,7 +24,7 @@ abstract class RegistrationState extends BlocState {
   final FocusNode passwordFocusNode;
   final FocusNode confirmPasswordFocusNode;
   final int pageIndex;
-  final int totalPages;
+  final int pageScrollLimit;
   final CancelableOperation<
       Either<Tuple2<List<GymEntity>, LocationEntity>, Failure>> loadGyms;
 
@@ -43,7 +45,7 @@ abstract class RegistrationState extends BlocState {
     required this.passwordFocusNode,
     required this.confirmPasswordFocusNode,
     required this.loadGyms,
-    required this.totalPages,
+    required this.pageScrollLimit,
   }) : super();
 
   @override
@@ -64,7 +66,7 @@ abstract class RegistrationState extends BlocState {
         passwordFocusNode,
         confirmPasswordFocusNode,
         loadGyms,
-        totalPages,
+        pageScrollLimit,
       ];
 
   @override
@@ -103,7 +105,7 @@ class RegistrationInitial extends RegistrationState {
     required super.confirmPasswordFocusNode,
     required super.pageController,
     required super.loadGyms,
-    required super.totalPages,
+    required super.pageScrollLimit,
   }) : super();
 
   RegistrationInitial copyWith({
@@ -125,7 +127,7 @@ class RegistrationInitial extends RegistrationState {
     CancelableOperation<
             Either<Tuple2<List<GymEntity>, LocationEntity>, Failure>>?
         loadGyms,
-    int? totalPages,
+    int? pageScrollLimit,
   }) =>
       RegistrationInitial(
         firstNameController: firstNameController ?? this.firstNameController,
@@ -146,7 +148,7 @@ class RegistrationInitial extends RegistrationState {
             confirmPasswordFocusNode ?? this.confirmPasswordFocusNode,
         pageController: pageController ?? this.pageController,
         loadGyms: loadGyms ?? this.loadGyms,
-        totalPages: totalPages ?? this.totalPages,
+        pageScrollLimit: pageScrollLimit ?? this.pageScrollLimit,
       );
 }
 
@@ -155,6 +157,7 @@ class GymsLoaded extends RegistrationInitial {
   final GymEntity? gym;
   final LocationEntity location;
   final bool showMustSelectGymError;
+  final CameraController cameraController;
 
   const GymsLoaded({
     required super.autovalidateMode,
@@ -173,10 +176,11 @@ class GymsLoaded extends RegistrationInitial {
     required super.confirmPasswordFocusNode,
     required super.pageController,
     required super.loadGyms,
-    required super.totalPages,
+    required super.pageScrollLimit,
     required this.showMustSelectGymError,
     required this.gyms,
     required this.location,
+    required this.cameraController,
     this.gym,
   }) : super();
 
@@ -203,7 +207,8 @@ class GymsLoaded extends RegistrationInitial {
     List<GymEntity>? gyms,
     GymEntity? gym,
     LocationEntity? location,
-    int? totalPages,
+    int? pageScrollLimit,
+    CameraController? cameraController,
   }) =>
       GymsLoaded(
         firstNameController: firstNameController ?? this.firstNameController,
@@ -229,7 +234,8 @@ class GymsLoaded extends RegistrationInitial {
         showMustSelectGymError:
             showMustSelectGymError ?? this.showMustSelectGymError,
         location: location ?? this.location,
-        totalPages: totalPages ?? this.totalPages,
+        pageScrollLimit: pageScrollLimit ?? this.pageScrollLimit,
+        cameraController: cameraController ?? this.cameraController,
       );
 
   @override
@@ -238,6 +244,7 @@ class GymsLoaded extends RegistrationInitial {
         gyms,
         showMustSelectGymError,
         location,
+        cameraController,
         ...(gym != null ? [gym!] : []),
       ];
 }
@@ -262,7 +269,7 @@ class GymsLoadingError extends RegistrationInitial {
     required super.confirmPasswordFocusNode,
     required super.pageController,
     required super.loadGyms,
-    required super.totalPages,
+    required super.pageScrollLimit,
     required this.failure,
   }) : super();
 
@@ -286,7 +293,7 @@ class GymsLoadingError extends RegistrationInitial {
             Either<Tuple2<List<GymEntity>, LocationEntity>, Failure>>?
         loadGyms,
     Failure? failure,
-    int? totalPages,
+    int? pageScrollLimit,
   }) =>
       GymsLoadingError(
         firstNameController: firstNameController ?? this.firstNameController,
@@ -308,12 +315,48 @@ class GymsLoadingError extends RegistrationInitial {
         failure: failure ?? this.failure,
         pageController: pageController ?? this.pageController,
         loadGyms: loadGyms ?? this.loadGyms,
-        totalPages: totalPages ?? this.totalPages,
+        pageScrollLimit: pageScrollLimit ?? this.pageScrollLimit,
       );
 
   @override
   List<Object> get props => [
         ...super.props,
         failure,
+      ];
+}
+
+class ProfilePictureUploaded extends GymsLoaded {
+  final XFile profilePicture;
+
+  const ProfilePictureUploaded({
+    required super.autovalidateMode,
+    required super.confirmPasswordController,
+    required super.emailController,
+    required super.firstNameController,
+    required super.lastNameController,
+    required super.passwordController,
+    required super.pageIndex,
+    required super.pageOneFormKey,
+    required super.pageTwoFormKey,
+    required super.firstNameFocusNode,
+    required super.lastNameFocusNode,
+    required super.emailFocusNode,
+    required super.passwordFocusNode,
+    required super.confirmPasswordFocusNode,
+    required super.pageController,
+    required super.loadGyms,
+    required super.gyms,
+    required super.gym,
+    required super.showMustSelectGymError,
+    required super.location,
+    required super.pageScrollLimit,
+    required super.cameraController,
+    required this.profilePicture,
+  }) : super();
+
+  @override
+  List<Object> get props => [
+        ...super.props,
+        profilePicture,
       ];
 }
