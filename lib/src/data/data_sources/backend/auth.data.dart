@@ -68,6 +68,8 @@ class RegisterResponse extends UserEntity {
 }
 
 class AuthDatabase {
+  const AuthDatabase();
+
   Future<Either<LoginResponse, Failure>> login(
           String email, String password) async =>
       httpAdapter.request(
@@ -119,4 +121,4 @@ class AuthDatabase {
       );
 }
 
-final authDatabase = AuthDatabase();
+const authDatabase = AuthDatabase();

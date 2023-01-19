@@ -3,25 +3,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../event/registration_event.dart';
 import '../state/registration_state.dart';
 
-void onLoadedGyms(
-  LoadedGymsEvent event,
+void onGymSelected(
+  GymSelectedEvent event,
   Emitter<RegistrationState> emit,
   RegistrationState state,
 ) {
-  if (state is InitialState) {
+  if (state is GymNotSelectedState) {
     emit(
-      GymNotSelectedState(
+      GymSelectedState(
         firstNameConfirmed: state.firstNameConfirmed,
-        gyms: event.gyms,
-        location: event.location,
+        gyms: state.gyms,
+        location: state.location,
+        gym: event.gym,
       ),
     );
-  } else if (state is GymsLoadingErrorEvent) {
+  } else if (state is GymSelectedState) {
     emit(
-      GymNotSelectedState(
+      GymSelectedState(
         firstNameConfirmed: state.firstNameConfirmed,
-        gyms: event.gyms,
-        location: event.location,
+        gyms: state.gyms,
+        location: state.location,
+        gym: event.gym,
       ),
     );
   } else {

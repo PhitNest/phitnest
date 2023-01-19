@@ -6,6 +6,8 @@ import '../../adapters/adapters.dart';
 import '../../adapters/interfaces/http.adapter.dart';
 
 class GymDatabase {
+  const GymDatabase();
+
   Future<Either<List<GymEntity>, Failure>> getNearest(
           LocationEntity location, double meters,
           {int? amount}) =>
@@ -35,4 +37,4 @@ class GymDatabase {
       );
 }
 
-final gymDatabase = GymDatabase();
+const gymDatabase = GymDatabase();

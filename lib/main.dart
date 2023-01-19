@@ -6,7 +6,7 @@ import 'src/common/shared_preferences.dart';
 import 'src/data/adapters/adapters.dart';
 import 'src/app.dart';
 
-main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ScreenUtil.ensureScreenSize();
   await dotenv.load();
