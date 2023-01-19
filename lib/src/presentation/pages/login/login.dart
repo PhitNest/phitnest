@@ -46,7 +46,7 @@ class LoginPage extends StatelessWidget {
                       width: 291.w,
                       child: Form(
                         key: state.formKey,
-                        autovalidateMode: state.autovalidateMode,
+                        autovalidateMode: state.autoValidateMode,
                         child: Column(
                           children: [
                             StyledUnderlinedTextField(

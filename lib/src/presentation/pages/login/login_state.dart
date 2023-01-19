@@ -8,14 +8,14 @@ abstract class LoginState extends BlocState {
   final TextEditingController passwordController;
   final FocusNode emailFocusNode;
   final FocusNode passwordFocusNode;
-  final AutovalidateMode autovalidateMode;
+  final AutovalidateMode autoValidateMode;
   final GlobalKey<FormState> formKey;
   final String? error;
 
   const LoginState({
     required this.emailController,
     required this.passwordController,
-    required this.autovalidateMode,
+    required this.autoValidateMode,
     required this.formKey,
     required this.emailFocusNode,
     required this.passwordFocusNode,
@@ -26,7 +26,7 @@ abstract class LoginState extends BlocState {
   List<Object> get props => [
         emailController,
         passwordController,
-        autovalidateMode,
+        autoValidateMode,
         formKey,
         emailFocusNode,
         passwordFocusNode,
@@ -45,7 +45,7 @@ abstract class LoginState extends BlocState {
 
 class LoginInitial extends LoginState {
   const LoginInitial({
-    required super.autovalidateMode,
+    required super.autoValidateMode,
     required super.emailController,
     required super.formKey,
     required super.passwordController,
@@ -57,7 +57,7 @@ class LoginInitial extends LoginState {
   LoginInitial copyWith({
     TextEditingController? emailController,
     TextEditingController? passwordController,
-    AutovalidateMode? autovalidateMode,
+    AutovalidateMode? autoValidateMode,
     GlobalKey<FormState>? formKey,
     String? error,
     FocusNode? emailFocusNode,
@@ -66,7 +66,7 @@ class LoginInitial extends LoginState {
       LoginInitial(
         emailController: emailController ?? this.emailController,
         passwordController: passwordController ?? this.passwordController,
-        autovalidateMode: autovalidateMode ?? this.autovalidateMode,
+        autoValidateMode: autoValidateMode ?? this.autoValidateMode,
         formKey: formKey ?? this.formKey,
         error: error ?? this.error,
         emailFocusNode: emailFocusNode ?? this.emailFocusNode,
@@ -79,7 +79,7 @@ class LoginLoading extends LoginInitial {
 
   const LoginLoading({
     required this.operation,
-    required super.autovalidateMode,
+    required super.autoValidateMode,
     required super.emailController,
     required super.formKey,
     required super.passwordController,
@@ -91,7 +91,7 @@ class LoginLoading extends LoginInitial {
   LoginLoading copyWith({
     TextEditingController? emailController,
     TextEditingController? passwordController,
-    AutovalidateMode? autovalidateMode,
+    AutovalidateMode? autoValidateMode,
     GlobalKey<FormState>? formKey,
     String? error,
     FocusNode? emailFocusNode,
@@ -101,7 +101,7 @@ class LoginLoading extends LoginInitial {
       LoginLoading(
         emailController: emailController ?? this.emailController,
         passwordController: passwordController ?? this.passwordController,
-        autovalidateMode: autovalidateMode ?? this.autovalidateMode,
+        autoValidateMode: autoValidateMode ?? this.autoValidateMode,
         formKey: formKey ?? this.formKey,
         error: error ?? this.error,
         emailFocusNode: emailFocusNode ?? this.emailFocusNode,
