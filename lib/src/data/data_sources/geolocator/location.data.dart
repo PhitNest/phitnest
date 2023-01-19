@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../common/constants.dart';
-import '../../common/failure.dart';
-import '../entities/entities.dart';
+import '../../../common/constants.dart';
+import '../../../common/failure.dart';
+import '../../../domain/entities/entities.dart';
 
-class LocationRepository {
+class LocationDatabase {
   LocationEntity _positionToLocation(Position position) => LocationEntity(
       longitude: position.longitude, latitude: position.latitude);
 
@@ -36,4 +36,4 @@ class LocationRepository {
   }
 }
 
-final locationRepository = LocationRepository();
+final locationDatabase = LocationDatabase();

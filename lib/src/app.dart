@@ -5,6 +5,7 @@ import 'package:phitnest_mobile/src/ui/screens/onBoarding/on_boarding_provider.d
 
 import 'app_bloc.dart';
 import 'common/theme.dart';
+import 'data/data_sources/cache/shared_preferences.dart';
 import 'presentation/pages/pages.dart';
 
 class App extends StatelessWidget {
@@ -18,7 +19,20 @@ class App extends StatelessWidget {
             title: 'PhitNest',
             theme: theme,
             debugShowCheckedModeBanner: false,
-            home: OnBoardingPage(),
+            home: Builder(
+              builder: (context) {
+                final user = deviceCache.cachedUser;
+                if (user != null) {
+                  if (user.confirmed) {
+                    return const HomePage();
+                  } else {
+                    return ConfirmEmailPage(email: user.email);
+                  }
+                } else {
+                  return const OnBoardingPage();
+                }
+              },
+            ),
           ),
         ),
       );
