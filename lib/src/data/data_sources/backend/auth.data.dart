@@ -29,6 +29,44 @@ class LoginResponse extends Equatable {
   List<Object?> get props => [session, user];
 }
 
+class RegisterResponse extends UserEntity {
+  final String uploadUrl;
+
+  RegisterResponse({
+    required super.cognitoId,
+    required super.id,
+    required super.email,
+    required super.firstName,
+    required super.lastName,
+    required super.gymId,
+    required super.confirmed,
+    required this.uploadUrl,
+  }) : super();
+
+  factory RegisterResponse.fromJson(Map<String, dynamic> json) =>
+      RegisterResponse(
+        cognitoId: json['cognitoId'],
+        id: json['_id'],
+        email: json['email'],
+        firstName: json['firstName'],
+        lastName: json['lastName'],
+        gymId: json['gymId'],
+        confirmed: json['confirmed'],
+        uploadUrl: json['uploadUrl'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        'uploadUrl': uploadUrl,
+      };
+
+  @override
+  List<Object?> get props => [
+        ...super.props,
+        uploadUrl,
+      ];
+}
+
 class AuthDatabase {
   Future<Either<LoginResponse, Failure>> login(
           String email, String password) async =>
@@ -44,6 +82,35 @@ class AuthDatabase {
           (response) => response.fold(
             (json) => Left(
               LoginResponse.fromJson(json),
+            ),
+            (list) => Right(kInvalidBackendResponse),
+          ),
+          (failure) => Right(failure),
+        ),
+      );
+
+  Future<Either<RegisterResponse, Failure>> register(
+    String email,
+    String password,
+    String firstName,
+    String lastName,
+    String gymId,
+  ) async =>
+      httpAdapter.request(
+        HttpMethod.post,
+        '/auth/register',
+        data: {
+          'email': email,
+          'password': password,
+          'firstName': firstName,
+          'lastName': lastName,
+          'gymId': gymId,
+        },
+      ).then(
+        (either) => either.fold(
+          (response) => response.fold(
+            (json) => Left(
+              RegisterResponse.fromJson(json),
             ),
             (list) => Right(kInvalidBackendResponse),
           ),
