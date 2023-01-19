@@ -1,10 +1,12 @@
 import 'dart:math';
 
+import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
 import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
+import '../../../app.dart';
 import '../../../common/failure.dart';
 import '../../../common/validators.dart';
 import '../../../domain/entities/entities.dart';
@@ -424,17 +426,56 @@ class RegistrationBloc extends PageBloc<RegistrationEvent, RegistrationState> {
                   submittedState.gym!.id,
                 ),
               )..then(
-                  (res) => res.fold(
-                    (success) => add(const RegistrationRequestSuccessEvent()),
-                    (failure) {
-                      if (failure.code == "UsernameExistsException") {
-                        add(const UserTakenEvent());
-                      } else {
-                        add(RegistrationRequestErrorEvent(failure: failure));
-                      }
-                    },
+                  (res) => add(
+                    res.fold(
+                      (res) => RegistrationRequestSuccessEvent(response: res),
+                      (failure) => failure.code == "UsernameExistsException"
+                          ? const UserTakenEvent()
+                          : RegistrationRequestErrorEvent(failure: failure),
+                    ),
                   ),
                 ),
+            ),
+          );
+        }
+      },
+    );
+    on<RegistrationRequestSuccessEvent>(
+      (event, emit) async {
+        final submittedState = state as S3RequestLoadingState;
+        final photoUploadRes = await http.put(
+          Uri.parse(event.response.uploadUrl),
+          headers: {
+            'Content-Type': 'image/*',
+            'Accept': "*/*",
+            'Content-Length':
+                (await submittedState.profilePicture.length()).toString(),
+            'Connection': 'keep-alive',
+          },
+          body: await submittedState.profilePicture.readAsBytes(),
+        );
+        if (photoUploadRes.statusCode != 200) {
+        } else {
+          emit(
+            RegistrationSuccessState(
+              autovalidateMode: state.autovalidateMode,
+              confirmPasswordController: state.confirmPasswordController,
+              emailController: state.emailController,
+              firstNameController: state.firstNameController,
+              lastNameController: state.lastNameController,
+              passwordController: state.passwordController,
+              pageIndex: state.pageIndex,
+              pageOneFormKey: state.pageOneFormKey,
+              pageTwoFormKey: state.pageTwoFormKey,
+              firstNameFocusNode: state.firstNameFocusNode,
+              lastNameFocusNode: state.lastNameFocusNode,
+              emailFocusNode: state.emailFocusNode,
+              passwordFocusNode: state.passwordFocusNode,
+              confirmPasswordFocusNode: state.confirmPasswordFocusNode,
+              pageController: state.pageController,
+              loadGyms: state.loadGyms,
+              pageScrollLimit: state.pageScrollLimit,
+              user: event.response,
             ),
           );
         }

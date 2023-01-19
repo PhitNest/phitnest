@@ -7,11 +7,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../../app_bloc.dart';
 import '../../../common/utils.dart';
 import '../../../common/theme.dart';
 import '../../../common/validators.dart';
 import '../../../domain/entities/entities.dart';
 import '../../widgets/styled/styled.dart';
+import '../pages.dart';
 import 'registration_bloc.dart';
 import 'registration_state.dart';
 
@@ -200,7 +202,24 @@ class RegistrationPage extends StatelessWidget {
         child: BlocBuilder<RegistrationBloc, RegistrationState>(
           builder: (context, state) {
             final keyboardPadding = MediaQuery.of(context).viewInsets.bottom;
-            if (state is RegistrationLoading) {
+            if (state is RegistrationSuccessState) {
+              context.read<AppBloc>().setRegistered(
+                  user: state.user, password: state.passwordController.text);
+              Future.delayed(
+                Duration.zero,
+                () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ConfirmEmailPage(
+                      email: state.emailController.text.trim(),
+                    ),
+                  ),
+                ),
+              );
+            }
+            if (state is RegistrationLoading ||
+                state is RegistrationSuccessState ||
+                state is S3RequestLoadingState) {
               return Scaffold(
                 body: Column(
                   children: [

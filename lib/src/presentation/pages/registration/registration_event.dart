@@ -129,7 +129,14 @@ class RegistrationRequestErrorEvent extends RegistrationEvent {
 }
 
 class RegistrationRequestSuccessEvent extends RegistrationEvent {
-  const RegistrationRequestSuccessEvent() : super();
+  final RegisterResponse response;
+
+  const RegistrationRequestSuccessEvent({
+    required this.response,
+  }) : super();
+
+  @override
+  List<Object> get props => [...super.props, response];
 }
 
 class UserTakenEvent extends RegistrationEvent {
