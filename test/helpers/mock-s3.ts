@@ -1,5 +1,5 @@
 import { Failure } from "../../src/common/types";
-import { IProfilePictureDatabase } from "../../src/data/data-sources/interfaces";
+import { IProfilePictureDatabase } from "../../src/data/data-sources/databases/interfaces";
 
 export const kMockProfilePictureError = new Failure(
   "MockProfilePictureError",

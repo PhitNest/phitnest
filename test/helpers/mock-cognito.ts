@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { Failure } from "../../src/common/types";
-import { IAuthDatabase } from "../../src/data/data-sources/interfaces";
+import { IAuthDatabase } from "../../src/data/data-sources/databases/interfaces";
 
 export const kMockAuthError = new Failure(
   "MockAuthError",
@@ -35,7 +35,11 @@ export class MockAuthDatabase implements IAuthDatabase {
 
   async signOut(cognitoId: string) {}
 
-  async forgotPassword(email: string) {}
+  async forgotPassword(email: string) {
+    if (email === "invalid") {
+      return kMockAuthError;
+    }
+  }
 
   async forgotPasswordSubmit(
     email: string,
