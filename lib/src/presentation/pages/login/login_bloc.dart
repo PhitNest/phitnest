@@ -14,7 +14,7 @@ class LoginBloc extends PageBloc<LoginEvent, LoginState> {
             passwordFocusNode: FocusNode(),
             emailController: TextEditingController(),
             passwordController: TextEditingController(),
-            autovalidateMode: AutovalidateMode.disabled,
+            autoValidateMode: AutovalidateMode.disabled,
             formKey: GlobalKey(),
           ),
         ) {
@@ -24,7 +24,7 @@ class LoginBloc extends PageBloc<LoginEvent, LoginState> {
           LoginInitial(
             emailFocusNode: state.emailFocusNode,
             passwordFocusNode: state.passwordFocusNode,
-            autovalidateMode: AutovalidateMode.always,
+            autoValidateMode: AutovalidateMode.always,
             emailController: state.emailController,
             formKey: state.formKey,
             passwordController: state.passwordController,
@@ -43,7 +43,7 @@ class LoginBloc extends PageBloc<LoginEvent, LoginState> {
             LoginLoading(
               emailFocusNode: state.emailFocusNode,
               passwordFocusNode: state.passwordFocusNode,
-              autovalidateMode: AutovalidateMode.disabled,
+              autoValidateMode: AutovalidateMode.disabled,
               emailController: state.emailController,
               passwordController: state.passwordController,
               formKey: state.formKey,
@@ -63,7 +63,7 @@ class LoginBloc extends PageBloc<LoginEvent, LoginState> {
         } else {
           emit(
             initialState.copyWith(
-              autovalidateMode: AutovalidateMode.always,
+              autoValidateMode: AutovalidateMode.always,
             ),
           );
         }
@@ -77,7 +77,7 @@ class LoginBloc extends PageBloc<LoginEvent, LoginState> {
           LoginInitial(
             emailFocusNode: loadingState.emailFocusNode,
             passwordFocusNode: loadingState.passwordFocusNode,
-            autovalidateMode: AutovalidateMode.disabled,
+            autoValidateMode: AutovalidateMode.disabled,
             emailController: loadingState.emailController,
             passwordController: loadingState.passwordController,
             formKey: loadingState.formKey,

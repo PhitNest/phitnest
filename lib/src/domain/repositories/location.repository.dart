@@ -1,14 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../common/constants.dart';
 import '../../common/failure.dart';
 import '../entities/entities.dart';
-
-final locationFailure =
-    Failure("LocationDenied", "Location permissions are denied.");
-
-final locationPermenantlyDeniedFailure = Failure("LocationPermenantlyDenied",
-    "Location permissions are permanently denied, we cannot request permissions.");
 
 class LocationRepository {
   LocationEntity _positionToLocation(Position position) => LocationEntity(
@@ -30,7 +25,7 @@ class LocationRepository {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return Right(locationPermenantlyDeniedFailure);
+      return Right(locationPermanentlyDeniedFailure);
     }
 
     return Left(

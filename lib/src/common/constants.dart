@@ -1,3 +1,5 @@
+import 'failure.dart';
+
 /// HTTP Status Code
 const kStatusContinue = 100; // RFC 7231; 6.2.1
 const kStatusSwitchingProtocols = 101; // RFC 7231; 6.2.2
@@ -61,3 +63,10 @@ const kStatusInsufficientStorage = 507; // RFC 4918; 11.5
 const kStatusLoopDetected = 508; // RFC 5842; 7.2
 const kStatusNotExtended = 510; // RFC 2774; 7
 const kStatusNetworkAuthenticationRequired = 511; // RFC 6585; 6
+
+// Failures
+final locationFailure =
+    Failure("LocationDenied", "Location permissions are denied.");
+
+final locationPermanentlyDeniedFailure = Failure("LocationPermanentlyDenied",
+    "Location permissions are permanently denied, we cannot request permissions.");
