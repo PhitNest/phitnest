@@ -62,7 +62,7 @@ class StyledPasswordField extends StatelessWidget {
               constraints: BoxConstraints(),
               icon: Icon(
                 Icons.visibility,
-                color: Colors.black,
+                color: state._obscureText ? Colors.grey : Colors.black,
               ),
               onPressed: () => state.obscureText = !state.obscureText,
             ),

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:phitnest_mobile/src/data/data_sources/backend/auth.data.dart';
 
 import '../../../common/failure.dart';
 import '../../../domain/entities/entities.dart';
@@ -34,10 +35,6 @@ class SubmitPageTwo extends RegistrationEvent {
   const SubmitPageTwo() : super();
 }
 
-class CancelLoading extends RegistrationEvent {
-  const CancelLoading() : super();
-}
-
 class GymLoadedErrorEvent extends RegistrationEvent {
   final Failure failure;
 
@@ -47,6 +44,10 @@ class GymLoadedErrorEvent extends RegistrationEvent {
 
   @override
   List<Object> get props => [...super.props, failure];
+}
+
+class UploadingPicture extends RegistrationEvent {
+  const UploadingPicture() : super();
 }
 
 class GymsLoadedEvent extends RegistrationEvent {
@@ -98,4 +99,39 @@ class SubmitPageFive extends RegistrationEvent {
         ...super.props,
         ...(image != null ? [image!] : [])
       ];
+}
+
+class SetProfilePictureEvent extends RegistrationEvent {
+  final XFile? image;
+
+  const SetProfilePictureEvent(this.image) : super();
+
+  @override
+  List<Object> get props => [
+        ...super.props,
+        ...(image != null ? [image!] : [])
+      ];
+}
+
+class SubmitPageSix extends RegistrationEvent {
+  const SubmitPageSix() : super();
+}
+
+class RegistrationRequestErrorEvent extends RegistrationEvent {
+  final Failure failure;
+
+  const RegistrationRequestErrorEvent({
+    required this.failure,
+  }) : super();
+
+  @override
+  List<Object> get props => [...super.props, failure];
+}
+
+class RegistrationRequestSuccessEvent extends RegistrationEvent {
+  const RegistrationRequestSuccessEvent() : super();
+}
+
+class UserTakenEvent extends RegistrationEvent {
+  const UserTakenEvent() : super();
 }

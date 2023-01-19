@@ -110,8 +110,8 @@ class LoginLoading extends LoginInitial {
       );
 
   @override
-  Future<void> dispose() {
-    operation.cancel();
+  Future<void> dispose() async {
+    await operation.cancel();
     return super.dispose();
   }
 
