@@ -4,7 +4,7 @@ import { Controller, HttpMethod } from "../types";
 import { authRepo } from "../../../domain/repositories";
 
 const resendConfirmation = z.object({
-  email: z.string().trim().email(),
+  email: z.string().trim(),
 });
 
 type ResendConfirmationRequest = z.infer<typeof resendConfirmation>;

@@ -5,7 +5,7 @@ import { authRepo } from "../../../domain/repositories";
 import { IRefreshSessionEntity } from "../../../domain/entities";
 
 const refreshSession = z.object({
-  email: z.string().trim().email(),
+  email: z.string().trim(),
   refreshToken: z.string(),
 });
 

@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
-import { compareProfilePictureUsers } from "../../../test/helpers/comparisons";
+import {
+  compareProfilePictureUsers,
+  compareUsers,
+} from "../../../test/helpers/comparisons";
 import {
   kMockAuthError,
   MockAuthDatabase,
@@ -9,7 +12,7 @@ import {
   MockProfilePictureDatabase,
 } from "../../../test/helpers/mock-s3";
 import { kGymNotFound } from "../../common/failures";
-import { IProfilePictureUserEntity } from "../entities";
+import { IProfilePictureUserEntity, IUserEntity } from "../entities";
 import { registerUser } from "./register";
 import { gymRepo, userRepo } from "../repositories";
 import {
@@ -61,14 +64,16 @@ test("Register user", async () => {
   const registration = (await registerUser({
     ...testUser1,
     gymId: gym._id,
-  })) as IProfilePictureUserEntity;
-  compareProfilePictureUsers(registration, {
+  })) as IUserEntity & {
+    uploadUrl: string;
+  };
+  expect(registration.uploadUrl).toBe("upload");
+  compareUsers(registration, {
     ...testUser1,
     gymId: gym._id,
     _id: registration._id,
     cognitoId: registration.cognitoId,
     confirmed: false,
-    profilePictureUrl: "upload",
   });
   expect(
     await registerUser({

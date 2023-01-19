@@ -36,7 +36,7 @@ export async function registerUser(user: {
                 ...user,
                 cognitoId: cognitoRegistration,
               })),
-              profilePictureUrl: profilePictureUrl,
+              uploadUrl: profilePictureUrl,
             };
           }
         }

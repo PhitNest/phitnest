@@ -4,7 +4,7 @@ import { Controller, HttpMethod } from "../types";
 import { authRepo } from "../../../domain/repositories";
 
 const forgotPassword = z.object({
-  email: z.string().trim().email(),
+  email: z.string().trim(),
 });
 
 type ForgotPasswordRequest = z.infer<typeof forgotPassword>;
