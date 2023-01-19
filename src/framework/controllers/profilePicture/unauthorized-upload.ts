@@ -4,7 +4,7 @@ import { Controller, HttpMethod } from "../types";
 import { unauthorizedProfilePictureUploadUrl } from "../../../domain/use-cases";
 
 const unauthorizedUploadValidator = z.object({
-  email: z.string().email(),
+  email: z.string().trim(),
   cognitoId: z.string(),
 });
 

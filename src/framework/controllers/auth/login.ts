@@ -5,7 +5,7 @@ import { IAuthEntity, IUserEntity } from "../../../domain/entities";
 import { login } from "../../../domain/use-cases";
 
 const loginValidator = z.object({
-  email: z.string().trim().email(),
+  email: z.string().trim(),
   password: z.string().min(8),
 });
 

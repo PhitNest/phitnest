@@ -4,7 +4,7 @@ import { Controller, HttpMethod } from "../types";
 import { authRepo } from "../../../domain/repositories";
 
 const forgotPasswordSubmit = z.object({
-  email: z.string().trim().email(),
+  email: z.string().trim(),
   code: z.string().length(6),
   newPassword: z.string().min(8),
 });

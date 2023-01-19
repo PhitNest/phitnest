@@ -5,7 +5,7 @@ import { IUserEntity } from "../../../domain/entities";
 import { confirmRegister } from "../../../domain/use-cases";
 
 const confirmRegisterValidator = z.object({
-  email: z.string().trim().email(),
+  email: z.string().trim(),
   code: z.string().length(6),
 });
 
