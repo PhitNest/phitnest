@@ -7,6 +7,7 @@ import '../../../../domain/use_cases/use_cases.dart';
 import '../event/registration_event.dart';
 import '../state/registration_state.dart';
 import 'on_edit_first_name.dart';
+import 'on_gym_selected.dart';
 import 'on_loaded_gyms.dart';
 
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
@@ -35,6 +36,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     on<LoadedGymsEvent>((event, emit) => onLoadedGyms(event, emit, state));
     on<GymsLoadingErrorEvent>(
         (event, emit) => onGymsLoadingError(event, emit, state));
+    on<GymSelectedEvent>((event, emit) => onGymSelected(event, emit, state));
   }
 
   @override

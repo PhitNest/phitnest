@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../event/registration_event.dart';
 import '../state/registration_state.dart';
 
-void onGymsLoadingError(GymsLoadingErrorEvent event,
-    Emitter<RegistrationState> emit, RegistrationState state) {
+void onGymsLoadingError(
+  GymsLoadingErrorEvent event,
+  Emitter<RegistrationState> emit,
+  RegistrationState state,
+) {
   if (state is InitialState) {
     emit(
       GymsLoadingErrorState(

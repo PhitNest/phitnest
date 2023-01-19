@@ -4,8 +4,11 @@ import '../../../../common/validators.dart';
 import '../event/edit_first_name.dart';
 import '../state/registration_state.dart';
 
-void onEditFirstName(EditFirstNameEvent event, Emitter<RegistrationState> emit,
-    RegistrationState state) {
+void onEditFirstName(
+  EditFirstNameEvent event,
+  Emitter<RegistrationState> emit,
+  RegistrationState state,
+) {
   if (state is InitialState) {
     emit(
       InitialState(
