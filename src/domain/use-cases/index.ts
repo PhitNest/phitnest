@@ -10,3 +10,4 @@ export { getFriendsAndMessages } from "./friends-and-messages";
 export { getDirectMessages } from "./get-direct-messages";
 export { sendDirectMessage } from "./send-direct-message";
 export { unauthorizedProfilePictureUploadUrl } from "./unauthorized-upload-url";
+export { forgotPassword } from "./forgot-password";

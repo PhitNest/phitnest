@@ -1,13 +1,13 @@
 import { IRequest, IResponse } from "../../../common/types";
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
-import { authRepo } from "../../../domain/repositories";
+import { forgotPassword } from "../../../domain/use-cases";
 
-const forgotPassword = z.object({
+const forgotPasswordValidator = z.object({
   email: z.string().trim(),
 });
 
-type ForgotPasswordRequest = z.infer<typeof forgotPassword>;
+type ForgotPasswordRequest = z.infer<typeof forgotPasswordValidator>;
 
 export class ForgotPasswordController
   implements Controller<ForgotPasswordRequest, void>
@@ -15,10 +15,10 @@ export class ForgotPasswordController
   method = HttpMethod.POST;
 
   validate(body: any) {
-    return forgotPassword.parse(body);
+    return forgotPasswordValidator.parse(body);
   }
 
   execute(req: IRequest<ForgotPasswordRequest>, res: IResponse<void>) {
-    return authRepo.forgotPassword(req.body.email);
+    return forgotPassword(req.body.email);
   }
 }
