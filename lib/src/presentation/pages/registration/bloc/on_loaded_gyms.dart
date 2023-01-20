@@ -14,6 +14,8 @@ void onLoadedGyms(
         firstNameConfirmed: state.firstNameConfirmed,
         gyms: event.gyms,
         location: event.location,
+        currentPage: state.currentPage,
+        autovalidateMode: state.autovalidateMode,
       ),
     );
   } else if (state is GymsLoadingErrorEvent) {
@@ -21,7 +23,9 @@ void onLoadedGyms(
       GymNotSelectedState(
         firstNameConfirmed: state.firstNameConfirmed,
         gyms: event.gyms,
+        currentPage: state.currentPage,
         location: event.location,
+        autovalidateMode: state.autovalidateMode,
       ),
     );
   } else {

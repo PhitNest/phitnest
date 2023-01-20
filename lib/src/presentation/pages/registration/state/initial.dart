@@ -8,6 +8,8 @@ class InitialState extends RegistrationState {
 
   const InitialState({
     required super.firstNameConfirmed,
+    required super.currentPage,
+    required super.autovalidateMode,
     required this.loadGymsOp,
   }) : super();
 
