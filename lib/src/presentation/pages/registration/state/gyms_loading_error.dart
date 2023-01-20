@@ -6,6 +6,8 @@ class GymsLoadingErrorState extends RegistrationState {
 
   const GymsLoadingErrorState({
     required super.firstNameConfirmed,
+    required super.currentPage,
+    required super.autovalidateMode,
     required this.failure,
   }) : super();
 

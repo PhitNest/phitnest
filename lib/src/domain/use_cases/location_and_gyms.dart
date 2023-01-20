@@ -11,7 +11,7 @@ typedef LocationAndGymsResponse
 Future<LocationAndGymsResponse> loadGyms() =>
     locationDatabase.getLocation().then(
           (either) => either.fold(
-            (location) => gymDatabase.getNearest(location, 30000000).then(
+            (location) => gymBackend.getNearest(location, 30000000).then(
                   (either) => either.leftMap(
                     (list) => Tuple2(list, location),
                   ),

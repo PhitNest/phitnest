@@ -5,8 +5,8 @@ import '../../../domain/entities/entities.dart';
 import '../../adapters/adapters.dart';
 import '../../adapters/interfaces/http.adapter.dart';
 
-class GymDatabase {
-  const GymDatabase();
+class GymBackend {
+  const GymBackend();
 
   Future<Either<List<GymEntity>, Failure>> getNearest(
           LocationEntity location, double meters,
@@ -37,4 +37,4 @@ class GymDatabase {
       );
 }
 
-const gymDatabase = GymDatabase();
+const gymBackend = GymBackend();

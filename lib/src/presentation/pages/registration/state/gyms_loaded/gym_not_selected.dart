@@ -5,5 +5,7 @@ class GymNotSelectedState extends GymsLoadedState {
     required super.firstNameConfirmed,
     required super.location,
     required super.gyms,
+    required super.autovalidateMode,
+    required super.currentPage,
   }) : super();
 }

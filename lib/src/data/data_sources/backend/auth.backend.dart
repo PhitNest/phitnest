@@ -67,8 +67,8 @@ class RegisterResponse extends UserEntity {
       ];
 }
 
-class AuthDatabase {
-  const AuthDatabase();
+class AuthBackend {
+  const AuthBackend();
 
   Future<Either<LoginResponse, Failure>> login(
           String email, String password) async =>
@@ -121,4 +121,4 @@ class AuthDatabase {
       );
 }
 
-const authDatabase = AuthDatabase();
+const authBackend = AuthBackend();

@@ -12,14 +12,9 @@ void onGymsLoadingError(
     emit(
       GymsLoadingErrorState(
         firstNameConfirmed: state.firstNameConfirmed,
+        currentPage: state.currentPage,
         failure: event.failure,
-      ),
-    );
-  } else if (state is GymsLoadingErrorEvent) {
-    emit(
-      GymsLoadingErrorState(
-        firstNameConfirmed: state.firstNameConfirmed,
-        failure: event.failure,
+        autovalidateMode: state.autovalidateMode,
       ),
     );
   } else {

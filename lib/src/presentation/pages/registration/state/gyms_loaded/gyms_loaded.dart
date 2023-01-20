@@ -7,6 +7,8 @@ abstract class GymsLoadedState extends RegistrationState {
 
   const GymsLoadedState({
     required super.firstNameConfirmed,
+    required super.currentPage,
+    required super.autovalidateMode,
     required this.location,
     required this.gyms,
   }) : super();
