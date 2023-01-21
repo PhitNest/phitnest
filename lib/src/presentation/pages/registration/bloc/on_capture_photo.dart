@@ -38,19 +38,19 @@ void onCapturePhoto(
         gymConfirmed: state.gymConfirmed,
         cameraController: state.cameraController,
         hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-        photoCapture: CancelableOperation.fromFuture(
-          state.cameraController.takePicture(),
-        )..value.catchError(
-            (err) {
-              if (err is CameraException) {
-                add(CaptureErrorEvent(err));
-              } else {
-                throw err;
-              }
-            },
-          ).then(
-            (photo) => add(SetProfilePictureEvent(photo)),
-          ),
+        photoCapture:
+            CancelableOperation.fromFuture(state.cameraController.takePicture())
+              ..value.catchError(
+                (err) {
+                  if (err is CameraException) {
+                    add(CaptureErrorEvent(err));
+                  } else {
+                    throw err;
+                  }
+                },
+              ).then(
+                (photo) => add(SetProfilePictureEvent(photo)),
+              ),
       ),
     );
   }

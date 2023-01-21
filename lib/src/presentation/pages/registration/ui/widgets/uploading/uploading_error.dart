@@ -18,6 +18,7 @@ class UploadingErrorPage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         body: Column(
           children: [
+            double.infinity.horizontalSpace,
             200.verticalSpace,
             Text(
               errorMessage,

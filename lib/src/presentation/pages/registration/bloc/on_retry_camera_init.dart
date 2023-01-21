@@ -43,8 +43,8 @@ Future<void> onRetryCameraInit(
     } on CameraException catch (err) {
       emit(
         state.copyWith(
-          failure:
-              Failure(err.code, "Please enable camera access\nand try again."),
+          failure: Failure(err.code,
+              err.description ?? "Please enable camera access\nand try again."),
         ),
       );
     }

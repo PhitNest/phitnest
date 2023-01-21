@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../domain/use_cases/use_cases.dart';
 import '../event/registration_event.dart';
 import '../state/registration_state.dart';
+import 'on_capture_error.dart';
 import 'on_capture_photo.dart';
 import 'on_confirm_gym.dart';
 import 'on_edit_first_name.dart';
@@ -105,6 +106,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         (event, emit) => onUploadSuccess(event, emit, state));
     on<RetryPhotoUploadEvent>(
         (event, emit) => onRetryPhotoUpload(event, emit, state, add));
+    on<CaptureErrorEvent>((event, emit) => onCaptureError(event, emit, state));
   }
 
   @override

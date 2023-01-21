@@ -75,11 +75,13 @@ Future<void> onGymConfirmed(
             takenEmails: state.takenEmails,
             autovalidateMode: state.autovalidateMode,
             gym: state.gym,
-            gymConfirmed: state.gymConfirmed,
+            gymConfirmed: true,
             cameraController: state.cameraController,
             hasReadPhotoInstructions: state.hasReadPhotoInstructions,
             failure: Failure(
-                err.code, "Please enable camera access\nand try again."),
+                err.code,
+                err.description ??
+                    "Please enable camera access\nand try again."),
           ),
         );
       }
