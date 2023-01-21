@@ -59,23 +59,6 @@ void onValidationFailed(
         registerOp: state.registerOp,
       ),
     );
-  } else if (state is UploadingPhotoState) {
-    emit(
-      UploadingPhotoState(
-        firstNameConfirmed: state.firstNameConfirmed,
-        location: state.location,
-        gym: state.gym,
-        autovalidateMode: AutovalidateMode.always,
-        currentPage: state.currentPage,
-        gyms: state.gyms,
-        takenEmails: state.takenEmails,
-        gymConfirmed: state.gymConfirmed,
-        cameraController: state.cameraController,
-        hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-        photo: state.photo,
-        uploadOp: state.uploadOp,
-      ),
-    );
   } else if (state is PhotoSelectedState) {
     emit(
       PhotoSelectedState(

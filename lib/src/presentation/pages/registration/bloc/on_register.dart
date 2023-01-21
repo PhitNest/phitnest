@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/validators.dart';
-import '../../../../data/data_sources/backend/backend.dart';
+import '../../../../domain/repositories/repositories.dart';
 import '../event/registration_event.dart';
 import '../state/registration_state.dart';
 
@@ -44,7 +44,7 @@ void onRegister(
         cameraController: photoSelectedState.cameraController,
         hasReadPhotoInstructions: photoSelectedState.hasReadPhotoInstructions,
         registerOp: CancelableOperation.fromFuture(
-          authBackend.register(
+          authRepo.register(
             email,
             password,
             firstName,

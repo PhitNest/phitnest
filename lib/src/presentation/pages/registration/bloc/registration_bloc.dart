@@ -1,6 +1,7 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phitnest_mobile/src/presentation/pages/registration/bloc/on_upload_success.dart';
 
 import '../../../../domain/use_cases/use_cases.dart';
 import '../event/registration_event.dart';
@@ -14,10 +15,13 @@ import 'on_loaded_gyms.dart';
 import 'on_read_photo_instructions.dart';
 import 'on_register.dart';
 import 'on_register_error.dart';
+import 'on_register_success.dart';
 import 'on_retake_photo.dart';
 import 'on_retry_camera_init.dart';
 import 'on_retry_load_gyms.dart';
+import 'on_retry_photo_upload.dart';
 import 'on_set_profile_picture.dart';
+import 'on_upload_error.dart';
 import 'on_validation_failed.dart';
 import 'on_swipe.dart';
 
@@ -148,6 +152,19 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         emailController.text.trim(),
       ),
     );
+    on<RegisterSuccessEvent>(
+      (event, emit) => onRegisterSuccess(
+        event,
+        emit,
+        state,
+        add,
+      ),
+    );
+    on<UploadErrorEvent>((event, emit) => onUploadError(event, emit, state));
+    on<UploadSuccessEvent>(
+        (event, emit) => onUploadSuccess(event, emit, state));
+    on<RetryPhotoUploadEvent>(
+        (event, emit) => onRetryPhotoUpload(event, emit, state, add));
   }
 
   @override

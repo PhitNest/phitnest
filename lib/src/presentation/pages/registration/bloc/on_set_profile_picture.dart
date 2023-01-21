@@ -8,20 +8,23 @@ void onSetProfilePicture(
   Emitter<RegistrationState> emit,
   RegistrationState state,
 ) {
-  final gymSelectedState = state as GymSelectedState;
-  emit(
-    PhotoSelectedState(
-      photo: event.image,
-      firstNameConfirmed: state.firstNameConfirmed,
-      location: gymSelectedState.location,
-      gyms: gymSelectedState.gyms,
-      currentPage: state.currentPage,
-      autovalidateMode: state.autovalidateMode,
-      gym: gymSelectedState.gym,
-      takenEmails: state.takenEmails,
-      gymConfirmed: gymSelectedState.gymConfirmed,
-      cameraController: gymSelectedState.cameraController,
-      hasReadPhotoInstructions: gymSelectedState.hasReadPhotoInstructions,
-    ),
-  );
+  if (state is GymSelectedState) {
+    emit(
+      PhotoSelectedState(
+        photo: event.image,
+        firstNameConfirmed: state.firstNameConfirmed,
+        location: state.location,
+        gyms: state.gyms,
+        currentPage: state.currentPage,
+        autovalidateMode: state.autovalidateMode,
+        gym: state.gym,
+        takenEmails: state.takenEmails,
+        gymConfirmed: state.gymConfirmed,
+        cameraController: state.cameraController,
+        hasReadPhotoInstructions: state.hasReadPhotoInstructions,
+      ),
+    );
+  } else {
+    throw Exception('Invalid state: $state');
+  }
 }

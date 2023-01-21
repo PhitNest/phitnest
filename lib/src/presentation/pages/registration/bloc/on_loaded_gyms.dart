@@ -18,7 +18,7 @@ void onLoadedGyms(
         autovalidateMode: state.autovalidateMode,
       ),
     );
-  } else if (state is GymsLoadingErrorEvent) {
+  } else if (state is GymsLoadingErrorState) {
     emit(
       GymNotSelectedState(
         firstNameConfirmed: state.firstNameConfirmed,

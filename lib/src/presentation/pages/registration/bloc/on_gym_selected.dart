@@ -51,23 +51,6 @@ Future<void> onGymSelected(
         registerOp: state.registerOp,
       ),
     );
-  } else if (state is UploadingPhotoState) {
-    emit(
-      UploadingPhotoState(
-        firstNameConfirmed: state.firstNameConfirmed,
-        location: state.location,
-        gym: event.gym,
-        gymConfirmed: false,
-        autovalidateMode: state.autovalidateMode,
-        currentPage: state.currentPage,
-        gyms: state.gyms,
-        takenEmails: state.takenEmails,
-        cameraController: state.cameraController,
-        hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-        photo: state.photo,
-        uploadOp: state.uploadOp,
-      ),
-    );
   } else if (state is PhotoSelectedState) {
     emit(
       PhotoSelectedState(

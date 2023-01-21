@@ -1,7 +1,7 @@
 import '../../../../common/failure.dart';
-import './registration_state.dart';
+import 'register_base.dart';
 
-class GymsLoadingErrorState extends RegistrationState {
+class GymsLoadingErrorState extends RegistrationBase {
   final Failure failure;
 
   const GymsLoadingErrorState({
