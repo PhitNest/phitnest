@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../common/assets_constants.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -40,17 +42,27 @@ class _StyledNavigationBarState extends State<StyledNavigationBar> {
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.only(bottom: 18.h),
+        padding: EdgeInsets.only(),
         child: Stack(
           children: [
+            Center(
+              child: Padding(
+                padding: EdgeInsets.only(left: 12.w),
+                child: Image.asset(
+                  kLogoPath,
+                  width: 38.62.w,
+                ),
+              ),
+            ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                NavButton(context, 'News', () {}),
-                NavButton(context, 'Explore', () {}),
-                NavButton(context, 'Chat', () {}),
-                NavButton(context, 'Options', () {}),
+                navButton(context, 'News', () {}),
+                navButton(context, 'Explore', () {}),
+                60.horizontalSpace,
+                navButton(context, 'Chat', () {}),
+                navButton(context, 'Options', () {}),
               ],
             )
           ],
@@ -60,7 +72,7 @@ class _StyledNavigationBarState extends State<StyledNavigationBar> {
   }
 }
 
-Widget NavButton(
+Widget navButton(
   BuildContext context,
   String tabName,
   VoidCallback onPressed,
