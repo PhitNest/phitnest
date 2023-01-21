@@ -31,17 +31,15 @@ int _getPageScrollLimit(InitialState state) => state.firstNameConfirmed
 void _onSelectedGym(BuildContext context, GymEntity gym) =>
     _bloc(context).add(GymSelectedEvent(gym));
 
-List<GymEntity> _filterGymsWithDuplicateNames(List<GymEntity> gyms) => gyms
-    .where(
-      (element) =>
-          gyms
-              .where(
-                (innerLoop) => innerLoop.name == element.name,
-              )
-              .length ==
-          1,
-    )
-    .toList();
+List<GymEntity> _filterGymsWithDuplicateNames(List<GymEntity> gyms) {
+  List<GymEntity> filtered = [];
+  for (final gym in gyms) {
+    if (!filtered.any((element) => element.name == gym.name)) {
+      filtered.add(gym);
+    }
+  }
+  return filtered;
+}
 
 void _onPressedNoGym(BuildContext context) {}
 

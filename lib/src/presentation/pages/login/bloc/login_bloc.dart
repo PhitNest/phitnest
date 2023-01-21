@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../event/login_event.dart';
 import '../state/login_state.dart';
+import 'on_submit.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc()
@@ -13,8 +14,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             emailFocusNode: FocusNode(),
             passwordFocusNode: FocusNode(),
             formKey: GlobalKey(),
+            autovalidateMode: AutovalidateMode.disabled,
+            invalidCredentials: {},
           ),
-        ) {}
+        ) {
+    on<SubmitEvent>((event, emit) => onSubmit(event, emit, state, add));
+  }
 
   @override
   Future<void> close() {

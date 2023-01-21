@@ -6,10 +6,10 @@ import '../../data/data_sources/s3/s3.dart';
 
 Future<Failure?> uploadPhotoUnauthorized(
   String email,
-  String cognitoId,
+  String password,
   XFile photo,
 ) =>
-    profilePictureBackend.getUploadUrlUnauthorized(email, cognitoId).then(
+    profilePictureBackend.getUploadUrlUnauthorized(email, password).then(
           (res) => res.fold(
             (url) => photoDatabase.uploadPhoto(url, photo),
             (failure) => Future.value(failure),

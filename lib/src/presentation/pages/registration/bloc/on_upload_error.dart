@@ -14,6 +14,7 @@ void onUploadError(
         photo: state.photo,
         failure: event.failure,
         registration: state.registration,
+        password: state.password,
       ),
     );
   } else {

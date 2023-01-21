@@ -5,7 +5,6 @@ import '../../../common/theme.dart';
 
 class StyledUnderlinedTextField extends StatelessWidget {
   final String? hint;
-  final String? error;
   final TextEditingController? controller;
   final bool obscureText;
   final TextInputType? keyboardType;
@@ -22,7 +21,6 @@ class StyledUnderlinedTextField extends StatelessWidget {
   const StyledUnderlinedTextField({
     Key? key,
     this.hint,
-    this.error,
     this.controller,
     this.obscureText = false,
     this.keyboardType,
@@ -60,7 +58,6 @@ class StyledUnderlinedTextField extends StatelessWidget {
           helperText: ' ',
           hintText: hint,
           isDense: true,
-          errorText: error,
           errorMaxLines: errorMaxLines,
           helperStyle: theme.textTheme.labelMedium,
           errorStyle: theme.textTheme.labelMedium!.copyWith(color: Colors.red),

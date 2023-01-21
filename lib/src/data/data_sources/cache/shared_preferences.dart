@@ -2,6 +2,18 @@ import '../../../common/shared_preferences.dart';
 import '../../../domain/entities/entities.dart';
 
 class DeviceCache {
+  String? get cachedAccessToken => sharedPreferences.getString('accessToken');
+
+  Future<bool> cacheAccessToken(String? accessToken) => accessToken != null
+      ? sharedPreferences.setString('accessToken', accessToken)
+      : sharedPreferences.remove('accessToken');
+
+  String? get cachedRefreshToken => sharedPreferences.getString('refreshToken');
+
+  Future<bool> cacheRefreshToken(String? refreshToken) => refreshToken != null
+      ? sharedPreferences.setString('refreshToken', refreshToken)
+      : sharedPreferences.remove('refreshToken');
+
   String? get cachedEmail => sharedPreferences.getString('email');
 
   Future<bool> cacheEmail(String? email) => email != null

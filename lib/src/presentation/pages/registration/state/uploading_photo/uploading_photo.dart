@@ -10,6 +10,7 @@ class UploadingPhotoState extends UploadingPhotoBaseState {
 
   const UploadingPhotoState({
     required super.registration,
+    required super.password,
     required super.photo,
     required this.uploadOp,
   }) : super();
