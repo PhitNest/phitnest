@@ -9,7 +9,10 @@ void onUploadSuccess(
   RegistrationState state,
 ) {
   if (state is UploadingPhotoState) {
-    emit(UploadSuccessState(registration: state.registration));
+    emit(UploadSuccessState(
+      registration: state.registration,
+      password: state.password,
+    ));
   } else {
     throw Exception("Invalid state: $state");
   }

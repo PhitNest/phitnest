@@ -13,19 +13,6 @@ class AppInitial extends AppState {
   const AppInitial() : super();
 }
 
-class AppRegistered extends AppState {
-  final UserEntity user;
-  final String password;
-
-  const AppRegistered({
-    required this.user,
-    required this.password,
-  }) : super();
-
-  @override
-  List<Object> get props => [...super.props, user, password];
-}
-
 class AppAuthenticated extends AppState {
   final String accessToken;
   final String refreshToken;
