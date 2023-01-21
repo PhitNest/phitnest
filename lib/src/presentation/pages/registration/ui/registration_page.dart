@@ -50,13 +50,13 @@ void _onSetProfilePicture(BuildContext context, XFile photo) => _bloc(
     ).add(SetProfilePictureEvent(photo));
 
 void _onPressedCapture(BuildContext context) =>
-    _bloc(context).add(CapturePhotoEvent());
+    _bloc(context).add(const CapturePhotoEvent());
 
 void _onPressedRetake(BuildContext context) =>
-    _bloc(context).add(RetakeProfilePictureEvent());
+    _bloc(context).add(const RetakeProfilePictureEvent());
 
 void _onPressedSubmitPageSix(BuildContext context) =>
-    _bloc(context).add(RegisterEvent());
+    _bloc(context).add(const RegisterEvent());
 
 /// Handles registration and profile picture upload
 class RegistrationPage extends StatelessWidget {
@@ -131,7 +131,7 @@ class RegistrationPage extends StatelessWidget {
                                           lastNameFocusNode:
                                               state.lastNameFocusNode,
                                           onSubmit: () => _bloc(context)
-                                              .add(SubmitPageOneEvent()),
+                                              .add(const SubmitPageOneEvent()),
                                         );
                                       // Second page
                                       case 1:
@@ -157,7 +157,7 @@ class RegistrationPage extends StatelessWidget {
                                               state.passwordFocusNode,
                                           // Emit the SubmitPageTwo event on completion
                                           onSubmit: () => _bloc(context)
-                                              .add(SubmitPageTwoEvent()),
+                                              .add(const SubmitPageTwoEvent()),
                                           confirmPasswordController:
                                               state.confirmPasswordController,
                                           confirmPasswordFocusNode:
@@ -189,7 +189,8 @@ class RegistrationPage extends StatelessWidget {
                                                 .trim(),
                                             error: state.failure.message,
                                             onPressedRetry: () => _bloc(context)
-                                                .add(RetryLoadGymsEvent()),
+                                                .add(
+                                                    const RetryLoadGymsEvent()),
                                           );
                                         } else if (state is GymSelectedState) {
                                           // The user has selected a gym
@@ -236,7 +237,7 @@ class RegistrationPage extends StatelessWidget {
                                           return PageFour(
                                             gym: state.gym,
                                             onPressedYes: () => _bloc(context)
-                                                .add(ConfirmGymEvent()),
+                                                .add(const ConfirmGymEvent()),
                                             // Use the result of the gym search page to set the gym
                                             onPressedNo: () => Navigator.push(
                                               context,
@@ -270,7 +271,7 @@ class RegistrationPage extends StatelessWidget {
                                           return PageFiveNoUpload(
                                             onPressedTakePhoto: () =>
                                                 _bloc(context).add(
-                                                    ReadPhotoInstructionsEvent()),
+                                                    const ReadPhotoInstructionsEvent()),
                                           );
                                         } else if (state is GymSelectedState) {
                                           return PageFive(
@@ -279,10 +280,10 @@ class RegistrationPage extends StatelessWidget {
                                               ..add(
                                                   SetProfilePictureEvent(image))
                                               ..add(
-                                                  ReadPhotoInstructionsEvent()),
+                                                  const ReadPhotoInstructionsEvent()),
                                             onPressedTakePhoto: () =>
                                                 _bloc(context).add(
-                                                    ReadPhotoInstructionsEvent()),
+                                                    const ReadPhotoInstructionsEvent()),
                                           );
                                         } else {
                                           // The state should be a gym selected state at this point
@@ -351,7 +352,7 @@ class RegistrationPage extends StatelessWidget {
                                             onPressedRetry: () => context
                                                 .read<RegistrationBloc>()
                                                 .add(
-                                                  RetryCameraInitializationEvent(),
+                                                  const RetryCameraInitializationEvent(),
                                                 ),
                                           );
                                         } else if (state is GymSelectedState) {
@@ -391,9 +392,9 @@ class RegistrationPage extends StatelessWidget {
                       // There was an error uploading their profile picture
                       return UploadingErrorPage(
                         errorMessage: state.failure.message,
-                        onRetry: () => context.read<RegistrationBloc>().add(
-                              RetryPhotoUploadEvent(),
-                            ),
+                        onRetry: () => context
+                            .read<RegistrationBloc>()
+                            .add(const RetryPhotoUploadEvent()),
                       );
                     } else {
                       throw Exception('Invalid state: $state');

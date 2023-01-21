@@ -46,7 +46,7 @@ void onRegisterError(
       );
       // Delay the event to allow the page to render... IS THERE A BETTER WAY TO DO THIS? :(
       Future.delayed(
-          Duration(milliseconds: 50), () => add(SubmitPageTwoEvent()));
+          Duration(milliseconds: 50), () => add(const SubmitPageTwoEvent()));
     } else {
       state.pageController.jumpToPage(5);
       emit(

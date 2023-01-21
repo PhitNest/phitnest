@@ -24,7 +24,7 @@ void onRetryPhotoUpload(
         )..then(
             (res) => res != null
                 ? add(UploadErrorEvent(res))
-                : add(UploadSuccessEvent()),
+                : add(const UploadSuccessEvent()),
           ),
         photo: state.photo,
         registration: state.registration,

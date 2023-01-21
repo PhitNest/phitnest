@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_mobile/src/presentation/pages/registration/ui/registration_page.dart';
 
 import 'app_bloc.dart';
 import 'common/theme.dart';
+import 'data/data_sources/cache/cache.dart';
+import 'presentation/pages/pages.dart';
 
 class App extends StatelessWidget {
   @override
@@ -19,16 +20,16 @@ class App extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             home: Builder(
               builder: (context) {
-                // final user = deviceCache.cachedUser;
+                final user = deviceCache.cachedUser;
                 // if (user != null) {
                 //   if (user.confirmed) {
                 //     return const HomePage();
                 //   } else {
                 //     return ConfirmEmailPage(email: user.email);
                 //   }
-                //  } else {
-                return RegistrationPage();
-                //}
+                // } else {
+                return OnBoardingPage();
+                // }
               },
             ),
           ),

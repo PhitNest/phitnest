@@ -19,7 +19,7 @@ void onRegister(
         validateName(state.lastNameController.text) != null) {
       state.pageController.jumpToPage(0);
       Future.delayed(
-          Duration(milliseconds: 50), () => add(SubmitPageOneEvent()));
+          Duration(milliseconds: 50), () => add(const SubmitPageOneEvent()));
     } else if (validateEmail(state.emailController.text) != null ||
         state.takenEmails.contains(state.emailController.text) ||
         validatePassword(state.passwordController.text) != null ||
@@ -27,7 +27,7 @@ void onRegister(
       state.pageController.jumpToPage(1);
       // Delay for page rendering
       Future.delayed(
-          Duration(milliseconds: 50), () => add(SubmitPageTwoEvent()));
+          Duration(milliseconds: 50), () => add(const SubmitPageTwoEvent()));
     } else {
       emit(
         RegisterRequestLoadingState(
