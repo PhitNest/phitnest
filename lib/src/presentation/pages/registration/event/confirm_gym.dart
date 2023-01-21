@@ -4,7 +4,4 @@ import 'registration_event.dart';
 /// they have selected.
 class ConfirmGymEvent extends RegistrationEvent {
   const ConfirmGymEvent();
-
-  @override
-  List<Object?> get props => [];
 }

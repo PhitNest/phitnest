@@ -25,7 +25,7 @@ void onRegisterSuccess(
         )..then(
             (res) => res != null
                 ? add(UploadErrorEvent(res))
-                : add(UploadSuccessEvent()),
+                : add(const UploadSuccessEvent()),
           ),
       ),
     );
