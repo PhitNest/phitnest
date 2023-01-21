@@ -3,9 +3,10 @@ import 'registration_event.dart';
 
 class RegisterSuccessEvent extends RegistrationEvent {
   final RegisterResponse response;
+  final String password;
 
-  const RegisterSuccessEvent(this.response);
+  const RegisterSuccessEvent(this.response, this.password);
 
   @override
-  List<Object?> get props => [response];
+  List<Object?> get props => [response, password];
 }

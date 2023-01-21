@@ -12,6 +12,7 @@ void onUploadError(
     emit(
       UploadErrorState(
         photo: state.photo,
+        password: state.password,
         failure: event.failure,
         registration: state.registration,
       ),

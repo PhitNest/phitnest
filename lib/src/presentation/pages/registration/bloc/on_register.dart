@@ -53,7 +53,7 @@ void onRegister(
           ),
         )..then(
             (either) => either.fold(
-              (success) => add(RegisterSuccessEvent(success)),
+              (success) => add(RegisterSuccessEvent(success, password)),
               (failure) => add(RegisterErrorEvent(failure)),
             ),
           ),

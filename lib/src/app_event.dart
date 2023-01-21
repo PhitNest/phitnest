@@ -8,16 +8,3 @@ abstract class AppEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
-
-class RegisteredEvent extends AppEvent {
-  final UserEntity user;
-  final String password;
-
-  const RegisteredEvent({
-    required this.user,
-    required this.password,
-  }) : super();
-
-  @override
-  List<Object> get props => [...super.props, user, password];
-}

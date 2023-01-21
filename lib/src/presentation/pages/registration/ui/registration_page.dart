@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../../app_bloc.dart';
+import '../../../../app_event.dart';
 import '../../../../domain/entities/entities.dart';
 import '../../../widgets/styled/styled.dart';
 import '../../pages.dart';
