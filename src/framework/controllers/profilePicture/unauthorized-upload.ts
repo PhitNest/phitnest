@@ -5,7 +5,7 @@ import { unauthorizedProfilePictureUploadUrl } from "../../../domain/use-cases";
 
 const unauthorizedUploadValidator = z.object({
   email: z.string().trim(),
-  cognitoId: z.string(),
+  password: z.string(),
 });
 
 type UnauthorizedProfilePictureUploadRequest = z.infer<
@@ -35,7 +35,7 @@ export class UnauthorizedProfilePictureUploadController
   ) {
     return unauthorizedProfilePictureUploadUrl(
       req.body.email,
-      req.body.cognitoId
+      req.body.password
     );
   }
 }

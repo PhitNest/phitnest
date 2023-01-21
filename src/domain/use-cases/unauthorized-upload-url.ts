@@ -1,21 +1,20 @@
 import {
-  kInvalidCognitoId,
   kUserAlreadyConfirmed,
+  kUserNotConfirmed,
 } from "../../common/failures";
 import { Failure } from "../../common/types";
-import { userRepo, profilePictureRepo } from "../repositories";
+import { authRepo, userRepo, profilePictureRepo } from "../repositories";
 
 export async function unauthorizedProfilePictureUploadUrl(
   email: string,
-  cognitoId: string
+  password: string
 ) {
-  const user = await userRepo.getByEmail(email);
-  if (user instanceof Failure) {
-    return user;
-  } else {
-    if (user.cognitoId === cognitoId) {
-      if (user.confirmed) {
-        return kUserAlreadyConfirmed;
+  const result = await authRepo.login(email, password);
+  if (result instanceof Failure) {
+    if (result.code === kUserNotConfirmed.code) {
+      const user = await userRepo.getByEmail(email);
+      if (user instanceof Failure) {
+        return user;
       } else {
         const url = await profilePictureRepo.getProfilePictureUploadUrl(
           user.cognitoId
@@ -29,7 +28,9 @@ export async function unauthorizedProfilePictureUploadUrl(
         }
       }
     } else {
-      return kInvalidCognitoId;
+      return result;
     }
+  } else {
+    return kUserAlreadyConfirmed;
   }
 }
