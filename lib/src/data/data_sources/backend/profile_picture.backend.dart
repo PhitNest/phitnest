@@ -9,14 +9,14 @@ class ProfilePictureBackend {
 
   Future<Either<String, Failure>> getUploadUrlUnauthorized(
     String email,
-    String cognitoId,
+    String password,
   ) =>
       httpAdapter.request(
         HttpMethod.get,
         '/profilePicture/unauthorized',
         data: {
           "email": email,
-          "cognitoId": cognitoId,
+          "password": password,
         },
       ).then(
         (res) => res.fold(

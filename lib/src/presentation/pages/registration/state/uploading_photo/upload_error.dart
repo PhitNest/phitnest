@@ -8,6 +8,7 @@ class UploadErrorState extends UploadingPhotoBaseState {
   const UploadErrorState({
     required super.photo,
     required super.registration,
+    required super.password,
     required this.failure,
   }) : super();
 

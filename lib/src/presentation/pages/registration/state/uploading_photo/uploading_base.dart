@@ -14,11 +14,15 @@ abstract class UploadingPhotoBaseState extends RegistrationState {
   /// This is the response from the users registration.
   final RegisterResponse registration;
 
+  /// This is the password the user used to register.
+  final String password;
+
   const UploadingPhotoBaseState({
     required this.photo,
     required this.registration,
+    required this.password,
   }) : super();
 
   @override
-  List<Object> get props => [photo, registration];
+  List<Object> get props => [photo, registration, password];
 }

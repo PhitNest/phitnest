@@ -21,15 +21,15 @@ class App extends StatelessWidget {
             home: Builder(
               builder: (context) {
                 final user = deviceCache.cachedUser;
-                // if (user != null) {
-                //   if (user.confirmed) {
-                //     return const HomePage();
-                //   } else {
-                //     return ConfirmEmailPage(email: user.email);
-                //   }
-                // } else {
-                return OnBoardingPage();
-                // }
+                if (user != null) {
+                  if (user.confirmed) {
+                    return const HomePage();
+                  } else {
+                    return ConfirmEmailPage(email: user.email);
+                  }
+                } else {
+                  return OnBoardingPage();
+                }
               },
             ),
           ),

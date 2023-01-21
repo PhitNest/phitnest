@@ -17,7 +17,6 @@ class _State extends ChangeNotifier {
 
 class StyledPasswordField extends StatelessWidget {
   final String? hint;
-  final String? error;
   final TextEditingController? controller;
   final TextInputAction? textInputAction;
   final FocusNode? focusNode;
@@ -29,7 +28,6 @@ class StyledPasswordField extends StatelessWidget {
   const StyledPasswordField({
     Key? key,
     this.hint,
-    this.error,
     this.controller,
     this.textInputAction,
     this.focusNode,
@@ -47,7 +45,6 @@ class StyledPasswordField extends StatelessWidget {
             onFieldSubmitted: onFieldSubmitted,
             hint: hint,
             errorMaxLines: 2,
-            error: error,
             controller: controller,
             obscureText: state.obscureText,
             textInputAction: textInputAction,

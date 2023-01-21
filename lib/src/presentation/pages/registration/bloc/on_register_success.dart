@@ -16,6 +16,7 @@ void onRegisterSuccess(
     emit(
       UploadingPhotoState(
         photo: state.photo,
+        password: state.passwordController.text,
         registration: event.response,
         uploadOp: CancelableOperation.fromFuture(
           photoDatabase.uploadPhoto(
