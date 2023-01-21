@@ -249,7 +249,8 @@ class PageSixCameraError extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          120.verticalSpace,
+          double.infinity.horizontalSpace,
+          200.verticalSpace,
           Text(
             errorMessage,
             style:

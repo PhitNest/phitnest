@@ -91,12 +91,12 @@ class DioHttpAdapter implements IHttpAdapter {
               },
             ),
           );
-    } on DioError catch (e) {
+    } catch (e) {
       final failure;
-      if (e.response!.data == null) {
-        failure = Failure("NetworkError", "Failed to connect to the network.");
-      } else {
+      if (e is DioError) {
         failure = Failure.fromJson(e.response!.data);
+      } else {
+        failure = Failure("NetworkError", "Failed to connect to the network.");
       }
       logger.e(
           "Response failure:\n\tmethod: $method\n\tpath: $path\n\tdata: $failure");

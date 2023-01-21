@@ -18,12 +18,7 @@ class PageThreeLoadingError extends _PageThreeBase {
   }) : super(
           key: key,
           children: [
-            Text(
-              "Error loading gyms...",
-              style: theme.textTheme.labelLarge,
-              textAlign: TextAlign.center,
-            ),
-            24.verticalSpace,
+            20.verticalSpace,
             Text(
               error,
               style:
@@ -31,7 +26,7 @@ class PageThreeLoadingError extends _PageThreeBase {
               textAlign: TextAlign.center,
             ),
             24.verticalSpace,
-            StyledUnderlinedTextButton(
+            StyledButton(
               text: "RETRY",
               onPressed: onPressedRetry,
             ),
