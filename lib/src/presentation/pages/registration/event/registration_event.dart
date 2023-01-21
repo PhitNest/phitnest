@@ -22,6 +22,7 @@ export 'upload_photo_error.dart';
 export 'upload_success.dart';
 export 'retry_photo_upload.dart';
 
+/// This is the base event for the registration page
 abstract class RegistrationEvent extends Equatable {
   const RegistrationEvent() : super();
 }

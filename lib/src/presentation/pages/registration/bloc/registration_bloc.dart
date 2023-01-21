@@ -1,7 +1,6 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:phitnest_mobile/src/presentation/pages/registration/bloc/on_upload_success.dart';
 
 import '../../../../domain/use_cases/use_cases.dart';
 import '../event/registration_event.dart';
@@ -11,7 +10,7 @@ import 'on_confirm_gym.dart';
 import 'on_edit_first_name.dart';
 import 'on_gym_loading_error.dart';
 import 'on_gym_selected.dart';
-import 'on_loaded_gyms.dart';
+import 'on_gyms_loaded.dart';
 import 'on_read_photo_instructions.dart';
 import 'on_register.dart';
 import 'on_register_error.dart';
@@ -21,39 +20,40 @@ import 'on_retry_camera_init.dart';
 import 'on_retry_load_gyms.dart';
 import 'on_retry_photo_upload.dart';
 import 'on_set_profile_picture.dart';
+import 'on_submit_page_two.dart';
 import 'on_upload_error.dart';
-import 'on_validation_failed.dart';
+import 'on_submit_page_one.dart';
 import 'on_swipe.dart';
+import 'on_upload_success.dart';
 
 const pageAnimation = const Duration(milliseconds: 400);
 
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  final pageController = PageController();
-  final pageOneFormKey = GlobalKey<FormState>();
-  final pageTwoFormKey = GlobalKey<FormState>();
-  final firstNameFocusNode = FocusNode();
-  final lastNameFocusNode = FocusNode();
-  final emailFocusNode = FocusNode();
-  final passwordFocusNode = FocusNode();
-  final confirmPasswordFocusNode = FocusNode();
-
   RegistrationBloc()
       : super(
-          InitialState(
+          GymsLoadingState(
+            firstNameController: TextEditingController(),
+            firstNameFocusNode: FocusNode(),
+            lastNameController: TextEditingController(),
+            lastNameFocusNode: FocusNode(),
+            emailController: TextEditingController(),
+            emailFocusNode: FocusNode(),
+            passwordController: TextEditingController(),
+            passwordFocusNode: FocusNode(),
+            confirmPasswordController: TextEditingController(),
+            confirmPasswordFocusNode: FocusNode(),
+            pageController: PageController(),
+            pageOneFormKey: GlobalKey<FormState>(),
+            pageTwoFormKey: GlobalKey<FormState>(),
             firstNameConfirmed: false,
             loadGymsOp: CancelableOperation.fromFuture(loadGyms()),
             currentPage: 0,
             autovalidateMode: AutovalidateMode.disabled,
           ),
         ) {
-    (state as InitialState).loadGymsOp.then(
+    (state as GymsLoadingState).loadGymsOp.then(
           (either) => either.fold(
-            (success) => add(LoadedGymsEvent(success.value1, success.value2)),
+            (success) => add(GymsLoadedEvent(success.value1, success.value2)),
             (failure) => add(GymsLoadingErrorEvent(failure)),
           ),
         );
@@ -61,62 +61,18 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         (event, emit) => onRetryLoadGyms(event, emit, state, add));
     on<EditFirstNameEvent>(
         (event, emit) => onEditFirstName(event, emit, state));
-    on<LoadedGymsEvent>((event, emit) => onLoadedGyms(event, emit, state));
+    on<GymsLoadedEvent>((event, emit) => onGymsLoaded(event, emit, state));
     on<GymsLoadingErrorEvent>(
         (event, emit) => onGymsLoadingError(event, emit, state));
     on<GymSelectedEvent>((event, emit) => onGymSelected(event, emit, state));
-    on<ConfirmGymEvent>(
-      (event, emit) async {
-        await onGymConfirmed(event, emit, state);
-        pageController.nextPage(
-          duration: pageAnimation,
-          curve: Curves.easeInOut,
-        );
-      },
-    );
-    on<SwipeEvent>(
-      (event, emit) {
-        onSwipe(event, emit, state);
-        firstNameFocusNode.unfocus();
-        lastNameFocusNode.unfocus();
-        emailFocusNode.unfocus();
-        passwordFocusNode.unfocus();
-        confirmPasswordFocusNode.unfocus();
-      },
-    );
+    on<ConfirmGymEvent>((event, emit) => onGymConfirmed(event, emit, state));
+    on<SwipeEvent>((event, emit) => onSwipe(event, emit, state));
     on<SubmitPageOneEvent>(
-      (event, emit) {
-        if (pageOneFormKey.currentState!.validate()) {
-          pageController.nextPage(
-            duration: pageAnimation,
-            curve: Curves.easeInOut,
-          );
-        } else {
-          onValidationFailed(emit, state);
-        }
-      },
-    );
+        (event, emit) => onSubmitPageOne(event, emit, state));
     on<SubmitPageTwoEvent>(
-      (event, emit) {
-        if (pageTwoFormKey.currentState!.validate()) {
-          pageController.nextPage(
-            duration: pageAnimation,
-            curve: Curves.easeInOut,
-          );
-        } else {
-          onValidationFailed(emit, state);
-        }
-      },
-    );
+        (event, emit) => onSubmitPageTwo(event, emit, state));
     on<ReadPhotoInstructionsEvent>(
-      (event, emit) {
-        onReadPhotoInstructions(event, emit, state);
-        pageController.nextPage(
-          duration: pageAnimation,
-          curve: Curves.easeInOut,
-        );
-      },
-    );
+        (event, emit) => onReadPhotoInstructions(event, emit, state));
     on<RetryCameraInitializationEvent>(
         (event, emit) => onRetryCameraInit(event, emit, state));
     on<CapturePhotoEvent>(
@@ -126,40 +82,24 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         (event, emit) => onSetProfilePicture(event, emit, state));
     on<RetakeProfilePictureEvent>(
         (event, emit) => onRetakeProfilePicture(event, emit, state));
-    on<RegisterEvent>(
-      (event, emit) {
-        onRegister(
+    on<RegisterEvent>((event, emit) => onRegister(
           event,
           emit,
           state,
           add,
-          pageController,
-          firstNameController.text.trim(),
-          lastNameController.text.trim(),
-          emailController.text.trim(),
-          passwordController.text.trim(),
-          confirmPasswordController.text.trim(),
-        );
-      },
-    );
-    on<RegisterErrorEvent>(
-      (event, emit) => onRegisterError(
-        event,
-        emit,
-        state,
-        add,
-        pageController,
-        emailController.text.trim(),
-      ),
-    );
-    on<RegisterSuccessEvent>(
-      (event, emit) => onRegisterSuccess(
-        event,
-        emit,
-        state,
-        add,
-      ),
-    );
+        ));
+    on<RegisterErrorEvent>((event, emit) => onRegisterError(
+          event,
+          emit,
+          state,
+          add,
+        ));
+    on<RegisterSuccessEvent>((event, emit) => onRegisterSuccess(
+          event,
+          emit,
+          state,
+          add,
+        ));
     on<UploadErrorEvent>((event, emit) => onUploadError(event, emit, state));
     on<UploadSuccessEvent>(
         (event, emit) => onUploadSuccess(event, emit, state));
@@ -169,10 +109,10 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   @override
   Future<void> close() async {
-    if (state is InitialState) {
-      final initialState = state as InitialState;
-      if (!initialState.loadGymsOp.isCompleted) {
-        await initialState.loadGymsOp.cancel();
+    if (state is GymsLoadingState) {
+      final gymsLoadingState = state as GymsLoadingState;
+      if (!gymsLoadingState.loadGymsOp.isCompleted) {
+        await gymsLoadingState.loadGymsOp.cancel();
       }
     }
     if (state is GymSelectedState) {
@@ -184,8 +124,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         await capturingState.photoCapture.cancel();
       }
     }
-    if (state is RegisteringState) {
-      final registeringState = state as RegisteringState;
+    if (state is RegisterRequestLoadingState) {
+      final registeringState = state as RegisterRequestLoadingState;
       if (!registeringState.registerOp.isCompleted) {
         await registeringState.registerOp.cancel();
       }
@@ -196,17 +136,20 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         await uploadingState.uploadOp.cancel();
       }
     }
-    firstNameController.dispose();
-    lastNameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    pageController.dispose();
-    firstNameFocusNode.dispose();
-    lastNameFocusNode.dispose();
-    emailFocusNode.dispose();
-    passwordFocusNode.dispose();
-    confirmPasswordFocusNode.dispose();
+    if (state is InitialState) {
+      final initialState = state as InitialState;
+      initialState.firstNameController.dispose();
+      initialState.lastNameController.dispose();
+      initialState.emailController.dispose();
+      initialState.passwordController.dispose();
+      initialState.confirmPasswordController.dispose();
+      initialState.pageController.dispose();
+      initialState.firstNameFocusNode.dispose();
+      initialState.lastNameFocusNode.dispose();
+      initialState.emailFocusNode.dispose();
+      initialState.passwordFocusNode.dispose();
+      initialState.confirmPasswordFocusNode.dispose();
+    }
     return super.close();
   }
 }

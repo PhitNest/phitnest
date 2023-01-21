@@ -5,8 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../app_bloc.dart';
-import '../../../../app_event.dart';
 import '../../../../domain/entities/entities.dart';
 import '../../../widgets/styled/styled.dart';
 import '../../pages.dart';
@@ -17,349 +15,385 @@ import 'widgets/gym_search/gym_search.dart';
 import 'widgets/uploading/uploading.dart';
 import 'widgets/widgets.dart';
 
+RegistrationBloc _bloc(BuildContext context) =>
+    context.read<RegistrationBloc>();
+
+int _getPageScrollLimit(InitialState state) => state.firstNameConfirmed
+    ? state is GymSelectedState
+        ? state.gymConfirmed
+            ? state.hasReadPhotoInstructions
+                ? 6
+                : 5
+            : 4
+        : 3
+    : 1;
+
+void _onSelectedGym(BuildContext context, GymEntity gym) =>
+    _bloc(context).add(GymSelectedEvent(gym));
+
+List<GymEntity> _filterGymsWithDuplicateNames(List<GymEntity> gyms) => gyms
+    .where(
+      (element) =>
+          gyms
+              .where(
+                (innerLoop) => innerLoop.name == element.name,
+              )
+              .length ==
+          1,
+    )
+    .toList();
+
+void _onPressedNoGym(BuildContext context) {}
+
+void _onSetProfilePicture(BuildContext context, XFile photo) => _bloc(
+      context,
+    ).add(SetProfilePictureEvent(photo));
+
+void _onPressedCapture(BuildContext context) =>
+    _bloc(context).add(CapturePhotoEvent());
+
+void _onPressedRetake(BuildContext context) =>
+    _bloc(context).add(RetakeProfilePictureEvent());
+
+void _onPressedSubmitPageSix(BuildContext context) =>
+    _bloc(context).add(RegisterEvent());
+
+/// Handles registration and profile picture upload
 class RegistrationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(
         create: (context) => RegistrationBloc(),
-        child: BlocBuilder<RegistrationBloc, RegistrationState>(
-          builder: (context, state) {
-            final keyboardPadding = MediaQuery.of(context).viewInsets.bottom;
-            return AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.dark,
-              child: Scaffold(
-                body: Builder(
-                  builder: (context) {
-                    if (state is RegistrationBase) {
-                      return SingleChildScrollView(
-                        keyboardDismissBehavior:
-                            ScrollViewKeyboardDismissBehavior.onDrag,
-                        child: SizedBox(
-                          height: 1.sh,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: PageView.builder(
-                                  onPageChanged: (value) =>
-                                      context.read<RegistrationBloc>().add(
-                                            SwipeEvent(value),
-                                          ),
-                                  controller: context
-                                      .read<RegistrationBloc>()
-                                      .pageController,
-                                  itemCount: state.firstNameConfirmed
-                                      ? state is GymSelectedState
-                                          ? state.gymConfirmed
-                                              ? state.hasReadPhotoInstructions
-                                                  ? 6
-                                                  : 5
-                                              : 4
-                                          : 3
-                                      : 1,
-                                  itemBuilder: (context, index) {
-                                    RegistrationBloc bloc = context.read();
-                                    switch (index) {
-                                      case 0:
-                                        return PageOne(
-                                          keyboardPadding: keyboardPadding,
-                                          formKey: bloc.pageOneFormKey,
-                                          firstNameController:
-                                              bloc.firstNameController,
-                                          lastNameController:
-                                              bloc.lastNameController,
-                                          autovalidateMode:
-                                              state.autovalidateMode,
-                                          onFirstNameEdited: (newValue) =>
-                                              context
-                                                  .read<RegistrationBloc>()
-                                                  .add(
-                                                    EditFirstNameEvent(
-                                                        newValue),
-                                                  ),
-                                          firstNameFocusNode:
-                                              bloc.firstNameFocusNode,
-                                          lastNameFocusNode:
-                                              bloc.lastNameFocusNode,
-                                          onSubmit: () => context
-                                              .read<RegistrationBloc>()
-                                              .add(
-                                                SubmitPageOneEvent(),
-                                              ),
-                                        );
-                                      case 1:
-                                        return PageTwo(
-                                          keyboardPadding: keyboardPadding,
-                                          formKey: bloc.pageTwoFormKey,
-                                          takenEmails:
-                                              (state is GymSelectedState
-                                                  ? state.takenEmails
-                                                  : {}),
-                                          emailController: bloc.emailController,
-                                          passwordController:
-                                              bloc.passwordController,
-                                          autovalidateMode:
-                                              state.autovalidateMode,
-                                          emailFocusNode: bloc.emailFocusNode,
-                                          passwordFocusNode:
-                                              bloc.passwordFocusNode,
-                                          onSubmit: () => context
-                                              .read<RegistrationBloc>()
-                                              .add(
-                                                SubmitPageTwoEvent(),
-                                              ),
-                                          confirmPasswordController:
-                                              bloc.confirmPasswordController,
-                                          confirmPasswordFocusNode:
-                                              bloc.confirmPasswordFocusNode,
-                                          firstName: bloc
+        child: BlocConsumer<RegistrationBloc, RegistrationState>(
+          listener: (context, state) {
+            if (state is UploadSuccessState) {
+              // On success, navigate to the confirm email page.
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ConfirmEmailPage(
+                    email: state.registration.email,
+                  ),
+                ),
+              );
+            }
+          },
+          // Dark text for device status bar (time and battery, etc.)
+          builder: (context, state) => AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle.dark,
+            child: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  // Registration form
+                  if (state is InitialState) {
+                    // This is the height of the keyboard (0 if the keyboard is not visible)
+                    final keyboardHeight =
+                        MediaQuery.of(context).viewInsets.bottom;
+                    // Scrollable view prevents overflow errors and allows the user
+                    // to dismiss the keyboard and scroll the page.
+                    return SingleChildScrollView(
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
+                      // Apply a size constraint to the page so that we can use Expanded
+                      // widgets
+                      child: SizedBox(
+                        height: 1.sh,
+                        child: Column(
+                          children: [
+                            // Swipeable page view
+                            Expanded(
+                              child: PageView.builder(
+                                // Emit SwipeEvent on page swipe
+                                onPageChanged: (value) =>
+                                    _bloc(context).add(SwipeEvent(value)),
+                                controller: state.pageController,
+                                // Control the page the user is allowed to swipe to.
+                                // This is necessary because later screens may depend
+                                // the results of earlier screens.
+                                itemCount: _getPageScrollLimit(state),
+                                itemBuilder: (context, index) {
+                                  switch (index) {
+                                    // First page
+                                    case 0:
+                                      return PageOne(
+                                        keyboardPadding: keyboardHeight,
+                                        formKey: state.pageOneFormKey,
+                                        firstNameController:
+                                            state.firstNameController,
+                                        lastNameController:
+                                            state.lastNameController,
+                                        autovalidateMode:
+                                            state.autovalidateMode,
+                                        onFirstNameEdited: (newValue) =>
+                                            _bloc(context).add(
+                                                EditFirstNameEvent(newValue)),
+                                        firstNameFocusNode:
+                                            state.firstNameFocusNode,
+                                        lastNameFocusNode:
+                                            state.lastNameFocusNode,
+                                        onSubmit: () => _bloc(context)
+                                            .add(SubmitPageOneEvent()),
+                                      );
+                                    // Second page
+                                    case 1:
+                                      return PageTwo(
+                                        keyboardPadding: keyboardHeight,
+                                        formKey: state.pageTwoFormKey,
+                                        // If we have not selected a gym yet, there is no
+                                        // possible way the user has encountered taken emails.
+                                        // So we can leave it as an empty set otherwise. These
+                                        // will be used to validate the email field.
+                                        takenEmails: (state is GymSelectedState
+                                            ? state.takenEmails
+                                            : {}),
+                                        emailController: state.emailController,
+                                        passwordController:
+                                            state.passwordController,
+                                        autovalidateMode:
+                                            state.autovalidateMode,
+                                        emailFocusNode: state.emailFocusNode,
+                                        passwordFocusNode:
+                                            state.passwordFocusNode,
+                                        // Emit the SubmitPageTwo event on completion
+                                        onSubmit: () => _bloc(context)
+                                            .add(SubmitPageTwoEvent()),
+                                        confirmPasswordController:
+                                            state.confirmPasswordController,
+                                        confirmPasswordFocusNode:
+                                            state.confirmPasswordFocusNode,
+                                        // Get the first name from page 1
+                                        firstName: state
+                                            .firstNameController.text
+                                            .trim(),
+                                      );
+                                    // Page 3
+                                    case 2:
+                                      // If we are loading gyms, show the loading screen
+                                      if (state is GymsLoadingState) {
+                                        return PageThreeLoading(
+                                          firstName: state
                                               .firstNameController.text
                                               .trim(),
+                                          onPressedNoGym: () =>
+                                              _onPressedNoGym(context),
                                         );
-                                      case 2:
-                                        final String firstName = bloc
-                                            .firstNameController.text
-                                            .trim();
-                                        final void Function() onPressedNoGym =
-                                            () {};
-                                        final List<GymEntity> Function(
-                                                List<GymEntity>)
-                                            filterDuplicateNames =
-                                            (gyms) => gyms
-                                                .where(
-                                                  (element) =>
-                                                      gyms
-                                                          .where(
-                                                            (innerLoop) =>
-                                                                innerLoop
-                                                                    .name ==
-                                                                element.name,
-                                                          )
-                                                          .length ==
-                                                      1,
-                                                )
-                                                .toList();
-                                        final ValueChanged<GymEntity>
-                                            onSelectedGym = (gym) => context
-                                                .read<RegistrationBloc>()
-                                                .add(
-                                                  GymSelectedEvent(gym),
-                                                );
-                                        if (state is InitialState) {
-                                          return PageThreeLoading(
-                                            firstName: firstName,
-                                            onPressedNoGym: onPressedNoGym,
-                                          );
-                                        } else if (state
-                                            is GymsLoadingErrorState) {
-                                          return PageThreeLoadingError(
-                                            onPressedNoGym: onPressedNoGym,
-                                            firstName: firstName,
-                                            error: state.failure.message,
-                                            onPressedRetry: () => context
-                                                .read<RegistrationBloc>()
-                                                .add(
-                                                  RetryLoadGymsEvent(),
-                                                ),
-                                          );
-                                        } else if (state is GymSelectedState) {
-                                          return PageThreeSelected(
-                                            firstName: firstName,
-                                            gyms: filterDuplicateNames(
-                                                state.gyms),
-                                            onSelected: onSelectedGym,
-                                            onPressedNoGym: onPressedNoGym,
-                                            gym: state.gym,
-                                            onPressedNext: () => context
-                                                .read<RegistrationBloc>()
-                                                .pageController
-                                                .nextPage(
-                                                  duration: const Duration(
-                                                    milliseconds: 400,
-                                                  ),
-                                                  curve: Curves.easeInOut,
-                                                ),
-                                          );
-                                        } else if (state
-                                            is GymNotSelectedState) {
-                                          return PageThreeNotSelected(
-                                            firstName: firstName,
-                                            onPressedNoGym: onPressedNoGym,
-                                            gyms: filterDuplicateNames(
-                                                state.gyms),
-                                            onSelected: onSelectedGym,
-                                          );
-                                        }
-                                        break;
-                                      case 3:
-                                        final gymSelectionState =
-                                            state as GymSelectedState;
+                                      } else if (state
+                                          is GymsLoadingErrorState) {
+                                        // There was an error loading gyms
+                                        return PageThreeLoadingError(
+                                          onPressedNoGym: () =>
+                                              _onPressedNoGym(context),
+                                          firstName: state
+                                              .firstNameController.text
+                                              .trim(),
+                                          error: state.failure.message,
+                                          onPressedRetry: () => _bloc(context)
+                                              .add(RetryLoadGymsEvent()),
+                                        );
+                                      } else if (state is GymSelectedState) {
+                                        // The user has selected a gym
+                                        return PageThreeSelected(
+                                          firstName: state
+                                              .firstNameController.text
+                                              .trim(),
+                                          // Filter out gyms with duplicate names
+                                          gyms: _filterGymsWithDuplicateNames(
+                                              state.gyms),
+                                          onSelected: (gym) =>
+                                              _onSelectedGym(context, gym),
+                                          onPressedNoGym: () =>
+                                              _onPressedNoGym(context),
+                                          gym: state.gym,
+                                          onPressedNext: () =>
+                                              state.pageController.nextPage(
+                                            duration: const Duration(
+                                              milliseconds: 400,
+                                            ),
+                                            curve: Curves.easeInOut,
+                                          ),
+                                        );
+                                      } else if (state is GymsLoadedState) {
+                                        // The user has not selected a gym yet
+                                        return PageThreeNotSelected(
+                                          firstName: state
+                                              .firstNameController.text
+                                              .trim(),
+                                          onPressedNoGym: () =>
+                                              _onPressedNoGym(context),
+                                          gyms: _filterGymsWithDuplicateNames(
+                                              state.gyms),
+                                          onSelected: (gym) =>
+                                              _onSelectedGym(context, gym),
+                                        );
+                                      }
+                                      break;
+                                    // Page 4
+                                    case 3:
+                                      // You should not be able to navigate to page 4 until
+                                      // you have selected a gym.
+                                      if (state is GymSelectedState) {
                                         return PageFour(
-                                          gym: gymSelectionState.gym,
-                                          onPressedYes: () => context
-                                              .read<RegistrationBloc>()
-                                              .add(
-                                                ConfirmGymEvent(),
-                                              ),
+                                          gym: state.gym,
+                                          onPressedYes: () => _bloc(context)
+                                              .add(ConfirmGymEvent()),
+                                          // Use the result of the gym search page to set the gym
                                           onPressedNo: () => Navigator.push(
                                             context,
                                             CupertinoPageRoute<GymEntity?>(
                                               builder: (context) =>
                                                   GymSearchPage(
-                                                gyms: gymSelectionState.gyms,
-                                                location:
-                                                    gymSelectionState.location,
+                                                gyms: state.gyms,
+                                                location: state.location,
                                                 initialGym: state.gym,
                                               ),
                                             ),
                                           ).then(
                                             (gym) {
+                                              // If the user updated their gym on the gym search page,
+                                              // set the newly selected gym.
                                               if (gym != null) {
-                                                context
-                                                    .read<RegistrationBloc>()
-                                                    .add(GymSelectedEvent(gym));
+                                                _onSelectedGym(context, gym);
                                               }
                                             },
                                           ),
                                         );
-                                      case 4:
+                                      } else {
+                                        // The state should be a gym selected state at this point
+                                        throw Exception(
+                                            "Invalid state: $state");
+                                      }
+                                    // Page 5
+                                    case 4:
+                                      if (state
+                                          is RegisterRequestLoadingState) {
+                                        return PageFiveNoUpload(
+                                          onPressedTakePhoto: () =>
+                                              _bloc(context).add(
+                                                  ReadPhotoInstructionsEvent()),
+                                        );
+                                      } else if (state is GymSelectedState) {
                                         return PageFive(
-                                          onUploadedImage: (image) {
-                                            if (!(state is RegisteringState ||
-                                                state is UploadingPhotoState)) {
-                                              context.read<RegistrationBloc>()
-                                                ..add(
-                                                  SetProfilePictureEvent(image),
-                                                )
-                                                ..add(
-                                                  ReadPhotoInstructionsEvent(),
-                                                );
-                                            }
-                                          },
-                                          onPressedTakePhoto: () => context
+                                          onUploadedImage: (image) => _bloc(
+                                              context)
+                                            ..add(SetProfilePictureEvent(image))
+                                            ..add(ReadPhotoInstructionsEvent()),
+                                          onPressedTakePhoto: () =>
+                                              _bloc(context).add(
+                                                  ReadPhotoInstructionsEvent()),
+                                        );
+                                      } else {
+                                        // The state should be a gym selected state at this point
+                                        throw Exception(
+                                            "Invalid state: $state");
+                                      }
+                                    // Page 6
+                                    case 5:
+                                      if (state is RegisterRequestErrorState) {
+                                        // There was an error with the register request
+                                        return PageSixRegisterError(
+                                          profilePicture: state.photo,
+                                          onPressedRetake: () =>
+                                              _onPressedRetake(context),
+                                          onSubmit: () =>
+                                              _onPressedSubmitPageSix(context),
+                                          onUploadPicture: (file) =>
+                                              _onSetProfilePicture(
+                                                  context, file),
+                                          errorMessage: state.failure.message,
+                                        );
+                                      } else if (state
+                                          is RegisterRequestLoadingState) {
+                                        // The register request is loading
+                                        return PageSixLoading(
+                                          profilePicture: state.photo,
+                                        );
+                                      } else if (state is PhotoSelectedState) {
+                                        // The user has selected a photo
+                                        return PageSixPhotoSelected(
+                                          onPressedRetake: () =>
+                                              _onPressedRetake(context),
+                                          profilePicture: state.photo,
+                                          onSubmit: () =>
+                                              _onPressedSubmitPageSix(context),
+                                          onUploadPicture: (file) =>
+                                              _onSetProfilePicture(
+                                                  context, file),
+                                        );
+                                      } else if (state is CaptureErrorState) {
+                                        // There was an error capturing the photo
+                                        return PageSixCaptureError(
+                                          cameraController:
+                                              state.cameraController,
+                                          onUploadPicture: (file) =>
+                                              _onSetProfilePicture(
+                                                  context, file),
+                                          onPressTakePicture: () =>
+                                              _onPressedCapture(context),
+                                          errorMessage: state.failure.message,
+                                        );
+                                      } else if (state is CapturingState) {
+                                        // The user is capturing a photo
+                                        return PageSixCapturing(
+                                          cameraController:
+                                              state.cameraController,
+                                        );
+                                      } else if (state is CameraErrorState) {
+                                        // There was an error initializing the camera
+                                        return PageSixCameraError(
+                                          errorMessage: state.failure.message,
+                                          onPressedRetry: () => context
                                               .read<RegistrationBloc>()
                                               .add(
-                                                ReadPhotoInstructionsEvent(),
+                                                RetryCameraInitializationEvent(),
                                               ),
                                         );
-                                      case 5:
-                                        final ValueChanged<XFile>
-                                            onUploadPicture = (file) => context
-                                                .read<RegistrationBloc>()
-                                                .add(
-                                                  SetProfilePictureEvent(file),
-                                                );
-                                        final VoidCallback onPressTakePicture =
-                                            () => context
-                                                .read<RegistrationBloc>()
-                                                .add(
-                                                  CapturePhotoEvent(),
-                                                );
-                                        final VoidCallback onPressedRetake =
-                                            () => context
-                                                .read<RegistrationBloc>()
-                                                .add(
-                                                  RetakeProfilePictureEvent(),
-                                                );
-                                        final VoidCallback onSubmit = () =>
-                                            context
-                                                .read<RegistrationBloc>()
-                                                .add(RegisterEvent());
-                                        if (state is RegisterErrorState) {
-                                          return PageSixRegisterError(
-                                            profilePicture: state.photo,
-                                            onPressedRetake: onPressedRetake,
-                                            onSubmit: onSubmit,
-                                            onUploadPicture: onUploadPicture,
-                                            errorMessage: state.failure.message,
-                                          );
-                                        } else if (state is RegisteringState) {
-                                          return PageSixLoading(
-                                            profilePicture: state.photo,
-                                          );
-                                        } else if (state
-                                            is PhotoSelectedState) {
-                                          return PageSixPhotoSelected(
-                                            onPressedRetake: onPressedRetake,
-                                            profilePicture: state.photo,
-                                            onSubmit: onSubmit,
-                                            onUploadPicture: onUploadPicture,
-                                          );
-                                        } else if (state is CaptureErrorState) {
-                                          return PageSixCaptureError(
-                                            cameraController:
-                                                state.cameraController,
-                                            onUploadPicture: onUploadPicture,
-                                            onPressTakePicture:
-                                                onPressTakePicture,
-                                            errorMessage: state.failure.message,
-                                          );
-                                        } else if (state is CapturingState) {
-                                          return PageSixCapturing(
-                                            cameraController:
-                                                state.cameraController,
-                                          );
-                                        } else if (state is CameraErrorState) {
-                                          return PageSixCameraError(
-                                            errorMessage: state.failure.message,
-                                            onPressedRetry: () => context
-                                                .read<RegistrationBloc>()
-                                                .add(
-                                                  RetryCameraInitializationEvent(),
-                                                ),
-                                          );
-                                        } else if (state is GymSelectedState) {
-                                          return PageSixInitial(
-                                            cameraController:
-                                                state.cameraController,
-                                            onUploadPicture: onUploadPicture,
-                                            onPressTakePicture:
-                                                onPressTakePicture,
-                                          );
-                                        }
-                                        break;
-                                    }
-                                    throw Exception('Invalid index: $index');
-                                  },
-                                ),
+                                      } else if (state is GymSelectedState) {
+                                        // The user has selected a gym
+                                        return PageSixInitial(
+                                          cameraController:
+                                              state.cameraController,
+                                          onUploadPicture: (file) =>
+                                              _onSetProfilePicture(
+                                                  context, file),
+                                          onPressTakePicture: () =>
+                                              _onPressedCapture(context),
+                                        );
+                                      }
+                                      break;
+                                  }
+                                  // The index should be between 0 and 5
+                                  throw Exception('Invalid index: $index');
+                                },
                               ),
-                              StyledPageIndicator(
-                                currentPage: state.currentPage,
-                                totalPages: 6,
-                              ),
-                              48.verticalSpace,
-                            ],
-                          ),
-                        ),
-                      );
-                    } else if (state is UploadingPhotoState) {
-                      return const UploadingPhotoPage();
-                    } else if (state is UploadErrorState) {
-                      return UploadingErrorPage(
-                        errorMessage: state.failure.message,
-                        onRetry: () => context.read<RegistrationBloc>().add(
-                              RetryPhotoUploadEvent(),
                             ),
-                      );
-                    } else if (state is UploadSuccessState) {
-                      Future.delayed(
-                        Duration.zero,
-                        () => Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ConfirmEmailPage(
-                              email: state.registration.email,
+                            StyledPageIndicator(
+                              currentPage: state.currentPage,
+                              totalPages: 6,
                             ),
-                          ),
+                            48.verticalSpace,
+                          ],
                         ),
-                      );
-                      return Scaffold(body: Container());
-                    } else {
-                      throw Exception('Invalid state: $state');
-                    }
-                  },
-                ),
+                      ),
+                    );
+                    // User is uploading their profile picture or they have already uploaded it
+                    // successfully.
+                  } else if (state is UploadingPhotoState ||
+                      state is UploadSuccessState) {
+                    return const UploadingPhotoPage();
+                  } else if (state is UploadErrorState) {
+                    // There was an error uploading their profile picture
+                    return UploadingErrorPage(
+                      errorMessage: state.failure.message,
+                      onRetry: () => context.read<RegistrationBloc>().add(
+                            RetryPhotoUploadEvent(),
+                          ),
+                    );
+                  } else {
+                    throw Exception('Invalid state: $state');
+                  }
+                },
               ),
-            );
-          },
+            ),
+          ),
         ),
       );
 }

@@ -1,20 +1,16 @@
-import 'package:async/async.dart';
-import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../event/registration_event.dart';
 import '../state/registration_state.dart';
 
-void onCapturePhoto(
-  CapturePhotoEvent event,
+void onGymsLoaded(
+  GymsLoadedEvent event,
   Emitter<RegistrationState> emit,
   RegistrationState state,
-  ValueChanged<RegistrationEvent> add,
 ) {
-  if (state is GymSelectedState) {
+  if (state is GymsLoadingState) {
     emit(
-      CapturingState(
+      GymsLoadedState(
         firstNameController: state.firstNameController,
         lastNameController: state.lastNameController,
         emailController: state.emailController,
@@ -29,29 +25,13 @@ void onCapturePhoto(
         pageOneFormKey: state.pageOneFormKey,
         pageTwoFormKey: state.pageTwoFormKey,
         firstNameConfirmed: state.firstNameConfirmed,
-        location: state.location,
-        gyms: state.gyms,
+        gyms: event.gyms,
+        location: event.location,
         currentPage: state.currentPage,
-        takenEmails: state.takenEmails,
         autovalidateMode: state.autovalidateMode,
-        gym: state.gym,
-        gymConfirmed: state.gymConfirmed,
-        cameraController: state.cameraController,
-        hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-        photoCapture: CancelableOperation.fromFuture(
-          state.cameraController.takePicture(),
-        )..value.catchError(
-            (err) {
-              if (err is CameraException) {
-                add(CaptureErrorEvent(err));
-              } else {
-                throw err;
-              }
-            },
-          ).then(
-            (photo) => add(SetProfilePictureEvent(photo)),
-          ),
       ),
     );
+  } else {
+    throw Exception('Invalid state: $state');
   }
 }

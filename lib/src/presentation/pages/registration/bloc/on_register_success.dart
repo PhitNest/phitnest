@@ -12,11 +12,10 @@ void onRegisterSuccess(
   RegistrationState state,
   ValueChanged<RegistrationEvent> add,
 ) {
-  if (state is RegisteringState) {
+  if (state is RegisterRequestLoadingState) {
     emit(
       UploadingPhotoState(
         photo: state.photo,
-        password: event.password,
         registration: event.response,
         uploadOp: CancelableOperation.fromFuture(
           photoDatabase.uploadPhoto(

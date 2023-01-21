@@ -12,52 +12,65 @@ void onRegister(
   Emitter<RegistrationState> emit,
   RegistrationState state,
   ValueChanged<RegistrationEvent> add,
-  PageController pageController,
-  String firstName,
-  String lastName,
-  String email,
-  String password,
-  String confirmPassword,
 ) {
-  final photoSelectedState = state as PhotoSelectedState;
-  if (validateName(firstName) != null || validateName(lastName) != null) {
-    pageController.jumpToPage(0);
-    Future.delayed(Duration(milliseconds: 50), () => add(SubmitPageOneEvent()));
-  } else if (validateEmail(email) != null ||
-      state.takenEmails.contains(email) ||
-      validatePassword(password) != null ||
-      password != confirmPassword) {
-    pageController.jumpToPage(1);
-    Future.delayed(Duration(milliseconds: 50), () => add(SubmitPageTwoEvent()));
-  } else {
-    emit(
-      RegisteringState(
-        autovalidateMode: state.autovalidateMode,
-        photo: photoSelectedState.photo,
-        gym: photoSelectedState.gym,
-        firstNameConfirmed: photoSelectedState.firstNameConfirmed,
-        gymConfirmed: photoSelectedState.gymConfirmed,
-        currentPage: photoSelectedState.currentPage,
-        takenEmails: state.takenEmails,
-        gyms: photoSelectedState.gyms,
-        location: photoSelectedState.location,
-        cameraController: photoSelectedState.cameraController,
-        hasReadPhotoInstructions: photoSelectedState.hasReadPhotoInstructions,
-        registerOp: CancelableOperation.fromFuture(
-          authRepo.register(
-            email,
-            password,
-            firstName,
-            lastName,
-            state.gym.id,
-          ),
-        )..then(
-            (either) => either.fold(
-              (success) => add(RegisterSuccessEvent(success, password)),
-              (failure) => add(RegisterErrorEvent(failure)),
+  if (state is PhotoSelectedState) {
+    // Validate (we can't use the form key because we aren't currently on these pages)
+    if (validateName(state.firstNameController.text) != null ||
+        validateName(state.lastNameController.text) != null) {
+      state.pageController.jumpToPage(0);
+      Future.delayed(
+          Duration(milliseconds: 50), () => add(SubmitPageOneEvent()));
+    } else if (validateEmail(state.emailController.text) != null ||
+        state.takenEmails.contains(state.emailController.text) ||
+        validatePassword(state.passwordController.text) != null ||
+        state.passwordController.text != state.confirmPasswordController.text) {
+      state.pageController.jumpToPage(1);
+      // Delay for page rendering
+      Future.delayed(
+          Duration(milliseconds: 50), () => add(SubmitPageTwoEvent()));
+    } else {
+      emit(
+        RegisterRequestLoadingState(
+          firstNameController: state.firstNameController,
+          lastNameController: state.lastNameController,
+          emailController: state.emailController,
+          passwordController: state.passwordController,
+          confirmPasswordController: state.confirmPasswordController,
+          firstNameFocusNode: state.firstNameFocusNode,
+          lastNameFocusNode: state.lastNameFocusNode,
+          emailFocusNode: state.emailFocusNode,
+          passwordFocusNode: state.passwordFocusNode,
+          confirmPasswordFocusNode: state.confirmPasswordFocusNode,
+          pageController: state.pageController,
+          pageOneFormKey: state.pageOneFormKey,
+          pageTwoFormKey: state.pageTwoFormKey,
+          autovalidateMode: state.autovalidateMode,
+          photo: state.photo,
+          gym: state.gym,
+          firstNameConfirmed: state.firstNameConfirmed,
+          gymConfirmed: state.gymConfirmed,
+          currentPage: state.currentPage,
+          takenEmails: state.takenEmails,
+          gyms: state.gyms,
+          location: state.location,
+          cameraController: state.cameraController,
+          hasReadPhotoInstructions: state.hasReadPhotoInstructions,
+          registerOp: CancelableOperation.fromFuture(
+            authRepo.register(
+              state.emailController.text.trim(),
+              state.passwordController.text.trim(),
+              state.firstNameController.text.trim(),
+              state.lastNameController.text.trim(),
+              state.gym.id,
             ),
-          ),
-      ),
-    );
+          )..then(
+              (either) => either.fold(
+                (success) => add(RegisterSuccessEvent(success)),
+                (failure) => add(RegisterErrorEvent(failure)),
+              ),
+            ),
+        ),
+      );
+    }
   }
 }
