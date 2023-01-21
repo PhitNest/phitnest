@@ -11,6 +11,19 @@ void onRetakeProfilePicture(
   if (state is GymSelectedState) {
     emit(
       GymSelectedState(
+        firstNameController: state.firstNameController,
+        lastNameController: state.lastNameController,
+        emailController: state.emailController,
+        passwordController: state.passwordController,
+        confirmPasswordController: state.confirmPasswordController,
+        firstNameFocusNode: state.firstNameFocusNode,
+        lastNameFocusNode: state.lastNameFocusNode,
+        emailFocusNode: state.emailFocusNode,
+        passwordFocusNode: state.passwordFocusNode,
+        confirmPasswordFocusNode: state.confirmPasswordFocusNode,
+        pageController: state.pageController,
+        pageOneFormKey: state.pageOneFormKey,
+        pageTwoFormKey: state.pageTwoFormKey,
         firstNameConfirmed: state.firstNameConfirmed,
         location: state.location,
         gyms: state.gyms,

@@ -14,7 +14,20 @@ void onRetryLoadGyms(
 ) {
   if (state is GymsLoadingErrorState) {
     emit(
-      InitialState(
+      GymsLoadingState(
+        firstNameController: state.firstNameController,
+        lastNameController: state.lastNameController,
+        emailController: state.emailController,
+        passwordController: state.passwordController,
+        confirmPasswordController: state.confirmPasswordController,
+        firstNameFocusNode: state.firstNameFocusNode,
+        lastNameFocusNode: state.lastNameFocusNode,
+        emailFocusNode: state.emailFocusNode,
+        passwordFocusNode: state.passwordFocusNode,
+        confirmPasswordFocusNode: state.confirmPasswordFocusNode,
+        pageController: state.pageController,
+        pageOneFormKey: state.pageOneFormKey,
+        pageTwoFormKey: state.pageTwoFormKey,
         firstNameConfirmed: state.firstNameConfirmed,
         currentPage: state.currentPage,
         autovalidateMode: state.autovalidateMode,
@@ -22,7 +35,7 @@ void onRetryLoadGyms(
           loadGyms(),
         )..then(
             (either) => either.fold(
-              (success) => add(LoadedGymsEvent(success.value1, success.value2)),
+              (success) => add(GymsLoadedEvent(success.value1, success.value2)),
               (failure) => add(GymsLoadingErrorEvent(failure)),
             ),
           ),

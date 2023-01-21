@@ -9,33 +9,61 @@ void onRegisterError(
   Emitter<RegistrationState> emit,
   RegistrationState state,
   ValueChanged<RegistrationEvent> add,
-  PageController pageController,
-  String email,
 ) {
-  if (state is RegisteringState) {
+  if (state is RegisterRequestLoadingState) {
     if (event.failure.code == "UsernameExistsException") {
-      pageController.jumpToPage(1);
+      state.pageController.jumpToPage(1);
       emit(
         PhotoSelectedState(
+          firstNameController: state.firstNameController,
+          lastNameController: state.lastNameController,
+          emailController: state.emailController,
+          passwordController: state.passwordController,
+          confirmPasswordController: state.confirmPasswordController,
+          firstNameFocusNode: state.firstNameFocusNode,
+          lastNameFocusNode: state.lastNameFocusNode,
+          emailFocusNode: state.emailFocusNode,
+          passwordFocusNode: state.passwordFocusNode,
+          confirmPasswordFocusNode: state.confirmPasswordFocusNode,
+          pageController: state.pageController,
+          pageOneFormKey: state.pageOneFormKey,
+          pageTwoFormKey: state.pageTwoFormKey,
           autovalidateMode: state.autovalidateMode,
           gym: state.gym,
           gyms: state.gyms,
           gymConfirmed: state.gymConfirmed,
           firstNameConfirmed: state.firstNameConfirmed,
           currentPage: state.currentPage,
-          takenEmails: {...state.takenEmails, email},
+          takenEmails: {
+            ...state.takenEmails,
+            state.emailController.text.trim()
+          },
           location: state.location,
           cameraController: state.cameraController,
           hasReadPhotoInstructions: state.hasReadPhotoInstructions,
           photo: state.photo,
         ),
       );
+      // Delay the event to allow the page to render... IS THERE A BETTER WAY TO DO THIS? :(
       Future.delayed(
           Duration(milliseconds: 50), () => add(SubmitPageTwoEvent()));
     } else {
-      pageController.jumpToPage(5);
+      state.pageController.jumpToPage(5);
       emit(
-        RegisterErrorState(
+        RegisterRequestErrorState(
+          firstNameController: state.firstNameController,
+          lastNameController: state.lastNameController,
+          emailController: state.emailController,
+          passwordController: state.passwordController,
+          confirmPasswordController: state.confirmPasswordController,
+          firstNameFocusNode: state.firstNameFocusNode,
+          lastNameFocusNode: state.lastNameFocusNode,
+          emailFocusNode: state.emailFocusNode,
+          passwordFocusNode: state.passwordFocusNode,
+          confirmPasswordFocusNode: state.confirmPasswordFocusNode,
+          pageController: state.pageController,
+          pageOneFormKey: state.pageOneFormKey,
+          pageTwoFormKey: state.pageTwoFormKey,
           autovalidateMode: state.autovalidateMode,
           firstNameConfirmed: state.firstNameConfirmed,
           currentPage: state.currentPage,

@@ -17,122 +17,71 @@ Future<void> onGymSelected(
   Emitter<RegistrationState> emit,
   RegistrationState state,
 ) async {
-  if (state is RegisterErrorState) {
+  if (state is RegisterRequestErrorState) {
     emit(
-      RegisterErrorState(
-        autovalidateMode: state.autovalidateMode,
-        firstNameConfirmed: state.firstNameConfirmed,
-        currentPage: state.currentPage,
+      state.copyWith(
         gym: event.gym,
-        gyms: state.gyms,
         gymConfirmed: false,
-        location: state.location,
-        takenEmails: state.takenEmails,
-        cameraController: state.cameraController,
-        hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-        photo: state.photo,
-        failure: state.failure,
       ),
     );
-  } else if (state is RegisteringState) {
+  } else if (state is RegisterRequestLoadingState) {
     emit(
-      RegisteringState(
-        autovalidateMode: state.autovalidateMode,
-        firstNameConfirmed: state.firstNameConfirmed,
-        currentPage: state.currentPage,
+      state.copyWith(
         gym: event.gym,
         gymConfirmed: false,
-        gyms: state.gyms,
-        location: state.location,
-        cameraController: state.cameraController,
-        takenEmails: state.takenEmails,
-        hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-        photo: state.photo,
-        registerOp: state.registerOp,
       ),
     );
   } else if (state is PhotoSelectedState) {
     emit(
-      PhotoSelectedState(
-        autovalidateMode: state.autovalidateMode,
+      state.copyWith(
         gym: event.gym,
         gymConfirmed: false,
-        gyms: state.gyms,
-        firstNameConfirmed: state.firstNameConfirmed,
-        currentPage: state.currentPage,
-        location: state.location,
-        cameraController: state.cameraController,
-        hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-        photo: state.photo,
-        takenEmails: state.takenEmails,
       ),
     );
   } else if (state is CaptureErrorState) {
     emit(
-      CaptureErrorState(
-        firstNameConfirmed: state.firstNameConfirmed,
-        location: state.location,
-        gyms: state.gyms,
-        currentPage: state.currentPage,
-        autovalidateMode: state.autovalidateMode,
+      state.copyWith(
         gym: event.gym,
-        takenEmails: state.takenEmails,
         gymConfirmed: false,
-        cameraController: state.cameraController,
-        hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-        failure: state.failure,
       ),
     );
   } else if (state is CapturingState) {
     emit(
-      CapturingState(
-        firstNameConfirmed: state.firstNameConfirmed,
-        location: state.location,
-        gyms: state.gyms,
-        currentPage: state.currentPage,
-        autovalidateMode: state.autovalidateMode,
+      state.copyWith(
         gym: event.gym,
-        takenEmails: state.takenEmails,
         gymConfirmed: false,
-        cameraController: state.cameraController,
-        hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-        photoCapture: state.photoCapture,
       ),
     );
   } else if (state is CameraErrorState) {
     emit(
-      CameraErrorState(
-        firstNameConfirmed: state.firstNameConfirmed,
-        gyms: state.gyms,
-        location: state.location,
+      state.copyWith(
         gym: event.gym,
-        currentPage: state.currentPage,
         gymConfirmed: false,
-        cameraController: state.cameraController,
-        autovalidateMode: state.autovalidateMode,
-        hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-        failure: state.failure,
-        takenEmails: state.takenEmails,
       ),
     );
   } else if (state is GymSelectedState) {
     emit(
-      GymSelectedState(
-        firstNameConfirmed: state.firstNameConfirmed,
-        gyms: state.gyms,
-        takenEmails: state.takenEmails,
-        location: state.location,
+      state.copyWith(
         gym: event.gym,
-        currentPage: state.currentPage,
         gymConfirmed: false,
-        cameraController: state.cameraController,
-        autovalidateMode: state.autovalidateMode,
-        hasReadPhotoInstructions: state.hasReadPhotoInstructions,
       ),
     );
-  } else if (state is GymNotSelectedState) {
+  } else if (state is GymsLoadedState) {
     emit(
       GymSelectedState(
+        firstNameController: state.firstNameController,
+        lastNameController: state.lastNameController,
+        emailController: state.emailController,
+        passwordController: state.passwordController,
+        confirmPasswordController: state.confirmPasswordController,
+        firstNameFocusNode: state.firstNameFocusNode,
+        lastNameFocusNode: state.lastNameFocusNode,
+        emailFocusNode: state.emailFocusNode,
+        passwordFocusNode: state.passwordFocusNode,
+        confirmPasswordFocusNode: state.confirmPasswordFocusNode,
+        pageController: state.pageController,
+        pageOneFormKey: state.pageOneFormKey,
+        pageTwoFormKey: state.pageTwoFormKey,
         firstNameConfirmed: state.firstNameConfirmed,
         gyms: state.gyms,
         takenEmails: {},

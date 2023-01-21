@@ -10,39 +10,45 @@ Future<void> onRetryCameraInit(
   Emitter<RegistrationState> emit,
   RegistrationState state,
 ) async {
-  final cameraErrorState = state as CameraErrorState;
-  try {
-    await cameraErrorState.cameraController.initialize();
-    emit(
-      GymSelectedState(
-        firstNameConfirmed: state.firstNameConfirmed,
-        location: cameraErrorState.location,
-        takenEmails: state.takenEmails,
-        gyms: cameraErrorState.gyms,
-        currentPage: state.currentPage,
-        autovalidateMode: state.autovalidateMode,
-        gym: cameraErrorState.gym,
-        gymConfirmed: cameraErrorState.gymConfirmed,
-        cameraController: cameraErrorState.cameraController,
-        hasReadPhotoInstructions: cameraErrorState.hasReadPhotoInstructions,
-      ),
-    );
-  } on CameraException catch (err) {
-    emit(
-      CameraErrorState(
-        firstNameConfirmed: state.firstNameConfirmed,
-        location: cameraErrorState.location,
-        gyms: cameraErrorState.gyms,
-        currentPage: state.currentPage,
-        takenEmails: state.takenEmails,
-        autovalidateMode: state.autovalidateMode,
-        gym: cameraErrorState.gym,
-        gymConfirmed: cameraErrorState.gymConfirmed,
-        cameraController: cameraErrorState.cameraController,
-        hasReadPhotoInstructions: cameraErrorState.hasReadPhotoInstructions,
-        failure:
-            Failure(err.code, "Please enable camera access\nand try again."),
-      ),
-    );
+  if (state is CameraErrorState) {
+    try {
+      await state.cameraController.initialize();
+      emit(
+        GymSelectedState(
+          firstNameConfirmed: state.firstNameConfirmed,
+          location: state.location,
+          takenEmails: state.takenEmails,
+          gyms: state.gyms,
+          currentPage: state.currentPage,
+          autovalidateMode: state.autovalidateMode,
+          gym: state.gym,
+          gymConfirmed: state.gymConfirmed,
+          cameraController: state.cameraController,
+          hasReadPhotoInstructions: state.hasReadPhotoInstructions,
+          firstNameController: state.firstNameController,
+          lastNameController: state.lastNameController,
+          emailController: state.emailController,
+          passwordController: state.passwordController,
+          confirmPasswordController: state.confirmPasswordController,
+          firstNameFocusNode: state.firstNameFocusNode,
+          lastNameFocusNode: state.lastNameFocusNode,
+          emailFocusNode: state.emailFocusNode,
+          passwordFocusNode: state.passwordFocusNode,
+          confirmPasswordFocusNode: state.confirmPasswordFocusNode,
+          pageController: state.pageController,
+          pageOneFormKey: state.pageOneFormKey,
+          pageTwoFormKey: state.pageTwoFormKey,
+        ),
+      );
+    } on CameraException catch (err) {
+      emit(
+        state.copyWith(
+          failure:
+              Failure(err.code, "Please enable camera access\nand try again."),
+        ),
+      );
+    }
+  } else {
+    throw Exception("Invalid state: $state");
   }
 }

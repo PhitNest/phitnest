@@ -15,7 +15,6 @@ void onRetryPhotoUpload(
   if (state is UploadErrorState) {
     emit(
       UploadingPhotoState(
-        password: state.password,
         uploadOp: CancelableOperation.fromFuture(
           uploadPhotoUnauthorized(
             state.registration.email,
