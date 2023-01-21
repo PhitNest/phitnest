@@ -18,6 +18,9 @@ export 'retake_profile_picture.dart';
 export 'register.dart';
 export 'register_error.dart';
 export 'register_success.dart';
+export 'upload_photo_error.dart';
+export 'upload_success.dart';
+export 'retry_photo_upload.dart';
 
 abstract class RegistrationEvent extends Equatable {
   const RegistrationEvent() : super();

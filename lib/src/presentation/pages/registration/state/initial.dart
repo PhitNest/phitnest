@@ -1,9 +1,9 @@
 import 'package:async/async.dart';
 
 import '../../../../domain/use_cases/use_cases.dart';
-import './registration_state.dart';
+import 'register_base.dart';
 
-class InitialState extends RegistrationState {
+class InitialState extends RegistrationBase {
   final CancelableOperation<LocationAndGymsResponse> loadGymsOp;
 
   const InitialState({

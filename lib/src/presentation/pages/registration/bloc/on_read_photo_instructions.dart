@@ -42,23 +42,6 @@ void onReadPhotoInstructions(
         registerOp: state.registerOp,
       ),
     );
-  } else if (state is UploadingPhotoState) {
-    emit(
-      UploadingPhotoState(
-        firstNameConfirmed: state.firstNameConfirmed,
-        location: state.location,
-        gym: state.gym,
-        autovalidateMode: state.autovalidateMode,
-        currentPage: state.currentPage,
-        gyms: state.gyms,
-        takenEmails: state.takenEmails,
-        gymConfirmed: state.gymConfirmed,
-        cameraController: state.cameraController,
-        hasReadPhotoInstructions: true,
-        photo: state.photo,
-        uploadOp: state.uploadOp,
-      ),
-    );
   } else if (state is PhotoSelectedState) {
     emit(
       PhotoSelectedState(

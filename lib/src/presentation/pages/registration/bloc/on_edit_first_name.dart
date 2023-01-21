@@ -72,22 +72,6 @@ void onEditFirstName(
         registerOp: state.registerOp,
       ),
     );
-  } else if (state is UploadingPhotoState) {
-    emit(
-      UploadingPhotoState(
-          firstNameConfirmed: validation == null,
-          location: state.location,
-          gym: state.gym,
-          autovalidateMode: state.autovalidateMode,
-          currentPage: state.currentPage,
-          gyms: state.gyms,
-          takenEmails: state.takenEmails,
-          gymConfirmed: state.gymConfirmed,
-          cameraController: state.cameraController,
-          hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-          photo: state.photo,
-          uploadOp: state.uploadOp),
-    );
   } else if (state is PhotoSelectedState) {
     emit(
       PhotoSelectedState(

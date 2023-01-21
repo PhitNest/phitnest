@@ -70,23 +70,6 @@ void onSwipe(
         registerOp: state.registerOp,
       ),
     );
-  } else if (state is UploadingPhotoState) {
-    emit(
-      UploadingPhotoState(
-        firstNameConfirmed: state.firstNameConfirmed,
-        location: state.location,
-        gym: state.gym,
-        autovalidateMode: state.autovalidateMode,
-        currentPage: event.pageIndex,
-        gyms: state.gyms,
-        takenEmails: state.takenEmails,
-        gymConfirmed: state.gymConfirmed,
-        cameraController: state.cameraController,
-        hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-        photo: state.photo,
-        uploadOp: state.uploadOp,
-      ),
-    );
   } else if (state is PhotoSelectedState) {
     emit(
       PhotoSelectedState(

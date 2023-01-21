@@ -1,7 +1,7 @@
 import '../../../../../domain/entities/entities.dart';
-import '../registration_state.dart';
+import '../register_base.dart';
 
-abstract class GymsLoadedState extends RegistrationState {
+abstract class GymsLoadedState extends RegistrationBase {
   final LocationEntity location;
   final List<GymEntity> gyms;
 

@@ -33,6 +33,7 @@ void onRegisterError(
       Future.delayed(
           Duration(milliseconds: 50), () => add(SubmitPageTwoEvent()));
     } else {
+      pageController.jumpToPage(5);
       emit(
         RegisterErrorState(
           autovalidateMode: state.autovalidateMode,
