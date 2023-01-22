@@ -65,8 +65,11 @@ const kStatusNotExtended = 510; // RFC 2774; 7
 const kStatusNetworkAuthenticationRequired = 511; // RFC 6585; 6
 
 // Failures
-final locationFailure =
+final kLocationFailure =
     Failure("LocationDenied", "Location permissions are denied.");
 
-final locationPermanentlyDeniedFailure = Failure("LocationPermanentlyDenied",
+final kLocationPermanentlyDeniedFailure = Failure("LocationPermanentlyDenied",
     "Location permissions are permanently denied, we cannot request permissions.");
+
+final kUserNotConfirmed =
+    Failure("UserNotConfirmedException", "User is not confirmed.");

@@ -14,27 +14,49 @@ void onSubmit(
   ValueChanged<LoginEvent> add,
 ) {
   if (state is InitialState) {
-    emit(
-      LoadingState(
-        autovalidateMode: state.autovalidateMode,
-        invalidCredentials: state.invalidCredentials,
-        emailController: state.emailController,
-        passwordController: state.passwordController,
-        emailFocusNode: state.emailFocusNode,
-        passwordFocusNode: state.passwordFocusNode,
-        formKey: state.formKey,
-        loginOperation: CancelableOperation.fromFuture(
-          authRepo.login(
-            state.emailController.text.trim(),
-            state.passwordController.text,
-          ),
-        ).then(
-          (res) => res.fold(
-            (res) {},
-            (failure) {},
-          ),
+    if (state.formKey.currentState!.validate()) {
+      emit(
+        LoadingState(
+          autovalidateMode: state.autovalidateMode,
+          invalidCredentials: state.invalidCredentials,
+          emailController: state.emailController,
+          passwordController: state.passwordController,
+          emailFocusNode: state.emailFocusNode,
+          passwordFocusNode: state.passwordFocusNode,
+          formKey: state.formKey,
+          loginOperation: CancelableOperation.fromFuture(
+            authRepo.login(
+              state.emailController.text.trim(),
+              state.passwordController.text,
+            ),
+          )..then(
+              (res) => res.fold(
+                (res) => add(LoginSuccessEvent(res)),
+                (failure) => add(
+                  LoginErrorEvent(
+                    failure,
+                    state.emailController.text.trim(),
+                    state.passwordController.text,
+                  ),
+                ),
+              ),
+            ),
         ),
-      ),
-    );
+      );
+    } else {
+      emit(
+        InitialState(
+          emailController: state.emailController,
+          passwordController: state.passwordController,
+          emailFocusNode: state.emailFocusNode,
+          passwordFocusNode: state.passwordFocusNode,
+          formKey: state.formKey,
+          autovalidateMode: AutovalidateMode.always,
+          invalidCredentials: state.invalidCredentials,
+        ),
+      );
+    }
+  } else {
+    throw Exception('Invalid state: $state');
   }
 }

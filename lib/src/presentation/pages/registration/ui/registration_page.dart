@@ -67,7 +67,7 @@ class RegistrationPage extends StatelessWidget {
               // On success, navigate to the confirm email page.
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
+                CupertinoPageRoute(
                   builder: (context) => ConfirmEmailPage(
                     email: state.registration.email,
                   ),

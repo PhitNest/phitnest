@@ -13,19 +13,19 @@ class LocationDatabase {
     LocationPermission permission;
 
     if (!await Geolocator.isLocationServiceEnabled()) {
-      return Right(locationFailure);
+      return Right(kLocationFailure);
     }
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Right(locationFailure);
+        return Right(kLocationFailure);
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return Right(locationPermanentlyDeniedFailure);
+      return Right(kLocationPermanentlyDeniedFailure);
     }
 
     return Left(

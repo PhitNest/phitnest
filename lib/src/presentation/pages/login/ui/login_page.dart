@@ -1,27 +1,38 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../pages.dart';
 import '../bloc/login_bloc.dart';
+import '../event/cancel_login.dart';
 import '../event/login_event.dart';
-import '../state/initial.dart';
+import '../event/reset.dart';
+import '../state/confirm_user.dart';
 import '../state/loading.dart';
+import '../state/login_state.dart';
+import '../state/login_success.dart';
 import 'widgets/initial.dart';
 import 'widgets/loading.dart';
 
-void _onPressedForgotPassword(BuildContext context) => Navigator.push(
-      context,
-      CupertinoPageRoute(
-        builder: (context) => ForgotPasswordPage(),
-      ),
-    );
+void _onPressedForgotPassword(BuildContext context) {
+  context.read<LoginBloc>().add(CancelLoginEvent());
+  Navigator.push(
+    context,
+    CupertinoPageRoute(
+      builder: (context) => ForgotPasswordPage(),
+    ),
+  );
+}
 
-void _onPressedRegister(BuildContext context) => Navigator.push(
-      context,
-      CupertinoPageRoute(
-        builder: (context) => RegistrationPage(),
-      ),
-    );
+void _onPressedRegister(BuildContext context) {
+  context.read<LoginBloc>().add(CancelLoginEvent());
+  Navigator.push(
+    context,
+    CupertinoPageRoute(
+      builder: (context) => RegistrationPage(),
+    ),
+  );
+}
 
 void _onPressedSubmit(BuildContext context) =>
     context.read<LoginBloc>().add(SubmitEvent());
@@ -33,11 +44,38 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider<LoginBloc>(
         create: (context) => LoginBloc(),
-        child: BlocConsumer(
-          listener: (context, state) {},
+        child: BlocConsumer<LoginBloc, LoginState>(
+          listener: (context, state) {
+            if (state is LoginSuccessState) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => HomePage(),
+                ),
+                (_) => false,
+              );
+            } else if (state is ConfirmUserState) {
+              // Navigate to confirm email page and reset login page state
+              context.read<LoginBloc>().add(ResetEvent());
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => ConfirmEmailPage(
+                    email: state.email,
+                  ),
+                ),
+              );
+            }
+          },
           builder: (context, state) {
             final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-            if (state is LoadingState) {
+            if (state is LoginSuccessState || state is ConfirmUserState) {
+              return Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else if (state is LoadingState) {
               return LoginLoadingPage(
                 keyboardHeight: keyboardHeight,
                 emailController: state.emailController,
