@@ -52,12 +52,16 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
             autovalidateMode: AutovalidateMode.disabled,
           ),
         ) {
-    (state as GymsLoadingState).loadGymsOp.then(
-          (either) => either.fold(
-            (success) => add(GymsLoadedEvent(success.value1, success.value2)),
-            (failure) => add(GymsLoadingErrorEvent(failure)),
-          ),
-        );
+    if (state is GymsLoadingState) {
+      (state as GymsLoadingState).loadGymsOp.then(
+            (either) => either.fold(
+              (success) => add(GymsLoadedEvent(success.value1, success.value2)),
+              (failure) => add(GymsLoadingErrorEvent(failure)),
+            ),
+          );
+    } else {
+      throw Exception('Invalid state: $state');
+    }
     on<RetryLoadGymsEvent>(
         (event, emit) => onRetryLoadGyms(event, emit, state, add));
     on<EditFirstNameEvent>(
@@ -83,24 +87,11 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         (event, emit) => onSetProfilePicture(event, emit, state));
     on<RetakeProfilePictureEvent>(
         (event, emit) => onRetakeProfilePicture(event, emit, state));
-    on<RegisterEvent>((event, emit) => onRegister(
-          event,
-          emit,
-          state,
-          add,
-        ));
-    on<RegisterErrorEvent>((event, emit) => onRegisterError(
-          event,
-          emit,
-          state,
-          add,
-        ));
-    on<RegisterSuccessEvent>((event, emit) => onRegisterSuccess(
-          event,
-          emit,
-          state,
-          add,
-        ));
+    on<RegisterEvent>((event, emit) => onRegister(event, emit, state, add));
+    on<RegisterErrorEvent>(
+        (event, emit) => onRegisterError(event, emit, state, add));
+    on<RegisterSuccessEvent>(
+        (event, emit) => onRegisterSuccess(event, emit, state, add));
     on<UploadErrorEvent>((event, emit) => onUploadError(event, emit, state));
     on<UploadSuccessEvent>(
         (event, emit) => onUploadSuccess(event, emit, state));
