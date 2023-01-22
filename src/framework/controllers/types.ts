@@ -1,7 +1,5 @@
-import { Failure, IRequest, IResponse } from "../../common/types";
+import { Failure, IRequest, IResponse, Validator } from "../../common/types";
 import { Middleware } from "../middleware/types";
-
-type Validator<BodyType> = (body: any) => BodyType;
 
 export enum HttpMethod {
   GET,
