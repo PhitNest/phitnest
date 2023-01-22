@@ -9,10 +9,7 @@ import {
   ResendConfirmationController,
   SignOutController,
 } from "./controllers/auth";
-import {
-  GetDirectMessagesController,
-  SendDirectMessageController,
-} from "./controllers/directMessage";
+import { GetDirectMessagesController } from "./controllers/directMessage";
 import {
   DenyFriendRequestController,
   SendFriendRequestController,
@@ -93,10 +90,6 @@ export function buildRouter(server: IServer) {
   server.bind({
     route: "/friendship/messages",
     controller: new FriendsAndMessagesController(),
-  });
-  server.bind({
-    route: "/directMessage",
-    controller: new SendDirectMessageController(),
   });
   server.bind({
     route: "/directMessage/list",
