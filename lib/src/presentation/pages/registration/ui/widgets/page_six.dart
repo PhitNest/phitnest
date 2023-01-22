@@ -206,28 +206,37 @@ class _PageSixCameraActiveBase extends StatelessWidget {
           Container(
             width: 1.sw,
             height: 320.h,
-            child: ClipRect(
-              child: OverflowBox(
-                alignment: Alignment.center,
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: SizedBox(
-                    width: 1.sw,
-                    height: 1.sh / cameraController.value.aspectRatio,
-                    child: CameraPreview(
-                      cameraController,
-                      child: Center(
-                        child: Opacity(
-                          opacity: 0.75,
-                          child: Image.asset(
-                            'assets/images/profile_picture_mask.png',
-                          ),
+            child: Stack(
+              children: [
+                ClipRect(
+                  child: OverflowBox(
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: SizedBox(
+                        width: 1.sw,
+                        height: 1.sh / cameraController.value.aspectRatio,
+                        child: CameraPreview(
+                          cameraController,
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
+                Center(
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: Opacity(
+                      opacity: 0.55,
+                      child: Image.asset(
+                        'assets/images/profile_picture_mask.png',
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           20.verticalSpace,

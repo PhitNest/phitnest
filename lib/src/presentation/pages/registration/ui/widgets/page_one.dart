@@ -82,7 +82,7 @@ class PageOne extends StatelessWidget {
               ),
             ),
           ),
-          (105 - keyboardPadding / 3).verticalSpace,
+          (105 - keyboardPadding / 4).verticalSpace,
           StyledButton(
             onPressed: onSubmit,
             text: "NEXT",

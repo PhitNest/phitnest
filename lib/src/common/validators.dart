@@ -53,6 +53,10 @@ String? validatePassword(String? password) {
     return 'Must contain at least one special character.';
   }
 
+  if (password.contains(' ')) {
+    return 'Cannot contain spaces.';
+  }
+
   return null;
 }
 
