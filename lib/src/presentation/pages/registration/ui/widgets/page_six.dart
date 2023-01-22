@@ -205,7 +205,7 @@ class _PageSixCameraActiveBase extends StatelessWidget {
           40.verticalSpace,
           Container(
             width: 1.sw,
-            height: 320.h,
+            height: 1.sw,
             child: Stack(
               children: [
                 ClipRect(

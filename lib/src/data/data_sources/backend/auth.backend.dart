@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../common/failure.dart';
+import '../../../common/failures.dart';
 import '../../../domain/entities/entities.dart';
 import '../../adapters/adapters.dart';
 import '../../adapters/interfaces/interfaces.dart';

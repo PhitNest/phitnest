@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../../common/constants.dart';
 import '../../../common/failure.dart';
+import '../../../common/failures.dart';
 import '../../../common/logger.dart';
 import '../interfaces/http.adapter.dart';
 
@@ -96,7 +97,7 @@ class DioHttpAdapter implements IHttpAdapter {
       if (e is DioError) {
         failure = Failure.fromJson(e.response!.data);
       } else {
-        failure = Failure("NetworkError", "Failed to connect to the network.");
+        failure = kNetworkFailure;
       }
       logger.e(
           "Response failure:\n\tmethod: $method\n\tpath: $path\n\tdata: $failure");

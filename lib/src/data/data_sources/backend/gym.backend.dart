@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../common/failure.dart';
+import '../../../common/failures.dart';
 import '../../../domain/entities/entities.dart';
 import '../../adapters/adapters.dart';
 import '../../adapters/interfaces/http.adapter.dart';
@@ -29,7 +30,7 @@ class GymBackend {
                     list.map((json) => GymEntity.fromJson(json)).toList(),
                   )
                 : Right(
-                    Failure("NoGymsFound", "No nearby gyms found."),
+                    kNoGymsFound,
                   ),
           ),
           (failure) => Right(failure),
