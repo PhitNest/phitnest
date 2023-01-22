@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../../common/constants.dart';
 import '../../../common/failure.dart';
+import '../../../common/failures.dart';
 import '../../../domain/entities/entities.dart';
 
 class LocationDatabase {
