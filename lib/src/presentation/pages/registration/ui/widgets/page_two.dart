@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../common/theme.dart';
 import '../../../../../common/validators.dart';
-import '../../../../widgets/styled/styled.dart';
+import '../../../../widgets/widgets.dart';
 
 class PageTwo extends StatelessWidget {
   final double keyboardPadding;
@@ -37,7 +37,7 @@ class PageTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          (120 - keyboardPadding / 4).verticalSpace,
+          (120 - keyboardPadding / 8).verticalSpace,
           Text(
             "Hi, $firstName.\nLet's make an account.",
             style: theme.textTheme.headlineLarge,
@@ -85,7 +85,7 @@ class PageTwo extends StatelessWidget {
               ),
             ),
           ),
-          (40 - keyboardPadding / 7).verticalSpace,
+          (40 - keyboardPadding / 10).verticalSpace,
           StyledButton(
             onPressed: onSubmit,
             text: "NEXT",
