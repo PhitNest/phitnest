@@ -201,28 +201,24 @@ class _PageSixCameraActiveBase extends StatelessWidget {
     return Column(
       children: [
         25.verticalSpace,
-        Stack(
-          children: [
-            SizedBox(
-              width: 1.sw,
-              height: 1.sw,
-              child: ClipRect(
-                child: OverflowBox(
-                  child: FittedBox(
-                    fit: BoxFit.fitWidth,
+        SizedBox(
+          width: 1.sw,
+          height: 1.sw,
+          child: ClipRect(
+            child: OverflowBox(
+              child: FittedBox(
+                fit: BoxFit.fitWidth,
+                child: SizedBox(
+                  height: 1.sh / 1.777777,
+                  child: CameraPreview(
+                    cameraController,
                     child: SizedBox(
-                      height: 1.sh / 1.777777,
-                      child: CameraPreview(
-                        cameraController,
-                        child: SizedBox(
-                          width: 1.sw,
-                          child: Opacity(
-                            opacity: 0.55,
-                            child: Image.asset(
-                              kProfilePictureMask,
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
+                      width: 1.sw,
+                      child: Opacity(
+                        opacity: 0.55,
+                        child: Image.asset(
+                          kProfilePictureMask,
+                          fit: BoxFit.fitWidth,
                         ),
                       ),
                     ),
@@ -230,7 +226,7 @@ class _PageSixCameraActiveBase extends StatelessWidget {
                 ),
               ),
             ),
-          ],
+          ),
         ),
         ...children,
       ],
