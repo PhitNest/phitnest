@@ -25,5 +25,5 @@ class AppAuthenticated extends AppState {
   }) : super();
 
   @override
-  List<Object> get props => [...super.props, accessToken, user];
+  List<Object> get props => [user, accessToken, refreshToken];
 }
