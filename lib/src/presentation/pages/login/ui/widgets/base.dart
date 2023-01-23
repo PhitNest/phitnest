@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../../common/assets_constants.dart';
 import '../../../../../common/theme.dart';
 import '../../../../../common/validators.dart';
 import '../../../../widgets/styled/styled.dart';
@@ -48,7 +49,7 @@ abstract class LoginPageBase extends StatelessWidget {
                 double.infinity.horizontalSpace,
                 (120 - keyboardHeight / 4).verticalSpace,
                 Image.asset(
-                  'assets/images/logo.png',
+                  kLogoPath,
                   width: 61.59.w,
                 ),
                 25.verticalSpace,
