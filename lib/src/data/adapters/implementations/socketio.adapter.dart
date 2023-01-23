@@ -8,15 +8,13 @@ import '../../../common/logger.dart';
 import '../interfaces/socketio.adapter.dart';
 
 class SocketIOAdapter implements ISocketIOAdapter {
-  static IO.Socket? _socket;
+  IO.Socket? _socket;
 
   bool get connected => _socket != null && _socket!.connected;
 
   @override
-  Future<Either<IO.Socket, Failure>> socketConnection(
-    String path,
-    String authorization,
-  ) async {
+  Future<Either<IO.Socket, Failure>> socketConnection(String path,
+      String authorization,) async {
     try {
       logger.d("Connecting to the websocket server...");
       _socket = IO.io(
@@ -32,11 +30,9 @@ class SocketIOAdapter implements ISocketIOAdapter {
       final completer = Completer();
 
       _socket!.onConnect((_) {
-        if (completer.isCompleted) {
-          logger.d("Connected to the websocket server.");
-          completer.complete();
-          return Left(_socket);
-        }
+        logger.d("Connected to the websocket server.");
+        completer.complete();
+        return Left(_socket);
       });
 
       _socket!.onDisconnect((_) {
@@ -63,10 +59,8 @@ class SocketIOAdapter implements ISocketIOAdapter {
   }
 
   @override
-  Future<Either<Stream<dynamic>, Failure>> stream(
-    SocketEvent event,
-    String authorization,
-  ) async {
+  Future<Either<Stream<dynamic>, Failure>> stream(SocketEvent event,
+      String authorization,) async {
     final streamMessages = () {
       final streamController = StreamController<dynamic>();
       logger.d('Opening stream for event: $event.name');
@@ -75,6 +69,7 @@ class SocketIOAdapter implements ISocketIOAdapter {
         logger.d("Received event: ${event.name}\n\tData: $data");
         streamController.add(data);
       };
+
       final disconnectHandler = (_) {
         logger.d('Closing event stream : ${event.name}');
         streamController.close();
@@ -105,10 +100,8 @@ class SocketIOAdapter implements ISocketIOAdapter {
   }
 
   @override
-  Future<Either<dynamic, Failure>> emit(
-    SocketEvent event,
-    dynamic data,
-  ) async {
+  Future<Either<dynamic, Failure>> emit(SocketEvent event,
+      dynamic data,) async {
     final emitMessage = () {
       logger.d('Emitting event: $event\n\tData: $data');
 
@@ -118,7 +111,7 @@ class SocketIOAdapter implements ISocketIOAdapter {
 
       _socket!.once(
         SocketEvent.success.name,
-        (data) {
+            (data) {
           if (!completer.isCompleted) {
             logger.d(
                 "Successfully emitted event: $event\n\tReturned data: $data");
@@ -129,12 +122,13 @@ class SocketIOAdapter implements ISocketIOAdapter {
 
       _socket!.once(
         SocketEvent.error.name,
-        (err) => !completer.isCompleted
+            (err) =>
+        !completer.isCompleted
             ? completer.complete(
-                Right(
-                  Failure("SocketIOError", err.toString()),
-                ),
-              )
+          Right(
+            Failure("SocketIOError", err.toString()),
+          ),
+        )
             : () {},
       );
       return completer.future.timeout(Duration(seconds: 10));
