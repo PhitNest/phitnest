@@ -10,6 +10,7 @@ import '../../../../widgets/styled/styled.dart';
 class PageSixLoading extends _PageSixPhotoSelectedBase {
   const PageSixLoading({
     required super.profilePicture,
+    required super.cameraController,
   }) : super(
           children: const [
             CircularProgressIndicator(),
@@ -25,6 +26,7 @@ class PageSixRegisterError extends PageSixPhotoSelected {
     required super.onPressedRetake,
     required super.onSubmit,
     required super.onUploadPicture,
+    required super.cameraController,
     required this.errorMessage,
   }) : super(
           child: Padding(
@@ -47,6 +49,7 @@ class PageSixPhotoSelected extends _PageSixPhotoSelectedBase {
 
   PageSixPhotoSelected({
     required super.profilePicture,
+    required super.cameraController,
     required this.onPressedRetake,
     required this.onSubmit,
     required this.onUploadPicture,
@@ -82,30 +85,23 @@ class PageSixPhotoSelected extends _PageSixPhotoSelectedBase {
 class _PageSixPhotoSelectedBase extends StatelessWidget {
   final XFile profilePicture;
   final List<Widget> children;
+  final CameraController cameraController;
 
   const _PageSixPhotoSelectedBase({
     required this.profilePicture,
     required this.children,
+    required this.cameraController,
   }) : super();
 
   @override
   Widget build(BuildContext context) => Column(
         children: [
           40.verticalSpace,
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                alignment: FractionalOffset.bottomCenter,
-                image: XFileImage(
-                  profilePicture,
-                ),
-              ),
+          Image(
+            image: XFileImage(
+              profilePicture,
             ),
-            child: SizedBox(
-              width: 1.sw,
-              height: 333.h,
-            ),
+            fit: BoxFit.fitWidth,
           ),
           20.verticalSpace,
           ...children,
@@ -200,49 +196,46 @@ class _PageSixCameraActiveBase extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          40.verticalSpace,
-          Container(
-            width: 1.sw,
-            height: 1.sw,
-            child: Stack(
-              children: [
-                ClipRect(
-                  child: OverflowBox(
-                    alignment: Alignment.center,
-                    child: FittedBox(
-                      fit: BoxFit.fitWidth,
-                      child: SizedBox(
-                        width: 1.sw,
-                        height: 1.sh / cameraController.value.aspectRatio,
-                        child: CameraPreview(
-                          cameraController,
-                        ),
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        25.verticalSpace,
+        Stack(
+          children: [
+            Container(
+              width: 1.sw,
+              height: 1.sw,
+              child: ClipRect(
+                child: OverflowBox(
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: SizedBox(
+                      height: 1.sh / 1.777777,
+                      child: CameraPreview(
+                        cameraController,
                       ),
                     ),
                   ),
                 ),
-                Center(
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: Opacity(
-                      opacity: 0.55,
-                      child: Image.asset(
-                        'assets/images/profile_picture_mask.png',
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          20.verticalSpace,
-          ...children,
-        ],
-      );
+            SizedBox(
+              height: 1.sh / 1.77777,
+              width: 1.sw,
+              child: Opacity(
+                opacity: 0.55,
+                child: Image.asset(
+                  'assets/images/profile_picture_mask.png',
+                  scale: 5,
+                ),
+              ),
+            ),
+          ],
+        ),
+        ...children,
+      ],
+    );
+  }
 }
 
 class PageSixCameraError extends StatelessWidget {
