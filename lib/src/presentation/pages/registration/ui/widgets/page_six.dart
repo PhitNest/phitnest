@@ -221,13 +221,13 @@ class _PageSixCameraActiveBase extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 1.sh / 1.77777,
+              height: 1.sh,
               width: 1.sw,
               child: Opacity(
                 opacity: 0.55,
                 child: Image.asset(
                   kProfilePictureMask,
-                  scale: 5,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),

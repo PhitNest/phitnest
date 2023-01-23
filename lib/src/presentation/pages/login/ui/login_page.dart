@@ -62,6 +62,7 @@ class LoginPage extends StatelessWidget {
                 CupertinoPageRoute(
                   builder: (context) => ConfirmEmailPage(
                     email: state.email,
+                    password: state.password,
                   ),
                 ),
               );

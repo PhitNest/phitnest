@@ -12,6 +12,7 @@ void onUploadSuccess(
     emit(
       UploadSuccessState(
         registration: state.registration,
+        password: state.password,
       ),
     );
   } else {
