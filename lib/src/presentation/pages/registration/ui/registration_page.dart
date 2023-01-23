@@ -22,7 +22,7 @@ int _getPageScrollLimit(InitialState state) => state.firstNameConfirmed
     ? state is GymSelectedState
         ? state.gymConfirmed
             ? state.hasReadPhotoInstructions
-                ? 7
+                ? 6
                 : 5
             : 4
         : 3
@@ -386,7 +386,7 @@ class RegistrationPage extends StatelessWidget {
                               ),
                               StyledPageIndicator(
                                 currentPage: state.currentPage,
-                                totalPages: 7,
+                                totalPages: 6,
                               ),
                               48.verticalSpace,
                             ],
