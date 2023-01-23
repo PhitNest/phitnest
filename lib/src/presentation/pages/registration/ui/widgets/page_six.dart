@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../../../common/assets_constants.dart';
 import '../../../../../common/theme.dart';
 import '../../../../widgets/styled/styled.dart';
 
@@ -225,7 +226,7 @@ class _PageSixCameraActiveBase extends StatelessWidget {
               child: Opacity(
                 opacity: 0.55,
                 child: Image.asset(
-                  'assets/images/profile_picture_mask.png',
+                  kProfilePictureMask,
                   scale: 5,
                 ),
               ),
