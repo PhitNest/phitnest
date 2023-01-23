@@ -18,15 +18,25 @@ import 'widgets/widgets.dart';
 RegistrationBloc _bloc(BuildContext context) =>
     context.read<RegistrationBloc>();
 
-int _getPageScrollLimit(InitialState state) => state.firstNameConfirmed
-    ? state is GymSelectedState
-        ? state.gymConfirmed
-            ? state.hasReadPhotoInstructions
-                ? 6
-                : 5
-            : 4
-        : 3
-    : 1;
+int _getPageScrollLimit(InitialState state) {
+  if (state.firstNameConfirmed) {
+    if (state is GymSelectedState) {
+      if (state.gymConfirmed) {
+        if (state.hasReadPhotoInstructions) {
+          return 6;
+        } else {
+          return 5;
+        }
+      } else {
+        return 4;
+      }
+    } else {
+      return 3;
+    }
+  } else {
+    return 1;
+  }
+}
 
 void _onSelectedGym(BuildContext context, GymEntity gym) =>
     _bloc(context).add(GymSelectedEvent(gym));

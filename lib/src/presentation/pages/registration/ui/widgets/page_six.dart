@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../../common/assets_constants.dart';
 import '../../../../../common/theme.dart';
 import '../../../../widgets/styled/styled.dart';
 
@@ -201,33 +200,10 @@ class _PageSixCameraActiveBase extends StatelessWidget {
     return Column(
       children: [
         25.verticalSpace,
-        SizedBox(
-          width: 1.sw,
-          height: 1.sw,
-          child: ClipRect(
-            child: OverflowBox(
-              child: FittedBox(
-                fit: BoxFit.fitWidth,
-                child: SizedBox(
-                  height: 1.sh / 1.777777,
-                  child: CameraPreview(
-                    cameraController,
-                    child: SizedBox(
-                      width: 1.sw,
-                      child: Opacity(
-                        opacity: 0.55,
-                        child: Image.asset(
-                          kProfilePictureMask,
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+        StyledProfilePictureCamera(
+          cameraController: cameraController,
         ),
+        20.verticalSpace,
         ...children,
       ],
     );
