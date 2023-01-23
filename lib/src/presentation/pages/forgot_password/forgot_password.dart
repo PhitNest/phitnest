@@ -7,7 +7,24 @@ import '../../widgets/widgets.dart';
 const kBackgroundColor = Color(0xFFF5F5F5);
 
 class ForgotPasswordPage extends StatelessWidget {
-  const ForgotPasswordPage({Key? key}) : super(key: key);
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final TextEditingController confirmPassController;
+  final FocusNode emailFocusNode;
+  final FocusNode passwordFocusNode;
+  final FocusNode confirmPassFocusNode;
+  final VoidCallback onSubmit;
+
+  const ForgotPasswordPage({
+    Key? key,
+    required this.emailController,
+    required this.passwordController,
+    required this.confirmPassController,
+    required this.emailFocusNode,
+    required this.passwordFocusNode,
+    required this.confirmPassFocusNode,
+    required this.onSubmit,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -36,10 +53,35 @@ class ForgotPasswordPage extends StatelessWidget {
               ),
               16.verticalSpace,
               SizedBox(
-                width: 45.w,
-                child: StyledUnderlinedTextField(
-                  hint: 'Email',
+                width: 291.w,
+                child: Column(
+                  children: [
+                    StyledUnderlinedTextField(
+                      hint: 'Email',
+                      keyboardType: TextInputType.emailAddress,
+                      controller: emailController,
+                      focusNode: emailFocusNode,
+                    ),
+                    StyledUnderlinedTextField(
+                      hint: 'New Password',
+                      keyboardType: TextInputType.visiblePassword,
+                      controller: passwordController,
+                      focusNode: passwordFocusNode,
+                    ),
+                    StyledUnderlinedTextField(
+                      hint: 'Confirm Password',
+                      keyboardType: TextInputType.visiblePassword,
+                      controller: confirmPassController,
+                      focusNode: confirmPassFocusNode,
+                    ),
+                  ],
                 ),
+              ),
+
+              30.verticalSpace,
+              StyledButton(
+                text: 'Submit',
+                onPressed: () {},
               ),
               // StyledUnderlinedTextField(),
             ],
