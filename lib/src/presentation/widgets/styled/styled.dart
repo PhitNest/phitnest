@@ -7,3 +7,4 @@ export './styled_page_indicator.dart';
 export './styled_underlined_text_button.dart';
 export './styled_back_button.dart';
 export './styled_password_field.dart';
+export './styled_nav_bar.dart';
