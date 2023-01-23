@@ -18,3 +18,6 @@ final kUserNotConfirmed =
     Failure("UserNotConfirmedException", "User is not confirmed.");
 
 final kNoGymsFound = Failure("NoGymsFound", "No nearby gyms found.");
+
+final kFailedToCropImage =
+    Failure("FailedToCropImage", "Failed to crop image.");

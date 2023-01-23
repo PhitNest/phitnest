@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +23,7 @@ int _getPageScrollLimit(InitialState state) => state.firstNameConfirmed
     ? state is GymSelectedState
         ? state.gymConfirmed
             ? state.hasReadPhotoInstructions
-                ? 6
+                ? 7
                 : 5
             : 4
         : 3
@@ -304,17 +305,23 @@ class RegistrationPage extends StatelessWidget {
                                                 _onSetProfilePicture(
                                                     context, file),
                                             errorMessage: state.failure.message,
+                                            cameraController:
+                                                state.cameraController,
                                           );
                                         } else if (state
                                             is RegisterRequestLoadingState) {
                                           // The register request is loading
                                           return PageSixLoading(
+                                            cameraController:
+                                                state.cameraController,
                                             profilePicture: state.photo,
                                           );
                                         } else if (state
                                             is PhotoSelectedState) {
                                           // The user has selected a photo
                                           return PageSixPhotoSelected(
+                                            cameraController:
+                                                state.cameraController,
                                             onPressedRetake: () =>
                                                 _onPressedRetake(context),
                                             profilePicture: state.photo,
@@ -366,6 +373,11 @@ class RegistrationPage extends StatelessWidget {
                                           );
                                         }
                                         break;
+                                      case 6:
+                                        return Scaffold(
+                                            body: CameraPreview(
+                                                (state as GymSelectedState)
+                                                    .cameraController));
                                     }
                                     // The index should be between 0 and 5
                                     throw Exception('Invalid index: $index');
@@ -374,7 +386,7 @@ class RegistrationPage extends StatelessWidget {
                               ),
                               StyledPageIndicator(
                                 currentPage: state.currentPage,
-                                totalPages: 6,
+                                totalPages: 7,
                               ),
                               48.verticalSpace,
                             ],
