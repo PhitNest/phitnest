@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../../common/assets_constants.dart';
+import '../../../../../common/assets.dart';
 import '../../../../../common/theme.dart';
 import '../../../../../common/validators.dart';
 import '../../../../widgets/styled/styled.dart';
@@ -38,7 +38,7 @@ abstract class LoginPageBase extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => StyledScaffold(
         // Prevent overflow and allow drag to dismiss keyboard
         body: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -49,7 +49,7 @@ abstract class LoginPageBase extends StatelessWidget {
                 double.infinity.horizontalSpace,
                 (120 - keyboardHeight / 4).verticalSpace,
                 Image.asset(
-                  kLogoPath,
+                  Assets.logo.path,
                   width: 61.59.w,
                 ),
                 25.verticalSpace,

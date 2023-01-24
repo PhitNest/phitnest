@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../common/assets_constants.dart';
+import '../../../common/assets.dart';
 
 class StyledBackButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -18,7 +18,7 @@ class StyledBackButton extends StatelessWidget {
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       icon: Image.asset(
-        kBackButton,
+        Assets.backButton.path,
         width: 32.w,
       ),
       onPressed: onPressed,

@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../common/assets_constants.dart';
+import '../../../common/assets.dart';
 
 class StyledProfilePictureCamera extends StatelessWidget {
   final CameraController cameraController;
@@ -21,7 +21,7 @@ class StyledProfilePictureCamera extends StatelessWidget {
             child: FittedBox(
               fit: BoxFit.fitWidth,
               child: SizedBox(
-                height: 1.sh / 1.777777,
+                height: 1.sh / cameraController.value.aspectRatio,
                 child: CameraPreview(
                   cameraController,
                   child: SizedBox(
@@ -29,7 +29,7 @@ class StyledProfilePictureCamera extends StatelessWidget {
                     child: Opacity(
                       opacity: 0.55,
                       child: Image.asset(
-                        kProfilePictureMask,
+                        Assets.profilePictureMask.path,
                         fit: BoxFit.fitWidth,
                       ),
                     ),

@@ -6,6 +6,7 @@ import '../../../common/failures.dart';
 import '../../../domain/entities/entities.dart';
 import '../../adapters/adapters.dart';
 import '../../adapters/interfaces/interfaces.dart';
+import 'backend.dart';
 
 class LoginResponse extends Equatable {
   final AuthEntity session;
@@ -75,7 +76,7 @@ class AuthBackend {
           String email, String password) async =>
       httpAdapter.request(
         HttpMethod.post,
-        '/auth/login',
+        Routes.login.path,
         data: {
           'email': email,
           'password': password,
@@ -101,7 +102,7 @@ class AuthBackend {
   ) async =>
       httpAdapter.request(
         HttpMethod.post,
-        '/auth/register',
+        Routes.register.path,
         data: {
           'email': email,
           'password': password,

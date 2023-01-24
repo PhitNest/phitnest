@@ -42,8 +42,7 @@ class GymSearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider<_GymSearchState>(
         create: (context) => _GymSearchState(initialGym),
-        builder: (context, child) => Scaffold(
-          backgroundColor: Colors.white,
+        builder: (context, child) => StyledScaffold(
           body: Column(
             children: [
               40.verticalSpace,

@@ -5,6 +5,7 @@ import '../../../common/failures.dart';
 import '../../../domain/entities/entities.dart';
 import '../../adapters/adapters.dart';
 import '../../adapters/interfaces/http.adapter.dart';
+import 'backend.dart';
 
 class GymBackend {
   const GymBackend();
@@ -14,7 +15,7 @@ class GymBackend {
           {int? amount}) =>
       httpAdapter.request(
         HttpMethod.get,
-        '/gym/nearest',
+        Routes.nearestGyms.path,
         data: {
           "meters": meters.toString(),
           "latitude": location.latitude.toString(),

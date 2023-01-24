@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../common/assets_constants.dart';
+import '../../../common/assets.dart';
 import '../../../common/theme.dart';
 
 class StyledComboBox<ItemType> extends StatelessWidget {
@@ -38,7 +38,7 @@ class StyledComboBox<ItemType> extends StatelessWidget {
           value: initialValue,
           borderRadius: BorderRadius.circular(8),
           icon: Image.asset(
-            kDropDownButton,
+            Assets.dropDownButton.path,
             width: 16.w,
             height: 16.h,
           ),

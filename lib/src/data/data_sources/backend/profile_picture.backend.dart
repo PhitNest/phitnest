@@ -4,6 +4,7 @@ import '../../../common/failure.dart';
 import '../../../common/failures.dart';
 import '../../adapters/adapters.dart';
 import '../../adapters/interfaces/interfaces.dart';
+import 'backend.dart';
 
 class ProfilePictureBackend {
   const ProfilePictureBackend();
@@ -14,7 +15,7 @@ class ProfilePictureBackend {
   ) =>
       httpAdapter.request(
         HttpMethod.get,
-        '/profilePicture/unauthorized',
+        Routes.getUploadUrlUnauthorized.path,
         data: {
           "email": email,
           "password": password,
