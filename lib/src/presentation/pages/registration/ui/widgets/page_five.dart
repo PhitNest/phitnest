@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../../common/assets_constants.dart';
+import '../../../../../common/assets.dart';
 import '../../../../../common/theme.dart';
 import '../../../../widgets/styled/styled.dart';
 
@@ -65,7 +65,7 @@ class _PageFiveBase extends StatelessWidget {
           Container(
             width: 160.h,
             child: Image.asset(
-              kProfilePictureMeme,
+              Assets.profilePictureMeme.path,
               fit: BoxFit.contain,
             ),
           ),

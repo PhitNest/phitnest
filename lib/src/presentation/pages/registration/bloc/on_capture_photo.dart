@@ -2,10 +2,8 @@ import 'package:async/async.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_editor/image_editor.dart';
 
-import '../../../../common/failures.dart';
-import '../../../../data/data_sources/s3/s3.dart';
+import '../../../../data/data_sources/camera/camera.dart';
 import '../event/registration_event.dart';
 import '../state/registration_state.dart';
 
@@ -42,9 +40,7 @@ void onCapturePhoto(
         cameraController: state.cameraController,
         hasReadPhotoInstructions: state.hasReadPhotoInstructions,
         photoCapture: CancelableOperation.fromFuture(
-          state.cameraController.takePicture().then(
-                (file) => photoDatabase.centerCrop(file),
-              ),
+          takeProfilePicture(state.cameraController),
         )..value.catchError(
             (err) {
               if (err is CameraException) {

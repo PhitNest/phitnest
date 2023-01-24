@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../common/assets_constants.dart';
+import '../../../common/assets.dart';
 
 class StyledNavigationBar extends StatefulWidget {
   const StyledNavigationBar({Key? key}) : super(key: key);
@@ -91,7 +91,7 @@ class _StyledNavigationBarState extends State<StyledNavigationBar>
                 child: Padding(
                   padding: EdgeInsets.only(left: 12.w),
                   child: Image.asset(
-                    kLogoPath,
+                    Assets.logo.path,
                     width: 38.62.w,
                   ),
                 ),

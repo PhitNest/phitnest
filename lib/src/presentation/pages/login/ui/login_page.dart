@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../widgets/styled/styled.dart';
 import '../../pages.dart';
 import '../bloc/login_bloc.dart';
 import '../event/cancel_login.dart';
@@ -62,6 +64,7 @@ class LoginPage extends StatelessWidget {
                 CupertinoPageRoute(
                   builder: (context) => ConfirmEmailPage(
                     email: state.email,
+                    password: state.password,
                   ),
                 ),
               );
@@ -70,9 +73,12 @@ class LoginPage extends StatelessWidget {
           builder: (context, state) {
             final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
             if (state is LoginSuccessState || state is ConfirmUserState) {
-              return Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
+              return StyledScaffold(
+                body: Column(
+                  children: [
+                    200.verticalSpace,
+                    CircularProgressIndicator(),
+                  ],
                 ),
               );
             } else if (state is LoadingState) {

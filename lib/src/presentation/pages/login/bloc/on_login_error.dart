@@ -15,7 +15,7 @@ void onLoginError(
 ) {
   if (state is LoadingState) {
     if (event.failure == kUserNotConfirmed) {
-      emit(ConfirmUserState(email: event.email));
+      emit(ConfirmUserState(email: event.email, password: event.password));
     } else {
       emit(
         InitialState(

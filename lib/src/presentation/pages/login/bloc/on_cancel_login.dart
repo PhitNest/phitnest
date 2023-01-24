@@ -19,6 +19,8 @@ Future<void> onCancelLogin(
         invalidCredentials: state.invalidCredentials,
       ),
     );
+  } else if (state is InitialState) {
+    // do nothing
   } else {
     throw Exception('Invalid state: $state');
   }

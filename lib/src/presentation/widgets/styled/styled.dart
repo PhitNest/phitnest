@@ -8,3 +8,5 @@ export './styled_underlined_text_button.dart';
 export './styled_back_button.dart';
 export './styled_password_field.dart';
 export './styled_nav_bar.dart';
+export './styled_profile_picture_camera.dart';
+export './styled_scaffold.dart';
