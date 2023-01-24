@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../../../common/constants.dart';
+import '../../../common/status_codes.dart';
 import '../../../common/failure.dart';
 import '../../../common/failures.dart';
 import '../../../common/logger.dart';
