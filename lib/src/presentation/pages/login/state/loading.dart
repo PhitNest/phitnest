@@ -17,6 +17,9 @@ class LoadingState extends InitialState {
   }) : super();
 
   @override
-  List<Object?> get props =>
-      [super.props, loginOperation.isCanceled, loginOperation.isCompleted];
+  List<Object?> get props => [
+        super.props,
+        loginOperation.isCanceled,
+        loginOperation.isCompleted,
+      ];
 }
