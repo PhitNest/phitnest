@@ -75,7 +75,7 @@ class AuthBackend {
   Future<Either<LoginResponse, Failure>> login(
     String email,
     String password,
-  ) async =>
+  ) =>
       httpAdapter.request(
         HttpMethod.post,
         Routes.login.path,
@@ -101,7 +101,7 @@ class AuthBackend {
     String firstName,
     String lastName,
     String gymId,
-  ) async =>
+  ) =>
       httpAdapter.request(
         HttpMethod.post,
         Routes.register.path,
@@ -127,21 +127,25 @@ class AuthBackend {
   Future<Either<Object?, Failure>> forgotPassword(
     String email,
     String password,
-  ) async =>
-      httpAdapter.request(HttpMethod.post, Routes.forgotPassword.path, data: {
-        'email': email,
-        'password': password,
-      }).then(
+  ) =>
+      httpAdapter.request(
+        HttpMethod.post,
+        Routes.forgotPassword.path,
+        data: {
+          'email': email,
+          'password': password,
+        },
+      ).then(
         (either) => either.fold(
           (response) => response.fold(
-            (l) {
-              if (l.isEmpty) {
+            (list) {
+              if (list.isEmpty) {
                 return Left(null);
               } else {
                 return Right(kInvalidBackendResponse);
               }
             },
-            (r) => Right(kInvalidBackendResponse),
+            (json) => Right(kInvalidBackendResponse),
           ),
           (failure) => Right(failure),
         ),
