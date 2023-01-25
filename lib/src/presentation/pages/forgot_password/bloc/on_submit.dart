@@ -1,7 +1,11 @@
+import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../domain/use_cases/reset_password.dart';
 import '../event/submit.dart';
+import '../state/initial.dart';
+import '../state/loading.dart';
 import 'forgot_password_bloc.dart';
 
 void onSubmit(
@@ -10,20 +14,25 @@ void onSubmit(
   ForgotPasswordState state,
   ValueChanged<ForgotPasswordEvent> add,
 ) {
-  // if (state is ForgotPasswordInitialState) {
-  //   if (state.formKey.currentState!.validate()) {
-  //     emit(
-  //       ForgotPasswordLoadingState(
-  //           passwordController: state.passwordController,
-  //           confirmPassController: state.confirmPassController,
-  //           emailFocusNode: state.emailFocusNode,
-  //           passwordFocusNode: state.passwordFocusNode,
-  //           confirmPassFocusNode: state.confirmPassFocusNode,
-  //           emailController: state.emailController,
-  //           autoValidateMode: state.autoValidateMode,
-  //           formKey: state.formKey,
-  //           forgotPassOperation: ),
-  //     );
-  //   }
-  // }
+  if (state is ForgotPasswordInitialState) {
+    if (state.formKey.currentState!.validate()) {
+      emit(
+        ForgotPasswordLoadingState(
+          passwordController: state.passwordController,
+          confirmPassController: state.confirmPassController,
+          emailFocusNode: state.emailFocusNode,
+          passwordFocusNode: state.passwordFocusNode,
+          confirmPassFocusNode: state.confirmPassFocusNode,
+          emailController: state.emailController,
+          autoValidateMode: state.autoValidateMode,
+          formKey: state.formKey,
+          forgotPassOperation: CancelableOperation.fromFuture(
+            resetPassword(state.emailController.text),
+          )..then(
+              (res) => debugPrint(res),
+            ),
+        ),
+      );
+    }
+  }
 }

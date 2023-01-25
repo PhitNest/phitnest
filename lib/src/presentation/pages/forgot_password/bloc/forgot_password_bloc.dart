@@ -15,16 +15,18 @@ part '../state/forgot_password_state.dart';
 class ForgotPasswordBloc
     extends Bloc<ForgotPasswordEvent, ForgotPasswordState> {
   ForgotPasswordBloc()
-      : super(ForgotPasswordInitialState(
-          passwordController: TextEditingController(),
-          confirmPassController: TextEditingController(),
-          emailController: TextEditingController(),
-          emailFocusNode: FocusNode(),
-          passwordFocusNode: FocusNode(),
-          confirmPassFocusNode: FocusNode(),
-          formKey: GlobalKey<FormState>(),
-          autoValidateMode: AutovalidateMode.disabled,
-        )) {
+      : super(
+          ForgotPasswordInitialState(
+            passwordController: TextEditingController(),
+            confirmPassController: TextEditingController(),
+            emailController: TextEditingController(),
+            emailFocusNode: FocusNode(),
+            passwordFocusNode: FocusNode(),
+            confirmPassFocusNode: FocusNode(),
+            formKey: GlobalKey<FormState>(),
+            autoValidateMode: AutovalidateMode.disabled,
+          ),
+        ) {
     on<ForgotPasswordOnSubmitEvent>(
       (event, emit) => onSubmit(
         event,
