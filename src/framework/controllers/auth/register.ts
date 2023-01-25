@@ -13,7 +13,7 @@ const validator = z.object({
 });
 
 type RegisterRequest = z.infer<typeof validator>;
-type RegisterResponse = IUserEntity & { uploadUrl: string };
+type RegisterResponse = { user: IUserEntity, uploadUrl: string };
 
 export class RegisterController
   implements Controller<RegisterRequest, RegisterResponse>
