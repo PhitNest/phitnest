@@ -4,14 +4,14 @@ import { Controller, HttpMethod } from "../types";
 import { IGymEntity, LocationEntity } from "../../../domain/entities";
 import { gymRepo } from "../../../domain/repositories";
 
-const nearestGyms = z.object({
+const validator = z.object({
   longitude: z.number(),
   latitude: z.number(),
   meters: z.number().positive(),
   amount: z.number().int().optional(),
 });
 
-type NearestGymsRequest = z.infer<typeof nearestGyms>;
+type NearestGymsRequest = z.infer<typeof validator>;
 
 export class NearestGymsController
   implements Controller<NearestGymsRequest, IGymEntity[]>
@@ -19,7 +19,7 @@ export class NearestGymsController
   method = HttpMethod.GET;
 
   validate(body: any) {
-    return nearestGyms.parse({
+    return validator.parse({
       longitude: parseFloat(body.longitude),
       latitude: parseFloat(body.latitude),
       meters: parseFloat(body.meters),

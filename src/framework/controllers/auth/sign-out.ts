@@ -9,11 +9,11 @@ import { authRepo } from "../../../domain/repositories";
 import { authMiddleware } from "../../middleware";
 import { getSocketServer } from "../../adapters/injection";
 
-const signOut = z.object({
+const validator = z.object({
   allDevices: z.boolean(),
 });
 
-type SignOutRequest = z.infer<typeof signOut>;
+type SignOutRequest = z.infer<typeof validator>;
 
 export class SignOutController
   implements Controller<SignOutRequest, void, AuthenticatedLocals>
@@ -23,7 +23,7 @@ export class SignOutController
   middleware = [authMiddleware];
 
   validate(body: any) {
-    return signOut.parse(body);
+    return validator.parse(body);
   }
 
   execute(

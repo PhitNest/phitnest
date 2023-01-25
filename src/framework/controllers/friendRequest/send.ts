@@ -14,11 +14,11 @@ import {
 import { sendFriendRequest } from "../../../domain/use-cases";
 import { getSocketServer } from "../../adapters/injection";
 
-const sendFriendRequestValidator = z.object({
+const validator = z.object({
   recipientCognitoId: z.string(),
 });
 
-type SendFriendRequestRequest = z.infer<typeof sendFriendRequestValidator>;
+type SendFriendRequestRequest = z.infer<typeof validator>;
 
 type SendFriendRequestResponse = IFriendRequestEntity | IFriendshipEntity;
 
@@ -35,7 +35,7 @@ export class SendFriendRequestController
   middleware = [authMiddleware];
 
   validate(body: any) {
-    return sendFriendRequestValidator.parse(body);
+    return validator.parse(body);
   }
 
   async execute(

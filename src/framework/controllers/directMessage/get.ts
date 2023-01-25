@@ -9,11 +9,11 @@ import { authMiddleware } from "../../middleware";
 import { IDirectMessageEntity } from "../../../domain/entities";
 import { getDirectMessages } from "../../../domain/use-cases";
 
-const getDirectMessagesValidator = z.object({
+const validator = z.object({
   friendCognitoId: z.string(),
 });
 
-type GetDirectMessagesRequest = z.infer<typeof getDirectMessagesValidator>;
+type GetDirectMessagesRequest = z.infer<typeof validator>;
 
 export class GetDirectMessagesController
   implements
@@ -28,7 +28,7 @@ export class GetDirectMessagesController
   middleware = [authMiddleware];
 
   validate(body: any) {
-    return getDirectMessagesValidator.parse(body);
+    return validator.parse(body);
   }
 
   execute(

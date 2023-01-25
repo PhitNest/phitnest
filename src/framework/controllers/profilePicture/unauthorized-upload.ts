@@ -3,14 +3,12 @@ import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import { unauthorizedProfilePictureUploadUrl } from "../../../domain/use-cases";
 
-const unauthorizedUploadValidator = z.object({
+const validator = z.object({
   email: z.string().trim(),
   password: z.string(),
 });
 
-type UnauthorizedProfilePictureUploadRequest = z.infer<
-  typeof unauthorizedUploadValidator
->;
+type UnauthorizedProfilePictureUploadRequest = z.infer<typeof validator>;
 
 export class UnauthorizedProfilePictureUploadController
   implements
@@ -24,7 +22,7 @@ export class UnauthorizedProfilePictureUploadController
   method = HttpMethod.GET;
 
   validate(body: any) {
-    return unauthorizedUploadValidator.parse(body);
+    return validator.parse(body);
   }
 
   execute(

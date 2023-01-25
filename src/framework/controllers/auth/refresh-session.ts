@@ -4,12 +4,12 @@ import { Controller, HttpMethod } from "../types";
 import { authRepo } from "../../../domain/repositories";
 import { IRefreshSessionEntity } from "../../../domain/entities";
 
-const refreshSession = z.object({
+const validator = z.object({
   email: z.string().trim(),
   refreshToken: z.string(),
 });
 
-type RefreshSessionRequest = z.infer<typeof refreshSession>;
+type RefreshSessionRequest = z.infer<typeof validator>;
 
 export class RefreshSessionController
   implements Controller<RefreshSessionRequest, IRefreshSessionEntity>
@@ -17,7 +17,7 @@ export class RefreshSessionController
   method = HttpMethod.POST;
 
   validate(body: any) {
-    return refreshSession.parse(body);
+    return validator.parse(body);
   }
 
   execute(
