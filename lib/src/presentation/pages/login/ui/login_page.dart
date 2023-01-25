@@ -16,8 +16,10 @@ import '../state/login_success.dart';
 import 'widgets/initial.dart';
 import 'widgets/loading.dart';
 
+LoginBloc _bloc(BuildContext context) => context.read();
+
 void _onPressedForgotPassword(BuildContext context) {
-  context.read<LoginBloc>().add(CancelLoginEvent());
+  _bloc(context).add(CancelLoginEvent());
   Navigator.push(
     context,
     CupertinoPageRoute(
@@ -27,7 +29,7 @@ void _onPressedForgotPassword(BuildContext context) {
 }
 
 void _onPressedRegister(BuildContext context) {
-  context.read<LoginBloc>().add(CancelLoginEvent());
+  _bloc(context).add(CancelLoginEvent());
   Navigator.push(
     context,
     CupertinoPageRoute(
@@ -37,7 +39,7 @@ void _onPressedRegister(BuildContext context) {
 }
 
 void _onPressedSubmit(BuildContext context) =>
-    context.read<LoginBloc>().add(SubmitEvent());
+    _bloc(context).add(SubmitEvent());
 
 /// Handles signing in and has links to forgot password and registration
 class LoginPage extends StatelessWidget {
@@ -58,13 +60,20 @@ class LoginPage extends StatelessWidget {
               );
             } else if (state is ConfirmUserState) {
               // Navigate to confirm email page and reset login page state
-              context.read<LoginBloc>().add(ResetEvent());
+              _bloc(context).add(ResetEvent());
               Navigator.push(
                 context,
                 CupertinoPageRoute(
                   builder: (context) => ConfirmEmailPage(
                     email: state.email,
                     password: state.password,
+                    onConfirmed: () => Navigator.pushAndRemoveUntil(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => HomePage(),
+                      ),
+                      (_) => false,
+                    ),
                   ),
                 ),
               );

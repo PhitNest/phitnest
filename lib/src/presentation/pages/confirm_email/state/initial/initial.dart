@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'confirm_email_state.dart';
+import '../confirm_email_state.dart';
+
+export 'error.dart';
+export 'loading.dart';
 
 class InitialState extends ConfirmEmailState {
   final TextEditingController codeController;

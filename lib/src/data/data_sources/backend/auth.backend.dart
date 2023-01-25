@@ -75,7 +75,7 @@ class AuthBackend {
   Future<Either<LoginResponse, Failure>> login(
     String email,
     String password,
-  ) async =>
+  ) =>
       httpAdapter.request(
         HttpMethod.post,
         Routes.login.path,
@@ -101,7 +101,7 @@ class AuthBackend {
     String firstName,
     String lastName,
     String gymId,
-  ) async =>
+  ) =>
       httpAdapter.request(
         HttpMethod.post,
         Routes.register.path,
@@ -126,7 +126,7 @@ class AuthBackend {
 
   Future<Failure?> forgotPassword(
     String email,
-  ) async =>
+  ) =>
       httpAdapter.request(
         HttpMethod.post,
         Routes.forgotPassword.path,
