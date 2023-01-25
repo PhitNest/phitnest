@@ -10,11 +10,14 @@ enum Routes {
   confirmRegister,
   getUploadUrlUnauthorized,
   nearestGyms,
+  resendConfirmationCode,
 }
 
 extension Paths on Routes {
   String get path {
     switch (this) {
+      case Routes.resendConfirmationCode:
+        return '/auth/resendConfirmation';
       case Routes.login:
         return '/auth/login';
       case Routes.register:

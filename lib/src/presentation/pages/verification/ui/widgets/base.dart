@@ -4,17 +4,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../common/theme.dart';
 import '../../../../widgets/styled/styled.dart';
 
-class ConfirmEmailBaseWidget extends StatelessWidget {
-  final String email;
+class VerificationBase extends StatelessWidget {
+  final String headerText;
   final Widget child;
   final TextEditingController codeController;
   final FocusNode codeFocusNode;
   final VoidCallback onChanged;
   final VoidCallback onCompleted;
 
-  const ConfirmEmailBaseWidget({
+  const VerificationBase({
     Key? key,
-    required this.email,
+    required this.headerText,
     required this.child,
     required this.onChanged,
     required this.onCompleted,
@@ -45,7 +45,7 @@ class ConfirmEmailBaseWidget extends StatelessWidget {
                 ),
                 40.verticalSpace,
                 Text(
-                  "Check $email for a verification\ncode from us and enter it below",
+                  headerText,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.labelLarge,
                 ),

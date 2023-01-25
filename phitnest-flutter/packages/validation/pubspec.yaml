@@ -3,9 +3,6 @@ description: Validation Utils
 version: 1.0.0+1
 publish_to: 'none'
 environment:
-<<<<<<< HEAD
-  sdk: ">=2.13.4 <3.0.0"
-=======
   sdk: ">=2.13.4 <3.0.0"
 
 dependencies:
@@ -22,4 +19,3 @@ flutter_icons:
 
 flutter:
   uses-material-design: true
->>>>>>> ebc467ce (Time package)

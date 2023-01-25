@@ -3,14 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'base.dart';
 
-class ConfirmEmailLoading extends ConfirmEmailBaseWidget {
-  ConfirmEmailLoading({
+class VerificationLoading extends VerificationBase {
+  VerificationLoading({
     Key? key,
     required super.codeController,
     required super.codeFocusNode,
     required super.onChanged,
     required super.onCompleted,
-    required super.email,
+    required super.headerText,
   }) : super(
           key: key,
           child: Column(

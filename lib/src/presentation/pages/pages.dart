@@ -1,4 +1,3 @@
-export 'confirm_email/confirm_email.dart';
 export 'forgot_password/ui/forgot_password.dart';
 export 'home/home.dart';
 export 'login/ui/login_page.dart';
