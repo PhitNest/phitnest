@@ -3,11 +3,11 @@ import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import { forgotPassword } from "../../../domain/use-cases";
 
-const forgotPasswordValidator = z.object({
+const validator = z.object({
   email: z.string().trim(),
 });
 
-type ForgotPasswordRequest = z.infer<typeof forgotPasswordValidator>;
+type ForgotPasswordRequest = z.infer<typeof validator>;
 
 export class ForgotPasswordController
   implements Controller<ForgotPasswordRequest, void>
@@ -15,7 +15,7 @@ export class ForgotPasswordController
   method = HttpMethod.POST;
 
   validate(body: any) {
-    return forgotPasswordValidator.parse(body);
+    return validator.parse(body);
   }
 
   execute(req: IRequest<ForgotPasswordRequest>, res: IResponse<void>) {

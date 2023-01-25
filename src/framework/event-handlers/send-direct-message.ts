@@ -3,16 +3,16 @@ import { Failure } from "../../common/types";
 import { sendDirectMessage } from "../../domain/use-cases";
 import { IConnection } from "../adapters/interfaces";
 
-const sendDirectMessageValidator = z.object({
+const validator = z.object({
   recipientCognitoId: z.string(),
   text: z.string().trim().min(1).max(1000),
 });
 
 export function validateSendDirectMessage(data: any) {
-  return sendDirectMessageValidator.parse(data);
+  return validator.parse(data);
 }
 
-type SendDirectMessageRequest = z.infer<typeof sendDirectMessageValidator>;
+type SendDirectMessageRequest = z.infer<typeof validator>;
 
 export async function handleSendDirectMessage(
   data: SendDirectMessageRequest,

@@ -12,11 +12,11 @@ import {
 } from "../../../domain/entities";
 import { explore } from "../../../domain/use-cases";
 
-const exploreValidator = z.object({
+const validator = z.object({
   gymId: z.string(),
 });
 
-type ExploreRequest = z.infer<typeof exploreValidator>;
+type ExploreRequest = z.infer<typeof validator>;
 
 type ExploreResponse = {
   users: IProfilePicturePublicUserEntity[];
@@ -31,7 +31,7 @@ export class ExploreController
   middleware = [authMiddleware];
 
   validate(body: any) {
-    return exploreValidator.parse(body);
+    return validator.parse(body);
   }
 
   execute(

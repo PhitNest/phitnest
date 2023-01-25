@@ -3,13 +3,13 @@ import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import { authRepo } from "../../../domain/repositories";
 
-const forgotPasswordSubmit = z.object({
+const validator = z.object({
   email: z.string().trim(),
   code: z.string().length(6),
   newPassword: z.string().min(8),
 });
 
-type ForgotPasswordSubmitRequest = z.infer<typeof forgotPasswordSubmit>;
+type ForgotPasswordSubmitRequest = z.infer<typeof validator>;
 
 export class ForgotPasswordSubmitController
   implements Controller<ForgotPasswordSubmitRequest, void>
@@ -17,7 +17,7 @@ export class ForgotPasswordSubmitController
   method = HttpMethod.POST;
 
   validate(body: any) {
-    return forgotPasswordSubmit.parse(body);
+    return validator.parse(body);
   }
 
   execute(req: IRequest<ForgotPasswordSubmitRequest>, res: IResponse<void>) {

@@ -3,11 +3,11 @@ import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import { authRepo } from "../../../domain/repositories";
 
-const resendConfirmation = z.object({
+const validator = z.object({
   email: z.string().trim(),
 });
 
-type ResendConfirmationRequest = z.infer<typeof resendConfirmation>;
+type ResendConfirmationRequest = z.infer<typeof validator>;
 
 export class ResendConfirmationController
   implements Controller<ResendConfirmationRequest, void>
@@ -15,7 +15,7 @@ export class ResendConfirmationController
   method = HttpMethod.POST;
 
   validate(body: any) {
-    return resendConfirmation.parse(body);
+    return validator.parse(body);
   }
 
   execute(req: IRequest<ResendConfirmationRequest>, res: IResponse<void>) {

@@ -8,11 +8,11 @@ import { Controller, HttpMethod } from "../types";
 import { authMiddleware } from "../../middleware";
 import { removeFriend } from "../../../domain/use-cases";
 
-const removeFriendValidator = z.object({
+const validator = z.object({
   friendCognitoId: z.string(),
 });
 
-type RemoveFriendRequest = z.infer<typeof removeFriendValidator>;
+type RemoveFriendRequest = z.infer<typeof validator>;
 
 export class RemoveFriendController
   implements Controller<RemoveFriendRequest, void, AuthenticatedLocals>
@@ -22,7 +22,7 @@ export class RemoveFriendController
   middleware = [authMiddleware];
 
   validate(body: any) {
-    return removeFriendValidator.parse(body);
+    return validator.parse(body);
   }
 
   execute(

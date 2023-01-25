@@ -4,12 +4,12 @@ import { Controller, HttpMethod } from "../types";
 import { IUserEntity } from "../../../domain/entities";
 import { confirmRegister } from "../../../domain/use-cases";
 
-const confirmRegisterValidator = z.object({
+const validator = z.object({
   email: z.string().trim(),
   code: z.string().length(6),
 });
 
-type ConfirmRegisterRequest = z.infer<typeof confirmRegisterValidator>;
+type ConfirmRegisterRequest = z.infer<typeof validator>;
 
 export class ConfirmRegisterController
   implements Controller<ConfirmRegisterRequest, IUserEntity>
@@ -17,7 +17,7 @@ export class ConfirmRegisterController
   method = HttpMethod.POST;
 
   validate(body: any) {
-    return confirmRegisterValidator.parse(body);
+    return validator.parse(body);
   }
 
   execute(req: IRequest<ConfirmRegisterRequest>, res: IResponse<IUserEntity>) {

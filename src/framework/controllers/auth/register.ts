@@ -4,7 +4,7 @@ import { Controller, HttpMethod } from "../types";
 import { registerUser } from "../../../domain/use-cases";
 import { IUserEntity } from "../../../domain/entities";
 
-const register = z.object({
+const validator = z.object({
   email: z.string().trim(),
   password: z.string().min(8),
   firstName: z.string().trim().min(1),
@@ -12,7 +12,7 @@ const register = z.object({
   gymId: z.string().trim(),
 });
 
-type RegisterRequest = z.infer<typeof register>;
+type RegisterRequest = z.infer<typeof validator>;
 type RegisterResponse = IUserEntity & { uploadUrl: string };
 
 export class RegisterController
@@ -21,7 +21,7 @@ export class RegisterController
   method = HttpMethod.POST;
 
   validate(body: any) {
-    return register.parse(body);
+    return validator.parse(body);
   }
 
   execute(req: IRequest<RegisterRequest>, res: IResponse<RegisterResponse>) {
