@@ -1,19 +1,15 @@
-import 'package:dartz/dartz.dart';
-
 import '../../common/failure.dart';
-import '../../common/failures.dart';
-import '../repositories/repositories.dart';
+import '../../data/data_sources/backend/backend.dart';
 
-Future<Either<bool, Failure>> resetPassword(
+Future<Failure?> resetPassword(
   String email,
-  String password,
 ) =>
-    authRepo.forgotPassword(email, password).then(
-      (res) {
-        if (res.isLeft()) {
-          return Left(true);
+    authBackend.forgotPassword(email).then(
+      (response) {
+        if (response == null) {
+          return null;
         } else {
-          return Right(kInvalidBackendResponse);
+          return response;
         }
       },
     );
