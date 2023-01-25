@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../data/data_sources/backend/backend.dart';
 import '../../../../domain/entities/entities.dart';
 import '../../../widgets/styled/styled.dart';
 import '../../pages.dart';
@@ -76,17 +77,8 @@ class RegistrationPage extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 CupertinoPageRoute(
-                  builder: (context) => ConfirmEmailPage(
-                    email: state.registration.email,
-                    password: state.password,
-                    onConfirmed: () => Navigator.pushAndRemoveUntil(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => HomePage(),
-                      ),
-                      (_) => false,
-                    ),
-                  ),
+                  builder: (context) =>
+                      ConfirmEmailPage(email: state.registration.email),
                 ),
               );
             }

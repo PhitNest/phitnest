@@ -1,27 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../../common/failure.dart';
+import '../../../../../common/theme.dart';
 import '../../../../widgets/styled/styled.dart';
 import 'base.dart';
 
-class ConfirmEmailInitial extends ConfirmEmailBaseWidget {
+class VerificationError extends VerificationBase {
   final VoidCallback onPressedResend;
+  final Failure error;
 
-  ConfirmEmailInitial({
+  VerificationError({
     Key? key,
     required super.codeController,
     required super.codeFocusNode,
     required super.onChanged,
     required super.onCompleted,
-    required super.email,
+    required super.headerText,
+    required this.error,
     required this.onPressedResend,
   }) : super(
           key: key,
           child: Column(
             children: [
-              20.verticalSpace,
+              Text(
+                error.message,
+                style: theme.textTheme.labelLarge!
+                    .copyWith(color: theme.errorColor),
+                textAlign: TextAlign.center,
+              ),
+              8.verticalSpace,
               StyledButton(
-                text: 'SUBMIT',
+                text: 'RETRY',
                 onPressed: onCompleted,
               ),
               Spacer(),

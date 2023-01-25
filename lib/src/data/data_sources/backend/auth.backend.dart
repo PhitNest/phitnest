@@ -142,6 +142,41 @@ class AuthBackend {
           (failure) => failure,
         ),
       );
+
+  Future<Failure?> resendConfirmationCode(String email) => httpAdapter.request(
+        HttpMethod.post,
+        Routes.resendConfirmationCode.path,
+        data: {
+          'email': email,
+        },
+      ).then(
+        (either) => either.fold(
+          (response) => response.fold(
+            (json) => null,
+            (list) => kInvalidBackendResponse,
+          ),
+          (failure) => failure,
+        ),
+      );
+
+  Future<Either<UserEntity, Failure>> confirmRegister(
+    String email,
+    String code,
+  ) =>
+      httpAdapter.request(HttpMethod.post, Routes.confirmRegister.path, data: {
+        'email': email,
+        'code': code,
+      }).then(
+        (either) => either.fold(
+          (response) => response.fold(
+            (json) => Left(
+              UserEntity.fromJson(json),
+            ),
+            (list) => Right(kInvalidBackendResponse),
+          ),
+          (failure) => Right(failure),
+        ),
+      );
 }
 
 const authBackend = AuthBackend();

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../confirm_email_state.dart';
+import '../verification.dart';
 
-export 'error.dart';
-export 'loading.dart';
-
-class InitialState extends ConfirmEmailState {
+class InitialState extends VerificationState {
   final TextEditingController codeController;
   final FocusNode codeFocusNode;
 
