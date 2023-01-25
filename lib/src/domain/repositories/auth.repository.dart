@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 
 import '../../common/failure.dart';
-import '../../common/failures.dart';
 import '../../data/data_sources/backend/backend.dart';
 import '../../data/data_sources/cache/cache.dart';
 
@@ -50,18 +49,6 @@ class AuthRepository {
           .getOrElse(() => throw Exception("This should not happen.")));
     }
     return response;
-  }
-
-  Future<Either<bool, Failure>> forgotPassword(
-    String email,
-    String password,
-  ) async {
-    final response = await authBackend.forgotPassword(email, password);
-    if (response.isLeft()) {
-      return Left(true);
-    } else {
-      return Right(kInvalidBackendResponse);
-    }
   }
 }
 

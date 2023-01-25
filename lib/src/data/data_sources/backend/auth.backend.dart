@@ -124,26 +124,22 @@ class AuthBackend {
         ),
       );
 
-  Future<Either<Object?, Failure>> forgotPassword(
+  Future<Failure?> forgotPassword(
     String email,
-    String password,
   ) async =>
-      httpAdapter.request(HttpMethod.post, Routes.forgotPassword.path, data: {
-        'email': email,
-        'password': password,
-      }).then(
+      httpAdapter.request(
+        HttpMethod.post,
+        Routes.forgotPassword.path,
+        data: {
+          'email': email,
+        },
+      ).then(
         (either) => either.fold(
           (response) => response.fold(
-            (l) {
-              if (l.isEmpty) {
-                return Left(null);
-              } else {
-                return Right(kInvalidBackendResponse);
-              }
-            },
-            (r) => Right(kInvalidBackendResponse),
+            (json) => null,
+            (list) => kUserNotConfirmed,
           ),
-          (failure) => Right(failure),
+          (failure) => failure,
         ),
       );
 }
