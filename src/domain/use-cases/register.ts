@@ -32,10 +32,10 @@ export async function registerUser(user: {
             return profilePictureUrl;
           } else {
             return {
-              ...(await userRepo.create({
+              user: await userRepo.create({
                 ...user,
                 cognitoId: cognitoRegistration,
-              })),
+              }),
               uploadUrl: profilePictureUrl,
             };
           }
