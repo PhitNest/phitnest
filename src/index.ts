@@ -7,7 +7,7 @@ import {
   injectAdapters,
 } from "./framework/adapters/injection";
 import { injectCaches, injectDatabases } from "./data/data-sources/injection";
-import { buildRouter } from "./framework/router";
+import { buildRouter } from "./framework/routes";
 import { bindEvents } from "./framework/events";
 
 injectAdapters();
