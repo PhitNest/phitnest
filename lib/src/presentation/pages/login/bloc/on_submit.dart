@@ -2,7 +2,7 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/repositories/repositories.dart';
+import '../../../../domain/use_cases/use_cases.dart';
 import '../event/login_event.dart';
 import '../state/loading.dart';
 import '../state/login_state.dart';
@@ -25,7 +25,7 @@ void onSubmit(
           passwordFocusNode: state.passwordFocusNode,
           formKey: state.formKey,
           loginOperation: CancelableOperation.fromFuture(
-            authRepo.login(
+            login(
               state.emailController.text.trim(),
               state.passwordController.text,
             ),

@@ -1,4 +1,4 @@
-import '../../../../data/data_sources/backend/backend.dart';
+import '../../../../data/data_sources/auth/auth.dart';
 import 'registration_event.dart';
 
 /// This is the event that is emitted when the user successfully registers.

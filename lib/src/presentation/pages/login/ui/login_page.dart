@@ -59,21 +59,13 @@ class LoginPage extends StatelessWidget {
                 (_) => false,
               );
             } else if (state is ConfirmUserState) {
-              // Navigate to confirm email page and reset login page state
+              // Navigate to confirm email page to confirm registration and reset login page state
               _bloc(context).add(ResetEvent());
               Navigator.push(
                 context,
                 CupertinoPageRoute(
                   builder: (context) => ConfirmEmailPage(
                     email: state.email,
-                    password: state.password,
-                    onConfirmed: () => Navigator.pushAndRemoveUntil(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => HomePage(),
-                      ),
-                      (_) => false,
-                    ),
                   ),
                 ),
               );
@@ -91,7 +83,7 @@ class LoginPage extends StatelessWidget {
                 ),
               );
             } else if (state is LoadingState) {
-              return LoginLoadingPage(
+              return LoginLoading(
                 keyboardHeight: keyboardHeight,
                 emailController: state.emailController,
                 passwordController: state.passwordController,
@@ -106,7 +98,7 @@ class LoginPage extends StatelessWidget {
                 onPressedRegister: () => _onPressedRegister(context),
               );
             } else if (state is InitialState) {
-              return LoginInitialPage(
+              return LoginInitial(
                 autovalidateMode: state.autovalidateMode,
                 emailController: state.emailController,
                 emailFocusNode: state.emailFocusNode,

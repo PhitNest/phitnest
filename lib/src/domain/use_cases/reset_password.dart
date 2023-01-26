@@ -1,15 +1,5 @@
 import '../../common/failure.dart';
-import '../../data/data_sources/backend/backend.dart';
+import '../repositories/repositories.dart';
 
-Future<Failure?> resetPassword(
-  String email,
-) =>
-    authBackend.forgotPassword(email).then(
-      (response) {
-        if (response == null) {
-          return null;
-        } else {
-          return response;
-        }
-      },
-    );
+Future<Failure?> resetPassword(String email) =>
+    AuthRepository.forgotPassword(email);

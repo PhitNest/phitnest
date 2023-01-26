@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'src/common/shared_preferences.dart';
 import 'src/data/adapters/adapters.dart';
-import 'src/app.dart';
+import 'src/presentation/app/app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../common/failures.dart';
+import '../../../../common/constants/failures.dart';
 import '../event/login_event.dart';
 import '../state/confirm_user.dart';
 import '../state/loading.dart';
@@ -14,7 +14,7 @@ void onLoginError(
   LoginState state,
 ) {
   if (state is LoadingState) {
-    if (event.failure == kUserNotConfirmed) {
+    if (event.failure == Failures.userNotConfirmed.instance) {
       emit(ConfirmUserState(email: event.email, password: event.password));
     } else {
       emit(
