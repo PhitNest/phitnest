@@ -18,7 +18,7 @@ void onRetryPhotoUpload(
         password: state.password,
         uploadOp: CancelableOperation.fromFuture(
           uploadPhotoUnauthorized(
-            state.registration.email,
+            state.registration.user.email,
             state.password,
             state.photo,
           ),

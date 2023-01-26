@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_editor/image_editor.dart';
 
-import 'failures.dart';
+import 'constants/failures.dart';
 
 extension FormatQuantity on double {
   /// This will return a rounded string version of this [double] with [unit]
@@ -37,7 +37,9 @@ extension Crop on XFile {
     );
     if (outBytes == null) {
       throw CameraException(
-          kFailedToCropImage.code, kFailedToCropImage.message);
+        Failures.failedToCropImage.code,
+        Failures.failedToCropImage.message,
+      );
     }
     return XFile.fromData(
       outBytes,

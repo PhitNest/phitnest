@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../common/assets.dart';
+import '../../../common/constants/assets.dart';
 
 class StyledNavigationBar extends StatefulWidget {
   const StyledNavigationBar({Key? key}) : super(key: key);

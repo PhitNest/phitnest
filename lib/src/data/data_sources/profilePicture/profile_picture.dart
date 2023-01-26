@@ -1,21 +1,16 @@
 import 'package:dartz/dartz.dart';
 
+import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
-import '../../../common/failures.dart';
 import '../../adapters/adapters.dart';
-import '../../adapters/interfaces/interfaces.dart';
-import 'backend.dart';
 
-class ProfilePictureBackend {
-  const ProfilePictureBackend();
-
-  Future<Either<String, Failure>> getUploadUrlUnauthorized(
+abstract class ProfilePictureDataSource {
+  static Future<Either<String, Failure>> getUploadUrlUnauthorized(
     String email,
     String password,
   ) =>
       httpAdapter.request(
-        HttpMethod.get,
-        Routes.getUploadUrlUnauthorized.path,
+        Routes.getUploadUrlUnauthorized.instance,
         data: {
           "email": email,
           "password": password,
@@ -24,11 +19,9 @@ class ProfilePictureBackend {
         (res) => res.fold(
           (response) => response.fold(
             (json) => Left(json['url']),
-            (list) => Right(kInvalidBackendResponse),
+            (list) => Right(Failures.invalidBackendResponse.instance),
           ),
           (failure) => Right(failure),
         ),
       );
 }
-
-const profilePictureBackend = ProfilePictureBackend();

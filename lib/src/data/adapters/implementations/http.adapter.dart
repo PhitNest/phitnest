@@ -2,25 +2,26 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../../../common/status_codes.dart';
+import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
-import '../../../common/failures.dart';
 import '../../../common/logger.dart';
 import '../interfaces/http.adapter.dart';
 
-String get _backendUrl =>
-    '${dotenv.get('BACKEND_HOST')}:${dotenv.get('BACKEND_PORT')}';
+const _timeout = Duration(seconds: 15);
 
 class DioHttpAdapter implements IHttpAdapter {
   Future<Either<Either<Map<String, dynamic>, List<dynamic>>, Failure>> request(
-    HttpMethod method,
-    String path, {
+    Route route, {
     Map<String, dynamic>? data,
     Map<String, dynamic>? headers,
     String? authorization,
   }) async {
-    logger.d(
-        'Request${authorization != null ? " (Authorized)" : ""}:\n\tmethod: $method\n\tpath: $path\n\tdata: $data');
+    final String url =
+        '${dotenv.get('BACKEND_HOST')}:${dotenv.get('BACKEND_PORT')}${route.path}';
+    final String Function(dynamic data) description = (data) =>
+        '\n\tmethod: ${route.method}\n\tpath: ${route.path}\n\tdata: $data';
+    prettyLogger.d(
+        'Request${authorization != null ? " (Authorized)" : ""}:${description(data)}');
     final headerMap = {
       ...headers ?? Map<String, dynamic>.from({}),
       ...authorization != null
@@ -29,15 +30,16 @@ class DioHttpAdapter implements IHttpAdapter {
     };
     final options = BaseOptions(
         headers: headerMap,
-        validateStatus: (status) => status == 200 || status == 500);
-    if (method == HttpMethod.get || method == HttpMethod.delete) {
+        validateStatus: (status) =>
+            status == kStatusOK || status == kStatusInternalServerError);
+    if (route.method == HttpMethod.get || route.method == HttpMethod.delete) {
       options.queryParameters = data ?? Map<String, dynamic>.from({});
     }
     final dio = Dio(options);
     Future<Either<dynamic, Failure>> result;
-    switch (method) {
+    switch (route.method) {
       case HttpMethod.get:
-        result = dio.get('$_backendUrl$path').then(
+        result = dio.get(url).then(
               (response) => response.statusCode == kStatusOK
                   ? Left(response.data)
                   : Right(
@@ -46,7 +48,7 @@ class DioHttpAdapter implements IHttpAdapter {
             );
         break;
       case HttpMethod.post:
-        result = dio.post('$_backendUrl$path', data: data).then(
+        result = dio.post(url, data: data).then(
               (response) => response.statusCode == kStatusOK
                   ? Left(response.data)
                   : Right(
@@ -55,7 +57,7 @@ class DioHttpAdapter implements IHttpAdapter {
             );
         break;
       case HttpMethod.put:
-        result = dio.put('$_backendUrl$path', data: data).then(
+        result = dio.put(url, data: data).then(
               (response) => response.statusCode == kStatusOK
                   ? Left(response.data)
                   : Right(
@@ -64,7 +66,7 @@ class DioHttpAdapter implements IHttpAdapter {
             );
         break;
       case HttpMethod.delete:
-        result = dio.delete('$_backendUrl$path').then(
+        result = dio.delete(url).then(
               (response) => response.statusCode == kStatusOK
                   ? Left(response.data)
                   : Right(
@@ -74,11 +76,10 @@ class DioHttpAdapter implements IHttpAdapter {
         break;
     }
     try {
-      return await result.timeout(const Duration(seconds: 15)).then(
+      return await result.timeout(_timeout).then(
             (res) => res.fold(
               (success) {
-                logger.d(
-                    "Response success:\n\tmethod: $method\n\tpath: $path\n\tdata: $success");
+                prettyLogger.d("Response success:${description(success)}");
                 if (success is List) {
                   return Left(Right(success));
                 } else {
@@ -86,22 +87,20 @@ class DioHttpAdapter implements IHttpAdapter {
                 }
               },
               (failure) {
-                logger.e(
-                    "Response failure:\n\tmethod: $method\n\tpath: $path\n\tdata: $failure");
+                prettyLogger.e("Response failure:${description(failure)}");
                 return Right(failure);
               },
             ),
           );
     } catch (e) {
-      final failure;
+      final Failure failure;
       if (e is DioError) {
         failure = Failure.fromJson(e.response!.data);
       } else {
-        failure = kNetworkFailure;
+        failure = Failures.networkFailure.instance;
       }
-      logger.e(
-          "Response failure:\n\tmethod: $method\n\tpath: $path\n\tdata: $failure");
-      return Future.value(Right(failure));
+      prettyLogger.e("Response failure:${description(failure)}");
+      return Right(failure);
     }
   }
 }

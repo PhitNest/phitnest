@@ -1,8 +1,8 @@
 import '../../../../widgets/styled/styled.dart';
 import 'base.dart';
 
-class LoginInitialPage extends LoginPageBase {
-  LoginInitialPage({
+class LoginInitial extends LoginPageBase {
+  LoginInitial({
     required super.emailController,
     required super.passwordController,
     required super.emailFocusNode,

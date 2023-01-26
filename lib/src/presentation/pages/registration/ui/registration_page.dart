@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../data/data_sources/backend/backend.dart';
 import '../../../../domain/entities/entities.dart';
 import '../../../widgets/styled/styled.dart';
 import '../../pages.dart';
@@ -78,7 +77,7 @@ class RegistrationPage extends StatelessWidget {
                 context,
                 CupertinoPageRoute(
                   builder: (context) =>
-                      ConfirmEmailPage(email: state.registration.email),
+                      ConfirmEmailPage(email: state.registration.user.email),
                 ),
               );
             }
