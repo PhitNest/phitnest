@@ -14,32 +14,23 @@ import {
 import { sendFriendRequest } from "../../../domain/use-cases";
 import { getSocketServer } from "../../adapters/injection";
 
-const validator = z.object({
-  recipientCognitoId: z.string(),
-});
-
-type SendFriendRequestRequest = z.infer<typeof validator>;
-
 type SendFriendRequestResponse = IFriendRequestEntity | IFriendshipEntity;
 
 export class SendFriendRequestController
-  implements
-    Controller<
-      SendFriendRequestRequest,
-      SendFriendRequestResponse,
-      AuthenticatedLocals
-    >
+  implements Controller<SendFriendRequestResponse>
 {
   method = HttpMethod.POST;
 
+  route = "/friendRequest";
+
+  validator = z.object({
+    recipientCognitoId: z.string(),
+  });
+
   middleware = [authMiddleware];
 
-  validate(body: any) {
-    return validator.parse(body);
-  }
-
   async execute(
-    req: IRequest<SendFriendRequestRequest>,
+    req: IRequest<z.infer<typeof this.validator>>,
     res: IResponse<SendFriendRequestResponse, AuthenticatedLocals>
   ) {
     const result = await sendFriendRequest(

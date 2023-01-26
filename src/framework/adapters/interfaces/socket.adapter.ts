@@ -1,5 +1,4 @@
 import http from "http";
-import { Validator } from "../../../common/types";
 import { EventHandler } from "../../event-handlers/types";
 
 export interface IConnection {
@@ -15,11 +14,7 @@ export interface IConnection {
 export interface ISocketServer {
   listen(server: http.Server): void;
 
-  bind<DataType>(
-    event: string,
-    validator: Validator<DataType>,
-    handler: EventHandler<DataType, any>
-  ): void;
+  bind(handler: EventHandler<any>): void;
 
   emit(event: string, body: any, room?: string): void;
 

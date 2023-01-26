@@ -3,22 +3,16 @@ import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import { authRepo } from "../../../domain/repositories";
 
-const validator = z.object({
-  email: z.string().trim(),
-});
-
-type ResendConfirmationRequest = z.infer<typeof validator>;
-
-export class ResendConfirmationController
-  implements Controller<ResendConfirmationRequest, void>
-{
+export class ResendConfirmationController implements Controller<void> {
   method = HttpMethod.POST;
 
-  validate(body: any) {
-    return validator.parse(body);
-  }
+  route = "/auth/resendConfirmation";
 
-  execute(req: IRequest<ResendConfirmationRequest>, res: IResponse<void>) {
+  validator = z.object({
+    email: z.string().trim(),
+  });
+
+  execute(req: IRequest<z.infer<typeof this.validator>>, res: IResponse<void>) {
     return authRepo.resendConfirmationCode(req.body.email);
   }
 }

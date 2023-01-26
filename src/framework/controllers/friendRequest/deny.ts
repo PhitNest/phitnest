@@ -8,25 +8,19 @@ import { Controller, HttpMethod } from "../types";
 import { authMiddleware } from "../../middleware";
 import { friendRequestRepo } from "../../../domain/repositories";
 
-const validator = z.object({
-  senderCognitoId: z.string(),
-});
-
-type DenyFriendRequestRequest = z.infer<typeof validator>;
-
-export class DenyFriendRequestController
-  implements Controller<DenyFriendRequestRequest, void, AuthenticatedLocals>
-{
+export class DenyFriendRequestController implements Controller<void> {
   method = HttpMethod.POST;
+
+  route = "/friendRequest/deny";
 
   middleware = [authMiddleware];
 
-  validate(body: any) {
-    return validator.parse(body);
-  }
+  validator = z.object({
+    senderCognitoId: z.string(),
+  });
 
   execute(
-    req: IRequest<DenyFriendRequestRequest>,
+    req: IRequest<z.infer<typeof this.validator>>,
     res: IResponse<void, AuthenticatedLocals>
   ) {
     return friendRequestRepo.deny(

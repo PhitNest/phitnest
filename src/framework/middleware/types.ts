@@ -1,7 +1,7 @@
 import { Failure, IRequest, IResponse } from "../../common/types";
 
-export type Middleware<BodyType, ResType, LocalsType> = (
-  req: IRequest<BodyType>,
-  res: IResponse<ResType, LocalsType>,
+export type Middleware = (
+  req: IRequest<any>,
+  res: IResponse<any, {}>,
   next: (failure?: Failure) => void
 ) => Promise<void>;

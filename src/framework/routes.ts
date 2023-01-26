@@ -27,80 +27,23 @@ import {
 import { ExploreController, GetUserController } from "./controllers/user";
 
 export function buildRouter(server: IServer) {
-  server.bind({
-    route: "/auth/login",
-    controller: new LoginController(),
-  });
-  server.bind({
-    route: "/auth/register",
-    controller: new RegisterController(),
-  });
-  server.bind({
-    route: "/auth/resendConfirmation",
-    controller: new ResendConfirmationController(),
-  });
-  server.bind({
-    route: "/auth/confirmRegister",
-    controller: new ConfirmRegisterController(),
-  });
-  server.bind({
-    route: "/auth/forgotPassword",
-    controller: new ForgotPasswordController(),
-  });
-  server.bind({
-    route: "/auth/forgotPasswordSubmit",
-    controller: new ForgotPasswordSubmitController(),
-  });
-  server.bind({
-    route: "/auth/signOut",
-    controller: new SignOutController(),
-  });
-  server.bind({
-    route: "/auth/refreshSession",
-    controller: new RefreshSessionController(),
-  });
-  server.bind({
-    route: "/user",
-    controller: new GetUserController(),
-  });
-  server.bind({
-    route: "/user/explore",
-    controller: new ExploreController(),
-  });
-  server.bind({
-    route: "/gym/nearest",
-    controller: new NearestGymsController(),
-  });
-  server.bind({
-    route: "/friendRequest",
-    controller: new SendFriendRequestController(),
-  });
-  server.bind({
-    route: "/friendRequest/deny",
-    controller: new DenyFriendRequestController(),
-  });
-  server.bind({
-    route: "/friendship",
-    controller: new RemoveFriendController(),
-  });
-  server.bind({
-    route: "/friendship/requests",
-    controller: new FriendsAndRequestsController(),
-  });
-  server.bind({
-    route: "/friendship/messages",
-    controller: new FriendsAndMessagesController(),
-  });
-  server.bind({
-    route: "/directMessage/list",
-    controller: new GetDirectMessagesController(),
-  });
-  server.bind({
-    route: "/profilePicture/unauthorized",
-    controller: new UnauthorizedProfilePictureUploadController(),
-  });
-  server.bind({
-    route: "/profilePicture/upload",
-    controller: new ProfilePictureUploadController(),
-  });
+  server.bind(new LoginController());
+  server.bind(new RegisterController());
+  server.bind(new ResendConfirmationController());
+  server.bind(new ConfirmRegisterController());
+  server.bind(new ForgotPasswordController());
+  server.bind(new ForgotPasswordSubmitController());
+  server.bind(new SignOutController());
+  server.bind(new RefreshSessionController());
+  server.bind(new GetUserController());
+  server.bind(new ExploreController());
+  server.bind(new NearestGymsController());
+  server.bind(new SendFriendRequestController());
+  server.bind(new DenyFriendRequestController());
+  server.bind(new RemoveFriendController());
+  server.bind(new FriendsAndRequestsController());
+  server.bind(new FriendsAndMessagesController());
+  server.bind(new GetDirectMessagesController());
+  server.bind(new UnauthorizedProfilePictureUploadController());
+  server.bind(new ProfilePictureUploadController());
 }

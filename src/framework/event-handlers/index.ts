@@ -1,4 +1,1 @@
-export {
-  handleSendDirectMessage,
-  validateSendDirectMessage,
-} from "./send-direct-message";
+export { SendDirectMessageHandler } from "./send-direct-message";

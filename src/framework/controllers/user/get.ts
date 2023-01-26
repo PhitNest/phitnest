@@ -15,21 +15,14 @@ type GetUserResponse = IProfilePictureUserEntity & {
   gym: IGymEntity;
 };
 
-export class GetUserController
-  implements Controller<{}, GetUserResponse, AuthenticatedLocals>
-{
+export class GetUserController implements Controller<GetUserResponse> {
   method = HttpMethod.GET;
+
+  route = "/user";
 
   middleware = [authMiddleware];
 
-  validate(body: any) {
-    return {};
-  }
-
-  execute(
-    req: IRequest<{}>,
-    res: IResponse<GetUserResponse, AuthenticatedLocals>
-  ) {
+  execute(req: IRequest, res: IResponse<GetUserResponse, AuthenticatedLocals>) {
     return getUserPopulated(res.locals.cognitoId);
   }
 }

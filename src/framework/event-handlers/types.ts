@@ -1,7 +1,11 @@
+import { z } from "zod";
 import { Failure } from "../../common/types";
 import { IConnection } from "../adapters/interfaces";
 
-export type EventHandler<DataType, ResType> = (
-  data: DataType,
-  connection: IConnection
-) => Promise<ResType | Failure>;
+export interface EventHandler<ResType> {
+  validator?: z.ZodObject<any>;
+
+  event: string;
+
+  execute(data: any, connection: IConnection): Promise<ResType | Failure>;
+}
