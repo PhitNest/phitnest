@@ -1,6 +1,6 @@
 import http from "http";
 import IO from "socket.io";
-import { Failure, Validator } from "../../../common/types";
+import { Failure } from "../../../common/types";
 import { authRepo } from "../../../domain/repositories";
 import { EventHandler } from "../../event-handlers/types";
 import { IConnection, ISocketServer } from "../interfaces";
@@ -29,15 +29,9 @@ class SocketIOConnection implements IConnection {
   }
 }
 
-type EventBinding = {
-  event: string;
-  validator: Validator<any>;
-  handler: EventHandler<any, any>;
-};
-
 export class SocketIOServer implements ISocketServer {
   io: IO.Server | undefined;
-  bindings: EventBinding[] = [];
+  bindings: EventHandler<any>[] = [];
 
   listen(server: http.Server) {
     this.io = new IO.Server(server);
@@ -58,8 +52,11 @@ export class SocketIOServer implements ISocketServer {
       this.bindings.forEach((binding) => {
         socket.on(binding.event, async (data) => {
           try {
-            const validationResult = binding.validator(data);
-            const result = await binding.handler(
+            let validationResult;
+            if (binding.validator) {
+              validationResult = binding.validator.parse(data);
+            }
+            const result = await binding.execute(
               validationResult,
               new SocketIOConnection(socket)
             );
@@ -87,12 +84,8 @@ export class SocketIOServer implements ISocketServer {
     }
   }
 
-  bind<DataType>(
-    event: string,
-    validator: Validator<DataType>,
-    handler: EventHandler<DataType, any>
-  ) {
-    this.bindings.push({ event, validator, handler });
+  bind(handler: EventHandler<any>) {
+    this.bindings.push(handler);
   }
 
   kickUser(cognitoId: string) {

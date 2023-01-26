@@ -12,30 +12,24 @@ import {
 } from "../../../domain/entities";
 import { explore } from "../../../domain/use-cases";
 
-const validator = z.object({
-  gymId: z.string(),
-});
-
-type ExploreRequest = z.infer<typeof validator>;
-
 type ExploreResponse = {
   users: IProfilePicturePublicUserEntity[];
   requests: IFriendRequestEntity[];
 };
 
-export class ExploreController
-  implements Controller<ExploreRequest, ExploreResponse, AuthenticatedLocals>
-{
+export class ExploreController implements Controller<ExploreResponse> {
+  validator = z.object({
+    gymId: z.string(),
+  });
+
+  route = "/user/explore";
+
   method = HttpMethod.GET;
 
   middleware = [authMiddleware];
 
-  validate(body: any) {
-    return validator.parse(body);
-  }
-
   execute(
-    req: IRequest<ExploreRequest>,
+    req: IRequest<z.infer<typeof this.validator>>,
     res: IResponse<ExploreResponse, AuthenticatedLocals>
   ) {
     return explore(res.locals.cognitoId, req.body.gymId);

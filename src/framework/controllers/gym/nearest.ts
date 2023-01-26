@@ -4,30 +4,22 @@ import { Controller, HttpMethod } from "../types";
 import { IGymEntity, LocationEntity } from "../../../domain/entities";
 import { gymRepo } from "../../../domain/repositories";
 
-const validator = z.object({
-  longitude: z.number(),
-  latitude: z.number(),
-  meters: z.number().positive(),
-  amount: z.number().int().optional(),
-});
-
-type NearestGymsRequest = z.infer<typeof validator>;
-
-export class NearestGymsController
-  implements Controller<NearestGymsRequest, IGymEntity[]>
-{
+export class NearestGymsController implements Controller<IGymEntity[]> {
   method = HttpMethod.GET;
 
-  validate(body: any) {
-    return validator.parse({
-      longitude: parseFloat(body.longitude),
-      latitude: parseFloat(body.latitude),
-      meters: parseFloat(body.meters),
-      ...(body.amount ? { amount: parseInt(body.amount) } : {}),
-    });
-  }
+  route = "/gym/nearest";
 
-  execute(req: IRequest<NearestGymsRequest>, res: IResponse<IGymEntity[]>) {
+  validator = z.object({
+    longitude: z.coerce.number(),
+    latitude: z.coerce.number(),
+    meters: z.coerce.number().positive(),
+    amount: z.coerce.number().int().optional(),
+  });
+
+  execute(
+    req: IRequest<z.infer<typeof this.validator>>,
+    res: IResponse<IGymEntity[]>
+  ) {
     return gymRepo.getNearest(
       new LocationEntity(req.body.longitude, req.body.latitude),
       req.body.meters,

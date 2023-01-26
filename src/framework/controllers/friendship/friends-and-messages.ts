@@ -17,18 +17,16 @@ type FriendsAndMessagesResponse = {
 }[];
 
 export class FriendsAndMessagesController
-  implements Controller<{}, FriendsAndMessagesResponse, AuthenticatedLocals>
+  implements Controller<FriendsAndMessagesResponse>
 {
   method = HttpMethod.GET;
 
+  route = "/friendship/friendsAndMessages";
+
   middleware = [authMiddleware];
 
-  validate(body: any) {
-    return {};
-  }
-
   async execute(
-    req: IRequest<{}>,
+    req: IRequest,
     res: IResponse<FriendsAndMessagesResponse, AuthenticatedLocals>
   ) {
     return getFriendsAndMessages(res.locals.cognitoId);

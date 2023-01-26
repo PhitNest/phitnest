@@ -9,30 +9,21 @@ import { authMiddleware } from "../../middleware";
 import { IDirectMessageEntity } from "../../../domain/entities";
 import { getDirectMessages } from "../../../domain/use-cases";
 
-const validator = z.object({
-  friendCognitoId: z.string(),
-});
-
-type GetDirectMessagesRequest = z.infer<typeof validator>;
-
 export class GetDirectMessagesController
-  implements
-    Controller<
-      GetDirectMessagesRequest,
-      IDirectMessageEntity[],
-      AuthenticatedLocals
-    >
+  implements Controller<IDirectMessageEntity[]>
 {
   method = HttpMethod.GET;
 
+  route = "/directMessage/list";
+
   middleware = [authMiddleware];
 
-  validate(body: any) {
-    return validator.parse(body);
-  }
+  validator = z.object({
+    friendCognitoId: z.string(),
+  });
 
   execute(
-    req: IRequest<GetDirectMessagesRequest>,
+    req: IRequest<z.infer<typeof this.validator>>,
     res: IResponse<IDirectMessageEntity[], AuthenticatedLocals>
   ) {
     return getDirectMessages([res.locals.cognitoId, req.body.friendCognitoId]);

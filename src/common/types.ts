@@ -10,13 +10,11 @@ export class Failure {
   }
 }
 
-export type Validator<BodyType> = (body: any) => BodyType;
-
 export type AuthenticatedLocals = {
   cognitoId: string;
 };
 
-export interface IRequest<BodyType> {
+export interface IRequest<BodyType = {}> {
   body: BodyType;
   authorization: string;
 }

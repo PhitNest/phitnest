@@ -3,33 +3,25 @@ import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import { unauthorizedProfilePictureUploadUrl } from "../../../domain/use-cases";
 
-const validator = z.object({
-  email: z.string().trim(),
-  password: z.string(),
-});
-
-type UnauthorizedProfilePictureUploadRequest = z.infer<typeof validator>;
+type UnauthorizedProfilePictureUploadResponse = {
+  url: string;
+};
 
 export class UnauthorizedProfilePictureUploadController
-  implements
-    Controller<
-      UnauthorizedProfilePictureUploadRequest,
-      {
-        url: string;
-      }
-    >
+  implements Controller<UnauthorizedProfilePictureUploadResponse>
 {
   method = HttpMethod.GET;
 
-  validate(body: any) {
-    return validator.parse(body);
-  }
+  route = "/profilePicture/unauthorized";
+
+  validator = z.object({
+    email: z.string().trim(),
+    password: z.string(),
+  });
 
   execute(
-    req: IRequest<UnauthorizedProfilePictureUploadRequest>,
-    res: IResponse<{
-      url: string;
-    }>
+    req: IRequest<z.infer<typeof this.validator>>,
+    res: IResponse<UnauthorizedProfilePictureUploadResponse>
   ) {
     return unauthorizedProfilePictureUploadUrl(
       req.body.email,

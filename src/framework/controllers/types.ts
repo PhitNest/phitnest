@@ -1,4 +1,5 @@
-import { Failure, IRequest, IResponse, Validator } from "../../common/types";
+import { z } from "zod";
+import { Failure, IRequest, IResponse } from "../../common/types";
 import { Middleware } from "../middleware/types";
 
 export enum HttpMethod {
@@ -9,15 +10,17 @@ export enum HttpMethod {
   PATCH,
 }
 
-export interface Controller<BodyType, ResType, LocalsType = {}> {
+export interface Controller<ResType> {
+  route: string;
+
+  validator?: z.ZodObject<any>;
+
   method: HttpMethod;
 
-  middleware?: Middleware<BodyType, ResType, any>[];
+  middleware?: Middleware[];
 
   execute(
-    req: IRequest<BodyType>,
-    res: IResponse<ResType, LocalsType>
+    req: IRequest,
+    res: IResponse<ResType, any>
   ): Promise<ResType | Failure>;
-
-  validate: Validator<BodyType>;
 }

@@ -9,25 +9,19 @@ import { authRepo } from "../../../domain/repositories";
 import { authMiddleware } from "../../middleware";
 import { getSocketServer } from "../../adapters/injection";
 
-const validator = z.object({
-  allDevices: z.boolean(),
-});
-
-type SignOutRequest = z.infer<typeof validator>;
-
-export class SignOutController
-  implements Controller<SignOutRequest, void, AuthenticatedLocals>
-{
+export class SignOutController implements Controller<void> {
   method = HttpMethod.POST;
+
+  route = "/auth/signOut";
+
+  validator = z.object({
+    allDevices: z.boolean(),
+  });
 
   middleware = [authMiddleware];
 
-  validate(body: any) {
-    return validator.parse(body);
-  }
-
   execute(
-    req: IRequest<SignOutRequest>,
+    req: IRequest<z.infer<typeof this.validator>>,
     res: IResponse<void, AuthenticatedLocals>
   ) {
     getSocketServer().kickUser(res.locals.cognitoId);

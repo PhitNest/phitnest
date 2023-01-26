@@ -60,21 +60,20 @@ export class ExpressServer implements IServer {
     );
   }
 
-  bind<BodyType, ResType, LocalsType>(options: {
-    route: string;
-    controller: Controller<BodyType, ResType, LocalsType>;
-  }) {
+  bind(controller: Controller<any>) {
     const validationMiddleware = (
       req: express.Request,
       res: express.Response,
       next: express.NextFunction
     ) => {
       try {
-        options.controller.validate({
-          ...req.body,
-          ...req.query,
-          ...req.params,
-        });
+        if (controller.validator) {
+          controller.validator.parse({
+            ...req.body,
+            ...req.query,
+            ...req.params,
+          });
+        }
         next();
       } catch (err) {
         next(err);
@@ -93,7 +92,7 @@ export class ExpressServer implements IServer {
       expressResponse: express.Response
     ) => {
       try {
-        const result = await options.controller.execute(
+        const result = await controller.execute(
           new ExpressRequest(expressRequest),
           new ExpressResponse(expressResponse)
         );
@@ -108,7 +107,7 @@ export class ExpressServer implements IServer {
         return expressResponse.status(500).send(err);
       }
     };
-    const expressMiddlewares = options.controller.middleware?.map(
+    const expressMiddlewares = controller.middleware?.map(
       (m) =>
         async (
           expressRequest: express.Request,
@@ -132,21 +131,21 @@ export class ExpressServer implements IServer {
       errorHandler,
       expressController,
     ];
-    switch (options.controller.method) {
+    switch (controller.method) {
       case HttpMethod.GET:
-        this.expressApp.get(options.route, stack);
+        this.expressApp.get(controller.route, stack);
         break;
       case HttpMethod.POST:
-        this.expressApp.post(options.route, stack);
+        this.expressApp.post(controller.route, stack);
         break;
       case HttpMethod.PUT:
-        this.expressApp.put(options.route, stack);
+        this.expressApp.put(controller.route, stack);
         break;
       case HttpMethod.DELETE:
-        this.expressApp.delete(options.route, stack);
+        this.expressApp.delete(controller.route, stack);
         break;
       case HttpMethod.PATCH:
-        this.expressApp.patch(options.route, stack);
+        this.expressApp.patch(controller.route, stack);
         break;
     }
   }

@@ -8,32 +8,22 @@ import { Controller, HttpMethod } from "../types";
 import { authMiddleware } from "../../middleware";
 import { profilePictureRepo } from "../../../domain/repositories";
 
+type ProfilePictureUploadResponse = {
+  url: string;
+};
+
 export class ProfilePictureUploadController
-  implements
-    Controller<
-      {},
-      {
-        url: string;
-      },
-      AuthenticatedLocals
-    >
+  implements Controller<ProfilePictureUploadResponse>
 {
   method = HttpMethod.GET;
 
+  route = "/profilePicture/upload";
+
   middleware = [authMiddleware];
 
-  validate(body: any) {
-    return {};
-  }
-
   async execute(
-    req: IRequest<{}>,
-    res: IResponse<
-      {
-        url: string;
-      },
-      AuthenticatedLocals
-    >
+    req: IRequest,
+    res: IResponse<ProfilePictureUploadResponse, AuthenticatedLocals>
   ) {
     const pfp = await profilePictureRepo.getProfilePictureUploadUrl(
       res.locals.cognitoId

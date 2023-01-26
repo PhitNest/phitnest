@@ -1,12 +1,11 @@
-import { Failure } from "../../common/types";
+import { Failure, IRequest, IResponse } from "../../common/types";
 import { authRepo } from "../../domain/repositories";
-import { Middleware } from "./types";
 
-export const authMiddleware: Middleware<any, any, any> = async (
-  req,
-  res,
-  next
-) => {
+export async function authMiddleware(
+  req: IRequest<any>,
+  res: IResponse<any>,
+  next: (failure?: Failure) => void
+) {
   const cognitoId = await authRepo.getCognitoId(req.authorization);
   if (cognitoId instanceof Failure) {
     next(cognitoId);
@@ -16,4 +15,4 @@ export const authMiddleware: Middleware<any, any, any> = async (
     });
     next();
   }
-};
+}
