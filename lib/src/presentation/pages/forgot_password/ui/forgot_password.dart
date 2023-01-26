@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../../../common/theme.dart';
 import '../../login/ui/login_page.dart';
 import '../bloc/forgot_password_bloc.dart';
+import '../event/error.dart';
 import '../event/submit.dart';
+import '../state/error.dart';
 import '../state/initial.dart';
 import '../state/loading.dart';
 import '../state/success.dart';
@@ -26,6 +29,49 @@ class ForgotPasswordPage extends StatelessWidget {
               ),
               (_) => false,
             );
+          } else if (state is ForgotPasswordErrorState) {
+            ScaffoldMessenger.of(context).showMaterialBanner(
+              MaterialBanner(
+                content: Text(
+                  state.failure.message.toString(),
+                  style: theme.textTheme.bodySmall!.copyWith(color: Colors.red),
+                ),
+                padding: EdgeInsets.all(10),
+                elevation: 8,
+                onVisible: () => Future.delayed(Duration(seconds: 3)).then(
+                  (_) =>
+                      ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
+                ),
+                backgroundColor: Colors.white,
+                leading: Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                    },
+                    child: Text(
+                      'Dismiss',
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  )
+                ],
+              ),
+            );
+            context.read<ForgotPasswordBloc>().add(
+                  ForgotPasswordErrorEvent(
+                      failure: state.failure,
+                      emailController: state.emailController,
+                      passwordController: state.passwordController,
+                      formKey: state.formKey,
+                      autoValidateMode: state.autoValidateMode,
+                      confirmPassFocusNode: state.confirmPassFocusNode,
+                      passwordFocusNode: state.passwordFocusNode,
+                      emailFocusNode: state.emailFocusNode,
+                      confirmPassController: state.confirmPassController),
+                );
           }
         },
         builder: (context, state) {
@@ -37,6 +83,8 @@ class ForgotPasswordPage extends StatelessWidget {
               emailFocusNode: state.emailFocusNode,
               passwordFocusNode: state.passwordFocusNode,
               confirmPassFocusNode: state.confirmPassFocusNode,
+              autovalidateMode: state.autoValidateMode,
+              formKey: state.formKey,
               onSubmit: () => context
                   .read<ForgotPasswordBloc>()
                   .add(ForgotPasswordOnSubmitEvent()),
@@ -49,6 +97,22 @@ class ForgotPasswordPage extends StatelessWidget {
               emailFocusNode: state.emailFocusNode,
               passwordFocusNode: state.passwordFocusNode,
               confirmPassFocusNode: state.confirmPassFocusNode,
+              autovalidateMode: state.autoValidateMode,
+              formKey: state.formKey,
+              onSubmit: () => context
+                  .read<ForgotPasswordBloc>()
+                  .add(ForgotPasswordOnSubmitEvent()),
+            );
+          } else if (state is ForgotPasswordErrorState) {
+            return ForgotPasswordInitialPage(
+              emailController: state.emailController,
+              passwordController: state.passwordController,
+              confirmPassController: state.confirmPassController,
+              emailFocusNode: state.emailFocusNode,
+              passwordFocusNode: state.passwordFocusNode,
+              confirmPassFocusNode: state.confirmPassFocusNode,
+              autovalidateMode: state.autoValidateMode,
+              formKey: state.formKey,
               onSubmit: () => context
                   .read<ForgotPasswordBloc>()
                   .add(ForgotPasswordOnSubmitEvent()),

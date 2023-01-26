@@ -11,6 +11,8 @@ class ForgotPasswordLoadingPage extends ForgotPasswordBasePage {
     required super.passwordFocusNode,
     required super.confirmPassFocusNode,
     required super.onSubmit,
+    required super.autovalidateMode,
+    required super.formKey,
   }) : super(
           child: CircularProgressIndicator(),
         );

@@ -16,6 +16,8 @@ abstract class ForgotPasswordBasePage extends StatelessWidget {
   final FocusNode confirmPassFocusNode;
   final Widget child;
   final VoidCallback onSubmit;
+  final AutovalidateMode autovalidateMode;
+  final GlobalKey<FormState> formKey;
 
   const ForgotPasswordBasePage({
     Key? key,
@@ -27,6 +29,8 @@ abstract class ForgotPasswordBasePage extends StatelessWidget {
     required this.confirmPassFocusNode,
     required this.child,
     required this.onSubmit,
+    required this.autovalidateMode,
+    required this.formKey,
   }) : super(key: key);
 
   @override
@@ -56,6 +60,8 @@ abstract class ForgotPasswordBasePage extends StatelessWidget {
               ),
               16.verticalSpace,
               Form(
+                autovalidateMode: autovalidateMode,
+                key: formKey,
                 child: SizedBox(
                   width: 291.w,
                   child: Column(
@@ -63,19 +69,21 @@ abstract class ForgotPasswordBasePage extends StatelessWidget {
                       StyledUnderlinedTextField(
                         hint: 'Email',
                         keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
                         controller: emailController,
                         focusNode: emailFocusNode,
+                        validator: (email) => validateEmail(email),
                       ),
-                      StyledUnderlinedTextField(
+                      StyledPasswordField(
                         hint: 'New Password',
-                        keyboardType: TextInputType.visiblePassword,
+                        textInputAction: TextInputAction.next,
                         controller: passwordController,
                         focusNode: passwordFocusNode,
                         validator: (pass) => validatePassword(pass),
                       ),
-                      StyledUnderlinedTextField(
+                      StyledPasswordField(
                         hint: 'Confirm Password',
-                        keyboardType: TextInputType.visiblePassword,
+                        textInputAction: TextInputAction.done,
                         controller: confirmPassController,
                         focusNode: confirmPassFocusNode,
                         validator: (confirmPass) => passwordController.text ==

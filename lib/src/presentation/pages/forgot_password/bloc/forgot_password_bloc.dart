@@ -2,12 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../event/cancel.dart';
 import '../event/error.dart';
 import '../event/submit.dart';
+import '../event/success.dart';
 import '../state/initial.dart';
 import 'error.dart';
 import 'on_submit.dart';
+import 'success.dart';
 
 part '../event/forgot_password_event.dart';
 part '../state/forgot_password_state.dart';
@@ -36,8 +37,9 @@ class ForgotPasswordBloc
       ),
     );
 
-    on<ForgotPassCancelEvent>((event, emit) => null);
+    on<ForgotPasswordSuccessEvent>((event, emit) => onSuccess(event, emit));
 
-    on<ForgotPasswordErrorEvent>((event, emit) => onForgotPasswordError());
+    on<ForgotPasswordErrorEvent>(
+        (event, emit) => onForgotPasswordError(event, emit));
   }
 }
