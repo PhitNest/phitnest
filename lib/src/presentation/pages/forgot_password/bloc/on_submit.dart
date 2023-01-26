@@ -47,7 +47,9 @@ void onSubmit(
                       ),
                     )
                   : add(ForgotPasswordSuccessEvent(
-                      email: state.emailController.text)),
+                      email: state.emailController.text,
+                      password: state.passwordController.text,
+                    )),
             ),
         ),
       );
@@ -82,7 +84,9 @@ void onSubmit(
                       ),
                     )
                   : add(ForgotPasswordSuccessEvent(
-                      email: state.emailController.text)),
+                      email: state.emailController.text,
+                      password: state.passwordController.text,
+                    )),
             ),
         ),
       );
