@@ -8,11 +8,11 @@ class VerificationLoading extends VerificationBase {
     Key? key,
     required super.codeController,
     required super.codeFocusNode,
-    required super.onChanged,
-    required super.onCompleted,
     required super.headerText,
   }) : super(
           key: key,
+          onChanged: () {},
+          onCompleted: () {},
           child: Column(
             children: [
               20.verticalSpace,

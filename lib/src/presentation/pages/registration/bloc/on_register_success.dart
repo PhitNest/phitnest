@@ -19,7 +19,7 @@ void onRegisterSuccess(
         password: state.passwordController.text,
         registration: event.response,
         uploadOp: CancelableOperation.fromFuture(
-          photoDatabase.uploadPhoto(
+          uploadPhoto(
             event.response.uploadUrl,
             state.photo,
           ),

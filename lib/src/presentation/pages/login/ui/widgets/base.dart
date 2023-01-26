@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../../common/assets.dart';
+import '../../../../../common/constants/assets.dart';
 import '../../../../../common/theme.dart';
 import '../../../../../common/validators.dart';
 import '../../../../widgets/styled/styled.dart';

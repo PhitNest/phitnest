@@ -11,12 +11,12 @@ class VerificationInitial extends VerificationBase {
     Key? key,
     required super.codeController,
     required super.codeFocusNode,
-    required super.onChanged,
     required super.onCompleted,
     required super.headerText,
     required this.onPressedResend,
   }) : super(
           key: key,
+          onChanged: () {},
           child: Column(
             children: [
               20.verticalSpace,

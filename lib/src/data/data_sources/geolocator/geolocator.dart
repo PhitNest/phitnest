@@ -1,39 +1,35 @@
 import 'package:dartz/dartz.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
-import '../../../common/failures.dart';
 import '../../../domain/entities/entities.dart';
 
-class LocationDatabase {
-  LocationEntity _positionToLocation(Position position) => LocationEntity(
-      longitude: position.longitude, latitude: position.latitude);
+LocationEntity _positionToLocation(Position position) =>
+    LocationEntity(longitude: position.longitude, latitude: position.latitude);
 
-  Future<Either<LocationEntity, Failure>> getLocation() async {
-    LocationPermission permission;
+Future<Either<LocationEntity, Failure>> getLocation() async {
+  LocationPermission permission;
 
-    if (!await Geolocator.isLocationServiceEnabled()) {
-      return Right(kLocationFailure);
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Right(kLocationFailure);
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Right(kLocationPermanentlyDeniedFailure);
-    }
-
-    return Left(
-      _positionToLocation(
-        await Geolocator.getCurrentPosition(),
-      ),
-    );
+  if (!await Geolocator.isLocationServiceEnabled()) {
+    return Right(Failures.locationFailure.instance);
   }
-}
 
-final locationDatabase = LocationDatabase();
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      return Right(Failures.locationFailure.instance);
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    return Right(Failures.locationPermanentlyDeniedFailure.instance);
+  }
+
+  return Left(
+    _positionToLocation(
+      await Geolocator.getCurrentPosition(),
+    ),
+  );
+}

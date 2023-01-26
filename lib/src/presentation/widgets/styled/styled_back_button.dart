@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../common/assets.dart';
+import '../../../common/constants/assets.dart';
 
 class StyledBackButton extends StatelessWidget {
   final VoidCallback? onPressed;

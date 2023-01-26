@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'base.dart';
 
-class LoginLoadingPage extends LoginPageBase {
-  const LoginLoadingPage({
+class LoginLoading extends LoginPageBase {
+  const LoginLoading({
     required super.emailController,
     required super.passwordController,
     required super.emailFocusNode,

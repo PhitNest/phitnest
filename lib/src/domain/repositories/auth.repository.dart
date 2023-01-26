@@ -1,25 +1,24 @@
 import 'package:dartz/dartz.dart';
 
 import '../../common/failure.dart';
-import '../../data/data_sources/backend/backend.dart';
-import '../../data/data_sources/cache/cache.dart';
+import '../../data/data_sources/auth/auth.dart';
+import '../../data/data_sources/user/user.dart';
+import '../entities/entities.dart';
 
-class AuthRepository {
-  const AuthRepository();
-
-  Future<Either<LoginResponse, Failure>> login(
+abstract class AuthRepository {
+  static Future<Either<LoginResponse, Failure>> login(
     String email,
     String password,
   ) async {
-    final response = await authBackend.login(email, password);
+    final response = await AuthDataSource.login(email, password);
     if (response.isLeft()) {
-      await deviceCache.cacheEmail(email);
-      await deviceCache.cachePassword(password);
+      await cacheEmail(email);
+      await cachePassword(password);
       await response.fold(
         (response) async {
-          await deviceCache.cacheUser(response.user);
-          await deviceCache.cacheAccessToken(response.session.accessToken);
-          await deviceCache.cacheRefreshToken(response.session.refreshToken);
+          await cacheUser(response.user);
+          await cacheAccessToken(response.session.accessToken);
+          await cacheRefreshToken(response.session.refreshToken);
         },
         (failure) => throw Exception("This should not happen."),
       );
@@ -27,14 +26,14 @@ class AuthRepository {
     return response;
   }
 
-  Future<Either<RegisterResponse, Failure>> register(
+  static Future<Either<RegisterResponse, Failure>> register(
     String firstName,
     String lastName,
     String email,
     String password,
     String gymId,
   ) async {
-    final response = await authBackend.register(
+    final response = await AuthDataSource.register(
       firstName,
       lastName,
       email,
@@ -42,14 +41,29 @@ class AuthRepository {
       gymId,
     );
     if (response.isLeft()) {
-      await deviceCache.cacheEmail(email);
-      await deviceCache.cachePassword(password);
-      await deviceCache.cacheUser(response
-          .swap()
-          .getOrElse(() => throw Exception("This should not happen.")));
+      await cacheEmail(email);
+      await cachePassword(password);
+      await cacheUser(
+        response
+            .swap()
+            .getOrElse(() => throw Exception("This should not happen."))
+            .user,
+      );
     }
     return response;
   }
-}
 
-const authRepo = AuthRepository();
+  static Future<Failure?> forgotPassword(
+    String email,
+  ) =>
+      AuthDataSource.forgotPassword(email);
+
+  static Future<Failure?> resendConfirmationCode(String email) =>
+      AuthDataSource.resendConfirmationCode(email);
+
+  static Future<Either<UserEntity, Failure>> confirmRegister(
+    String email,
+    String code,
+  ) =>
+      AuthDataSource.confirmRegister(email, code);
+}

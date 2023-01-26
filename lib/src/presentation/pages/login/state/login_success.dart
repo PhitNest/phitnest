@@ -1,4 +1,4 @@
-import '../../../../data/data_sources/backend/backend.dart';
+import '../../../../data/data_sources/auth/auth.dart';
 import 'login_state.dart';
 
 class LoginSuccessState extends LoginState {

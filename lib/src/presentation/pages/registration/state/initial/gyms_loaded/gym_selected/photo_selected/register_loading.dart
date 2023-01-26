@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../../../../common/failure.dart';
-import '../../../../../../../../data/data_sources/backend/backend.dart';
+import '../../../../../../../../data/data_sources/auth/auth.dart';
 import '../../../../../../../../domain/entities/entities.dart';
 import 'photo_selected.dart';
 

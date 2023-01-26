@@ -1,16 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
-
-enum SocketEvent {
-  friendRequest,
-  directMessage,
-  friendship,
-  disconnect,
-  success,
-  error
-}
 
 abstract class ISocketIOAdapter {
   Future<Either<dynamic, Failure>> emit(
@@ -18,13 +9,7 @@ abstract class ISocketIOAdapter {
     dynamic data,
   );
 
-  Future<Either<Stream<dynamic>, Failure>> stream(
-    SocketEvent event,
-    String authorization,
-  );
+  Future<Either<Stream<T>, Failure>> stream<T>(SocketEvent event);
 
-  Future<Either<IO.Socket, Failure>> socketConnection(
-    String path,
-    String authorization,
-  );
+  Future<Failure?> connect(String authorization);
 }

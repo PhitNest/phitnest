@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../common/failures.dart';
+import '../../../../common/constants/constants.dart';
 import '../event/registration_event.dart';
 import '../state/registration_state.dart';
 
@@ -12,7 +12,7 @@ void onRegisterError(
   ValueChanged<RegistrationEvent> add,
 ) {
   if (state is RegisterRequestLoadingState) {
-    if (event.failure == kUserNotConfirmed) {
+    if (event.failure == Failures.userNotConfirmed.instance) {
       state.pageController.jumpToPage(1);
       emit(
         PhotoSelectedState(

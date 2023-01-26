@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/validators.dart';
-import '../../../../domain/repositories/repositories.dart';
+import '../../../../domain/use_cases/use_cases.dart';
 import '../event/registration_event.dart';
 import '../state/registration_state.dart';
 
@@ -56,7 +56,7 @@ void onRegister(
           cameraController: state.cameraController,
           hasReadPhotoInstructions: state.hasReadPhotoInstructions,
           registerOp: CancelableOperation.fromFuture(
-            authRepo.register(
+            register(
               state.emailController.text.trim(),
               state.passwordController.text.trim(),
               state.firstNameController.text.trim(),
