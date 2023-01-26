@@ -46,9 +46,8 @@ void onSubmit(
                         autoValidateMode: state.autoValidateMode,
                       ),
                     )
-                  : add(
-                      ForgotPasswordSuccessEvent(),
-                    ),
+                  : add(ForgotPasswordSuccessEvent(
+                      email: state.emailController.text)),
             ),
         ),
       );
@@ -82,9 +81,8 @@ void onSubmit(
                         autoValidateMode: state.autoValidateMode,
                       ),
                     )
-                  : add(
-                      ForgotPasswordSuccessEvent(),
-                    ),
+                  : add(ForgotPasswordSuccessEvent(
+                      email: state.emailController.text)),
             ),
         ),
       );

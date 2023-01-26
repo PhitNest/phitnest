@@ -8,4 +8,4 @@ void onSuccess(
   ForgotPasswordSuccessEvent event,
   Emitter<ForgotPasswordState> emit,
 ) =>
-    emit(ForgotPasswordSuccessState());
+    emit(ForgotPasswordSuccessState(email: event.email));

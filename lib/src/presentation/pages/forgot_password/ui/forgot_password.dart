@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phitnest_mobile/src/presentation/pages/forgot_password/ui/widgets/verification_page.dart';
+
 import '../../../../common/theme.dart';
-import '../../login/ui/login_page.dart';
 import '../bloc/forgot_password_bloc.dart';
 import '../event/error.dart';
 import '../event/submit.dart';
@@ -23,11 +24,10 @@ class ForgotPasswordPage extends StatelessWidget {
       child: BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
         listener: (context, state) {
           if (state is ForgotPasswordSuccessState) {
-            Navigator.of(context).pushAndRemoveUntil(
+            Navigator.of(context).push(
               CupertinoPageRoute(
-                builder: (context) => LoginPage(),
+                builder: (context) => VerifyEmail(email: state.email),
               ),
-              (_) => false,
             );
           } else if (state is ForgotPasswordErrorState) {
             ScaffoldMessenger.of(context).showMaterialBanner(
