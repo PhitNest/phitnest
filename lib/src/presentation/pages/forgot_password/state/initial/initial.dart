@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
 
-import '../bloc/forgot_password_bloc.dart';
+import '../forgot_password_state.dart';
 
-class ForgotPasswordInitialState extends ForgotPasswordState {
+export 'error.dart';
+export 'loading.dart';
+export 'success.dart';
+
+class InitialState extends ForgotPasswordState {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController confirmPassController;
   final FocusNode emailFocusNode;
   final FocusNode passwordFocusNode;
   final FocusNode confirmPassFocusNode;
-  final AutovalidateMode autoValidateMode;
+  final AutovalidateMode autovalidateMode;
   final GlobalKey<FormState> formKey;
 
-  ForgotPasswordInitialState({
+  const InitialState({
     required this.passwordController,
     required this.confirmPassController,
     required this.emailFocusNode,
     required this.passwordFocusNode,
     required this.confirmPassFocusNode,
     required this.emailController,
-    required this.autoValidateMode,
+    required this.autovalidateMode,
     required this.formKey,
   });
 
   @override
-  List<Object?> get props => [
-        autoValidateMode,
-        passwordController.text,
-        confirmPassController.text,
-        emailController.text,
-      ];
+  List<Object?> get props => [autovalidateMode];
 }

@@ -4,4 +4,4 @@ export 'login.dart';
 export 'register.dart';
 export 'resend_confirmation.dart';
 export 'confirm_register.dart';
-export 'reset_password.dart';
+export 'forgot_password.dart';

@@ -12,45 +12,51 @@ class OnBoardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => StyledScaffold(
-        body: Column(
-          children: [
-            SizedBox(
-              height: 120.h,
-              width: double.infinity,
-            ),
-            Text(
-              "It takes a village\nto live a healthy life",
-              style: theme.textTheme.headlineLarge,
-              textAlign: TextAlign.center,
-            ),
-            40.verticalSpace,
-            Text(
-              "Meet people at your fitness club.\nAchieve your goals together.\nLive a healthy life!",
-              style: theme.textTheme.labelLarge,
-              textAlign: TextAlign.center,
-            ),
-            Spacer(),
-            StyledButton(
-              onPressed: () => Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => RegistrationPage(),
+        body: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          child: SizedBox(
+            height: 1.sh,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 120.h,
+                  width: double.infinity,
                 ),
-              ),
-              text: "LET'S GET STARTED",
-            ),
-            12.verticalSpace,
-            StyledUnderlinedTextButton(
-              text: 'SIGN IN',
-              onPressed: () => Navigator.pushReplacement(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => LoginPage(),
+                Text(
+                  "It takes a village\nto live a healthy life",
+                  style: theme.textTheme.headlineLarge,
+                  textAlign: TextAlign.center,
                 ),
-              ),
+                40.verticalSpace,
+                Text(
+                  "Meet people at your fitness club.\nAchieve your goals together.\nLive a healthy life!",
+                  style: theme.textTheme.labelLarge,
+                  textAlign: TextAlign.center,
+                ),
+                Spacer(),
+                StyledButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => RegistrationPage(),
+                    ),
+                  ),
+                  text: "LET'S GET STARTED",
+                ),
+                12.verticalSpace,
+                StyledUnderlinedTextButton(
+                  text: 'SIGN IN',
+                  onPressed: () => Navigator.pushReplacement(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => LoginPage(),
+                    ),
+                  ),
+                ),
+                167.verticalSpace,
+              ],
             ),
-            167.verticalSpace,
-          ],
+          ),
         ),
       );
 }

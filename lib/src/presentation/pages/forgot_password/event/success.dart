@@ -1,14 +1,5 @@
-import '../bloc/forgot_password_bloc.dart';
+import 'forgot_password_event.dart';
 
-class ForgotPasswordSuccessEvent extends ForgotPasswordEvent {
-  final String email;
-  final String password;
-
-  const ForgotPasswordSuccessEvent({
-    required this.email,
-    required this.password,
-  }) : super();
-
-  @override
-  List<Object?> get props => [];
+class SuccessEvent extends ForgotPasswordEvent {
+  const SuccessEvent() : super();
 }

@@ -5,8 +5,6 @@ import '../../../../../common/theme.dart';
 import '../../../../../common/validators.dart';
 import '../../../../widgets/widgets.dart';
 
-const kBackgroundColor = Color(0xFFF5F5F5);
-
 abstract class ForgotPasswordBasePage extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
@@ -34,71 +32,75 @@ abstract class ForgotPasswordBasePage extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          leading: StyledBackButton(
-            onPressed: () => Navigator.pop(context),
-          ),
-          elevation: 0,
-          backgroundColor: kBackgroundColor,
-        ),
-        body: SizedBox(
-          width: 1.sw,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              0.verticalSpace,
-              Text(
-                'Forgot the password?',
-                style: theme.textTheme.headlineLarge,
-              ),
-              42.verticalSpace,
-              Text(
-                'We’ll send you an email to reset\nyour password.',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.labelLarge,
-              ),
-              16.verticalSpace,
-              Form(
-                autovalidateMode: autovalidateMode,
-                key: formKey,
-                child: SizedBox(
-                  width: 291.w,
-                  child: Column(
-                    children: [
-                      StyledUnderlinedTextField(
-                        hint: 'Email',
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        controller: emailController,
-                        focusNode: emailFocusNode,
-                        validator: (email) => validateEmail(email),
-                      ),
-                      StyledPasswordField(
-                        hint: 'New Password',
-                        textInputAction: TextInputAction.next,
-                        controller: passwordController,
-                        focusNode: passwordFocusNode,
-                        validator: (pass) => validatePassword(pass),
-                      ),
-                      StyledPasswordField(
-                        hint: 'Confirm Password',
-                        textInputAction: TextInputAction.done,
-                        controller: confirmPassController,
-                        focusNode: confirmPassFocusNode,
-                        validator: (confirmPass) => passwordController.text ==
-                                confirmPassController.text
-                            ? null
-                            : "Password did not match",
-                      ),
-                    ],
+  Widget build(BuildContext context) => StyledScaffold(
+        body: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          child: SizedBox(
+            height: 1.sh,
+            width: 1.sw,
+            child: Column(
+              children: [
+                40.verticalSpace,
+                Container(
+                  width: double.infinity,
+                  alignment: Alignment.centerLeft,
+                  child: StyledBackButton(
+                      onPressed: () => Navigator.of(context).pop()),
+                ),
+                30.verticalSpace,
+                Text(
+                  'Forgot the password?',
+                  style: theme.textTheme.headlineLarge,
+                ),
+                30.verticalSpace,
+                Text(
+                  'We’ll send you an email to reset\nyour password.',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.labelLarge,
+                ),
+                20.verticalSpace,
+                Form(
+                  autovalidateMode: autovalidateMode,
+                  key: formKey,
+                  child: SizedBox(
+                    width: 291.w,
+                    child: Column(
+                      children: [
+                        StyledUnderlinedTextField(
+                          hint: 'Email',
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          controller: emailController,
+                          focusNode: emailFocusNode,
+                          validator: (email) => validateEmail(email),
+                        ),
+                        StyledPasswordField(
+                          hint: 'New Password',
+                          textInputAction: TextInputAction.next,
+                          controller: passwordController,
+                          focusNode: passwordFocusNode,
+                          validator: (pass) => validatePassword(pass),
+                        ),
+                        StyledPasswordField(
+                          hint: 'Confirm Password',
+                          textInputAction: TextInputAction.done,
+                          controller: confirmPassController,
+                          focusNode: confirmPassFocusNode,
+                          validator: (confirmPass) => passwordController.text ==
+                                  confirmPassController.text
+                              ? null
+                              : "Passwords do not match",
+                          onFieldSubmitted: (_) => onSubmit(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              30.verticalSpace,
-              child
-              // StyledUnderlinedTextField(),
-            ],
+                30.verticalSpace,
+                child,
+                Spacer(),
+              ],
+            ),
           ),
         ),
       );

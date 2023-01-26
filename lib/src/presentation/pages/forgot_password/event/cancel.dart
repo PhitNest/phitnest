@@ -1,6 +1,5 @@
-import '../bloc/forgot_password_bloc.dart';
+import 'forgot_password_event.dart';
 
-class ForgotPassCancelEvent extends ForgotPasswordEvent {
-  @override
-  List<Object?> get props => [];
+class CancelEvent extends ForgotPasswordEvent {
+  const CancelEvent() : super();
 }
