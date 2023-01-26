@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
+import '../../../../../common/failure.dart';
+import 'initial.dart';
 
-import 'base.dart';
+class ErrorState extends InitialState {
+  final Failure failure;
 
-class ForgotPasswordLoadingPage extends ForgotPasswordBasePage {
-  ForgotPasswordLoadingPage({
+  const ErrorState({
     required super.emailController,
     required super.passwordController,
     required super.confirmPassController,
@@ -12,8 +13,9 @@ class ForgotPasswordLoadingPage extends ForgotPasswordBasePage {
     required super.confirmPassFocusNode,
     required super.autovalidateMode,
     required super.formKey,
-  }) : super(
-          onSubmit: () {},
-          child: const CircularProgressIndicator(),
-        );
+    required this.failure,
+  }) : super();
+
+  @override
+  List<Object?> get props => [super.props, failure];
 }

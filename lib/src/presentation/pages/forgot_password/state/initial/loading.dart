@@ -1,18 +1,19 @@
 import 'package:async/async.dart';
 
+import '../../../../../common/failure.dart';
 import 'initial.dart';
 
-class ForgotPasswordLoadingState extends ForgotPasswordInitialState {
-  final CancelableOperation forgotPassOperation;
+class LoadingState extends InitialState {
+  final CancelableOperation<Failure?> forgotPassOperation;
 
-  ForgotPasswordLoadingState({
+  LoadingState({
     required super.passwordController,
     required super.confirmPassController,
     required super.emailFocusNode,
     required super.passwordFocusNode,
     required super.confirmPassFocusNode,
     required super.emailController,
-    required super.autoValidateMode,
+    required super.autovalidateMode,
     required super.formKey,
     required this.forgotPassOperation,
   }) : super();

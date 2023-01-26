@@ -1,45 +1,38 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../event/error.dart';
-import '../event/submit.dart';
-import '../event/success.dart';
-import '../state/initial.dart';
-import 'error.dart';
+import '../event/forgot_password_event.dart';
+import '../state/forgot_password_state.dart';
+import 'on_error.dart';
 import 'on_submit.dart';
-import 'success.dart';
-
-part '../event/forgot_password_event.dart';
-part '../state/forgot_password_state.dart';
+import 'on_success.dart';
 
 class ForgotPasswordBloc
     extends Bloc<ForgotPasswordEvent, ForgotPasswordState> {
   ForgotPasswordBloc()
       : super(
-          ForgotPasswordInitialState(
+          InitialState(
             passwordController: TextEditingController(),
             confirmPassController: TextEditingController(),
             emailController: TextEditingController(),
             emailFocusNode: FocusNode(),
             passwordFocusNode: FocusNode(),
             confirmPassFocusNode: FocusNode(),
-            formKey: GlobalKey<FormState>(),
-            autoValidateMode: AutovalidateMode.disabled,
+            formKey: GlobalKey(),
+            autovalidateMode: AutovalidateMode.disabled,
           ),
         ) {
-    on<ForgotPasswordOnSubmitEvent>(
-      (event, emit) => onSubmit(
-        event,
-        emit,
-        state,
-        add,
-      ),
-    );
+    on<SubmitEvent>((event, emit) => onSubmit(event, emit, state, add));
+    on<SuccessEvent>((event, emit) => onSuccess(event, emit, state));
+    on<ErrorEvent>((event, emit) => onForgotPasswordError(event, emit, state));
+  }
 
-    on<ForgotPasswordSuccessEvent>((event, emit) => onSuccess(event, emit));
-
-    on<ForgotPasswordErrorEvent>(
-        (event, emit) => onForgotPasswordError(event, emit));
+  @override
+  Future<void> close() async {
+    if (state is LoadingState) {
+      final loadingState = state as LoadingState;
+      await loadingState.forgotPassOperation.cancel();
+    }
+    return super.close();
   }
 }

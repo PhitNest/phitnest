@@ -42,36 +42,28 @@ class DioHttpAdapter implements IHttpAdapter {
         result = dio.get(url).then(
               (response) => response.statusCode == kStatusOK
                   ? Left(response.data)
-                  : Right(
-                      Failure.fromJson(response.data),
-                    ),
+                  : Right(Failure.fromJson(response.data)),
             );
         break;
       case HttpMethod.post:
         result = dio.post(url, data: data).then(
               (response) => response.statusCode == kStatusOK
                   ? Left(response.data)
-                  : Right(
-                      Failure.fromJson(response.data),
-                    ),
+                  : Right(Failure.fromJson(response.data)),
             );
         break;
       case HttpMethod.put:
         result = dio.put(url, data: data).then(
               (response) => response.statusCode == kStatusOK
                   ? Left(response.data)
-                  : Right(
-                      Failure.fromJson(response.data),
-                    ),
+                  : Right(Failure.fromJson(response.data)),
             );
         break;
       case HttpMethod.delete:
         result = dio.delete(url).then(
               (response) => response.statusCode == kStatusOK
                   ? Left(response.data)
-                  : Right(
-                      Failure.fromJson(response.data),
-                    ),
+                  : Right(Failure.fromJson(response.data)),
             );
         break;
     }
@@ -82,6 +74,12 @@ class DioHttpAdapter implements IHttpAdapter {
                 prettyLogger.d("Response success:${description(success)}");
                 if (success is List) {
                   return Left(Right(success));
+                } else if (success is String) {
+                  if (success.isEmpty) {
+                    return Left(Left(Map<String, dynamic>.from({})));
+                  } else {
+                    throw Exception("Invalid response: $success");
+                  }
                 } else {
                   return Left(Left(success));
                 }
@@ -94,6 +92,7 @@ class DioHttpAdapter implements IHttpAdapter {
           );
     } catch (e) {
       final Failure failure;
+      print(e);
       if (e is DioError) {
         failure = Failure.fromJson(e.response!.data);
       } else {

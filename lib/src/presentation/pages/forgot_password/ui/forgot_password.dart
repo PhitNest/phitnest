@@ -4,15 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/theme.dart';
 import '../bloc/forgot_password_bloc.dart';
-import '../event/error.dart';
 import '../event/submit.dart';
-import '../state/error.dart';
-import '../state/initial.dart';
-import '../state/loading.dart';
-import '../state/success.dart';
+import '../state/forgot_password_state.dart';
 import 'widgets/initial.dart';
 import 'widgets/loading.dart';
 import 'widgets/verification_page.dart';
+
+ForgotPasswordBloc _bloc(BuildContext context) => context.read();
+
+void _onSubmit(BuildContext context) => _bloc(context).add(SubmitEvent());
 
 class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -23,16 +23,16 @@ class ForgotPasswordPage extends StatelessWidget {
       create: (context) => ForgotPasswordBloc(),
       child: BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
         listener: (context, state) {
-          if (state is ForgotPasswordSuccessState) {
+          if (state is SuccessState) {
             Navigator.of(context).push(
               CupertinoPageRoute(
                 builder: (context) => VerifyEmail(
-                  email: state.email,
-                  password: state.password,
+                  email: state.emailController.text.trim(),
+                  password: state.passwordController.text,
                 ),
               ),
             );
-          } else if (state is ForgotPasswordErrorState) {
+          } else if (state is ErrorState) {
             ScaffoldMessenger.of(context).showMaterialBanner(
               MaterialBanner(
                 content: Text(
@@ -63,22 +63,10 @@ class ForgotPasswordPage extends StatelessWidget {
                 ],
               ),
             );
-            context.read<ForgotPasswordBloc>().add(
-                  ForgotPasswordErrorEvent(
-                      failure: state.failure,
-                      emailController: state.emailController,
-                      passwordController: state.passwordController,
-                      formKey: state.formKey,
-                      autoValidateMode: state.autoValidateMode,
-                      confirmPassFocusNode: state.confirmPassFocusNode,
-                      passwordFocusNode: state.passwordFocusNode,
-                      emailFocusNode: state.emailFocusNode,
-                      confirmPassController: state.confirmPassController),
-                );
           }
         },
         builder: (context, state) {
-          if (state is ForgotPasswordLoadingState) {
+          if (state is LoadingState) {
             return ForgotPasswordLoadingPage(
               emailController: state.emailController,
               passwordController: state.passwordController,
@@ -86,13 +74,10 @@ class ForgotPasswordPage extends StatelessWidget {
               emailFocusNode: state.emailFocusNode,
               passwordFocusNode: state.passwordFocusNode,
               confirmPassFocusNode: state.confirmPassFocusNode,
-              autovalidateMode: state.autoValidateMode,
+              autovalidateMode: state.autovalidateMode,
               formKey: state.formKey,
-              onSubmit: () => context
-                  .read<ForgotPasswordBloc>()
-                  .add(ForgotPasswordOnSubmitEvent()),
             );
-          } else if (state is ForgotPasswordInitialState) {
+          } else if (state is ErrorState) {
             return ForgotPasswordInitialPage(
               emailController: state.emailController,
               passwordController: state.passwordController,
@@ -100,13 +85,11 @@ class ForgotPasswordPage extends StatelessWidget {
               emailFocusNode: state.emailFocusNode,
               passwordFocusNode: state.passwordFocusNode,
               confirmPassFocusNode: state.confirmPassFocusNode,
-              autovalidateMode: state.autoValidateMode,
+              autovalidateMode: state.autovalidateMode,
               formKey: state.formKey,
-              onSubmit: () => context
-                  .read<ForgotPasswordBloc>()
-                  .add(ForgotPasswordOnSubmitEvent()),
+              onSubmit: () => _onSubmit(context),
             );
-          } else if (state is ForgotPasswordErrorState) {
+          } else if (state is InitialState) {
             return ForgotPasswordInitialPage(
               emailController: state.emailController,
               passwordController: state.passwordController,
@@ -114,11 +97,9 @@ class ForgotPasswordPage extends StatelessWidget {
               emailFocusNode: state.emailFocusNode,
               passwordFocusNode: state.passwordFocusNode,
               confirmPassFocusNode: state.confirmPassFocusNode,
-              autovalidateMode: state.autoValidateMode,
+              autovalidateMode: state.autovalidateMode,
               formKey: state.formKey,
-              onSubmit: () => context
-                  .read<ForgotPasswordBloc>()
-                  .add(ForgotPasswordOnSubmitEvent()),
+              onSubmit: () => _onSubmit(context),
             );
           } else {
             throw Exception('Invalid state: $state');
