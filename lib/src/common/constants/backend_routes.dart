@@ -16,6 +16,7 @@ enum Routes {
   login,
   register,
   forgotPassword,
+  forgotPasswordSubmit,
   getUser,
   confirmRegister,
   getUploadUrlUnauthorized,
@@ -32,6 +33,8 @@ extension RouteInstance on Routes {
         return const Route('/auth/register', HttpMethod.post);
       case Routes.forgotPassword:
         return const Route('/auth/forgotPassword', HttpMethod.post);
+      case Routes.forgotPasswordSubmit:
+        return const Route('/auth/forgotPasswordSubmit', HttpMethod.post);
       case Routes.getUser:
         return const Route('/user', HttpMethod.get);
       case Routes.confirmRegister:

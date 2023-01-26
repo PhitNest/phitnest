@@ -6,8 +6,8 @@ import '../../../domain/entities/entities.dart';
 import '../../adapters/adapters.dart';
 import 'responses/responses.dart';
 
-export 'responses/responses.dart';
 export 'cache.dart';
+export 'responses/responses.dart';
 
 abstract class AuthDataSource {
   static Future<Either<LoginResponse, Failure>> login(
@@ -107,6 +107,28 @@ abstract class AuthDataSource {
             (list) => Right(Failures.invalidBackendResponse.instance),
           ),
           (failure) => Right(failure),
+        ),
+      );
+
+  static Future<Failure?> forgotPasswordSubmit(
+    String email,
+    String password,
+    String code,
+  ) =>
+      httpAdapter.request(
+        Routes.forgotPasswordSubmit.instance,
+        data: {
+          'email': email,
+          'code': code,
+          'newPassword': password,
+        },
+      ).then(
+        (either) => either.fold(
+          (response) => response.fold(
+            (json) => null,
+            (list) => Failures.invalidCode.instance,
+          ),
+          (failure) => failure,
         ),
       );
 }
