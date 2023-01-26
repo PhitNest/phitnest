@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:phitnest_mobile/src/presentation/pages/forgot_password/ui/widgets/verification_page.dart';
 
 import '../../../../common/theme.dart';
 import '../bloc/forgot_password_bloc.dart';
@@ -13,6 +12,7 @@ import '../state/loading.dart';
 import '../state/success.dart';
 import 'widgets/initial.dart';
 import 'widgets/loading.dart';
+import 'widgets/verification_page.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -26,7 +26,10 @@ class ForgotPasswordPage extends StatelessWidget {
           if (state is ForgotPasswordSuccessState) {
             Navigator.of(context).push(
               CupertinoPageRoute(
-                builder: (context) => VerifyEmail(email: state.email),
+                builder: (context) => VerifyEmail(
+                  email: state.email,
+                  password: state.password,
+                ),
               ),
             );
           } else if (state is ForgotPasswordErrorState) {
