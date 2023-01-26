@@ -58,6 +58,10 @@ abstract class AuthRepository {
   ) =>
       AuthDataSource.forgotPassword(email);
 
+  static Future<Failure?> forgotPasswordSubmit(
+          String email, String password, String code) =>
+      AuthDataSource.forgotPasswordSubmit(email, password, code);
+
   static Future<Failure?> resendConfirmationCode(String email) =>
       AuthDataSource.resendConfirmationCode(email);
 
