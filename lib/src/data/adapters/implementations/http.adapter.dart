@@ -92,7 +92,6 @@ class DioHttpAdapter implements IHttpAdapter {
           );
     } catch (e) {
       final Failure failure;
-      print(e);
       if (e is DioError) {
         failure = Failure.fromJson(e.response!.data);
       } else {
