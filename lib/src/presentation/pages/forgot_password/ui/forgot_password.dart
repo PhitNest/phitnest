@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/theme.dart';
+import '../../pages.dart';
 import '../bloc/forgot_password_bloc.dart';
 import '../event/submit.dart';
 import '../state/forgot_password_state.dart';
@@ -63,6 +64,13 @@ class ForgotPasswordPage extends StatelessWidget {
                 ],
               ),
             );
+          } else if (state is ConfirmEmailState) {
+            Navigator.of(context).push(
+              CupertinoPageRoute(
+                builder: (context) =>
+                    ConfirmEmailPage(email: state.emailController.text),
+              ),
+            );
           }
         },
         builder: (context, state) {
@@ -101,8 +109,44 @@ class ForgotPasswordPage extends StatelessWidget {
               formKey: state.formKey,
               onSubmit: () => _onSubmit(context),
             );
+          } else if (state is ConfirmEmailState) {
+            // var initialState = state as InitialState;
+            return ForgotPasswordInitialPage(
+              emailController: state.emailController,
+              passwordController: state.passwordController,
+              confirmPassController: state.confirmPassController,
+              emailFocusNode: state.emailFocusNode,
+              passwordFocusNode: state.passwordFocusNode,
+              confirmPassFocusNode: state.confirmPassFocusNode,
+              autovalidateMode: state.autovalidateMode,
+              formKey: state.formKey,
+              onSubmit: () => _onSubmit(context),
+            );
+          } else if (state is SuccessState) {
+            return ForgotPasswordInitialPage(
+              emailController: state.emailController,
+              passwordController: state.passwordController,
+              confirmPassController: state.confirmPassController,
+              emailFocusNode: state.emailFocusNode,
+              passwordFocusNode: state.passwordFocusNode,
+              confirmPassFocusNode: state.confirmPassFocusNode,
+              autovalidateMode: state.autovalidateMode,
+              formKey: state.formKey,
+              onSubmit: () => _onSubmit(context),
+            );
           } else {
-            throw Exception('Invalid state: $state');
+            var initialState = state as InitialState;
+            return ForgotPasswordInitialPage(
+              emailController: initialState.emailController,
+              passwordController: initialState.passwordController,
+              confirmPassController: initialState.confirmPassController,
+              emailFocusNode: initialState.emailFocusNode,
+              passwordFocusNode: initialState.passwordFocusNode,
+              confirmPassFocusNode: initialState.confirmPassFocusNode,
+              autovalidateMode: initialState.autovalidateMode,
+              formKey: initialState.formKey,
+              onSubmit: () => _onSubmit(context),
+            );
           }
         },
       ),

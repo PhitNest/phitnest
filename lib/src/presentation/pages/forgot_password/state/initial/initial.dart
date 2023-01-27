@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../forgot_password_state.dart';
 
+export 'confirm_email.dart';
 export 'error.dart';
 export 'loading.dart';
 export 'success.dart';

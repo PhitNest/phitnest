@@ -39,7 +39,7 @@ class VerificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(
         create: (context) => VerificationBloc(),
-        child: BlocConsumer(
+        child: BlocConsumer<VerificationBloc, VerificationState>(
           listener: (context, state) {
             if (state is ConfirmErrorState) {
               if (onConfirmError != null) {
