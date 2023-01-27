@@ -13,10 +13,10 @@ class VerificationInitial extends VerificationBase {
     required super.codeFocusNode,
     required super.onCompleted,
     required super.headerText,
+    required super.email,
     required this.onPressedResend,
   }) : super(
           key: key,
-          onChanged: () {},
           child: Column(
             children: [
               20.verticalSpace,

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,9 +28,26 @@ class App extends StatelessWidget {
                   if (user.confirmed) {
                     return const HomePage();
                   } else if (password != null) {
-                    return ConfirmEmailPage(
-                      email: user.email,
+                    Future.delayed(
+                      Duration.zero,
+                      () => Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => ConfirmEmailPage(
+                            email: user.email,
+                            onConfirmed: (context) =>
+                                Navigator.pushAndRemoveUntil(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => HomePage(),
+                              ),
+                              (_) => false,
+                            ),
+                          ),
+                        ),
+                      ),
                     );
+                    return LoginPage();
                   }
                 }
                 return OnBoardingPage();

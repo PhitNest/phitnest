@@ -14,22 +14,26 @@ class VerificationError extends VerificationBase {
     Key? key,
     required super.codeController,
     required super.codeFocusNode,
-    required super.onChanged,
     required super.onCompleted,
     required super.headerText,
+    required super.email,
     required this.error,
     required this.onPressedResend,
   }) : super(
           key: key,
           child: Column(
             children: [
-              Text(
-                error.message,
-                style: theme.textTheme.labelLarge!
-                    .copyWith(color: theme.errorColor),
-                textAlign: TextAlign.center,
-              ),
               8.verticalSpace,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Text(
+                  error.message,
+                  style: theme.textTheme.labelLarge!
+                      .copyWith(color: theme.errorColor),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              16.verticalSpace,
               StyledButton(
                 text: 'RETRY',
                 onPressed: onCompleted,

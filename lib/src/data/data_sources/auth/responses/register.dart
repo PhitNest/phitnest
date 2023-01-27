@@ -13,21 +13,10 @@ class RegisterResponse extends Equatable {
 
   factory RegisterResponse.fromJson(Map<String, dynamic> json) =>
       RegisterResponse(
-        user: UserEntity(
-          cognitoId: json['cognitoId'],
-          id: json['_id'],
-          email: json['email'],
-          firstName: json['firstName'],
-          lastName: json['lastName'],
-          gymId: json['gymId'],
-          confirmed: json['confirmed'],
-        ),
+        user: UserEntity.fromJson(json['user']),
         uploadUrl: json['uploadUrl'],
       );
 
   @override
-  List<Object?> get props => [
-        user,
-        uploadUrl,
-      ];
+  List<Object?> get props => [user, uploadUrl];
 }

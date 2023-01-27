@@ -1,10 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../event/confirm_email.dart';
 import '../event/forgot_password_event.dart';
 import '../state/forgot_password_state.dart';
-import 'on_confirm_email.dart';
 import 'on_error.dart';
 import 'on_submit.dart';
 import 'on_success.dart';
@@ -27,7 +25,6 @@ class ForgotPasswordBloc
     on<SubmitEvent>((event, emit) => onSubmit(event, emit, state, add));
     on<SuccessEvent>((event, emit) => onSuccess(event, emit, state));
     on<ErrorEvent>((event, emit) => onForgotPasswordError(event, emit, state));
-    on<ConfirmEmailEvent>((event, emit) => onConfirmEmail(event, emit, state));
   }
 
   @override

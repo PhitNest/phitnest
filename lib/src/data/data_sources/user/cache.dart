@@ -37,7 +37,7 @@ Future<bool> cacheUser(UserEntity? user) async {
       sharedPreferences.setString('user.cognitoId', user.cognitoId),
       sharedPreferences.setString('user.firstName', user.firstName),
       sharedPreferences.setString('user.lastName', user.lastName),
-      sharedPreferences.setString('email', user.email),
+      sharedPreferences.setString('user.email', user.email),
       sharedPreferences.setString('gym.id', user.gymId),
       sharedPreferences.setBool('user.confirmed', user.confirmed),
     ]).then((_) => true);

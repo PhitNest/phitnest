@@ -6,7 +6,6 @@ export 'resend.dart';
 export 'confirm_success.dart';
 export 'resend_error.dart';
 export 'reset.dart';
-export 'clear_error.dart';
 
 abstract class VerificationEvent extends Equatable {
   const VerificationEvent() : super();

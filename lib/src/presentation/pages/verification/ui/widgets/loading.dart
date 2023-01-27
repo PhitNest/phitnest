@@ -9,9 +9,9 @@ class VerificationLoading extends VerificationBase {
     required super.codeController,
     required super.codeFocusNode,
     required super.headerText,
+    required super.email,
   }) : super(
           key: key,
-          onChanged: () {},
           onCompleted: () {},
           child: Column(
             children: [

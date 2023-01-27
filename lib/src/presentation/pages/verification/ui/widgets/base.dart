@@ -9,17 +9,17 @@ class VerificationBase extends StatelessWidget {
   final Widget child;
   final TextEditingController codeController;
   final FocusNode codeFocusNode;
-  final VoidCallback onChanged;
   final VoidCallback onCompleted;
+  final String email;
 
   const VerificationBase({
     Key? key,
     required this.headerText,
     required this.child,
-    required this.onChanged,
     required this.onCompleted,
     required this.codeController,
     required this.codeFocusNode,
+    required this.email,
   }) : super(key: key);
 
   @override
@@ -39,22 +39,24 @@ class VerificationBase extends StatelessWidget {
                 ),
                 30.verticalSpace,
                 Text(
-                  "Please confirm\nthat it's you.",
+                  headerText,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.headlineLarge,
                 ),
                 40.verticalSpace,
-                Text(
-                  headerText,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.labelLarge,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Text(
+                    "Check $email for a verification code from us and enter it below",
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.labelLarge,
+                  ),
                 ),
-                60.verticalSpace,
+                30.verticalSpace,
                 StyledVerificationField(
                   controller: codeController,
                   focusNode: codeFocusNode,
-                  onChanged: (_) => onChanged,
-                  onCompleted: (_) => onCompleted,
+                  onCompleted: (_) => onCompleted(),
                 ),
                 Expanded(child: child),
               ],
