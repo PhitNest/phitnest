@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../domain/use_cases/forgot_password.dart';
+import '../event/confirm_email.dart';
 import '../event/forgot_password_event.dart';
 import '../state/forgot_password_state.dart';
 
@@ -28,11 +29,14 @@ void onSubmit(
             forgotPassword(state.emailController.text),
           )..then(
               (failure) {
-                if (failure != null) {
-                  add(ErrorEvent(failure));
-                } else {
-                  add(SuccessEvent());
-                }
+                failure != null
+                    ? failure.code == "UserNotConfirmedException"
+                        ? add(
+                            ConfirmEmailEvent(
+                                email: state.emailController.text),
+                          )
+                        : add(ErrorEvent(failure))
+                    : add(SuccessEvent());
               },
             ),
         ),
