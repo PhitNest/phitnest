@@ -6,7 +6,7 @@ import '../../../common/theme.dart';
 
 class StyledVerificationField extends StatelessWidget {
   final TextEditingController? controller;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String>? onChanged;
   final ValueChanged<String> onCompleted;
   final FocusNode? focusNode;
 
@@ -14,7 +14,7 @@ class StyledVerificationField extends StatelessWidget {
     Key? key,
     this.controller,
     this.focusNode,
-    required this.onChanged,
+    this.onChanged,
     required this.onCompleted,
   }) : super(key: key);
 
@@ -24,12 +24,13 @@ class StyledVerificationField extends StatelessWidget {
         child: PinCodeTextField(
           appContext: context,
           length: 6,
-          onChanged: onChanged,
+          onChanged: onChanged ?? (_) {},
           onCompleted: onCompleted,
           controller: controller,
           focusNode: focusNode,
           textStyle: theme.textTheme.labelLarge,
           keyboardType: TextInputType.number,
+          autoDisposeControllers: false,
           pinTheme: PinTheme(
             activeColor: Colors.grey.shade600,
             selectedColor: Colors.black,

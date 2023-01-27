@@ -76,8 +76,16 @@ class RegistrationPage extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 CupertinoPageRoute(
-                  builder: (context) =>
-                      ConfirmEmailPage(email: state.registration.user.email),
+                  builder: (context) => ConfirmEmailPage(
+                    email: state.registration.user.email,
+                    onConfirmed: (context) => Navigator.pushAndRemoveUntil(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => HomePage(),
+                      ),
+                      (_) => false,
+                    ),
+                  ),
                 ),
               );
             }

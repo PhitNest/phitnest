@@ -68,6 +68,15 @@ abstract class AuthRepository {
   static Future<Either<UserEntity, Failure>> confirmRegister(
     String email,
     String code,
-  ) =>
-      AuthDataSource.confirmRegister(email, code);
+  ) async {
+    final result = await AuthDataSource.confirmRegister(email, code);
+    if (result.isLeft()) {
+      await cacheUser(
+        result.swap().getOrElse(
+              () => throw Exception("This should not happen."),
+            ),
+      );
+    }
+    return result;
+  }
 }

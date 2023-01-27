@@ -66,6 +66,13 @@ class LoginPage extends StatelessWidget {
                 CupertinoPageRoute(
                   builder: (context) => ConfirmEmailPage(
                     email: state.email,
+                    onConfirmed: (context) => Navigator.pushAndRemoveUntil(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => HomePage(),
+                      ),
+                      (_) => false,
+                    ),
                   ),
                 ),
               );

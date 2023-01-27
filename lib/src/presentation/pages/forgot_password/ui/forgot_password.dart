@@ -67,8 +67,19 @@ class ForgotPasswordPage extends StatelessWidget {
           } else if (state is ConfirmEmailState) {
             Navigator.of(context).push(
               CupertinoPageRoute(
-                builder: (context) =>
-                    ConfirmEmailPage(email: state.emailController.text),
+                builder: (context) => ConfirmEmailPage(
+                  email: state.emailController.text.trim(),
+                  onConfirmed: (context) => Navigator.of(context)
+                    ..pop()
+                    ..push(
+                      CupertinoPageRoute(
+                        builder: (context) => VerifyEmail(
+                          email: state.emailController.text.trim(),
+                          password: state.passwordController.text.trim(),
+                        ),
+                      ),
+                    ),
+                ),
               ),
             );
           }
@@ -109,44 +120,8 @@ class ForgotPasswordPage extends StatelessWidget {
               formKey: state.formKey,
               onSubmit: () => _onSubmit(context),
             );
-          } else if (state is ConfirmEmailState) {
-            // var initialState = state as InitialState;
-            return ForgotPasswordInitialPage(
-              emailController: state.emailController,
-              passwordController: state.passwordController,
-              confirmPassController: state.confirmPassController,
-              emailFocusNode: state.emailFocusNode,
-              passwordFocusNode: state.passwordFocusNode,
-              confirmPassFocusNode: state.confirmPassFocusNode,
-              autovalidateMode: state.autovalidateMode,
-              formKey: state.formKey,
-              onSubmit: () => _onSubmit(context),
-            );
-          } else if (state is SuccessState) {
-            return ForgotPasswordInitialPage(
-              emailController: state.emailController,
-              passwordController: state.passwordController,
-              confirmPassController: state.confirmPassController,
-              emailFocusNode: state.emailFocusNode,
-              passwordFocusNode: state.passwordFocusNode,
-              confirmPassFocusNode: state.confirmPassFocusNode,
-              autovalidateMode: state.autovalidateMode,
-              formKey: state.formKey,
-              onSubmit: () => _onSubmit(context),
-            );
           } else {
-            var initialState = state as InitialState;
-            return ForgotPasswordInitialPage(
-              emailController: initialState.emailController,
-              passwordController: initialState.passwordController,
-              confirmPassController: initialState.confirmPassController,
-              emailFocusNode: initialState.emailFocusNode,
-              passwordFocusNode: initialState.passwordFocusNode,
-              confirmPassFocusNode: initialState.confirmPassFocusNode,
-              autovalidateMode: initialState.autovalidateMode,
-              formKey: initialState.formKey,
-              onSubmit: () => _onSubmit(context),
-            );
+            throw Exception('Invalid state: $state');
           }
         },
       ),

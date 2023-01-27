@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../event/verification_event.dart';
 import '../state/verification_state.dart';
-import 'on_clear_error.dart';
 import 'on_confirm_error.dart';
 import 'on_confirm_success.dart';
 import 'on_resend.dart';
@@ -26,7 +25,6 @@ class VerificationBloc extends Bloc<VerificationEvent, VerificationState> {
     on<ResendEvent>((event, emit) => onResend(event, emit, state, add));
     on<ResendErrorEvent>((event, emit) => onResendError(event, emit, state));
     on<ResetEvent>((event, emit) => onReset(event, emit, state));
-    on<ClearErrorEvent>((event, emit) => onClearError(event, emit, state));
   }
 
   @override

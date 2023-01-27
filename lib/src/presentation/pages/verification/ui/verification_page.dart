@@ -13,6 +13,7 @@ VerificationBloc _bloc(BuildContext context) => context.read();
 
 class VerificationPage extends StatelessWidget {
   final String headerText;
+  final String email;
   final Future<Failure?> Function(String code) confirm;
   final Future<Failure?> Function() resend;
   final VoidCallback onConfirmed;
@@ -24,12 +25,10 @@ class VerificationPage extends StatelessWidget {
   void _onPressedResend(BuildContext context) =>
       _bloc(context).add(ResendEvent(resend));
 
-  void _onChangedCode(BuildContext context) =>
-      _bloc(context).add(ClearErrorEvent());
-
   const VerificationPage({
     Key? key,
     required this.headerText,
+    required this.email,
     required this.confirm,
     required this.resend,
     required this.onConfirmed,
@@ -56,26 +55,27 @@ class VerificationPage extends StatelessWidget {
                 codeController: state.codeController,
                 codeFocusNode: state.codeFocusNode,
                 headerText: headerText,
+                email: email,
               );
             } else if (state is ConfirmErrorState) {
               return VerificationError(
                 codeController: state.codeController,
                 codeFocusNode: state.codeFocusNode,
-                onChanged: () => _onChangedCode(context),
                 onCompleted: () => _onCompleted(context),
                 onPressedResend: () => _onPressedResend(context),
                 headerText: headerText,
                 error: state.failure,
+                email: email,
               );
             } else if (state is ResendErrorState) {
               return VerificationError(
                 codeController: state.codeController,
                 codeFocusNode: state.codeFocusNode,
-                onChanged: () => _onChangedCode(context),
                 onCompleted: () => _onCompleted(context),
                 onPressedResend: () => _onPressedResend(context),
                 headerText: headerText,
                 error: state.failure,
+                email: email,
               );
             } else if (state is InitialState) {
               return VerificationInitial(
@@ -84,6 +84,7 @@ class VerificationPage extends StatelessWidget {
                 onCompleted: () => _onCompleted(context),
                 onPressedResend: () => _onPressedResend(context),
                 headerText: headerText,
+                email: email,
               );
             } else {
               throw Exception('Invalid state: $state');
