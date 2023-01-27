@@ -24,4 +24,18 @@ abstract class ProfilePictureDataSource {
           (failure) => Right(failure),
         ),
       );
+
+  static Future<Either<String, Failure>> profilePictureUpload() => httpAdapter
+      .request(
+        Routes.profilePictureUpload.instance,
+      )
+      .then(
+        (res) => res.fold(
+          (response) => response.fold(
+            (json) => Left(json['url']),
+            (list) => Right(Failures.invalidBackendResponse.instance),
+          ),
+          (failure) => Right(failure),
+        ),
+      );
 }
