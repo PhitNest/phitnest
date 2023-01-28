@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'entities.dart';
+
 class FriendRequestEntity extends Equatable {
   final String id;
   final String fromCognitoId;
@@ -31,5 +33,34 @@ class FriendRequestEntity extends Equatable {
         denied,
         fromCognitoId,
         toCognitoId,
+      ];
+}
+
+class PopulatedFriendRequestEntity extends FriendRequestEntity {
+  final UserEntity fromUser;
+
+  PopulatedFriendRequestEntity({
+    required super.id,
+    required super.createdAt,
+    required super.denied,
+    required super.fromCognitoId,
+    required super.toCognitoId,
+    required this.fromUser,
+  }) : super();
+
+  factory PopulatedFriendRequestEntity.fromJson(Map<String, dynamic> json) =>
+      PopulatedFriendRequestEntity(
+        id: json['_id'],
+        createdAt: json['createdAt'],
+        denied: json['denied'],
+        fromCognitoId: json['fromCognitoId'],
+        toCognitoId: json['toCognitoId'],
+        fromUser: UserEntity.fromJson(json['fromUser']),
+      );
+
+  @override
+  List<Object?> get props => [
+        super.props,
+        fromUser,
       ];
 }
