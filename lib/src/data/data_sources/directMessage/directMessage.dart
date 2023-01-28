@@ -17,14 +17,14 @@ abstract class DirectMessageDataSource {
       ).then(
         (either) => either.fold(
           (response) => response.fold(
-            (json) => Left(List<DirectMessageResponse>.from(json[''])
-                .map(
-                  (directMessage) => DirectMessageResponse.fromJson(
-                    json[''],
-                  ),
-                )
-                .toList()),
-            (list) => Right(Failures.invalidBackendResponse.instance),
+            (json) => Right(Failures.invalidBackendResponse.instance),
+            (list) => Left(
+              list
+                  .map(
+                    (json) => DirectMessageResponse.fromJson(json),
+                  )
+                  .toList(),
+            ),
           ),
           (failure) => Right(failure),
         ),
