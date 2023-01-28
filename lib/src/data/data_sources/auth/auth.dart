@@ -131,4 +131,35 @@ abstract class AuthDataSource {
           (failure) => failure,
         ),
       );
+
+  static Future<Either<RefreshTokenResponse, Failure>> refreshSession(
+    String email,
+    String refreshToken,
+  ) =>
+      httpAdapter.request(Routes.refreshSession.instance, data: {
+        'email': email,
+        'refreshToken': refreshToken,
+      }).then(
+        (either) => either.fold(
+          (response) => response.fold(
+              (json) => Left(RefreshTokenResponse.fromJson(json)),
+              (list) => Right(Failures.invalidBackendResponse.instance)),
+          (failure) => Right(failure),
+        ),
+      );
+
+  static Future<Failure?> signOut(bool allDevices) => httpAdapter.request(
+        Routes.signOut.instance,
+        data: {
+          "allDevices": allDevices,
+        },
+      ).then(
+        (either) => either.fold(
+          (response) => response.fold(
+            (json) => null,
+            (list) => Failures.invalidBackendResponse.instance,
+          ),
+          (failure) => failure,
+        ),
+      );
 }

@@ -50,3 +50,50 @@ class UserEntity extends Equatable {
         confirmed,
       ];
 }
+
+class PublicUserEntity extends Equatable {
+  final String id;
+  final String firstName;
+  final String lastName;
+  final String cognitoId;
+  final String gymId;
+  final bool confirmed;
+
+  PublicUserEntity({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+    required this.cognitoId,
+    required this.gymId,
+    required this.confirmed,
+  }) : super();
+
+  factory PublicUserEntity.fromJson(Map<String, dynamic> json) =>
+      PublicUserEntity(
+        id: json['_id'],
+        firstName: json['firstName'],
+        lastName: json['lastName'],
+        cognitoId: json['cognitoId'],
+        gymId: json['gymId'],
+        confirmed: json['confirmed'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        '_id': id,
+        'firstName': firstName,
+        'lastName': lastName,
+        'cognitoId': cognitoId,
+        'gymId': gymId,
+        'confirmed': confirmed,
+      };
+
+  @override
+  List<Object?> get props => [
+        id,
+        firstName,
+        lastName,
+        cognitoId,
+        gymId,
+        confirmed,
+      ];
+}
