@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../../../domain/entities/friendRequest.entity.dart';
-import 'friendsAndMessage.dart';
+import '../../../../domain/entities/friendship.entity.dart';
 
 class FriendsAndRequestsResponse extends Equatable {
   final List<PopulatedFriendshipEntity> friendships;

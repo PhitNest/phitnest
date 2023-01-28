@@ -1,10 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:phitnest_mobile/src/data/data_sources/friendship/response/friendsAndRequests.dart';
 
 import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
+import '../../../domain/entities/entities.dart';
 import '../../adapters/adapters.dart';
 import 'response/friendsAndMessage.dart';
+import 'response/friendsAndRequests.dart';
 
 abstract class FriendshipDataSource {
   static Future<Either<List<FriendsAndMessagesResponse>, Failure>>
@@ -15,15 +16,29 @@ abstract class FriendshipDataSource {
               (response) => response.fold(
                 (json) {
                   try {
-                    return Left([FriendsAndMessagesResponse.fromJson(json)]);
+                    return Left(
+                      List<FriendsAndMessagesResponse>.from(json[''])
+                          .map(
+                            (res) => FriendsAndMessagesResponse(
+                              friendship: PopulatedFriendshipEntity.fromJson(
+                                  json['friendship']),
+                              message:
+                                  DirectMessageEntity.fromJson(json['message']),
+                            ),
+                          )
+                          .toList(),
+                    );
                   } catch (_) {
-                    return Left([
-                      FriendsAndMessagesResponse(
-                        friendship: PopulatedFriendshipEntity.fromJson(
-                            json['friendship']),
-                        message: null,
-                      ),
-                    ]);
+                    return Left(
+                      List<FriendsAndMessagesResponse>.from(json[''])
+                          .map(
+                            (res) => FriendsAndMessagesResponse(
+                                friendship: PopulatedFriendshipEntity.fromJson(
+                                    json[res.friendship.friend.toString()]),
+                                message: null),
+                          )
+                          .toList(),
+                    );
                   }
                 },
                 (list) => Right(Failures.invalidBackendResponse.instance),
