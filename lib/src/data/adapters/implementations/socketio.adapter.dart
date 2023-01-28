@@ -7,6 +7,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
 import '../../../common/logger.dart';
+import '../../../common/utils/utils.dart';
 import '../interfaces/socketio.adapter.dart';
 
 const _timeout = Duration(seconds: 15);
@@ -49,7 +50,7 @@ class SocketIOAdapter implements ISocketIOAdapter {
   }
 
   @override
-  Future<Either<Stream<T>, Failure>> stream<T>(SocketEvent event) async {
+  FEither<Stream<T>, Failure> stream<T>(SocketEvent event) async {
     if (connected) {
       final streamController = StreamController<T>();
       prettyLogger.d('Opening stream for event: $event.name');
@@ -80,7 +81,7 @@ class SocketIOAdapter implements ISocketIOAdapter {
   }
 
   @override
-  Future<Either<dynamic, Failure>> emit(
+  FEither<dynamic, Failure> emit(
     SocketEvent event,
     dynamic data,
   ) async {

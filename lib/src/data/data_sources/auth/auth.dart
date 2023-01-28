@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
+import '../../../common/utils/utils.dart';
 import '../../../domain/entities/entities.dart';
 import '../../adapters/adapters.dart';
 import 'responses/responses.dart';
@@ -10,7 +11,7 @@ export 'cache.dart';
 export 'responses/responses.dart';
 
 abstract class AuthDataSource {
-  static Future<Either<LoginResponse, Failure>> login(
+  static FEither<LoginResponse, Failure> login(
     String email,
     String password,
   ) =>
@@ -22,15 +23,13 @@ abstract class AuthDataSource {
         },
       ).then(
         (either) => either.fold(
-          (response) => response.fold(
-            (json) => Left(LoginResponse.fromJson(json)),
-            (list) => Right(Failures.invalidBackendResponse.instance),
-          ),
+          (json) => Left(LoginResponse.fromJson(json)),
+          (list) => Right(Failures.invalidBackendResponse.instance),
           (failure) => Right(failure),
         ),
       );
 
-  static Future<Either<RegisterResponse, Failure>> register(
+  static FEither<RegisterResponse, Failure> register(
     String email,
     String password,
     String firstName,
@@ -48,10 +47,8 @@ abstract class AuthDataSource {
         },
       ).then(
         (either) => either.fold(
-          (response) => response.fold(
-            (json) => Left(RegisterResponse.fromJson(json)),
-            (list) => Right(Failures.invalidBackendResponse.instance),
-          ),
+          (json) => Left(RegisterResponse.fromJson(json)),
+          (list) => Right(Failures.invalidBackendResponse.instance),
           (failure) => Right(failure),
         ),
       );
@@ -66,10 +63,8 @@ abstract class AuthDataSource {
         },
       ).then(
         (either) => either.fold(
-          (response) => response.fold(
-            (json) => null,
-            (list) => Failures.invalidBackendResponse.instance,
-          ),
+          (json) => null,
+          (list) => Failures.invalidBackendResponse.instance,
           (failure) => failure,
         ),
       );
@@ -82,15 +77,13 @@ abstract class AuthDataSource {
         },
       ).then(
         (either) => either.fold(
-          (response) => response.fold(
-            (json) => null,
-            (list) => Failures.invalidBackendResponse.instance,
-          ),
+          (json) => null,
+          (list) => Failures.invalidBackendResponse.instance,
           (failure) => failure,
         ),
       );
 
-  static Future<Either<UserEntity, Failure>> confirmRegister(
+  static FEither<UserEntity, Failure> confirmRegister(
     String email,
     String code,
   ) =>
@@ -101,11 +94,9 @@ abstract class AuthDataSource {
           'code': code,
         },
       ).then(
-        (either) => either.fold(
-          (response) => response.fold(
-            (json) => Left(UserEntity.fromJson(json)),
-            (list) => Right(Failures.invalidBackendResponse.instance),
-          ),
+        (response) => response.fold(
+          (json) => Left(UserEntity.fromJson(json)),
+          (list) => Right(Failures.invalidBackendResponse.instance),
           (failure) => Right(failure),
         ),
       );
@@ -124,15 +115,13 @@ abstract class AuthDataSource {
         },
       ).then(
         (either) => either.fold(
-          (response) => response.fold(
-            (json) => null,
-            (list) => Failures.invalidCode.instance,
-          ),
+          (json) => null,
+          (list) => Failures.invalidCode.instance,
           (failure) => failure,
         ),
       );
 
-  static Future<Either<RefreshTokenResponse, Failure>> refreshSession(
+  static FEither<RefreshTokenResponse, Failure> refreshSession(
     String email,
     String refreshToken,
   ) =>
@@ -141,9 +130,8 @@ abstract class AuthDataSource {
         'refreshToken': refreshToken,
       }).then(
         (either) => either.fold(
-          (response) => response.fold(
-              (json) => Left(RefreshTokenResponse.fromJson(json)),
-              (list) => Right(Failures.invalidBackendResponse.instance)),
+          (json) => Left(RefreshTokenResponse.fromJson(json)),
+          (list) => Right(Failures.invalidBackendResponse.instance),
           (failure) => Right(failure),
         ),
       );
@@ -155,10 +143,8 @@ abstract class AuthDataSource {
         },
       ).then(
         (either) => either.fold(
-          (response) => response.fold(
-            (json) => null,
-            (list) => Failures.invalidBackendResponse.instance,
-          ),
+          (json) => null,
+          (list) => Failures.invalidBackendResponse.instance,
           (failure) => failure,
         ),
       );

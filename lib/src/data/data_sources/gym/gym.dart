@@ -2,13 +2,14 @@ import 'package:dartz/dartz.dart';
 
 import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
+import '../../../common/utils/utils.dart';
 import '../../../domain/entities/entities.dart';
 import '../../adapters/adapters.dart';
 
 export 'cache.dart';
 
 abstract class GymDataSource {
-  static Future<Either<List<GymEntity>, Failure>> getNearest(
+  static FEither<List<GymEntity>, Failure> getNearest(
     LocationEntity location,
     double meters, {
     int? amount,
@@ -23,11 +24,8 @@ abstract class GymDataSource {
         },
       ).then(
         (res) => res.fold(
-          (response) => response.fold(
-            (json) => Right(Failures.invalidBackendResponse.instance),
-            (list) =>
-                Left(list.map((json) => GymEntity.fromJson(json)).toList()),
-          ),
+          (json) => Right(Failures.invalidBackendResponse.instance),
+          (list) => Left(list.map((json) => GymEntity.fromJson(json)).toList()),
           (failure) => Right(failure),
         ),
       );

@@ -1,10 +1,9 @@
-import 'package:dartz/dartz.dart';
-
 import '../../common/failure.dart';
+import '../../common/utils/utils.dart';
 import '../../data/data_sources/auth/auth.dart';
 import '../repositories/repositories.dart';
 
-Future<Either<RegisterResponse, Failure>> register(
+FEither<RegisterResponse, Failure> register(
   String firstName,
   String lastName,
   String email,

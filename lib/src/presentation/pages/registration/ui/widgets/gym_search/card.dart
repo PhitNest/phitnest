@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../common/theme.dart';
-import '../../../../../../common/utils.dart';
+import '../../../../../../common/utils/utils.dart';
 import '../../../../../../domain/entities/entities.dart';
 
 class GymCard extends StatelessWidget {
@@ -46,7 +46,7 @@ class GymCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '${gym.name} (${distance.formatQuantity("mile")})',
+                  '${gym.name} (${distance.formatUnits("mile")})',
                   style: theme.textTheme.labelMedium!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),

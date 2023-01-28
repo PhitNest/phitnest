@@ -1,10 +1,9 @@
-import 'package:dartz/dartz.dart';
-
 import '../../common/failure.dart';
+import '../../common/utils/utils.dart';
 import '../../data/data_sources/auth/auth.dart';
 import '../repositories/repositories.dart';
 
-Future<Either<LoginResponse, Failure>> login(
+FEither<LoginResponse, Failure> login(
   String email,
   String password,
 ) =>

@@ -1,10 +1,9 @@
-import 'package:dartz/dartz.dart';
-
 import '../../common/failure.dart';
+import '../../common/utils/utils.dart';
 import '../entities/entities.dart';
 import '../repositories/repositories.dart';
 
-Future<Either<UserEntity, Failure>> confirmRegister(
+FEither<UserEntity, Failure> confirmRegister(
   String email,
   String code,
 ) =>
