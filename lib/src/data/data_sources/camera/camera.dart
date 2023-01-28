@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
 
-import '../../../common/utils.dart';
+import '../../../common/utils/utils.dart';
 
 Future<XFile> takeProfilePicture(CameraController cameraController) =>
     cameraController.takePicture().then(

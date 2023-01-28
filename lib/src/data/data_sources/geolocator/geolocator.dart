@@ -3,12 +3,13 @@ import 'package:geolocator/geolocator.dart';
 
 import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
+import '../../../common/utils/utils.dart';
 import '../../../domain/entities/entities.dart';
 
 LocationEntity _positionToLocation(Position position) =>
     LocationEntity(longitude: position.longitude, latitude: position.latitude);
 
-Future<Either<LocationEntity, Failure>> getLocation() async {
+FEither<LocationEntity, Failure> getLocation() async {
   LocationPermission permission;
 
   if (!await Geolocator.isLocationServiceEnabled()) {

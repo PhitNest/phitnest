@@ -5,12 +5,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
 import '../../../common/logger.dart';
+import '../../../common/utils/utils.dart';
 import '../interfaces/http.adapter.dart';
 
 const _timeout = Duration(seconds: 15);
 
 class DioHttpAdapter implements IHttpAdapter {
-  Future<Either<Either<Map<String, dynamic>, List<dynamic>>, Failure>> request(
+  FEither3<Map<String, dynamic>, List<dynamic>, Failure> request(
     Route route, {
     Map<String, dynamic>? data,
     Map<String, dynamic>? headers,
@@ -36,7 +37,7 @@ class DioHttpAdapter implements IHttpAdapter {
       options.queryParameters = data ?? Map<String, dynamic>.from({});
     }
     final dio = Dio(options);
-    Future<Either<dynamic, Failure>> result;
+    FEither<dynamic, Failure> result;
     switch (route.method) {
       case HttpMethod.get:
         result = dio.get(url).then(
@@ -73,20 +74,20 @@ class DioHttpAdapter implements IHttpAdapter {
               (success) {
                 prettyLogger.d("Response success:${description(success)}");
                 if (success is List) {
-                  return Left(Right(success));
+                  return Second(success);
                 } else if (success is String) {
                   if (success.isEmpty) {
-                    return Left(Left(Map<String, dynamic>.from({})));
+                    return First(Map<String, dynamic>.from({}));
                   } else {
                     throw Exception("Invalid response: $success");
                   }
                 } else {
-                  return Left(Left(success));
+                  return First(success);
                 }
               },
               (failure) {
                 prettyLogger.e("Response failure:${description(failure)}");
-                return Right(failure);
+                return Third(failure);
               },
             ),
           );
@@ -98,7 +99,7 @@ class DioHttpAdapter implements IHttpAdapter {
         failure = Failures.networkFailure.instance;
       }
       prettyLogger.e("Response failure:${description(failure)}");
-      return Right(failure);
+      return Third(failure);
     }
   }
 }

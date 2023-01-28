@@ -1,12 +1,13 @@
 import 'package:dartz/dartz.dart';
 
 import '../../common/failure.dart';
+import '../../common/utils/utils.dart';
 import '../../data/data_sources/auth/auth.dart';
 import '../../data/data_sources/user/user.dart';
 import '../entities/entities.dart';
 
 abstract class AuthRepository {
-  static Future<Either<LoginResponse, Failure>> login(
+  static FEither<LoginResponse, Failure> login(
     String email,
     String password,
   ) async {
@@ -26,7 +27,7 @@ abstract class AuthRepository {
     return response;
   }
 
-  static Future<Either<RegisterResponse, Failure>> register(
+  static FEither<RegisterResponse, Failure> register(
     String firstName,
     String lastName,
     String email,
@@ -65,7 +66,7 @@ abstract class AuthRepository {
   static Future<Failure?> resendConfirmationCode(String email) =>
       AuthDataSource.resendConfirmationCode(email);
 
-  static Future<Either<UserEntity, Failure>> confirmRegister(
+  static FEither<UserEntity, Failure> confirmRegister(
     String email,
     String code,
   ) async {

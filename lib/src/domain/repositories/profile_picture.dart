@@ -1,10 +1,9 @@
-import 'package:dartz/dartz.dart';
-
 import '../../common/failure.dart';
+import '../../common/utils/utils.dart';
 import '../../data/data_sources/profilePicture/profile_picture.dart';
 
 abstract class ProfilePictureRepository {
-  static Future<Either<String, Failure>> getUploadUrlUnauthorized(
+  static FEither<String, Failure> getUploadUrlUnauthorized(
     String email,
     String password,
   ) =>

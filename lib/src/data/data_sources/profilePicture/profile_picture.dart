@@ -2,10 +2,11 @@ import 'package:dartz/dartz.dart';
 
 import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
+import '../../../common/utils/utils.dart';
 import '../../adapters/adapters.dart';
 
 abstract class ProfilePictureDataSource {
-  static Future<Either<String, Failure>> getUploadUrlUnauthorized(
+  static FEither<String, Failure> getUploadUrlUnauthorized(
     String email,
     String password,
   ) =>
@@ -17,24 +18,20 @@ abstract class ProfilePictureDataSource {
         },
       ).then(
         (res) => res.fold(
-          (response) => response.fold(
-            (json) => Left(json['url']),
-            (list) => Right(Failures.invalidBackendResponse.instance),
-          ),
+          (json) => Left(json['url']),
+          (list) => Right(Failures.invalidBackendResponse.instance),
           (failure) => Right(failure),
         ),
       );
 
-  static Future<Either<String, Failure>> profilePictureUpload() => httpAdapter
+  static FEither<String, Failure> profilePictureUpload() => httpAdapter
       .request(
         Routes.profilePictureUpload.instance,
       )
       .then(
         (res) => res.fold(
-          (response) => response.fold(
-            (json) => Left(json['url']),
-            (list) => Right(Failures.invalidBackendResponse.instance),
-          ),
+          (json) => Left(json['url']),
+          (list) => Right(Failures.invalidBackendResponse.instance),
           (failure) => Right(failure),
         ),
       );
