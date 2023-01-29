@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -37,67 +36,42 @@ class DioHttpAdapter implements IHttpAdapter {
       options.queryParameters = data ?? Map<String, dynamic>.from({});
     }
     final dio = Dio(options);
-    FEither<dynamic, Failure> result;
-    switch (route.method) {
-      case HttpMethod.get:
-        result = dio.get(url).then(
-              (response) => response.statusCode == kStatusOK
-                  ? Left(response.data)
-                  : Right(Failure.fromJson(response.data)),
-            );
-        break;
-      case HttpMethod.post:
-        result = dio.post(url, data: data).then(
-              (response) => response.statusCode == kStatusOK
-                  ? Left(response.data)
-                  : Right(Failure.fromJson(response.data)),
-            );
-        break;
-      case HttpMethod.put:
-        result = dio.put(url, data: data).then(
-              (response) => response.statusCode == kStatusOK
-                  ? Left(response.data)
-                  : Right(Failure.fromJson(response.data)),
-            );
-        break;
-      case HttpMethod.delete:
-        result = dio.delete(url).then(
-              (response) => response.statusCode == kStatusOK
-                  ? Left(response.data)
-                  : Right(Failure.fromJson(response.data)),
-            );
-        break;
-    }
     try {
-      return await result.timeout(_timeout).then(
-            (res) => res.fold(
-              (success) {
-                prettyLogger.d("Response success:${description(success)}");
-                if (success is List) {
-                  return Second(success);
-                } else if (success is String) {
-                  if (success.isEmpty) {
-                    return First(Map<String, dynamic>.from({}));
-                  } else {
-                    throw Exception("Invalid response: $success");
-                  }
-                } else {
-                  return First(success);
-                }
-              },
-              (failure) {
-                prettyLogger.e("Response failure:${description(failure)}");
-                return Third(failure);
-              },
-            ),
-          );
+      return await () async {
+        switch (route.method) {
+          case HttpMethod.get:
+            return dio.get(url);
+          case HttpMethod.post:
+            return dio.post(url, data: data);
+          case HttpMethod.put:
+            return dio.put(url, data: data);
+          case HttpMethod.delete:
+            return dio.delete(url);
+        }
+      }()
+          .timeout(_timeout)
+          .then(
+        (response) {
+          if (response.statusCode == kStatusOK) {
+            prettyLogger.d("Response success:${description(response.data)}");
+            if (response.data is List) {
+              return Second(response.data);
+            } else if (response.data is String) {
+              if (response.data.isEmpty) {
+                return First(Map<String, dynamic>.from({}));
+              } else {
+                throw Exception("Invalid response: $response.data");
+              }
+            } else {
+              return First(response.data);
+            }
+          } else {
+            throw Failure.fromJson(response.data);
+          }
+        },
+      );
     } catch (e) {
-      final Failure failure;
-      if (e is DioError) {
-        failure = Failure.fromJson(e.response!.data);
-      } else {
-        failure = Failures.networkFailure.instance;
-      }
+      final failure = e is Failure ? e : Failures.networkFailure.instance;
       prettyLogger.e("Response failure:${description(failure)}");
       return Third(failure);
     }
