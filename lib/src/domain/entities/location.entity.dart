@@ -1,7 +1,10 @@
-import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 
-class LocationEntity extends Equatable {
+import 'entity.dart';
+
+class LocationEntity extends Entity<LocationEntity> {
+  static const kEmpty = LocationEntity(longitude: 0, latitude: 0);
+
   final double longitude;
   final double latitude;
 
@@ -10,11 +13,13 @@ class LocationEntity extends Equatable {
     required this.latitude,
   }) : super();
 
-  factory LocationEntity.fromJson(Map<String, dynamic> json) => LocationEntity(
+  @override
+  LocationEntity fromJson(Map<String, dynamic> json) => LocationEntity(
         longitude: json['coordinates'][0],
         latitude: json['coordinates'][1],
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         'type': "Point",
         'coordinates': [longitude.toString(), latitude.toString()]

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../domain/entities/friendRequest.entity.dart';
+import '../../../../domain/entities/friend_request.entity.dart';
 import '../../../../domain/entities/friendship.entity.dart';
 
 class FriendsAndRequestsResponse extends Equatable {

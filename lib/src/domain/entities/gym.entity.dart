@@ -1,8 +1,13 @@
-import 'package:equatable/equatable.dart';
-
 import 'entities.dart';
 
-class GymEntity extends Equatable {
+class GymEntity extends Entity<GymEntity> {
+  static const kEmpty = GymEntity(
+    id: "",
+    name: "",
+    address: AddressEntity.kEmpty,
+    location: LocationEntity.kEmpty,
+  );
+
   final String id;
   final String name;
   final AddressEntity address;
@@ -15,11 +20,12 @@ class GymEntity extends Equatable {
     required this.location,
   }) : super();
 
-  factory GymEntity.fromJson(Map<String, dynamic> json) => GymEntity(
+  @override
+  GymEntity fromJson(Map<String, dynamic> json) => GymEntity(
       id: json['_id'],
       name: json['name'],
-      address: AddressEntity.fromJson(json['address']),
-      location: LocationEntity.fromJson(json['location']));
+      address: Entities.fromJson(json['address']),
+      location: Entities.fromJson(json['location']));
 
   Map<String, dynamic> toJson() => {
         '_id': id,
