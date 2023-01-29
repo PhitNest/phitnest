@@ -23,6 +23,6 @@ final responses = GetIt.instance;
 void injectResponses() {
   responses.registerSingleton(EmptyResponse());
   responses.registerSingleton(LoginResponse.kEmpty);
-  responses.registerSingleton(LoginResponse.kEmpty);
+  responses.registerSingleton(RefreshTokenResponse.kEmpty);
   responses.registerSingleton(RegisterResponse.kEmpty);
 }
