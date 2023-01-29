@@ -58,7 +58,7 @@ class PopulatedFriendshipEntity extends FriendshipEntity {
         id: json['_id'],
         userCognitoIds: json['userCognitoIds'],
         createdAt: json['createdAt'],
-        friend: Entities.fromJson(json['friend']),
+        friend: Entity.jsonFactory(json['friend']),
       );
 
   @override

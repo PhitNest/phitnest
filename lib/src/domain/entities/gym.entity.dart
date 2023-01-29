@@ -24,8 +24,8 @@ class GymEntity extends Entity<GymEntity> {
   GymEntity fromJson(Map<String, dynamic> json) => GymEntity(
       id: json['_id'],
       name: json['name'],
-      address: Entities.fromJson(json['address']),
-      location: Entities.fromJson(json['location']));
+      address: Entity.jsonFactory(json['address']),
+      location: Entity.jsonFactory(json['location']));
 
   Map<String, dynamic> toJson() => {
         '_id': id,

@@ -1,6 +1,6 @@
-import '../../../../domain/entities/entity.dart';
+import '../responses.dart';
 
-class RefreshTokenResponse extends Entity<RefreshTokenResponse> {
+class RefreshTokenResponse extends Response<RefreshTokenResponse> {
   static const kEmpty = RefreshTokenResponse(accessToken: "", idToken: "");
 
   final String accessToken;
@@ -17,12 +17,6 @@ class RefreshTokenResponse extends Entity<RefreshTokenResponse> {
         accessToken: json['accessToken'],
         idToken: json['idToken'],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'accessToken': accessToken,
-        'idToken': idToken,
-      };
 
   @override
   List<Object?> get props => [accessToken, idToken];

@@ -1,4 +1,3 @@
-import 'entity.dart';
 import 'entities.dart';
 
 class AddressEntity extends Entity<AddressEntity> {

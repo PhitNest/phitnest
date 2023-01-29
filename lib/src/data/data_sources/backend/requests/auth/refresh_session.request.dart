@@ -1,6 +1,6 @@
-import '../../../../domain/entities/entity.dart';
+import '../requests.dart';
 
-class RefreshSessionRequest extends Entity<RefreshSessionRequest> {
+class RefreshSessionRequest extends Request {
   static const kEmpty = RefreshSessionRequest(email: '', refreshToken: '');
 
   final String email;
@@ -10,13 +10,6 @@ class RefreshSessionRequest extends Entity<RefreshSessionRequest> {
     required this.email,
     required this.refreshToken,
   }) : super();
-
-  @override
-  RefreshSessionRequest fromJson(Map<String, dynamic> json) =>
-      RefreshSessionRequest(
-        email: json['email'],
-        refreshToken: json['refreshToken'],
-      );
 
   @override
   Map<String, dynamic> toJson() => {

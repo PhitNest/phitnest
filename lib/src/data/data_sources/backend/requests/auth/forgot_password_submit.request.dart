@@ -1,6 +1,6 @@
-import '../../../../domain/entities/entity.dart';
+import '../requests.dart';
 
-class ForgotPasswordSubmitRequest extends Entity<ForgotPasswordSubmitRequest> {
+class ForgotPasswordSubmitRequest extends Request {
   static const kEmpty =
       ForgotPasswordSubmitRequest(email: '', code: '', password: '');
 
@@ -13,14 +13,6 @@ class ForgotPasswordSubmitRequest extends Entity<ForgotPasswordSubmitRequest> {
     required this.code,
     required this.password,
   }) : super();
-
-  @override
-  ForgotPasswordSubmitRequest fromJson(Map<String, dynamic> json) =>
-      ForgotPasswordSubmitRequest(
-        email: json['email'],
-        code: json['code'],
-        password: json['password'],
-      );
 
   @override
   Map<String, dynamic> toJson() => {

@@ -1,4 +1,4 @@
-import 'entity.dart';
+import 'entities.dart';
 
 class DirectMessageEntity extends Entity<DirectMessageEntity> {
   static final kEmpty = DirectMessageEntity(

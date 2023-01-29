@@ -1,6 +1,6 @@
-import '../../../../domain/entities/entity.dart';
+import '../requests.dart';
 
-class SignOutRequest extends Entity<SignOutRequest> {
+class SignOutRequest extends Request {
   static const kEmpty = SignOutRequest(allDevices: false);
 
   final bool allDevices;
@@ -8,11 +8,6 @@ class SignOutRequest extends Entity<SignOutRequest> {
   const SignOutRequest({
     required this.allDevices,
   }) : super();
-
-  @override
-  SignOutRequest fromJson(Map<String, dynamic> json) => SignOutRequest(
-        allDevices: json['allDevices'],
-      );
 
   @override
   Map<String, dynamic> toJson() => {

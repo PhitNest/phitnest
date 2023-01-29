@@ -1,7 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../data/data_sources/auth/requests/requests.dart';
-import '../../data/data_sources/auth/responses/responses.dart';
+import '../../common/utils/utils.dart';
 import 'entities.dart';
 
 export 'address.entity.dart';
@@ -12,11 +12,10 @@ export 'gym.entity.dart';
 export 'location.entity.dart';
 export 'user.entity.dart';
 export 'direct_message.entity.dart';
-export 'entity.dart';
 
 final empties = GetIt.instance;
 
-void injectEmpties() {
+void injectEntities() {
   empties.registerSingleton(AddressEntity.kEmpty);
   empties.registerSingleton(AuthEntity.kEmpty);
   empties.registerSingleton(DirectMessageEntity.kEmpty);
@@ -28,25 +27,18 @@ void injectEmpties() {
   empties.registerSingleton(FriendshipEntity.kEmpty);
   empties.registerSingleton(LocationEntity.kEmpty);
   empties.registerSingleton(GymEntity.kEmpty);
-  empties.registerSingleton(LoginResponse.kEmpty);
-  empties.registerSingleton(RegisterResponse.kEmpty);
-  empties.registerSingleton(RefreshTokenResponse.kEmpty);
-  empties.registerSingleton(LoginRequest.kEmpty);
-  empties.registerSingleton(RegisterRequest.kEmpty);
-  empties.registerSingleton(ForgotPasswordRequest.kEmpty);
-  empties.registerSingleton(ResendConfirmationRequest.kEmpty);
-  empties.registerSingleton(ConfirmRegisterRequest.kEmpty);
-  empties.registerSingleton(ForgotPasswordSubmitRequest.kEmpty);
-  empties.registerSingleton(RefreshSessionRequest.kEmpty);
 }
 
-abstract class Entities {
-  static EntityType fromJson<EntityType extends Entity>(
+abstract class Entity<EntityType> extends Equatable
+    with FromJson<EntityType>, ToJson {
+  const Entity();
+
+  static EntityType jsonFactory<EntityType extends Entity>(
           Map<String, dynamic> json) =>
       empties.get<EntityType>().fromJson(json);
 
-  static List<EntityType> fromList<EntityType extends Entity>(
+  static List<EntityType> listFactory<EntityType extends Entity>(
       List<dynamic> jsonList) {
-    return jsonList.map((json) => fromJson<EntityType>(json)).toList();
+    return jsonList.map((json) => jsonFactory<EntityType>(json)).toList();
   }
 }
