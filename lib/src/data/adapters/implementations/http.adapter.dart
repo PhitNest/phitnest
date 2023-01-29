@@ -7,14 +7,17 @@ import '../../../common/failure.dart';
 import '../../../common/logger.dart';
 import '../../../common/utils/utils.dart';
 import '../../../domain/entities/entities.dart';
+import '../../data_sources/backend/routes/routes.dart';
 import '../interfaces/http.adapter.dart';
+import '../../data_sources/backend/backend.dart' as Backend;
 
 const _timeout = Duration(seconds: 15);
 
 class DioHttpAdapter implements IHttpAdapter {
-  FEither3<Map<String, dynamic>, List<dynamic>, Failure> _request(
-    Route route, {
-    Map<String, dynamic>? data,
+  FEither3<ResType, List<ResType>, Failure>
+      _request<ResType extends FromJson<ResType>, ReqType extends ToJson>(
+    Route<ReqType, ResType> route,
+    ReqType data, {
     Map<String, dynamic>? headers,
     String? authorization,
   }) async {
@@ -35,7 +38,7 @@ class DioHttpAdapter implements IHttpAdapter {
         validateStatus: (status) =>
             status == kStatusOK || status == kStatusInternalServerError);
     if (route.method == HttpMethod.get || route.method == HttpMethod.delete) {
-      options.queryParameters = data ?? Map<String, dynamic>.from({});
+      options.queryParameters = data.toJson();
     }
     final dio = Dio(options);
     try {
@@ -57,15 +60,17 @@ class DioHttpAdapter implements IHttpAdapter {
           if (response.statusCode == kStatusOK) {
             prettyLogger.d("Response success:${description(response.data)}");
             if (response.data is List) {
-              return Second(response.data);
-            } else if (response.data is String) {
-              if (response.data.isEmpty) {
-                return First(Map<String, dynamic>.from({}));
+              if (ResType is Entity) {
+                return Second(Entity.listFactory(response.data));
               } else {
-                throw Exception("Invalid response: $response.data");
+                return Second(Backend.Response.listFactory(response.data));
               }
             } else {
-              return First(response.data);
+              if (ResType is Entity) {
+                return First(Entity.jsonFactory(response.data));
+              } else {
+                return First(Backend.Response.jsonFactory(response.data));
+              }
             }
           } else {
             throw Failure.fromJson(response.data);
@@ -80,64 +85,38 @@ class DioHttpAdapter implements IHttpAdapter {
   }
 
   @override
-  FEither<ResType, Failure> requestJson<ResType extends Entity<ResType>,
-          ReqType extends Entity<ReqType>>(
-    Route route, {
-    ReqType? data,
+  FEither<ResType, Failure>
+      request<ResType extends FromJson<ResType>, ReqType extends ToJson>(
+    Route<ReqType, ResType> route,
+    ReqType data, {
     Map<String, dynamic>? headers,
     String? authorization,
-  }) =>
-      _request(
-        route,
-        data: data?.toJson(),
-        headers: headers,
-        authorization: authorization,
-      ).then(
-        (response) => response.fold(
-          (json) => Left(Entities.fromJson(json)),
-          (list) => Right(Failures.invalidBackendResponse.instance),
-          (failure) => Right(failure),
-        ),
-      );
+  }) async {
+    return _request(route, data, headers: headers, authorization: authorization)
+        .then(
+      (either) => either.fold(
+        (res) => Left(res),
+        (list) => Right(Failures.networkFailure.instance),
+        (failure) => Right(failure),
+      ),
+    );
+  }
 
   @override
-  FEither<List<ResType>, Failure> requestList<ResType extends Entity<ResType>,
-          ReqType extends Entity<ReqType>>(
-    Route route, {
-    ReqType? data,
+  FEither<List<ResType>, Failure>
+      requestList<ResType extends FromJson<ResType>, ReqType extends ToJson>(
+    Route<ReqType, ResType> route,
+    ReqType data, {
     Map<String, dynamic>? headers,
     String? authorization,
-  }) =>
-      _request(
-        route,
-        data: data?.toJson(),
-        headers: headers,
-        authorization: authorization,
-      ).then(
-        (response) => response.fold(
-          (json) => Right(Failures.invalidBackendResponse.instance),
-          (list) => Left(Entities.fromList(list)),
-          (failure) => Right(failure),
-        ),
-      );
-
-  @override
-  Future<Failure?> requestVoid<ReqType extends Entity<ReqType>>(
-    Route route, {
-    ReqType? data,
-    Map<String, dynamic>? headers,
-    String? authorization,
-  }) =>
-      _request(
-        route,
-        data: data?.toJson(),
-        headers: headers,
-        authorization: authorization,
-      ).then(
-        (response) => response.fold(
-          (json) => null,
-          (list) => Failures.invalidBackendResponse.instance,
-          (failure) => failure,
-        ),
-      );
+  }) async {
+    return _request(route, data, headers: headers, authorization: authorization)
+        .then(
+      (either) => either.fold(
+        (res) => Right(Failures.networkFailure.instance),
+        (list) => Left(list),
+        (failure) => Right(failure),
+      ),
+    );
+  }
 }

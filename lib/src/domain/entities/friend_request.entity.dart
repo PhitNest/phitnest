@@ -81,7 +81,7 @@ class PopulatedFriendRequestEntity extends FriendRequestEntity {
         denied: json['denied'],
         fromCognitoId: json['fromCognitoId'],
         toCognitoId: json['toCognitoId'],
-        fromUser: Entities.fromJson((json['fromUser'])),
+        fromUser: Entity.jsonFactory((json['fromUser'])),
       );
 
   @override

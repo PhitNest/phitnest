@@ -1,4 +1,4 @@
-import 'entity.dart';
+import 'entities.dart';
 
 class AuthEntity extends Entity<AuthEntity> {
   static const kEmpty =

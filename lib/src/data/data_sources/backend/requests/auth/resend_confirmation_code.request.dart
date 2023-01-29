@@ -1,6 +1,6 @@
-import '../../../../domain/entities/entity.dart';
+import '../requests.dart';
 
-class ResendConfirmationRequest extends Entity<ResendConfirmationRequest> {
+class ResendConfirmationRequest extends Request {
   static const kEmpty = ResendConfirmationRequest(email: '');
 
   final String email;
@@ -8,12 +8,6 @@ class ResendConfirmationRequest extends Entity<ResendConfirmationRequest> {
   const ResendConfirmationRequest({
     required this.email,
   }) : super();
-
-  @override
-  ResendConfirmationRequest fromJson(Map<String, dynamic> json) =>
-      ResendConfirmationRequest(
-        email: json['email'],
-      );
 
   @override
   Map<String, dynamic> toJson() => {

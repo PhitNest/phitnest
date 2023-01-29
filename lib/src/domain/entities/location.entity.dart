@@ -1,6 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 
-import 'entity.dart';
+import 'entities.dart';
 
 class LocationEntity extends Entity<LocationEntity> {
   static const kEmpty = LocationEntity(longitude: 0, latitude: 0);

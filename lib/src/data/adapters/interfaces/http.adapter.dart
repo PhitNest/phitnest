@@ -1,28 +1,20 @@
-import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
 import '../../../common/utils/utils.dart';
-import '../../../domain/entities/entity.dart';
+import '../../data_sources/backend/routes/routes.dart';
 
 abstract class IHttpAdapter {
-  FEither<ResType, Failure> requestJson<ResType extends Entity<ResType>,
-      ReqType extends Entity<ReqType>>(
-    Route route, {
-    ReqType? data,
+  FEither<ResType, Failure>
+      request<ResType extends FromJson<ResType>, ReqType extends ToJson>(
+    Route<ReqType, ResType> route,
+    ReqType data, {
     Map<String, dynamic>? headers,
     String? authorization,
   });
 
-  FEither<List<ResType>, Failure> requestList<ResType extends Entity<ResType>,
-      ReqType extends Entity<ReqType>>(
-    Route route, {
-    ReqType? data,
-    Map<String, dynamic>? headers,
-    String? authorization,
-  });
-
-  Future<Failure?> requestVoid<ReqType extends Entity<ReqType>>(
-    Route route, {
-    ReqType? data,
+  FEither<List<ResType>, Failure>
+      requestList<ResType extends FromJson<ResType>, ReqType extends ToJson>(
+    Route<ReqType, ResType> route,
+    ReqType data, {
     Map<String, dynamic>? headers,
     String? authorization,
   });

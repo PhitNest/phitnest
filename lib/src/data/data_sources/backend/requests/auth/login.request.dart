@@ -1,6 +1,6 @@
-import '../../../../domain/entities/entities.dart';
+import '../requests.dart';
 
-class LoginRequest extends Entity<LoginRequest> {
+class LoginRequest extends Request {
   static const kEmpty = LoginRequest(email: '', password: '');
 
   final String email;
@@ -10,12 +10,6 @@ class LoginRequest extends Entity<LoginRequest> {
     required this.email,
     required this.password,
   }) : super();
-
-  @override
-  LoginRequest fromJson(Map<String, dynamic> json) => LoginRequest(
-        email: json['email'],
-        password: json['password'],
-      );
 
   @override
   Map<String, dynamic> toJson() => {

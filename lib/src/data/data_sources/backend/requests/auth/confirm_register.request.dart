@@ -1,6 +1,6 @@
-import '../../../../domain/entities/entity.dart';
+import '../requests.dart';
 
-class ConfirmRegisterRequest extends Entity<ConfirmRegisterRequest> {
+class ConfirmRegisterRequest extends Request {
   static const kEmpty = ConfirmRegisterRequest(email: '', code: '');
 
   final String email;
@@ -10,13 +10,6 @@ class ConfirmRegisterRequest extends Entity<ConfirmRegisterRequest> {
     required this.email,
     required this.code,
   }) : super();
-
-  @override
-  ConfirmRegisterRequest fromJson(Map<String, dynamic> json) =>
-      ConfirmRegisterRequest(
-        email: json['email'],
-        code: json['code'],
-      );
 
   @override
   Map<String, dynamic> toJson() => {

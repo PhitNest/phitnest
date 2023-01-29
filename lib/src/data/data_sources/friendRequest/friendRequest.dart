@@ -4,26 +4,17 @@ import '../../../common/utils/utils.dart';
 import '../../../domain/entities/friend_request.entity.dart';
 import '../../../domain/entities/friendship.entity.dart';
 import '../../adapters/adapters.dart';
+import 'requests/requests.dart';
 
 abstract class FriendRequestDataSource {
   static FEither3<FriendRequestEntity, FriendshipEntity, Failure>
       sendFriendRequest(
     String recipientCognitoId,
   ) =>
-          httpAdapter.request(
+          httpAdapter.requestEither(
             Routes.sendFriendRequest.instance,
-            data: {'recipientCognitoId': recipientCognitoId},
-          ).then(
-            (either) => either.fold(
-              (json) {
-                try {
-                  return First(FriendRequestEntity.fromJson(json));
-                } catch (_) {
-                  return Second(FriendshipEntity.fromJson(json));
-                }
-              },
-              (list) => Third(Failures.invalidBackendResponse.instance),
-              (failure) => Third(failure),
+            data: SendFriendRequestRequest(
+              recipientCognitoId: recipientCognitoId,
             ),
           );
 
@@ -32,12 +23,6 @@ abstract class FriendRequestDataSource {
   ) =>
       httpAdapter.request(
         Routes.denyFriendRequest.instance,
-        data: {'senderCognitoId': senderCognitoId},
-      ).then(
-        (response) => response.fold(
-          (json) => null,
-          (list) => Failures.invalidBackendResponse.instance,
-          (failure) => failure,
-        ),
+        data: DenyFriendRequestRequest(senderCognitoId: senderCognitoId),
       );
 }

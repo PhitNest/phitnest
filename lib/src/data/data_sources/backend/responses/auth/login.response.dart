@@ -1,6 +1,7 @@
-import '../../../../domain/entities/entities.dart';
+import '../../../../../domain/entities/entities.dart';
+import '../responses.dart';
 
-class LoginResponse extends Entity<LoginResponse> {
+class LoginResponse extends Response<LoginResponse> {
   static const kEmpty = LoginResponse(
     session: AuthEntity.kEmpty,
     user: UserEntity.kEmpty,
@@ -16,15 +17,9 @@ class LoginResponse extends Entity<LoginResponse> {
 
   @override
   LoginResponse fromJson(Map<String, dynamic> json) => LoginResponse(
-        session: Entities.fromJson(json['session']),
-        user: Entities.fromJson(json['user']),
+        session: Entity.jsonFactory(json['session']),
+        user: Entity.jsonFactory(json['user']),
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'session': session.toJson(),
-        'user': user.toJson(),
-      };
 
   @override
   List<Object?> get props => [session, user];

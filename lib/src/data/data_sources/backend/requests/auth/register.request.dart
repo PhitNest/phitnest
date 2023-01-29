@@ -1,6 +1,6 @@
-import '../../../../domain/entities/entities.dart';
+import '../requests.dart';
 
-class RegisterRequest extends Entity<RegisterRequest> {
+class RegisterRequest extends Request {
   static const kEmpty = RegisterRequest(
     email: '',
     password: '',
@@ -22,15 +22,6 @@ class RegisterRequest extends Entity<RegisterRequest> {
     required this.lastName,
     required this.gymId,
   }) : super();
-
-  @override
-  RegisterRequest fromJson(Map<String, dynamic> json) => RegisterRequest(
-        email: json['email'],
-        password: json['password'],
-        firstName: json['firstName'],
-        lastName: json['lastName'],
-        gymId: json['gymId'],
-      );
 
   @override
   Map<String, dynamic> toJson() => {

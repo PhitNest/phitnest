@@ -1,6 +1,7 @@
-import '../../../../domain/entities/entities.dart';
+import '../../../../../domain/entities/entities.dart';
+import '../responses.dart';
 
-class RegisterResponse extends Entity<RegisterResponse> {
+class RegisterResponse extends Response<RegisterResponse> {
   static const kEmpty = RegisterResponse(
     user: UserEntity.kEmpty,
     uploadUrl: '',
@@ -16,15 +17,9 @@ class RegisterResponse extends Entity<RegisterResponse> {
 
   @override
   RegisterResponse fromJson(Map<String, dynamic> json) => RegisterResponse(
-        user: Entities.fromJson(json['user']),
+        user: Entity.jsonFactory(json['user']),
         uploadUrl: json['uploadUrl'],
       );
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'user': user.toJson(),
-        'uploadUrl': uploadUrl,
-      };
 
   @override
   List<Object?> get props => [user, uploadUrl];
