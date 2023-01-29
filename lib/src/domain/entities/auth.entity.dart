@@ -1,6 +1,9 @@
-import 'package:equatable/equatable.dart';
+import 'entity.dart';
 
-class AuthEntity extends Equatable {
+class AuthEntity extends Entity<AuthEntity> {
+  static const kEmpty =
+      AuthEntity(accessToken: "", refreshToken: "", idToken: "");
+
   final String accessToken;
   final String refreshToken;
   final String idToken;
@@ -11,12 +14,14 @@ class AuthEntity extends Equatable {
     required this.idToken,
   }) : super();
 
-  factory AuthEntity.fromJson(Map<String, dynamic> json) => AuthEntity(
+  @override
+  AuthEntity fromJson(Map<String, dynamic> json) => AuthEntity(
         accessToken: json['accessToken'],
         refreshToken: json['refreshToken'],
         idToken: json['idToken'],
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         'accessToken': accessToken,
         'refreshToken': refreshToken,

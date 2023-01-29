@@ -1,6 +1,10 @@
-import 'package:equatable/equatable.dart';
+import 'entity.dart';
+import 'entities.dart';
 
-class AddressEntity extends Equatable {
+class AddressEntity extends Entity<AddressEntity> {
+  static const kEmpty =
+      AddressEntity(city: "", state: "", street: "", zipCode: "");
+
   final String street;
   final String city;
   final String state;
@@ -13,13 +17,15 @@ class AddressEntity extends Equatable {
     required this.zipCode,
   }) : super();
 
-  factory AddressEntity.fromJson(Map<String, dynamic> json) => AddressEntity(
+  @override
+  AddressEntity fromJson(Map<String, dynamic> json) => AddressEntity(
         street: json['street'],
         city: json['city'],
         state: json['state'],
         zipCode: json['zipCode'],
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         'street': street,
         'city': city,

@@ -1,17 +1,15 @@
-import 'package:equatable/equatable.dart';
+import 'entities.dart';
 
-class UserEntity extends Equatable {
+abstract class _User<UserType> extends Entity<UserType> {
   final String id;
-  final String email;
   final String firstName;
   final String lastName;
   final String cognitoId;
   final String gymId;
   final bool confirmed;
 
-  const UserEntity({
+  const _User({
     required this.id,
-    required this.email,
     required this.firstName,
     required this.lastName,
     required this.cognitoId,
@@ -19,7 +17,52 @@ class UserEntity extends Equatable {
     required this.confirmed,
   }) : super();
 
-  factory UserEntity.fromJson(Map<String, dynamic> json) => UserEntity(
+  @override
+  Map<String, dynamic> toJson() => {
+        '_id': id,
+        'firstName': firstName,
+        'lastName': lastName,
+        'cognitoId': cognitoId,
+        'gymId': gymId,
+        'confirmed': confirmed,
+      };
+
+  @override
+  List<Object?> get props => [
+        id,
+        firstName,
+        lastName,
+        cognitoId,
+        gymId,
+        confirmed,
+      ];
+}
+
+class UserEntity extends _User<UserEntity> {
+  static const kEmpty = UserEntity(
+    id: '',
+    firstName: '',
+    lastName: '',
+    cognitoId: '',
+    confirmed: false,
+    gymId: '',
+    email: '',
+  );
+
+  final String email;
+
+  const UserEntity({
+    required super.id,
+    required super.firstName,
+    required super.lastName,
+    required super.cognitoId,
+    required super.confirmed,
+    required super.gymId,
+    required this.email,
+  }) : super();
+
+  @override
+  UserEntity fromJson(Map<String, dynamic> json) => UserEntity(
         id: json['_id'],
         email: json['email'],
         firstName: json['firstName'],
@@ -29,47 +72,40 @@ class UserEntity extends Equatable {
         confirmed: json['confirmed'],
       );
 
+  @override
   Map<String, dynamic> toJson() => {
-        '_id': id,
+        ...super.toJson(),
         'email': email,
-        'firstName': firstName,
-        'lastName': lastName,
-        'cognitoId': cognitoId,
-        'gymId': gymId,
-        'confirmed': confirmed,
       };
 
   @override
   List<Object?> get props => [
-        id,
+        super.props,
         email,
-        firstName,
-        lastName,
-        cognitoId,
-        gymId,
-        confirmed,
       ];
 }
 
-class PublicUserEntity extends Equatable {
-  final String id;
-  final String firstName;
-  final String lastName;
-  final String cognitoId;
-  final String gymId;
-  final bool confirmed;
+class PublicUserEntity extends _User<PublicUserEntity> {
+  static const kEmpty = PublicUserEntity(
+    id: '',
+    firstName: '',
+    lastName: '',
+    cognitoId: '',
+    confirmed: false,
+    gymId: '',
+  );
 
-  PublicUserEntity({
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.cognitoId,
-    required this.gymId,
-    required this.confirmed,
+  const PublicUserEntity({
+    required super.id,
+    required super.firstName,
+    required super.lastName,
+    required super.cognitoId,
+    required super.gymId,
+    required super.confirmed,
   }) : super();
 
-  factory PublicUserEntity.fromJson(Map<String, dynamic> json) =>
-      PublicUserEntity(
+  @override
+  PublicUserEntity fromJson(Map<String, dynamic> json) => PublicUserEntity(
         id: json['_id'],
         firstName: json['firstName'],
         lastName: json['lastName'],
@@ -77,23 +113,4 @@ class PublicUserEntity extends Equatable {
         gymId: json['gymId'],
         confirmed: json['confirmed'],
       );
-
-  Map<String, dynamic> toJson() => {
-        '_id': id,
-        'firstName': firstName,
-        'lastName': lastName,
-        'cognitoId': cognitoId,
-        'gymId': gymId,
-        'confirmed': confirmed,
-      };
-
-  @override
-  List<Object?> get props => [
-        id,
-        firstName,
-        lastName,
-        cognitoId,
-        gymId,
-        confirmed,
-      ];
 }

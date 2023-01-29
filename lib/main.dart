@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'src/common/shared_preferences.dart';
 import 'src/data/adapters/adapters.dart';
+import 'src/domain/entities/entities.dart';
 import 'src/presentation/app/app.dart';
 
 Future<void> main() async {
@@ -12,6 +13,7 @@ Future<void> main() async {
   await dotenv.load();
   await loadPreferences();
   injectAdapters();
+  injectEmpties();
   runApp(
     App(),
   );

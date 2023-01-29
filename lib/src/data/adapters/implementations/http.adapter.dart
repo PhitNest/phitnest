@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -5,12 +6,13 @@ import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
 import '../../../common/logger.dart';
 import '../../../common/utils/utils.dart';
+import '../../../domain/entities/entities.dart';
 import '../interfaces/http.adapter.dart';
 
 const _timeout = Duration(seconds: 15);
 
 class DioHttpAdapter implements IHttpAdapter {
-  FEither3<Map<String, dynamic>, List<dynamic>, Failure> request(
+  FEither3<Map<String, dynamic>, List<dynamic>, Failure> _request(
     Route route, {
     Map<String, dynamic>? data,
     Map<String, dynamic>? headers,
@@ -76,4 +78,66 @@ class DioHttpAdapter implements IHttpAdapter {
       return Third(failure);
     }
   }
+
+  @override
+  FEither<ResType, Failure> requestJson<ResType extends Entity<ResType>,
+          ReqType extends Entity<ReqType>>(
+    Route route, {
+    ReqType? data,
+    Map<String, dynamic>? headers,
+    String? authorization,
+  }) =>
+      _request(
+        route,
+        data: data?.toJson(),
+        headers: headers,
+        authorization: authorization,
+      ).then(
+        (response) => response.fold(
+          (json) => Left(Entities.fromJson(json)),
+          (list) => Right(Failures.invalidBackendResponse.instance),
+          (failure) => Right(failure),
+        ),
+      );
+
+  @override
+  FEither<List<ResType>, Failure> requestList<ResType extends Entity<ResType>,
+          ReqType extends Entity<ReqType>>(
+    Route route, {
+    ReqType? data,
+    Map<String, dynamic>? headers,
+    String? authorization,
+  }) =>
+      _request(
+        route,
+        data: data?.toJson(),
+        headers: headers,
+        authorization: authorization,
+      ).then(
+        (response) => response.fold(
+          (json) => Right(Failures.invalidBackendResponse.instance),
+          (list) => Left(Entities.fromList(list)),
+          (failure) => Right(failure),
+        ),
+      );
+
+  @override
+  Future<Failure?> requestVoid<ReqType extends Entity<ReqType>>(
+    Route route, {
+    ReqType? data,
+    Map<String, dynamic>? headers,
+    String? authorization,
+  }) =>
+      _request(
+        route,
+        data: data?.toJson(),
+        headers: headers,
+        authorization: authorization,
+      ).then(
+        (response) => response.fold(
+          (json) => null,
+          (list) => Failures.invalidBackendResponse.instance,
+          (failure) => failure,
+        ),
+      );
 }

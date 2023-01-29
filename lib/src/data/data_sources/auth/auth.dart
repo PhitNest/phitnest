@@ -1,10 +1,9 @@
-import 'package:dartz/dartz.dart';
-
 import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
 import '../../../common/utils/utils.dart';
 import '../../../domain/entities/entities.dart';
 import '../../adapters/adapters.dart';
+import 'requests/requests.dart';
 import 'responses/responses.dart';
 
 export 'cache.dart';
@@ -15,17 +14,11 @@ abstract class AuthDataSource {
     String email,
     String password,
   ) =>
-      httpAdapter.request(
+      httpAdapter.requestJson(
         Routes.login.instance,
-        data: {
-          'email': email,
-          'password': password,
-        },
-      ).then(
-        (either) => either.fold(
-          (json) => Left(LoginResponse.fromJson(json)),
-          (list) => Right(Failures.invalidBackendResponse.instance),
-          (failure) => Right(failure),
+        data: LoginRequest(
+          email: email,
+          password: password,
         ),
       );
 
@@ -36,68 +29,40 @@ abstract class AuthDataSource {
     String lastName,
     String gymId,
   ) =>
-      httpAdapter.request(
+      httpAdapter.requestJson(
         Routes.register.instance,
-        data: {
-          'email': email,
-          'password': password,
-          'firstName': firstName,
-          'lastName': lastName,
-          'gymId': gymId,
-        },
-      ).then(
-        (either) => either.fold(
-          (json) => Left(RegisterResponse.fromJson(json)),
-          (list) => Right(Failures.invalidBackendResponse.instance),
-          (failure) => Right(failure),
+        data: RegisterRequest(
+          email: email,
+          password: password,
+          firstName: firstName,
+          lastName: lastName,
+          gymId: gymId,
         ),
       );
 
   static Future<Failure?> forgotPassword(
     String email,
   ) =>
-      httpAdapter.request(
+      httpAdapter.requestVoid(
         Routes.forgotPassword.instance,
-        data: {
-          'email': email,
-        },
-      ).then(
-        (either) => either.fold(
-          (json) => null,
-          (list) => Failures.invalidBackendResponse.instance,
-          (failure) => failure,
-        ),
+        data: ForgotPasswordRequest(email: email),
       );
 
   static Future<Failure?> resendConfirmationCode(String email) =>
-      httpAdapter.request(
+      httpAdapter.requestVoid(
         Routes.resendConfirmationCode.instance,
-        data: {
-          'email': email,
-        },
-      ).then(
-        (either) => either.fold(
-          (json) => null,
-          (list) => Failures.invalidBackendResponse.instance,
-          (failure) => failure,
-        ),
+        data: ResendConfirmationRequest(email: email),
       );
 
   static FEither<UserEntity, Failure> confirmRegister(
     String email,
     String code,
   ) =>
-      httpAdapter.request(
+      httpAdapter.requestJson(
         Routes.confirmRegister.instance,
-        data: {
-          'email': email,
-          'code': code,
-        },
-      ).then(
-        (response) => response.fold(
-          (json) => Left(UserEntity.fromJson(json)),
-          (list) => Right(Failures.invalidBackendResponse.instance),
-          (failure) => Right(failure),
+        data: ConfirmRegisterRequest(
+          email: email,
+          code: code,
         ),
       );
 
@@ -106,18 +71,12 @@ abstract class AuthDataSource {
     String password,
     String code,
   ) =>
-      httpAdapter.request(
+      httpAdapter.requestVoid(
         Routes.forgotPasswordSubmit.instance,
-        data: {
-          'email': email,
-          'code': code,
-          'newPassword': password,
-        },
-      ).then(
-        (either) => either.fold(
-          (json) => null,
-          (list) => Failures.invalidCode.instance,
-          (failure) => failure,
+        data: ForgotPasswordSubmitRequest(
+          email: email,
+          code: code,
+          password: password,
         ),
       );
 
@@ -125,27 +84,16 @@ abstract class AuthDataSource {
     String email,
     String refreshToken,
   ) =>
-      httpAdapter.request(Routes.refreshSession.instance, data: {
-        'email': email,
-        'refreshToken': refreshToken,
-      }).then(
-        (either) => either.fold(
-          (json) => Left(RefreshTokenResponse.fromJson(json)),
-          (list) => Right(Failures.invalidBackendResponse.instance),
-          (failure) => Right(failure),
+      httpAdapter.requestJson(
+        Routes.refreshSession.instance,
+        data: RefreshSessionRequest(
+          email: email,
+          refreshToken: refreshToken,
         ),
       );
 
-  static Future<Failure?> signOut(bool allDevices) => httpAdapter.request(
+  static Future<Failure?> signOut(bool allDevices) => httpAdapter.requestVoid(
         Routes.signOut.instance,
-        data: {
-          "allDevices": allDevices,
-        },
-      ).then(
-        (either) => either.fold(
-          (json) => null,
-          (list) => Failures.invalidBackendResponse.instance,
-          (failure) => failure,
-        ),
+        data: SignOutRequest(allDevices: allDevices),
       );
 }

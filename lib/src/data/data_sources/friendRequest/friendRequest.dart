@@ -1,7 +1,7 @@
 import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
 import '../../../common/utils/utils.dart';
-import '../../../domain/entities/friendRequest.entity.dart';
+import '../../../domain/entities/friend_request.entity.dart';
 import '../../../domain/entities/friendship.entity.dart';
 import '../../adapters/adapters.dart';
 
