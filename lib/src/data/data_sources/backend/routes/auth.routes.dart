@@ -1,6 +1,5 @@
 import '../../../../domain/entities/entities.dart';
 import '../backend.dart';
-import 'routes.dart';
 
 const kLoginRoute = Route<LoginRequest, LoginResponse>(
   '/auth/login',

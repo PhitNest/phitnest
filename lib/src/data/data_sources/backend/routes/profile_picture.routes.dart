@@ -4,9 +4,13 @@ import 'routes.dart';
 
 const kGetUploadUrlUnauthorized =
     Route<GetUploadUrlUnauthorizedRequest, GetUploadUrlResponse>(
-        "/profilePicture/unauthorized",
-        HttpMethod.get,
-        GetUploadUrlResponseParser());
+  "/profilePicture/unauthorized",
+  HttpMethod.get,
+  GetUploadUrlResponseParser(),
+);
 
 const kGetUploadUrl = Route<EmptyRequest, GetUploadUrlResponse>(
-    "/profilePicture/upload", HttpMethod.get, GetUploadUrlResponseParser());
+  "/profilePicture/upload",
+  HttpMethod.get,
+  GetUploadUrlResponseParser(),
+);
