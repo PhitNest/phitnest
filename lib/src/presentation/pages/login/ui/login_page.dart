@@ -10,7 +10,7 @@ import '../event/cancel_login.dart';
 import '../event/login_event.dart';
 import '../event/reset.dart';
 import '../state/confirm_user.dart';
-import '../state/loading.dart';
+import '../state/initial/loading.dart';
 import '../state/login_state.dart';
 import '../state/login_success.dart';
 import 'widgets/initial.dart';

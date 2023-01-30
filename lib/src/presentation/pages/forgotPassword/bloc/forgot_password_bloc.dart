@@ -32,13 +32,8 @@ class ForgotPasswordBloc
     if (state is LoadingState) {
       final loadingState = state as LoadingState;
       await loadingState.forgotPassOperation.cancel();
-      loadingState.emailController.dispose();
-      loadingState.passwordController.dispose();
-      loadingState.confirmPassController.dispose();
-      loadingState.emailFocusNode.dispose();
-      loadingState.passwordFocusNode.dispose();
-      loadingState.confirmPassFocusNode.dispose();
-    } else if (state is InitialState) {
+    }
+    if (state is InitialState) {
       final initialState = state as InitialState;
       initialState.emailController.dispose();
       initialState.passwordController.dispose();
@@ -46,30 +41,6 @@ class ForgotPasswordBloc
       initialState.emailFocusNode.dispose();
       initialState.passwordFocusNode.dispose();
       initialState.confirmPassFocusNode.dispose();
-    } else if (state is SuccessState) {
-      final successState = state as SuccessState;
-      successState.emailController.dispose();
-      successState.passwordController.dispose();
-      successState.confirmPassController.dispose();
-      successState.emailFocusNode.dispose();
-      successState.passwordFocusNode.dispose();
-      successState.confirmPassFocusNode.dispose();
-    } else if (state is ErrorState) {
-      final errorState = state as ErrorState;
-      errorState.emailController.dispose();
-      errorState.passwordController.dispose();
-      errorState.confirmPassController.dispose();
-      errorState.emailFocusNode.dispose();
-      errorState.passwordFocusNode.dispose();
-      errorState.confirmPassFocusNode.dispose();
-    } else if (state is ConfirmEmailState) {
-      final confirmEmailState = state as ConfirmEmailState;
-      confirmEmailState.emailController.dispose();
-      confirmEmailState.passwordController.dispose();
-      confirmEmailState.confirmPassController.dispose();
-      confirmEmailState.emailFocusNode.dispose();
-      confirmEmailState.passwordFocusNode.dispose();
-      confirmEmailState.confirmPassFocusNode.dispose();
     }
     return super.close();
   }

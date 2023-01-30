@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
-import 'login_state.dart';
+import '../login_state.dart';
 
 class InitialState extends LoginState {
   final TextEditingController emailController;
