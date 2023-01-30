@@ -3,10 +3,10 @@ import 'package:async/async.dart';
 import '../../../../../common/failure.dart';
 import '../verification_state.dart';
 
-class LoadingState extends InitialState {
+class ResendingState extends InitialState {
   final CancelableOperation<Failure?> operation;
 
-  const LoadingState({
+  const ResendingState({
     required super.codeController,
     required super.codeFocusNode,
     required this.operation,

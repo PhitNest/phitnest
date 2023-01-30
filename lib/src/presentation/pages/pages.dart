@@ -1,7 +1,8 @@
-export 'forgot_password/ui/forgot_password.dart';
-export 'home/home.dart';
+export 'forgotPassword/ui/forgot_password_page.dart';
+export 'home/home_page.dart';
 export 'login/ui/login_page.dart';
-export 'on_boarding/on_boarding.dart';
-export 'forgot_password/forgot_password.dart';
-export 'confirm_email/ui/confirm_email_page.dart';
-export 'home/home.dart';
+export 'onBoarding/on_boarding_page.dart';
+export 'registration/ui/registration_page.dart';
+export 'confirmEmail/confirm_email_page.dart';
+export 'verification/ui/verification_page.dart';
+export 'forgotPasswordSubmit/forgot_password_submit_page.dart';

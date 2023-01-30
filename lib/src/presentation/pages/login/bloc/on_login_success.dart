@@ -11,7 +11,12 @@ void onLoginSuccess(
   LoginState state,
 ) {
   if (state is LoadingState) {
-    emit(LoginSuccessState(response: event.response));
+    emit(
+      LoginSuccessState(
+        response: event.response,
+        password: state.passwordController.text,
+      ),
+    );
   } else {
     throw Exception('Invalid state: $state');
   }
