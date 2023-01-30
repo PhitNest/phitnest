@@ -19,12 +19,6 @@ export async function confirmRegister(email: string, code: string) {
         const result = await userRepo.setConfirmed(user.cognitoId);
         if (result instanceof Failure) {
           return result;
-        } else {
-          user.confirmed = true;
-          return {
-            ...user,
-            profilePictureUrl: profilePictureUrl,
-          };
         }
       }
     }
