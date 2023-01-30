@@ -104,3 +104,35 @@ class PublicUserEntity extends _User<PublicUserEntity> {
     required super.confirmed,
   }) : super();
 }
+
+class ProfilePicturePublicUserParser
+    extends Parser<ProfilePicturePublicUserEntity> {
+  @override
+  ProfilePicturePublicUserEntity fromJson(Map<String, dynamic> json) =>
+      ProfilePicturePublicUserEntity(
+        id: json['_id'],
+        firstName: json['firstName'],
+        lastName: json['lastName'],
+        cognitoId: json['cognitoId'],
+        gymId: json['gymId'],
+        confirmed: json['confirmed'],
+        profilePictureUrl: json['profilePictureUrl'],
+      );
+}
+
+class ProfilePicturePublicUserEntity extends PublicUserEntity {
+  final String profilePictureUrl;
+
+  ProfilePicturePublicUserEntity({
+    required super.id,
+    required super.cognitoId,
+    required super.confirmed,
+    required super.firstName,
+    required super.gymId,
+    required super.lastName,
+    required this.profilePictureUrl,
+  }) : super();
+
+  @override
+  List<Object?> get props => [super.props, profilePictureUrl];
+}
