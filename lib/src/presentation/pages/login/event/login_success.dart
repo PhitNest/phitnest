@@ -1,4 +1,4 @@
-import '../../../../data/data_sources/auth/auth.dart';
+import '../../../../data/data_sources/backend/backend.dart';
 import 'login_event.dart';
 
 /// This event is emitted when the login request is successful

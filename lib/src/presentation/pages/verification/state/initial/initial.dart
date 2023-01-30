@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../verification_state.dart';
 
-export 'loading.dart';
+export 'confirming.dart';
 export 'confirm_error.dart';
 export 'confirm_success.dart';
 export 'resend_error.dart';
+export 'resending.dart';
 
 class InitialState extends VerificationState {
   final TextEditingController codeController;

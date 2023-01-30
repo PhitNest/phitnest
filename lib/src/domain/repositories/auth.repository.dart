@@ -3,7 +3,6 @@ import '../../common/utils/utils.dart';
 import '../../data/adapters/adapters.dart';
 import '../../data/data_sources/backend/backend.dart';
 import '../../data/data_sources/cache/cache.dart';
-import '../entities/entities.dart';
 
 abstract class AuthRepository {
   static FEither<LoginResponse, Failure> login(

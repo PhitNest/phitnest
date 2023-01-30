@@ -8,7 +8,7 @@ void onConfirmError(
   Emitter<VerificationState> emit,
   VerificationState state,
 ) {
-  if (state is LoadingState) {
+  if (state is ConfirmingState) {
     emit(
       ConfirmErrorState(
         codeController: state.codeController,

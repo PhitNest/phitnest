@@ -8,9 +8,10 @@ void onConfirmSuccess(
   Emitter<VerificationState> emit,
   VerificationState state,
 ) {
-  if (state is LoadingState) {
+  if (state is ConfirmingState) {
     emit(
       ConfirmSuccessState(
+        response: event.response,
         codeController: state.codeController,
         codeFocusNode: state.codeFocusNode,
       ),

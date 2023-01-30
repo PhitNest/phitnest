@@ -6,44 +6,14 @@ import '../../../../../common/constants/assets.dart';
 import '../../../../../common/theme.dart';
 import '../../../../widgets/styled/styled.dart';
 
-class PageFiveNoUpload extends _PageFiveBase {
-  const PageFiveNoUpload({
-    Key? key,
-    required super.onPressedTakePhoto,
-  }) : super(key: key);
-}
-
-class PageFive extends _PageFiveBase {
+class PageFiveInitial extends StatelessWidget {
+  final VoidCallback onPressedTakePhoto;
   final ValueChanged<XFile> onUploadedImage;
 
-  PageFive({
-    Key? key,
-    required super.onPressedTakePhoto,
-    required this.onUploadedImage,
-  }) : super(
-          key: key,
-          child: StyledUnderlinedTextButton(
-            onPressed: () =>
-                ImagePicker().pickImage(source: ImageSource.gallery).then(
-              (image) {
-                if (image != null) {
-                  onUploadedImage(image);
-                }
-              },
-            ),
-            text: 'UPLOAD FROM ALBUMS',
-          ),
-        );
-}
-
-class _PageFiveBase extends StatelessWidget {
-  final VoidCallback onPressedTakePhoto;
-  final Widget? child;
-
-  const _PageFiveBase({
+  const PageFiveInitial({
     Key? key,
     required this.onPressedTakePhoto,
-    this.child,
+    required this.onUploadedImage,
   }) : super(key: key);
 
   @override
@@ -75,7 +45,17 @@ class _PageFiveBase extends StatelessWidget {
             text: 'TAKE PHOTO',
           ),
           Spacer(),
-          child ?? Container(),
+          StyledUnderlinedTextButton(
+            onPressed: () =>
+                ImagePicker().pickImage(source: ImageSource.gallery).then(
+              (image) {
+                if (image != null) {
+                  onUploadedImage(image);
+                }
+              },
+            ),
+            text: 'UPLOAD FROM ALBUMS',
+          ),
           32.verticalSpace,
         ],
       );
