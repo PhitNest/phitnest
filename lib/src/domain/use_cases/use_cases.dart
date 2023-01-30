@@ -5,3 +5,4 @@ export 'register.dart';
 export 'resend_confirmation.dart';
 export 'confirm_register.dart';
 export 'forgot_password.dart';
+export 'forgot_password_submit.dart';

@@ -34,8 +34,8 @@ class VerificationBloc extends Bloc<VerificationEvent, VerificationState> {
       initialState.codeController.dispose();
       initialState.codeFocusNode.dispose();
     }
-    if (state is LoadingState) {
-      final loadingState = state as LoadingState;
+    if (state is ConfirmingState) {
+      final loadingState = state as ConfirmingState;
       await loadingState.operation.cancel();
     }
     return super.close();

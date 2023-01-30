@@ -9,7 +9,6 @@ import '../event/submit.dart';
 import '../state/forgot_password_state.dart';
 import 'widgets/initial.dart';
 import 'widgets/loading.dart';
-import 'widgets/verification_page.dart';
 
 ForgotPasswordBloc _bloc(BuildContext context) => context.read();
 
@@ -23,11 +22,11 @@ class ForgotPasswordPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => ForgotPasswordBloc(),
       child: BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is SuccessState) {
             Navigator.of(context).push(
               CupertinoPageRoute(
-                builder: (context) => VerifyEmail(
+                builder: (context) => ForgotPasswordSubmitPage(
                   email: state.emailController.text.trim(),
                   password: state.passwordController.text,
                 ),
@@ -65,23 +64,28 @@ class ForgotPasswordPage extends StatelessWidget {
               ),
             );
           } else if (state is ConfirmEmailState) {
-            Navigator.of(context).push(
-              CupertinoPageRoute(
+            final confirmed = await Navigator.of(context).push(
+              CupertinoPageRoute<bool>(
                 builder: (context) => ConfirmEmailPage(
                   email: state.emailController.text.trim(),
-                  onConfirmed: (context) => Navigator.of(context)
-                    ..pop()
-                    ..push(
-                      CupertinoPageRoute(
-                        builder: (context) => VerifyEmail(
-                          email: state.emailController.text.trim(),
-                          password: state.passwordController.text.trim(),
-                        ),
-                      ),
-                    ),
+                  shouldLogin: false,
+                  password: null,
+                  onConfirmed: (context, response) =>
+                      Navigator.pop(context, true),
                 ),
               ),
             );
+            if (confirmed ?? false) {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => ForgotPasswordSubmitPage(
+                    email: state.emailController.text.trim(),
+                    password: state.passwordController.text,
+                  ),
+                ),
+              );
+            }
           }
         },
         builder: (context, state) {

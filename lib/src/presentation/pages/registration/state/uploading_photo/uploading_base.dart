@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
 
-import '../../../../../data/data_sources/auth/auth.dart';
+import '../../../../../data/data_sources/backend/backend.dart';
 import '../registration_state.dart';
 
 export 'upload_error.dart';

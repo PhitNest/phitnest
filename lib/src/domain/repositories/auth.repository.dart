@@ -3,7 +3,6 @@ import '../../common/utils/utils.dart';
 import '../../data/adapters/adapters.dart';
 import '../../data/data_sources/backend/backend.dart';
 import '../../data/data_sources/cache/cache.dart';
-import '../entities/entities.dart';
 
 abstract class AuthRepository {
   static FEither<LoginResponse, Failure> login(
@@ -60,26 +59,5 @@ abstract class AuthRepository {
       );
     }
     return response;
-  }
-
-  static FEither<UserEntity, Failure> confirmRegister(
-    String email,
-    String code,
-  ) async {
-    final result = await httpAdapter.request(
-      kConfirmRegisterRoute,
-      ConfirmRegisterRequest(
-        email: email,
-        code: code,
-      ),
-    );
-    if (result.isLeft()) {
-      await cacheUser(
-        result.swap().getOrElse(
-              () => throw Exception("This should not happen."),
-            ),
-      );
-    }
-    return result;
   }
 }

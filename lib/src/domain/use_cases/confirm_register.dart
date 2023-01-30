@@ -1,10 +1,22 @@
 import '../../common/failure.dart';
-import '../../common/utils/utils.dart';
-import '../entities/entities.dart';
-import '../repositories/repositories.dart';
+import '../../data/adapters/adapters.dart';
+import '../../data/data_sources/backend/backend.dart';
 
-FEither<UserEntity, Failure> confirmRegister(
+Future<Failure?> confirmRegister(
   String email,
   String code,
 ) =>
-    AuthRepository.confirmRegister(email, code);
+    httpAdapter
+        .request(
+          kConfirmRegisterRoute,
+          ConfirmRegisterRequest(
+            email: email,
+            code: code,
+          ),
+        )
+        .then(
+          (either) => either.fold(
+            (_) => null,
+            (failure) => failure,
+          ),
+        );

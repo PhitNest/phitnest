@@ -1,5 +1,4 @@
 import '../backend.dart';
-import 'routes.dart';
 
 const kFriendsAndMessagesRoute =
     Route<EmptyRequest, FriendsAndMessagesResponse>(

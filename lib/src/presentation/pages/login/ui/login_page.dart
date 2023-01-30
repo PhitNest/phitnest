@@ -54,7 +54,12 @@ class LoginPage extends StatelessWidget {
               Navigator.pushAndRemoveUntil(
                 context,
                 CupertinoPageRoute(
-                  builder: (context) => HomePage(),
+                  builder: (context) => HomePage(
+                    initialAccessToken: state.response.session.accessToken,
+                    initialRefreshToken: state.response.session.refreshToken,
+                    initialUserData: state.response.user,
+                    initialPassword: state.password,
+                  ),
                 ),
                 (_) => false,
               );
@@ -66,10 +71,17 @@ class LoginPage extends StatelessWidget {
                 CupertinoPageRoute(
                   builder: (context) => ConfirmEmailPage(
                     email: state.email,
-                    onConfirmed: (context) => Navigator.pushAndRemoveUntil(
+                    password: state.password,
+                    onConfirmed: (context, response) =>
+                        Navigator.pushAndRemoveUntil(
                       context,
                       CupertinoPageRoute(
-                        builder: (context) => HomePage(),
+                        builder: (context) => HomePage(
+                          initialAccessToken: response!.session.accessToken,
+                          initialRefreshToken: response.session.refreshToken,
+                          initialUserData: response.user,
+                          initialPassword: state.password,
+                        ),
                       ),
                       (_) => false,
                     ),
