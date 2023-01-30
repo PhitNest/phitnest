@@ -1,9 +1,8 @@
-import 'package:dartz/dartz.dart';
-
 import '../../common/failure.dart';
 import '../../common/utils/utils.dart';
-import '../../data/data_sources/auth/auth.dart';
-import '../../data/data_sources/user/user.dart';
+import '../../data/adapters/adapters.dart';
+import '../../data/data_sources/backend/backend.dart';
+import '../../data/data_sources/cache/cache.dart';
 import '../entities/entities.dart';
 
 abstract class AuthRepository {
@@ -11,7 +10,13 @@ abstract class AuthRepository {
     String email,
     String password,
   ) async {
-    final response = await AuthDataSource.login(email, password);
+    final response = await httpAdapter.request(
+      kLoginRoute,
+      LoginRequest(
+        email: email,
+        password: password,
+      ),
+    );
     if (response.isLeft()) {
       await cacheEmail(email);
       await cachePassword(password);
@@ -34,12 +39,15 @@ abstract class AuthRepository {
     String password,
     String gymId,
   ) async {
-    final response = await AuthDataSource.register(
-      firstName,
-      lastName,
-      email,
-      password,
-      gymId,
+    final response = await httpAdapter.request(
+      kRegisterRoute,
+      RegisterRequest(
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
+        gymId: gymId,
+      ),
     );
     if (response.isLeft()) {
       await cacheEmail(email);
@@ -54,23 +62,17 @@ abstract class AuthRepository {
     return response;
   }
 
-  static Future<Failure?> forgotPassword(
-    String email,
-  ) =>
-      AuthDataSource.forgotPassword(email);
-
-  static Future<Failure?> forgotPasswordSubmit(
-          String email, String password, String code) =>
-      AuthDataSource.forgotPasswordSubmit(email, password, code);
-
-  static Future<Failure?> resendConfirmationCode(String email) =>
-      AuthDataSource.resendConfirmationCode(email);
-
   static FEither<UserEntity, Failure> confirmRegister(
     String email,
     String code,
   ) async {
-    final result = await AuthDataSource.confirmRegister(email, code);
+    final result = await httpAdapter.request(
+      kConfirmRegisterRoute,
+      ConfirmRegisterRequest(
+        email: email,
+        code: code,
+      ),
+    );
     if (result.isLeft()) {
       await cacheUser(
         result.swap().getOrElse(

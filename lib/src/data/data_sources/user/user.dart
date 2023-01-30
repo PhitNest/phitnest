@@ -7,7 +7,7 @@ import '../../adapters/adapters.dart';
 import 'response/explore.dart';
 import 'response/getUser.dart';
 
-export 'cache.dart';
+export '../cache/user.cache.dart';
 
 abstract class UserDataSource {
   static FEither<GetUserResponse, Failure> getUser() => httpAdapter

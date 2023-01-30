@@ -1,7 +1,8 @@
 import 'package:camera/camera.dart';
 
 import '../../common/failure.dart';
-import '../../data/data_sources/profilePicture/profile_picture.dart';
+import '../../data/adapters/adapters.dart';
+import '../../data/data_sources/backend/backend.dart';
 import '../../data/data_sources/s3/s3.dart';
 
 Future<Failure?> uploadPhotoUnauthorized(
@@ -9,9 +10,17 @@ Future<Failure?> uploadPhotoUnauthorized(
   String password,
   XFile photo,
 ) =>
-    ProfilePictureDataSource.getUploadUrlUnauthorized(email, password).then(
-      (res) => res.fold(
-        (url) => uploadPhoto(url, photo),
-        (failure) => Future.value(failure),
-      ),
-    );
+    httpAdapter
+        .request(
+          kGetUploadUrlUnauthorized,
+          GetUploadUrlUnauthorizedRequest(
+            email: email,
+            password: password,
+          ),
+        )
+        .then(
+          (res) => res.fold(
+            (res) => uploadPhoto(res.url, photo),
+            (failure) => Future.value(failure),
+          ),
+        );
