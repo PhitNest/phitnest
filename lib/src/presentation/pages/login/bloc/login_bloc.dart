@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../event/cancel_login.dart';
 import '../event/login_event.dart';
 import '../event/reset.dart';
-import '../state/loading.dart';
+import '../state/initial/loading.dart';
 import '../state/login_state.dart';
 import 'on_cancel_login.dart';
 import 'on_login_error.dart';
