@@ -1,8 +1,6 @@
 import '../requests.dart';
 
 class SignOutRequest extends Request {
-  static const kEmpty = SignOutRequest(allDevices: false);
-
   final bool allDevices;
 
   const SignOutRequest({

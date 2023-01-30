@@ -1,23 +1,20 @@
 import '../requests.dart';
 
-class ForgotPasswordSubmitRequest extends Request {
+class GetUploadUrlUnauthorizedRequest extends Request {
   final String email;
-  final String code;
   final String password;
 
-  const ForgotPasswordSubmitRequest({
+  const GetUploadUrlUnauthorizedRequest({
     required this.email,
-    required this.code,
     required this.password,
   }) : super();
 
   @override
   Map<String, dynamic> toJson() => {
         'email': email,
-        'code': code,
         'password': password,
       };
 
   @override
-  List<Object?> get props => [email, code, password];
+  List<Object?> get props => [email, password];
 }

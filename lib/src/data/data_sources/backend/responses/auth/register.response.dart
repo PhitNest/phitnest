@@ -1,12 +1,19 @@
+import 'package:equatable/equatable.dart';
+
+import '../../../../../common/utils/utils.dart';
 import '../../../../../domain/entities/entities.dart';
-import '../responses.dart';
 
-class RegisterResponse extends Response<RegisterResponse> {
-  static const kEmpty = RegisterResponse(
-    user: UserEntity.kEmpty,
-    uploadUrl: '',
-  );
+class RegisterResponseParser extends Parser<RegisterResponse> {
+  const RegisterResponseParser() : super();
 
+  @override
+  RegisterResponse fromJson(Map<String, dynamic> json) => RegisterResponse(
+        user: UserParser().fromJson(json['user']),
+        uploadUrl: json['uploadUrl'],
+      );
+}
+
+class RegisterResponse extends Equatable {
   final String uploadUrl;
   final UserEntity user;
 
@@ -14,12 +21,6 @@ class RegisterResponse extends Response<RegisterResponse> {
     required this.user,
     required this.uploadUrl,
   }) : super();
-
-  @override
-  RegisterResponse fromJson(Map<String, dynamic> json) => RegisterResponse(
-        user: Entity.jsonFactory(json['user']),
-        uploadUrl: json['uploadUrl'],
-      );
 
   @override
   List<Object?> get props => [user, uploadUrl];

@@ -1,22 +1,26 @@
-import '../responses.dart';
+import 'package:equatable/equatable.dart';
 
-class RefreshTokenResponse extends Response<RefreshTokenResponse> {
-  static const kEmpty = RefreshTokenResponse(accessToken: "", idToken: "");
+import '../../../../../common/utils/utils.dart';
 
-  final String accessToken;
-  final String idToken;
-
-  const RefreshTokenResponse({
-    required this.accessToken,
-    required this.idToken,
-  }) : super();
+class RefreshSessionResponseParser extends Parser<RefreshSessionResponse> {
+  const RefreshSessionResponseParser() : super();
 
   @override
-  RefreshTokenResponse fromJson(Map<String, dynamic> json) =>
-      RefreshTokenResponse(
+  RefreshSessionResponse fromJson(Map<String, dynamic> json) =>
+      RefreshSessionResponse(
         accessToken: json['accessToken'],
         idToken: json['idToken'],
       );
+}
+
+class RefreshSessionResponse extends Equatable {
+  final String accessToken;
+  final String idToken;
+
+  const RefreshSessionResponse({
+    required this.accessToken,
+    required this.idToken,
+  }) : super();
 
   @override
   List<Object?> get props => [accessToken, idToken];

@@ -1,8 +1,6 @@
 import '../requests.dart';
 
 class RefreshSessionRequest extends Request {
-  static const kEmpty = RefreshSessionRequest(email: '', refreshToken: '');
-
   final String email;
   final String refreshToken;
 

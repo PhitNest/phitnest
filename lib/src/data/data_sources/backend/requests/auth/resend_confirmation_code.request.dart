@@ -1,8 +1,6 @@
 import '../requests.dart';
 
 class ResendConfirmationRequest extends Request {
-  static const kEmpty = ResendConfirmationRequest(email: '');
-
   final String email;
 
   const ResendConfirmationRequest({

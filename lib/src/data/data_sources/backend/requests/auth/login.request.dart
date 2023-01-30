@@ -1,8 +1,6 @@
 import '../requests.dart';
 
 class LoginRequest extends Request {
-  static const kEmpty = LoginRequest(email: '', password: '');
-
   final String email;
   final String password;
 

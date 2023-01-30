@@ -1,14 +1,6 @@
 import '../requests.dart';
 
 class RegisterRequest extends Request {
-  static const kEmpty = RegisterRequest(
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
-    gymId: '',
-  );
-
   final String email;
   final String password;
   final String firstName;
