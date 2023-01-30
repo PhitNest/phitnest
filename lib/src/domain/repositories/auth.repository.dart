@@ -82,4 +82,98 @@ abstract class AuthRepository {
     }
     return result;
   }
+
+  static Future<Failure?> forgotPassword(
+    String email,
+  ) async {
+    final result = await httpAdapter.request(
+      kForgotPasswordRoute,
+      ForgotPasswordRequest(
+        email: email,
+      ),
+    );
+    return result.fold(
+      (response) => null,
+      (failure) => failure,
+    );
+  }
+
+  static Future<Failure?> forgotPasswordSubmit(
+    String email,
+    String code,
+    String password,
+  ) async {
+    final result = await httpAdapter.request(
+      kForgotPasswordSubmitRoute,
+      ForgotPasswordSubmitRequest(
+        email: email,
+        code: code,
+        password: password,
+      ),
+    );
+    return result.fold(
+      (response) => null,
+      (failure) => failure,
+    );
+  }
+
+  static Future<Failure?> resendConfirmation(
+    String email,
+  ) async {
+    final result = await httpAdapter.request(
+      kResendConfirmationRoute,
+      ResendConfirmationRequest(
+        email: email,
+      ),
+    );
+    return result.fold(
+      (response) => null,
+      (failure) => failure,
+    );
+  }
+
+  static FEither<RefreshSessionResponse, Failure> refreshSession(
+    String email,
+    String refreshToken,
+  ) async {
+    final result = await httpAdapter.request(
+      kRefreshSessionRoute,
+      RefreshSessionRequest(
+        email: email,
+        refreshToken: refreshToken,
+      ),
+    );
+
+    if (result.isLeft()) {
+      await cacheRefreshToken(refreshToken);
+    }
+
+    return result;
+  }
+
+  static Future<Failure?> signOut(
+    bool allDevices,
+  ) async {
+    final result = await httpAdapter.request(
+      kSignOutRoute,
+      SignOutRequest(
+        allDevices: allDevices,
+      ),
+    );
+
+    return result.fold(
+      (res) async {
+        await cacheAccessToken(null);
+        await cacheRefreshToken(null);
+        await cacheUser(null);
+        await cacheEmail(null);
+        await cacheGym(null);
+
+        return null;
+      },
+      (failure) {
+        return failure;
+      },
+    );
+  }
 }
