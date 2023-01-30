@@ -9,6 +9,7 @@ enum Failures {
   noGymsFound,
   failedToCropImage,
   invalidCode,
+  serializationError,
 }
 
 extension Instance on Failures {
@@ -37,6 +38,8 @@ extension Instance on Failures {
         return const Failure("NoGymsFound", "No nearby gyms found.");
       case Failures.failedToCropImage:
         return const Failure("FailedToCropImage", "Failed to crop image.");
+      case Failures.serializationError:
+        return const Failure("SerializationError", "Failed to serialize data.");
     }
   }
 }

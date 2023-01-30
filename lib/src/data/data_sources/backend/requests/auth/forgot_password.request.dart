@@ -1,8 +1,6 @@
 import '../requests.dart';
 
 class ForgotPasswordRequest extends Request {
-  static const kEmpty = ForgotPasswordRequest(email: '');
-
   final String email;
 
   const ForgotPasswordRequest({

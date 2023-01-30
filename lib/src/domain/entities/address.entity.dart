@@ -1,9 +1,19 @@
+import '../../common/utils/utils.dart';
 import 'entities.dart';
 
-class AddressEntity extends Entity<AddressEntity> {
-  static const kEmpty =
-      AddressEntity(city: "", state: "", street: "", zipCode: "");
+class AddressParser extends Parser<AddressEntity> {
+  const AddressParser() : super();
 
+  @override
+  AddressEntity fromJson(Map<String, dynamic> json) => AddressEntity(
+        street: json['street'],
+        city: json['city'],
+        state: json['state'],
+        zipCode: json['zipCode'],
+      );
+}
+
+class AddressEntity extends Entity {
   final String street;
   final String city;
   final String state;
@@ -15,14 +25,6 @@ class AddressEntity extends Entity<AddressEntity> {
     required this.state,
     required this.zipCode,
   }) : super();
-
-  @override
-  AddressEntity fromJson(Map<String, dynamic> json) => AddressEntity(
-        street: json['street'],
-        city: json['city'],
-        state: json['state'],
-        zipCode: json['zipCode'],
-      );
 
   @override
   Map<String, dynamic> toJson() => {

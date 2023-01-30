@@ -2,28 +2,51 @@ import '../../../../domain/entities/entities.dart';
 import '../backend.dart';
 import 'routes.dart';
 
-const kLoginRoute =
-    Route<LoginRequest, LoginResponse>('/auth/login', HttpMethod.post);
+const kLoginRoute = Route<LoginRequest, LoginResponse>(
+  '/auth/login',
+  HttpMethod.post,
+  LoginResponseParser(),
+);
 
-const kRegisterRoute =
-    Route<RegisterRequest, RegisterResponse>('/auth/register', HttpMethod.post);
+const kRegisterRoute = Route<RegisterRequest, RegisterResponse>(
+  '/auth/register',
+  HttpMethod.post,
+  RegisterResponseParser(),
+);
 
-const kForgotPasswordRoute = Route<ForgotPasswordRequest, EmptyResponse>(
-    '/auth/forgotPassword', HttpMethod.post);
+const kForgotPasswordRoute = Route<ForgotPasswordRequest, void>(
+  '/auth/forgotPassword',
+  HttpMethod.post,
+  Void(),
+);
 
-const kForgotPasswordSubmitRoute =
-    Route<ForgotPasswordSubmitRequest, EmptyResponse>(
-        '/auth/forgotPasswordSubmit', HttpMethod.post);
+const kForgotPasswordSubmitRoute = Route<ForgotPasswordSubmitRequest, void>(
+  '/auth/forgotPasswordSubmit',
+  HttpMethod.post,
+  Void(),
+);
 
-const kResendConfirmationRoute =
-    Route<ResendConfirmationRequest, EmptyResponse>(
-        '/auth/resendConfirmation', HttpMethod.post);
+const kResendConfirmationRoute = Route<ResendConfirmationRequest, void>(
+  '/auth/resendConfirmation',
+  HttpMethod.post,
+  Void(),
+);
 
 const kConfirmRegisterRoute = Route<ConfirmRegisterRequest, UserEntity>(
-    '/auth/confirmRegister', HttpMethod.post);
+  '/auth/confirmRegister',
+  HttpMethod.post,
+  UserParser(),
+);
 
-const kRefreshSessionRoute = Route<RefreshSessionRequest, EmptyResponse>(
-    '/auth/refreshSession', HttpMethod.post);
+const kRefreshSessionRoute =
+    Route<RefreshSessionRequest, RefreshSessionResponse>(
+  '/auth/refreshSession',
+  HttpMethod.post,
+  RefreshSessionResponseParser(),
+);
 
-const kSignOutRoute =
-    Route<SignOutRequest, EmptyResponse>('/auth/signOut', HttpMethod.post);
+const kSignOutRoute = Route<SignOutRequest, void>(
+  '/auth/signOut',
+  HttpMethod.post,
+  Void(),
+);

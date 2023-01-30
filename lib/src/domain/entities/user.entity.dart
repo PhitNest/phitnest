@@ -1,6 +1,7 @@
+import '../../common/utils/utils.dart';
 import 'entities.dart';
 
-abstract class _User<UserType> extends Entity<UserType> {
+abstract class _User<UserType> extends Entity {
   final String id;
   final String firstName;
   final String lastName;
@@ -38,28 +39,8 @@ abstract class _User<UserType> extends Entity<UserType> {
       ];
 }
 
-class UserEntity extends _User<UserEntity> {
-  static const kEmpty = UserEntity(
-    id: '',
-    firstName: '',
-    lastName: '',
-    cognitoId: '',
-    confirmed: false,
-    gymId: '',
-    email: '',
-  );
-
-  final String email;
-
-  const UserEntity({
-    required super.id,
-    required super.firstName,
-    required super.lastName,
-    required super.cognitoId,
-    required super.confirmed,
-    required super.gymId,
-    required this.email,
-  }) : super();
+class UserParser extends Parser<UserEntity> {
+  const UserParser() : super();
 
   @override
   UserEntity fromJson(Map<String, dynamic> json) => UserEntity(
@@ -71,6 +52,20 @@ class UserEntity extends _User<UserEntity> {
         gymId: json['gymId'],
         confirmed: json['confirmed'],
       );
+}
+
+class UserEntity extends _User<UserEntity> {
+  final String email;
+
+  const UserEntity({
+    required super.id,
+    required super.firstName,
+    required super.lastName,
+    required super.cognitoId,
+    required super.confirmed,
+    required super.gymId,
+    required this.email,
+  }) : super();
 
   @override
   Map<String, dynamic> toJson() => {
@@ -85,24 +80,8 @@ class UserEntity extends _User<UserEntity> {
       ];
 }
 
-class PublicUserEntity extends _User<PublicUserEntity> {
-  static const kEmpty = PublicUserEntity(
-    id: '',
-    firstName: '',
-    lastName: '',
-    cognitoId: '',
-    confirmed: false,
-    gymId: '',
-  );
-
-  const PublicUserEntity({
-    required super.id,
-    required super.firstName,
-    required super.lastName,
-    required super.cognitoId,
-    required super.gymId,
-    required super.confirmed,
-  }) : super();
+class PublicUserParser extends Parser<PublicUserEntity> {
+  const PublicUserParser() : super();
 
   @override
   PublicUserEntity fromJson(Map<String, dynamic> json) => PublicUserEntity(
@@ -113,4 +92,15 @@ class PublicUserEntity extends _User<PublicUserEntity> {
         gymId: json['gymId'],
         confirmed: json['confirmed'],
       );
+}
+
+class PublicUserEntity extends _User<PublicUserEntity> {
+  const PublicUserEntity({
+    required super.id,
+    required super.firstName,
+    required super.lastName,
+    required super.cognitoId,
+    required super.gymId,
+    required super.confirmed,
+  }) : super();
 }

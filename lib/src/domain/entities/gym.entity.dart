@@ -1,13 +1,18 @@
+import '../../common/utils/utils.dart';
 import 'entities.dart';
 
-class GymEntity extends Entity<GymEntity> {
-  static const kEmpty = GymEntity(
-    id: "",
-    name: "",
-    address: AddressEntity.kEmpty,
-    location: LocationEntity.kEmpty,
-  );
+class GymParser extends Parser<GymEntity> {
+  const GymParser() : super();
 
+  @override
+  GymEntity fromJson(Map<String, dynamic> json) => GymEntity(
+      id: json['_id'],
+      name: json['name'],
+      address: AddressParser().fromJson(json['address']),
+      location: LocationParser().fromJson(json['location']));
+}
+
+class GymEntity extends Entity {
   final String id;
   final String name;
   final AddressEntity address;
@@ -19,13 +24,6 @@ class GymEntity extends Entity<GymEntity> {
     required this.name,
     required this.location,
   }) : super();
-
-  @override
-  GymEntity fromJson(Map<String, dynamic> json) => GymEntity(
-      id: json['_id'],
-      name: json['name'],
-      address: Entity.jsonFactory(json['address']),
-      location: Entity.jsonFactory(json['location']));
 
   Map<String, dynamic> toJson() => {
         '_id': id,

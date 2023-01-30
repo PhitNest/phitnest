@@ -1,10 +1,19 @@
 import 'package:geolocator/geolocator.dart';
 
+import '../../common/utils/utils.dart';
 import 'entities.dart';
 
-class LocationEntity extends Entity<LocationEntity> {
-  static const kEmpty = LocationEntity(longitude: 0, latitude: 0);
+class LocationParser extends Parser<LocationEntity> {
+  const LocationParser() : super();
 
+  @override
+  LocationEntity fromJson(Map<String, dynamic> json) => LocationEntity(
+        longitude: json['coordinates'][0],
+        latitude: json['coordinates'][1],
+      );
+}
+
+class LocationEntity extends Entity {
   final double longitude;
   final double latitude;
 
@@ -12,12 +21,6 @@ class LocationEntity extends Entity<LocationEntity> {
     required this.longitude,
     required this.latitude,
   }) : super();
-
-  @override
-  LocationEntity fromJson(Map<String, dynamic> json) => LocationEntity(
-        longitude: json['coordinates'][0],
-        latitude: json['coordinates'][1],
-      );
 
   @override
   Map<String, dynamic> toJson() => {

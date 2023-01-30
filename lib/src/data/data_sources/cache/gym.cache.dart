@@ -37,7 +37,7 @@ GymEntity? get cachedGym {
   }
 }
 
-Future<bool> cacheUser(GymEntity? gym) async {
+Future<bool> cacheGym(GymEntity? gym) async {
   if (gym != null) {
     return Future.wait([
       sharedPreferences.setString('gym.id', gym.id),
@@ -53,13 +53,14 @@ Future<bool> cacheUser(GymEntity? gym) async {
     ]).then((_) => true);
   } else {
     return Future.wait([
-      sharedPreferences.remove('user.id'),
-      sharedPreferences.remove('user.cognitoId'),
-      sharedPreferences.remove('user.firstName'),
-      sharedPreferences.remove('user.lastName'),
-      sharedPreferences.remove('email'),
       sharedPreferences.remove('gym.id'),
-      sharedPreferences.remove('user.confirmed'),
+      sharedPreferences.remove('gym.name'),
+      sharedPreferences.remove('gym.address.street'),
+      sharedPreferences.remove('gym.address.city'),
+      sharedPreferences.remove('gym.address.state'),
+      sharedPreferences.remove('gym.address.zipCode'),
+      sharedPreferences.remove('gym.location.longitude'),
+      sharedPreferences.remove('gym.location.latitude'),
     ]).then((_) => true);
   }
 }

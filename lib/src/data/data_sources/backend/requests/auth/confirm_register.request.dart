@@ -1,8 +1,6 @@
 import '../requests.dart';
 
 class ConfirmRegisterRequest extends Request {
-  static const kEmpty = ConfirmRegisterRequest(email: '', code: '');
-
   final String email;
   final String code;
 

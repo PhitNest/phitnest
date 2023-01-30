@@ -1,9 +1,18 @@
+import '../../common/utils/utils.dart';
 import 'entities.dart';
 
-class AuthEntity extends Entity<AuthEntity> {
-  static const kEmpty =
-      AuthEntity(accessToken: "", refreshToken: "", idToken: "");
+class AuthParser extends Parser<AuthEntity> {
+  const AuthParser() : super();
 
+  @override
+  AuthEntity fromJson(Map<String, dynamic> json) => AuthEntity(
+        accessToken: json['accessToken'],
+        refreshToken: json['refreshToken'],
+        idToken: json['idToken'],
+      );
+}
+
+class AuthEntity extends Entity {
   final String accessToken;
   final String refreshToken;
   final String idToken;
@@ -13,13 +22,6 @@ class AuthEntity extends Entity<AuthEntity> {
     required this.refreshToken,
     required this.idToken,
   }) : super();
-
-  @override
-  AuthEntity fromJson(Map<String, dynamic> json) => AuthEntity(
-        accessToken: json['accessToken'],
-        refreshToken: json['refreshToken'],
-        idToken: json['idToken'],
-      );
 
   @override
   Map<String, dynamic> toJson() => {

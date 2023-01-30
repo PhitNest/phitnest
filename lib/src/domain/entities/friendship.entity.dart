@@ -1,12 +1,16 @@
+import '../../common/utils/utils.dart';
 import 'entities.dart';
 
-class FriendshipEntity extends Entity<FriendshipEntity> {
-  static final kEmpty = FriendshipEntity(
-    id: "",
-    userCognitoIds: [],
-    createdAt: DateTime.now(),
-  );
+class FriendshipParser extends Parser<FriendshipEntity> {
+  @override
+  FriendshipEntity fromJson(Map<String, dynamic> json) => FriendshipEntity(
+        id: json['_id'],
+        userCognitoIds: json['userCognitoIds'],
+        createdAt: json['createdAt'],
+      );
+}
 
+class FriendshipEntity extends Entity {
   final String id;
   final List<String> userCognitoIds;
   final DateTime createdAt;
@@ -16,13 +20,6 @@ class FriendshipEntity extends Entity<FriendshipEntity> {
     required this.userCognitoIds,
     required this.createdAt,
   }) : super();
-
-  @override
-  FriendshipEntity fromJson(Map<String, dynamic> json) => FriendshipEntity(
-        id: json['_id'],
-        userCognitoIds: json['userCognitoIds'],
-        createdAt: json['createdAt'],
-      );
 
   @override
   Map<String, dynamic> toJson() => {
@@ -35,14 +32,18 @@ class FriendshipEntity extends Entity<FriendshipEntity> {
   List<Object?> get props => [id, userCognitoIds, createdAt];
 }
 
-class PopulatedFriendshipEntity extends FriendshipEntity {
-  static final kEmpty = PopulatedFriendshipEntity(
-    id: "",
-    userCognitoIds: [],
-    createdAt: DateTime.now(),
-    friend: PublicUserEntity.kEmpty,
-  );
+class PopulatedFriendshipParser extends Parser<PopulatedFriendshipEntity> {
+  @override
+  PopulatedFriendshipEntity fromJson(Map<String, dynamic> json) =>
+      PopulatedFriendshipEntity(
+        id: json['_id'],
+        userCognitoIds: json['userCognitoIds'],
+        createdAt: json['createdAt'],
+        friend: PublicUserParser().fromJson(json['friend']),
+      );
+}
 
+class PopulatedFriendshipEntity extends FriendshipEntity {
   final PublicUserEntity friend;
 
   PopulatedFriendshipEntity({
@@ -51,15 +52,6 @@ class PopulatedFriendshipEntity extends FriendshipEntity {
     required super.createdAt,
     required this.friend,
   }) : super();
-
-  @override
-  PopulatedFriendshipEntity fromJson(Map<String, dynamic> json) =>
-      PopulatedFriendshipEntity(
-        id: json['_id'],
-        userCognitoIds: json['userCognitoIds'],
-        createdAt: json['createdAt'],
-        friend: Entity.jsonFactory(json['friend']),
-      );
 
   @override
   Map<String, dynamic> toJson() => {
