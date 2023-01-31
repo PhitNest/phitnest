@@ -5,6 +5,34 @@ import '../../../../../common/theme.dart';
 import '../../../../../domain/entities/entities.dart';
 import '../../../../widgets/styled/styled.dart';
 
+class PageFourLoading extends StatelessWidget {
+  const PageFourLoading({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => StyledScaffold(
+        body: Column(
+          children: [
+            40.verticalSpace,
+            StyledBackButton(),
+            Expanded(
+              child: Column(
+                children: [
+                  180.verticalSpace,
+                  Text(
+                    "Getting you started...",
+                    style: theme.textTheme.headlineLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                  40.verticalSpace,
+                  CircularProgressIndicator(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+}
+
 class PageFourError extends _PageFourBase {
   final String error;
 
@@ -20,17 +48,12 @@ class PageFourError extends _PageFourBase {
           onPressedYes: onPressedYes,
           onPressedNo: onPressedNo,
           buttonText: "RETRY",
-          child: Column(
-            children: [
-              20.verticalSpace,
-              Text(
-                error,
-                style: theme.textTheme.labelLarge!.copyWith(
-                  color: theme.errorColor,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+          child: Text(
+            error,
+            style: theme.textTheme.labelLarge!.copyWith(
+              color: theme.errorColor,
+            ),
+            textAlign: TextAlign.center,
           ),
         );
 }
@@ -87,12 +110,13 @@ class _PageFourBase extends StatelessWidget {
             style: theme.textTheme.labelLarge,
             textAlign: TextAlign.center,
           ),
-          134.verticalSpace,
+          100.verticalSpace,
+          child ?? Container(),
+          20.verticalSpace,
           StyledButton(
             onPressed: onPressedYes,
             text: buttonText,
           ),
-          child ?? Container(),
           Spacer(),
           StyledUnderlinedTextButton(
             text: "NO, IT'S NOT",

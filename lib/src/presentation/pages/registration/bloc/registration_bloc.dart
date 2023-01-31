@@ -16,9 +16,6 @@ import 'on_retry_load_gyms.dart';
 import 'on_submit_page_two.dart';
 import 'on_submit_page_one.dart';
 import 'on_swipe.dart';
-import 'on_upload.dart';
-import 'on_upload_error.dart';
-import 'on_upload_success.dart';
 
 const pageAnimation = const Duration(milliseconds: 400);
 
@@ -73,14 +70,18 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         (event, emit) => onRegisterError(event, emit, state, add));
     on<RegisterSuccessEvent>(
         (event, emit) => onRegisterSuccess(event, emit, state, add));
-    on<UploadEvent>((event, emit) => onUpload(event, emit, state, add));
-    on<UploadErrorEvent>((event, emit) => onUploadError(event, emit, state));
-    on<UploadSuccessEvent>(
-        (event, emit) => onUploadSuccess(event, emit, state));
   }
 
   @override
   Future<void> close() async {
+    if (state is UploadingState) {
+      final uploadingState = state as UploadingState;
+      await uploadingState.uploadImage.cancel();
+    }
+    if (state is RegisterRequestLoadingState) {
+      final registerRequestLoadingState = state as RegisterRequestLoadingState;
+      await registerRequestLoadingState.registerOp.cancel();
+    }
     if (state is GymsLoadingState) {
       final gymsLoadingState = state as GymsLoadingState;
       if (!gymsLoadingState.loadGymsOp.isCompleted) {

@@ -2,7 +2,7 @@ import '../initialized.dart';
 
 export 'capture_error.dart';
 export 'capture_loading.dart';
-export 'capture_success.dart';
+export 'captureSuccess/capture_success.dart';
 
 class CameraLoadedState extends InitializedState {
   const CameraLoadedState({

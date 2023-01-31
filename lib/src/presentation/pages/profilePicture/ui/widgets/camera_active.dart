@@ -67,7 +67,7 @@ class CameraActive extends _CameraActiveBase {
             child ?? Container(),
             Spacer(),
             AlbumsButton(onUploadPicture: onUploadPicture),
-            32.verticalSpace,
+            62.verticalSpace,
           ],
         );
 }

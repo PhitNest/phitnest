@@ -75,13 +75,18 @@ class GymSearchPage extends StatelessWidget {
                           leading: Container(),
                           elevation: 0,
                           leadingWidth: 0,
-                          backgroundColor: Colors.white,
+                          backgroundColor: Colors.grey[50],
                           floating: true,
+                          snap: true,
                           primary: false,
                           toolbarHeight: 50.h,
                           centerTitle: true,
-                          title: Padding(
-                            padding: EdgeInsets.only(top: 20.h),
+                          title: Container(
+                            padding: EdgeInsets.only(
+                              top: 26.h,
+                              left: 8.w,
+                              right: 8.w,
+                            ),
                             child: StyledTextField(
                               hint: 'Search',
                               maxLines: 1,

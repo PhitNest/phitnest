@@ -19,8 +19,6 @@ class VerificationPage extends StatelessWidget {
   final String email;
   final Future<Failure?> Function(String code) confirm;
   final Future<Failure?> Function() resend;
-  final ValueChanged<LoginResponse?> onConfirmed;
-  final Future<void> Function(Failure failure)? onConfirmError;
   final String? password;
   final bool shouldLogin;
 
@@ -48,10 +46,8 @@ class VerificationPage extends StatelessWidget {
     required this.email,
     required this.confirm,
     required this.resend,
-    required this.onConfirmed,
     required this.password,
     this.shouldLogin = true,
-    this.onConfirmError,
   })  : assert(password != null && shouldLogin ||
             password == null && !shouldLogin),
         super(key: key);
@@ -61,13 +57,9 @@ class VerificationPage extends StatelessWidget {
         create: (context) => VerificationBloc(),
         child: BlocConsumer<VerificationBloc, VerificationState>(
           listener: (context, state) {
-            if (state is ConfirmErrorState) {
-              if (onConfirmError != null) {
-                onConfirmError!(state.failure);
-              }
-            } else if (state is ConfirmSuccessState) {
-              onConfirmed(state.response);
-              _bloc(context).add(const ResetEvent());
+            print(state);
+            if (state is ConfirmSuccessState) {
+              Navigator.pop(context, state.response);
             }
           },
           builder: (context, state) {

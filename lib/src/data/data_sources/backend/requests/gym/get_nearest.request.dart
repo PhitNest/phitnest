@@ -14,7 +14,8 @@ class GetNearestGymsRequest extends Request {
 
   @override
   Map<String, dynamic> toJson() => {
-        'location': location,
+        'longitude': location.longitude,
+        'latitude': location.latitude,
         'meters': meters,
         ...(amount != null ? {'amount': amount} : {})
       };

@@ -27,7 +27,7 @@ void onRegister(
       state.pageController.jumpToPage(1);
       // Delay for page rendering
       Future.delayed(
-          Duration(milliseconds: 50), () => add(const SubmitPageTwoEvent()));
+          Duration(milliseconds: 100), () => add(const SubmitPageTwoEvent()));
     } else {
       emit(
         RegisterRequestLoadingState(

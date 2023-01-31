@@ -18,19 +18,19 @@ abstract class InitialState extends RegistrationState {
   final AutovalidateMode autovalidateMode;
 
   // Controllers for the form fields.
-  final firstNameController;
-  final lastNameController;
-  final emailController;
-  final passwordController;
-  final confirmPasswordController;
-  final pageController;
-  final pageOneFormKey;
-  final pageTwoFormKey;
-  final firstNameFocusNode;
-  final lastNameFocusNode;
-  final emailFocusNode;
-  final passwordFocusNode;
-  final confirmPasswordFocusNode;
+  final TextEditingController firstNameController;
+  final TextEditingController lastNameController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final TextEditingController confirmPasswordController;
+  final PageController pageController;
+  final GlobalKey<FormState> pageOneFormKey;
+  final GlobalKey<FormState> pageTwoFormKey;
+  final FocusNode firstNameFocusNode;
+  final FocusNode lastNameFocusNode;
+  final FocusNode emailFocusNode;
+  final FocusNode passwordFocusNode;
+  final FocusNode confirmPasswordFocusNode;
 
   const InitialState({
     required this.firstNameConfirmed,
