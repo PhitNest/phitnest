@@ -13,7 +13,7 @@ void onResend(
 ) {
   if (state is InitialState) {
     emit(
-      LoadingState(
+      ResendingState(
         codeController: state.codeController,
         codeFocusNode: state.codeFocusNode,
         operation: CancelableOperation.fromFuture(

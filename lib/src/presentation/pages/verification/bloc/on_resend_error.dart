@@ -8,7 +8,7 @@ void onResendError(
   Emitter<VerificationState> emit,
   VerificationState state,
 ) {
-  if (state is LoadingState) {
+  if (state is ResendingState) {
     emit(
       ResendErrorState(
         codeController: state.codeController,

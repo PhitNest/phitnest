@@ -13,7 +13,7 @@ void onRegister(
   RegistrationState state,
   ValueChanged<RegistrationEvent> add,
 ) {
-  if (state is PhotoSelectedState) {
+  if (state is GymSelectedState) {
     // Validate (we can't use the form key because we aren't currently on these pages)
     if (validateName(state.firstNameController.text) != null ||
         validateName(state.lastNameController.text) != null) {
@@ -27,7 +27,7 @@ void onRegister(
       state.pageController.jumpToPage(1);
       // Delay for page rendering
       Future.delayed(
-          Duration(milliseconds: 50), () => add(const SubmitPageTwoEvent()));
+          Duration(milliseconds: 100), () => add(const SubmitPageTwoEvent()));
     } else {
       emit(
         RegisterRequestLoadingState(
@@ -45,16 +45,12 @@ void onRegister(
           pageOneFormKey: state.pageOneFormKey,
           pageTwoFormKey: state.pageTwoFormKey,
           autovalidateMode: state.autovalidateMode,
-          photo: state.photo,
           gym: state.gym,
           firstNameConfirmed: state.firstNameConfirmed,
-          gymConfirmed: state.gymConfirmed,
           currentPage: state.currentPage,
           takenEmails: state.takenEmails,
           gyms: state.gyms,
           location: state.location,
-          cameraController: state.cameraController,
-          hasReadPhotoInstructions: state.hasReadPhotoInstructions,
           registerOp: CancelableOperation.fromFuture(
             register(
               state.emailController.text.trim(),

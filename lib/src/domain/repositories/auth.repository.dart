@@ -33,10 +33,10 @@ abstract class AuthRepository {
   }
 
   static FEither<RegisterResponse, Failure> register(
-    String firstName,
-    String lastName,
     String email,
     String password,
+    String firstName,
+    String lastName,
     String gymId,
   ) async {
     final response = await httpAdapter.request(

@@ -1,7 +1,10 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/failure.dart';
+import '../../../../data/data_sources/backend/backend.dart';
+import '../../../../domain/use_cases/use_cases.dart';
 import '../bloc/verification_bloc.dart';
 import '../event/verification_event.dart';
 import '../state/verification_state.dart';
@@ -16,11 +19,23 @@ class VerificationPage extends StatelessWidget {
   final String email;
   final Future<Failure?> Function(String code) confirm;
   final Future<Failure?> Function() resend;
-  final VoidCallback onConfirmed;
-  final Future<void> Function(Failure failure)? onConfirmError;
+  final String? password;
+  final bool shouldLogin;
 
-  void _onCompleted(BuildContext context) =>
-      _bloc(context).add(SubmitEvent(confirmation: confirm));
+  void _onCompleted(BuildContext context) => _bloc(context).add(
+        SubmitEvent(
+          confirmation: (code) => confirm(code).then(
+            (failure) async => failure != null
+                ? Right(failure)
+                : shouldLogin
+                    ? (await login(
+                        email,
+                        password!,
+                      )) as Either<LoginResponse?, Failure>
+                    : Left(null),
+          ),
+        ),
+      );
 
   void _onPressedResend(BuildContext context) =>
       _bloc(context).add(ResendEvent(resend));
@@ -31,26 +46,31 @@ class VerificationPage extends StatelessWidget {
     required this.email,
     required this.confirm,
     required this.resend,
-    required this.onConfirmed,
-    this.onConfirmError,
-  }) : super(key: key);
+    required this.password,
+    this.shouldLogin = true,
+  })  : assert(password != null && shouldLogin ||
+            password == null && !shouldLogin),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) => BlocProvider(
         create: (context) => VerificationBloc(),
         child: BlocConsumer<VerificationBloc, VerificationState>(
           listener: (context, state) {
-            if (state is ConfirmErrorState) {
-              if (onConfirmError != null) {
-                onConfirmError!(state.failure);
-              }
-            } else if (state is ConfirmSuccessState) {
-              onConfirmed();
-              _bloc(context).add(const ResetEvent());
+            print(state);
+            if (state is ConfirmSuccessState) {
+              Navigator.pop(context, state.response);
             }
           },
           builder: (context, state) {
-            if (state is LoadingState) {
+            if (state is ConfirmingState) {
+              return VerificationLoading(
+                codeController: state.codeController,
+                codeFocusNode: state.codeFocusNode,
+                headerText: headerText,
+                email: email,
+              );
+            } else if (state is ResendingState) {
               return VerificationLoading(
                 codeController: state.codeController,
                 codeFocusNode: state.codeFocusNode,

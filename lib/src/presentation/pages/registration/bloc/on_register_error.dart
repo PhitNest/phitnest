@@ -12,10 +12,9 @@ void onRegisterError(
   ValueChanged<RegistrationEvent> add,
 ) {
   if (state is RegisterRequestLoadingState) {
-    if (event.failure == Failures.userNotConfirmed.instance) {
-      state.pageController.jumpToPage(1);
+    if (event.failure == Failures.usernameExists.instance) {
       emit(
-        PhotoSelectedState(
+        GymSelectedState(
           firstNameController: state.firstNameController,
           lastNameController: state.lastNameController,
           emailController: state.emailController,
@@ -29,10 +28,9 @@ void onRegisterError(
           pageController: state.pageController,
           pageOneFormKey: state.pageOneFormKey,
           pageTwoFormKey: state.pageTwoFormKey,
-          autovalidateMode: state.autovalidateMode,
+          autovalidateMode: AutovalidateMode.always,
           gym: state.gym,
           gyms: state.gyms,
-          gymConfirmed: state.gymConfirmed,
           firstNameConfirmed: state.firstNameConfirmed,
           currentPage: state.currentPage,
           takenEmails: {
@@ -40,16 +38,16 @@ void onRegisterError(
             state.emailController.text.trim()
           },
           location: state.location,
-          cameraController: state.cameraController,
-          hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-          photo: state.photo,
         ),
       );
-      // Delay the event to allow the page to render... IS THERE A BETTER WAY TO DO THIS? :(
-      Future.delayed(
-          Duration(milliseconds: 50), () => add(const SubmitPageTwoEvent()));
+      Future.delayed(const Duration(milliseconds: 200),
+          () => state.pageController.jumpToPage(1)).then(
+        (_) => Future.delayed(
+          Duration(milliseconds: 100),
+          () => add(const SubmitPageTwoEvent()),
+        ),
+      );
     } else {
-      state.pageController.jumpToPage(5);
       emit(
         RegisterRequestErrorState(
           firstNameController: state.firstNameController,
@@ -70,15 +68,13 @@ void onRegisterError(
           currentPage: state.currentPage,
           gym: state.gym,
           gyms: state.gyms,
-          gymConfirmed: state.gymConfirmed,
           location: state.location,
           takenEmails: state.takenEmails,
-          cameraController: state.cameraController,
-          hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-          photo: state.photo,
           failure: event.failure,
         ),
       );
+      Future.delayed(const Duration(milliseconds: 200),
+          () => state.pageController.jumpToPage(3));
     }
   } else {
     throw Exception("Invalid state: $state");

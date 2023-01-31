@@ -5,16 +5,88 @@ import '../../../../../common/theme.dart';
 import '../../../../../domain/entities/entities.dart';
 import '../../../../widgets/styled/styled.dart';
 
-class PageFour extends StatelessWidget {
+class PageFourLoading extends StatelessWidget {
+  const PageFourLoading({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => StyledScaffold(
+        body: Column(
+          children: [
+            40.verticalSpace,
+            StyledBackButton(),
+            Expanded(
+              child: Column(
+                children: [
+                  180.verticalSpace,
+                  Text(
+                    "Getting you started...",
+                    style: theme.textTheme.headlineLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                  40.verticalSpace,
+                  CircularProgressIndicator(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+}
+
+class PageFourError extends _PageFourBase {
+  final String error;
+
+  PageFourError({
+    Key? key,
+    required GymEntity gym,
+    required VoidCallback onPressedYes,
+    required VoidCallback onPressedNo,
+    required this.error,
+  }) : super(
+          key: key,
+          gym: gym,
+          onPressedYes: onPressedYes,
+          onPressedNo: onPressedNo,
+          buttonText: "RETRY",
+          child: Text(
+            error,
+            style: theme.textTheme.labelLarge!.copyWith(
+              color: theme.errorColor,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        );
+}
+
+class PageFour extends _PageFourBase {
+  PageFour({
+    Key? key,
+    required GymEntity gym,
+    required VoidCallback onPressedYes,
+    required VoidCallback onPressedNo,
+  }) : super(
+          key: key,
+          gym: gym,
+          onPressedYes: onPressedYes,
+          onPressedNo: onPressedNo,
+          buttonText: "YES",
+        );
+}
+
+class _PageFourBase extends StatelessWidget {
   final GymEntity gym;
   final VoidCallback onPressedYes;
   final VoidCallback onPressedNo;
+  final Widget? child;
+  final String buttonText;
 
-  const PageFour({
+  const _PageFourBase({
     Key? key,
     required this.gym,
     required this.onPressedYes,
     required this.onPressedNo,
+    required this.buttonText,
+    this.child,
   }) : super(key: key);
 
   @override
@@ -38,10 +110,12 @@ class PageFour extends StatelessWidget {
             style: theme.textTheme.labelLarge,
             textAlign: TextAlign.center,
           ),
-          134.verticalSpace,
+          100.verticalSpace,
+          child ?? Container(),
+          20.verticalSpace,
           StyledButton(
             onPressed: onPressedYes,
-            text: "YES",
+            text: buttonText,
           ),
           Spacer(),
           StyledUnderlinedTextButton(

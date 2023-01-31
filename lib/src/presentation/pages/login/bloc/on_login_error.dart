@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../common/constants/failures.dart';
 import '../event/login_event.dart';
 import '../state/confirm_user.dart';
-import '../state/loading.dart';
+import '../state/initial/loading.dart';
 import '../state/login_state.dart';
 
 void onLoginError(

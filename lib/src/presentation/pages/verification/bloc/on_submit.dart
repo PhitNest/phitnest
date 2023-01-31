@@ -23,20 +23,17 @@ void onSubmit(
       );
     } else {
       emit(
-        LoadingState(
+        ConfirmingState(
           codeController: state.codeController,
           codeFocusNode: state.codeFocusNode,
           operation: CancelableOperation.fromFuture(
             event.confirmation(
               state.codeController.text,
             )..then(
-                (failure) {
-                  if (failure != null) {
-                    add(ConfirmErrorEvent(failure));
-                  } else {
-                    add(const ConfirmSuccessEvent());
-                  }
-                },
+                (either) => either.fold(
+                  (response) => add(ConfirmSuccessEvent(response)),
+                  (failure) => add(ConfirmErrorEvent(failure)),
+                ),
               ),
           ),
         ),
