@@ -61,27 +61,6 @@ abstract class AuthRepository {
     return response;
   }
 
-  static FEither<UserEntity, Failure> confirmRegister(
-    String email,
-    String code,
-  ) async {
-    final result = await httpAdapter.request(
-      kConfirmRegisterRoute,
-      ConfirmRegisterRequest(
-        email: email,
-        code: code,
-      ),
-    );
-    if (result.isLeft()) {
-      await cacheUser(
-        result.swap().getOrElse(
-              () => throw Exception("This should not happen."),
-            ),
-      );
-    }
-    return result;
-  }
-
   static Future<Failure?> forgotPassword(
     String email,
   ) async {

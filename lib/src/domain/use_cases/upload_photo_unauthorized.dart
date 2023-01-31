@@ -21,6 +21,6 @@ Future<Failure?> uploadPhotoUnauthorized(
         .then(
           (res) => res.fold(
             (res) => uploadPhoto(res.url, photo),
-            (failure) => Future.value(failure),
+            (failure) => failure,
           ),
         );

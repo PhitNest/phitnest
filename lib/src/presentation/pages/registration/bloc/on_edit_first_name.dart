@@ -22,30 +22,6 @@ void onEditFirstName(
         firstNameConfirmed: validation == null,
       ),
     );
-  } else if (state is PhotoSelectedState) {
-    emit(
-      state.copyWith(
-        firstNameConfirmed: validation == null,
-      ),
-    );
-  } else if (state is CaptureErrorState) {
-    emit(
-      state.copyWith(
-        firstNameConfirmed: validation == null,
-      ),
-    );
-  } else if (state is CapturingState) {
-    emit(
-      state.copyWith(
-        firstNameConfirmed: validation == null,
-      ),
-    );
-  } else if (state is CameraErrorState) {
-    emit(
-      state.copyWith(
-        firstNameConfirmed: validation == null,
-      ),
-    );
   } else if (state is GymSelectedState) {
     emit(
       state.copyWith(

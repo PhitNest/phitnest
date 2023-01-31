@@ -21,30 +21,6 @@ void onSwipe(
           currentPage: event.pageIndex,
         ),
       );
-    } else if (state is PhotoSelectedState) {
-      emit(
-        state.copyWith(
-          currentPage: event.pageIndex,
-        ),
-      );
-    } else if (state is CameraErrorState) {
-      emit(
-        state.copyWith(
-          currentPage: event.pageIndex,
-        ),
-      );
-    } else if (state is CaptureErrorState) {
-      emit(
-        state.copyWith(
-          currentPage: event.pageIndex,
-        ),
-      );
-    } else if (state is CapturingState) {
-      emit(
-        state.copyWith(
-          currentPage: event.pageIndex,
-        ),
-      );
     } else if (state is GymSelectedState) {
       emit(
         state.copyWith(

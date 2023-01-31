@@ -15,7 +15,7 @@ void onRegisterError(
     if (event.failure == Failures.userNotConfirmed.instance) {
       state.pageController.jumpToPage(1);
       emit(
-        PhotoSelectedState(
+        GymSelectedState(
           firstNameController: state.firstNameController,
           lastNameController: state.lastNameController,
           emailController: state.emailController,
@@ -32,7 +32,6 @@ void onRegisterError(
           autovalidateMode: state.autovalidateMode,
           gym: state.gym,
           gyms: state.gyms,
-          gymConfirmed: state.gymConfirmed,
           firstNameConfirmed: state.firstNameConfirmed,
           currentPage: state.currentPage,
           takenEmails: {
@@ -40,9 +39,6 @@ void onRegisterError(
             state.emailController.text.trim()
           },
           location: state.location,
-          cameraController: state.cameraController,
-          hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-          photo: state.photo,
         ),
       );
       // Delay the event to allow the page to render... IS THERE A BETTER WAY TO DO THIS? :(
@@ -70,12 +66,8 @@ void onRegisterError(
           currentPage: state.currentPage,
           gym: state.gym,
           gyms: state.gyms,
-          gymConfirmed: state.gymConfirmed,
           location: state.location,
           takenEmails: state.takenEmails,
-          cameraController: state.cameraController,
-          hasReadPhotoInstructions: state.hasReadPhotoInstructions,
-          photo: state.photo,
           failure: event.failure,
         ),
       );
