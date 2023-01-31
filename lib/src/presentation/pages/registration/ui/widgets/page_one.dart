@@ -33,16 +33,7 @@ class PageOne extends StatelessWidget {
   Widget build(BuildContext context) => Column(
         children: [
           40.verticalSpace,
-          Container(
-            padding: EdgeInsets.only(
-              left: 8.w,
-            ),
-            alignment: Alignment.centerLeft,
-            width: double.infinity,
-            child: StyledBackButton(
-              onPressed: () => Navigator.pop(context),
-            ),
-          ),
+          StyledBackButton(),
           (32 - keyboardPadding / 10).verticalSpace,
           Text(
             "Let's get started!\nWhat can we call you?",

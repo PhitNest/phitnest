@@ -41,12 +41,7 @@ abstract class ForgotPasswordBasePage extends StatelessWidget {
             child: Column(
               children: [
                 40.verticalSpace,
-                Container(
-                  width: double.infinity,
-                  alignment: Alignment.centerLeft,
-                  child: StyledBackButton(
-                      onPressed: () => Navigator.of(context).pop()),
-                ),
+                StyledBackButton(),
                 30.verticalSpace,
                 Text(
                   'Forgot the password?',

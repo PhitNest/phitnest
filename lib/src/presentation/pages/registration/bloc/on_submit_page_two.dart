@@ -28,30 +28,6 @@ void onSubmitPageTwo(
             autovalidateMode: AutovalidateMode.always,
           ),
         );
-      } else if (state is PhotoSelectedState) {
-        emit(
-          state.copyWith(
-            autovalidateMode: AutovalidateMode.always,
-          ),
-        );
-      } else if (state is CameraErrorState) {
-        emit(
-          state.copyWith(
-            autovalidateMode: AutovalidateMode.always,
-          ),
-        );
-      } else if (state is CaptureErrorState) {
-        emit(
-          state.copyWith(
-            autovalidateMode: AutovalidateMode.always,
-          ),
-        );
-      } else if (state is CapturingState) {
-        emit(
-          state.copyWith(
-            autovalidateMode: AutovalidateMode.always,
-          ),
-        );
       } else if (state is GymSelectedState) {
         emit(
           state.copyWith(

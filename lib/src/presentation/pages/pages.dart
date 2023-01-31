@@ -9,3 +9,5 @@ export 'forgotPasswordSubmit/forgot_password_submit_page.dart';
 export 'options/ui/options_page.dart';
 export 'chat/ui/chat_page.dart';
 export 'explore/ui/explore_page.dart';
+export 'gymSearch/gym_search_page.dart';
+export 'profilePicture/ui/profile_picture_page.dart';

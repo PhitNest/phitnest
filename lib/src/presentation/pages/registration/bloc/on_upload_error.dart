@@ -8,16 +8,16 @@ void onUploadError(
   Emitter<RegistrationState> emit,
   RegistrationState state,
 ) {
-  if (state is UploadingPhotoState) {
+  if (state is UploadingState) {
     emit(
       UploadErrorState(
-        photo: state.photo,
         failure: event.failure,
-        registration: state.registration,
+        file: state.file,
         password: state.password,
+        response: state.response,
       ),
     );
   } else {
-    throw Exception("Invalid state: $state");
+    throw Exception('Invalid state: $state');
   }
 }
