@@ -53,3 +53,13 @@ Future<bool> cacheUser(UserEntity? user) async {
     ]).then((_) => true);
   }
 }
+
+Future<bool> cacheProfilePictureUser(ProfilePictureUserEntity? user) async {
+  return Future.wait([
+    cacheUser(user),
+    user != null
+        ? sharedPreferences.setString(
+            'user.profilePictureUrl', user.profilePictureUrl)
+        : sharedPreferences.remove('user.profilePictureUrl'),
+  ]).then((_) => true);
+}

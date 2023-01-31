@@ -7,18 +7,11 @@ Future<Failure?> forgotPasswordSubmit(
   String password,
   String code,
 ) =>
-    httpAdapter
-        .request(
-          kForgotPasswordSubmitRoute,
-          ForgotPasswordSubmitRequest(
-            email: email,
-            password: password,
-            code: code,
-          ),
-        )
-        .then(
-          (result) => result.fold(
-            (_) => null,
-            (failure) => failure,
-          ),
-        );
+    httpAdapter.requestVoid(
+      kForgotPasswordSubmitRoute,
+      ForgotPasswordSubmitRequest(
+        email: email,
+        password: password,
+        code: code,
+      ),
+    );

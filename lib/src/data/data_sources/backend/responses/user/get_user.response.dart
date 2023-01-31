@@ -5,8 +5,7 @@ class GetUserResponseParser extends Parser<GetUserResponse> {
   const GetUserResponseParser() : super();
 
   @override
-  GetUserResponse fromJson(Map<String, dynamic> json) =>
-      GetUserResponse(
+  GetUserResponse fromJson(Map<String, dynamic> json) => GetUserResponse(
         id: json['_id'],
         cognitoId: json['cognitoId'],
         confirmed: json['confirmed'],
@@ -16,7 +15,6 @@ class GetUserResponseParser extends Parser<GetUserResponse> {
         profilePictureUrl: json['profilePictureUrl'],
         gym: GymParser().fromJson(json['gym']),
       );
-
 }
 
 class GetUserResponse extends ProfilePicturePublicUserEntity {

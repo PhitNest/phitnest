@@ -19,7 +19,12 @@ class ConfirmEmailPage extends StatelessWidget {
   Widget build(BuildContext context) => VerificationPage(
         headerText: "Did you get the\nverification code?",
         email: email,
-        confirm: (code) => confirmRegister(email, code),
+        confirm: (code) => confirmRegister(email, code).then(
+          (either) => either.fold(
+            (_) => null,
+            (failure) => failure,
+          ),
+        ),
         resend: () => resendConfirmation(email),
         password: password,
         shouldLogin: shouldLogin,

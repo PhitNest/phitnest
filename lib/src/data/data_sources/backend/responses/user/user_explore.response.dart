@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../../../common/utils/utils.dart';
 import '../../../../../domain/entities/entities.dart';
-import '../../backend.dart';
 
 class UserExploreResponseParser extends Parser<UserExploreResponse> {
   const UserExploreResponseParser() : super();
@@ -8,30 +9,20 @@ class UserExploreResponseParser extends Parser<UserExploreResponse> {
   @override
   UserExploreResponse fromJson(Map<String, dynamic> json) =>
       UserExploreResponse(
-        user: ProfilePicturePublicUserParser().fromList(json['user']),
-        request: FriendRequestParser().fromList(json['request']),
+        users: ProfilePicturePublicUserParser().fromList(json['users']),
+        requests: FriendRequestParser().fromList(json['requests']),
       );
 }
 
-class UserExploreResponse extends Request {
-  final List<ProfilePicturePublicUserEntity> user;
-  final List<FriendRequestEntity> request;
+class UserExploreResponse extends Equatable {
+  final List<ProfilePicturePublicUserEntity> users;
+  final List<FriendRequestEntity> requests;
 
   const UserExploreResponse({
-    required this.user,
-    required this.request,
+    required this.users,
+    required this.requests,
   }) : super();
 
   @override
-  Map<String, dynamic> toJson() => {
-        'user': List<ProfilePicturePublicUserEntity>.from(user)
-            .map((u) => u.toJson())
-            .toList(),
-        'request': List<FriendRequestEntity>.from(request)
-            .map((req) => req.toJson())
-            .toList(),
-      };
-
-  @override
-  List<Object?> get props => [user, request];
+  List<Object?> get props => [users, requests];
 }

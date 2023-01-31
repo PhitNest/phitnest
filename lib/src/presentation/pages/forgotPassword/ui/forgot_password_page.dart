@@ -25,7 +25,7 @@ class ForgotPasswordPage extends StatelessWidget {
       child: BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
         listener: (context, state) async {
           if (state is SuccessState) {
-            Navigator.of(context).push(
+            final result = await Navigator.of(context).push<LoginResponse>(
               CupertinoPageRoute(
                 builder: (context) => ForgotPasswordSubmitPage(
                   email: state.emailController.text.trim(),
@@ -33,6 +33,20 @@ class ForgotPasswordPage extends StatelessWidget {
                 ),
               ),
             );
+            if (result != null) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => HomePage(
+                    initialUserData: result.user,
+                    initialPassword: state.passwordController.text,
+                    initialAccessToken: result.session.accessToken,
+                    initialRefreshToken: result.session.refreshToken,
+                  ),
+                ),
+                (_) => false,
+              );
+            }
           } else if (state is ErrorState) {
             ScaffoldMessenger.of(context).showMaterialBanner(
               MaterialBanner(

@@ -62,7 +62,7 @@ abstract class AuthRepository {
     return response;
   }
 
-  static FEither<UserEntity, Failure> confirmRegister(
+  static FEither<ProfilePictureUserEntity, Failure> confirmRegister(
     String email,
     String code,
   ) async {
@@ -74,7 +74,7 @@ abstract class AuthRepository {
       ),
     );
     if (result.isLeft()) {
-      await cacheUser(
+      await cacheProfilePictureUser(
         result.swap().getOrElse(
               () => throw Exception("This should not happen."),
             ),
@@ -104,27 +104,28 @@ abstract class AuthRepository {
 
   static Future<Failure?> signOut(
     bool allDevices,
-  ) async {
-    final result = await httpAdapter.request(
-      kSignOutRoute,
-      SignOutRequest(
-        allDevices: allDevices,
-      ),
-    );
-
-    return result.fold(
-      (res) async {
-        await cacheAccessToken(null);
-        await cacheRefreshToken(null);
-        await cacheUser(null);
-        await cacheEmail(null);
-        await cacheGym(null);
-
-        return null;
-      },
-      (failure) {
-        return failure;
-      },
-    );
-  }
+  ) =>
+      httpAdapter
+          .requestVoid(
+        kSignOutRoute,
+        SignOutRequest(
+          allDevices: allDevices,
+        ),
+      )
+          .then(
+        (failure) async {
+          if (failure == null) {
+            await Future.wait(
+              [
+                cacheAccessToken(null),
+                cacheRefreshToken(null),
+                cacheUser(null),
+                cacheEmail(null),
+                cacheGym(null),
+              ],
+            );
+          }
+          return failure;
+        },
+      );
 }

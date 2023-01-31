@@ -80,16 +80,15 @@ class DioHttpAdapter implements IHttpAdapter {
     ReqType data, {
     Map<String, dynamic>? headers,
     String? authorization,
-  }) async {
-    return _request(route, data, headers: headers, authorization: authorization)
-        .then(
-      (either) => either.fold(
-        (json) => Left(route.parser.fromJson(json)),
-        (list) => Right(Failures.networkFailure.instance),
-        (failure) => Right(failure),
-      ),
-    );
-  }
+  }) =>
+      _request(route, data, headers: headers, authorization: authorization)
+          .then(
+        (either) => either.fold(
+          (json) => Left(route.parser.fromJson(json)),
+          (list) => Right(Failures.networkFailure.instance),
+          (failure) => Right(failure),
+        ),
+      );
 
   @override
   FEither<List<ResType>, Failure>
@@ -98,14 +97,26 @@ class DioHttpAdapter implements IHttpAdapter {
     ReqType data, {
     Map<String, dynamic>? headers,
     String? authorization,
-  }) async {
-    return _request(route, data, headers: headers, authorization: authorization)
-        .then(
-      (either) => either.fold(
-        (res) => Right(Failures.networkFailure.instance),
-        (list) => Left(route.parser.fromList(list)),
-        (failure) => Right(failure),
-      ),
-    );
-  }
+  }) =>
+          _request(route, data, headers: headers, authorization: authorization)
+              .then(
+            (either) => either.fold(
+              (res) => Right(Failures.networkFailure.instance),
+              (list) => Left(route.parser.fromList(list)),
+              (failure) => Right(failure),
+            ),
+          );
+
+  Future<Failure?> requestVoid<ReqType extends Writeable>(
+    Route<ReqType, void> route,
+    ReqType data, {
+    Map<String, dynamic>? headers,
+    String? authorization,
+  }) =>
+      request(route, data, headers: headers, authorization: authorization).then(
+        (either) => either.fold(
+          (_) => null,
+          (failure) => failure,
+        ),
+      );
 }

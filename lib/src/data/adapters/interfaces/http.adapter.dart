@@ -17,4 +17,11 @@ abstract class IHttpAdapter {
     Map<String, dynamic>? headers,
     String? authorization,
   });
+
+  Future<Failure?> requestVoid<ReqType extends Writeable>(
+    Route<ReqType, void> route,
+    ReqType data, {
+    Map<String, dynamic>? headers,
+    String? authorization,
+  });
 }
