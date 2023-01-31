@@ -10,11 +10,19 @@ enum Failures {
   failedToCropImage,
   invalidCode,
   serializationError,
+  usernameExists,
+  profilePictureNotFound,
 }
 
 extension Instance on Failures {
   Failure get instance {
     switch (this) {
+      case Failures.profilePictureNotFound:
+        return const Failure("FailedToGetProfilePictureUrl",
+            "Failed to get profile picture url");
+      case Failures.usernameExists:
+        return const Failure("UsernameExistsException",
+            "An account with the given email already exists.");
       case Failures.invalidCode:
         return const Failure("InvalidCode", "Invalid code.");
       case Failures.networkFailure:

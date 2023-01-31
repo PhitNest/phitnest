@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/theme.dart';
+import '../../../../data/data_sources/backend/backend.dart';
 import '../../pages.dart';
 import '../bloc/forgot_password_bloc.dart';
 import '../event/submit.dart';
@@ -64,18 +65,16 @@ class ForgotPasswordPage extends StatelessWidget {
               ),
             );
           } else if (state is ConfirmEmailState) {
-            final confirmed = await Navigator.of(context).push(
-              CupertinoPageRoute<bool>(
+            final response = await Navigator.of(context).push(
+              CupertinoPageRoute<LoginResponse>(
                 builder: (context) => ConfirmEmailPage(
                   email: state.emailController.text.trim(),
                   shouldLogin: false,
                   password: null,
-                  onConfirmed: (context, response) =>
-                      Navigator.pop(context, true),
                 ),
               ),
             );
-            if (confirmed ?? false) {
+            if (response != null) {
               Navigator.push(
                 context,
                 CupertinoPageRoute(

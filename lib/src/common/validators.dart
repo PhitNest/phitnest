@@ -1,6 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 
-/// Length for the first name and email address
+/// Max length for the first name and email address
 const int kMaxNameLength = 24;
 
 const int kMinPasswordLength = 8;

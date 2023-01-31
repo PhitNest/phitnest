@@ -12,8 +12,7 @@ void onRegisterError(
   ValueChanged<RegistrationEvent> add,
 ) {
   if (state is RegisterRequestLoadingState) {
-    if (event.failure == Failures.userNotConfirmed.instance) {
-      state.pageController.jumpToPage(1);
+    if (event.failure == Failures.usernameExists.instance) {
       emit(
         GymSelectedState(
           firstNameController: state.firstNameController,
@@ -29,7 +28,7 @@ void onRegisterError(
           pageController: state.pageController,
           pageOneFormKey: state.pageOneFormKey,
           pageTwoFormKey: state.pageTwoFormKey,
-          autovalidateMode: state.autovalidateMode,
+          autovalidateMode: AutovalidateMode.always,
           gym: state.gym,
           gyms: state.gyms,
           firstNameConfirmed: state.firstNameConfirmed,
@@ -41,11 +40,14 @@ void onRegisterError(
           location: state.location,
         ),
       );
-      // Delay the event to allow the page to render... IS THERE A BETTER WAY TO DO THIS? :(
-      Future.delayed(
-          Duration(milliseconds: 50), () => add(const SubmitPageTwoEvent()));
+      Future.delayed(const Duration(milliseconds: 200),
+          () => state.pageController.jumpToPage(1)).then(
+        (_) => Future.delayed(
+          Duration(milliseconds: 100),
+          () => add(const SubmitPageTwoEvent()),
+        ),
+      );
     } else {
-      state.pageController.jumpToPage(5);
       emit(
         RegisterRequestErrorState(
           firstNameController: state.firstNameController,
@@ -71,6 +73,8 @@ void onRegisterError(
           failure: event.failure,
         ),
       );
+      Future.delayed(const Duration(milliseconds: 200),
+          () => state.pageController.jumpToPage(3));
     }
   } else {
     throw Exception("Invalid state: $state");

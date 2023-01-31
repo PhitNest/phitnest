@@ -18,6 +18,7 @@ void onInitialized(
     final cameraController = CameraController(
       event.cameraDescription,
       ResolutionPreset.max,
+      enableAudio: false,
     );
     emit(
       CameraLoadingState(

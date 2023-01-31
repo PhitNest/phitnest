@@ -3,7 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../data/data_sources/backend/backend.dart';
+import '../../../../data/data_sources/s3/s3.dart';
 import '../../../../domain/entities/entities.dart';
+import '../../../../domain/use_cases/use_cases.dart';
 import '../../../widgets/styled/styled.dart';
 import '../../pages.dart';
 import '../bloc/registration_bloc.dart';
@@ -64,19 +67,49 @@ void _onPressedNotMyGym(BuildContext context, GymSelectedState state) =>
 void _onPressedSubmitRegister(BuildContext context) =>
     _bloc(context).add(RegisterEvent());
 
-void _onSubmitPhotoInstructions(BuildContext context, XFile? image) =>
-    Navigator.push(
+void _onSubmitPhotoInstructions(BuildContext context, XFile? initialImage,
+        RegisterSuccessState state) =>
+    Navigator.push<XFile>(
       context,
       CupertinoPageRoute(
         builder: (context) => ProfilePicturePage(
-          initialImage: image,
+          initialImage: initialImage,
+          uploadImage: (photo) async {
+            final failure = await uploadPhoto(state.response.uploadUrl, photo);
+            if (failure != null) {
+              return uploadPhotoUnauthorized(
+                  state.response.user.email, state.password, photo);
+            }
+            return null;
+          },
         ),
       ),
     ).then(
-      (image) {
+      (image) async {
         if (image != null) {
-          final profilePicture = image as XFile;
-          _bloc(context).add(UploadEvent(profilePicture));
+          final response = await Navigator.pushReplacement<LoginResponse, void>(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => ConfirmEmailPage(
+                email: state.response.user.email,
+                password: state.password,
+              ),
+            ),
+          );
+          if (response != null) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => HomePage(
+                  initialAccessToken: response.session.accessToken,
+                  initialPassword: state.password,
+                  initialRefreshToken: response.session.refreshToken,
+                  initialUserData: response.user,
+                ),
+              ),
+              (_) => false,
+            );
+          }
         }
       },
     );
@@ -87,51 +120,20 @@ class RegistrationPage extends StatelessWidget {
   Widget build(BuildContext context) => BlocProvider(
         create: (context) => RegistrationBloc(),
         child: BlocConsumer<RegistrationBloc, RegistrationState>(
-          listener: (context, state) {
-            if (state is UploadSuccessState) {
-              Navigator.pushReplacement(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => ConfirmEmailPage(
-                    email: state.response.user.email,
-                    password: state.password,
-                    onConfirmed: (context, response) =>
-                        Navigator.pushAndRemoveUntil(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => HomePage(
-                          initialAccessToken: response!.session.accessToken,
-                          initialPassword: state.password,
-                          initialRefreshToken: response.session.refreshToken,
-                          initialUserData: response.user,
-                        ),
-                      ),
-                      (_) => false,
-                    ),
-                  ),
-                ),
-              );
-            }
-          },
+          listener: (context, state) {},
           // Dark text for device status bar (time and battery, etc.)
           builder: (context, state) {
             // This is the height of the keyboard (0 if the keyboard is not visible)
             final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-            if (state is UploadErrorState) {
-              return UploadLoadingError(
-                errorMessage: state.failure.message,
-                onPressedRetry: () =>
-                    _bloc(context).add(UploadEvent(state.file)),
-              );
-            } else if (state is UploadingState || state is UploadSuccessState) {
-              return const UploadLoading();
-            } else if (state is RegisterSuccessState) {
+            if (state is RegisterSuccessState) {
               return ProfilePictureInstructions(
                 onPressedTakePhoto: () =>
-                    _onSubmitPhotoInstructions(context, null),
+                    _onSubmitPhotoInstructions(context, null, state),
                 onUploadFromAlbums: (file) =>
-                    _onSubmitPhotoInstructions(context, file),
+                    _onSubmitPhotoInstructions(context, file, state),
               );
+            } else if (state is RegisterRequestLoadingState) {
+              return const PageFourLoading();
             } else if (state is InitialState) {
               return StyledScaffold(
                 body: SingleChildScrollView(

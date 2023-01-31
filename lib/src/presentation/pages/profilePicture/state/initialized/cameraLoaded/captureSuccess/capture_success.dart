@@ -1,6 +1,10 @@
 import 'package:camera/camera.dart';
 
-import 'camera_loaded.dart';
+import '../camera_loaded.dart';
+
+export 'uploading.dart';
+export 'upload_error.dart';
+export 'upload_success.dart';
 
 class CaptureSuccessState extends CameraLoadedState {
   final XFile file;

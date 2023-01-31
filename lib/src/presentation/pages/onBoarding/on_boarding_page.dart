@@ -53,7 +53,7 @@ class OnBoardingPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                167.verticalSpace,
+                120.verticalSpace,
               ],
             ),
           ),

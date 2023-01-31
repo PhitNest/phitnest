@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../data/data_sources/backend/backend.dart';
 import '../../../widgets/styled/styled.dart';
 import '../../pages.dart';
 import '../bloc/login_bloc.dart';
@@ -49,7 +50,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) => BlocProvider<LoginBloc>(
         create: (context) => LoginBloc(),
         child: BlocConsumer<LoginBloc, LoginState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is LoginSuccessState) {
               Navigator.pushAndRemoveUntil(
                 context,
@@ -66,28 +67,29 @@ class LoginPage extends StatelessWidget {
             } else if (state is ConfirmUserState) {
               // Navigate to confirm email page to confirm registration and reset login page state
               _bloc(context).add(ResetEvent());
-              Navigator.push(
+              final response = await Navigator.push<LoginResponse>(
                 context,
                 CupertinoPageRoute(
                   builder: (context) => ConfirmEmailPage(
                     email: state.email,
                     password: state.password,
-                    onConfirmed: (context, response) =>
-                        Navigator.pushAndRemoveUntil(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => HomePage(
-                          initialAccessToken: response!.session.accessToken,
-                          initialRefreshToken: response.session.refreshToken,
-                          initialUserData: response.user,
-                          initialPassword: state.password,
-                        ),
-                      ),
-                      (_) => false,
-                    ),
                   ),
                 ),
               );
+              if (response != null) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => HomePage(
+                      initialAccessToken: response.session.accessToken,
+                      initialRefreshToken: response.session.refreshToken,
+                      initialUserData: response.user,
+                      initialPassword: state.password,
+                    ),
+                  ),
+                  (_) => false,
+                );
+              }
             }
           },
           builder: (context, state) {

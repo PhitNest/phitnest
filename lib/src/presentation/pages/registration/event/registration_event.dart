@@ -11,9 +11,6 @@ export 'retry_load_gyms.dart';
 export 'register.dart';
 export 'register_error.dart';
 export 'register_success.dart';
-export 'upload_photo.dart';
-export 'upload_error.dart';
-export 'upload_success.dart';
 
 /// This is the base event for the registration page
 abstract class RegistrationEvent extends Equatable {

@@ -18,11 +18,5 @@ class ForgotPasswordSubmitPage extends VerificationPage {
             code,
           ),
           resend: () => forgotPassword(email),
-          onConfirmed: (response) => HomePage(
-            initialAccessToken: response!.session.accessToken,
-            initialRefreshToken: response.session.refreshToken,
-            initialUserData: response.user,
-            initialPassword: password,
-          ),
         );
 }

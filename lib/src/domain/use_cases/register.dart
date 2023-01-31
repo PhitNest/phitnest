@@ -4,10 +4,10 @@ import '../../data/data_sources/backend/backend.dart';
 import '../repositories/repositories.dart';
 
 FEither<RegisterResponse, Failure> register(
-  String firstName,
-  String lastName,
   String email,
   String password,
+  String firstName,
+  String lastName,
   String gymId,
 ) =>
-    AuthRepository.register(firstName, lastName, email, password, gymId);
+    AuthRepository.register(email, password, firstName, lastName, gymId);

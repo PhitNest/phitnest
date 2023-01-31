@@ -31,8 +31,8 @@ void onSubmit(
               state.codeController.text,
             )..then(
                 (either) => either.fold(
-                  (response) => ConfirmSuccessEvent(response),
-                  (failure) => ConfirmErrorEvent(failure),
+                  (response) => add(ConfirmSuccessEvent(response)),
+                  (failure) => add(ConfirmErrorEvent(failure)),
                 ),
               ),
           ),

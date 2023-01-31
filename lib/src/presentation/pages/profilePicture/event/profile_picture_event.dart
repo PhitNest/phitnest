@@ -8,6 +8,9 @@ export 'capture_error.dart';
 export 'capture_success.dart';
 export 'retake_photo.dart';
 export 'retry_initialize_camera.dart';
+export 'upload_error.dart';
+export 'upload_success.dart';
+export 'upload.dart';
 
 /// Base event for the profile picture screen
 abstract class ProfilePictureEvent extends Equatable {
