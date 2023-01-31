@@ -4,8 +4,7 @@ import { Controller, HttpMethod } from "../types";
 import { IAuthEntity, IUserEntity } from "../../../domain/entities";
 import { login } from "../../../domain/use-cases";
 
-type LoginResponse = {
-  session: IAuthEntity;
+type LoginResponse = IAuthEntity & {
   user: IUserEntity;
 };
 

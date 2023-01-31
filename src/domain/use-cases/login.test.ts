@@ -69,13 +69,11 @@ test("Login", async () => {
     ...invalidUser,
     gymId: gym._id,
   });
-  let result = (await login(user1.email, "password1")) as {
-    session: IAuthEntity;
+  let result = (await login(user1.email, "password1")) as IAuthEntity & {
     user: IUserEntity;
   };
   compareUsers(result.user, user1);
-  result = (await login(user2.email, "password2")) as {
-    session: IAuthEntity;
+  result = (await login(user2.email, "password2")) as IAuthEntity & {
     user: IUserEntity;
   };
   compareUsers(result.user, user2);
