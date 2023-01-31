@@ -8,14 +8,14 @@ class UserExploreResponseParser extends Parser<UserExploreResponse> {
   @override
   UserExploreResponse fromJson(Map<String, dynamic> json) =>
       UserExploreResponse(
-        user: ProfilePicturePublicUserParser().fromJson(json['user']),
-        request: FriendRequestParser().fromJson(json['request']),
+        user: ProfilePicturePublicUserParser().fromList(json['user']),
+        request: FriendRequestParser().fromList(json['request']),
       );
 }
 
 class UserExploreResponse extends Request {
-  final ProfilePicturePublicUserEntity user;
-  final FriendRequestEntity request;
+  final List<ProfilePicturePublicUserEntity> user;
+  final List<FriendRequestEntity> request;
 
   const UserExploreResponse({
     required this.user,
@@ -24,8 +24,12 @@ class UserExploreResponse extends Request {
 
   @override
   Map<String, dynamic> toJson() => {
-        'user': user.toJson(),
-        'request': request.toJson(),
+        'user': List<ProfilePicturePublicUserEntity>.from(user)
+            .map((u) => u.toJson())
+            .toList(),
+        'request': List<FriendRequestEntity>.from(request)
+            .map((req) => req.toJson())
+            .toList(),
       };
 
   @override

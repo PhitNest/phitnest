@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 
-import '../../common/failure.dart';
-import '../../data/adapters/adapters.dart';
-import '../../data/data_sources/backend/backend.dart';
-import '../../data/data_sources/geolocator/geolocator.dart';
-import '../entities/entities.dart';
+import '../../../common/failure.dart';
+import '../../../data/adapters/adapters.dart';
+import '../../../data/data_sources/backend/backend.dart';
+import '../../../data/data_sources/geolocator/geolocator.dart';
+import '../../entities/entities.dart';
 
 typedef LocationAndGymsResponse
     = Either<Tuple2<List<GymEntity>, LocationEntity>, Failure>;

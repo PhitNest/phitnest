@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../../../../domain/use_cases/forgot_password_submit.dart';
+import '../../../../../domain/use_cases/auth/forgot_password_submit.dart';
 import '../../../../../domain/use_cases/use_cases.dart';
 import '../../../verification/ui/verification_page.dart';
 

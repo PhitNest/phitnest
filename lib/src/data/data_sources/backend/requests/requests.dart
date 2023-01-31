@@ -8,7 +8,6 @@ export 'empty.request.dart';
 export 'friendRequest/friend_request.dart';
 export 'gym/gym.dart';
 export 'profilePicture/profile_picture.dart';
-export 'user/user.dart';
 
 abstract class Request extends Equatable with Writeable {
   const Request() : super();

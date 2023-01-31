@@ -1,6 +1,6 @@
 import '../backend.dart';
 
-const kExploreRoute = Route<UserExploreRequest, UserExploreResponse>(
+const kExploreRoute = Route<EmptyRequest, UserExploreResponse>(
   '/user/explore',
   HttpMethod.get,
   UserExploreResponseParser(),

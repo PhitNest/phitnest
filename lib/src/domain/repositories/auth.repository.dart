@@ -83,55 +83,6 @@ abstract class AuthRepository {
     return result;
   }
 
-  static Future<Failure?> forgotPassword(
-    String email,
-  ) async {
-    final result = await httpAdapter.request(
-      kForgotPasswordRoute,
-      ForgotPasswordRequest(
-        email: email,
-      ),
-    );
-    return result.fold(
-      (response) => null,
-      (failure) => failure,
-    );
-  }
-
-  static Future<Failure?> forgotPasswordSubmit(
-    String email,
-    String code,
-    String password,
-  ) async {
-    final result = await httpAdapter.request(
-      kForgotPasswordSubmitRoute,
-      ForgotPasswordSubmitRequest(
-        email: email,
-        code: code,
-        password: password,
-      ),
-    );
-    return result.fold(
-      (response) => null,
-      (failure) => failure,
-    );
-  }
-
-  static Future<Failure?> resendConfirmation(
-    String email,
-  ) async {
-    final result = await httpAdapter.request(
-      kResendConfirmationRoute,
-      ResendConfirmationRequest(
-        email: email,
-      ),
-    );
-    return result.fold(
-      (response) => null,
-      (failure) => failure,
-    );
-  }
-
   static FEither<RefreshSessionResponse, Failure> refreshSession(
     String email,
     String refreshToken,
