@@ -16,10 +16,7 @@ export async function confirmRegister(email: string, code: string) {
       if (session instanceof Failure) {
         return session;
       } else {
-        const result = await userRepo.setConfirmed(user.cognitoId);
-        if (result instanceof Failure) {
-          return result;
-        }
+        return await userRepo.setConfirmed(user.cognitoId);
       }
     }
   }
