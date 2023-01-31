@@ -61,7 +61,7 @@ abstract class AuthRepository {
     return response;
   }
 
-  static Future<Failure?> forgotPassword(
+  static FEither<ProfilePictureUserEntity, Failure> confirmRegister(
     String email,
   ) async {
     final result = await httpAdapter.request(
@@ -70,44 +70,14 @@ abstract class AuthRepository {
         email: email,
       ),
     );
-    return result.fold(
-      (response) => null,
-      (failure) => failure,
-    );
-  }
-
-  static Future<Failure?> forgotPasswordSubmit(
-    String email,
-    String code,
-    String password,
-  ) async {
-    final result = await httpAdapter.request(
-      kForgotPasswordSubmitRoute,
-      ForgotPasswordSubmitRequest(
-        email: email,
-        code: code,
-        password: password,
-      ),
-    );
-    return result.fold(
-      (response) => null,
-      (failure) => failure,
-    );
-  }
-
-  static Future<Failure?> resendConfirmation(
-    String email,
-  ) async {
-    final result = await httpAdapter.request(
-      kResendConfirmationRoute,
-      ResendConfirmationRequest(
-        email: email,
-      ),
-    );
-    return result.fold(
-      (response) => null,
-      (failure) => failure,
-    );
+    if (result.isLeft()) {
+      await cacheProfilePictureUser(
+        result.swap().getOrElse(
+              () => throw Exception("This should not happen."),
+            ),
+      );
+    }
+    return result;
   }
 
   static FEither<RefreshSessionResponse, Failure> refreshSession(
@@ -131,27 +101,28 @@ abstract class AuthRepository {
 
   static Future<Failure?> signOut(
     bool allDevices,
-  ) async {
-    final result = await httpAdapter.request(
-      kSignOutRoute,
-      SignOutRequest(
-        allDevices: allDevices,
-      ),
-    );
-
-    return result.fold(
-      (res) async {
-        await cacheAccessToken(null);
-        await cacheRefreshToken(null);
-        await cacheUser(null);
-        await cacheEmail(null);
-        await cacheGym(null);
-
-        return null;
-      },
-      (failure) {
-        return failure;
-      },
-    );
-  }
+  ) =>
+      httpAdapter
+          .requestVoid(
+        kSignOutRoute,
+        SignOutRequest(
+          allDevices: allDevices,
+        ),
+      )
+          .then(
+        (failure) async {
+          if (failure == null) {
+            await Future.wait(
+              [
+                cacheAccessToken(null),
+                cacheRefreshToken(null),
+                cacheUser(null),
+                cacheEmail(null),
+                cacheGym(null),
+              ],
+            );
+          }
+          return failure;
+        },
+      );
 }

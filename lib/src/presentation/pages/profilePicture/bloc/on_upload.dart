@@ -19,9 +19,8 @@ void onUpload(
       UploadingState(
         cameraController: state.cameraController,
         file: state.file,
-        uploadImage: CancelableOperation.fromFuture(
-          uploadImage(state.file),
-        )..then(
+        uploadImage: CancelableOperation.fromFuture(uploadImage(state.file))
+          ..then(
             (failure) => failure != null
                 ? add(UploadErrorEvent(failure))
                 : add(const UploadSuccessEvent()),

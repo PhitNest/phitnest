@@ -1,3 +1,4 @@
+import '../../../../domain/entities/entities.dart';
 import '../backend.dart';
 
 const kLoginRoute = Route<LoginRequest, LoginResponse>(
@@ -30,10 +31,11 @@ const kResendConfirmationRoute = Route<ResendConfirmationRequest, void>(
   Void(),
 );
 
-const kConfirmRegisterRoute = Route<ConfirmRegisterRequest, void>(
+const kConfirmRegisterRoute =
+    Route<ConfirmRegisterRequest, ProfilePictureUserEntity>(
   '/auth/confirmRegister',
   HttpMethod.post,
-  Void(),
+  ProfilePictureUserParser(),
 );
 
 const kRefreshSessionRoute =
