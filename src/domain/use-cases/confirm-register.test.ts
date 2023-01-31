@@ -97,8 +97,12 @@ test("Confirm registration", async () => {
   rebindDatabases({
     profilePictureDatabase: new MockProfilePictureDatabase(""),
   });
-  expect(await confirmRegister(testUser1.email, "123456")).toBeUndefined();
+  const result = (await confirmRegister(
+    testUser1.email,
+    "123456"
+  )) as IProfilePictureUserEntity;
   user1.confirmed = true;
+  compareProfilePictureUsers(result, { ...user1, profilePictureUrl: "get" });
   expect(await confirmRegister("invalidUser", "123456")).toBe(kUserNotFound);
   expect(await confirmRegister(user2.email, "123456")).toBe(kMockAuthError);
   expect(await confirmRegister(user3.email, "123456")).toBe(
