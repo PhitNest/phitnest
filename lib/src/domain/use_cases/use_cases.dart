@@ -1,7 +1,5 @@
-export 'location_and_gyms.dart';
-export 'upload_photo_unauthorized.dart';
-export 'login.dart';
-export 'register.dart';
-export 'resend_confirmation.dart';
-export 'confirm_register.dart';
-export 'forgot_password.dart';
+export 'auth/auth.dart';
+export 'directMessage/directMessage.dart';
+export 'friendRequest/friendRequest.dart';
+export 'gym/gym.dart';
+export 'profilePicture/profilePicturssage.dart';

@@ -2,7 +2,7 @@ import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/use_cases/forgot_password.dart';
+import '../../../../domain/use_cases/auth/forgot_password.dart';
 import '../event/forgot_password_event.dart';
 import '../state/forgot_password_state.dart';
 
