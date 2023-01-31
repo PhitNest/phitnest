@@ -11,7 +11,7 @@ export async function login(email: string, password: string) {
       return user;
     } else {
       return {
-        session: session,
+        ...session,
         user: user,
       };
     }
