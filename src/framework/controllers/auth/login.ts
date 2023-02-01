@@ -1,11 +1,14 @@
 import { IRequest, IResponse } from "../../../common/types";
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
-import { IAuthEntity, IUserEntity } from "../../../domain/entities";
+import {
+  IAuthEntity,
+  IProfilePictureUserEntity,
+} from "../../../domain/entities";
 import { login } from "../../../domain/use-cases";
 
 type LoginResponse = IAuthEntity & {
-  user: IUserEntity;
+  user: IProfilePictureUserEntity;
 };
 
 export class LoginController implements Controller<LoginResponse> {
