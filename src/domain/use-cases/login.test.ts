@@ -4,13 +4,14 @@ import {
   MockAuthDatabase,
 } from "../../../test/helpers/mock-cognito";
 import { kUserNotFound } from "../../common/failures";
-import { IAuthEntity, IUserEntity } from "../entities";
+import { IAuthEntity, IProfilePictureUserEntity } from "../entities";
 import { login } from "./login";
 import { gymRepo, userRepo } from "../repositories";
 import {
   injectDatabases,
   rebindDatabases,
 } from "../../data/data-sources/injection";
+import { MockProfilePictureDatabase } from "../../../test/helpers/mock-s3";
 
 const testGym1 = {
   name: "testGym1",
@@ -55,6 +56,7 @@ afterEach(async () => {
 test("Login", async () => {
   rebindDatabases({
     authDatabase: new MockAuthDatabase(),
+    profilePictureDatabase: new MockProfilePictureDatabase("invalid"),
   });
   const gym = await gymRepo.create(testGym1);
   const user1 = await userRepo.create({
@@ -70,11 +72,11 @@ test("Login", async () => {
     gymId: gym._id,
   });
   let result = (await login(user1.email, "password1")) as IAuthEntity & {
-    user: IUserEntity;
+    user: IProfilePictureUserEntity;
   };
   compareUsers(result.user, user1);
   result = (await login(user2.email, "password2")) as IAuthEntity & {
-    user: IUserEntity;
+    user: IProfilePictureUserEntity;
   };
   compareUsers(result.user, user2);
   expect(await login("invalid", "password1")).toBe(kMockAuthError);

@@ -1,5 +1,5 @@
 import { Failure } from "../../common/types";
-import { authRepo, userRepo } from "../repositories";
+import { authRepo, profilePictureRepo, userRepo } from "../repositories";
 
 export async function login(email: string, password: string) {
   const session = await authRepo.login(email, password);
@@ -10,10 +10,20 @@ export async function login(email: string, password: string) {
     if (user instanceof Failure) {
       return user;
     } else {
-      return {
-        ...session,
-        user: user,
-      };
+      const profilePictureUrl = await profilePictureRepo.getProfilePictureUrl(
+        user.cognitoId
+      );
+      if (profilePictureUrl instanceof Failure) {
+        return profilePictureUrl;
+      } else {
+        return {
+          ...session,
+          user: {
+            ...user,
+            profilePictureUrl: profilePictureUrl,
+          },
+        };
+      }
     }
   }
 }
