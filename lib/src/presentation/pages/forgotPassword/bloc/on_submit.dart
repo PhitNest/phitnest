@@ -1,49 +1,27 @@
-import 'package:async/async.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of forgot_password_page;
 
-import '../../../../domain/use_cases/auth/forgot_password.dart';
-import '../event/forgot_password_event.dart';
-import '../state/forgot_password_state.dart';
-
-void onSubmit(
-  SubmitEvent event,
-  Emitter<ForgotPasswordState> emit,
-  ForgotPasswordState state,
-  ValueChanged<ForgotPasswordEvent> add,
-) {
-  if (state is InitialState) {
-    if (state.formKey.currentState!.validate()) {
+extension on _ForgotPasswordBloc {
+  void onSubmit(
+    _SubmitEvent event,
+    Emitter<_ForgotPasswordState> emit,
+  ) {
+    if (formKey.currentState!.validate()) {
       emit(
-        LoadingState(
-          passwordController: state.passwordController,
-          confirmPassController: state.confirmPassController,
-          emailFocusNode: state.emailFocusNode,
-          passwordFocusNode: state.passwordFocusNode,
-          confirmPassFocusNode: state.confirmPassFocusNode,
-          emailController: state.emailController,
+        _LoadingState(
           autovalidateMode: state.autovalidateMode,
-          formKey: state.formKey,
           forgotPassOperation: CancelableOperation.fromFuture(
-            forgotPassword(state.emailController.text),
+            Backend.auth.forgotPassword(email: emailController.text.trim()),
           )..then(
-              (failure) => failure != null
-                  ? add(ErrorEvent(failure))
-                  : add(SuccessEvent()),
+              (failure) => add(
+                failure != null ? _ErrorEvent(failure) : const _SuccessEvent(),
+              ),
             ),
         ),
       );
     } else {
       emit(
-        InitialState(
-          passwordController: state.passwordController,
-          confirmPassController: state.confirmPassController,
-          emailFocusNode: state.emailFocusNode,
-          passwordFocusNode: state.passwordFocusNode,
-          confirmPassFocusNode: state.confirmPassFocusNode,
-          emailController: state.emailController,
+        _InitialState(
           autovalidateMode: AutovalidateMode.always,
-          formKey: state.formKey,
         ),
       );
     }

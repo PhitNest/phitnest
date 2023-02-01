@@ -2,7 +2,7 @@ import 'package:async/async.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../common/failure.dart';
-import '../../../../data/data_sources/backend/backend.dart';
+import '../../../../data/backend/backend.dart';
 import 'verification_state.dart';
 
 class ConfirmingState extends InitialState {

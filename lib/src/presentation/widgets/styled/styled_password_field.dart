@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets.dart';
+import 'styled_underlined_text_field.dart';
 
 class _State extends ChangeNotifier {
   bool _obscureText = true;

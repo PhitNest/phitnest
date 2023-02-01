@@ -1,5 +1,5 @@
-import 'login_event.dart';
+part of login_page;
 
-class SubmitEvent extends LoginEvent {
-  const SubmitEvent() : super();
+class _SubmitEvent extends _LoginEvent {
+  const _SubmitEvent() : super();
 }

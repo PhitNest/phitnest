@@ -1,50 +1,32 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of login_page;
 
-import '../event/cancel_login.dart';
-import '../event/login_event.dart';
-import '../event/reset.dart';
-import '../state/initial/loading.dart';
-import '../state/login_state.dart';
-import 'on_cancel_login.dart';
-import 'on_login_error.dart';
-import 'on_login_success.dart';
-import 'on_reset.dart';
-import 'on_submit.dart';
+class _LoginBloc extends Bloc<_LoginEvent, _LoginState> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc()
+  _LoginBloc()
       : super(
-          InitialState(
-            emailController: TextEditingController(),
-            passwordController: TextEditingController(),
-            emailFocusNode: FocusNode(),
-            passwordFocusNode: FocusNode(),
-            formKey: GlobalKey(),
+          _InitialState(
             autovalidateMode: AutovalidateMode.disabled,
             invalidCredentials: {},
           ),
         ) {
-    on<SubmitEvent>((event, emit) => onSubmit(event, emit, state, add));
-    on<LoginSuccessEvent>((event, emit) => onLoginSuccess(event, emit, state));
-    on<LoginErrorEvent>((event, emit) => onLoginError(event, emit, state));
-    on<ResetEvent>((event, emit) => onReset(event, emit, state));
-    on<CancelLoginEvent>((event, emit) => onCancelLogin(event, emit, state));
+    on<_SubmitEvent>(onSubmit);
+    on<_SuccessEvent>(onLoginSuccess);
+    on<_ErrorEvent>(onLoginError);
+    on<_ResetEvent>(onReset);
+    on<_CancelEvent>(onCancel);
   }
 
   @override
   Future<void> close() {
-    if (state is LoadingState) {
-      final loadingState = state as LoadingState;
+    if (state is _LoadingState) {
+      final loadingState = state as _LoadingState;
       loadingState.loginOperation.cancel();
     }
-    if (state is InitialState) {
-      final initialState = state as InitialState;
-      initialState.emailController.dispose();
-      initialState.passwordController.dispose();
-      initialState.emailFocusNode.dispose();
-      initialState.passwordFocusNode.dispose();
-    }
+    emailController.dispose();
+    passwordController.dispose();
     return super.close();
   }
 }

@@ -1,11 +1,12 @@
-import 'package:equatable/equatable.dart';
+part of forgot_password_page;
 
-export 'confirm_email.dart';
-export 'error.dart';
-export 'initial.dart';
-export 'loading.dart';
-export 'success.dart';
+abstract class _ForgotPasswordState extends Equatable {
+  final AutovalidateMode autovalidateMode;
 
-abstract class ForgotPasswordState extends Equatable {
-  const ForgotPasswordState();
+  const _ForgotPasswordState({
+    required this.autovalidateMode,
+  }) : super();
+
+  @override
+  List<Object> get props => [autovalidateMode];
 }

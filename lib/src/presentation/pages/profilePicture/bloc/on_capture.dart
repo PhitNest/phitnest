@@ -4,8 +4,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../common/utils/utils.dart';
 import '../../../../common/failure.dart';
-import '../../../../data/data_sources/camera/camera.dart';
 import '../event/profile_picture_event.dart';
 import '../state/profile_picture_state.dart';
 
@@ -20,7 +20,8 @@ void onCapture(
       CaptureLoadingState(
         cameraController: state.cameraController,
         captureImage: CancelableOperation.fromFuture(
-          takeProfilePicture(state.cameraController)
+          state.cameraController
+              .takeProfilePicture()
               .then<Either<XFile, Failure>>((file) => Left(file))
               .catchError(
                 (err) => Right<XFile, Failure>(

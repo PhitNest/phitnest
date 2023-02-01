@@ -1,4 +1,4 @@
-import '../../../../data/data_sources/backend/backend.dart';
+import '../../../../data/backend/backend.dart';
 import 'registration_state.dart';
 
 class RegisterSuccessState extends RegistrationState {

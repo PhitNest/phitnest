@@ -32,7 +32,7 @@ void onRetryLoadGyms(
         currentPage: state.currentPage,
         autovalidateMode: state.autovalidateMode,
         loadGymsOp: CancelableOperation.fromFuture(
-          loadGyms(),
+          UseCases.getNearbyGyms(),
         )..then(
             (either) => either.fold(
               (success) => add(GymsLoadedEvent(success.value1, success.value2)),

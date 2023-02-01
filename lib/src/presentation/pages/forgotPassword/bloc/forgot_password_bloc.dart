@@ -1,47 +1,32 @@
-import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
+part of forgot_password_page;
 
-import '../event/forgot_password_event.dart';
-import '../state/forgot_password_state.dart';
-import 'on_error.dart';
-import 'on_submit.dart';
-import 'on_success.dart';
+class _ForgotPasswordBloc
+    extends Bloc<_ForgotPasswordEvent, _ForgotPasswordState> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPassController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
-class ForgotPasswordBloc
-    extends Bloc<ForgotPasswordEvent, ForgotPasswordState> {
-  ForgotPasswordBloc()
+  _ForgotPasswordBloc()
       : super(
-          InitialState(
-            passwordController: TextEditingController(),
-            confirmPassController: TextEditingController(),
-            emailController: TextEditingController(),
-            emailFocusNode: FocusNode(),
-            passwordFocusNode: FocusNode(),
-            confirmPassFocusNode: FocusNode(),
-            formKey: GlobalKey(),
+          const _InitialState(
             autovalidateMode: AutovalidateMode.disabled,
           ),
         ) {
-    on<SubmitEvent>((event, emit) => onSubmit(event, emit, state, add));
-    on<SuccessEvent>((event, emit) => onSuccess(event, emit, state));
-    on<ErrorEvent>((event, emit) => onForgotPasswordError(event, emit, state));
+    on<_SubmitEvent>(onSubmit);
+    on<_SuccessEvent>(onSuccess);
+    on<_ErrorEvent>(onForgotPasswordError);
   }
 
   @override
   Future<void> close() async {
-    if (state is LoadingState) {
-      final loadingState = state as LoadingState;
+    if (state is _LoadingState) {
+      final loadingState = state as _LoadingState;
       await loadingState.forgotPassOperation.cancel();
     }
-    if (state is InitialState) {
-      final initialState = state as InitialState;
-      initialState.emailController.dispose();
-      initialState.passwordController.dispose();
-      initialState.confirmPassController.dispose();
-      initialState.emailFocusNode.dispose();
-      initialState.passwordFocusNode.dispose();
-      initialState.confirmPassFocusNode.dispose();
-    }
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPassController.dispose();
     return super.close();
   }
 }

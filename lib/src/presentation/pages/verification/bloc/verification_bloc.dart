@@ -5,13 +5,14 @@ import '../event/verification_event.dart';
 import '../state/verification_state.dart';
 import 'on_confirm_error.dart';
 import 'on_confirm_success.dart';
+import 'on_profile_picture_error.dart';
 import 'on_resend.dart';
 import 'on_resend_error.dart';
 import 'on_reset.dart';
 import 'on_submit.dart';
 
 class VerificationBloc extends Bloc<VerificationEvent, VerificationState> {
-  VerificationBloc()
+  VerificationBloc(bool checkProfilePicture)
       : super(
           InitialState(
             codeController: TextEditingController(),
@@ -21,10 +22,13 @@ class VerificationBloc extends Bloc<VerificationEvent, VerificationState> {
     on<SubmitEvent>((event, emit) => onSubmit(event, emit, state, add));
     on<ConfirmSuccessEvent>(
         (event, emit) => onConfirmSuccess(event, emit, state));
-    on<ConfirmErrorEvent>((event, emit) => onConfirmError(event, emit, state));
+    on<ConfirmErrorEvent>((event, emit) =>
+        onConfirmError(event, emit, state, checkProfilePicture));
     on<ResendEvent>((event, emit) => onResend(event, emit, state, add));
     on<ResendErrorEvent>((event, emit) => onResendError(event, emit, state));
     on<ResetEvent>((event, emit) => onReset(event, emit, state));
+    on<ProfilePictureErrorEvent>(
+        (event, emit) => onProfilePictureError(event, emit, state));
   }
 
   @override

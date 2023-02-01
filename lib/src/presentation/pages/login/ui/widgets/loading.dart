@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-import 'base.dart';
+part of login_page;
 
 class LoginLoading extends LoginPageBase {
   const LoginLoading({

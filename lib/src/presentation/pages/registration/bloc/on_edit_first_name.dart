@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../common/validators.dart';
+import '../../../../common/utils/validators.dart';
 import '../event/registration_event.dart';
 import '../state/registration_state.dart';
 

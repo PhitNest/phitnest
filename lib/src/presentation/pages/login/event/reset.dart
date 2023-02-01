@@ -1,8 +1,5 @@
-import 'login_event.dart';
+part of login_page;
 
-class ResetEvent extends LoginEvent {
-  const ResetEvent() : super();
-
-  @override
-  List<Object?> get props => [];
+class _ResetEvent extends _LoginEvent {
+  const _ResetEvent() : super();
 }

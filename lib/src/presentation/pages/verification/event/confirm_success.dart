@@ -1,4 +1,4 @@
-import '../../../../data/data_sources/backend/backend.dart';
+import '../../../../data/backend/backend.dart';
 import 'verification_event.dart';
 
 class ConfirmSuccessEvent extends VerificationEvent {

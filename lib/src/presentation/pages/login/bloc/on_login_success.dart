@@ -1,9 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../event/login_event.dart';
-import '../state/initial/loading.dart';
-import '../state/login_state.dart';
-import '../state/login_success.dart';
+part of login_page;
 
 void onLoginSuccess(
   LoginSuccessEvent event,

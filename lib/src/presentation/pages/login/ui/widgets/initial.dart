@@ -1,5 +1,4 @@
-import '../../../../widgets/styled/styled.dart';
-import 'base.dart';
+part of login_page;
 
 class LoginInitial extends LoginPageBase {
   LoginInitial({

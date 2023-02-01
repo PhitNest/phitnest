@@ -1,2 +1,1 @@
-export 'http.adapter.dart';
-export 'socketio.adapter.dart';
+export 'socketio.dart';

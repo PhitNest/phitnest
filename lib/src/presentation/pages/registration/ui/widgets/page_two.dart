@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../common/theme.dart';
-import '../../../../../common/validators.dart';
+import '../../../../../common/utils/validators.dart';
 import '../../../../widgets/widgets.dart';
 
 class PageTwo extends StatelessWidget {

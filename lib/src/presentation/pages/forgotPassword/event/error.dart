@@ -1,10 +1,9 @@
-import '../../../../common/failure.dart';
-import 'forgot_password_event.dart';
+part of forgot_password_page;
 
-class ErrorEvent extends ForgotPasswordEvent {
+class _ErrorEvent extends _ForgotPasswordEvent {
   final Failure failure;
 
-  const ErrorEvent(this.failure) : super();
+  const _ErrorEvent(this.failure) : super();
 
   @override
   List<Object?> get props => [failure];
