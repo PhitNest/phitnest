@@ -46,35 +46,9 @@ class ForgotPasswordPage extends StatelessWidget {
             return context.goToSubmitPage();
           } else if (state is _ErrorState) {
             ScaffoldMessenger.of(context).showMaterialBanner(
-              MaterialBanner(
-                content: Text(
-                  state.failure.message,
-                  style: theme.textTheme.bodySmall!.copyWith(
-                    color: theme.errorColor,
-                  ),
-                ),
-                padding: EdgeInsets.all(10),
-                elevation: 8,
-                onVisible: () => Future.delayed(Duration(seconds: 3)).then(
-                  (_) =>
-                      ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
-                ),
-                backgroundColor: Colors.white,
-                leading: Icon(
-                  Icons.error_outline,
-                  color: theme.errorColor,
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                    },
-                    child: Text(
-                      'Dismiss',
-                      style: theme.textTheme.bodySmall,
-                    ),
-                  )
-                ],
+              StyledErrorBanner(
+                err: state.failure.message,
+                context: context,
               ),
             );
           } else if (state is _ConfirmingEmailState) {
