@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-
-import '../../../../domain/entities/entities.dart';
-import '../../../widgets/styled/styled_nav_bar.dart';
+part of home_page;
 
 class HomePage extends StatelessWidget {
   final String initialAccessToken;

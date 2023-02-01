@@ -37,7 +37,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
             pageOneFormKey: GlobalKey<FormState>(),
             pageTwoFormKey: GlobalKey<FormState>(),
             firstNameConfirmed: false,
-            loadGymsOp: CancelableOperation.fromFuture(loadGyms()),
+            loadGymsOp:
+                CancelableOperation.fromFuture(UseCases.getNearbyGyms()),
             currentPage: 0,
             autovalidateMode: AutovalidateMode.disabled,
           ),

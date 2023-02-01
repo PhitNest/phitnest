@@ -1,8 +1,17 @@
-export 'location_and_gyms.dart';
-export 'upload_photo_unauthorized.dart';
-export 'login.dart';
-export 'register.dart';
-export 'resend_confirmation.dart';
-export 'confirm_register.dart';
-export 'forgot_password.dart';
-export 'forgot_password_submit.dart';
+library use_cases;
+
+import 'package:camera/camera.dart';
+import 'package:dartz/dartz.dart';
+
+import '../../common/failure.dart';
+import '../../common/utils/utils.dart';
+import '../../data/backend/backend.dart';
+import '../entities/entities.dart';
+
+part 'location_and_gyms.dart';
+part 'upload_photo_unauthorized.dart';
+
+abstract class UseCases {
+  static const getNearbyGyms = _getNearbyGyms;
+  static const uploadPhotoUnauthorized = _uploadPhotoUnauthorized;
+}

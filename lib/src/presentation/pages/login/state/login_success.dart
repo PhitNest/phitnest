@@ -1,11 +1,12 @@
-import '../../../../data/data_sources/backend/backend.dart';
-import 'login_state.dart';
+part of login_page;
 
-class LoginSuccessState extends LoginState {
+class _SuccessState extends _LoginState {
   final LoginResponse response;
   final String password;
 
-  const LoginSuccessState({
+  const _SuccessState({
+    required super.autovalidateMode,
+    required super.invalidCredentials,
     required this.response,
     required this.password,
   }) : super();

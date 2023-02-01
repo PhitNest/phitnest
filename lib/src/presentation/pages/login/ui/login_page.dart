@@ -1,21 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../../data/data_sources/backend/backend.dart';
-import '../../../widgets/styled/styled.dart';
-import '../../pages.dart';
-import '../bloc/login_bloc.dart';
-import '../event/cancel_login.dart';
-import '../event/login_event.dart';
-import '../event/reset.dart';
-import '../state/confirm_user.dart';
-import '../state/initial/loading.dart';
-import '../state/login_state.dart';
-import '../state/login_success.dart';
-import 'widgets/initial.dart';
-import 'widgets/loading.dart';
+part of login_page;
 
 LoginBloc _bloc(BuildContext context) => context.read();
 
@@ -56,8 +39,8 @@ class LoginPage extends StatelessWidget {
                 context,
                 CupertinoPageRoute(
                   builder: (context) => HomePage(
-                    initialAccessToken: state.response.session.accessToken,
-                    initialRefreshToken: state.response.session.refreshToken,
+                    initialAccessToken: state.response.accessToken,
+                    initialRefreshToken: state.response.refreshToken,
                     initialUserData: state.response.user,
                     initialPassword: state.password,
                   ),
@@ -81,8 +64,8 @@ class LoginPage extends StatelessWidget {
                   context,
                   CupertinoPageRoute(
                     builder: (context) => HomePage(
-                      initialAccessToken: response.session.accessToken,
-                      initialRefreshToken: response.session.refreshToken,
+                      initialAccessToken: response.accessToken,
+                      initialRefreshToken: response.refreshToken,
                       initialUserData: response.user,
                       initialPassword: state.password,
                     ),

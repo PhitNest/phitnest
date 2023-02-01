@@ -1,5 +1,5 @@
-import 'forgot_password_event.dart';
+part of forgot_password_page;
 
-class SuccessEvent extends ForgotPasswordEvent {
-  const SuccessEvent() : super();
+class _SuccessEvent extends _ForgotPasswordEvent {
+  const _SuccessEvent() : super();
 }

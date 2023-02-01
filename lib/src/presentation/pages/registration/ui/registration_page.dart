@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../data/data_sources/backend/backend.dart';
-import '../../../../data/data_sources/s3/s3.dart';
+import '../../../../common/utils/utils.dart';
+import '../../../../data/backend/backend.dart';
 import '../../../../domain/entities/entities.dart';
 import '../../../../domain/use_cases/use_cases.dart';
 import '../../../widgets/styled/styled.dart';
@@ -74,14 +74,19 @@ void _onSubmitPhotoInstructions(BuildContext context, XFile? initialImage,
       CupertinoPageRoute(
         builder: (context) => ProfilePicturePage(
           initialImage: initialImage,
-          uploadImage: (photo) async {
-            final failure = await uploadPhoto(state.response.uploadUrl, photo);
-            if (failure != null) {
-              return uploadPhotoUnauthorized(
-                  state.response.user.email, state.password, photo);
-            }
-            return null;
-          },
+          uploadImage: (photo) =>
+              uploadPhoto(state.response.uploadUrl, photo).then(
+            (failure) {
+              if (failure != null) {
+                return UseCases.uploadPhotoUnauthorized(
+                  email: state.response.user.email,
+                  password: state.password,
+                  photo: photo,
+                );
+              }
+              return null;
+            },
+          ),
         ),
       ),
     ).then(
@@ -101,9 +106,9 @@ void _onSubmitPhotoInstructions(BuildContext context, XFile? initialImage,
               context,
               CupertinoPageRoute(
                 builder: (context) => HomePage(
-                  initialAccessToken: response.session.accessToken,
+                  initialAccessToken: response.accessToken,
                   initialPassword: state.password,
-                  initialRefreshToken: response.session.refreshToken,
+                  initialRefreshToken: response.refreshToken,
                   initialUserData: response.user,
                 ),
               ),

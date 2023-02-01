@@ -1,11 +1,4 @@
-import 'package:async/async.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../domain/use_cases/use_cases.dart';
-import '../event/login_event.dart';
-import '../state/initial/loading.dart';
-import '../state/login_state.dart';
+part of login_page;
 
 void onSubmit(
   SubmitEvent event,
@@ -25,9 +18,9 @@ void onSubmit(
           passwordFocusNode: state.passwordFocusNode,
           formKey: state.formKey,
           loginOperation: CancelableOperation.fromFuture(
-            login(
-              state.emailController.text.trim(),
-              state.passwordController.text,
+            Repositories.auth.login(
+              email: state.emailController.text.trim(),
+              password: state.passwordController.text,
             ),
           )..then(
               (res) => res.fold(

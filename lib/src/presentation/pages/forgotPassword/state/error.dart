@@ -1,21 +1,13 @@
-import '../../../../common/failure.dart';
-import 'initial.dart';
+part of forgot_password_page;
 
-class ErrorState extends InitialState {
+class _ErrorState extends _ForgotPasswordState {
   final Failure failure;
 
-  const ErrorState({
-    required super.emailController,
-    required super.passwordController,
-    required super.confirmPassController,
-    required super.emailFocusNode,
-    required super.passwordFocusNode,
-    required super.confirmPassFocusNode,
+  const _ErrorState({
     required super.autovalidateMode,
-    required super.formKey,
     required this.failure,
   }) : super();
 
   @override
-  List<Object?> get props => [super.props, failure];
+  List<Object> get props => [super.props, failure];
 }

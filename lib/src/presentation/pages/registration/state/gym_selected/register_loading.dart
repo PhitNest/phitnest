@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../common/failure.dart';
-import '../../../../../data/data_sources/backend/backend.dart';
+import '../../../../../data/backend/backend.dart';
 import '../../../../../domain/entities/entities.dart';
 import 'gym_selected.dart';
 

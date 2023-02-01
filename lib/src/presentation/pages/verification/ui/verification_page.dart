@@ -1,10 +1,13 @@
+import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/failure.dart';
-import '../../../../data/data_sources/backend/backend.dart';
+import '../../../../data/backend/backend.dart';
+import '../../../../domain/repositories/repository.dart';
 import '../../../../domain/use_cases/use_cases.dart';
+import '../../pages.dart';
 import '../bloc/verification_bloc.dart';
 import '../event/verification_event.dart';
 import '../state/verification_state.dart';
@@ -28,9 +31,9 @@ class VerificationPage extends StatelessWidget {
             (failure) async => failure != null
                 ? Right(failure)
                 : shouldLogin
-                    ? (await login(
-                        email,
-                        password!,
+                    ? (await Repositories.auth.login(
+                        email: email,
+                        password: password!,
                       )) as Either<LoginResponse?, Failure>
                     : Left(null),
           ),
@@ -54,12 +57,28 @@ class VerificationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (context) => VerificationBloc(),
+        create: (context) => VerificationBloc(password != null),
         child: BlocConsumer<VerificationBloc, VerificationState>(
-          listener: (context, state) {
-            print(state);
+          listener: (context, state) async {
             if (state is ConfirmSuccessState) {
               Navigator.pop(context, state.response);
+            } else if (state is ProfilePictureErrorState) {
+              if ((await Navigator.push<XFile>(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => ProfilePicturePage(
+                        uploadImage: (photo) =>
+                            UseCases.uploadPhotoUnauthorized(
+                          email: email,
+                          password: password!,
+                          photo: photo,
+                        ),
+                      ),
+                    ),
+                  )) !=
+                  null) {
+                _onCompleted(context);
+              }
             }
           },
           builder: (context, state) {

@@ -1,9 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../event/reset.dart';
-import '../state/confirm_user.dart';
-import '../state/login_state.dart';
+part of login_page;
 
 void onReset(
   ResetEvent event,

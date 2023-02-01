@@ -1,12 +1,7 @@
-import 'package:equatable/equatable.dart';
+part of forgot_password_page;
 
-export 'cancel.dart';
-export 'submit.dart';
-export 'success.dart';
-export 'error.dart';
-
-abstract class ForgotPasswordEvent extends Equatable {
-  const ForgotPasswordEvent();
+abstract class _ForgotPasswordEvent extends Equatable {
+  const _ForgotPasswordEvent();
 
   @override
   List<Object?> get props => [];

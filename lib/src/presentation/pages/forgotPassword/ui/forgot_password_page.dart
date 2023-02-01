@@ -1,19 +1,37 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of forgot_password_page;
 
-import '../../../../common/theme.dart';
-import '../../../../data/data_sources/backend/backend.dart';
-import '../../pages.dart';
-import '../bloc/forgot_password_bloc.dart';
-import '../event/submit.dart';
-import '../state/forgot_password_state.dart';
-import 'widgets/initial.dart';
-import 'widgets/loading.dart';
+extension _Bloc on BuildContext {
+  _ForgotPasswordBloc get bloc => read();
 
-ForgotPasswordBloc _bloc(BuildContext context) => context.read();
+  Future<void> goToSubmitPage() => Navigator.push<LoginResponse>(
+        this,
+        CupertinoPageRoute(
+          builder: (context) => ForgotPasswordSubmitPage(
+            email: context.bloc.emailController.text.trim(),
+            password: context.bloc.passwordController.text,
+          ),
+        ),
+      ).then(
+        (submitResult) {
+          if (submitResult != null) {
+            return Navigator.pushAndRemoveUntil(
+              this,
+              CupertinoPageRoute(
+                builder: (context) => HomePage(
+                  initialUserData: submitResult.user,
+                  initialPassword: context.bloc.passwordController.text,
+                  initialAccessToken: submitResult.accessToken,
+                  initialRefreshToken: submitResult.refreshToken,
+                ),
+              ),
+              (_) => false,
+            );
+          }
+        },
+      );
 
-void _onSubmit(BuildContext context) => _bloc(context).add(SubmitEvent());
+  void onPressedSubmit() => bloc.add(const _SubmitEvent());
+}
 
 class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -21,38 +39,19 @@ class ForgotPasswordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ForgotPasswordBloc(),
-      child: BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
+      create: (context) => _ForgotPasswordBloc(),
+      child: BlocConsumer<_ForgotPasswordBloc, _ForgotPasswordState>(
         listener: (context, state) async {
-          if (state is SuccessState) {
-            final result = await Navigator.of(context).push<LoginResponse>(
-              CupertinoPageRoute(
-                builder: (context) => ForgotPasswordSubmitPage(
-                  email: state.emailController.text.trim(),
-                  password: state.passwordController.text,
-                ),
-              ),
-            );
-            if (result != null) {
-              Navigator.pushAndRemoveUntil(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => HomePage(
-                    initialUserData: result.user,
-                    initialPassword: state.passwordController.text,
-                    initialAccessToken: result.session.accessToken,
-                    initialRefreshToken: result.session.refreshToken,
-                  ),
-                ),
-                (_) => false,
-              );
-            }
-          } else if (state is ErrorState) {
+          if (state is _SuccessState) {
+            return context.goToSubmitPage();
+          } else if (state is _ErrorState) {
             ScaffoldMessenger.of(context).showMaterialBanner(
               MaterialBanner(
                 content: Text(
-                  state.failure.message.toString(),
-                  style: theme.textTheme.bodySmall!.copyWith(color: Colors.red),
+                  state.failure.message,
+                  style: theme.textTheme.bodySmall!.copyWith(
+                    color: theme.errorColor,
+                  ),
                 ),
                 padding: EdgeInsets.all(10),
                 elevation: 8,
@@ -63,7 +62,7 @@ class ForgotPasswordPage extends StatelessWidget {
                 backgroundColor: Colors.white,
                 leading: Icon(
                   Icons.error_outline,
-                  color: Colors.red,
+                  color: theme.errorColor,
                 ),
                 actions: [
                   TextButton(
@@ -78,67 +77,39 @@ class ForgotPasswordPage extends StatelessWidget {
                 ],
               ),
             );
-          } else if (state is ConfirmEmailState) {
-            final response = await Navigator.of(context).push(
+          } else if (state is _ConfirmingEmailState) {
+            final confirmEmailResponse = await Navigator.of(context).push(
               CupertinoPageRoute<LoginResponse>(
                 builder: (context) => ConfirmEmailPage(
-                  email: state.emailController.text.trim(),
+                  email: context.bloc.emailController.text.trim(),
                   shouldLogin: false,
                   password: null,
                 ),
               ),
             );
-            if (response != null) {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => ForgotPasswordSubmitPage(
-                    email: state.emailController.text.trim(),
-                    password: state.passwordController.text,
-                  ),
-                ),
-              );
+            if (confirmEmailResponse != null) {
+              return context.goToSubmitPage();
             }
           }
         },
         builder: (context, state) {
-          if (state is LoadingState) {
-            return ForgotPasswordLoadingPage(
-              emailController: state.emailController,
-              passwordController: state.passwordController,
-              confirmPassController: state.confirmPassController,
-              emailFocusNode: state.emailFocusNode,
-              passwordFocusNode: state.passwordFocusNode,
-              confirmPassFocusNode: state.confirmPassFocusNode,
+          if (state is _LoadingState) {
+            return _LoadingPage(
+              emailController: context.bloc.emailController,
+              passwordController: context.bloc.passwordController,
+              confirmPassController: context.bloc.confirmPassController,
               autovalidateMode: state.autovalidateMode,
-              formKey: state.formKey,
-            );
-          } else if (state is ErrorState) {
-            return ForgotPasswordInitialPage(
-              emailController: state.emailController,
-              passwordController: state.passwordController,
-              confirmPassController: state.confirmPassController,
-              emailFocusNode: state.emailFocusNode,
-              passwordFocusNode: state.passwordFocusNode,
-              confirmPassFocusNode: state.confirmPassFocusNode,
-              autovalidateMode: state.autovalidateMode,
-              formKey: state.formKey,
-              onSubmit: () => _onSubmit(context),
-            );
-          } else if (state is InitialState) {
-            return ForgotPasswordInitialPage(
-              emailController: state.emailController,
-              passwordController: state.passwordController,
-              confirmPassController: state.confirmPassController,
-              emailFocusNode: state.emailFocusNode,
-              passwordFocusNode: state.passwordFocusNode,
-              confirmPassFocusNode: state.confirmPassFocusNode,
-              autovalidateMode: state.autovalidateMode,
-              formKey: state.formKey,
-              onSubmit: () => _onSubmit(context),
+              formKey: context.bloc.formKey,
             );
           } else {
-            throw Exception('Invalid state: $state');
+            return _InitialPage(
+              emailController: context.bloc.emailController,
+              passwordController: context.bloc.passwordController,
+              confirmPassController: context.bloc.confirmPassController,
+              autovalidateMode: state.autovalidateMode,
+              formKey: context.bloc.formKey,
+              onSubmit: context.onPressedSubmit,
+            );
           }
         },
       ),

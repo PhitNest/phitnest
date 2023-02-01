@@ -1,12 +1,12 @@
-abstract class Parser<R> {
-  const Parser();
+mixin Serializable {
+  Map<String, dynamic> toJson();
 
-  R fromJson(Map<String, dynamic> json);
-
-  List<R> fromList(List<dynamic> list) =>
-      list.map((e) => fromJson(e as Map<String, dynamic>)).toList();
+  static const empty = _EmptyRequest();
 }
 
-mixin Writeable {
-  Map<String, dynamic> toJson();
+class _EmptyRequest with Serializable {
+  const _EmptyRequest();
+
+  @override
+  Map<String, dynamic> toJson() => const {};
 }

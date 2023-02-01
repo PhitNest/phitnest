@@ -2,8 +2,8 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../common/validators.dart';
-import '../../../../domain/use_cases/use_cases.dart';
+import '../../../../common/utils/validators.dart';
+import '../../../../domain/repositories/repository.dart';
 import '../event/registration_event.dart';
 import '../state/registration_state.dart';
 
@@ -52,12 +52,12 @@ void onRegister(
           gyms: state.gyms,
           location: state.location,
           registerOp: CancelableOperation.fromFuture(
-            register(
-              state.emailController.text.trim(),
-              state.passwordController.text.trim(),
-              state.firstNameController.text.trim(),
-              state.lastNameController.text.trim(),
-              state.gym.id,
+            Repositories.auth.register(
+              email: state.emailController.text.trim(),
+              password: state.passwordController.text.trim(),
+              firstName: state.firstNameController.text.trim(),
+              lastName: state.lastNameController.text.trim(),
+              gymId: state.gym.id,
             ),
           )..then(
               (either) => either.fold(

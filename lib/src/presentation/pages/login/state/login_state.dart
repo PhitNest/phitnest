@@ -1,8 +1,14 @@
-import 'package:equatable/equatable.dart';
+part of login_page;
 
-export 'initial/initial.dart';
+abstract class _LoginState extends Equatable {
+  final AutovalidateMode autovalidateMode;
+  final Set<Tuple2<String, String>> invalidCredentials;
 
-/// Base state for the login screen
-abstract class LoginState extends Equatable {
-  const LoginState() : super();
+  const _LoginState({
+    required this.autovalidateMode,
+    required this.invalidCredentials,
+  }) : super();
+
+  @override
+  List<Object?> get props => [autovalidateMode, invalidCredentials];
 }

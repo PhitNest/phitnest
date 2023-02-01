@@ -1,15 +1,10 @@
-import 'package:flutter/material.dart';
+part of forgot_password_page;
 
-import 'base.dart';
-
-class ForgotPasswordLoadingPage extends ForgotPasswordBasePage {
-  ForgotPasswordLoadingPage({
+class _LoadingPage extends _BasePage {
+  _LoadingPage({
     required super.emailController,
     required super.passwordController,
     required super.confirmPassController,
-    required super.emailFocusNode,
-    required super.passwordFocusNode,
-    required super.confirmPassFocusNode,
     required super.autovalidateMode,
     required super.formKey,
   }) : super(
