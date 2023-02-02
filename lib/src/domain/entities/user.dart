@@ -18,7 +18,7 @@ abstract class _User extends Equatable {
   }) : super();
 
   @override
-  List<Object?> get props => [
+  List<Object> get props => [
         id,
         firstName,
         lastName,
@@ -26,6 +26,8 @@ abstract class _User extends Equatable {
         gymId,
         confirmed,
       ];
+
+  String get fullName => '$firstName $lastName';
 }
 
 class UserEntity extends _User {
@@ -53,7 +55,7 @@ class UserEntity extends _User {
       );
 
   @override
-  List<Object?> get props => [
+  List<Object> get props => [
         super.props,
         email,
       ];
@@ -108,8 +110,23 @@ class ProfilePictureUserEntity extends UserEntity {
         profilePictureUrl: json['profilePictureUrl'],
       );
 
+  factory ProfilePictureUserEntity.fromUserEntity(
+    UserEntity user,
+    String profilePictureUrl,
+  ) =>
+      ProfilePictureUserEntity(
+        id: user.id,
+        email: user.email,
+        cognitoId: user.cognitoId,
+        confirmed: user.confirmed,
+        firstName: user.firstName,
+        gymId: user.gymId,
+        lastName: user.lastName,
+        profilePictureUrl: profilePictureUrl,
+      );
+
   @override
-  List<Object?> get props => [super.props, profilePictureUrl];
+  List<Object> get props => [super.props, profilePictureUrl];
 }
 
 class ProfilePicturePublicUserEntity extends PublicUserEntity {
@@ -138,5 +155,5 @@ class ProfilePicturePublicUserEntity extends PublicUserEntity {
       );
 
   @override
-  List<Object?> get props => [super.props, profilePictureUrl];
+  List<Object> get props => [super.props, profilePictureUrl];
 }

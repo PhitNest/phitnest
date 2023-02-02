@@ -26,5 +26,5 @@ class LocationEntity extends Equatable {
       1600;
 
   @override
-  List<Object?> get props => [longitude, latitude];
+  List<Object> get props => [longitude, latitude];
 }

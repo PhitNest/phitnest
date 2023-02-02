@@ -16,12 +16,10 @@ class OnBoardingPage extends StatelessWidget {
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: SizedBox(
             height: 1.sh,
+            width: double.infinity,
             child: Column(
               children: [
-                SizedBox(
-                  height: 120.h,
-                  width: double.infinity,
-                ),
+                120.verticalSpace,
                 Text(
                   "It takes a village\nto live a healthy life",
                   style: theme.textTheme.headlineLarge,

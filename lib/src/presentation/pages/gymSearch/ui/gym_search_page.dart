@@ -30,7 +30,7 @@ class GymSearchPage extends StatelessWidget {
                           ),
                         )
                         .map(
-                          (gym) => GymCard(
+                          (gym) => _GymCard(
                             gym: gym,
                             distance: location.distanceTo(
                               gym.location,

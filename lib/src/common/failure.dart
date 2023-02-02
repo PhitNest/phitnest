@@ -14,5 +14,5 @@ class Failure extends Equatable {
       );
 
   @override
-  List<Object?> get props => [code, message, details];
+  List<Object> get props => [code, message, details];
 }

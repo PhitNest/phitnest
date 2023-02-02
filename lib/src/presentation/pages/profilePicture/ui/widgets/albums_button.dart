@@ -1,12 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+part of profile_picture_page;
 
-import '../../../../widgets/widgets.dart';
-
-class AlbumsButton extends StatelessWidget {
+class _AlbumsButton extends StatelessWidget {
   final ValueChanged<XFile> onUploadPicture;
 
-  const AlbumsButton({
+  const _AlbumsButton({
     required this.onUploadPicture,
   }) : super();
 

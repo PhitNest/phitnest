@@ -18,10 +18,8 @@ extension _Bloc on BuildContext {
               this,
               CupertinoPageRoute(
                 builder: (context) => HomePage(
-                  initialUserData: submitResult.user,
                   initialPassword: context.bloc.passwordController.text,
-                  initialAccessToken: submitResult.accessToken,
-                  initialRefreshToken: submitResult.refreshToken,
+                  initialData: submitResult,
                 ),
               ),
               (_) => false,

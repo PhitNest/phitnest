@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meta/meta.dart';
 import 'package:phitnest_mobile/src/presentation/widgets/styled/styled_error_banner.dart';
 
 import '../../../common/constants/constants.dart';
@@ -14,7 +15,9 @@ import '../../../common/theme.dart';
 import '../../../common/utils/utils.dart';
 import '../../../data/backend/backend.dart';
 import '../../widgets/widgets.dart';
+import '../confirmEmail/confirm_email.dart';
 import '../forgotPasswordSubmit/forgot_password_submit.dart';
+import '../home/home.dart';
 
 part 'bloc/forgot_password_bloc.dart';
 part 'bloc/on_error.dart';

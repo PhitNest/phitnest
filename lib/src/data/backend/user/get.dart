@@ -29,7 +29,7 @@ class GetUserResponse extends ProfilePictureUserEntity {
       );
 
   @override
-  List<Object?> get props => [super.props, gym];
+  List<Object> get props => [super.props, gym];
 }
 
 Future<Either<GetUserResponse, Failure>> _get({

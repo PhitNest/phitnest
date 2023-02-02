@@ -1,25 +1,19 @@
-import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of profile_picture_page;
 
-import '../../../../../common/theme.dart';
-import '../../../../widgets/widgets.dart';
-import 'albums_button.dart';
-
-class Capturing extends _CameraActiveBase {
-  Capturing({
+class _CaptureLoadingPage extends _CameraActiveBasePage {
+  const _CaptureLoadingPage({
     required super.cameraController,
   }) : super(
-          children: [
+          children: const [
             CircularProgressIndicator(),
           ],
         );
 }
 
-class CapturingError extends CameraActive {
+class _CaptureErrorPage extends _CameraActivePage {
   final String errorMessage;
 
-  CapturingError({
+  _CaptureErrorPage({
     required super.cameraController,
     required super.onUploadPicture,
     required super.onPressTakePicture,
@@ -34,12 +28,12 @@ class CapturingError extends CameraActive {
         );
 }
 
-class CameraActive extends _CameraActiveBase {
+class _CameraActivePage extends _CameraActiveBasePage {
   final VoidCallback onPressTakePicture;
   final ValueChanged<XFile> onUploadPicture;
   final Widget? child;
 
-  CameraActive({
+  _CameraActivePage({
     required super.cameraController,
     required this.onPressTakePicture,
     required this.onUploadPicture,
@@ -66,17 +60,17 @@ class CameraActive extends _CameraActiveBase {
             10.verticalSpace,
             child ?? Container(),
             Spacer(),
-            AlbumsButton(onUploadPicture: onUploadPicture),
+            _AlbumsButton(onUploadPicture: onUploadPicture),
             62.verticalSpace,
           ],
         );
 }
 
-class _CameraActiveBase extends StatelessWidget {
+class _CameraActiveBasePage extends StatelessWidget {
   final CameraController cameraController;
   final List<Widget> children;
 
-  const _CameraActiveBase({
+  const _CameraActiveBasePage({
     Key? key,
     required this.cameraController,
     required this.children,

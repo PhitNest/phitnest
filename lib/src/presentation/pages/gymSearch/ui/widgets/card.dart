@@ -1,12 +1,12 @@
 part of gym_search_page;
 
-class GymCard extends StatelessWidget {
+class _GymCard extends StatelessWidget {
   final bool selected;
   final GymEntity gym;
   final double distance;
   final VoidCallback onPressed;
 
-  GymCard({
+  _GymCard({
     required this.onPressed,
     required this.selected,
     required this.gym,

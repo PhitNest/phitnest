@@ -4,13 +4,11 @@ class _InitialPage extends _BasePage {
   final VoidCallback onSignOut;
 
   _InitialPage({
-    required super.name,
-    required super.address,
-    required super.email,
-    required super.profilePicUri,
+    required super.user,
+    required super.gym,
     required this.onSignOut,
   }) : super(
-          child: StyledButton(
+          child: StyledUnderlinedTextButton(
             text: 'SIGN OUT',
             onPressed: onSignOut,
           ),

@@ -1,12 +1,9 @@
-import 'package:async/async.dart';
-import 'package:camera/camera.dart';
+part of profile_picture_page;
 
-import 'profile_picture_state.dart';
-
-class InitialState extends ProfilePictureState {
+class _InitialState extends _ProfilePictureState {
   final CancelableOperation<CameraDescription> getFrontCamera;
 
-  const InitialState({
+  const _InitialState({
     required this.getFrontCamera,
   }) : super();
 

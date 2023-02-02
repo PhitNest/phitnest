@@ -13,9 +13,8 @@ class _LoginBloc extends Bloc<_LoginEvent, _LoginState> {
           ),
         ) {
     on<_SubmitEvent>(onSubmit);
-    on<_SuccessEvent>(onLoginSuccess);
+    on<_SuccessEvent>(onSuccess);
     on<_ErrorEvent>(onLoginError);
-    on<_ResetEvent>(onReset);
     on<_CancelEvent>(onCancel);
   }
 

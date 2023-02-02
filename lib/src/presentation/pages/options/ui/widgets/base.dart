@@ -1,18 +1,14 @@
 part of options_page;
 
 abstract class _BasePage extends StatelessWidget {
-  final String name;
-  final String email;
-  final String address;
-  final String profilePicUri;
+  final GymEntity gym;
+  final ProfilePictureUserEntity user;
   final Widget child;
 
   const _BasePage({
     Key? key,
-    required this.name,
-    required this.email,
-    required this.address,
-    required this.profilePicUri,
+    required this.gym,
+    required this.user,
     required this.child,
   }) : super(key: key);
 
@@ -22,7 +18,7 @@ abstract class _BasePage extends StatelessWidget {
           children: [
             Stack(
               children: [
-                Image.network(profilePicUri),
+                Image.network(user.profilePictureUrl),
                 Padding(
                   padding: EdgeInsets.only(
                     top: 32.h,
@@ -41,12 +37,12 @@ abstract class _BasePage extends StatelessWidget {
             ),
             40.verticalSpace,
             Text(
-              name,
+              user.fullName,
               style: theme.textTheme.headlineLarge,
             ),
             32.verticalSpace,
             Text(
-              email,
+              user.email,
               style: theme.textTheme.labelLarge,
             ),
             Divider(),
@@ -54,6 +50,11 @@ abstract class _BasePage extends StatelessWidget {
             Text(
               'Address',
               style: theme.textTheme.headlineLarge,
+            ),
+            32.verticalSpace,
+            Text(
+              gym.toString(),
+              style: theme.textTheme.labelLarge,
             ),
             Divider(),
             45.verticalSpace,

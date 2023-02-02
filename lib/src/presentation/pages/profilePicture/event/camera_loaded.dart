@@ -1,5 +1,5 @@
-import 'profile_picture_event.dart';
+part of profile_picture_page;
 
-class CameraLoadedEvent extends ProfilePictureEvent {
-  const CameraLoadedEvent() : super();
+class _CameraLoadedEvent extends _ProfilePictureEvent {
+  const _CameraLoadedEvent() : super();
 }

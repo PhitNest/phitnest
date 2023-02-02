@@ -20,7 +20,7 @@ class UserExploreResponse extends Equatable {
       );
 
   @override
-  List<Object?> get props => [users, requests];
+  List<Object> get props => [users, requests];
 }
 
 Future<Either<UserExploreResponse, Failure>> _explore({

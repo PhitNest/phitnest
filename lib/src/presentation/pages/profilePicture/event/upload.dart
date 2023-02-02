@@ -1,5 +1,5 @@
-import 'profile_picture_event.dart';
+part of profile_picture_page;
 
-class UploadEvent extends ProfilePictureEvent {
-  const UploadEvent() : super();
+class _UploadEvent extends _ProfilePictureEvent {
+  const _UploadEvent() : super();
 }

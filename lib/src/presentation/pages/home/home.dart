@@ -2,7 +2,7 @@ library home_page;
 
 import 'package:flutter/material.dart';
 
-import '../../../domain/entities/entities.dart';
+import '../../../data/backend/backend.dart';
 import '../../widgets/widgets.dart';
 
 part 'ui/home_page.dart';

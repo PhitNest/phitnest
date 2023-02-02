@@ -20,7 +20,7 @@ class FriendsAndRequestsResponse extends Equatable {
       );
 
   @override
-  List<Object?> get props => [friendships, requests];
+  List<Object> get props => [friendships, requests];
 }
 
 Future<Either<FriendsAndRequestsResponse, Failure>> _friendsAndRequests({
