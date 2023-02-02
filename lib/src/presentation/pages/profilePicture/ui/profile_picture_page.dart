@@ -1,25 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
+part of profile_picture_page;
 
-import '../../../../common/failure.dart';
-import '../bloc/profile_picture_bloc.dart';
-import '../event/profile_picture_event.dart';
-import '../state/profile_picture_state.dart';
-import 'widgets/widgets.dart';
+extension on BuildContext {
+  _ProfilePictureBloc get bloc => read();
 
-ProfilePictureBloc _bloc(BuildContext context) => context.read();
+  void retake() => bloc.add(const _RetakePhotoEvent());
 
-void _onPressedRetake(BuildContext context) =>
-    _bloc(context).add(const RetakePhotoEvent());
+  void capture() => bloc.add(const _CaptureEvent());
 
-void _onPressedTakePicture(BuildContext context) =>
-    _bloc(context).add(const CaptureEvent());
+  void upload() => bloc.add(const _UploadEvent());
 
-void _onUploadFromAlbums(BuildContext context, XFile image) =>
-    _bloc(context).add(CaptureSuccessEvent(image));
-
-void _onUpload(BuildContext context) => _bloc(context).add(const UploadEvent());
+  void uploadFromAlbums(XFile image) => bloc.add(_CaptureSuccessEvent(image));
+}
 
 class ProfilePicturePage extends StatelessWidget {
   final XFile? initialImage;
@@ -33,70 +24,69 @@ class ProfilePicturePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (context) => ProfilePictureBloc(
+        create: (context) => _ProfilePictureBloc(
           initialImage: initialImage,
           uploadImage: uploadImage,
         ),
-        child: BlocConsumer<ProfilePictureBloc, ProfilePictureState>(
+        child: BlocConsumer<_ProfilePictureBloc, _ProfilePictureState>(
           listener: (context, state) {
-            if (state is UploadSuccessState) {
+            if (state is _UploadSuccessState) {
               Navigator.pop(context, state.file);
             }
           },
           builder: (context, state) {
-            if (state is UploadSuccessState) {
-              return Uploading(
-                profilePicture: state.file,
-                cameraController: state.cameraController,
-              );
-            } else if (state is UploadingState) {
-              return Uploading(
-                profilePicture: state.file,
-                cameraController: state.cameraController,
-              );
-            } else if (state is UploadErrorState) {
-              return UploadingError(
-                cameraController: state.cameraController,
-                profilePicture: state.file,
-                onUploadPicture: (file) => _onUploadFromAlbums(context, file),
-                onPressedConfirm: () => _onUpload(context),
-                failure: state.failure,
-                onPressedRetake: () => _onPressedRetake(context),
-              );
-            } else if (state is CaptureSuccessState) {
-              return CapturedPhoto(
-                profilePicture: state.file,
-                onPressedRetake: () => _onPressedRetake(context),
-                onUploadPicture: (file) => _onUploadFromAlbums(context, file),
-                cameraController: state.cameraController,
-                onPressedConfirm: () => _onUpload(context),
-              );
-            } else if (state is CaptureLoadingState) {
-              return Capturing(cameraController: state.cameraController);
-            } else if (state is CaptureErrorState) {
-              return CapturingError(
-                cameraController: state.cameraController,
-                onUploadPicture: (file) => _onUploadFromAlbums(context, file),
-                onPressTakePicture: () => _onPressedTakePicture(context),
+            if (state is _Captured) {
+              if (state is _UploadErrorState) {
+                return _UploadingErrorPage(
+                  profilePicture: state.file,
+                  onUploadPicture: context.uploadFromAlbums,
+                  cameraController: state.cameraController,
+                  onPressedRetake: context.retake,
+                  onPressedConfirm: context.upload,
+                  failure: state.failure,
+                );
+              } else if (state is _CaptureSuccessState) {
+                return _CapturedPhotoPage(
+                  profilePicture: state.file,
+                  cameraController: state.cameraController,
+                  onPressedRetake: context.retake,
+                  onUploadPicture: context.uploadFromAlbums,
+                  onPressedConfirm: context.upload,
+                );
+              } else {
+                return _UploadingPage(
+                  profilePicture: state.file,
+                  cameraController: state.cameraController,
+                );
+              }
+            } else if (state is _Initialized) {
+              if (state is _CaptureErrorState) {
+                return _CaptureErrorPage(
+                  cameraController: state.cameraController,
+                  onUploadPicture: context.uploadFromAlbums,
+                  onPressTakePicture: context.capture,
+                  errorMessage: state.failure.message,
+                );
+              } else if (state is _CaptureLoadingState) {
+                return _CaptureLoadingPage(
+                  cameraController: state.cameraController,
+                );
+              } else {
+                return _CameraActivePage(
+                  cameraController: state.cameraController,
+                  onUploadPicture: context.uploadFromAlbums,
+                  onPressTakePicture: context.capture,
+                );
+              }
+            } else if (state is _CameraErrorState) {
+              return _CameraLoadingErrorPage(
                 errorMessage: state.failure.message,
-              );
-            } else if (state is CameraLoadedState) {
-              return CameraActive(
-                cameraController: state.cameraController,
-                onUploadPicture: (file) => _onUploadFromAlbums(context, file),
-                onPressTakePicture: () => _onPressedTakePicture(context),
-              );
-            } else if (state is CameraErrorState) {
-              return CameraLoadingError(
-                errorMessage: state.failure.message,
-                onPressedRetry: () => _bloc(context).add(
-                  const RetryInitializeCameraEvent(),
+                onPressedRetry: () => context.bloc.add(
+                  const _RetryInitializeCameraEvent(),
                 ),
               );
-            } else if (state is CameraLoadingState || state is InitialState) {
-              return const CameraLoading();
             } else {
-              throw Exception("Invalid state: $state");
+              return const _CameraLoadingPage();
             }
           },
         ),

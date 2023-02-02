@@ -28,5 +28,8 @@ class GymEntity extends Equatable {
       address.containsIgnoreCase(query);
 
   @override
-  List<Object?> get props => [id, name, address, location];
+  String toString() => '$name, ${address.city}, ${address.state}';
+
+  @override
+  List<Object> get props => [id, name, address, location];
 }

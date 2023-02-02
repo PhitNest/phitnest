@@ -16,7 +16,7 @@ class RegisterResponse extends Equatable {
       );
 
   @override
-  List<Object?> get props => [user, uploadUrl];
+  List<Object> get props => [user, uploadUrl];
 }
 
 Future<Either<RegisterResponse, Failure>> _register({

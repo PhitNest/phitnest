@@ -1,9 +1,13 @@
 part of options_page;
 
 class _OptionsBloc extends Bloc<_OptionsEvent, _OptionsState> {
-  _OptionsBloc() : super(_InitialState()) {
+  final T Function<T>(T Function(String accessToken) f) withAuth;
+
+  _OptionsBloc({
+    required this.withAuth,
+  }) : super(_InitialState()) {
     on<_SignOutEvent>(onSignOut);
-    on<_ErrorEvent>(onOptionsError);
-    on<_SuccessEvent>(onSuccess);
+    on<_SignOutErrorEvent>(onSignOutError);
+    on<_SignOutSuccessEvent>(onSignOutSuccess);
   }
 }

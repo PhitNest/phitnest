@@ -1,17 +1,9 @@
-import 'package:camera/camera.dart';
-import 'package:cross_file_image/cross_file_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of profile_picture_page;
 
-import '../../../../../common/failure.dart';
-import '../../../../../common/theme.dart';
-import '../../../../widgets/widgets.dart';
-import 'albums_button.dart';
-
-class UploadingError extends CapturedPhoto {
+class _UploadingErrorPage extends _CapturedPhotoPage {
   final Failure failure;
 
-  UploadingError({
+  _UploadingErrorPage({
     required super.profilePicture,
     required super.onUploadPicture,
     required super.cameraController,
@@ -33,13 +25,13 @@ class UploadingError extends CapturedPhoto {
         );
 }
 
-class CapturedPhoto extends _CapturedPhotoBase {
+class _CapturedPhotoPage extends _CapturedPhotoBasePage {
   final VoidCallback onPressedConfirm;
   final VoidCallback onPressedRetake;
   final ValueChanged<XFile> onUploadPicture;
   final Widget? child;
 
-  CapturedPhoto({
+  _CapturedPhotoPage({
     required super.profilePicture,
     required super.cameraController,
     required this.onPressedRetake,
@@ -58,14 +50,14 @@ class CapturedPhoto extends _CapturedPhotoBase {
               onPressed: onPressedRetake,
             ),
             Spacer(),
-            AlbumsButton(onUploadPicture: onUploadPicture),
+            _AlbumsButton(onUploadPicture: onUploadPicture),
             62.verticalSpace,
           ],
         );
 }
 
-class Uploading extends _CapturedPhotoBase {
-  Uploading({
+class _UploadingPage extends _CapturedPhotoBasePage {
+  _UploadingPage({
     required super.profilePicture,
     required super.cameraController,
   }) : super(
@@ -75,12 +67,12 @@ class Uploading extends _CapturedPhotoBase {
         );
 }
 
-class _CapturedPhotoBase extends StatelessWidget {
+class _CapturedPhotoBasePage extends StatelessWidget {
   final XFile profilePicture;
   final CameraController cameraController;
   final List<Widget> children;
 
-  const _CapturedPhotoBase({
+  const _CapturedPhotoBasePage({
     required this.profilePicture,
     required this.cameraController,
     required this.children,

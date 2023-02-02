@@ -1,22 +1,21 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of profile_picture_page;
 
-import '../event/profile_picture_event.dart';
-import '../state/profile_picture_state.dart';
-
-void onUploadError(
-  UploadErrorEvent event,
-  Emitter<ProfilePictureState> emit,
-  ProfilePictureState state,
-) {
-  if (state is UploadingState) {
-    emit(
-      UploadErrorState(
-        cameraController: state.cameraController,
-        failure: event.failure,
-        file: state.file,
-      ),
-    );
-  } else {
-    throw Exception("Invalid state: $state");
+extension on _ProfilePictureBloc {
+  void onUploadError(
+    _UploadErrorEvent event,
+    Emitter<_ProfilePictureState> emit,
+  ) {
+    if (state is _Captured) {
+      final capturedState = state as _Captured;
+      emit(
+        _UploadErrorState(
+          cameraController: capturedState.cameraController,
+          failure: event.failure,
+          file: capturedState.file,
+        ),
+      );
+    } else {
+      throw Exception("Invalid state: $state");
+    }
   }
 }

@@ -1,5 +1,5 @@
-import 'profile_picture_event.dart';
+part of profile_picture_page;
 
-class RetakePhotoEvent extends ProfilePictureEvent {
-  const RetakePhotoEvent() : super();
+class _RetakePhotoEvent extends _ProfilePictureEvent {
+  const _RetakePhotoEvent() : super();
 }

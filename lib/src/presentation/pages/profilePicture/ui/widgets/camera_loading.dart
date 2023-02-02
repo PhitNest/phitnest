@@ -1,11 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of profile_picture_page;
 
-import '../../../../../common/theme.dart';
-import '../../../../widgets/widgets.dart';
-
-class CameraLoading extends _CameraLoadingBase {
-  const CameraLoading({
+class _CameraLoadingPage extends _CameraLoadingBasePage {
+  const _CameraLoadingPage({
     Key? key,
   }) : super(
           key: key,
@@ -13,11 +9,11 @@ class CameraLoading extends _CameraLoadingBase {
         );
 }
 
-class CameraLoadingError extends _CameraLoadingBase {
+class _CameraLoadingErrorPage extends _CameraLoadingBasePage {
   final String errorMessage;
   final VoidCallback onPressedRetry;
 
-  CameraLoadingError({
+  _CameraLoadingErrorPage({
     Key? key,
     required this.errorMessage,
     required this.onPressedRetry,
@@ -41,10 +37,10 @@ class CameraLoadingError extends _CameraLoadingBase {
         );
 }
 
-abstract class _CameraLoadingBase extends StatelessWidget {
+abstract class _CameraLoadingBasePage extends StatelessWidget {
   final Widget child;
 
-  const _CameraLoadingBase({
+  const _CameraLoadingBasePage({
     Key? key,
     required this.child,
   }) : super(key: key);

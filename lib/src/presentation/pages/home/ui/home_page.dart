@@ -1,16 +1,12 @@
 part of home_page;
 
 class HomePage extends StatelessWidget {
-  final String initialAccessToken;
-  final String initialRefreshToken;
-  final UserEntity initialUserData;
+  final LoginResponse initialData;
   final String initialPassword;
 
   const HomePage({
     Key? key,
-    required this.initialAccessToken,
-    required this.initialRefreshToken,
-    required this.initialUserData,
+    required this.initialData,
     required this.initialPassword,
   }) : super(key: key);
 

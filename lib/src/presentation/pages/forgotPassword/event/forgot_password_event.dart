@@ -4,5 +4,5 @@ abstract class _ForgotPasswordEvent extends Equatable {
   const _ForgotPasswordEvent();
 
   @override
-  List<Object?> get props => [];
+  List<Object> get props => [];
 }

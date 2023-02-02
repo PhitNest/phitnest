@@ -3,26 +3,26 @@ part of backend;
 class LoginResponse extends Equatable {
   final String accessToken;
   final String refreshToken;
-  final String idToken;
-  final UserEntity user;
+  final ProfilePictureUserEntity user;
+  final GymEntity gym;
 
   const LoginResponse({
     required this.accessToken,
     required this.refreshToken,
-    required this.idToken,
     required this.user,
+    required this.gym,
   }) : super();
 
   @override
   factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
         accessToken: json['accessToken'],
         refreshToken: json['refreshToken'],
-        idToken: json['idToken'],
-        user: UserEntity.fromJson(json['user']),
+        user: ProfilePictureUserEntity.fromJson(json['user']),
+        gym: GymEntity.fromJson(json['gym']),
       );
 
   @override
-  List<Object?> get props => [accessToken, refreshToken, idToken, user];
+  List<Object> get props => [accessToken, refreshToken, user, gym];
 }
 
 Future<Either<LoginResponse, Failure>> _login({

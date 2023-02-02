@@ -16,11 +16,12 @@ class _Auth {
             (either) => either.fold(
               (response) => Future.wait(
                 [
-                  cacheEmail(email),
-                  cachePassword(password),
-                  cacheUser(response.user),
-                  cacheAccessToken(response.accessToken),
-                  cacheRefreshToken(response.refreshToken),
+                  Cache.cachePassword(password),
+                  Cache.cacheUser(response.user),
+                  Cache.cacheProfilePictureUrl(response.user.profilePictureUrl),
+                  Cache.cacheAccessToken(response.accessToken),
+                  Cache.cacheRefreshToken(response.refreshToken),
+                  Cache.cacheGym(response.gym),
                 ],
               ).then((_) => Left(response)),
               (failure) => Right(failure),
@@ -46,9 +47,8 @@ class _Auth {
             (either) => either.fold(
               (response) => Future.wait(
                 [
-                  cacheEmail(email),
-                  cachePassword(password),
-                  cacheUser(response.user),
+                  Cache.cachePassword(password),
+                  Cache.cacheUser(response.user),
                 ],
               ).then((_) => Left(response)),
               (failure) => Right(failure),
@@ -68,8 +68,8 @@ class _Auth {
             (either) => either.fold(
               (user) => Future.wait(
                 [
-                  cacheEmail(email),
-                  cacheProfilePictureUser(user),
+                  Cache.cacheUser(user),
+                  Cache.cacheProfilePictureUrl(user.profilePictureUrl),
                 ],
               ).then((_) => Left(user)),
               (failure) => Right(failure),
@@ -89,9 +89,8 @@ class _Auth {
             (either) => either.fold(
               (user) => Future.wait(
                 [
-                  cacheEmail(email),
-                  cacheRefreshToken(refreshToken),
-                  cacheAccessToken(user.accessToken),
+                  Cache.cacheRefreshToken(refreshToken),
+                  Cache.cacheAccessToken(user.accessToken),
                 ],
               ).then((_) => Left(user)),
               (failure) => Right(failure),
@@ -112,11 +111,12 @@ class _Auth {
           if (failure != null) {
             return Future.wait(
               [
-                cacheEmail(null),
-                cachePassword(null),
-                cacheAccessToken(null),
-                cacheRefreshToken(null),
-                cacheProfilePictureUser(null),
+                Cache.cachePassword(null),
+                Cache.cacheAccessToken(null),
+                Cache.cacheRefreshToken(null),
+                Cache.cacheUser(null),
+                Cache.cacheProfilePictureUrl(null),
+                Cache.cacheGym(null),
               ],
             ).then((_) => null);
           }

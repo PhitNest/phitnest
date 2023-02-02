@@ -28,7 +28,7 @@ class AddressEntity extends Equatable {
       zipCode.toLowerCase().contains(query.toLowerCase());
 
   @override
-  List<Object?> get props => [street, city, state, zipCode];
+  List<Object> get props => [street, city, state, zipCode];
 
   @override
   String toString() => '$street,\n$city, $state $zipCode';

@@ -1,5 +1,5 @@
-import 'profile_picture_event.dart';
+part of profile_picture_page;
 
-class RetryInitializeCameraEvent extends ProfilePictureEvent {
-  const RetryInitializeCameraEvent() : super();
+class _RetryInitializeCameraEvent extends _ProfilePictureEvent {
+  const _RetryInitializeCameraEvent() : super();
 }

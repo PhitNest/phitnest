@@ -12,5 +12,5 @@ class _ConfirmingEmailState extends _LoginState {
   }) : super();
 
   @override
-  List<Object?> get props => [super.props, email, password];
+  List<Object> get props => [super.props, email, password];
 }

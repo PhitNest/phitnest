@@ -1,10 +1,9 @@
-import '../../../../common/failure.dart';
-import 'profile_picture_event.dart';
+part of profile_picture_page;
 
-class CameraErrorEvent extends ProfilePictureEvent {
+class _CameraErrorEvent extends _ProfilePictureEvent {
   final Failure failure;
 
-  const CameraErrorEvent(this.failure);
+  const _CameraErrorEvent(this.failure) : super();
 
   @override
   List<Object?> get props => [failure];

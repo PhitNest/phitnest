@@ -22,7 +22,7 @@ class FriendshipEntity extends Equatable {
       );
 
   @override
-  List<Object?> get props => [id, userCognitoIds, createdAt];
+  List<Object> get props => [id, userCognitoIds, createdAt];
 }
 
 class PopulatedFriendshipEntity extends FriendshipEntity {

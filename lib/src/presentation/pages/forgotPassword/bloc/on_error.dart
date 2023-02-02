@@ -4,20 +4,15 @@ extension on _ForgotPasswordBloc {
   void onForgotPasswordError(
     _ErrorEvent event,
     Emitter<_ForgotPasswordState> emit,
-  ) {
-    if (event.failure == Failures.userNotConfirmed.instance) {
+  ) =>
       emit(
-        _ConfirmingEmailState(
-          autovalidateMode: state.autovalidateMode,
-        ),
+        event.failure == Failures.userNotConfirmed.instance
+            ? _ConfirmingEmailState(
+                autovalidateMode: state.autovalidateMode,
+              )
+            : _ErrorState(
+                failure: event.failure,
+                autovalidateMode: state.autovalidateMode,
+              ),
       );
-    } else {
-      emit(
-        _ErrorState(
-          failure: event.failure,
-          autovalidateMode: state.autovalidateMode,
-        ),
-      );
-    }
-  }
 }

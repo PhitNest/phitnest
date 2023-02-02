@@ -1,56 +1,52 @@
 part of login_page;
 
-LoginBloc _bloc(BuildContext context) => context.read();
+extension on BuildContext {
+  _LoginBloc get bloc => read();
 
-void _onPressedForgotPassword(BuildContext context) {
-  _bloc(context).add(CancelLoginEvent());
-  Navigator.push(
-    context,
-    CupertinoPageRoute(
-      builder: (context) => ForgotPasswordPage(),
-    ),
-  );
+  void submit() => bloc.add(const _SubmitEvent());
+
+  void goToForgotPassword() {
+    bloc.add(const _CancelEvent());
+    Navigator.push(
+      this,
+      CupertinoPageRoute(
+        builder: (context) => const ForgotPasswordPage(),
+      ),
+    );
+  }
+
+  void goToRegistration() {
+    bloc.add(const _CancelEvent());
+    Navigator.push(
+      this,
+      CupertinoPageRoute(
+        builder: (context) => const RegistrationPage(),
+      ),
+    );
+  }
 }
 
-void _onPressedRegister(BuildContext context) {
-  _bloc(context).add(CancelLoginEvent());
-  Navigator.push(
-    context,
-    CupertinoPageRoute(
-      builder: (context) => RegistrationPage(),
-    ),
-  );
-}
-
-void _onPressedSubmit(BuildContext context) =>
-    _bloc(context).add(SubmitEvent());
-
-/// Handles signing in and has links to forgot password and registration
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => BlocProvider<LoginBloc>(
-        create: (context) => LoginBloc(),
-        child: BlocConsumer<LoginBloc, LoginState>(
-          listener: (context, state) async {
-            if (state is LoginSuccessState) {
+  Widget build(BuildContext context) => BlocProvider(
+        create: (context) => _LoginBloc(),
+        child: BlocConsumer<_LoginBloc, _LoginState>(
+          listener: (context, state) {
+            if (state is _SuccessState) {
               Navigator.pushAndRemoveUntil(
                 context,
                 CupertinoPageRoute(
                   builder: (context) => HomePage(
-                    initialAccessToken: state.response.accessToken,
-                    initialRefreshToken: state.response.refreshToken,
-                    initialUserData: state.response.user,
-                    initialPassword: state.password,
+                    initialData: state.response,
+                    initialPassword: context.bloc.passwordController.text,
                   ),
                 ),
                 (_) => false,
               );
-            } else if (state is ConfirmUserState) {
-              // Navigate to confirm email page to confirm registration and reset login page state
-              _bloc(context).add(ResetEvent());
-              final response = await Navigator.push<LoginResponse>(
+            } else if (state is _ConfirmingEmailState) {
+              Navigator.push<LoginResponse>(
                 context,
                 CupertinoPageRoute(
                   builder: (context) => ConfirmEmailPage(
@@ -58,66 +54,49 @@ class LoginPage extends StatelessWidget {
                     password: state.password,
                   ),
                 ),
+              ).then(
+                (response) {
+                  if (response != null) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => HomePage(
+                          initialData: response,
+                          initialPassword: state.password,
+                        ),
+                      ),
+                      (_) => false,
+                    );
+                  }
+                },
               );
-              if (response != null) {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => HomePage(
-                      initialAccessToken: response.accessToken,
-                      initialRefreshToken: response.refreshToken,
-                      initialUserData: response.user,
-                      initialPassword: state.password,
-                    ),
-                  ),
-                  (_) => false,
-                );
-              }
             }
           },
           builder: (context, state) {
             final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-            if (state is LoginSuccessState || state is ConfirmUserState) {
-              return StyledScaffold(
-                body: Column(
-                  children: [
-                    200.verticalSpace,
-                    CircularProgressIndicator(),
-                  ],
-                ),
-              );
-            } else if (state is LoadingState) {
-              return LoginLoading(
+            if (state is _LoadingState) {
+              return _LoadingPage(
                 keyboardHeight: keyboardHeight,
-                emailController: state.emailController,
-                passwordController: state.passwordController,
-                emailFocusNode: state.emailFocusNode,
-                passwordFocusNode: state.passwordFocusNode,
-                formKey: state.formKey,
+                emailController: context.bloc.emailController,
+                passwordController: context.bloc.passwordController,
+                formKey: context.bloc.formKey,
                 autovalidateMode: state.autovalidateMode,
                 invalidCredentials: state.invalidCredentials,
-                onSubmit: () => _onPressedSubmit(context),
-                onPressedForgotPassword: () =>
-                    _onPressedForgotPassword(context),
-                onPressedRegister: () => _onPressedRegister(context),
-              );
-            } else if (state is InitialState) {
-              return LoginInitial(
-                autovalidateMode: state.autovalidateMode,
-                emailController: state.emailController,
-                emailFocusNode: state.emailFocusNode,
-                formKey: state.formKey,
-                passwordController: state.passwordController,
-                passwordFocusNode: state.passwordFocusNode,
-                keyboardHeight: keyboardHeight,
-                invalidCredentials: state.invalidCredentials,
-                onPressedForgotPassword: () =>
-                    _onPressedForgotPassword(context),
-                onPressedRegister: () => _onPressedRegister(context),
-                onSubmit: () => _onPressedSubmit(context),
+                onPressedForgotPassword: context.goToForgotPassword,
+                onPressedRegister: context.goToRegistration,
               );
             } else {
-              throw Exception('Invalid state: $state');
+              return _InitialPage(
+                autovalidateMode: state.autovalidateMode,
+                emailController: context.bloc.emailController,
+                formKey: context.bloc.formKey,
+                passwordController: context.bloc.passwordController,
+                keyboardHeight: keyboardHeight,
+                invalidCredentials: state.invalidCredentials,
+                onPressedForgotPassword: context.goToForgotPassword,
+                onPressedRegister: context.goToRegistration,
+                onSubmit: context.submit,
+              );
             }
           },
         ),

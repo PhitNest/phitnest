@@ -4,11 +4,10 @@ extension on _ForgotPasswordBloc {
   void onSuccess(
     _SuccessEvent event,
     Emitter<_ForgotPasswordState> emit,
-  ) {
-    emit(
-      _SuccessState(
-        autovalidateMode: state.autovalidateMode,
-      ),
-    );
-  }
+  ) =>
+      emit(
+        _SuccessState(
+          autovalidateMode: state.autovalidateMode,
+        ),
+      );
 }

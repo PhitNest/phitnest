@@ -13,7 +13,7 @@ class GetUploadUrlResponse extends Equatable {
       );
 
   @override
-  List<Object?> get props => [url];
+  List<Object> get props => [url];
 }
 
 Future<Either<GetUploadUrlResponse, Failure>> _getUploadUrl({

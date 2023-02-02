@@ -10,5 +10,5 @@ abstract class _LoginState extends Equatable {
   }) : super();
 
   @override
-  List<Object?> get props => [autovalidateMode, invalidCredentials];
+  List<Object> get props => [autovalidateMode, invalidCredentials];
 }

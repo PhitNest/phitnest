@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../data/backend/backend.dart';
 import '../data/cache/cache.dart';
 import '../common/theme.dart';
+import '../domain/entities/entities.dart';
 import 'pages/pages.dart';
 
 class App extends StatelessWidget {
@@ -18,18 +19,28 @@ class App extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           home: Builder(
             builder: (context) {
-              final user = cachedUser;
-              final password = cachedPassword;
+              final user = Cache.user;
+              final password = Cache.password;
               if (user != null && password != null) {
-                final accessToken = cachedAccessToken;
-                final refreshToken = cachedRefreshToken;
+                final accessToken = Cache.accessToken;
+                final refreshToken = Cache.refreshToken;
+                final profilePictureUrl = Cache.profilePictureUrl;
+                final gym = Cache.gym;
                 if (user.confirmed &&
                     accessToken != null &&
-                    refreshToken != null) {
+                    refreshToken != null &&
+                    profilePictureUrl != null &&
+                    gym != null) {
                   return HomePage(
-                    initialAccessToken: accessToken,
-                    initialRefreshToken: refreshToken,
-                    initialUserData: user,
+                    initialData: LoginResponse(
+                      accessToken: accessToken,
+                      refreshToken: refreshToken,
+                      user: ProfilePictureUserEntity.fromUserEntity(
+                        user,
+                        profilePictureUrl,
+                      ),
+                      gym: gym,
+                    ),
                     initialPassword: password,
                   );
                 } else {
@@ -54,9 +65,7 @@ class App extends StatelessWidget {
                                 context,
                                 CupertinoPageRoute(
                                   builder: (context) => HomePage(
-                                    initialAccessToken: response.accessToken,
-                                    initialRefreshToken: response.refreshToken,
-                                    initialUserData: response.user,
+                                    initialData: response,
                                     initialPassword: password,
                                   ),
                                 ),

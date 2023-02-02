@@ -1,21 +1,20 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of profile_picture_page;
 
-import '../event/profile_picture_event.dart';
-import '../state/profile_picture_state.dart';
-
-void onCameraError(
-  CameraErrorEvent event,
-  Emitter<ProfilePictureState> emit,
-  ProfilePictureState state,
-) {
-  if (state is CameraLoadingState) {
-    emit(
-      CameraErrorState(
-        cameraController: state.cameraController,
-        failure: event.failure,
-      ),
-    );
-  } else {
-    throw Exception("Invalid state: $state");
+extension on _ProfilePictureBloc {
+  void onCameraError(
+    _CameraErrorEvent event,
+    Emitter<_ProfilePictureState> emit,
+  ) {
+    if (state is _Initialized) {
+      final initializedState = state as _Initialized;
+      emit(
+        _CameraErrorState(
+          cameraController: initializedState.cameraController,
+          failure: event.failure,
+        ),
+      );
+    } else {
+      throw Exception("Invalid state: $state");
+    }
   }
 }

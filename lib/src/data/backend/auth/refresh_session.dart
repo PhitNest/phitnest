@@ -17,7 +17,7 @@ class RefreshSessionResponse extends Equatable {
       );
 
   @override
-  List<Object?> get props => [accessToken, idToken];
+  List<Object> get props => [accessToken, idToken];
 }
 
 Future<Either<RefreshSessionResponse, Failure>> _refreshSession({

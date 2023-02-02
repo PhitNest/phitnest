@@ -1,29 +1,15 @@
-import 'package:async/async.dart';
-import 'package:camera/camera.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of profile_picture_page;
 
-import '../../../../common/failure.dart';
-import '../event/profile_picture_event.dart';
-import '../state/profile_picture_state.dart';
-import 'on_camera_error.dart';
-import 'on_camera_loaded.dart';
-import 'on_capture.dart';
-import 'on_capture_error.dart';
-import 'on_capture_success.dart';
-import 'on_initialized.dart';
-import 'on_retake_photo.dart';
-import 'on_retry_initialize_camera.dart';
-import 'on_upload.dart';
-import 'on_upload_error.dart';
-import 'on_upload_success.dart';
+class _ProfilePictureBloc
+    extends Bloc<_ProfilePictureEvent, _ProfilePictureState> {
+  final XFile? initialImage;
+  final Future<Failure?> Function(XFile image) uploadImage;
 
-class ProfilePictureBloc
-    extends Bloc<ProfilePictureEvent, ProfilePictureState> {
-  ProfilePictureBloc({
-    required Future<Failure?> Function(XFile image) uploadImage,
-    XFile? initialImage,
+  _ProfilePictureBloc({
+    required this.uploadImage,
+    this.initialImage,
   }) : super(
-          InitialState(
+          _InitialState(
             getFrontCamera: CancelableOperation.fromFuture(
               availableCameras().then(
                 (cameras) => cameras.firstWhere(
@@ -35,49 +21,44 @@ class ProfilePictureBloc
             ),
           ),
         ) {
-    if (state is InitialState) {
-      final initialState = state as InitialState;
-      initialState.getFrontCamera.value.then(
-          (cameraDescription) => add(InitializedEvent(cameraDescription)));
+    if (state is _InitialState) {
+      final initialState = state as _InitialState;
+      initialState.getFrontCamera.value.then((cameraDescription) =>
+          add(_InitializeCameraEvent(cameraDescription)));
     }
-    on<InitializedEvent>(
-        (event, emit) => onInitialized(event, emit, state, add, initialImage));
-    on<CameraLoadedEvent>((event, emit) => onCameraLoaded(event, emit, state));
-    on<CameraErrorEvent>((event, emit) => onCameraError(event, emit, state));
-    on<CaptureEvent>((event, emit) => onCapture(event, emit, state, add));
-    on<CaptureErrorEvent>((event, emit) => onCaptureError(event, emit, state));
-    on<CaptureSuccessEvent>(
-        (event, emit) => onCaptureSuccess(event, emit, state));
-    on<RetakePhotoEvent>((event, emit) => onRetakePhoto(event, emit, state));
-    on<RetryInitializeCameraEvent>((event, emit) =>
-        onRetryInitializeCamera(event, emit, state, add, initialImage));
-    on<UploadEvent>(
-        (event, emit) => onUpload(event, emit, state, add, uploadImage));
-    on<UploadErrorEvent>((event, emit) => onUploadError(event, emit, state));
-    on<UploadSuccessEvent>(
-        (event, emit) => onUploadSuccess(event, emit, state));
+    on<_InitializeCameraEvent>(onInitializeCamera);
+    on<_RetryInitializeCameraEvent>(onRetryInitializeCamera);
+    on<_CameraLoadedEvent>(onCameraLoaded);
+    on<_CameraErrorEvent>(onCameraError);
+    on<_CaptureEvent>(onCapture);
+    on<_CaptureErrorEvent>(onCaptureError);
+    on<_CaptureSuccessEvent>(onCaptureSuccess);
+    on<_RetakePhotoEvent>(onRetakePhoto);
+    on<_UploadEvent>(onUpload);
+    on<_UploadErrorEvent>(onUploadError);
+    on<_UploadSuccessEvent>(onUploadSuccess);
   }
 
   @override
   Future<void> close() async {
-    if (state is UploadingState) {
-      final uploadingState = state as UploadingState;
+    if (state is _UploadingState) {
+      final uploadingState = state as _UploadingState;
       await uploadingState.uploadImage.cancel();
     }
-    if (state is InitialState) {
-      final initialState = state as InitialState;
+    if (state is _InitialState) {
+      final initialState = state as _InitialState;
       await initialState.getFrontCamera.cancel();
     }
-    if (state is InitializedState) {
-      final initializedState = state as InitializedState;
+    if (state is _Initialized) {
+      final initializedState = state as _Initialized;
       await initializedState.cameraController.dispose();
     }
-    if (state is CaptureLoadingState) {
-      final captureLoadingState = state as CaptureLoadingState;
+    if (state is _CaptureLoadingState) {
+      final captureLoadingState = state as _CaptureLoadingState;
       await captureLoadingState.captureImage.cancel();
     }
-    if (state is CameraLoadingState) {
-      final cameraLoadingState = state as CameraLoadingState;
+    if (state is _CameraLoadingState) {
+      final cameraLoadingState = state as _CameraLoadingState;
       await cameraLoadingState.initializeCamera.cancel();
     }
     return super.close();

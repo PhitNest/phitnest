@@ -1,10 +1,9 @@
-import '../../../../../../../common/failure.dart';
-import 'capture_success.dart';
+part of profile_picture_page;
 
-class UploadErrorState extends CaptureSuccessState {
+class _UploadErrorState extends _Captured {
   final Failure failure;
 
-  const UploadErrorState({
+  const _UploadErrorState({
     required super.cameraController,
     required super.file,
     required this.failure,

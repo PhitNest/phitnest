@@ -6,5 +6,5 @@ class _ErrorEvent extends _ForgotPasswordEvent {
   const _ErrorEvent(this.failure) : super();
 
   @override
-  List<Object?> get props => [failure];
+  List<Object> get props => [failure];
 }

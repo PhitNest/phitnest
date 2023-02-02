@@ -1,17 +1,14 @@
-import 'package:async/async.dart';
+part of profile_picture_page;
 
-import '../../../../../common/failure.dart';
-import 'initialized.dart';
-
-class CameraLoadingState extends InitializedState {
+class _CameraLoadingState extends _Initialized {
   final CancelableOperation<Failure?> initializeCamera;
 
-  const CameraLoadingState({
+  const _CameraLoadingState({
     required super.cameraController,
     required this.initializeCamera,
   }) : super();
 
   @override
-  List<Object?> get props =>
+  List<Object> get props =>
       [super.props, initializeCamera.isCanceled, initializeCamera.isCompleted];
 }

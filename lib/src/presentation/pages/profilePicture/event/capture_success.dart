@@ -1,11 +1,9 @@
-import 'package:camera/camera.dart';
+part of profile_picture_page;
 
-import 'profile_picture_event.dart';
-
-class CaptureSuccessEvent extends ProfilePictureEvent {
+class _CaptureSuccessEvent extends _ProfilePictureEvent {
   final XFile file;
 
-  const CaptureSuccessEvent(this.file);
+  const _CaptureSuccessEvent(this.file) : super();
 
   @override
   List<Object?> get props => [file];

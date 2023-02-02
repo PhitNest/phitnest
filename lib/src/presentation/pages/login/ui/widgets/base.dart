@@ -1,45 +1,40 @@
 part of login_page;
 
-abstract class LoginPageBase extends StatelessWidget {
+abstract class _LoginPageBase extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
-  final FocusNode emailFocusNode;
-  final FocusNode passwordFocusNode;
   final GlobalKey<FormState> formKey;
   final double keyboardHeight;
   final AutovalidateMode autovalidateMode;
-  final VoidCallback onSubmit;
+  final VoidCallback? onSubmit;
   final Widget child;
   final VoidCallback onPressedForgotPassword;
   final VoidCallback onPressedRegister;
   final Set<Tuple2<String, String>> invalidCredentials;
 
-  const LoginPageBase({
+  const _LoginPageBase({
     Key? key,
     required this.emailController,
     required this.passwordController,
-    required this.emailFocusNode,
-    required this.passwordFocusNode,
     required this.formKey,
     required this.keyboardHeight,
     required this.autovalidateMode,
-    required this.onSubmit,
     required this.child,
     required this.onPressedForgotPassword,
     required this.onPressedRegister,
     required this.invalidCredentials,
+    this.onSubmit,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => StyledScaffold(
-        // Prevent overflow and allow drag to dismiss keyboard
         body: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: SizedBox(
             height: 1.sh,
+            width: double.infinity,
             child: Column(
               children: [
-                double.infinity.horizontalSpace,
                 (120 - keyboardHeight / 4).verticalSpace,
                 Image.asset(
                   Assets.logo.path,
@@ -62,7 +57,6 @@ abstract class LoginPageBase extends StatelessWidget {
                           controller: emailController,
                           hint: 'Email',
                           errorMaxLines: 1,
-                          focusNode: emailFocusNode,
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           validator: (value) =>
@@ -77,10 +71,10 @@ abstract class LoginPageBase extends StatelessWidget {
                         StyledPasswordField(
                           controller: passwordController,
                           hint: 'Password',
-                          focusNode: passwordFocusNode,
                           textInputAction: TextInputAction.done,
                           validator: (value) => validatePassword(value),
-                          onFieldSubmitted: (value) => onSubmit(),
+                          onFieldSubmitted:
+                              onSubmit != null ? (value) => onSubmit!() : null,
                         ),
                       ],
                     ),

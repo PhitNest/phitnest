@@ -28,7 +28,7 @@ class FriendRequestEntity extends Equatable {
       );
 
   @override
-  List<Object?> get props => [
+  List<Object> get props => [
         id,
         createdAt,
         denied,
@@ -61,7 +61,7 @@ class PopulatedFriendRequestEntity extends FriendRequestEntity {
       );
 
   @override
-  List<Object?> get props => [
+  List<Object> get props => [
         super.props,
         fromUser,
       ];

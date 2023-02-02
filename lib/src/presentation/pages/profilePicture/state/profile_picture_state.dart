@@ -1,9 +1,28 @@
-import 'package:equatable/equatable.dart';
+part of profile_picture_page;
 
-export 'initial.dart';
-export 'initialized/initialized.dart';
+abstract class _ProfilePictureState extends Equatable {
+  const _ProfilePictureState() : super();
+}
 
-/// Base state for the profile picture screen
-abstract class ProfilePictureState extends Equatable {
-  const ProfilePictureState() : super();
+abstract class _Initialized extends _ProfilePictureState {
+  final CameraController cameraController;
+
+  const _Initialized({
+    required this.cameraController,
+  }) : super();
+
+  @override
+  List<Object> get props => [cameraController];
+}
+
+abstract class _Captured extends _Initialized {
+  final XFile file;
+
+  const _Captured({
+    required super.cameraController,
+    required this.file,
+  }) : super();
+
+  @override
+  List<Object> get props => [file];
 }
