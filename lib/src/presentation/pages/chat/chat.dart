@@ -4,6 +4,6 @@ part 'ui/chat_page.dart';
 
 part 'bloc/chat_bloc.dart';
 
-part 'event/chat_event.dart';
+part 'event/base.dart';
 
-part 'state/chat_state.dart';
+part 'state/base.dart';

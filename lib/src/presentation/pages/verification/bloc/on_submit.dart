@@ -1,45 +1,24 @@
-import 'package:async/async.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of verification_page;
 
-import '../../../../common/constants/constants.dart';
-import '../event/verification_event.dart';
-import '../state/verification_state.dart';
-
-void onSubmit(
-  SubmitEvent event,
-  Emitter<VerificationState> emit,
-  VerificationState state,
-  ValueChanged<VerificationEvent> add,
-) {
-  if (state is InitialState) {
-    if (state.codeController.text.length != 6) {
+extension on _VerificationBloc {
+  void onSubmit(
+    _SubmitEvent event,
+    Emitter<_VerificationState> emit,
+  ) =>
       emit(
-        ConfirmErrorState(
-          codeController: state.codeController,
-          codeFocusNode: state.codeFocusNode,
-          failure: Failures.invalidCode.instance,
-        ),
-      );
-    } else {
-      emit(
-        ConfirmingState(
-          codeController: state.codeController,
-          codeFocusNode: state.codeFocusNode,
-          operation: CancelableOperation.fromFuture(
-            event.confirmation(
-              state.codeController.text,
-            )..then(
-                (either) => either.fold(
-                  (response) => add(ConfirmSuccessEvent(response)),
-                  (failure) => add(ConfirmErrorEvent(failure)),
+        codeController.text.length != 6
+            ? _ConfirmErrorState(failure: Failures.invalidCode.instance)
+            : _ConfirmingState(
+                operation: CancelableOperation.fromFuture(
+                  event.confirmation(
+                    codeController.text,
+                  )..then(
+                      (either) => either.fold(
+                        (response) => add(_SuccessEvent(response)),
+                        (failure) => add(_ConfirmErrorEvent(failure)),
+                      ),
+                    ),
                 ),
               ),
-          ),
-        ),
       );
-    }
-  } else {
-    throw Exception('Invalid state: $state');
-  }
 }

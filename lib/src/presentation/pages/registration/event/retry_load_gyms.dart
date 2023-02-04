@@ -1,6 +1,5 @@
-import 'registration_event.dart';
+part of registration_page;
 
-/// This event is emitted when the user retries loading gyms.
-class RetryLoadGymsEvent extends RegistrationEvent {
-  const RetryLoadGymsEvent() : super();
+class _RetryLoadGymsEvent extends _RegistrationEvent {
+  const _RetryLoadGymsEvent() : super();
 }

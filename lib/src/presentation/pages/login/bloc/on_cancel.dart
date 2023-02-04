@@ -6,8 +6,8 @@ extension on _LoginBloc {
     Emitter<_LoginState> emit,
   ) async {
     if (state is _LoadingState) {
-      final loadingState = state as _LoadingState;
-      await loadingState.loginOperation.cancel();
+      final state = this.state as _LoadingState;
+      await state.loginOperation.cancel();
       emit(
         _InitialState(
           autovalidateMode: state.autovalidateMode,

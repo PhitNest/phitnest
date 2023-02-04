@@ -6,10 +6,10 @@ extension on _ProfilePictureBloc {
     Emitter<_ProfilePictureState> emit,
   ) {
     if (state is _Initialized) {
-      final initializedState = state as _Initialized;
+      final state = this.state as _Initialized;
       emit(
         _CaptureSuccessState(
-          cameraController: initializedState.cameraController,
+          cameraController: state.cameraController,
           file: event.file,
         ),
       );

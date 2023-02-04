@@ -21,7 +21,7 @@ part 'ui/widgets/camera_loading.dart';
 part 'ui/widgets/camera_active.dart';
 part 'ui/widgets/captured_photo.dart';
 
-part 'state/profile_picture_state.dart';
+part 'state/base.dart';
 part 'state/initial.dart';
 part 'state/camera_error.dart';
 part 'state/camera_loading.dart';
@@ -41,7 +41,7 @@ part 'event/capture_success.dart';
 part 'event/upload_error.dart';
 part 'event/upload_success.dart';
 part 'event/upload.dart';
-part 'event/profile_picture_event.dart';
+part 'event/base.dart';
 part 'event/capture.dart';
 part 'event/retake_photo.dart';
 part 'event/retry_initialize_camera.dart';

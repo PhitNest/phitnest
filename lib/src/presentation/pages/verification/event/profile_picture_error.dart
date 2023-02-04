@@ -1,5 +1,5 @@
-import 'verification_event.dart';
+part of verification_page;
 
-class ProfilePictureErrorEvent extends VerificationEvent {
-  const ProfilePictureErrorEvent() : super();
+class _ProfilePictureErrorEvent extends _VerificationEvent {
+  const _ProfilePictureErrorEvent() : super();
 }

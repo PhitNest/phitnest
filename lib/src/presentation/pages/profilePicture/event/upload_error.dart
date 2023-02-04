@@ -6,5 +6,5 @@ class _UploadErrorEvent extends _ProfilePictureEvent {
   const _UploadErrorEvent(this.failure) : super();
 
   @override
-  List<Object?> get props => [failure];
+  List<Object> get props => [failure];
 }

@@ -6,12 +6,12 @@ extension on _ProfilePictureBloc {
     Emitter<_ProfilePictureState> emit,
   ) {
     if (state is _Initialized) {
-      final initializedState = state as _Initialized;
+      final state = this.state as _Initialized;
       emit(
         _CameraLoadingState(
-          cameraController: initializedState.cameraController,
+          cameraController: state.cameraController,
           initializeCamera: CancelableOperation.fromFuture(
-            initializedState.cameraController
+            state.cameraController
                 .initialize()
                 .then<Failure?>((_) => null)
                 .catchError(

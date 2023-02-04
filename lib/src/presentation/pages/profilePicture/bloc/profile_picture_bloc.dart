@@ -22,8 +22,8 @@ class _ProfilePictureBloc
           ),
         ) {
     if (state is _InitialState) {
-      final initialState = state as _InitialState;
-      initialState.getFrontCamera.value.then((cameraDescription) =>
+      final state = this.state as _InitialState;
+      state.getFrontCamera.value.then((cameraDescription) =>
           add(_InitializeCameraEvent(cameraDescription)));
     }
     on<_InitializeCameraEvent>(onInitializeCamera);
@@ -42,24 +42,24 @@ class _ProfilePictureBloc
   @override
   Future<void> close() async {
     if (state is _UploadingState) {
-      final uploadingState = state as _UploadingState;
-      await uploadingState.uploadImage.cancel();
+      final state = this.state as _UploadingState;
+      await state.uploadImage.cancel();
     }
     if (state is _InitialState) {
-      final initialState = state as _InitialState;
-      await initialState.getFrontCamera.cancel();
+      final state = this.state as _InitialState;
+      await state.getFrontCamera.cancel();
     }
     if (state is _Initialized) {
-      final initializedState = state as _Initialized;
-      await initializedState.cameraController.dispose();
+      final state = this.state as _Initialized;
+      await state.cameraController.dispose();
     }
     if (state is _CaptureLoadingState) {
-      final captureLoadingState = state as _CaptureLoadingState;
-      await captureLoadingState.captureImage.cancel();
+      final state = this.state as _CaptureLoadingState;
+      await state.captureImage.cancel();
     }
     if (state is _CameraLoadingState) {
-      final cameraLoadingState = state as _CameraLoadingState;
-      await cameraLoadingState.initializeCamera.cancel();
+      final state = this.state as _CameraLoadingState;
+      await state.initializeCamera.cancel();
     }
     return super.close();
   }

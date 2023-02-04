@@ -1,19 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_picker/image_picker.dart';
+part of registration_page;
 
-import '../../../../../common/constants/assets.dart';
-import '../../../../../common/theme.dart';
-import '../../../../widgets/styled/styled.dart';
-
-class ProfilePictureInstructions extends StatelessWidget {
+class _ProfilePictureInstructions extends StatelessWidget {
   final VoidCallback onPressedTakePhoto;
-  final ValueChanged<XFile> onUploadFromAlbums;
+  final ValueChanged<XFile> onPressedUploadFromAlbums;
 
-  const ProfilePictureInstructions({
+  const _ProfilePictureInstructions({
     Key? key,
     required this.onPressedTakePhoto,
-    required this.onUploadFromAlbums,
+    required this.onPressedUploadFromAlbums,
   }) : super(key: key);
 
   @override
@@ -52,7 +46,7 @@ class ProfilePictureInstructions extends StatelessWidget {
                   ImagePicker().pickImage(source: ImageSource.gallery).then(
                 (image) {
                   if (image != null) {
-                    onUploadFromAlbums(image);
+                    onPressedUploadFromAlbums(image);
                   }
                 },
               ),

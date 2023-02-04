@@ -20,14 +20,14 @@ part 'bloc/on_sign_out_success.dart';
 part 'bloc/options_bloc.dart';
 
 part 'event/sign_out_error.dart';
-part 'event/options_event.dart';
+part 'event/base.dart';
 part 'event/sign_out.dart';
 part 'event/sign_out_success.dart';
 
 part 'state/error.dart';
 part 'state/initial.dart';
 part 'state/sign_out_loading.dart';
-part 'state/options_state.dart';
+part 'state/base.dart';
 part 'state/sign_out_success.dart';
 
 part 'ui/options_page.dart';

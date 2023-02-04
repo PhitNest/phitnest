@@ -1,62 +1,106 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of registration_page;
 
-import '../event/registration_event.dart';
-import '../state/registration_state.dart';
-
-void onSubmitPageTwo(
-  SubmitPageTwoEvent event,
-  Emitter<RegistrationState> emit,
-  RegistrationState state,
-) {
-  if (state is InitialState) {
-    if (state.pageTwoFormKey.currentState!.validate()) {
-      state.pageController.nextPage(
+extension on _RegistrationBloc {
+  void onSubmitPageTwo(
+    _SubmitPageTwoEvent event,
+    Emitter<_RegistrationState> emit,
+  ) {
+    if (pageTwoFormKey.currentState!.validate()) {
+      pageController.nextPage(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
       );
     } else {
-      if (state is RegisterRequestErrorState) {
+      if (state is _SuccessState) {
+        final state = this.state as _SuccessState;
         emit(
-          state.copyWith(
+          _SuccessState(
+            firstNameConfirmed: state.firstNameConfirmed,
+            currentPage: state.currentPage,
             autovalidateMode: AutovalidateMode.always,
+            takenEmails: state.takenEmails,
+            response: state.response,
+            password: state.password,
           ),
         );
-      } else if (state is RegisterRequestLoadingState) {
+      } else if (state is _RegisterErrorState) {
+        final state = this.state as _RegisterErrorState;
         emit(
-          state.copyWith(
+          _RegisterErrorState(
             autovalidateMode: AutovalidateMode.always,
+            firstNameConfirmed: state.firstNameConfirmed,
+            currentPage: state.currentPage,
+            gym: state.gym,
+            gyms: state.gyms,
+            location: state.location,
+            takenEmails: state.takenEmails,
+            failure: state.failure,
           ),
         );
-      } else if (state is GymSelectedState) {
+      } else if (state is _RegisterLoadingState) {
+        final state = this.state as _RegisterLoadingState;
         emit(
-          state.copyWith(
+          _RegisterLoadingState(
             autovalidateMode: AutovalidateMode.always,
+            firstNameConfirmed: state.firstNameConfirmed,
+            currentPage: state.currentPage,
+            gym: state.gym,
+            gyms: state.gyms,
+            location: state.location,
+            takenEmails: state.takenEmails,
+            registerOp: state.registerOp,
           ),
         );
-      } else if (state is GymsLoadedState) {
+      } else if (state is _GymSelectedState) {
+        final state = this.state as _GymSelectedState;
         emit(
-          state.copyWith(
+          _GymSelectedState(
+            firstNameConfirmed: state.firstNameConfirmed,
+            location: state.location,
+            gyms: state.gyms,
+            currentPage: state.currentPage,
             autovalidateMode: AutovalidateMode.always,
+            gym: state.gym,
+            takenEmails: state.takenEmails,
           ),
         );
-      } else if (state is GymsLoadingState) {
+      } else if (state is _InitialState) {
+        final state = this.state as _InitialState;
         emit(
-          state.copyWith(
+          _InitialState(
+            firstNameConfirmed: state.firstNameConfirmed,
+            currentPage: state.currentPage,
             autovalidateMode: AutovalidateMode.always,
+            loadGymsOp: state.loadGymsOp,
+            takenEmails: state.takenEmails,
           ),
         );
-      } else if (state is GymsLoadingErrorState) {
+      } else if (state is _GymsLoadedState) {
+        final state = this.state as _GymsLoadedState;
         emit(
-          state.copyWith(
+          _GymsLoadedState(
+            firstNameConfirmed: state.firstNameConfirmed,
+            currentPage: state.currentPage,
             autovalidateMode: AutovalidateMode.always,
+            gyms: state.gyms,
+            takenEmails: state.takenEmails,
+            location: state.location,
+          ),
+        );
+      } else if (state is _GymsLoadingErrorState) {
+        final state = this.state as _GymsLoadingErrorState;
+        emit(
+          _GymsLoadingErrorState(
+            takenEmails: state.takenEmails,
+            firstNameConfirmed: state.firstNameConfirmed,
+            currentPage: state.currentPage,
+            autovalidateMode: AutovalidateMode.always,
+            failure: state.failure,
           ),
         );
       } else {
         throw Exception('Invalid state: $state');
       }
     }
-  } else {
-    throw Exception('Invalid state: $state');
   }
 }

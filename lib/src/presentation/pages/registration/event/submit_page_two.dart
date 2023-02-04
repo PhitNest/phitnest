@@ -1,6 +1,5 @@
-import 'registration_event.dart';
+part of registration_page;
 
-/// This event is emitted when the user submits the second page of the registration form.
-class SubmitPageTwoEvent extends RegistrationEvent {
-  const SubmitPageTwoEvent();
+class _SubmitPageTwoEvent extends _RegistrationEvent {
+  const _SubmitPageTwoEvent() : super();
 }

@@ -1,12 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of registration_page;
 
-import '../../../../../common/theme.dart';
-import '../../../../../domain/entities/entities.dart';
-import '../../../../widgets/styled/styled.dart';
-
-class PageFourLoading extends StatelessWidget {
-  const PageFourLoading({Key? key}) : super(key: key);
+class _PageFourLoading extends StatelessWidget {
+  const _PageFourLoading({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => StyledScaffold(
@@ -33,10 +28,10 @@ class PageFourLoading extends StatelessWidget {
       );
 }
 
-class PageFourError extends _PageFourBase {
+class _PageFourError extends _PageFourBase {
   final String error;
 
-  PageFourError({
+  _PageFourError({
     Key? key,
     required GymEntity gym,
     required VoidCallback onPressedYes,
@@ -58,8 +53,8 @@ class PageFourError extends _PageFourBase {
         );
 }
 
-class PageFour extends _PageFourBase {
-  PageFour({
+class _PageFour extends _PageFourBase {
+  _PageFour({
     Key? key,
     required GymEntity gym,
     required VoidCallback onPressedYes,

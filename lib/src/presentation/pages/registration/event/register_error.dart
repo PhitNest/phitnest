@@ -1,13 +1,10 @@
-import '../../../../common/failure.dart';
-import 'registration_event.dart';
+part of registration_page;
 
-/// This is the event that is emitted when the users registration request fails.
-/// This may be due to a UsernameExistsException in which case we should handle that.
-class RegisterErrorEvent extends RegistrationEvent {
+class _RegisterErrorEvent extends _RegistrationEvent {
   final Failure failure;
 
-  RegisterErrorEvent(this.failure);
+  const _RegisterErrorEvent(this.failure) : super();
 
   @override
-  List<Object?> get props => [failure];
+  List<Object> get props => [failure];
 }

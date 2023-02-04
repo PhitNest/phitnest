@@ -1,22 +1,9 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of verification_page;
 
-import '../event/verification_event.dart';
-import '../state/verification_state.dart';
-
-void onResendError(
-  ResendErrorEvent event,
-  Emitter<VerificationState> emit,
-  VerificationState state,
-) {
-  if (state is ResendingState) {
-    emit(
-      ResendErrorState(
-        codeController: state.codeController,
-        codeFocusNode: state.codeFocusNode,
-        failure: event.failure,
-      ),
-    );
-  } else {
-    throw Exception('Invalid state: $state');
-  }
+extension on _VerificationBloc {
+  void onResendError(
+    _ResendErrorEvent event,
+    Emitter<_VerificationState> emit,
+  ) =>
+      emit(_ResendErrorState(failure: event.failure));
 }

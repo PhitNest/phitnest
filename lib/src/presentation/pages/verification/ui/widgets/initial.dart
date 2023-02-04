@@ -1,13 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of verification_page;
 
-import '../../../../widgets/styled/styled.dart';
-import 'base.dart';
-
-class VerificationInitial extends VerificationBase {
+class _InitialPage extends _BasePage {
   final VoidCallback onPressedResend;
 
-  VerificationInitial({
+  _InitialPage({
     Key? key,
     required super.codeController,
     required super.codeFocusNode,

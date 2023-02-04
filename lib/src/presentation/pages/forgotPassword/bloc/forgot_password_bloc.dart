@@ -21,8 +21,8 @@ class _ForgotPasswordBloc
   @override
   Future<void> close() async {
     if (state is _LoadingState) {
-      final loadingState = state as _LoadingState;
-      await loadingState.forgotPassOperation.cancel();
+      final state = this.state as _LoadingState;
+      await state.forgotPassOperation.cancel();
     }
     emailController.dispose();
     passwordController.dispose();

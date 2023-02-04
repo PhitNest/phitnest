@@ -1,12 +1,9 @@
-import '../../../../common/failure.dart';
-import 'verification_state.dart';
+part of verification_page;
 
-class ConfirmErrorState extends InitialState {
+class _ConfirmErrorState extends _VerificationState {
   final Failure failure;
 
-  const ConfirmErrorState({
-    required super.codeController,
-    required super.codeFocusNode,
+  const _ConfirmErrorState({
     required this.failure,
   }) : super();
 

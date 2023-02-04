@@ -21,8 +21,8 @@ class _LoginBloc extends Bloc<_LoginEvent, _LoginState> {
   @override
   Future<void> close() {
     if (state is _LoadingState) {
-      final loadingState = state as _LoadingState;
-      loadingState.loginOperation.cancel();
+      final state = this.state as _LoadingState;
+      state.loginOperation.cancel();
     }
     emailController.dispose();
     passwordController.dispose();

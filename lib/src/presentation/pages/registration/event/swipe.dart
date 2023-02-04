@@ -1,10 +1,9 @@
-import 'registration_event.dart';
+part of registration_page;
 
-/// This event is emitted when the users swipes to another page
-class SwipeEvent extends RegistrationEvent {
+class _SwipeEvent extends _RegistrationEvent {
   final int pageIndex;
 
-  const SwipeEvent(this.pageIndex) : super();
+  const _SwipeEvent(this.pageIndex) : super();
 
   @override
   List<Object> get props => [pageIndex];

@@ -1,18 +1,12 @@
-import 'package:async/async.dart';
+part of verification_page;
 
-import '../../../../common/failure.dart';
-import 'verification_state.dart';
-
-class ResendingState extends InitialState {
+class _ResendingState extends _VerificationState {
   final CancelableOperation<Failure?> operation;
 
-  const ResendingState({
-    required super.codeController,
-    required super.codeFocusNode,
+  const _ResendingState({
     required this.operation,
   }) : super();
 
   @override
-  List<Object> get props =>
-      [super.props, operation.isCanceled, operation.isCompleted];
+  List<Object> get props => [super.props, operation.value];
 }

@@ -1,16 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of verification_page;
 
-import '../../../../../common/failure.dart';
-import '../../../../../common/theme.dart';
-import '../../../../widgets/styled/styled.dart';
-import 'base.dart';
-
-class VerificationError extends VerificationBase {
+class _ErrorPage extends _BasePage {
   final VoidCallback onPressedResend;
   final Failure error;
 
-  VerificationError({
+  _ErrorPage({
     Key? key,
     required super.codeController,
     required super.codeFocusNode,

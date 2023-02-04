@@ -1,21 +1,8 @@
-import 'package:camera/camera.dart';
-import 'package:dartz/dartz.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of verification_page;
 
-import '../../../../common/failure.dart';
-import '../../../../data/backend/backend.dart';
-import '../../../../domain/repositories/repository.dart';
-import '../../../../domain/use_cases/use_cases.dart';
-import '../../pages.dart';
-import '../bloc/verification_bloc.dart';
-import '../event/verification_event.dart';
-import '../state/verification_state.dart';
-import 'widgets/error.dart';
-import 'widgets/initial.dart';
-import 'widgets/loading.dart';
-
-VerificationBloc _bloc(BuildContext context) => context.read();
+extension on BuildContext {
+  _VerificationBloc get bloc => read();
+}
 
 class VerificationPage extends StatelessWidget {
   final String headerText;
@@ -25,8 +12,8 @@ class VerificationPage extends StatelessWidget {
   final String? password;
   final bool shouldLogin;
 
-  void _onCompleted(BuildContext context) => _bloc(context).add(
-        SubmitEvent(
+  void _onCompleted(BuildContext context) => context.bloc.add(
+        _SubmitEvent(
           confirmation: (code) => confirm(code).then(
             (failure) async => failure != null
                 ? Right(failure)
@@ -41,7 +28,7 @@ class VerificationPage extends StatelessWidget {
       );
 
   void _onPressedResend(BuildContext context) =>
-      _bloc(context).add(ResendEvent(resend));
+      context.bloc.add(_ResendEvent(resend));
 
   const VerificationPage({
     Key? key,
@@ -57,12 +44,12 @@ class VerificationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (context) => VerificationBloc(password != null),
-        child: BlocConsumer<VerificationBloc, VerificationState>(
+        create: (context) => _VerificationBloc(password != null),
+        child: BlocConsumer<_VerificationBloc, _VerificationState>(
           listener: (context, state) async {
-            if (state is ConfirmSuccessState) {
+            if (state is _SuccessState) {
               Navigator.pop(context, state.response);
-            } else if (state is ProfilePictureErrorState) {
+            } else if (state is _ProfilePictureUploadState) {
               if ((await Navigator.push<XFile>(
                     context,
                     CupertinoPageRoute(
@@ -82,51 +69,42 @@ class VerificationPage extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            if (state is ConfirmingState) {
-              return VerificationLoading(
-                codeController: state.codeController,
-                codeFocusNode: state.codeFocusNode,
+            if (state is _ConfirmingState || state is _ResendingState) {
+              return _LoadingPage(
+                codeController: context.bloc.codeController,
+                codeFocusNode: context.bloc.codeFocusNode,
                 headerText: headerText,
                 email: email,
               );
-            } else if (state is ResendingState) {
-              return VerificationLoading(
-                codeController: state.codeController,
-                codeFocusNode: state.codeFocusNode,
-                headerText: headerText,
-                email: email,
-              );
-            } else if (state is ConfirmErrorState) {
-              return VerificationError(
-                codeController: state.codeController,
-                codeFocusNode: state.codeFocusNode,
+            } else if (state is _ConfirmErrorState) {
+              return _ErrorPage(
+                codeController: context.bloc.codeController,
+                codeFocusNode: context.bloc.codeFocusNode,
                 onCompleted: () => _onCompleted(context),
                 onPressedResend: () => _onPressedResend(context),
                 headerText: headerText,
                 error: state.failure,
                 email: email,
               );
-            } else if (state is ResendErrorState) {
-              return VerificationError(
-                codeController: state.codeController,
-                codeFocusNode: state.codeFocusNode,
+            } else if (state is _ResendErrorState) {
+              return _ErrorPage(
+                codeController: context.bloc.codeController,
+                codeFocusNode: context.bloc.codeFocusNode,
                 onCompleted: () => _onCompleted(context),
                 onPressedResend: () => _onPressedResend(context),
                 headerText: headerText,
                 error: state.failure,
-                email: email,
-              );
-            } else if (state is InitialState) {
-              return VerificationInitial(
-                codeController: state.codeController,
-                codeFocusNode: state.codeFocusNode,
-                onCompleted: () => _onCompleted(context),
-                onPressedResend: () => _onPressedResend(context),
-                headerText: headerText,
                 email: email,
               );
             } else {
-              throw Exception('Invalid state: $state');
+              return _InitialPage(
+                codeController: context.bloc.codeController,
+                codeFocusNode: context.bloc.codeFocusNode,
+                onCompleted: () => _onCompleted(context),
+                onPressedResend: () => _onPressedResend(context),
+                headerText: headerText,
+                email: email,
+              );
             }
           },
         ),
