@@ -14,7 +14,11 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('Home Page'),
+        child: OptionsPage(
+          withAuth: <T>(T Function(String) f) => f(initialData.accessToken),
+          gym: initialData.gym,
+          user: initialData.user,
+        ),
       ),
       bottomNavigationBar: StyledNavigationBar(),
     );
