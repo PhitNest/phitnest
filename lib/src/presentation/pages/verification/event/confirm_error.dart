@@ -1,10 +1,9 @@
-import '../../../../common/failure.dart';
-import 'verification_event.dart';
+part of verification_page;
 
-class ConfirmErrorEvent extends VerificationEvent {
+class _ConfirmErrorEvent extends _VerificationEvent {
   final Failure failure;
 
-  ConfirmErrorEvent(this.failure) : super();
+  const _ConfirmErrorEvent(this.failure) : super();
 
   @override
   List<Object> get props => [failure];

@@ -1,6 +1,6 @@
-import 'registration_event.dart';
+part of registration_page;
 
 /// This is the event that is emitted when the user submits page six.
-class RegisterEvent extends RegistrationEvent {
-  const RegisterEvent();
+class _RegisterEvent extends _RegistrationEvent {
+  const _RegisterEvent() : super();
 }

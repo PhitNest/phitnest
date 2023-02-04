@@ -1,11 +1,9 @@
-import '../../../../domain/entities/entities.dart';
-import 'registration_event.dart';
+part of registration_page;
 
-/// This event is emitted when the user selects a gym
-class GymSelectedEvent extends RegistrationEvent {
+class _GymSelectedEvent extends _RegistrationEvent {
   final GymEntity gym;
 
-  GymSelectedEvent(this.gym);
+  const _GymSelectedEvent(this.gym) : super();
 
   @override
   List<Object> get props => [gym];

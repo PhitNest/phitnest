@@ -6,5 +6,5 @@ class _CaptureErrorEvent extends _ProfilePictureEvent {
   const _CaptureErrorEvent(this.failure) : super();
 
   @override
-  List<Object?> get props => [failure];
+  List<Object> get props => [failure];
 }

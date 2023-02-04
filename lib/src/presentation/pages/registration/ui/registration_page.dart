@@ -1,36 +1,107 @@
-import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of registration_page;
 
-import '../../../../common/utils/utils.dart';
-import '../../../../data/backend/backend.dart';
-import '../../../../domain/entities/entities.dart';
-import '../../../../domain/use_cases/use_cases.dart';
-import '../../../widgets/styled/styled.dart';
-import '../../pages.dart';
-import '../bloc/registration_bloc.dart';
-import '../event/registration_event.dart';
-import '../state/registration_state.dart';
-import 'widgets/widgets.dart';
+extension on BuildContext {
+  _RegistrationBloc get bloc => read();
 
-RegistrationBloc _bloc(BuildContext context) =>
-    context.read<RegistrationBloc>();
-
-int _getPageScrollLimit(InitialState state) {
-  if (state.firstNameConfirmed) {
-    if (state is GymSelectedState) {
-      return 4;
+  int get scrollLimit {
+    if (bloc.state.firstNameConfirmed) {
+      if (bloc.state is _GymSelected) {
+        return 4;
+      } else {
+        return 3;
+      }
     } else {
-      return 3;
+      return 1;
     }
-  } else {
-    return 1;
   }
-}
 
-void _onSelectedGym(BuildContext context, GymEntity gym) =>
-    _bloc(context).add(GymSelectedEvent(gym));
+  void selectGym(GymEntity gym) => bloc.add(_GymSelectedEvent(gym));
+
+  void noGym() {}
+
+  void notMyGym() {
+    final state = bloc.state as _GymSelected;
+    Navigator.push(
+      this,
+      CupertinoPageRoute(
+        builder: (context) => GymSearchPage(
+          gyms: state.gyms,
+          location: state.location,
+          initialGym: state.gym,
+        ),
+      ),
+    ).then(
+      (gym) {
+        if (gym != null) {
+          selectGym(gym);
+        }
+      },
+    );
+  }
+
+  void submitPageOne() => bloc.add(const _SubmitPageOneEvent());
+
+  void submitPageTwo() => bloc.add(const _SubmitPageTwoEvent());
+
+  void editFirstName(String? value) =>
+      bloc.add(_EditFirstNameEvent(value ?? ""));
+
+  void submit() => bloc.add(const _RegisterEvent());
+
+  void retryLoadGyms() => bloc.add(const _RetryLoadGymsEvent());
+
+  Future<void> goToProfilePicture(XFile? initialImage) async {
+    final photo = await Navigator.push<XFile>(
+      this,
+      CupertinoPageRoute(
+        builder: (context) => ProfilePicturePage(
+          uploadImage: (image) => UseCases.uploadPhotoUnauthorized(
+            email: bloc.emailController.text.trim(),
+            password: bloc.passwordController.text,
+            photo: image,
+          ),
+        ),
+      ),
+    );
+    if (photo != null) {
+      Navigator.pushAndRemoveUntil(
+        this,
+        CupertinoPageRoute(
+          builder: (context) {
+            Navigator.push<LoginResponse>(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => ConfirmEmailPage(
+                  email: bloc.emailController.text.trim(),
+                  password: bloc.passwordController.text,
+                ),
+              ),
+            ).then(
+              (confirmEmail) {
+                if (confirmEmail != null) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => HomePage(
+                        initialData: confirmEmail,
+                        initialPassword: bloc.passwordController.text,
+                      ),
+                    ),
+                    (_) => false,
+                  );
+                }
+              },
+            );
+            return const LoginPage();
+          },
+        ),
+        (_) => false,
+      );
+    }
+  }
+
+  void swipe(int pageIndex) => bloc.add(_SwipeEvent(pageIndex));
+}
 
 List<GymEntity> _filterGymsWithDuplicateNames(List<GymEntity> gyms) {
   List<GymEntity> filtered = [];
@@ -42,259 +113,140 @@ List<GymEntity> _filterGymsWithDuplicateNames(List<GymEntity> gyms) {
   return filtered;
 }
 
-void _onPressedNoGym(BuildContext context) {}
-
-void _onPressedNotMyGym(BuildContext context, GymSelectedState state) =>
-    Navigator.push(
-      context,
-      CupertinoPageRoute<GymEntity?>(
-        builder: (context) => GymSearchPage(
-          gyms: state.gyms,
-          location: state.location,
-          initialGym: state.gym,
-        ),
-      ),
-    ).then(
-      (gym) {
-        // If the user updated their gym on the gym search page,
-        // set the newly selected gym.
-        if (gym != null) {
-          _onSelectedGym(context, gym);
-        }
-      },
-    );
-
-void _onPressedSubmitRegister(BuildContext context) =>
-    _bloc(context).add(RegisterEvent());
-
-void _onSubmitPhotoInstructions(BuildContext context, XFile? initialImage,
-        RegisterSuccessState state) =>
-    Navigator.push<XFile>(
-      context,
-      CupertinoPageRoute(
-        builder: (context) => ProfilePicturePage(
-          initialImage: initialImage,
-          uploadImage: (photo) =>
-              uploadPhoto(state.response.uploadUrl, photo).then(
-            (failure) {
-              if (failure != null) {
-                return UseCases.uploadPhotoUnauthorized(
-                  email: state.response.user.email,
-                  password: state.password,
-                  photo: photo,
-                );
-              }
-              return null;
-            },
-          ),
-        ),
-      ),
-    ).then(
-      (image) async {
-        if (image != null) {
-          final response = await Navigator.pushReplacement<LoginResponse, void>(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => ConfirmEmailPage(
-                email: state.response.user.email,
-                password: state.password,
-              ),
-            ),
-          );
-          if (response != null) {
-            Navigator.pushAndRemoveUntil(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => HomePage(
-                  initialAccessToken: response.accessToken,
-                  initialPassword: state.password,
-                  initialRefreshToken: response.refreshToken,
-                  initialUserData: response.user,
-                ),
-              ),
-              (_) => false,
-            );
-          }
-        }
-      },
-    );
-
-/// Handles registration
 class RegistrationPage extends StatelessWidget {
+  const RegistrationPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (context) => RegistrationBloc(),
-        child: BlocConsumer<RegistrationBloc, RegistrationState>(
+        create: (context) => _RegistrationBloc(),
+        child: BlocConsumer<_RegistrationBloc, _RegistrationState>(
           listener: (context, state) {},
-          // Dark text for device status bar (time and battery, etc.)
           builder: (context, state) {
-            // This is the height of the keyboard (0 if the keyboard is not visible)
             final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-            if (state is RegisterSuccessState) {
-              return ProfilePictureInstructions(
-                onPressedTakePhoto: () =>
-                    _onSubmitPhotoInstructions(context, null, state),
-                onUploadFromAlbums: (file) =>
-                    _onSubmitPhotoInstructions(context, file, state),
+            if (state is _SuccessState) {
+              return _ProfilePictureInstructions(
+                onPressedTakePhoto: () => context.goToProfilePicture(null),
+                onPressedUploadFromAlbums: context.goToProfilePicture,
               );
-            } else if (state is RegisterRequestLoadingState) {
-              return const PageFourLoading();
-            } else if (state is InitialState) {
+            } else {
               return StyledScaffold(
                 body: SingleChildScrollView(
                   keyboardDismissBehavior:
                       ScrollViewKeyboardDismissBehavior.onDrag,
-                  // Apply a size constraint to the page so that we can use Expanded
-                  // widgets
                   child: SizedBox(
                     height: 1.sh,
                     child: Column(
                       children: [
-                        // Swipeable page view
                         Expanded(
                           child: PageView.builder(
-                            // Emit SwipeEvent on page swipe
-                            onPageChanged: (value) =>
-                                _bloc(context).add(SwipeEvent(value)),
-                            controller: state.pageController,
-                            // Control the page the user is allowed to swipe to.
-                            // This is necessary because later screens may depend
-                            // the results of earlier screens.
-                            itemCount: _getPageScrollLimit(state),
+                            onPageChanged: context.swipe,
+                            controller: context.bloc.pageController,
+                            itemCount: context.scrollLimit,
                             itemBuilder: (context, index) {
                               switch (index) {
-                                // First page
                                 case 0:
-                                  return PageOne(
+                                  return _PageOne(
                                     keyboardPadding: keyboardHeight,
-                                    formKey: state.pageOneFormKey,
+                                    formKey: context.bloc.pageOneFormKey,
                                     firstNameController:
-                                        state.firstNameController,
+                                        context.bloc.firstNameController,
                                     lastNameController:
-                                        state.lastNameController,
+                                        context.bloc.lastNameController,
                                     autovalidateMode: state.autovalidateMode,
-                                    onFirstNameEdited: (newValue) =>
-                                        _bloc(context)
-                                            .add(EditFirstNameEvent(newValue)),
+                                    onFirstNameEdited: context.editFirstName,
                                     firstNameFocusNode:
-                                        state.firstNameFocusNode,
-                                    lastNameFocusNode: state.lastNameFocusNode,
-                                    onSubmit: () => _bloc(context)
-                                        .add(const SubmitPageOneEvent()),
+                                        context.bloc.firstNameFocusNode,
+                                    lastNameFocusNode:
+                                        context.bloc.lastNameFocusNode,
+                                    onSubmit: context.submitPageOne,
                                   );
-                                // Second page
                                 case 1:
-                                  return PageTwo(
+                                  return _PageTwo(
                                     keyboardPadding: keyboardHeight,
-                                    formKey: state.pageTwoFormKey,
-                                    // If we have not selected a gym yet, there is no
-                                    // possible way the user has encountered taken emails.
-                                    // So we can leave it as an empty set otherwise. These
-                                    // will be used to validate the email field.
-                                    takenEmails: (state is GymSelectedState
-                                        ? state.takenEmails
-                                        : {}),
-                                    emailController: state.emailController,
+                                    formKey: context.bloc.pageTwoFormKey,
+                                    takenEmails: state.takenEmails,
+                                    emailController:
+                                        context.bloc.emailController,
                                     passwordController:
-                                        state.passwordController,
+                                        context.bloc.passwordController,
                                     autovalidateMode: state.autovalidateMode,
-                                    emailFocusNode: state.emailFocusNode,
-                                    passwordFocusNode: state.passwordFocusNode,
-                                    // Emit the SubmitPageTwo event on completion
-                                    onSubmit: () => _bloc(context)
-                                        .add(const SubmitPageTwoEvent()),
+                                    emailFocusNode: context.bloc.emailFocusNode,
+                                    passwordFocusNode:
+                                        context.bloc.passwordFocusNode,
+                                    onSubmit: context.submitPageTwo,
                                     confirmPasswordController:
-                                        state.confirmPasswordController,
+                                        context.bloc.confirmPasswordController,
                                     confirmPasswordFocusNode:
-                                        state.confirmPasswordFocusNode,
-                                    // Get the first name from page 1
-                                    firstName:
-                                        state.firstNameController.text.trim(),
+                                        context.bloc.confirmPasswordFocusNode,
+                                    firstName: context
+                                        .bloc.firstNameController.text
+                                        .trim(),
                                   );
-                                // Page 3
                                 case 2:
-                                  // If we are loading gyms, show the loading screen
-                                  if (state is GymsLoadingState) {
-                                    return PageThreeLoading(
-                                      firstName:
-                                          state.firstNameController.text.trim(),
-                                      onPressedNoGym: () =>
-                                          _onPressedNoGym(context),
+                                  if (state is _InitialState) {
+                                    return _PageThreeLoading(
+                                      firstName: context
+                                          .bloc.firstNameController.text
+                                          .trim(),
+                                      onPressedNoGym: context.noGym,
                                     );
-                                  } else if (state is GymsLoadingErrorState) {
-                                    // There was an error loading gyms
-                                    return PageThreeLoadingError(
-                                      onPressedNoGym: () =>
-                                          _onPressedNoGym(context),
-                                      firstName:
-                                          state.firstNameController.text.trim(),
+                                  } else if (state is _GymsLoadingErrorState) {
+                                    return _PageThreeLoadingError(
+                                      onPressedNoGym: context.noGym,
+                                      firstName: context
+                                          .bloc.firstNameController.text
+                                          .trim(),
                                       error: state.failure.message,
-                                      onPressedRetry: () => _bloc(context)
-                                          .add(const RetryLoadGymsEvent()),
+                                      onPressedRetry: context.retryLoadGyms,
                                     );
-                                  } else if (state is GymSelectedState) {
-                                    // The user has selected a gym
-                                    return PageThreeSelected(
-                                      firstName:
-                                          state.firstNameController.text.trim(),
-                                      // Filter out gyms with duplicate names
+                                  } else if (state is _GymSelected) {
+                                    return _PageThreeSelected(
+                                      firstName: context
+                                          .bloc.firstNameController.text
+                                          .trim(),
                                       gyms: _filterGymsWithDuplicateNames(
                                           state.gyms),
-                                      onSelected: (gym) =>
-                                          _onSelectedGym(context, gym),
-                                      onPressedNoGym: () =>
-                                          _onPressedNoGym(context),
+                                      onSelected: context.selectGym,
+                                      onPressedNoGym: context.noGym,
                                       gym: state.gym,
                                       onPressedNext: () =>
-                                          state.pageController.nextPage(
+                                          context.bloc.pageController.nextPage(
                                         duration: const Duration(
                                           milliseconds: 400,
                                         ),
                                         curve: Curves.easeInOut,
                                       ),
                                     );
-                                  } else if (state is GymsLoadedState) {
-                                    // The user has not selected a gym yet
-                                    return PageThreeNotSelected(
-                                      firstName:
-                                          state.firstNameController.text.trim(),
-                                      onPressedNoGym: () =>
-                                          _onPressedNoGym(context),
+                                  } else if (state is _GymsLoaded) {
+                                    return _PageThreeNotSelected(
+                                      firstName: context
+                                          .bloc.firstNameController.text
+                                          .trim(),
+                                      onPressedNoGym: context.noGym,
                                       gyms: _filterGymsWithDuplicateNames(
                                           state.gyms),
-                                      onSelected: (gym) =>
-                                          _onSelectedGym(context, gym),
+                                      onSelected: context.selectGym,
                                     );
                                   }
                                   break;
-                                // Page 4
                                 case 3:
-                                  // You should not be able to navigate to page 4 until
-                                  // you have selected a gym.
-                                  if (state is RegisterRequestErrorState) {
-                                    return PageFourError(
+                                  if (state is _RegisterLoadingState) {
+                                    return const _PageFourLoading();
+                                  } else if (state is _RegisterErrorState) {
+                                    return _PageFourError(
                                       gym: state.gym,
-                                      onPressedYes: () =>
-                                          _onPressedSubmitRegister(context),
-                                      onPressedNo: () =>
-                                          _onPressedNotMyGym(context, state),
+                                      onPressedYes: context.submit,
+                                      onPressedNo: context.notMyGym,
                                       error: state.failure.message,
                                     );
-                                  } else if (state is GymSelectedState) {
-                                    return PageFour(
+                                  } else if (state is _GymSelected) {
+                                    return _PageFour(
                                       gym: state.gym,
-                                      onPressedYes: () =>
-                                          _onPressedSubmitRegister(context),
-                                      // Use the result of the gym search page to set the gym
-                                      onPressedNo: () =>
-                                          _onPressedNotMyGym(context, state),
+                                      onPressedYes: context.submit,
+                                      onPressedNo: context.notMyGym,
                                     );
-                                  } else {
-                                    // The state should be a gym selected state at this point
-                                    throw Exception("Invalid state: $state");
                                   }
                               }
-                              // The index should be between 0 and 3
                               throw Exception('Invalid index: $index');
                             },
                           ),
@@ -309,8 +261,6 @@ class RegistrationPage extends StatelessWidget {
                   ),
                 ),
               );
-            } else {
-              throw Exception('Invalid state: $state');
             }
           },
         ),

@@ -1,14 +1,10 @@
-import 'package:dartz/dartz.dart';
+part of verification_page;
 
-import '../../../../common/failure.dart';
-import '../../../../data/backend/backend.dart';
-import 'verification_event.dart';
-
-class SubmitEvent extends VerificationEvent {
+class _SubmitEvent extends _VerificationEvent {
   final Future<Either<LoginResponse?, Failure>> Function(String code)
       confirmation;
 
-  const SubmitEvent({
+  const _SubmitEvent({
     required this.confirmation,
   }) : super();
 

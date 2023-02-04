@@ -6,5 +6,5 @@ class _CameraErrorEvent extends _ProfilePictureEvent {
   const _CameraErrorEvent(this.failure) : super();
 
   @override
-  List<Object?> get props => [failure];
+  List<Object> get props => [failure];
 }

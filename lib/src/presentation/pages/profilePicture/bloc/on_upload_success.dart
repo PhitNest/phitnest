@@ -6,11 +6,11 @@ extension on _ProfilePictureBloc {
     Emitter<_ProfilePictureState> emit,
   ) {
     if (state is _Captured) {
-      final capturedState = state as _Captured;
+      final state = this.state as _Captured;
       emit(
         _UploadSuccessState(
-          cameraController: capturedState.cameraController,
-          file: capturedState.file,
+          cameraController: state.cameraController,
+          file: state.file,
         ),
       );
     } else {

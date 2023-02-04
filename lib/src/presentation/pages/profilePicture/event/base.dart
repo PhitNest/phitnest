@@ -4,5 +4,5 @@ abstract class _ProfilePictureEvent extends Equatable {
   const _ProfilePictureEvent() : super();
 
   @override
-  List<Object?> get props => [];
+  List<Object> get props => [];
 }

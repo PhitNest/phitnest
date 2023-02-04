@@ -1,59 +1,104 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of registration_page;
 
-import '../event/registration_event.dart';
-import '../state/registration_state.dart';
-
-void onSwipe(
-  SwipeEvent event,
-  Emitter<RegistrationState> emit,
-  RegistrationState state,
-) {
-  if (state is InitialState) {
-    if (state is RegisterRequestErrorState) {
+extension on _RegistrationBloc {
+  void onSwipe(
+    _SwipeEvent event,
+    Emitter<_RegistrationState> emit,
+  ) {
+    if (state is _SuccessState) {
+      final state = this.state as _SuccessState;
       emit(
-        state.copyWith(
+        _SuccessState(
+          firstNameConfirmed: state.firstNameConfirmed,
           currentPage: event.pageIndex,
+          autovalidateMode: state.autovalidateMode,
+          takenEmails: state.takenEmails,
+          response: state.response,
+          password: state.password,
         ),
       );
-    } else if (state is RegisterRequestLoadingState) {
+    } else if (state is _RegisterErrorState) {
+      final state = this.state as _RegisterErrorState;
       emit(
-        state.copyWith(
+        _RegisterErrorState(
+          autovalidateMode: state.autovalidateMode,
+          firstNameConfirmed: state.firstNameConfirmed,
           currentPage: event.pageIndex,
+          gym: state.gym,
+          gyms: state.gyms,
+          location: state.location,
+          takenEmails: state.takenEmails,
+          failure: state.failure,
         ),
       );
-    } else if (state is GymSelectedState) {
+    } else if (state is _RegisterLoadingState) {
+      final state = this.state as _RegisterLoadingState;
       emit(
-        state.copyWith(
+        _RegisterLoadingState(
+          autovalidateMode: state.autovalidateMode,
+          firstNameConfirmed: state.firstNameConfirmed,
           currentPage: event.pageIndex,
+          gym: state.gym,
+          gyms: state.gyms,
+          location: state.location,
+          takenEmails: state.takenEmails,
+          registerOp: state.registerOp,
         ),
       );
-    } else if (state is GymsLoadedState) {
+    } else if (state is _GymSelectedState) {
+      final state = this.state as _GymSelectedState;
       emit(
-        state.copyWith(
+        _GymSelectedState(
+          firstNameConfirmed: state.firstNameConfirmed,
+          location: state.location,
+          gyms: state.gyms,
           currentPage: event.pageIndex,
+          autovalidateMode: state.autovalidateMode,
+          gym: state.gym,
+          takenEmails: state.takenEmails,
         ),
       );
-    } else if (state is GymsLoadingErrorState) {
+    } else if (state is _InitialState) {
+      final state = this.state as _InitialState;
       emit(
-        state.copyWith(
+        _InitialState(
+          firstNameConfirmed: state.firstNameConfirmed,
           currentPage: event.pageIndex,
+          autovalidateMode: state.autovalidateMode,
+          loadGymsOp: state.loadGymsOp,
+          takenEmails: state.takenEmails,
         ),
       );
-    } else if (state is GymsLoadingState) {
+    } else if (state is _GymsLoadedState) {
+      final state = this.state as _GymsLoadedState;
       emit(
-        state.copyWith(
+        _GymsLoadedState(
+          firstNameConfirmed: state.firstNameConfirmed,
           currentPage: event.pageIndex,
+          autovalidateMode: state.autovalidateMode,
+          gyms: state.gyms,
+          takenEmails: state.takenEmails,
+          location: state.location,
+        ),
+      );
+    } else if (state is _GymsLoadingErrorState) {
+      final state = this.state as _GymsLoadingErrorState;
+      emit(
+        _GymsLoadingErrorState(
+          takenEmails: state.takenEmails,
+          firstNameConfirmed: state.firstNameConfirmed,
+          currentPage: event.pageIndex,
+          autovalidateMode: state.autovalidateMode,
+          failure: state.failure,
         ),
       );
     } else {
       throw Exception('Invalid state: $state');
     }
-    state.firstNameFocusNode.unfocus();
-    state.lastNameFocusNode.unfocus();
-    state.emailFocusNode.unfocus();
-    state.passwordFocusNode.unfocus();
-    state.confirmPasswordFocusNode.unfocus();
-  } else {
-    throw Exception('Invalid state: $state');
+    emailFocusNode.unfocus();
+    passwordFocusNode.unfocus();
+    firstNameFocusNode.unfocus();
+    lastNameFocusNode.unfocus();
+    confirmPasswordFocusNode.unfocus();
   }
 }

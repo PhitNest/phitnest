@@ -9,6 +9,8 @@ extension on BuildContext {
 
   void upload() => bloc.add(const _UploadEvent());
 
+  void retryInitializeCamera() => bloc.add(const _RetryInitializeCameraEvent());
+
   void uploadFromAlbums(XFile image) => bloc.add(_CaptureSuccessEvent(image));
 }
 
@@ -81,9 +83,7 @@ class ProfilePicturePage extends StatelessWidget {
             } else if (state is _CameraErrorState) {
               return _CameraLoadingErrorPage(
                 errorMessage: state.failure.message,
-                onPressedRetry: () => context.bloc.add(
-                  const _RetryInitializeCameraEvent(),
-                ),
+                onPressedRetry: context.retryInitializeCamera,
               );
             } else {
               return const _CameraLoadingPage();

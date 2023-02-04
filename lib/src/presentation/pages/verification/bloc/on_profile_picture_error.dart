@@ -1,21 +1,9 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of verification_page;
 
-import '../event/verification_event.dart';
-import '../state/verification_state.dart';
-
-void onProfilePictureError(
-  ProfilePictureErrorEvent event,
-  Emitter<VerificationState> emit,
-  VerificationState state,
-) {
-  if (state is ConfirmingState) {
-    emit(
-      ProfilePictureErrorState(
-        codeController: state.codeController,
-        codeFocusNode: state.codeFocusNode,
-      ),
-    );
-  } else {
-    throw Exception('Invalid state: $state');
-  }
+extension on _VerificationBloc {
+  void onProfilePictureError(
+    _ProfilePictureErrorEvent event,
+    Emitter<_VerificationState> emit,
+  ) =>
+      emit(const _ProfilePictureUploadState());
 }

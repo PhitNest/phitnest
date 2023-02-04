@@ -6,5 +6,5 @@ class _CaptureSuccessEvent extends _ProfilePictureEvent {
   const _CaptureSuccessEvent(this.file) : super();
 
   @override
-  List<Object?> get props => [file];
+  List<Object> get props => [file];
 }

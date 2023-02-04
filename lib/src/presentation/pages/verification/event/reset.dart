@@ -1,5 +1,5 @@
-import 'verification_event.dart';
+part of verification_page;
 
-class ResetEvent extends VerificationEvent {
-  const ResetEvent();
+class _ResetEvent extends _VerificationEvent {
+  const _ResetEvent() : super();
 }

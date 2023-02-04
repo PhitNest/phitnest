@@ -1,10 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of verification_page;
 
-import 'base.dart';
-
-class VerificationLoading extends VerificationBase {
-  VerificationLoading({
+class _LoadingPage extends _BasePage {
+  _LoadingPage({
     Key? key,
     required super.codeController,
     required super.codeFocusNode,

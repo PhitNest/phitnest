@@ -1,10 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of verification_page;
 
-import '../../../../../common/theme.dart';
-import '../../../../widgets/styled/styled.dart';
-
-class VerificationBase extends StatelessWidget {
+class _BasePage extends StatelessWidget {
   final String headerText;
   final Widget child;
   final TextEditingController codeController;
@@ -12,7 +8,7 @@ class VerificationBase extends StatelessWidget {
   final VoidCallback onCompleted;
   final String email;
 
-  const VerificationBase({
+  const _BasePage({
     Key? key,
     required this.headerText,
     required this.child,

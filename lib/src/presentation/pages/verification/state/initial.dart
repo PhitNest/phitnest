@@ -1,16 +1,5 @@
-import 'package:flutter/material.dart';
+part of verification_page;
 
-import 'verification_state.dart';
-
-class InitialState extends VerificationState {
-  final TextEditingController codeController;
-  final FocusNode codeFocusNode;
-
-  const InitialState({
-    required this.codeController,
-    required this.codeFocusNode,
-  }) : super();
-
-  @override
-  List<Object> get props => [codeController, codeFocusNode];
+class _InitialState extends _VerificationState {
+  const _InitialState() : super();
 }

@@ -1,20 +1,12 @@
-import 'package:async/async.dart';
-import 'package:dartz/dartz.dart';
+part of verification_page;
 
-import '../../../../common/failure.dart';
-import '../../../../data/backend/backend.dart';
-import 'verification_state.dart';
-
-class ConfirmingState extends InitialState {
+class _ConfirmingState extends _VerificationState {
   final CancelableOperation<Either<LoginResponse?, Failure>> operation;
 
-  const ConfirmingState({
-    required super.codeController,
-    required super.codeFocusNode,
+  const _ConfirmingState({
     required this.operation,
   }) : super();
 
   @override
-  List<Object> get props =>
-      [super.props, operation.isCanceled, operation.isCompleted];
+  List<Object> get props => [super.props, operation.value];
 }

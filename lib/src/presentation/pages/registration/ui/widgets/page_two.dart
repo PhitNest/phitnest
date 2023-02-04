@@ -1,11 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of registration_page;
 
-import '../../../../../common/theme.dart';
-import '../../../../../common/utils/validators.dart';
-import '../../../../widgets/widgets.dart';
-
-class PageTwo extends StatelessWidget {
+class _PageTwo extends StatelessWidget {
   final double keyboardPadding;
   final TextEditingController emailController;
   final TextEditingController passwordController;
@@ -19,7 +14,7 @@ class PageTwo extends StatelessWidget {
   final VoidCallback onSubmit;
   final Set<String> takenEmails;
 
-  const PageTwo({
+  const _PageTwo({
     required this.keyboardPadding,
     required this.emailController,
     required this.passwordController,

@@ -6,20 +6,19 @@ extension on _ProfilePictureBloc {
     Emitter<_ProfilePictureState> emit,
   ) {
     if (state is _Captured) {
-      final capturedState = state as _Captured;
+      final state = this.state as _Captured;
       emit(
         _UploadingState(
-          cameraController: capturedState.cameraController,
-          file: capturedState.file,
-          uploadImage:
-              CancelableOperation.fromFuture(uploadImage(capturedState.file))
-                ..then(
-                  (failure) => add(
-                    failure != null
-                        ? _UploadErrorEvent(failure)
-                        : const _UploadSuccessEvent(),
-                  ),
-                ),
+          cameraController: state.cameraController,
+          file: state.file,
+          uploadImage: CancelableOperation.fromFuture(uploadImage(state.file))
+            ..then(
+              (failure) => add(
+                failure != null
+                    ? _UploadErrorEvent(failure)
+                    : const _UploadSuccessEvent(),
+              ),
+            ),
         ),
       );
     } else {

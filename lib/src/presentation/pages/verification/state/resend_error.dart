@@ -1,12 +1,9 @@
-import '../../../../common/failure.dart';
-import 'verification_state.dart';
+part of verification_page;
 
-class ResendErrorState extends InitialState {
+class _ResendErrorState extends _VerificationState {
   final Failure failure;
 
-  const ResendErrorState({
-    required super.codeController,
-    required super.codeFocusNode,
+  const _ResendErrorState({
     required this.failure,
   }) : super();
 

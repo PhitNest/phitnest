@@ -18,6 +18,7 @@ import '../../widgets/widgets.dart';
 import '../confirmEmail/confirm_email.dart';
 import '../forgotPassword/forgot_password.dart';
 import '../home/home.dart';
+import '../registration/registration.dart';
 
 part 'bloc/login_bloc.dart';
 part 'bloc/on_cancel.dart';
@@ -26,12 +27,12 @@ part 'bloc/on_success.dart';
 part 'bloc/on_submit.dart';
 
 part 'event/cancel.dart';
-part 'event/login_event.dart';
+part 'event/base.dart';
 part 'event/submit.dart';
 part 'event/success.dart';
 part 'event/error.dart';
 
-part 'state/login_state.dart';
+part 'state/base.dart';
 part 'state/success.dart';
 part 'state/initial.dart';
 part 'state/loading.dart';

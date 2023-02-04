@@ -1,15 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of registration_page;
 
-import '../../../../../common/theme.dart';
-import '../../../../../domain/entities/entities.dart';
-import '../../../../widgets/styled/styled.dart';
-
-class PageThreeLoadingError extends _PageThreeBase {
+class _PageThreeLoadingError extends _PageThreeBase {
   final String error;
   final VoidCallback onPressedRetry;
 
-  PageThreeLoadingError({
+  _PageThreeLoadingError({
     Key? key,
     required super.firstName,
     required super.onPressedNoGym,
@@ -34,11 +29,11 @@ class PageThreeLoadingError extends _PageThreeBase {
         );
 }
 
-class PageThreeNotSelected extends _PageThreeBase {
+class _PageThreeNotSelected extends _PageThreeBase {
   final List<GymEntity> gyms;
   final ValueChanged<GymEntity> onSelected;
 
-  PageThreeNotSelected({
+  _PageThreeNotSelected({
     Key? key,
     required super.firstName,
     required super.onPressedNoGym,
@@ -65,13 +60,13 @@ class PageThreeNotSelected extends _PageThreeBase {
         );
 }
 
-class PageThreeSelected extends _PageThreeBase {
+class _PageThreeSelected extends _PageThreeBase {
   final List<GymEntity> gyms;
   final GymEntity gym;
   final ValueChanged<GymEntity> onSelected;
   final VoidCallback onPressedNext;
 
-  PageThreeSelected({
+  _PageThreeSelected({
     Key? key,
     required super.firstName,
     required super.onPressedNoGym,
@@ -106,8 +101,8 @@ class PageThreeSelected extends _PageThreeBase {
         );
 }
 
-class PageThreeLoading extends _PageThreeBase {
-  PageThreeLoading({
+class _PageThreeLoading extends _PageThreeBase {
+  _PageThreeLoading({
     Key? key,
     required super.firstName,
     required super.onPressedNoGym,

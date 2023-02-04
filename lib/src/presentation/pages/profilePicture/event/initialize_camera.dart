@@ -6,5 +6,5 @@ class _InitializeCameraEvent extends _ProfilePictureEvent {
   const _InitializeCameraEvent(this.cameraDescription) : super();
 
   @override
-  List<Object?> get props => [cameraDescription];
+  List<Object> get props => [cameraDescription];
 }

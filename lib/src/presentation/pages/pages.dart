@@ -9,5 +9,5 @@ export 'login/login.dart';
 export 'onBoarding/on_boarding_page.dart';
 export 'options/options_page.dart';
 export 'profilePicture/profile_picture.dart';
-export 'registration/ui/registration_page.dart';
-export 'verification/ui/verification_page.dart';
+export 'registration/registration.dart';
+export 'verification/verification.dart';

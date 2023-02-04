@@ -7,8 +7,8 @@ import '../../widgets/widgets.dart';
 
 part 'ui/home_page.dart';
 
-part 'state/home_state.dart';
+part 'state/base.dart';
 
 part 'bloc/home_bloc.dart';
 
-part 'event/home_event.dart';
+part 'event/base.dart';

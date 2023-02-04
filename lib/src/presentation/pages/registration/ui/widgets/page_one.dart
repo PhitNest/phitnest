@@ -1,11 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of registration_page;
 
-import '../../../../../common/theme.dart';
-import '../../../../../common/utils/validators.dart';
-import '../../../../widgets/styled/styled.dart';
-
-class PageOne extends StatelessWidget {
+class _PageOne extends StatelessWidget {
   final double keyboardPadding;
   final GlobalKey<FormState> formKey;
   final AutovalidateMode autovalidateMode;
@@ -16,7 +11,7 @@ class PageOne extends StatelessWidget {
   final FocusNode lastNameFocusNode;
   final VoidCallback onSubmit;
 
-  const PageOne({
+  const _PageOne({
     Key? key,
     required this.keyboardPadding,
     required this.formKey,
