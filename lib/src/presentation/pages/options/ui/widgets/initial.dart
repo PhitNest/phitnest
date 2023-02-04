@@ -6,6 +6,7 @@ class _InitialPage extends _BasePage {
   _InitialPage({
     required super.user,
     required super.gym,
+    required super.onEditProfilePicture,
     required this.onSignOut,
   }) : super(
           child: StyledUnderlinedTextButton(

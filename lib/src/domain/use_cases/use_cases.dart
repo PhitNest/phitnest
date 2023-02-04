@@ -9,9 +9,11 @@ import '../../data/backend/backend.dart';
 import '../entities/entities.dart';
 
 part 'location_and_gyms.dart';
+part 'upload_photo_authorized.dart';
 part 'upload_photo_unauthorized.dart';
 
 abstract class UseCases {
   static const getNearbyGyms = _getNearbyGyms;
   static const uploadPhotoUnauthorized = _uploadPhotoUnauthorized;
+  static const uploadPhotoAuthorized = _uploadPhotoAuthorized;
 }
