@@ -1,9 +1,9 @@
 part of options_page;
 
-class _SignOutErrorEvent extends _OptionsEvent {
+class _ErrorEvent extends _OptionsEvent {
   final Failure failure;
 
-  const _SignOutErrorEvent(this.failure) : super();
+  const _ErrorEvent(this.failure) : super();
 
   @override
   List<Object> get props => [failure];

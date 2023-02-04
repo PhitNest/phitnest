@@ -29,7 +29,7 @@ class OptionsPage extends StatelessWidget {
                 context: context,
               ),
             );
-          } else if (state is _SignOutSuccessState) {
+          } else if (state is _SuccessState) {
             Navigator.of(context).pushAndRemoveUntil(
               CupertinoPageRoute(
                 builder: (context) => LoginPage(),
@@ -43,12 +43,22 @@ class OptionsPage extends StatelessWidget {
             return _LoadingPage(
               user: user,
               gym: gym,
+              onEditProfilePicture: () =>
+                  ImagePicker().pickImage(source: ImageSource.gallery).then(
+                (img) {
+                  if (img != null) {
+                    context.bloc
+                        .add(_EditProfilePictureEvent(newProfilePicture: img));
+                  }
+                },
+              ),
             );
           } else {
             return _InitialPage(
               user: user,
               gym: gym,
               onSignOut: () => context.bloc.add(const _SignOutEvent()),
+              onEditProfilePicture: () {},
             );
           }
         },

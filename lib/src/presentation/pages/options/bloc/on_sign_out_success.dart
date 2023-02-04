@@ -2,8 +2,8 @@ part of options_page;
 
 extension on _OptionsBloc {
   void onSignOutSuccess(
-    _SignOutSuccessEvent event,
+    _SuccessEvent event,
     Emitter<_OptionsState> emit,
   ) =>
-      emit(const _SignOutSuccessState());
+      emit(const _SuccessState());
 }

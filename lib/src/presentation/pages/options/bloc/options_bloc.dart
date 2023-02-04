@@ -7,7 +7,8 @@ class _OptionsBloc extends Bloc<_OptionsEvent, _OptionsState> {
     required this.withAuth,
   }) : super(_InitialState()) {
     on<_SignOutEvent>(onSignOut);
-    on<_SignOutErrorEvent>(onSignOutError);
-    on<_SignOutSuccessEvent>(onSignOutSuccess);
+    on<_ErrorEvent>(onErrorCaught);
+    on<_SuccessEvent>(onSignOutSuccess);
+    on<_EditProfilePictureEvent>(onEditProfilePicture);
   }
 }
