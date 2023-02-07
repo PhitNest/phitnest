@@ -21,7 +21,7 @@ class StyledProfilePictureCamera extends StatelessWidget {
             child: FittedBox(
               fit: BoxFit.fitWidth,
               child: SizedBox(
-                height: 1.sh / cameraController.value.aspectRatio,
+                height: 1.sw / cameraController.value.aspectRatio,
                 child: CameraPreview(
                   cameraController,
                   child: SizedBox(

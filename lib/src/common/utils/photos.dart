@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as Math;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -46,13 +47,14 @@ extension Crop on XFile {
     final inImage = await decodeImageFromList(inBytes);
     final width = inImage.width;
     final height = inImage.height;
-    final scaledHeight = height * (1 / (inImage.width / inImage.height));
+    final min = Math.min(width, height);
     final imageEditOptions = editor.ImageEditorOption()
       ..addOption(
         editor.ClipOption(
-          width: width,
-          height: scaledHeight,
-          y: height / 2 - scaledHeight / 2,
+          width: min,
+          height: min,
+          y: height / 2 - min / 2,
+          x: width / 2 - min / 2,
         ),
       );
     final outBytes = await editor.ImageEditor.editImage(
