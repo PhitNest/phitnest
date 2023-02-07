@@ -1,6 +1,6 @@
 part of registration_page;
 
-extension on _RegistrationBloc {
+extension _OnRegisterError on _RegistrationBloc {
   void onRegisterError(
     _RegisterErrorEvent event,
     Emitter<_RegistrationState> emit,

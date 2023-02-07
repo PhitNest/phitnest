@@ -1,6 +1,6 @@
 part of profile_picture_page;
 
-extension on _ProfilePictureBloc {
+extension _OnCameraError on _ProfilePictureBloc {
   void onCameraError(
     _CameraErrorEvent event,
     Emitter<_ProfilePictureState> emit,

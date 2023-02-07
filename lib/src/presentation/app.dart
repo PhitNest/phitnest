@@ -46,33 +46,39 @@ class App extends StatelessWidget {
                 } else {
                   Future.delayed(
                     Duration.zero,
-                    () => Navigator.of(context)
-                      ..pushReplacement(
-                        CupertinoPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                      )
-                      ..push<LoginResponse>(
-                        CupertinoPageRoute(
-                          builder: (context) => ConfirmEmailPage(
-                            password: password,
-                            email: user.email,
+                    () {
+                      final nav = Navigator.of(context)
+                        ..pushReplacement(
+                          CupertinoPageRoute(
+                            builder: (context) => const LoginPage(),
                           ),
-                        ),
-                      ).then(
-                        (response) => response != null
-                            ? Navigator.pushAndRemoveUntil(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) => HomePage(
-                                    initialData: response,
-                                    initialPassword: password,
-                                  ),
+                        );
+                      if (!user.confirmed) {
+                        nav
+                            .push<LoginResponse>(
+                              CupertinoPageRoute(
+                                builder: (context) => ConfirmEmailPage(
+                                  password: password,
+                                  email: user.email,
                                 ),
-                                (_) => false,
-                              )
-                            : null,
-                      ),
+                              ),
+                            )
+                            .then(
+                              (response) => response != null
+                                  ? Navigator.pushAndRemoveUntil(
+                                      context,
+                                      CupertinoPageRoute(
+                                        builder: (context) => HomePage(
+                                          initialData: response,
+                                          initialPassword: password,
+                                        ),
+                                      ),
+                                      (_) => false,
+                                    )
+                                  : null,
+                            );
+                      }
+                    },
                   );
                   return LoginPage();
                 }

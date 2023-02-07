@@ -56,8 +56,10 @@ Future<Either3<Map<String, dynamic>, List<dynamic>, Failure>> _requestRaw({
           prettyLogger.d("Response success:${description(response.data)}");
           if (response.data is List) {
             return Second(response.data);
-          } else {
+          } else if (response.data is Map<String, dynamic>) {
             return First(response.data);
+          } else {
+            return First(Map<String, dynamic>.from({}));
           }
         } else {
           throw Failure.fromJson(response.data);
@@ -158,13 +160,13 @@ Future<Failure?> _request({
     _requestJson(
       route: route,
       method: method,
-      parser: (json) {},
       data: data,
+      parser: (json) {},
       headers: headers,
       authorization: authorization,
     ).then(
       (either) => either.fold(
-        (_) => null,
+        (json) => null,
         (failure) => failure,
       ),
     );

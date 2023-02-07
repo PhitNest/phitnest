@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:phitnest_mobile/src/domain/use_cases/use_cases.dart';
 
 import '../../../common/failure.dart';
 import '../../../common/theme.dart';
 import '../../../domain/entities/entities.dart';
 import '../../../domain/repositories/repository.dart';
+import '../../../domain/use_cases/use_cases.dart';
 import '../../widgets/widgets.dart';
 import '../login/login.dart';
 

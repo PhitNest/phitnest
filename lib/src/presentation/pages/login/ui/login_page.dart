@@ -1,6 +1,6 @@
 part of login_page;
 
-extension on BuildContext {
+extension _Bloc on BuildContext {
   _LoginBloc get bloc => read();
 
   void submit() => bloc.add(const _SubmitEvent());
@@ -35,12 +35,13 @@ class LoginPage extends StatelessWidget {
         child: BlocConsumer<_LoginBloc, _LoginState>(
           listener: (context, state) {
             if (state is _SuccessState) {
+              final password = context.bloc.passwordController.text;
               Navigator.pushAndRemoveUntil(
                 context,
                 CupertinoPageRoute(
                   builder: (context) => HomePage(
                     initialData: state.response,
-                    initialPassword: context.bloc.passwordController.text,
+                    initialPassword: password,
                   ),
                 ),
                 (_) => false,

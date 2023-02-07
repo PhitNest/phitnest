@@ -1,6 +1,6 @@
 part of forgot_password_page;
 
-extension on _ForgotPasswordBloc {
+extension _OnSubmit on _ForgotPasswordBloc {
   void onSubmit(
     _SubmitEvent event,
     Emitter<_ForgotPasswordState> emit,

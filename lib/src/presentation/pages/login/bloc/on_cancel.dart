@@ -1,6 +1,6 @@
 part of login_page;
 
-extension on _LoginBloc {
+extension _OnLogin on _LoginBloc {
   Future<void> onCancel(
     _LoginEvent event,
     Emitter<_LoginState> emit,

@@ -1,6 +1,6 @@
 part of profile_picture_page;
 
-extension on _ProfilePictureBloc {
+extension _OnRetryInitializeCamera on _ProfilePictureBloc {
   void onRetryInitializeCamera(
     _RetryInitializeCameraEvent event,
     Emitter<_ProfilePictureState> emit,

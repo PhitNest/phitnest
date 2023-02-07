@@ -1,6 +1,6 @@
 part of profile_picture_page;
 
-extension on _ProfilePictureBloc {
+extension _OnUpload on _ProfilePictureBloc {
   void onUpload(
     _UploadEvent event,
     Emitter<_ProfilePictureState> emit,

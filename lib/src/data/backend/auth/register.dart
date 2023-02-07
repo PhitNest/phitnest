@@ -27,7 +27,7 @@ Future<Either<RegisterResponse, Failure>> _register({
   required String gymId,
 }) =>
     _requestJson(
-      route: "/auth/login",
+      route: "/auth/register",
       method: HttpMethod.post,
       parser: RegisterResponse.fromJson,
       data: {

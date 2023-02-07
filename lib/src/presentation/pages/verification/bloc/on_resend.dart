@@ -1,6 +1,6 @@
 part of verification_page;
 
-extension on _VerificationBloc {
+extension _OnResend on _VerificationBloc {
   void onResend(
     _ResendEvent event,
     Emitter<_VerificationState> emit,

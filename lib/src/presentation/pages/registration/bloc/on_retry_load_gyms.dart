@@ -1,6 +1,6 @@
 part of registration_page;
 
-extension on _RegistrationBloc {
+extension _OnRetryLoadGyms on _RegistrationBloc {
   void onRetryLoadGyms(
     _RetryLoadGymsEvent event,
     Emitter<_RegistrationState> emit,

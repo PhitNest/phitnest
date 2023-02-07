@@ -1,6 +1,6 @@
 part of profile_picture_page;
 
-extension on _ProfilePictureBloc {
+extension _OnRetakePhoto on _ProfilePictureBloc {
   void onRetakePhoto(
     _RetakePhotoEvent event,
     Emitter<_ProfilePictureState> emit,

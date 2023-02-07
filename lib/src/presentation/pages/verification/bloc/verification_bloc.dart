@@ -22,7 +22,6 @@ class _VerificationBloc extends Bloc<_VerificationEvent, _VerificationState> {
       await loadingState.operation.cancel();
     }
     codeController.dispose();
-    codeFocusNode.dispose();
     return super.close();
   }
 }

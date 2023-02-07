@@ -18,8 +18,8 @@ extension Instance on Failures {
   Failure get instance {
     switch (this) {
       case Failures.profilePictureNotFound:
-        return const Failure("FailedToGetProfilePictureUrl",
-            "Failed to get profile picture url");
+        return const Failure(
+            "InvalidProfilePicture", "Invalid profile picture");
       case Failures.usernameExists:
         return const Failure("UsernameExistsException",
             "An account with the given email already exists.");

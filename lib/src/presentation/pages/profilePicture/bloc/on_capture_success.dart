@@ -1,6 +1,6 @@
 part of profile_picture_page;
 
-extension on _ProfilePictureBloc {
+extension _OnCaptureSuccess on _ProfilePictureBloc {
   void onCaptureSuccess(
     _CaptureSuccessEvent event,
     Emitter<_ProfilePictureState> emit,

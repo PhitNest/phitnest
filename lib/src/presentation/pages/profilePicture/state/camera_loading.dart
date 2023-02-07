@@ -1,14 +1,18 @@
 part of profile_picture_page;
 
-class _CameraLoadingState extends _Initialized {
+class _CameraLoadingState extends _ProfilePictureState {
+  final CameraController cameraController;
   final CancelableOperation<Failure?> initializeCamera;
 
   const _CameraLoadingState({
-    required super.cameraController,
+    required this.cameraController,
     required this.initializeCamera,
   }) : super();
 
   @override
-  List<Object> get props =>
-      [super.props, initializeCamera.isCanceled, initializeCamera.isCompleted];
+  List<Object> get props => [
+        cameraController,
+        initializeCamera.isCanceled,
+        initializeCamera.isCompleted
+      ];
 }

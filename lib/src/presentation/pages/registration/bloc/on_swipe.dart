@@ -1,6 +1,6 @@
 part of registration_page;
 
-extension on _RegistrationBloc {
+extension _OnSwipe on _RegistrationBloc {
   void onSwipe(
     _SwipeEvent event,
     Emitter<_RegistrationState> emit,

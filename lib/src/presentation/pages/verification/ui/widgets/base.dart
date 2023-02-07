@@ -4,17 +4,13 @@ class _BasePage extends StatelessWidget {
   final String headerText;
   final Widget child;
   final TextEditingController codeController;
-  final FocusNode codeFocusNode;
-  final VoidCallback onCompleted;
   final String email;
 
   const _BasePage({
     Key? key,
     required this.headerText,
     required this.child,
-    required this.onCompleted,
     required this.codeController,
-    required this.codeFocusNode,
     required this.email,
   }) : super(key: key);
 
@@ -46,8 +42,7 @@ class _BasePage extends StatelessWidget {
                 30.verticalSpace,
                 StyledVerificationField(
                   controller: codeController,
-                  focusNode: codeFocusNode,
-                  onCompleted: (_) => onCompleted(),
+                  onCompleted: (_) {},
                 ),
                 Expanded(child: child),
               ],

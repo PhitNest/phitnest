@@ -1,6 +1,6 @@
 part of registration_page;
 
-extension on _RegistrationBloc {
+extension _OnSuccess on _RegistrationBloc {
   void onSuccess(
     _SuccessEvent event,
     Emitter<_RegistrationState> emit,

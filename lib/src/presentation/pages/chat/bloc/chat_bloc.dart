@@ -5,22 +5,20 @@ class _ChatBloc extends Bloc<_ChatEvent, _ChatState> {
 
   _ChatBloc({required this.withAuth})
       : super(
-    _InitialState(
-      loadingMessages: CancelableOperation.fromFuture(
-        withAuth(
-              (accessToken) =>
-              Backend.friendships
-                  .friendsAndMessages(accessToken: accessToken),
-        ),
-      ),
-    ),
-  ) {
+          _InitialState(
+            loadingMessages: CancelableOperation.fromFuture(
+              withAuth(
+                (accessToken) => Backend.friendships
+                    .friendsAndMessages(accessToken: accessToken),
+              ),
+            ),
+          ),
+        ) {
     if (state is _InitialState) {
       final _InitialState state = this.state as _InitialState;
-      state.loadingMessages.then((value) =>
-          value.fold(
-                (messages) => add(_MessagesLoadedEvent(messages: messages)),
-                (failure) => add(_ErrorEvent(failure: failure)),
+      state.loadingMessages.then((value) => value.fold(
+            (messages) => add(_MessagesLoadedEvent(messages: messages)),
+            (failure) => add(_ErrorEvent(failure: failure)),
           ));
     }
 

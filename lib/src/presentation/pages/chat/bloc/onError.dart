@@ -1,6 +1,6 @@
 part of chat_page;
 
-extension on _ChatBloc {
+extension _OnError on _ChatBloc {
   void onErrorCaught(
     _ErrorEvent event,
     Emitter<_ChatState> emit,

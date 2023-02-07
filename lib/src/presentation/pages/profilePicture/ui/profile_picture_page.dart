@@ -1,6 +1,6 @@
 part of profile_picture_page;
 
-extension on BuildContext {
+extension _Bloc on BuildContext {
   _ProfilePictureBloc get bloc => read();
 
   void retake() => bloc.add(const _RetakePhotoEvent());

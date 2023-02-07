@@ -1,6 +1,6 @@
 part of options_page;
 
-extension on _OptionsBloc {
+extension _OnSignOut on _OptionsBloc {
   void onSignOut(
     _SignOutEvent event,
     Emitter<_OptionsState> emit,

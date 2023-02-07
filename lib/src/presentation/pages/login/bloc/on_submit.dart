@@ -1,6 +1,6 @@
 part of login_page;
 
-extension on _LoginBloc {
+extension _OnSubmit on _LoginBloc {
   void onSubmit(
     _SubmitEvent event,
     Emitter<_LoginState> emit,
