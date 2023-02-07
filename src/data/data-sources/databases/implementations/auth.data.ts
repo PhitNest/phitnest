@@ -26,13 +26,18 @@ const identityServiceProvider = new CognitoIdentityProvider({
 
 export class CognitoAuthDatabase implements IAuthDatabase {
   async getCognitoId(accessToken: string) {
-    const rawUser = await identityServiceProvider.getUser({
-      AccessToken: accessToken,
-    });
-    if (rawUser.UserAttributes) {
-      return rawUser.UserAttributes.find((attr) => attr.Name === "sub")?.Value!;
-    } else {
-      return kUserNotFound;
+    try {
+      const rawUser = await identityServiceProvider.getUser({
+        AccessToken: accessToken,
+      });
+      if (rawUser.UserAttributes) {
+        return rawUser.UserAttributes.find((attr) => attr.Name === "sub")
+          ?.Value!;
+      } else {
+        return kUserNotFound;
+      }
+    } catch (err: any) {
+      return new Failure(err.name, err.message);
     }
   }
 
