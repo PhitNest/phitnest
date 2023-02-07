@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:basic_utils/basic_utils.dart';
 
 import '../../common/constants/constants.dart';
 import '../../common/failure.dart';

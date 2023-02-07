@@ -6,8 +6,7 @@ extension _OnConfirmError on _VerificationBloc {
     Emitter<_VerificationState> emit,
   ) =>
       emit(
-        checkProfilePicture &&
-                event.failure == Failures.profilePictureNotFound.instance
+        event.failure == Failures.profilePictureNotFound.instance
             ? const _ProfilePictureUploadState()
             : _ConfirmErrorState(failure: event.failure),
       );

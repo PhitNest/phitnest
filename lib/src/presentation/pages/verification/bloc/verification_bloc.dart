@@ -3,9 +3,8 @@ part of verification_page;
 class _VerificationBloc extends Bloc<_VerificationEvent, _VerificationState> {
   final codeController = TextEditingController();
   final codeFocusNode = FocusNode();
-  final bool checkProfilePicture;
 
-  _VerificationBloc(this.checkProfilePicture) : super(_InitialState()) {
+  _VerificationBloc() : super(_InitialState()) {
     on<_SubmitEvent>(onSubmit);
     on<_SuccessEvent>(onSuccess);
     on<_ConfirmErrorEvent>(onConfirmError);

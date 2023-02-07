@@ -16,10 +16,11 @@ Future<Either3<Map<String, dynamic>, List<dynamic>, Failure>> _requestRaw({
   Map<String, dynamic>? headers,
   String? authorization,
 }) async {
+  final startTime = DateTime.now();
   final String url =
       '${dotenv.get('BACKEND_HOST')}:${dotenv.get('BACKEND_PORT')}$route';
-  final String Function(dynamic data) description =
-      (data) => '\n\tmethod: $method\n\tpath: $route\n\tdata: $data';
+  final String Function(dynamic data) description = (data) =>
+      '\n\tmethod: $method\n\tpath: $route${StringUtils.addCharAtPosition("\n\tdata: $data", '\n\t', 100, repeat: true)}';
   prettyLogger.d(
       'Request${authorization != null ? " (Authorized)" : ""}:${description(data)}');
   final headerMap = {
@@ -53,7 +54,8 @@ Future<Either3<Map<String, dynamic>, List<dynamic>, Failure>> _requestRaw({
         .then(
       (response) {
         if (response.statusCode == kStatusOK) {
-          prettyLogger.d("Response success:${description(response.data)}");
+          prettyLogger.d(
+              "Response success:${description(response.data)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
           if (response.data is List) {
             return Second(response.data);
           } else if (response.data is Map<String, dynamic>) {
@@ -67,9 +69,14 @@ Future<Either3<Map<String, dynamic>, List<dynamic>, Failure>> _requestRaw({
       },
     );
   } catch (e) {
-    final failure = e is Failure ? e : Failures.networkFailure.instance;
-    prettyLogger.e("Response failure:${description(failure)}");
-    return Third(failure);
+    if (e is Failure) {
+      prettyLogger.e(
+          "Response failure:${description(e)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
+      return Third(e);
+    } else {
+      prettyLogger.e(e);
+      return Third(Failures.networkFailure.instance);
+    }
   }
 }
 

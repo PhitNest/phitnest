@@ -20,7 +20,6 @@ class GetUnauthorizedUploadUrlResponse extends Equatable {
 Future<Either<GetUnauthorizedUploadUrlResponse, Failure>>
     _getUnauthorizedUploadUrl({
   required String email,
-  required String password,
 }) =>
         _requestJson(
           route: "/profilePicture/unauthorized",
@@ -28,6 +27,5 @@ Future<Either<GetUnauthorizedUploadUrlResponse, Failure>>
           parser: GetUnauthorizedUploadUrlResponse.fromJson,
           data: {
             'email': email,
-            'password': password,
           },
         );
