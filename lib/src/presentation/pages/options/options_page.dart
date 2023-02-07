@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../common/failure.dart';
 import '../../../common/theme.dart';
+import '../../../common/utils/utils.dart';
 import '../../../domain/entities/entities.dart';
 import '../../../domain/repositories/repository.dart';
 import '../../../domain/use_cases/use_cases.dart';
