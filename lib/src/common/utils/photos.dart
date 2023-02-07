@@ -46,7 +46,7 @@ extension Crop on XFile {
     final inImage = await decodeImageFromList(inBytes);
     final width = inImage.width;
     final height = inImage.height;
-    final scaledHeight = height * (1 / 1.7777777);
+    final scaledHeight = height * (1 / (inImage.width / inImage.height));
     final imageEditOptions = editor.ImageEditorOption()
       ..addOption(
         editor.ClipOption(

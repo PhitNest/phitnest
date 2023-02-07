@@ -13,6 +13,14 @@ extension _OnCaptureSuccess on _ProfilePictureBloc {
           file: event.file,
         ),
       );
+    } else if (state is _CameraLoadingState) {
+      final state = this.state as _CameraLoadingState;
+      emit(
+        _CaptureSuccessState(
+          cameraController: state.cameraController,
+          file: event.file,
+        ),
+      );
     } else {
       throw Exception("Invalid state: $state");
     }
