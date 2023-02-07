@@ -22,18 +22,38 @@ abstract class _BasePage extends StatelessWidget {
               Stack(
                 children: [
                   Image.network(user.profilePictureUrl),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: 32.h,
-                      right: 24.w,
-                    ),
-                    child: Positioned(
-                      top: 0,
-                      right: 0,
-                      child: IconButton(
-                        icon: Icon(Icons.more_horiz_sharp),
-                        onPressed: onEditProfilePicture,
-                        color: Color(0xFFC11C1C),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: 32.h,
+                        right: 24.w,
+                      ),
+                      child: PopupMenuButton(
+                        icon: Icon(
+                          Icons.more_horiz_sharp,
+                          color: Color(0xFFC11C1C),
+                        ),
+                        color: Colors.black,
+                        tooltip: 'Edit',
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        itemBuilder: (BuildContext context) {
+                          return [
+                            PopupMenuItem(
+                              onTap: onEditProfilePicture,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text('Edit'),
+                              ),
+                              textStyle: theme.textTheme.labelMedium!.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ];
+                        },
                       ),
                     ),
                   ),
