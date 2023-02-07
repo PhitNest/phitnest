@@ -108,7 +108,7 @@ class _Auth {
       )
           .then(
         (failure) {
-          if (failure != null) {
+          if (failure == null) {
             return Future.wait(
               [
                 Cache.cachePassword(null),

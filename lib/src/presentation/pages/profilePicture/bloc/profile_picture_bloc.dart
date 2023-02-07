@@ -49,6 +49,14 @@ class _ProfilePictureBloc
       final state = this.state as _InitialState;
       await state.getFrontCamera.cancel();
     }
+    if (state is _CameraLoadedState) {
+      final state = this.state as _CameraLoadedState;
+      await state.cameraController.dispose();
+    }
+    if (state is _CameraErrorState) {
+      final state = this.state as _CameraErrorState;
+      await state.cameraController.dispose();
+    }
     if (state is _Initialized) {
       final state = this.state as _Initialized;
       await state.cameraController.dispose();

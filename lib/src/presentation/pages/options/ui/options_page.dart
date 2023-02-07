@@ -29,7 +29,7 @@ class OptionsPage extends StatelessWidget {
                 context: context,
               ),
             );
-          } else if (state is _SuccessState) {
+          } else if (state is _SignOutSuccessState) {
             Navigator.of(context).pushAndRemoveUntil(
               CupertinoPageRoute(
                 builder: (context) => LoginPage(),

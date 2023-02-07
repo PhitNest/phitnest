@@ -16,7 +16,9 @@ extension _OnSignOut on _OptionsBloc {
             ),
           )..then(
               (failure) => add(
-                failure != null ? _ErrorEvent(failure) : const _SuccessEvent(),
+                failure != null
+                    ? _SignOutErrorEvent(failure)
+                    : const _SignOutSuccessEvent(),
               ),
             ),
         ),

@@ -4,7 +4,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_editor/image_editor.dart' as editor;
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 
 import '../constants/constants.dart';
 import '../failure.dart';
@@ -47,7 +46,7 @@ extension Crop on XFile {
     final inImage = await decodeImageFromList(inBytes);
     final width = inImage.width;
     final height = inImage.height;
-    final scaledHeight = height * 0.75;
+    final scaledHeight = height * (1 / 1.7777777);
     final imageEditOptions = editor.ImageEditorOption()
       ..addOption(
         editor.ClipOption(
