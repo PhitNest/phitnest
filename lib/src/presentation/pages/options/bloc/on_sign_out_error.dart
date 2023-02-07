@@ -1,8 +1,8 @@
 part of options_page;
 
-extension _OnError on _OptionsBloc {
-  void onErrorCaught(
-    _ErrorEvent event,
+extension _OnSignOutError on _OptionsBloc {
+  void onSignOutError(
+    _SignOutErrorEvent event,
     Emitter<_OptionsState> emit,
   ) =>
       emit(

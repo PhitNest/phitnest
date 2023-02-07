@@ -21,7 +21,6 @@ import '../../widgets/widgets.dart';
 import '../confirmEmail/confirm_email.dart';
 import '../gymSearch/gym_search.dart';
 import '../home/home.dart';
-import '../login/login.dart';
 import '../profilePicture/profile_picture.dart';
 
 part 'bloc/on_edit_first_name.dart';
