@@ -5,8 +5,8 @@ extension _OnRetryInitializeCamera on _ProfilePictureBloc {
     _RetryInitializeCameraEvent event,
     Emitter<_ProfilePictureState> emit,
   ) {
-    if (state is _Initialized) {
-      final state = this.state as _Initialized;
+    if (state is _CameraErrorState) {
+      final state = this.state as _CameraErrorState;
       emit(
         _CameraLoadingState(
           cameraController: state.cameraController,

@@ -43,7 +43,7 @@ class VerificationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (context) => _VerificationBloc(password != null),
+        create: (context) => _VerificationBloc(),
         child: BlocConsumer<_VerificationBloc, _VerificationState>(
           listener: (context, state) async {
             if (state is _SuccessState) {
@@ -56,7 +56,6 @@ class VerificationPage extends StatelessWidget {
                         uploadImage: (photo) =>
                             UseCases.uploadPhotoUnauthorized(
                           email: email,
-                          password: password!,
                           photo: photo,
                         ),
                       ),

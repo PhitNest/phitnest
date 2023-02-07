@@ -51,13 +51,14 @@ extension _Bloc on BuildContext {
   void retryLoadGyms() => bloc.add(const _RetryLoadGymsEvent());
 
   Future<void> goToProfilePicture(XFile? initialImage) async {
+    final email = bloc.emailController.text.trim();
+    final password = bloc.passwordController.text;
     final photo = await Navigator.push<XFile>(
       this,
       CupertinoPageRoute(
         builder: (context) => ProfilePicturePage(
           uploadImage: (image) => UseCases.uploadPhotoUnauthorized(
-            email: bloc.emailController.text.trim(),
-            password: bloc.passwordController.text,
+            email: email,
             photo: image,
           ),
         ),
@@ -72,8 +73,8 @@ extension _Bloc on BuildContext {
               context,
               CupertinoPageRoute(
                 builder: (context) => ConfirmEmailPage(
-                  email: bloc.emailController.text.trim(),
-                  password: bloc.passwordController.text,
+                  email: email,
+                  password: password,
                 ),
               ),
             ).then(
@@ -84,7 +85,7 @@ extension _Bloc on BuildContext {
                     CupertinoPageRoute(
                       builder: (context) => HomePage(
                         initialData: confirmEmail,
-                        initialPassword: bloc.passwordController.text,
+                        initialPassword: password,
                       ),
                     ),
                     (_) => false,

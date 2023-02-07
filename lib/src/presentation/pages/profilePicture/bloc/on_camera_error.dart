@@ -5,8 +5,8 @@ extension _OnCameraError on _ProfilePictureBloc {
     _CameraErrorEvent event,
     Emitter<_ProfilePictureState> emit,
   ) {
-    if (state is _Initialized) {
-      final state = this.state as _Initialized;
+    if (state is _CameraLoadingState) {
+      final state = this.state as _CameraLoadingState;
       emit(
         _CameraErrorState(
           cameraController: state.cameraController,
