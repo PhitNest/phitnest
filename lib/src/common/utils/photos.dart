@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:image_editor/image_editor.dart';
+import 'package:image_editor/image_editor.dart' as editor;
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 import '../constants/constants.dart';
 import '../failure.dart';
@@ -36,26 +37,26 @@ Future<Failure?> uploadPhoto(String uploadUrl, XFile photo) async => http
 
 extension TakeProfilePicture on CameraController {
   Future<XFile> takeProfilePicture() => takePicture().then(
-        (file) => file.centerCrop(1 / value.aspectRatio),
+        (file) => file.centerCrop(),
       );
 }
 
 extension Crop on XFile {
-  Future<XFile> centerCrop(double heightFactor) async {
+  Future<XFile> centerCrop() async {
     final inBytes = await readAsBytes();
     final inImage = await decodeImageFromList(inBytes);
     final width = inImage.width;
     final height = inImage.height;
-    final scaledHeight = height * heightFactor;
-    final imageEditOptions = ImageEditorOption()
+    final scaledHeight = height * 0.75;
+    final imageEditOptions = editor.ImageEditorOption()
       ..addOption(
-        ClipOption(
+        editor.ClipOption(
           width: width,
           height: scaledHeight,
           y: height / 2 - scaledHeight / 2,
         ),
       );
-    final outBytes = await ImageEditor.editImage(
+    final outBytes = await editor.ImageEditor.editImage(
       image: inBytes,
       imageEditorOption: imageEditOptions,
     );

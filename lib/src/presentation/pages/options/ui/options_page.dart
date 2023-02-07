@@ -43,15 +43,7 @@ class OptionsPage extends StatelessWidget {
             return _LoadingPage(
               user: user,
               gym: gym,
-              onEditProfilePicture: () =>
-                  ImagePicker().pickImage(source: ImageSource.gallery).then(
-                (img) {
-                  if (img != null) {
-                    context.bloc
-                        .add(_EditProfilePictureEvent(newProfilePicture: img));
-                  }
-                },
-              ),
+              onEditProfilePicture: () {},
             );
           } else {
             return _InitialPage(

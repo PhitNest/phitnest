@@ -12,9 +12,9 @@ class _AlbumsButton extends StatelessWidget {
         text: 'ALBUMS',
         onPressed: () =>
             ImagePicker().pickImage(source: ImageSource.gallery).then(
-          (image) {
+          (image) async {
             if (image != null) {
-              onUploadPicture(image);
+              onUploadPicture(await image.centerCrop());
             }
           },
         ),

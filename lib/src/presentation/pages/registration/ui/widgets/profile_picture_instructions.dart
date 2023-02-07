@@ -44,9 +44,9 @@ class _ProfilePictureInstructions extends StatelessWidget {
             StyledUnderlinedTextButton(
               onPressed: () =>
                   ImagePicker().pickImage(source: ImageSource.gallery).then(
-                (image) {
+                (image) async {
                   if (image != null) {
-                    onPressedUploadFromAlbums(image);
+                    onPressedUploadFromAlbums(await image.centerCrop());
                   }
                 },
               ),
