@@ -1,6 +1,6 @@
 part of registration_page;
 
-extension on _RegistrationBloc {
+extension _OnSubmitPageOne on _RegistrationBloc {
   void onSubmitPageOne(
     _SubmitPageOneEvent event,
     Emitter<_RegistrationState> emit,

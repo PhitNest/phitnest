@@ -1,6 +1,6 @@
 part of verification_page;
 
-extension on BuildContext {
+extension _Bloc on BuildContext {
   _VerificationBloc get bloc => read();
 }
 
@@ -38,8 +38,7 @@ class VerificationPage extends StatelessWidget {
     required this.resend,
     required this.password,
     this.shouldLogin = true,
-  })  : assert(password != null && shouldLogin ||
-            password == null && !shouldLogin),
+  })  : assert(password != null && shouldLogin || !shouldLogin),
         super(key: key);
 
   @override
@@ -72,14 +71,12 @@ class VerificationPage extends StatelessWidget {
             if (state is _ConfirmingState || state is _ResendingState) {
               return _LoadingPage(
                 codeController: context.bloc.codeController,
-                codeFocusNode: context.bloc.codeFocusNode,
                 headerText: headerText,
                 email: email,
               );
             } else if (state is _ConfirmErrorState) {
               return _ErrorPage(
                 codeController: context.bloc.codeController,
-                codeFocusNode: context.bloc.codeFocusNode,
                 onCompleted: () => _onCompleted(context),
                 onPressedResend: () => _onPressedResend(context),
                 headerText: headerText,
@@ -89,7 +86,6 @@ class VerificationPage extends StatelessWidget {
             } else if (state is _ResendErrorState) {
               return _ErrorPage(
                 codeController: context.bloc.codeController,
-                codeFocusNode: context.bloc.codeFocusNode,
                 onCompleted: () => _onCompleted(context),
                 onPressedResend: () => _onPressedResend(context),
                 headerText: headerText,
@@ -99,7 +95,6 @@ class VerificationPage extends StatelessWidget {
             } else {
               return _InitialPage(
                 codeController: context.bloc.codeController,
-                codeFocusNode: context.bloc.codeFocusNode,
                 onCompleted: () => _onCompleted(context),
                 onPressedResend: () => _onPressedResend(context),
                 headerText: headerText,

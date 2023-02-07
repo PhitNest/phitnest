@@ -12,9 +12,9 @@ import '../../../common/theme.dart';
 import '../../../data/backend/backend.dart';
 import '../../widgets/widgets.dart';
 
-part './ui/widgets/available_chat.dart';
-part './ui/widgets/base.dart';
-part './ui/widgets/empty.dart';
+part 'ui/widgets/available_chat.dart';
+part 'ui/widgets/base.dart';
+part 'ui/widgets/empty.dart';
 part 'bloc/chat_bloc.dart';
 part 'bloc/onError.dart';
 part 'bloc/onMessageLoaded.dart';

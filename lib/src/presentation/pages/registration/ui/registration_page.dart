@@ -1,6 +1,6 @@
 part of registration_page;
 
-extension on BuildContext {
+extension _Bloc on BuildContext {
   _RegistrationBloc get bloc => read();
 
   int get scrollLimit {

@@ -1,6 +1,6 @@
 part of registration_page;
 
-extension on _RegistrationBloc {
+extension _OnGymsLoadingError on _RegistrationBloc {
   void onGymsLoadingError(
     _GymsLoadingErrorEvent event,
     Emitter<_RegistrationState> emit,

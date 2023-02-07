@@ -1,15 +1,15 @@
 part of verification_page;
 
 class _InitialPage extends _BasePage {
+  final VoidCallback onCompleted;
   final VoidCallback onPressedResend;
 
   _InitialPage({
     Key? key,
     required super.codeController,
-    required super.codeFocusNode,
-    required super.onCompleted,
     required super.headerText,
     required super.email,
+    required this.onCompleted,
     required this.onPressedResend,
   }) : super(
           key: key,

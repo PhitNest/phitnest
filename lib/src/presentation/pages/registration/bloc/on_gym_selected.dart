@@ -1,6 +1,6 @@
 part of registration_page;
 
-extension on _RegistrationBloc {
+extension _OnGymSelected on _RegistrationBloc {
   void onGymSelected(
     _GymSelectedEvent event,
     Emitter<_RegistrationState> emit,

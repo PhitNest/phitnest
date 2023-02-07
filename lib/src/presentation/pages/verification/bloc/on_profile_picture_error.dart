@@ -1,6 +1,6 @@
 part of verification_page;
 
-extension on _VerificationBloc {
+extension _OnProfilePictureError on _VerificationBloc {
   void onProfilePictureError(
     _ProfilePictureErrorEvent event,
     Emitter<_VerificationState> emit,

@@ -3,30 +3,34 @@ part of forgot_password_page;
 extension _Bloc on BuildContext {
   _ForgotPasswordBloc get bloc => read();
 
-  Future<void> goToSubmitPage() => Navigator.push<LoginResponse>(
-        this,
-        CupertinoPageRoute(
-          builder: (context) => ForgotPasswordSubmitPage(
-            email: context.bloc.emailController.text.trim(),
-            password: context.bloc.passwordController.text,
-          ),
+  Future<void> goToSubmitPage() {
+    final email = bloc.emailController.text.trim();
+    final password = bloc.passwordController.text;
+    return Navigator.push<LoginResponse>(
+      this,
+      CupertinoPageRoute(
+        builder: (context) => ForgotPasswordSubmitPage(
+          email: email,
+          password: password,
         ),
-      ).then(
-        (submitResult) {
-          if (submitResult != null) {
-            return Navigator.pushAndRemoveUntil(
-              this,
-              CupertinoPageRoute(
-                builder: (context) => HomePage(
-                  initialPassword: context.bloc.passwordController.text,
-                  initialData: submitResult,
-                ),
+      ),
+    ).then(
+      (submitResult) {
+        if (submitResult != null) {
+          return Navigator.pushAndRemoveUntil(
+            this,
+            CupertinoPageRoute(
+              builder: (context) => HomePage(
+                initialPassword: password,
+                initialData: submitResult,
               ),
-              (_) => false,
-            );
-          }
-        },
-      );
+            ),
+            (_) => false,
+          );
+        }
+      },
+    );
+  }
 
   void onPressedSubmit() => bloc.add(const _SubmitEvent());
 }
@@ -50,12 +54,14 @@ class ForgotPasswordPage extends StatelessWidget {
               ),
             );
           } else if (state is _ConfirmingEmailState) {
-            final confirmEmailResponse = await Navigator.of(context).push(
+            final String email = context.bloc.emailController.text.trim();
+            final confirmEmailResponse = await Navigator.push(
+              context,
               CupertinoPageRoute<LoginResponse>(
                 builder: (context) => ConfirmEmailPage(
-                  email: context.bloc.emailController.text.trim(),
+                  email: email,
                   shouldLogin: false,
-                  password: null,
+                  password: Cache.password,
                 ),
               ),
             );

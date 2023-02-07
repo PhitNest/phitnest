@@ -1,6 +1,6 @@
 part of options_page;
 
-extension on BuildContext {
+extension _Bloc on BuildContext {
   _OptionsBloc get bloc => read();
 }
 

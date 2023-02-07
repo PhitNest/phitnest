@@ -1,6 +1,6 @@
 part of verification_page;
 
-extension on _VerificationBloc {
+extension _OnConfirmError on _VerificationBloc {
   void onConfirmError(
     _ConfirmErrorEvent event,
     Emitter<_VerificationState> emit,

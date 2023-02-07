@@ -1,6 +1,6 @@
 part of registration_page;
 
-extension on _RegistrationBloc {
+extension _OnEditFirstName on _RegistrationBloc {
   void onEditFirstName(
     _EditFirstNameEvent event,
     Emitter<_RegistrationState> emit,

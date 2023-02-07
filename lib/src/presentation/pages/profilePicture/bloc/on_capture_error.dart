@@ -1,6 +1,6 @@
 part of profile_picture_page;
 
-extension on _ProfilePictureBloc {
+extension _OnCaptureError on _ProfilePictureBloc {
   void onCaptureError(
     _CaptureErrorEvent event,
     Emitter<_ProfilePictureState> emit,

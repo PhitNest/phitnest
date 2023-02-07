@@ -1,6 +1,6 @@
 part of forgot_password_page;
 
-extension on _ForgotPasswordBloc {
+extension _OnForgotPassword on _ForgotPasswordBloc {
   void onForgotPasswordError(
     _ErrorEvent event,
     Emitter<_ForgotPasswordState> emit,

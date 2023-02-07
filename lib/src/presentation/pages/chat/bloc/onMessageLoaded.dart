@@ -1,6 +1,6 @@
 part of chat_page;
 
-extension on _ChatBloc {
+extension _OnMessageLoaded on _ChatBloc {
   void onMessageLoaded(
     _MessagesLoadedEvent event,
     Emitter<_ChatState> emit,

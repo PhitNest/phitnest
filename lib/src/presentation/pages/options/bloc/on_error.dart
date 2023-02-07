@@ -1,6 +1,6 @@
 part of options_page;
 
-extension on _OptionsBloc {
+extension _OnError on _OptionsBloc {
   void onErrorCaught(
     _ErrorEvent event,
     Emitter<_OptionsState> emit,

@@ -1,18 +1,18 @@
 part of verification_page;
 
 class _ErrorPage extends _BasePage {
+  final VoidCallback onCompleted;
   final VoidCallback onPressedResend;
   final Failure error;
 
   _ErrorPage({
     Key? key,
     required super.codeController,
-    required super.codeFocusNode,
-    required super.onCompleted,
     required super.headerText,
     required super.email,
     required this.error,
     required this.onPressedResend,
+    required this.onCompleted,
   }) : super(
           key: key,
           child: Column(

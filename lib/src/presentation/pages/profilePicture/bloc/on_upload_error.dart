@@ -1,6 +1,6 @@
 part of profile_picture_page;
 
-extension on _ProfilePictureBloc {
+extension _OnUploadError on _ProfilePictureBloc {
   void onUploadError(
     _UploadErrorEvent event,
     Emitter<_ProfilePictureState> emit,

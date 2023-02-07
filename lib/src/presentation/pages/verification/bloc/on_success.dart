@@ -1,6 +1,6 @@
 part of verification_page;
 
-extension on _VerificationBloc {
+extension _OnSuccess on _VerificationBloc {
   void onSuccess(
     _SuccessEvent event,
     Emitter<_VerificationState> emit,

@@ -1,6 +1,6 @@
 part of verification_page;
 
-extension on _VerificationBloc {
+extension _OnSubmit on _VerificationBloc {
   void onSubmit(
     _SubmitEvent event,
     Emitter<_VerificationState> emit,

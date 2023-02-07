@@ -1,6 +1,6 @@
 part of login_page;
 
-extension on _LoginBloc {
+extension _OnSuccess on _LoginBloc {
   void onSuccess(
     _SuccessEvent event,
     Emitter<_LoginState> emit,

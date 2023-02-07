@@ -1,6 +1,6 @@
 part of login_page;
 
-extension on _LoginBloc {
+extension _OnLoginError on _LoginBloc {
   void onLoginError(
     _ErrorEvent event,
     Emitter<_LoginState> emit,
