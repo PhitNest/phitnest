@@ -65,38 +65,31 @@ extension _Bloc on BuildContext {
       ),
     );
     if (photo != null) {
-      Navigator.pushAndRemoveUntil(
+      Navigator.push<LoginResponse>(
         this,
         CupertinoPageRoute(
-          builder: (context) {
-            Navigator.push<LoginResponse>(
-              context,
+          builder: (context) => ConfirmEmailPage(
+            email: email,
+            password: password,
+          ),
+        ),
+      ).then(
+        (confirmEmail) {
+          if (confirmEmail != null) {
+            Navigator.pushAndRemoveUntil(
+              this,
               CupertinoPageRoute(
-                builder: (context) => ConfirmEmailPage(
-                  email: email,
-                  password: password,
+                builder: (context) => HomePage(
+                  initialData: confirmEmail,
+                  initialPassword: password,
                 ),
               ),
-            ).then(
-              (confirmEmail) {
-                if (confirmEmail != null) {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => HomePage(
-                        initialData: confirmEmail,
-                        initialPassword: password,
-                      ),
-                    ),
-                    (_) => false,
-                  );
-                }
-              },
+              (_) => false,
             );
-            return const LoginPage();
-          },
-        ),
-        (_) => false,
+          } else {
+            Navigator.pop(this);
+          }
+        },
       );
     }
   }
