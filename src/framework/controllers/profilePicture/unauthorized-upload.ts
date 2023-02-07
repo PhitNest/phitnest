@@ -16,16 +16,12 @@ export class UnauthorizedProfilePictureUploadController
 
   validator = z.object({
     email: z.string().trim(),
-    password: z.string(),
   });
 
   execute(
     req: IRequest<z.infer<typeof this.validator>>,
     res: IResponse<UnauthorizedProfilePictureUploadResponse>
   ) {
-    return unauthorizedProfilePictureUploadUrl(
-      req.body.email,
-      req.body.password
-    );
+    return unauthorizedProfilePictureUploadUrl(req.body.email);
   }
 }
