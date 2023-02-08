@@ -159,7 +159,7 @@ class App extends StatelessWidget {
     return DevicePreview(
       defaultDevice: device,
       enabled: device != null,
-      isToolbarVisible: false,
+      isToolbarVisible: true,
       builder: (context) => ScreenUtilInit(
         minTextAdapt: true,
         designSize: const Size(375, 667),

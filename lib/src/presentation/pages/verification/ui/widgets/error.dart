@@ -23,7 +23,7 @@ class _ErrorPage extends _BasePage {
                 child: Text(
                   error.message,
                   style: theme.textTheme.labelLarge!
-                      .copyWith(color: theme.errorColor),
+                      .copyWith(color: theme.colorScheme.error),
                   textAlign: TextAlign.center,
                 ),
               ),
