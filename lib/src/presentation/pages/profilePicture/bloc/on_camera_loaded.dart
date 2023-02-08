@@ -9,7 +9,7 @@ extension _OnCameraLoaded on _ProfilePictureBloc {
       final state = this.state as _CameraLoadingState;
       emit(
         _CameraLoadedState(
-          cameraController: state.cameraController,
+          cameraController: state.cameraController..setFlashMode(FlashMode.off),
         ),
       );
     } else {

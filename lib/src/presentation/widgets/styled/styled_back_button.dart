@@ -14,7 +14,7 @@ class StyledBackButton extends StatelessWidget {
         alignment: Alignment.centerLeft,
         width: double.infinity,
         child: IconButton(
-          splashRadius: 28,
+          splashRadius: 28.w,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           icon: Image.asset(

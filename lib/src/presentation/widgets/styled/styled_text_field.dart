@@ -68,7 +68,7 @@ class StyledTextField extends StatelessWidget {
                 theme.textTheme.labelMedium!.copyWith(color: Colors.red),
             hintStyle: theme.textTheme.labelMedium,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
             ),
           ),
         ),

@@ -21,7 +21,26 @@ abstract class _BasePage extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  Image.network(user.profilePictureUrl),
+                  Image.network(
+                    user.profilePictureUrl,
+                    loadingBuilder: (context, child, loadingProgress) =>
+                        SizedBox(
+                      width: 1.sw,
+                      height: 1.sw,
+                      child: Center(
+                        child: loadingProgress == null
+                            ? child
+                            : CircularProgressIndicator(),
+                      ),
+                    ),
+                    errorBuilder: (context, child, loadingProgress) => SizedBox(
+                      width: 1.sw,
+                      height: 1.sw,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
                   Positioned(
                     top: 0,
                     right: 0,

@@ -25,7 +25,7 @@ class _GymCard extends StatelessWidget {
             ),
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12.r),
               ),
             ),
             backgroundColor: MaterialStateProperty.all(

@@ -1,9 +1,9 @@
 part of options_page;
 
-class _LoadingErrorState extends _OptionsState {
+class _ErrorEvent extends _OptionsEvent {
   final Failure failure;
 
-  const _LoadingErrorState({
+  const _ErrorEvent({
     required this.failure,
   }) : super();
 

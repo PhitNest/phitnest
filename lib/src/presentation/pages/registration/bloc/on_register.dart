@@ -10,22 +10,20 @@ extension _OnRegister on _RegistrationBloc {
     if (validateName(firstNameController.text) != null ||
         validateName(lastNameController.text) != null) {
       pageController.jumpToPage(0);
-      Future.delayed(
-        Duration(milliseconds: 50),
-        () => add(
-          const _SubmitPageOneEvent(),
-        ),
+      SchedulerBinding.instance.addPostFrameCallback(
+        (_) {
+          add(const _SubmitPageOneEvent());
+        },
       );
     } else if (validateEmail(emailController.text) != null ||
         state.takenEmails.contains(emailController.text) ||
         validatePassword(passwordController.text) != null ||
         passwordController.text != confirmPasswordController.text) {
       pageController.jumpToPage(1);
-      Future.delayed(
-        Duration(milliseconds: 100),
-        () => add(
-          const _SubmitPageTwoEvent(),
-        ),
+      SchedulerBinding.instance.addPostFrameCallback(
+        (_) {
+          add(const _SubmitPageTwoEvent());
+        },
       );
     } else {
       emit(

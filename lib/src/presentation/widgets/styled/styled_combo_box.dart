@@ -36,7 +36,7 @@ class StyledComboBox<ItemType> extends StatelessWidget {
                 )
               : null,
           value: initialValue,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8.r),
           icon: Image.asset(
             Assets.dropDownButton.path,
             width: 16.w,
@@ -46,20 +46,20 @@ class StyledComboBox<ItemType> extends StatelessWidget {
             contentPadding:
                 EdgeInsets.symmetric(vertical: 8.w, horizontal: 16.w),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
               borderSide: BorderSide(
                 color: Colors.black,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
               borderSide: BorderSide(
                 color: Colors.black,
                 width: 1,
               ),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
               borderSide: BorderSide(
                 color: Colors.black,
               ),

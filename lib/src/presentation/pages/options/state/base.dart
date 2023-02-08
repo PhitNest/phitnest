@@ -6,3 +6,14 @@ abstract class _OptionsState extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+abstract class _LoadedState extends _OptionsState {
+  final GetUserResponse response;
+
+  const _LoadedState({
+    required this.response,
+  }) : super();
+
+  @override
+  List<Object> get props => [response];
+}
