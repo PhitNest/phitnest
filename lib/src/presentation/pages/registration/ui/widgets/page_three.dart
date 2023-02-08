@@ -16,8 +16,8 @@ class _PageThreeLoadingError extends _PageThreeBase {
             20.verticalSpace,
             Text(
               error,
-              style:
-                  theme.textTheme.labelLarge!.copyWith(color: theme.errorColor),
+              style: theme.textTheme.labelLarge!
+                  .copyWith(color: theme.colorScheme.error),
               textAlign: TextAlign.center,
             ),
             24.verticalSpace,

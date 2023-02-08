@@ -15,6 +15,7 @@ import '../../../domain/entities/entities.dart';
 import '../../../domain/repositories/repository.dart';
 import '../../widgets/widgets.dart';
 import '../login/login.dart';
+import '../home/home.dart';
 
 part 'bloc/on_sign_out_error.dart';
 part 'bloc/on_sign_out.dart';

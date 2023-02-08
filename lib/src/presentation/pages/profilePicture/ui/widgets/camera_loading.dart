@@ -24,7 +24,7 @@ class _CameraLoadingErrorPage extends _CameraLoadingBasePage {
               Text(
                 errorMessage,
                 style: theme.textTheme.labelLarge!
-                    .copyWith(color: theme.errorColor),
+                    .copyWith(color: theme.colorScheme.error),
                 textAlign: TextAlign.center,
               ),
               24.verticalSpace,

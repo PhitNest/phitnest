@@ -26,7 +26,6 @@ abstract class _BasePage extends StatelessWidget {
                     loadingBuilder: (context, child, loadingProgress) =>
                         SizedBox(
                       width: 1.sw,
-                      height: 1.sw,
                       child: Center(
                         child: loadingProgress == null
                             ? child
@@ -35,7 +34,6 @@ abstract class _BasePage extends StatelessWidget {
                     ),
                     errorBuilder: (context, child, loadingProgress) => SizedBox(
                       width: 1.sw,
-                      height: 1.sw,
                       child: Center(
                         child: CircularProgressIndicator(),
                       ),

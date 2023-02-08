@@ -46,7 +46,7 @@ class _PageFourError extends _PageFourBase {
           child: Text(
             error,
             style: theme.textTheme.labelLarge!.copyWith(
-              color: theme.errorColor,
+              color: theme.colorScheme.error,
             ),
             textAlign: TextAlign.center,
           ),

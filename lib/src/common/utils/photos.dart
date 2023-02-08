@@ -43,20 +43,29 @@ extension TakeProfilePicture on CameraController {
 
 extension Crop on XFile {
   Future<XFile> centerCrop() async {
+    const aspectRatio = 375.0 / 330.0;
     final inBytes = await readAsBytes();
     final inImage = await decodeImageFromList(inBytes);
     final width = inImage.width;
     final height = inImage.height;
-    final min = Math.min(width, height);
-    final imageEditOptions = editor.ImageEditorOption()
-      ..addOption(
+    final imageEditOptions = editor.ImageEditorOption();
+    if (width / height > aspectRatio) {
+      imageEditOptions.addOption(
         editor.ClipOption(
-          width: min,
-          height: min,
-          y: height / 2 - min / 2,
-          x: width / 2 - min / 2,
+          width: height * aspectRatio,
+          height: height,
+          x: (width - height * aspectRatio) / 2,
         ),
       );
+    } else {
+      imageEditOptions.addOption(
+        editor.ClipOption(
+          width: width,
+          height: width / aspectRatio,
+          y: (height - width / aspectRatio) / 2,
+        ),
+      );
+    }
     final outBytes = await editor.ImageEditor.editImage(
       image: inBytes,
       imageEditorOption: imageEditOptions,

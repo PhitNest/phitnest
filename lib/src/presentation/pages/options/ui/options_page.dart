@@ -26,7 +26,9 @@ class OptionsPage extends StatelessWidget {
       ),
       child: BlocConsumer<_OptionsBloc, _OptionsState>(
         listener: (context, state) {
-          if (state is _LoadingErrorState) {
+          if (state is _LoadedUserState) {
+            context.homeBloc.loadUser(state.response);
+          } else if (state is _LoadingErrorState) {
             ScaffoldMessenger.of(context).showMaterialBanner(
               StyledErrorBanner(
                 err: state.failure.message,

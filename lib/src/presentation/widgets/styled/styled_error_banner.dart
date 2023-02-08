@@ -13,7 +13,7 @@ class StyledErrorBanner extends MaterialBanner {
           content: Text(
             err,
             style: theme.textTheme.bodySmall!.copyWith(
-              color: theme.errorColor,
+              color: theme.colorScheme.error,
             ),
           ),
           padding: EdgeInsets.all(10),
@@ -24,7 +24,7 @@ class StyledErrorBanner extends MaterialBanner {
           backgroundColor: Colors.white,
           leading: Icon(
             Icons.error_outline,
-            color: theme.errorColor,
+            color: theme.colorScheme.error,
           ),
           actions: [
             TextButton(

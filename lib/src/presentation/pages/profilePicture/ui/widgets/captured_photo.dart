@@ -17,8 +17,8 @@ class _UploadingErrorPage extends _CapturedPhotoPage {
             ),
             child: Text(
               failure.message,
-              style:
-                  theme.textTheme.labelLarge!.copyWith(color: theme.errorColor),
+              style: theme.textTheme.labelLarge!
+                  .copyWith(color: theme.colorScheme.error),
               textAlign: TextAlign.center,
             ),
           ),
