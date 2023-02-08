@@ -22,11 +22,10 @@ extension _OnRegisterError on _RegistrationBloc {
         ),
       );
       pageController.jumpToPage(1);
-      Future.delayed(
-        const Duration(milliseconds: 100),
-        () => add(
-          const _SubmitPageTwoEvent(),
-        ),
+      SchedulerBinding.instance.addPostFrameCallback(
+        (_) {
+          add(const _SubmitPageTwoEvent());
+        },
       );
     } else {
       emit(

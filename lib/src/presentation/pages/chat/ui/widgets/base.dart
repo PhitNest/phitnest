@@ -40,7 +40,7 @@ abstract class _BasePage extends StatelessWidget {
                             backgroundColor: Colors.red,
                             clipBehavior: Clip.antiAlias,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(32),
+                              borderRadius: BorderRadius.circular(32.r),
                             ),
                           ),
                         ),

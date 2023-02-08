@@ -26,7 +26,7 @@ class StyledButton extends StatelessWidget {
           textStyle: MaterialStateProperty.all(theme.textTheme.bodySmall!),
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
             ),
           ),
         ),

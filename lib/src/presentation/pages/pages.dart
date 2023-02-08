@@ -7,7 +7,7 @@ export 'gymSearch/gym_search.dart';
 export 'home/home.dart';
 export 'login/login.dart';
 export 'onBoarding/on_boarding_page.dart';
-export 'options/options_page.dart';
+export 'options/options.dart';
 export 'profilePicture/profile_picture.dart';
 export 'registration/registration.dart';
 export 'verification/verification.dart';

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../data/backend/backend.dart';
 import '../../widgets/widgets.dart';
-import '../options/options_page.dart';
+import '../options/options.dart';
 
 part 'ui/home_page.dart';
 

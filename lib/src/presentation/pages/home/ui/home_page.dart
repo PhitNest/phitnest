@@ -16,8 +16,8 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: OptionsPage(
           withAuth: <T>(T Function(String) f) => f(initialData.accessToken),
-          gym: initialData.gym,
-          user: initialData.user,
+          initialGym: initialData.gym,
+          initialUser: initialData.user,
         ),
       ),
       bottomNavigationBar: StyledNavigationBar(),

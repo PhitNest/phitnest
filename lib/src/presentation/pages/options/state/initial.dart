@@ -1,5 +1,12 @@
 part of options_page;
 
 class _InitialState extends _OptionsState {
-  const _InitialState() : super();
+  final CancelableOperation<Either<GetUserResponse, Failure>> getUser;
+
+  const _InitialState({
+    required this.getUser,
+  }) : super();
+
+  @override
+  List<Object> get props => [getUser.value];
 }

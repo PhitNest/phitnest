@@ -22,7 +22,7 @@ class StyledPageIndicator extends StatelessWidget {
             margin: EdgeInsets.only(right: 8.w),
             decoration: BoxDecoration(
               color: currentPage >= index ? Colors.black : Colors.grey.shade400,
-              borderRadius: BorderRadius.circular(4.w),
+              borderRadius: BorderRadius.circular(4.r),
             ),
           ),
         ),

@@ -9,7 +9,7 @@ extension _OnInitializeCamera on _ProfilePictureBloc {
       event.cameraDescription,
       ResolutionPreset.max,
       enableAudio: false,
-    )..setFlashMode(FlashMode.off);
+    );
     emit(
       _CameraLoadingState(
         cameraController: cameraController,
