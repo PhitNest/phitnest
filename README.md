@@ -1,11 +1,3 @@
-# PhitNest Mobile
-
-Here is the official PhitNest Mobile development documentation.
-
-### Documentation Videos
-
-<a href="https://drive.google.com/file/d/1nAqiDd6KK6wRXIsCiL_kyeRbILgp5uyr/view?usp=sharing">1. Creating a Screen</a>
-
 ### Backend
 
 In order for the app to function properly, you need to connect to the backend.
