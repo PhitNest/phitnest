@@ -5,8 +5,8 @@ extension _OnSetProfilePicture on _OptionsBloc {
     _SetProfilePictureEvent event,
     Emitter<_OptionsState> emit,
   ) {
-    if (state is _LoadedState) {
-      final state = this.state as _LoadedState;
+    if (state is _EditProfilePictureState) {
+      final state = this.state as _EditProfilePictureState;
       emit(
         _InitialState(
           response: state.response,

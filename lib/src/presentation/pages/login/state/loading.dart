@@ -1,7 +1,7 @@
 part of login_page;
 
 class _LoadingState extends _LoginState {
-  final CancelableOperation loginOperation;
+  final CancelableOperation<Either<LoginResponse, Failure>> loginOperation;
 
   const _LoadingState({
     required super.autovalidateMode,

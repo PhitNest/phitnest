@@ -39,7 +39,11 @@ class OptionsPage extends StatelessWidget {
                 ),
               ),
             );
-            if (photo != null) {}
+            if (photo != null) {
+              context.bloc.add(_SetProfilePictureEvent(photo));
+            } else {
+              context.bloc.add(_LoadedUserEvent(response: state.response));
+            }
           } else if (state is _LoadedUserState) {
             context.homeBloc.loadUser(state.response);
           } else if (state is _LoadingErrorState) {
