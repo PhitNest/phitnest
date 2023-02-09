@@ -31,9 +31,7 @@ class ConfirmEmailPage extends StatelessWidget {
                 (failure) => failure,
               ),
             ),
-        resend: () => Backend.auth.resendConfirmation(
-          email: email,
-        ),
+        resend: () => Backend.auth.resendConfirmation(email),
         password: password,
         shouldLogin: shouldLogin,
       );

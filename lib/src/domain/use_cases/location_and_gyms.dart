@@ -5,7 +5,7 @@ typedef LocationAndGymsResponse
 
 Future<LocationAndGymsResponse> _getNearbyGyms() => getLocation().then(
       (either) => either.fold(
-        (location) => Backend.gyms
+        (location) => Backend.gym
             .nearest(
               location: location,
               meters: 30000000,

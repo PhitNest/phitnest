@@ -6,11 +6,7 @@ class _User {
   Future<Either<GetUserResponse, Failure>> getUser({
     required String accessToken,
   }) =>
-      Backend.users
-          .get(
-            accessToken: accessToken,
-          )
-          .then(
+      Backend.user.get(accessToken).then(
             (either) => either.fold(
               (response) => Future.wait(
                 [

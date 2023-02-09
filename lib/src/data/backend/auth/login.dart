@@ -25,16 +25,18 @@ class LoginResponse extends Equatable {
   List<Object> get props => [accessToken, refreshToken, user, gym];
 }
 
-Future<Either<LoginResponse, Failure>> _login({
-  required String email,
-  required String password,
-}) =>
-    _requestJson(
-      route: "/auth/login",
-      method: HttpMethod.post,
-      parser: LoginResponse.fromJson,
-      data: {
-        "email": email,
-        "password": password,
-      },
-    );
+extension Login on _Auth {
+  Future<Either<LoginResponse, Failure>> login({
+    required String email,
+    required String password,
+  }) =>
+      _requestJson(
+        route: "/auth/login",
+        method: HttpMethod.post,
+        parser: LoginResponse.fromJson,
+        data: {
+          "email": email,
+          "password": password,
+        },
+      );
+}

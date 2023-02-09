@@ -23,13 +23,13 @@ class UserExploreResponse extends Equatable {
   List<Object> get props => [users, requests];
 }
 
-Future<Either<UserExploreResponse, Failure>> _explore({
-  required String accessToken,
-}) =>
-    _requestJson(
-      route: "/user/explore",
-      method: HttpMethod.get,
-      parser: UserExploreResponse.fromJson,
-      authorization: accessToken,
-      data: {},
-    );
+extension Explore on _User {
+  Future<Either<UserExploreResponse, Failure>> explore(String accessToken) =>
+      _requestJson(
+        route: "/user/explore",
+        method: HttpMethod.get,
+        parser: UserExploreResponse.fromJson,
+        authorization: accessToken,
+        data: {},
+      );
+}

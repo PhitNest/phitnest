@@ -8,8 +8,8 @@ class _ChatBloc extends Bloc<_ChatEvent, _ChatState> {
           _InitialState(
             loadingMessages: CancelableOperation.fromFuture(
               withAuth(
-                (accessToken) => Backend.friendships
-                    .friendsAndMessages(accessToken: accessToken),
+                (accessToken) =>
+                    Backend.friendship.friendsAndMessages(accessToken),
               ),
             ),
           ),

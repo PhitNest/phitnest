@@ -48,11 +48,11 @@ part 'user/get.dart';
 part 'user/explore.dart';
 
 abstract class Backend {
-  static const auth = _Auth();
-  static const directMessages = _DirectMessage();
-  static const friendRequests = _FriendRequest();
-  static const friendships = _Friendship();
-  static const gyms = _Gym();
-  static const profilePictures = _ProfilePicture();
-  static const users = _User();
+  static const auth = _Auth._();
+  static const directMessage = _DirectMessage._();
+  static const friendRequest = _FriendRequest._();
+  static const friendship = _Friendship._();
+  static const gym = _Gym._();
+  static const profilePicture = _ProfilePicture._();
+  static const user = _User._();
 }

@@ -1,7 +1,5 @@
 part of backend;
 
 class _DirectMessage {
-  const _DirectMessage();
-
-  final getDirectMessages = _getDirectMessages;
+  const _DirectMessage._();
 }

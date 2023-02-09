@@ -17,8 +17,6 @@ class ForgotPasswordSubmitPage extends VerificationPage {
             newPassword: password,
             code: code,
           ),
-          resend: () => Backend.auth.forgotPassword(
-            email: email,
-          ),
+          resend: () => Backend.auth.forgotPassword(email),
         );
 }
