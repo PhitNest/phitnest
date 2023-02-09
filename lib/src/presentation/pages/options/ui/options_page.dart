@@ -25,8 +25,22 @@ class OptionsPage extends StatelessWidget {
         initialUser: initialUser,
       ),
       child: BlocConsumer<_OptionsBloc, _OptionsState>(
-        listener: (context, state) {
-          if (state is _LoadedUserState) {
+        listener: (context, state) async {
+          if (state is _EditProfilePictureState) {
+            final photo = await Navigator.of(context).push<XFile>(
+              CupertinoPageRoute(
+                builder: (context) => ProfilePicturePage(
+                  uploadImage: (image) => withAuth(
+                    (accessToken) => UseCases.uploadPhotoAuthorized(
+                      accessToken: accessToken,
+                      photo: image,
+                    ),
+                  ),
+                ),
+              ),
+            );
+            if (photo != null) {}
+          } else if (state is _LoadedUserState) {
             context.homeBloc.loadUser(state.response);
           } else if (state is _LoadingErrorState) {
             ScaffoldMessenger.of(context).showMaterialBanner(
@@ -62,15 +76,17 @@ class OptionsPage extends StatelessWidget {
               user: state.response,
               gym: state.response.gym,
               onSignOut: () => context.bloc.add(const _SignOutEvent()),
-              onEditProfilePicture: () {},
+              onEditProfilePicture: () =>
+                  context.bloc.add(const _EditProfilePictureEvent()),
+            );
+          } else if (state is _InitialState) {
+            return _LoadingPage(
+              user: state.response,
+              gym: state.response.gym,
+              onSignOut: () => context.bloc.add(const _SignOutEvent()),
             );
           } else {
-            return _InitialPage(
-              user: initialUser,
-              gym: initialGym,
-              onSignOut: () => context.bloc.add(const _SignOutEvent()),
-              onEditProfilePicture: () {},
-            );
+            throw Exception('Invalid state: $state');
           }
         },
       ),
