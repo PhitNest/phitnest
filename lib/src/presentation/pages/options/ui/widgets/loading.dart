@@ -1,15 +1,15 @@
 part of options_page;
 
-class _InitialPage extends _BasePage {
+class _LoadingPage extends _BasePage {
   final VoidCallback onSignOut;
 
-  _InitialPage({
+  _LoadingPage({
     required super.user,
     required super.gym,
-    required super.onEditProfilePicture,
     required this.onSignOut,
   }) : super(
-          showEdit: true,
+          showEdit: false,
+          onEditProfilePicture: () {},
           child: StyledUnderlinedTextButton(
             text: 'SIGN OUT',
             onPressed: onSignOut,

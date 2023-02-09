@@ -11,6 +11,17 @@ class _OptionsBloc extends Bloc<_OptionsEvent, _OptionsState> {
     required this.initialGym,
   }) : super(
           _InitialState(
+            response: GetUserResponse(
+              id: initialUser.id,
+              firstName: initialUser.firstName,
+              email: initialUser.email,
+              lastName: initialUser.lastName,
+              cognitoId: initialUser.cognitoId,
+              confirmed: initialUser.confirmed,
+              profilePictureUrl: initialUser.profilePictureUrl,
+              gymId: initialUser.gymId,
+              gym: initialGym,
+            ),
             getUser: CancelableOperation.fromFuture(
               withAuth(
                 (accessToken) =>
@@ -33,6 +44,8 @@ class _OptionsBloc extends Bloc<_OptionsEvent, _OptionsState> {
     on<_SignOutSuccessEvent>(onSignOutSuccess);
     on<_ErrorEvent>(onLoadingError);
     on<_LoadedUserEvent>(onLoaded);
+    on<_EditProfilePictureEvent>(onEditProfilePicture);
+    on<_SetProfilePictureEvent>(onSetProfilePicture);
   }
 
   @override

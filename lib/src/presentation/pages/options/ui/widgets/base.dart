@@ -5,6 +5,7 @@ abstract class _BasePage extends StatelessWidget {
   final ProfilePictureUserEntity user;
   final Widget child;
   final VoidCallback onEditProfilePicture;
+  final bool showEdit;
 
   const _BasePage({
     Key? key,
@@ -12,6 +13,7 @@ abstract class _BasePage extends StatelessWidget {
     required this.user,
     required this.child,
     required this.onEditProfilePicture,
+    required this.showEdit,
   }) : super(key: key);
 
   @override
@@ -39,38 +41,42 @@ abstract class _BasePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        top: 32.h,
-                        right: 24.w,
-                      ),
-                      child: PopupMenuButton(
-                        icon: Icon(
-                          Icons.more_horiz_sharp,
-                          color: Color(0xFFC11C1C),
+                  Visibility(
+                    visible: showEdit,
+                    child: Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          top: 32.h,
+                          right: 24.w,
                         ),
-                        color: Colors.black,
-                        tooltip: 'Edit',
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.r),
+                        child: PopupMenuButton(
+                          icon: Icon(
+                            Icons.more_horiz_sharp,
+                            color: Color(0xFFC11C1C),
+                          ),
+                          color: Colors.black,
+                          tooltip: 'Edit',
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          itemBuilder: (BuildContext context) {
+                            return [
+                              PopupMenuItem(
+                                onTap: onEditProfilePicture,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text('Edit'),
+                                ),
+                                textStyle:
+                                    theme.textTheme.labelMedium!.copyWith(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ];
+                          },
                         ),
-                        itemBuilder: (BuildContext context) {
-                          return [
-                            PopupMenuItem(
-                              onTap: onEditProfilePicture,
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text('Edit'),
-                              ),
-                              textStyle: theme.textTheme.labelMedium!.copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ];
-                        },
                       ),
                     ),
                   ),

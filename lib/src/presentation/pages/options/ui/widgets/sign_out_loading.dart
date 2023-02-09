@@ -6,6 +6,7 @@ class _SignOutLoadingPage extends _BasePage {
     required super.gym,
   }) : super(
           child: const CircularProgressIndicator(),
+          showEdit: false,
           onEditProfilePicture: () {},
         );
 }
