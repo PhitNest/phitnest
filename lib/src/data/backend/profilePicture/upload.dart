@@ -16,13 +16,14 @@ class GetUploadUrlResponse extends Equatable {
   List<Object> get props => [url];
 }
 
-Future<Either<GetUploadUrlResponse, Failure>> _getUploadUrl({
-  required String accessToken,
-}) =>
-    _requestJson(
-      route: "/profilePicture/upload",
-      method: HttpMethod.get,
-      parser: GetUploadUrlResponse.fromJson,
-      authorization: accessToken,
-      data: {},
-    );
+extension UploadAuthorized on _ProfilePicture {
+  Future<Either<GetUploadUrlResponse, Failure>> getUploadUrl(
+          String accessToken) =>
+      _requestJson(
+        route: "/profilePicture/upload",
+        method: HttpMethod.get,
+        parser: GetUploadUrlResponse.fromJson,
+        authorization: accessToken,
+        data: {},
+      );
+}

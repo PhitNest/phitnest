@@ -20,16 +20,18 @@ class RefreshSessionResponse extends Equatable {
   List<Object> get props => [accessToken, idToken];
 }
 
-Future<Either<RefreshSessionResponse, Failure>> _refreshSession({
-  required String email,
-  required String refreshToken,
-}) =>
-    _requestJson(
-      route: "/auth/refreshSession",
-      method: HttpMethod.post,
-      parser: RefreshSessionResponse.fromJson,
-      data: {
-        "email": email,
-        "refreshToken": refreshToken,
-      },
-    );
+extension RefreshSession on _Auth {
+  Future<Either<RefreshSessionResponse, Failure>> refreshSession({
+    required String email,
+    required String refreshToken,
+  }) =>
+      _requestJson(
+        route: "/auth/refreshSession",
+        method: HttpMethod.post,
+        parser: RefreshSessionResponse.fromJson,
+        data: {
+          "email": email,
+          "refreshToken": refreshToken,
+        },
+      );
+}

@@ -21,13 +21,14 @@ class FriendsAndMessagesResponse extends Equatable {
   List<Object> get props => [friendship, message ?? ""];
 }
 
-Future<Either<List<FriendsAndMessagesResponse>, Failure>> _friendsAndMessages({
-  required String accessToken,
-}) =>
-    _requestList(
-      route: "/friendship/friendsAndMessages",
-      method: HttpMethod.get,
-      parser: FriendsAndMessagesResponse.fromJson,
-      authorization: accessToken,
-      data: {},
-    );
+extension FriendsAndMessages on _Friendship {
+  Future<Either<List<FriendsAndMessagesResponse>, Failure>> friendsAndMessages(
+          String accessToken) =>
+      _requestList(
+        route: "/friendship/friendsAndMessages",
+        method: HttpMethod.get,
+        parser: FriendsAndMessagesResponse.fromJson,
+        authorization: accessToken,
+        data: {},
+      );
+}

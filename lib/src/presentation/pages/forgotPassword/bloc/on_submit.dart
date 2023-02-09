@@ -10,8 +10,7 @@ extension _OnSubmit on _ForgotPasswordBloc {
             ? _LoadingState(
                 autovalidateMode: state.autovalidateMode,
                 forgotPassOperation: CancelableOperation.fromFuture(
-                  Backend.auth
-                      .forgotPassword(email: emailController.text.trim()),
+                  Backend.auth.forgotPassword(emailController.text.trim()),
                 )..then(
                     (failure) => add(
                       failure != null

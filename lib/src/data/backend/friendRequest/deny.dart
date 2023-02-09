@@ -1,14 +1,16 @@
 part of backend;
 
-Future<Failure?> _deny({
-  required String accessToken,
-  required String senderCognitoId,
-}) =>
-    _request(
-      route: "/friendRequest/deny",
-      method: HttpMethod.post,
-      authorization: accessToken,
-      data: {
-        'senderCognitoId': senderCognitoId,
-      },
-    );
+extension Deny on _FriendRequest {
+  Future<Failure?> deny({
+    required String accessToken,
+    required String senderCognitoId,
+  }) =>
+      _request(
+        route: "/friendRequest/deny",
+        method: HttpMethod.post,
+        authorization: accessToken,
+        data: {
+          'senderCognitoId': senderCognitoId,
+        },
+      );
+}

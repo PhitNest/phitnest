@@ -4,7 +4,7 @@ Future<Failure?> _uploadPhotoAuthorized({
   required String accessToken,
   required XFile photo,
 }) =>
-    Backend.profilePictures.getUploadUrl(accessToken: accessToken).then(
+    Backend.profilePicture.getUploadUrl(accessToken).then(
           (res) => res.fold(
             (res) => uploadPhoto(res.url, photo),
             (failure) => failure,

@@ -19,22 +19,24 @@ class RegisterResponse extends Equatable {
   List<Object> get props => [user, uploadUrl];
 }
 
-Future<Either<RegisterResponse, Failure>> _register({
-  required String email,
-  required String password,
-  required String firstName,
-  required String lastName,
-  required String gymId,
-}) =>
-    _requestJson(
-      route: "/auth/register",
-      method: HttpMethod.post,
-      parser: RegisterResponse.fromJson,
-      data: {
-        "email": email,
-        "password": password,
-        "firstName": firstName,
-        "lastName": lastName,
-        "gymId": gymId,
-      },
-    );
+extension Register on _Auth {
+  Future<Either<RegisterResponse, Failure>> register({
+    required String email,
+    required String password,
+    required String firstName,
+    required String lastName,
+    required String gymId,
+  }) =>
+      _requestJson(
+        route: "/auth/register",
+        method: HttpMethod.post,
+        parser: RegisterResponse.fromJson,
+        data: {
+          "email": email,
+          "password": password,
+          "firstName": firstName,
+          "lastName": lastName,
+          "gymId": gymId,
+        },
+      );
+}
