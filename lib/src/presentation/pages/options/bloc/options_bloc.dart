@@ -1,12 +1,16 @@
 part of options_page;
 
 class _OptionsBloc extends Bloc<_OptionsEvent, _OptionsState> {
-  final T Function<T>(T Function(String accessToken) f) withAuth;
+  final Future<Either<T, Failure>> Function<T>(
+      Future<Either<T, Failure>> Function(String accessToken) f) withAuth;
+  final Future<Failure?> Function(
+      Future<Failure?> Function(String accessToken) f) withAuthVoid;
   final ProfilePictureUserEntity initialUser;
   final GymEntity initialGym;
 
   _OptionsBloc({
     required this.withAuth,
+    required this.withAuthVoid,
     required this.initialUser,
     required this.initialGym,
   }) : super(

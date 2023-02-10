@@ -12,6 +12,7 @@ enum Failures {
   serializationError,
   usernameExists,
   profilePictureNotFound,
+  unauthorized,
 }
 
 extension Instance on Failures {
@@ -48,6 +49,9 @@ extension Instance on Failures {
         return const Failure("FailedToCropImage", "Failed to crop image.");
       case Failures.serializationError:
         return const Failure("SerializationError", "Failed to serialize data.");
+      case Failures.unauthorized:
+        return const Failure(
+            "NotAuthorizedException", "Access Token has expired");
     }
   }
 }

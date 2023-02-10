@@ -1,14 +1,14 @@
 part of home_page;
 
-extension _OnLoadedUser on _HomeBloc {
-  void onLoadedUser(
-    _LoadedUserEvent event,
+extension _OnLogOut on _HomeBloc {
+  void onLogOut(
+    _LogOutEvent event,
     Emitter<_HomeState> emit,
   ) =>
       emit(
-        _InitialState(
-          user: event.response,
-          gym: event.response.gym,
+        _LogOutState(
+          user: state.user,
+          gym: state.gym,
           accessToken: state.accessToken,
           password: state.password,
           refreshToken: state.refreshToken,
