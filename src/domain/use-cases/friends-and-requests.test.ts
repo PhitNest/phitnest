@@ -3,12 +3,7 @@ import {
   compareFriendships,
   comparePublicUsers,
 } from "../../../test/helpers/comparisons";
-import {
-  gymRepo,
-  userRepo,
-  friendRequestRepo,
-  friendshipRepo,
-} from "../repositories";
+import databases from "../../data/data-sources/injection";
 import { getFriendsAndFriendRequests } from "./friends-and-requests";
 
 const testGym1 = {
@@ -54,19 +49,31 @@ const testUser4 = {
 };
 
 afterEach(async () => {
-  await gymRepo.deleteAll();
-  await userRepo.deleteAll();
-  await friendRequestRepo.deleteAll();
-  await friendshipRepo.deleteAll();
+  await databases().gymDatabase.deleteAll();
+  await databases().userDatabase.deleteAll();
+  await databases().friendRequestDatabase.deleteAll();
+  await databases().friendshipDatabase.deleteAll();
 });
 
 test("Get friends and friends requests populated", async () => {
-  const gym1 = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym1._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym1._id });
-  const user3 = await userRepo.create({ ...testUser3, gymId: gym1._id });
-  const user4 = await userRepo.create({ ...testUser4, gymId: gym1._id });
-  const friendRequest1 = await friendRequestRepo.create(
+  const gym1 = await databases().gymDatabase.create(testGym1);
+  const user1 = await databases().userDatabase.create({
+    ...testUser1,
+    gymId: gym1._id,
+  });
+  const user2 = await databases().userDatabase.create({
+    ...testUser2,
+    gymId: gym1._id,
+  });
+  const user3 = await databases().userDatabase.create({
+    ...testUser3,
+    gymId: gym1._id,
+  });
+  const user4 = await databases().userDatabase.create({
+    ...testUser4,
+    gymId: gym1._id,
+  });
+  const friendRequest1 = await databases().friendRequestDatabase.create(
     user1.cognitoId,
     user2.cognitoId
   );
@@ -78,7 +85,7 @@ test("Get friends and friends requests populated", async () => {
   expect(result.requests.length).toBe(1);
   compareFriendRequests(result.requests[0], friendRequest1);
   comparePublicUsers(result.requests[0].fromUser, user1);
-  const friendship1 = await friendshipRepo.create([
+  const friendship1 = await databases().friendshipDatabase.create([
     user2.cognitoId,
     user3.cognitoId,
   ]);
@@ -88,11 +95,11 @@ test("Get friends and friends requests populated", async () => {
   comparePublicUsers(result.requests[0].fromUser, user1);
   expect(result.friendships.length).toBe(1);
   comparePublicUsers(result.friendships[0].friend, user3);
-  const friendship2 = await friendshipRepo.create([
+  const friendship2 = await databases().friendshipDatabase.create([
     user1.cognitoId,
     user3.cognitoId,
   ]);
-  const friendRequest2 = await friendRequestRepo.create(
+  const friendRequest2 = await databases().friendRequestDatabase.create(
     user4.cognitoId,
     user3.cognitoId
   );

@@ -1,15 +1,10 @@
 import { Failure } from "../../common/types";
-import {
-  authRepo,
-  gymRepo,
-  profilePictureRepo,
-  userRepo,
-} from "../repositories";
+import databases from "../../data/data-sources/injection";
 
 export async function login(email: string, password: string) {
   const [session, user] = await Promise.all([
-    authRepo.login(email, password),
-    userRepo.getByEmail(email),
+    databases().authDatabase.login(email, password),
+    databases().userDatabase.getByEmail(email),
   ]);
   if (session instanceof Failure) {
     return session;
@@ -18,8 +13,8 @@ export async function login(email: string, password: string) {
       return user;
     } else {
       const [profilePictureUrl, gym] = await Promise.all([
-        profilePictureRepo.getProfilePictureUrl(user.cognitoId),
-        gymRepo.get(user.gymId),
+        databases().profilePictureDatabase.getProfilePictureUrl(user.cognitoId),
+        databases().gymDatabase.get(user.gymId),
       ]);
       if (profilePictureUrl instanceof Failure) {
         return profilePictureUrl;

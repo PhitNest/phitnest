@@ -11,8 +11,7 @@ import {
 import { kGymNotFound } from "../../common/failures";
 import { IUserEntity } from "../entities";
 import { registerUser } from "./register";
-import { gymRepo, userRepo } from "../repositories";
-import {
+import databases, {
   injectDatabases,
   rebindDatabases,
 } from "../../data/data-sources/injection";
@@ -39,8 +38,8 @@ const testUser1 = {
 };
 
 afterEach(async () => {
-  await gymRepo.deleteAll();
-  await userRepo.deleteAll();
+  await databases().gymDatabase.deleteAll();
+  await databases().userDatabase.deleteAll();
 });
 
 test("Register user", async () => {
@@ -48,7 +47,7 @@ test("Register user", async () => {
     authDatabase: new MockAuthDatabase(),
     profilePictureDatabase: new MockProfilePictureDatabase("cognitoId"),
   });
-  const gym = await gymRepo.create(testGym1);
+  const gym = await databases().gymDatabase.create(testGym1);
   expect(
     await registerUser({
       ...testUser1,

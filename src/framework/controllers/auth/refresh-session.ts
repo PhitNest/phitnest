@@ -1,7 +1,7 @@
 import { IRequest, IResponse } from "../../../common/types";
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
-import { authRepo } from "../../../domain/repositories";
+import { databases().authDatabase } from "../../../domain/repositories";
 import { IRefreshSessionEntity } from "../../../domain/entities";
 
 export class RefreshSessionController
@@ -20,6 +20,6 @@ export class RefreshSessionController
     req: IRequest<z.infer<typeof this.validator>>,
     res: IResponse<IRefreshSessionEntity>
   ) {
-    return authRepo.refreshSession(req.body.refreshToken, req.body.email);
+    return databases().authDatabase.refreshSession(req.body.refreshToken, req.body.email);
   }
 }

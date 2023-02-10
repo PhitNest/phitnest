@@ -12,8 +12,7 @@ import { Failure } from "../../common/types";
 import { MongoUserDatabase } from "../../data/data-sources/databases/implementations";
 import { IProfilePictureUserEntity } from "../entities";
 import { confirmRegister } from "./confirm-register";
-import { gymRepo, userRepo } from "../repositories";
-import {
+import databases, {
   injectDatabases,
   rebindDatabases,
 } from "../../data/data-sources/injection";
@@ -71,8 +70,8 @@ class FailingUserDatabase extends MongoUserDatabase {
 }
 
 afterEach(async () => {
-  await gymRepo.deleteAll();
-  await userRepo.deleteAll();
+  await databases().gymDatabase.deleteAll();
+  await databases().userDatabase.deleteAll();
 });
 
 test("Confirm registration", async () => {
@@ -81,13 +80,16 @@ test("Confirm registration", async () => {
     userDatabase: new FailingUserDatabase(),
     profilePictureDatabase: new MockProfilePictureDatabase(testUser1.cognitoId),
   });
-  const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym._id });
-  const user2 = await userRepo.create({
+  const gym = await databases().gymDatabase.create(testGym1);
+  const user1 = await databases().userDatabase.create({
+    ...testUser1,
+    gymId: gym._id,
+  });
+  const user2 = await databases().userDatabase.create({
     ...cognitoFailingUser,
     gymId: gym._id,
   });
-  const user3 = await userRepo.create({
+  const user3 = await databases().userDatabase.create({
     ...failingUser,
     gymId: gym._id,
   });

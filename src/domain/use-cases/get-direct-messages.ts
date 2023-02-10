@@ -1,11 +1,11 @@
 import { Failure } from "../../common/types";
-import { directMessageRepo, friendshipRepo } from "../repositories";
+import databases from "../../data/data-sources/injection";
 
 export async function getDirectMessages(users: [string, string]) {
-  const friendship = await friendshipRepo.getByUsers(users);
+  const friendship = await databases().friendshipDatabase.getByUsers(users);
   if (friendship instanceof Failure) {
     return friendship;
   } else {
-    return directMessageRepo.get(friendship._id);
+    return databases().directMessageDatabase.get(friendship._id);
   }
 }

@@ -4,13 +4,7 @@ import {
   comparePublicUsers,
 } from "../../../test/helpers/comparisons";
 import { explore } from "./explore";
-import {
-  gymRepo,
-  userRepo,
-  friendRequestRepo,
-  friendshipRepo,
-} from "../repositories";
-import {
+import databases, {
   injectDatabases,
   rebindDatabases,
 } from "../../data/data-sources/injection";
@@ -80,31 +74,46 @@ const testUser5 = {
 };
 
 afterEach(async () => {
-  await gymRepo.deleteAll();
-  await userRepo.deleteAll();
-  await friendRequestRepo.deleteAll();
-  await friendshipRepo.deleteAll();
+  await databases().gymDatabase.deleteAll();
+  await databases().userDatabase.deleteAll();
+  await databases().friendRequestDatabase.deleteAll();
+  await databases().friendshipDatabase.deleteAll();
 });
 
 test("Explore users", async () => {
-  const gym1 = await gymRepo.create(testGym1);
-  const gym2 = await gymRepo.create(testGym2);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym1._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym1._id });
-  const user3 = await userRepo.create({ ...testUser3, gymId: gym1._id });
-  const user4 = await userRepo.create({ ...testUser4, gymId: gym1._id });
-  const user5 = await userRepo.create({ ...testUser5, gymId: gym2._id });
+  const gym1 = await databases().gymDatabase.create(testGym1);
+  const gym2 = await databases().gymDatabase.create(testGym2);
+  const user1 = await databases().userDatabase.create({
+    ...testUser1,
+    gymId: gym1._id,
+  });
+  const user2 = await databases().userDatabase.create({
+    ...testUser2,
+    gymId: gym1._id,
+  });
+  const user3 = await databases().userDatabase.create({
+    ...testUser3,
+    gymId: gym1._id,
+  });
+  const user4 = await databases().userDatabase.create({
+    ...testUser4,
+    gymId: gym1._id,
+  });
+  const user5 = await databases().userDatabase.create({
+    ...testUser5,
+    gymId: gym2._id,
+  });
   rebindDatabases({
     profilePictureDatabase: new MockProfilePictureDatabase(user4.cognitoId),
   });
   let result = await explore(user1.cognitoId, user1.gymId);
   expect(result.users.length).toBe(0);
   expect(result.requests.length).toBe(0);
-  await userRepo.setConfirmed(user1.cognitoId);
-  await userRepo.setConfirmed(user2.cognitoId);
-  await userRepo.setConfirmed(user3.cognitoId);
-  await userRepo.setConfirmed(user4.cognitoId);
-  await userRepo.setConfirmed(user5.cognitoId);
+  await databases().userDatabase.setConfirmed(user1.cognitoId);
+  await databases().userDatabase.setConfirmed(user2.cognitoId);
+  await databases().userDatabase.setConfirmed(user3.cognitoId);
+  await databases().userDatabase.setConfirmed(user4.cognitoId);
+  await databases().userDatabase.setConfirmed(user5.cognitoId);
   result = await explore(user1.cognitoId, user1.gymId);
   expect(result.users.length).toBe(2);
   compareProfilePicturePublicUsers(result.users[0], {
@@ -134,7 +143,7 @@ test("Explore users", async () => {
   result = await explore(user5.cognitoId, user5.gymId);
   expect(result.users.length).toBe(0);
   expect(result.requests.length).toBe(0);
-  const friendRequest1 = await friendRequestRepo.create(
+  const friendRequest1 = await databases().friendRequestDatabase.create(
     user1.cognitoId,
     user2.cognitoId
   );
@@ -150,13 +159,16 @@ test("Explore users", async () => {
   comparePublicUsers(result.users[2], user4);
   expect(result.requests.length).toBe(1);
   compareFriendRequests(result.requests[0], friendRequest1);
-  await friendRequestRepo.deny(user1.cognitoId, user2.cognitoId);
+  await databases().friendRequestDatabase.deny(
+    user1.cognitoId,
+    user2.cognitoId
+  );
   result = await explore(user2.cognitoId, user2.gymId);
   expect(result.users.length).toBe(2);
   comparePublicUsers(result.users[0], user3);
   comparePublicUsers(result.users[1], user4);
   expect(result.requests.length).toBe(0);
-  const friendship = await friendshipRepo.create([
+  const friendship = await databases().friendshipDatabase.create([
     user2.cognitoId,
     user4.cognitoId,
   ]);

@@ -6,8 +6,7 @@ import {
 import { kUserNotFound } from "../../common/failures";
 import { IAuthEntity, IProfilePictureUserEntity } from "../entities";
 import { login } from "./login";
-import { gymRepo, userRepo } from "../repositories";
-import {
+import databases, {
   injectDatabases,
   rebindDatabases,
 } from "../../data/data-sources/injection";
@@ -49,8 +48,8 @@ const invalidUser = {
 };
 
 afterEach(async () => {
-  await gymRepo.deleteAll();
-  await userRepo.deleteAll();
+  await databases().gymDatabase.deleteAll();
+  await databases().userDatabase.deleteAll();
 });
 
 test("Login", async () => {
@@ -58,16 +57,16 @@ test("Login", async () => {
     authDatabase: new MockAuthDatabase(),
     profilePictureDatabase: new MockProfilePictureDatabase("invalid"),
   });
-  const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({
+  const gym = await databases().gymDatabase.create(testGym1);
+  const user1 = await databases().userDatabase.create({
     ...testUser1,
     gymId: gym._id,
   });
-  const user2 = await userRepo.create({
+  const user2 = await databases().userDatabase.create({
     ...testUser2,
     gymId: gym._id,
   });
-  await userRepo.create({
+  await databases().userDatabase.create({
     ...invalidUser,
     gymId: gym._id,
   });

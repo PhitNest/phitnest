@@ -1,7 +1,7 @@
 import { IRequest, IResponse } from "../../../common/types";
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
-import { authRepo } from "../../../domain/repositories";
+import { databases().authDatabase } from "../../../domain/repositories";
 
 export class ResendConfirmationController implements Controller<void> {
   method = HttpMethod.POST;
@@ -13,6 +13,6 @@ export class ResendConfirmationController implements Controller<void> {
   });
 
   execute(req: IRequest<z.infer<typeof this.validator>>, res: IResponse<void>) {
-    return authRepo.resendConfirmationCode(req.body.email);
+    return databases().authDatabase.resendConfirmationCode(req.body.email);
   }
 }

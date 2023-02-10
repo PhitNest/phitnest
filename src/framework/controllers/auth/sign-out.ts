@@ -5,7 +5,7 @@ import {
 } from "../../../common/types";
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
-import { authRepo } from "../../../domain/repositories";
+import { databases().authDatabase } from "../../../domain/repositories";
 import { authMiddleware } from "../../middleware";
 import { getSocketServer } from "../../adapters/injection";
 
@@ -25,6 +25,6 @@ export class SignOutController implements Controller<void> {
     res: IResponse<void, AuthenticatedLocals>
   ) {
     getSocketServer().kickUser(res.locals.cognitoId);
-    return authRepo.signOut(req.authorization);
+    return databases().authDatabase.signOut(req.authorization);
   }
 }

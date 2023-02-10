@@ -2,7 +2,7 @@ import { IRequest, IResponse } from "../../../common/types";
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import { IGymEntity, LocationEntity } from "../../../domain/entities";
-import { gymRepo } from "../../../domain/repositories";
+import { databases().gymDatabase } from "../../../domain/repositories";
 
 export class NearestGymsController implements Controller<IGymEntity[]> {
   method = HttpMethod.GET;
@@ -20,7 +20,7 @@ export class NearestGymsController implements Controller<IGymEntity[]> {
     req: IRequest<z.infer<typeof this.validator>>,
     res: IResponse<IGymEntity[]>
   ) {
-    return gymRepo.getNearest(
+    return databases().gymDatabase.getNearest(
       new LocationEntity(req.body.longitude, req.body.latitude),
       req.body.meters,
       req.body.amount

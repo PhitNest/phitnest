@@ -1,14 +1,14 @@
 import { kUserNotConfirmed } from "../../common/failures";
 import { Failure } from "../../common/types";
-import { authRepo, userRepo } from "../repositories";
+import databases from "../../data/data-sources/injection";
 
 export async function forgotPassword(email: string) {
-  const user = await userRepo.getByEmail(email);
+  const user = await databases().userDatabase.getByEmail(email);
   if (user instanceof Failure) {
     return user;
   } else {
     if (user.confirmed) {
-      return authRepo.forgotPassword(email);
+      return databases().authDatabase.forgotPassword(email);
     } else {
       return kUserNotConfirmed;
     }

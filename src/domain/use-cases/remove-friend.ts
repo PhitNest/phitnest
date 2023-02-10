@@ -1,13 +1,19 @@
 import { Failure } from "../../common/types";
-import { friendshipRepo, friendRequestRepo } from "../repositories";
+import databases from "../../data/data-sources/injection";
 
 export async function removeFriend(
   senderCognitoId: string,
   recipientCognitoId: string
 ) {
   const [deletion] = await Promise.all([
-    friendshipRepo.delete([senderCognitoId, recipientCognitoId]),
-    friendRequestRepo.create(recipientCognitoId, senderCognitoId),
+    databases().friendshipDatabase.delete([
+      senderCognitoId,
+      recipientCognitoId,
+    ]),
+    databases().friendRequestDatabase.create(
+      recipientCognitoId,
+      senderCognitoId
+    ),
   ]);
   if (deletion instanceof Failure) {
     return deletion;

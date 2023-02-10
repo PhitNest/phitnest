@@ -3,12 +3,7 @@ import {
   compareFriendships,
 } from "../../../test/helpers/comparisons";
 import { IDirectMessageEntity, IPopulatedFriendshipEntity } from "../entities";
-import {
-  gymRepo,
-  userRepo,
-  directMessageRepo,
-  friendshipRepo,
-} from "../repositories";
+import databases from "../../data/data-sources/injection";
 import { getFriendsAndMessages } from "./friends-and-messages";
 
 const testGym1 = {
@@ -68,10 +63,10 @@ const testUser6 = {
 };
 
 afterEach(async () => {
-  await gymRepo.deleteAll();
-  await userRepo.deleteAll();
-  await directMessageRepo.deleteAll();
-  await friendshipRepo.deleteAll();
+  await databases().gymDatabase.deleteAll();
+  await databases().userDatabase.deleteAll();
+  await databases().directMessageDatabase.deleteAll();
+  await databases().friendshipDatabase.deleteAll();
 });
 
 type Response = {
@@ -80,16 +75,34 @@ type Response = {
 }[];
 
 test("Get friends and friends requests populated", async () => {
-  const gym1 = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym1._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym1._id });
-  const user3 = await userRepo.create({ ...testUser3, gymId: gym1._id });
-  const user4 = await userRepo.create({ ...testUser4, gymId: gym1._id });
-  const user5 = await userRepo.create({ ...testUser5, gymId: gym1._id });
-  const user6 = await userRepo.create({ ...testUser6, gymId: gym1._id });
+  const gym1 = await databases().gymDatabase.create(testGym1);
+  const user1 = await databases().userDatabase.create({
+    ...testUser1,
+    gymId: gym1._id,
+  });
+  const user2 = await databases().userDatabase.create({
+    ...testUser2,
+    gymId: gym1._id,
+  });
+  const user3 = await databases().userDatabase.create({
+    ...testUser3,
+    gymId: gym1._id,
+  });
+  const user4 = await databases().userDatabase.create({
+    ...testUser4,
+    gymId: gym1._id,
+  });
+  const user5 = await databases().userDatabase.create({
+    ...testUser5,
+    gymId: gym1._id,
+  });
+  const user6 = await databases().userDatabase.create({
+    ...testUser6,
+    gymId: gym1._id,
+  });
   let result = (await getFriendsAndMessages(user1.cognitoId)) as Response;
   expect(result.length).toBe(0);
-  const friendship1 = await friendshipRepo.create([
+  const friendship1 = await databases().friendshipDatabase.create([
     user1.cognitoId,
     user2.cognitoId,
   ]);
@@ -97,16 +110,16 @@ test("Get friends and friends requests populated", async () => {
   expect(result.length).toBe(1);
   compareFriendships(result[0].friendship, friendship1);
   expect(result[0].message).toBeUndefined();
-  const friendship2 = await friendshipRepo.create([
+  const friendship2 = await databases().friendshipDatabase.create([
     user1.cognitoId,
     user3.cognitoId,
   ]);
-  const message1 = await directMessageRepo.create({
+  const message1 = await databases().directMessageDatabase.create({
     senderCognitoId: user1.cognitoId,
     text: "hey",
     friendshipId: friendship1._id,
   });
-  const message2 = await directMessageRepo.create({
+  const message2 = await databases().directMessageDatabase.create({
     senderCognitoId: user1.cognitoId,
     text: "hey2",
     friendshipId: friendship2._id,
@@ -117,7 +130,7 @@ test("Get friends and friends requests populated", async () => {
   compareDirectMessages(result[0].message, message2);
   compareFriendships(result[1].friendship, friendship1);
   compareDirectMessages(result[1].message, message1);
-  const message3 = await directMessageRepo.create({
+  const message3 = await databases().directMessageDatabase.create({
     senderCognitoId: user2.cognitoId,
     text: "hey3",
     friendshipId: friendship1._id,
@@ -128,7 +141,7 @@ test("Get friends and friends requests populated", async () => {
   compareDirectMessages(result[0].message, message3);
   compareFriendships(result[1].friendship, friendship2);
   compareDirectMessages(result[1].message, message2);
-  const friendship3 = await friendshipRepo.create([
+  const friendship3 = await databases().friendshipDatabase.create([
     user1.cognitoId,
     user4.cognitoId,
   ]);
@@ -140,12 +153,12 @@ test("Get friends and friends requests populated", async () => {
   compareDirectMessages(result[1].message, message3);
   compareFriendships(result[2].friendship, friendship2);
   compareDirectMessages(result[2].message, message2);
-  const message4 = await directMessageRepo.create({
+  const message4 = await databases().directMessageDatabase.create({
     senderCognitoId: user1.cognitoId,
     text: "hey4",
     friendshipId: friendship2._id,
   });
-  const friendship4 = await friendshipRepo.create([
+  const friendship4 = await databases().friendshipDatabase.create([
     user1.cognitoId,
     user5.cognitoId,
   ]);
@@ -159,7 +172,7 @@ test("Get friends and friends requests populated", async () => {
   expect(result[2].message).toBeUndefined();
   compareFriendships(result[3].friendship, friendship1);
   compareDirectMessages(result[3].message, message3);
-  const friendship5 = await friendshipRepo.create([
+  const friendship5 = await databases().friendshipDatabase.create([
     user1.cognitoId,
     user6.cognitoId,
   ]);
