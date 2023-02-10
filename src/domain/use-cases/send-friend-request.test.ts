@@ -9,12 +9,7 @@ import {
   kUsersHaveDifferentGyms,
 } from "../../common/failures";
 import { IFriendRequestEntity, IFriendshipEntity } from "../entities";
-import {
-  gymRepo,
-  userRepo,
-  friendRequestRepo,
-  friendshipRepo,
-} from "../repositories";
+import databases from "../../data/data-sources/injection";
 import { sendFriendRequest } from "./send-friend-request";
 
 const testGym1 = {
@@ -67,19 +62,19 @@ const testUser3 = {
 };
 
 afterEach(async () => {
-  await gymRepo.deleteAll();
-  await userRepo.deleteAll();
-  await friendRequestRepo.deleteAll();
-  await friendshipRepo.deleteAll();
+  await databases().gymDatabase.deleteAll();
+  await databases().userDatabase.deleteAll();
+  await databases().friendRequestDatabase.deleteAll();
+  await databases().friendshipDatabase.deleteAll();
 });
 
 test("Send friend request to previously denied user", async () => {
-  const gym1 = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({
+  const gym1 = await databases().gymDatabase.create(testGym1);
+  const user1 = await databases().userDatabase.create({
     ...testUser1,
     gymId: gym1._id,
   });
-  const user2 = await userRepo.create({
+  const user2 = await databases().userDatabase.create({
     ...testUser2,
     gymId: gym1._id,
   });
@@ -88,7 +83,10 @@ test("Send friend request to previously denied user", async () => {
     user2.cognitoId
   )) as IFriendRequestEntity;
   expect(
-    await friendRequestRepo.deny(user1.cognitoId, user2.cognitoId)
+    await databases().friendRequestDatabase.deny(
+      user1.cognitoId,
+      user2.cognitoId
+    )
   ).toBeUndefined();
   const friendship = (await sendFriendRequest(
     user2.cognitoId,
@@ -96,7 +94,7 @@ test("Send friend request to previously denied user", async () => {
   )) as IFriendshipEntity;
   compareFriendships(
     friendship,
-    (await friendshipRepo.getByUsers([
+    (await databases().friendshipDatabase.getByUsers([
       user1.cognitoId,
       user2.cognitoId,
     ])) as IFriendshipEntity
@@ -104,17 +102,17 @@ test("Send friend request to previously denied user", async () => {
 });
 
 test("Send friend request", async () => {
-  const gym1 = await gymRepo.create(testGym1);
-  const gym2 = await gymRepo.create(testGym2);
-  const user1 = await userRepo.create({
+  const gym1 = await databases().gymDatabase.create(testGym1);
+  const gym2 = await databases().gymDatabase.create(testGym2);
+  const user1 = await databases().userDatabase.create({
     ...testUser1,
     gymId: gym1._id,
   });
-  const user2 = await userRepo.create({
+  const user2 = await databases().userDatabase.create({
     ...testUser2,
     gymId: gym1._id,
   });
-  const user3 = await userRepo.create({
+  const user3 = await databases().userDatabase.create({
     ...testUser3,
     gymId: gym2._id,
   });
@@ -124,7 +122,7 @@ test("Send friend request", async () => {
   )) as IFriendRequestEntity;
   compareFriendRequests(
     friendRequest,
-    (await friendRequestRepo.getByCognitoIds(
+    (await databases().friendRequestDatabase.getByCognitoIds(
       user1.cognitoId,
       user2.cognitoId
     )) as IFriendRequestEntity
@@ -141,16 +139,22 @@ test("Send friend request", async () => {
   )) as IFriendshipEntity;
   compareFriendships(
     friendship,
-    (await friendshipRepo.getByUsers([
+    (await databases().friendshipDatabase.getByUsers([
       user1.cognitoId,
       user2.cognitoId,
     ])) as IFriendshipEntity
   );
   expect(
-    await friendRequestRepo.getByCognitoIds(user1.cognitoId, user2.cognitoId)
+    await databases().friendRequestDatabase.getByCognitoIds(
+      user1.cognitoId,
+      user2.cognitoId
+    )
   ).toBe(kFriendRequestNotFound);
   expect(
-    await friendRequestRepo.getByCognitoIds(user2.cognitoId, user1.cognitoId)
+    await databases().friendRequestDatabase.getByCognitoIds(
+      user2.cognitoId,
+      user1.cognitoId
+    )
   ).toBe(kFriendRequestNotFound);
   expect(await sendFriendRequest(user1.cognitoId, user2.cognitoId)).toBe(
     kFriendshipAlreadyExists

@@ -2,12 +2,7 @@ import { compareDirectMessages } from "../../../test/helpers/comparisons";
 import { kFriendshipNotFound } from "../../common/failures";
 import { Failure } from "../../common/types";
 import { IDirectMessageEntity } from "../entities";
-import {
-  gymRepo,
-  userRepo,
-  directMessageRepo,
-  friendshipRepo,
-} from "../repositories";
+import databases from "../../data/data-sources/injection";
 import { sendDirectMessage } from "./send-direct-message";
 
 const testGym1 = {
@@ -46,24 +41,33 @@ const testUser3 = {
 };
 
 afterEach(async () => {
-  await gymRepo.deleteAll();
-  await userRepo.deleteAll();
-  await directMessageRepo.deleteAll();
-  await friendshipRepo.deleteAll();
+  await databases().gymDatabase.deleteAll();
+  await databases().userDatabase.deleteAll();
+  await databases().directMessageDatabase.deleteAll();
+  await databases().friendshipDatabase.deleteAll();
 });
 
 test("Send direct message", async () => {
-  const gym1 = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym1._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym1._id });
-  const user3 = await userRepo.create({ ...testUser3, gymId: gym1._id });
+  const gym1 = await databases().gymDatabase.create(testGym1);
+  const user1 = await databases().userDatabase.create({
+    ...testUser1,
+    gymId: gym1._id,
+  });
+  const user2 = await databases().userDatabase.create({
+    ...testUser2,
+    gymId: gym1._id,
+  });
+  const user3 = await databases().userDatabase.create({
+    ...testUser3,
+    gymId: gym1._id,
+  });
   let failure = await sendDirectMessage(
     user1.cognitoId,
     user2.cognitoId,
     "hey"
   );
   expect(failure).toBe(kFriendshipNotFound);
-  const friendship1 = await friendshipRepo.create([
+  const friendship1 = await databases().friendshipDatabase.create([
     user1.cognitoId,
     user2.cognitoId,
   ]);
@@ -88,7 +92,7 @@ test("Send direct message", async () => {
     "hey"
   )) as Failure;
   expect(failure).toBe(kFriendshipNotFound);
-  const friendship2 = await friendshipRepo.create([
+  const friendship2 = await databases().friendshipDatabase.create([
     user3.cognitoId,
     user1.cognitoId,
   ]);

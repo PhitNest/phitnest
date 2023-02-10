@@ -3,12 +3,7 @@ import { kFriendshipNotFound } from "../../common/failures";
 import { Failure } from "../../common/types";
 import { IDirectMessageEntity } from "../entities";
 import { getDirectMessages } from "./get-direct-messages";
-import {
-  gymRepo,
-  userRepo,
-  friendshipRepo,
-  directMessageRepo,
-} from "../repositories";
+import databases from "../../data/data-sources/injection";
 
 const testGym1 = {
   name: "testGym1",
@@ -46,51 +41,60 @@ const testUser3 = {
 };
 
 afterEach(async () => {
-  await gymRepo.deleteAll();
-  await userRepo.deleteAll();
-  await friendshipRepo.deleteAll();
-  await directMessageRepo.deleteAll();
+  await databases().gymDatabase.deleteAll();
+  await databases().userDatabase.deleteAll();
+  await databases().friendshipDatabase.deleteAll();
+  await databases().directMessageDatabase.deleteAll();
 });
 
 test("Get direct messages", async () => {
-  const gym1 = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym1._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym1._id });
-  const user3 = await userRepo.create({ ...testUser3, gymId: gym1._id });
-  const friendship1 = await friendshipRepo.create([
+  const gym1 = await databases().gymDatabase.create(testGym1);
+  const user1 = await databases().userDatabase.create({
+    ...testUser1,
+    gymId: gym1._id,
+  });
+  const user2 = await databases().userDatabase.create({
+    ...testUser2,
+    gymId: gym1._id,
+  });
+  const user3 = await databases().userDatabase.create({
+    ...testUser3,
+    gymId: gym1._id,
+  });
+  const friendship1 = await databases().friendshipDatabase.create([
     user1.cognitoId,
     user2.cognitoId,
   ]);
-  const friendship2 = await friendshipRepo.create([
+  const friendship2 = await databases().friendshipDatabase.create([
     user1.cognitoId,
     user3.cognitoId,
   ]);
-  const directMessage1 = await directMessageRepo.create({
+  const directMessage1 = await databases().directMessageDatabase.create({
     friendshipId: friendship1._id,
     senderCognitoId: user1.cognitoId,
     text: "message1",
   });
-  const directMessage2 = await directMessageRepo.create({
+  const directMessage2 = await databases().directMessageDatabase.create({
     friendshipId: friendship1._id,
     senderCognitoId: user2.cognitoId,
     text: "message2",
   });
-  const directMessage3 = await directMessageRepo.create({
+  const directMessage3 = await databases().directMessageDatabase.create({
     friendshipId: friendship2._id,
     senderCognitoId: user1.cognitoId,
     text: "message3",
   });
-  const directMessage4 = await directMessageRepo.create({
+  const directMessage4 = await databases().directMessageDatabase.create({
     friendshipId: friendship2._id,
     senderCognitoId: user3.cognitoId,
     text: "message4",
   });
-  const directMessage5 = await directMessageRepo.create({
+  const directMessage5 = await databases().directMessageDatabase.create({
     friendshipId: friendship2._id,
     senderCognitoId: user1.cognitoId,
     text: "message5",
   });
-  const directMessage6 = await directMessageRepo.create({
+  const directMessage6 = await databases().directMessageDatabase.create({
     friendshipId: friendship2._id,
     senderCognitoId: user3.cognitoId,
     text: "message6",

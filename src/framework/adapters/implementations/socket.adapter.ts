@@ -1,7 +1,7 @@
 import http from "http";
 import IO from "socket.io";
 import { Failure } from "../../../common/types";
-import { authRepo } from "../../../domain/repositories";
+import databases from "../../../data/data-sources/injection";
 import { EventHandler } from "../../event-handlers/types";
 import { IConnection, ISocketServer } from "../interfaces";
 
@@ -38,10 +38,12 @@ export class SocketIOServer implements ISocketServer {
     this.io.use((socket, next) => {
       const token = socket.handshake.headers["token"];
       if (token) {
-        authRepo.getCognitoId(token as string).then((cognitoId) => {
-          socket.data.cognitoId = cognitoId;
-          next();
-        });
+        databases()
+          .authDatabase.getCognitoId(token as string)
+          .then((cognitoId) => {
+            socket.data.cognitoId = cognitoId;
+            next();
+          });
       } else {
         next(new Error("Unauthorized"));
       }

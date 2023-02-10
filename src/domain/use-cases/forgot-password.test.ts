@@ -3,11 +3,10 @@ import {
   MockAuthDatabase,
 } from "../../../test/helpers/mock-cognito";
 import { kUserNotConfirmed, kUserNotFound } from "../../common/failures";
-import {
+import databases, {
   injectDatabases,
   rebindDatabases,
 } from "../../data/data-sources/injection";
-import { gymRepo, userRepo } from "../repositories";
 import { forgotPassword } from "./forgot-password";
 
 const testGym1 = {
@@ -39,22 +38,28 @@ const testUser2 = {
 };
 
 afterEach(async () => {
-  await gymRepo.deleteAll();
-  await userRepo.deleteAll();
+  await databases().gymDatabase.deleteAll();
+  await databases().userDatabase.deleteAll();
 });
 
 test("Forgot password", async () => {
   rebindDatabases({
     authDatabase: new MockAuthDatabase(),
   });
-  const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym._id });
+  const gym = await databases().gymDatabase.create(testGym1);
+  const user1 = await databases().userDatabase.create({
+    ...testUser1,
+    gymId: gym._id,
+  });
+  const user2 = await databases().userDatabase.create({
+    ...testUser2,
+    gymId: gym._id,
+  });
   expect(await forgotPassword(testUser1.email)).toBe(kUserNotConfirmed);
   expect(await forgotPassword(testUser2.email)).toBe(kUserNotConfirmed);
   expect(await forgotPassword("")).toBe(kUserNotFound);
-  await userRepo.setConfirmed(user1.cognitoId);
-  await userRepo.setConfirmed(user2.cognitoId);
+  await databases().userDatabase.setConfirmed(user1.cognitoId);
+  await databases().userDatabase.setConfirmed(user2.cognitoId);
   expect(await forgotPassword(testUser1.email)).toBeUndefined();
   expect(await forgotPassword(testUser2.email)).toBe(kMockAuthError);
   injectDatabases();

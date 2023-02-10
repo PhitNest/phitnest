@@ -6,7 +6,7 @@ import {
   kUsersHaveDifferentGyms,
 } from "../../common/failures";
 import { Failure } from "../../common/types";
-import { friendshipRepo, friendRequestRepo, userRepo } from "../repositories";
+import databases from "../../data/data-sources/injection";
 
 export async function sendFriendRequest(
   senderCognitoId: string,
@@ -14,10 +14,19 @@ export async function sendFriendRequest(
 ) {
   const [haveSameGym, sentRequest, receivedRequest, friendship] =
     await Promise.all([
-      userRepo.haveSameGym(senderCognitoId, recipientCognitoId),
-      friendRequestRepo.getByCognitoIds(senderCognitoId, recipientCognitoId),
-      friendRequestRepo.getByCognitoIds(recipientCognitoId, senderCognitoId),
-      friendshipRepo.getByUsers([senderCognitoId, recipientCognitoId]),
+      databases().userDatabase.haveSameGym(senderCognitoId, recipientCognitoId),
+      databases().friendRequestDatabase.getByCognitoIds(
+        senderCognitoId,
+        recipientCognitoId
+      ),
+      databases().friendRequestDatabase.getByCognitoIds(
+        recipientCognitoId,
+        senderCognitoId
+      ),
+      databases().friendshipDatabase.getByUsers([
+        senderCognitoId,
+        recipientCognitoId,
+      ]),
     ]);
   if (haveSameGym) {
     if (sentRequest instanceof Failure) {
@@ -26,7 +35,7 @@ export async function sendFriendRequest(
           if (friendship === kFriendshipNotFound) {
             if (receivedRequest instanceof Failure) {
               if (receivedRequest === kFriendRequestNotFound) {
-                return friendRequestRepo.create(
+                return databases().friendRequestDatabase.create(
                   senderCognitoId,
                   recipientCognitoId
                 );
@@ -34,14 +43,14 @@ export async function sendFriendRequest(
                 return receivedRequest;
               }
             } else {
-              const deletion = await friendRequestRepo.delete(
+              const deletion = await databases().friendRequestDatabase.delete(
                 recipientCognitoId,
                 senderCognitoId
               );
               if (deletion instanceof Failure) {
                 return deletion;
               } else {
-                return friendshipRepo.create([
+                return databases().friendshipDatabase.create([
                   senderCognitoId,
                   recipientCognitoId,
                 ]);

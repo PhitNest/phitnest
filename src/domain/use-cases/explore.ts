@@ -1,18 +1,13 @@
 import { Failure } from "../../common/types";
 import { IProfilePicturePublicUserEntity } from "../entities";
-import {
-  userRepo,
-  friendshipRepo,
-  friendRequestRepo,
-  profilePictureRepo,
-} from "../repositories";
+import databases from "../../data/data-sources/injection";
 
 export async function explore(cognitoId: string, gymId: string) {
   const [others, friends, sentRequests, receivedRequests] = await Promise.all([
-    userRepo.getByGym(gymId),
-    friendshipRepo.get(cognitoId),
-    friendRequestRepo.getByFromCognitoId(cognitoId),
-    friendRequestRepo.getByToCognitoId(cognitoId),
+    databases().userDatabase.getByGym(gymId),
+    databases().friendshipDatabase.get(cognitoId),
+    databases().friendRequestDatabase.getByFromCognitoId(cognitoId),
+    databases().friendRequestDatabase.getByToCognitoId(cognitoId),
   ]);
   return {
     users: (
@@ -36,9 +31,10 @@ export async function explore(cognitoId: string, gymId: string) {
               )
           )
           .map(async (user) => {
-            const url = await profilePictureRepo.getProfilePictureUrl(
-              user.cognitoId
-            );
+            const url =
+              await databases().profilePictureDatabase.getProfilePictureUrl(
+                user.cognitoId
+              );
             if (url instanceof Failure) {
               return url;
             } else {

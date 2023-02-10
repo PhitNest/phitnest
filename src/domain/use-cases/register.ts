@@ -1,11 +1,6 @@
 import { kGymNotFound } from "../../common/failures";
 import { Failure } from "../../common/types";
-import {
-  authRepo,
-  userRepo,
-  gymRepo,
-  profilePictureRepo,
-} from "../repositories";
+import databases from "../../data/data-sources/injection";
 
 export async function registerUser(user: {
   email: string;
@@ -14,25 +9,25 @@ export async function registerUser(user: {
   gymId: string;
   password: string;
 }) {
-  const gym = await gymRepo.get(user.gymId);
+  const gym = await databases().gymDatabase.get(user.gymId);
   if (gym instanceof Failure) {
     return kGymNotFound;
   } else {
-    return authRepo
-      .registerUser(user.email, user.password)
+    return databases()
+      .authDatabase.registerUser(user.email, user.password)
       .then(async (cognitoRegistration) => {
         if (cognitoRegistration instanceof Failure) {
           return cognitoRegistration;
         } else {
           const profilePictureUrl =
-            await profilePictureRepo.getProfilePictureUploadUrl(
+            await databases().profilePictureDatabase.getProfilePictureUploadUrl(
               cognitoRegistration
             );
           if (profilePictureUrl instanceof Failure) {
             return profilePictureUrl;
           } else {
             return {
-              user: await userRepo.create({
+              user: await databases().userDatabase.create({
                 ...user,
                 cognitoId: cognitoRegistration,
               }),

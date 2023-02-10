@@ -3,47 +3,53 @@ import {
   IPopulatedFriendRequestEntity,
   IPopulatedFriendshipEntity,
 } from "../entities";
-import { friendshipRepo, friendRequestRepo, userRepo } from "../repositories";
+import databases from "../../data/data-sources/injection";
 
 export async function getFriendsAndFriendRequests(cognitoId: string) {
   const [friends, friendRequests] = await Promise.all([
-    friendshipRepo.get(cognitoId).then(
-      async (friendships) =>
-        (
-          await Promise.all(
-            friendships.map((friendship) => {
-              const friendCognitoId = friendship.userCognitoIds.find(
-                (user) => user !== cognitoId
-              )!;
-              return userRepo.get(friendCognitoId);
-            })
+    databases()
+      .friendshipDatabase.get(cognitoId)
+      .then(
+        async (friendships) =>
+          (
+            await Promise.all(
+              friendships.map((friendship) => {
+                const friendCognitoId = friendship.userCognitoIds.find(
+                  (user) => user !== cognitoId
+                )!;
+                return databases().userDatabase.get(friendCognitoId);
+              })
+            )
           )
-        )
-          .map((friend, i) => {
+            .map((friend, i) => {
+              return {
+                ...friendships[i],
+                friend: friend,
+              };
+            })
+            .filter(
+              (friendship) => !(friendship.friend instanceof Failure)
+            ) as IPopulatedFriendshipEntity[]
+      ),
+    databases()
+      .friendRequestDatabase.getByToCognitoId(cognitoId)
+      .then((friendRequests) =>
+        Promise.all(
+          friendRequests.map(async (friendRequest) => {
             return {
-              ...friendships[i],
-              friend: friend,
+              ...friendRequest,
+              fromUser: await databases().userDatabase.get(
+                friendRequest.fromCognitoId
+              ),
             };
           })
-          .filter(
-            (friendship) => !(friendship.friend instanceof Failure)
-          ) as IPopulatedFriendshipEntity[]
-    ),
-    friendRequestRepo.getByToCognitoId(cognitoId).then((friendRequests) =>
-      Promise.all(
-        friendRequests.map(async (friendRequest) => {
-          return {
-            ...friendRequest,
-            fromUser: await userRepo.get(friendRequest.fromCognitoId),
-          };
-        })
-      ).then(
-        (friendRequests) =>
-          friendRequests.filter(
-            (friendRequest) => !(friendRequest.fromUser instanceof Failure)
-          ) as IPopulatedFriendRequestEntity[]
-      )
-    ),
+        ).then(
+          (friendRequests) =>
+            friendRequests.filter(
+              (friendRequest) => !(friendRequest.fromUser instanceof Failure)
+            ) as IPopulatedFriendRequestEntity[]
+        )
+      ),
   ]);
   return {
     friendships: friends,

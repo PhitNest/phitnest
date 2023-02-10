@@ -1,15 +1,9 @@
 import { compareFriendRequests } from "../../../test/helpers/comparisons";
 import { Failure } from "../../common/types";
 import { MongoFriendshipDatabase } from "../../data/data-sources/databases/implementations";
-import { rebindDatabases } from "../../data/data-sources/injection";
+import databases, { rebindDatabases } from "../../data/data-sources/injection";
 import { IFriendRequestEntity } from "../entities";
 import { removeFriend } from "./remove-friend";
-import {
-  userRepo,
-  friendshipRepo,
-  gymRepo,
-  friendRequestRepo,
-} from "../repositories";
 
 const testGym1 = {
   name: "testGym1",
@@ -58,15 +52,25 @@ test("Remove friend", async () => {
   rebindDatabases({
     friendshipDatabase: new FailingFriendshipDatabase(),
   });
-  const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({ ...testUser1, gymId: gym._id });
-  const user2 = await userRepo.create({ ...testUser2, gymId: gym._id });
-  await friendshipRepo.create([user1.cognitoId, user2.cognitoId]);
-  expect(await removeFriend(user1.cognitoId, user2.cognitoId)).toBeUndefined();
-  const friendRequest = (await friendRequestRepo.getByCognitoIds(
+  const gym = await databases().gymDatabase.create(testGym1);
+  const user1 = await databases().userDatabase.create({
+    ...testUser1,
+    gymId: gym._id,
+  });
+  const user2 = await databases().userDatabase.create({
+    ...testUser2,
+    gymId: gym._id,
+  });
+  await databases().friendshipDatabase.create([
+    user1.cognitoId,
     user2.cognitoId,
-    user1.cognitoId
-  )) as IFriendRequestEntity;
+  ]);
+  expect(await removeFriend(user1.cognitoId, user2.cognitoId)).toBeUndefined();
+  const friendRequest =
+    (await databases().friendRequestDatabase.getByCognitoIds(
+      user2.cognitoId,
+      user1.cognitoId
+    )) as IFriendRequestEntity;
   compareFriendRequests(friendRequest, {
     fromCognitoId: user2.cognitoId,
     toCognitoId: user1.cognitoId,

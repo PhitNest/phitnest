@@ -10,8 +10,7 @@ import {
 import { kGymNotFound, kUserNotFound } from "../../common/failures";
 import { IGymEntity, IProfilePictureUserEntity } from "../entities";
 import { getUserPopulated } from "./get-user-populated";
-import { gymRepo, userRepo } from "../repositories";
-import {
+import databases, {
   injectDatabases,
   rebindDatabases,
 } from "../../data/data-sources/injection";
@@ -45,13 +44,13 @@ const testUser2 = {
 };
 
 afterEach(async () => {
-  await gymRepo.deleteAll();
-  await userRepo.deleteAll();
+  await databases().gymDatabase.deleteAll();
+  await databases().userDatabase.deleteAll();
 });
 
 test("Get user populated", async () => {
-  const gym = await gymRepo.create(testGym1);
-  const user1 = await userRepo.create({
+  const gym = await databases().gymDatabase.create(testGym1);
+  const user1 = await databases().userDatabase.create({
     ...testUser1,
     gymId: gym._id,
   });
@@ -74,7 +73,7 @@ test("Get user populated", async () => {
     profilePictureUrl: "get",
   });
   compareGyms(populatedUser.gym, gym);
-  const user2 = await userRepo.create({
+  const user2 = await databases().userDatabase.create({
     ...testUser2,
     gymId: new mongoose.Types.ObjectId().toString(),
   });

@@ -1,19 +1,19 @@
 import { Failure } from "../../common/types";
-import { friendshipRepo, directMessageRepo } from "../repositories";
+import databases from "../../data/data-sources/injection";
 
 export async function sendDirectMessage(
   senderCognitoId: string,
   recipientCognitoId: string,
   text: string
 ) {
-  const friendship = await friendshipRepo.getByUsers([
+  const friendship = await databases().friendshipDatabase.getByUsers([
     senderCognitoId,
     recipientCognitoId,
   ]);
   if (friendship instanceof Failure) {
     return friendship;
   } else {
-    return directMessageRepo.create({
+    return databases().directMessageDatabase.create({
       friendshipId: friendship._id,
       text: text,
       senderCognitoId: senderCognitoId,
