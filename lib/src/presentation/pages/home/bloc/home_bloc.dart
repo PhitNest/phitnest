@@ -13,9 +13,13 @@ class _HomeBloc extends Bloc<_HomeEvent, _HomeState> {
             gym: initialData.gym,
             accessToken: initialData.accessToken,
             refreshToken: initialData.refreshToken,
+            password: initialPassword,
           ),
         ) {
     on<_LoadedUserEvent>(onLoadedUser);
+    on<_LogOutEvent>(onLogOut);
+    on<_LoginEvent>(onLogin);
+    on<_RefreshSessionEvent>(onRefreshSession);
   }
 
   void loadUser(GetUserResponse response) => add(_LoadedUserEvent(response));

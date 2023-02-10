@@ -11,7 +11,7 @@ extension _OnSignOut on _OptionsBloc {
         _SignOutLoadingState(
           response: state.response,
           signOut: CancelableOperation.fromFuture(
-            withAuth(
+            withAuthVoid(
               (accessToken) => Repositories.auth.signOut(
                 accessToken: accessToken,
                 allDevices: true,
@@ -43,7 +43,7 @@ extension _OnSignOut on _OptionsBloc {
             gym: initialGym,
           ),
           signOut: CancelableOperation.fromFuture(
-            withAuth(
+            withAuthVoid(
               (accessToken) => Repositories.auth.signOut(
                 accessToken: accessToken,
                 allDevices: true,

@@ -5,13 +5,11 @@ extension _Bloc on BuildContext {
 }
 
 class OptionsPage extends StatelessWidget {
-  final T Function<T>(T Function(String accessToken) f) withAuth;
   final ProfilePictureUserEntity initialUser;
   final GymEntity initialGym;
 
   const OptionsPage({
     Key? key,
-    required this.withAuth,
     required this.initialUser,
     required this.initialGym,
   }) : super(key: key);
@@ -20,7 +18,8 @@ class OptionsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => _OptionsBloc(
-        withAuth: withAuth,
+        withAuth: context.withAuth,
+        withAuthVoid: context.withAuthVoid,
         initialGym: initialGym,
         initialUser: initialUser,
       ),
@@ -30,7 +29,7 @@ class OptionsPage extends StatelessWidget {
             final photo = await Navigator.of(context).push<XFile>(
               CupertinoPageRoute(
                 builder: (context) => ProfilePicturePage(
-                  uploadImage: (image) => withAuth(
+                  uploadImage: (image) => context.withAuthVoid(
                     (accessToken) => UseCases.uploadPhotoAuthorized(
                       accessToken: accessToken,
                       photo: image,
@@ -83,14 +82,12 @@ class OptionsPage extends StatelessWidget {
               onEditProfilePicture: () =>
                   context.bloc.add(const _EditProfilePictureEvent()),
             );
-          } else if (state is _InitialState) {
+          } else {
             return _LoadingPage(
               user: state.response,
               gym: state.response.gym,
               onSignOut: () => context.bloc.add(const _SignOutEvent()),
             );
-          } else {
-            throw Exception('Invalid state: $state');
           }
         },
       ),

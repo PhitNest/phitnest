@@ -8,6 +8,7 @@ extension _OnError on _OptionsBloc {
       emit(
         _LoadingErrorState(
           failure: event.failure,
+          response: state.response,
         ),
       );
 }
