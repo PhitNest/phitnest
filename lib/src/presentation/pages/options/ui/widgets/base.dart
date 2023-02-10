@@ -19,6 +19,7 @@ abstract class _BasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => StyledScaffold(
         body: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
           child: Column(
             children: [
               Stack(
@@ -45,38 +46,37 @@ abstract class _BasePage extends StatelessWidget {
                     visible: showEdit,
                     child: Positioned(
                       top: 0,
-                      right: 0,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          top: 32.h,
-                          right: 24.w,
-                        ),
-                        child: PopupMenuButton(
-                          icon: Icon(
+                      right: 16.w,
+                      child: PopupMenuButton(
+                        icon: Padding(
+                          padding: EdgeInsets.only(
+                            top: 16.h,
+                          ),
+                          child: Icon(
                             Icons.more_horiz_sharp,
                             color: Color(0xFFC11C1C),
                           ),
-                          color: Colors.black,
-                          tooltip: 'Edit',
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          itemBuilder: (BuildContext context) {
-                            return [
-                              PopupMenuItem(
-                                onTap: onEditProfilePicture,
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text('Edit'),
-                                ),
-                                textStyle:
-                                    theme.textTheme.labelMedium!.copyWith(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ];
-                          },
                         ),
+                        iconSize: 48,
+                        color: Colors.black,
+                        tooltip: 'Edit',
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        itemBuilder: (BuildContext context) {
+                          return [
+                            PopupMenuItem(
+                              onTap: onEditProfilePicture,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text('Edit'),
+                              ),
+                              textStyle: theme.textTheme.labelMedium!.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ];
+                        },
                       ),
                     ),
                   ),
@@ -91,28 +91,30 @@ abstract class _BasePage extends StatelessWidget {
                       user.fullName,
                       style: theme.textTheme.headlineLarge,
                     ),
-                    // 32.verticalSpace,
-                    Text(
-                      user.email,
-                      style: theme.textTheme.labelMedium,
+                    24.verticalSpace,
+                    SizedBox(
+                      width: 275.w,
+                      child: Text(
+                        user.email,
+                        textAlign: TextAlign.left,
+                        style: theme.textTheme.labelMedium,
+                      ),
                     ),
                     Divider(
                       thickness: 1.0,
                     ),
                     12.verticalSpace,
-                    Text(
-                      'Address',
-                      style: theme.textTheme.headlineLarge,
-                    ),
-                    // 32.verticalSpace,
-                    Text(
-                      gym.toString(),
-                      style: theme.textTheme.labelMedium,
+                    SizedBox(
+                      width: 275.w,
+                      child: Text(
+                        gym.toString(),
+                        style: theme.textTheme.labelMedium,
+                      ),
                     ),
                     Divider(
                       thickness: 1.0,
                     ),
-                    45.verticalSpace,
+                    20.verticalSpace,
                     child,
                   ],
                 ),

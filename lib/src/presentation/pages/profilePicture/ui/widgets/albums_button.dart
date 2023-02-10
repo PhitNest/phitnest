@@ -14,7 +14,26 @@ class _AlbumsButton extends StatelessWidget {
             ImagePicker().pickImage(source: ImageSource.gallery).then(
           (image) async {
             if (image != null) {
-              onUploadPicture(await image.centerCrop());
+              final cropped = await ImageCropper()
+                  .cropImage(
+                sourcePath: image.path,
+                aspectRatio: CropAspectRatio(
+                  ratioX: kProfilePictureAspectRatio.width,
+                  ratioY: kProfilePictureAspectRatio.height,
+                ),
+              )
+                  .then(
+                (img) async {
+                  if (img != null) {
+                    return XFile.fromData(await img.readAsBytes());
+                  } else {
+                    return null;
+                  }
+                },
+              );
+              if (cropped != null) {
+                onUploadPicture(cropped);
+              }
             }
           },
         ),
