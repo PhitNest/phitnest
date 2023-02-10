@@ -46,7 +46,18 @@ class _ProfilePictureInstructions extends StatelessWidget {
                   ImagePicker().pickImage(source: ImageSource.gallery).then(
                 (image) async {
                   if (image != null) {
-                    onPressedUploadFromAlbums(await image.centerCrop());
+                    onPressedUploadFromAlbums(
+                      await ImageCropper()
+                          .cropImage(
+                            sourcePath: image.path,
+                          )
+                          .then(
+                            (img) => img!.readAsBytes(),
+                          )
+                          .then(
+                            (bytes) => XFile.fromData(bytes),
+                          ),
+                    );
                   }
                 },
               ),

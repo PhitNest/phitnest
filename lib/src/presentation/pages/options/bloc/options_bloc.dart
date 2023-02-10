@@ -53,13 +53,13 @@ class _OptionsBloc extends Bloc<_OptionsEvent, _OptionsState> {
   }
 
   @override
-  Future<void> close() {
+  Future<void> close() async {
     if (state is _InitialState) {
       final state = this.state as _InitialState;
-      state.getUser.cancel();
+      await state.getUser.cancel();
     } else if (state is _SignOutLoadingState) {
       final state = this.state as _SignOutLoadingState;
-      state.signOut.cancel();
+      await state.signOut.cancel();
     }
     return super.close();
   }

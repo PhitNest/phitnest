@@ -40,28 +40,29 @@ extension TakeProfilePicture on CameraController {
       );
 }
 
+const kProfilePictureAspectRatio = Size(375.0, 330.0);
+
 extension Crop on XFile {
   Future<XFile> centerCrop() async {
-    const aspectRatio = 375.0 / 330.0;
     final inBytes = await readAsBytes();
     final inImage = await decodeImageFromList(inBytes);
     final width = inImage.width;
     final height = inImage.height;
     final imageEditOptions = editor.ImageEditorOption();
-    if (width / height > aspectRatio) {
+    if (width / height > kProfilePictureAspectRatio.aspectRatio) {
       imageEditOptions.addOption(
         editor.ClipOption(
-          width: height * aspectRatio,
+          width: height * kProfilePictureAspectRatio.aspectRatio,
           height: height,
-          x: (width - height * aspectRatio) / 2,
+          x: (width - height * kProfilePictureAspectRatio.aspectRatio) / 2,
         ),
       );
     } else {
       imageEditOptions.addOption(
         editor.ClipOption(
           width: width,
-          height: width / aspectRatio,
-          y: (height - width / aspectRatio) / 2,
+          height: width / kProfilePictureAspectRatio.aspectRatio,
+          y: (height - width / kProfilePictureAspectRatio.aspectRatio) / 2,
         ),
       );
     }
