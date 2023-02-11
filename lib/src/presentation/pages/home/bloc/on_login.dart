@@ -7,6 +7,7 @@ extension _OnLogin on _HomeBloc {
   ) =>
       emit(
         _InitialState(
+          currentPage: state.currentPage,
           user: event.response.user,
           gym: event.response.gym,
           accessToken: event.response.accessToken,

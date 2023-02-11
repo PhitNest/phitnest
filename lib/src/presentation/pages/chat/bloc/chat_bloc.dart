@@ -1,10 +1,15 @@
 part of chat_page;
 
 class _ChatBloc extends Bloc<_ChatEvent, _ChatState> {
-  final T Function<T>(T Function(String accessToken) f) withAuth;
+  final Future<Either<T, Failure>> Function<T>(
+      Future<Either<T, Failure>> Function(String accessToken) f) withAuth;
+  final Future<Failure?> Function(
+      Future<Failure?> Function(String accessToken) f) withAuthVoid;
 
-  _ChatBloc({required this.withAuth})
-      : super(
+  _ChatBloc({
+    required this.withAuth,
+    required this.withAuthVoid,
+  }) : super(
           _InitialState(
             loadingMessages: CancelableOperation.fromFuture(
               withAuth(
@@ -22,7 +27,7 @@ class _ChatBloc extends Bloc<_ChatEvent, _ChatState> {
           ));
     }
 
-    on((event, emit) => onErrorCaught);
-    on((event, emit) => onMessageLoaded);
+    on<_ErrorEvent>(onErrorCaught);
+    on<_MessagesLoadedEvent>(onMessageLoaded);
   }
 }

@@ -1,6 +1,7 @@
 library options_page;
 
 import 'package:async/async.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/failure.dart';
 import '../../../common/theme.dart';
+import '../../../common/utils/utils.dart';
 import '../../../data/backend/backend.dart';
 import '../../../domain/entities/entities.dart';
 import '../../../domain/repositories/repository.dart';

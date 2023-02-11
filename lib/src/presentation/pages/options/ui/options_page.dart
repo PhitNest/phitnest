@@ -7,11 +7,13 @@ extension _Bloc on BuildContext {
 class OptionsPage extends StatelessWidget {
   final ProfilePictureUserEntity initialUser;
   final GymEntity initialGym;
+  final ValueChanged<GetUserResponse> onLoadedUser;
 
   const OptionsPage({
     Key? key,
     required this.initialUser,
     required this.initialGym,
+    required this.onLoadedUser,
   }) : super(key: key);
 
   @override
@@ -44,7 +46,7 @@ class OptionsPage extends StatelessWidget {
               context.bloc.add(_LoadedUserEvent(response: state.response));
             }
           } else if (state is _LoadedUserState) {
-            context.homeBloc.loadUser(state.response);
+            onLoadedUser(state.response);
           } else if (state is _LoadingErrorState) {
             ScaffoldMessenger.of(context).showMaterialBanner(
               StyledErrorBanner(

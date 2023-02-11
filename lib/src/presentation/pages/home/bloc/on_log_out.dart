@@ -7,6 +7,7 @@ extension _OnLogOut on _HomeBloc {
   ) =>
       emit(
         _LogOutState(
+          currentPage: state.currentPage,
           user: state.user,
           gym: state.gym,
           accessToken: state.accessToken,
