@@ -6,7 +6,7 @@ import {
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import { authMiddleware } from "../../middleware";
-import { databases().friendRequestDatabase } from "../../../domain/repositories";
+import databases from "../../../data/data-sources/injection";
 
 export class DenyFriendRequestController implements Controller<void> {
   method = HttpMethod.POST;

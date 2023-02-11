@@ -6,7 +6,7 @@ import {
 } from "../../../common/types";
 import { Controller, HttpMethod } from "../types";
 import { authMiddleware } from "../../middleware";
-import { databases().profilePictureDatabase } from "../../../domain/repositories";
+import databases from "../../../data/data-sources/injection";
 
 type ProfilePictureUploadResponse = {
   url: string;
@@ -25,9 +25,10 @@ export class ProfilePictureUploadController
     req: IRequest,
     res: IResponse<ProfilePictureUploadResponse, AuthenticatedLocals>
   ) {
-    const pfp = await databases().profilePictureDatabase.getProfilePictureUploadUrl(
-      res.locals.cognitoId
-    );
+    const pfp =
+      await databases().profilePictureDatabase.getProfilePictureUploadUrl(
+        res.locals.cognitoId
+      );
     if (pfp instanceof Failure) {
       return pfp;
     } else {

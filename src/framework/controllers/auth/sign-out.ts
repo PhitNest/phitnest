@@ -5,7 +5,7 @@ import {
 } from "../../../common/types";
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
-import { databases().authDatabase } from "../../../domain/repositories";
+import databases from "../../../data/data-sources/injection";
 import { authMiddleware } from "../../middleware";
 import { getSocketServer } from "../../adapters/injection";
 

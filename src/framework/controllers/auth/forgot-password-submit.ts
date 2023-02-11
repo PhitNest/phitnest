@@ -1,7 +1,7 @@
 import { IRequest, IResponse } from "../../../common/types";
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
-import { databases().authDatabase } from "../../../domain/repositories";
+import databases from "../../../data/data-sources/injection";
 
 export class ForgotPasswordSubmitController implements Controller<void> {
   method = HttpMethod.POST;
