@@ -7,6 +7,7 @@ extension _OnLoadedUser on _HomeBloc {
   ) =>
       emit(
         _InitialState(
+          currentPage: state.currentPage,
           user: event.response,
           gym: event.response.gym,
           accessToken: state.accessToken,

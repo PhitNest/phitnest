@@ -1,40 +1,45 @@
 part of home_page;
 
-extension HomeBloc on BuildContext {
-  _HomeBloc get homeBloc => read();
+extension _Bloc on BuildContext {
+  _HomeBloc get bloc => read();
 
+  void loadUser(GetUserResponse response) =>
+      bloc.add(_LoadedUserEvent(response));
+}
+
+extension Auth on BuildContext {
   Future<Either<T, Failure>> withAuth<T>(
     Future<Either<T, Failure>> Function(String) f,
   ) =>
-      f(homeBloc.state.accessToken).then(
+      f(bloc.state.accessToken).then(
         (either) => either.fold(
           (response) => Left(response),
           (failure) {
             if (failure == Failures.unauthorized.instance) {
               return Repositories.auth
                   .refreshSession(
-                    email: homeBloc.state.user.email,
-                    refreshToken: homeBloc.state.refreshToken,
+                    email: bloc.state.user.email,
+                    refreshToken: bloc.state.refreshToken,
                   )
                   .then(
                     (either) => either.fold(
                       (refreshResponse) {
-                        homeBloc.add(_RefreshSessionEvent(refreshResponse));
+                        bloc.add(_RefreshSessionEvent(refreshResponse));
                         return f(refreshResponse.accessToken);
                       },
                       (failure) => Repositories.auth
                           .login(
-                            email: homeBloc.state.user.email,
-                            password: homeBloc.state.password,
+                            email: bloc.state.user.email,
+                            password: bloc.state.password,
                           )
                           .then(
                             (either) => either.fold(
                               (loginResponse) {
-                                homeBloc.add(_LoginEvent(loginResponse));
+                                bloc.add(_LoginEvent(loginResponse));
                                 return f(loginResponse.accessToken);
                               },
                               (failure) {
-                                homeBloc.add(_LogOutEvent());
+                                bloc.add(_LogOutEvent());
                                 return Right(failure);
                               },
                             ),
@@ -90,13 +95,53 @@ class HomePage extends StatelessWidget {
             }
           },
           builder: (context, state) => Scaffold(
-            body: Center(
-              child: OptionsPage(
-                initialGym: state.gym,
-                initialUser: state.user,
+            body: SingleChildScrollView(
+              child: SizedBox(
+                height: 1.sh,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          if (state.currentPage == NavbarPage.chat) {
+                            return ChatPage();
+                          } else {
+                            return OptionsPage(
+                              initialUser: state.user,
+                              initialGym: state.gym,
+                              onLoadedUser: context.loadUser,
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                    StyledNavBar(
+                      page: state.currentPage,
+                      onReleaseLogo: () {
+                        if (state is _ExploreState) {
+                          state.logoPress.add(PressType.up);
+                        }
+                      },
+                      onPressDownLogo: () {
+                        if (state is _ExploreState) {
+                          state.logoPress.add(PressType.down);
+                        } else {
+                          context.bloc.add(_SetPageEvent(NavbarPage.explore));
+                        }
+                      },
+                      onPressedNews: () =>
+                          context.bloc.add(_SetPageEvent(NavbarPage.news)),
+                      onPressedExplore: () =>
+                          context.bloc.add(_SetPageEvent(NavbarPage.explore)),
+                      onPressedOptions: () =>
+                          context.bloc.add(_SetPageEvent(NavbarPage.options)),
+                      onPressedChat: () =>
+                          context.bloc.add(_SetPageEvent(NavbarPage.chat)),
+                    ),
+                  ],
+                ),
               ),
             ),
-            bottomNavigationBar: StyledNavigationBar(),
           ),
         ),
       );

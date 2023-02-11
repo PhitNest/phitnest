@@ -9,6 +9,7 @@ class _HomeBloc extends Bloc<_HomeEvent, _HomeState> {
     required this.initialPassword,
   }) : super(
           _InitialState(
+            currentPage: NavbarPage.options,
             user: initialData.user,
             gym: initialData.gym,
             accessToken: initialData.accessToken,
@@ -20,7 +21,15 @@ class _HomeBloc extends Bloc<_HomeEvent, _HomeState> {
     on<_LogOutEvent>(onLogOut);
     on<_LoginEvent>(onLogin);
     on<_RefreshSessionEvent>(onRefreshSession);
+    on<_SetPageEvent>(onSetPage);
   }
 
-  void loadUser(GetUserResponse response) => add(_LoadedUserEvent(response));
+  @override
+  Future<void> close() async {
+    if (state is _ExploreState) {
+      final state = this.state as _ExploreState;
+      await state.logoPress.close();
+    }
+    return super.close();
+  }
 }

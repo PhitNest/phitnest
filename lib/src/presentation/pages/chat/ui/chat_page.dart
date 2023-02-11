@@ -1,14 +1,15 @@
 part of chat_page;
 
-class _ChatPage extends StatelessWidget {
-  final T Function<T>(T Function(String accessToken) f) withAuth;
-
-  const _ChatPage({Key? key, required this.withAuth}) : super(key: key);
+class ChatPage extends StatelessWidget {
+  const ChatPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => _ChatBloc(withAuth: withAuth),
+      create: (context) => _ChatBloc(
+        withAuth: context.withAuth,
+        withAuthVoid: context.withAuthVoid,
+      ),
       child: BlocConsumer<_ChatBloc, _ChatState>(listener: (context, state) {
         if (state is _ErrorState) {
           ScaffoldMessenger.of(context).showMaterialBanner(

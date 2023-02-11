@@ -7,6 +7,7 @@ extension _OnRefreshSession on _HomeBloc {
   ) =>
       emit(
         _InitialState(
+          currentPage: state.currentPage,
           user: state.user,
           gym: state.gym,
           accessToken: event.response.accessToken,

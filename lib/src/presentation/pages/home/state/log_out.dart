@@ -7,5 +7,6 @@ class _LogOutState extends _HomeState {
     required super.accessToken,
     required super.refreshToken,
     required super.password,
+    required super.currentPage,
   }) : super();
 }

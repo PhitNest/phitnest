@@ -11,6 +11,7 @@ import '../../../common/failure.dart';
 import '../../../common/theme.dart';
 import '../../../data/backend/backend.dart';
 import '../../widgets/widgets.dart';
+import '../home/home.dart';
 
 part 'ui/widgets/available_chat.dart';
 part 'ui/widgets/base.dart';
