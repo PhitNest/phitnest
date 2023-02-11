@@ -2,7 +2,7 @@ import { IRequest, IResponse } from "../../../common/types";
 import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import { IGymEntity, LocationEntity } from "../../../domain/entities";
-import { databases().gymDatabase } from "../../../domain/repositories";
+import databases from "../../../data/data-sources/injection";
 
 export class NearestGymsController implements Controller<IGymEntity[]> {
   method = HttpMethod.GET;
