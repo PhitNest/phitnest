@@ -28,20 +28,31 @@ class OptionsPage extends StatelessWidget {
       child: BlocConsumer<_OptionsBloc, _OptionsState>(
         listener: (context, state) async {
           if (state is _EditProfilePictureState) {
-            final photo = await Navigator.of(context).push<XFile>(
-              CupertinoPageRoute(
-                builder: (context) => ProfilePicturePage(
-                  uploadImage: (image) => context.withAuthVoid(
-                    (accessToken) => UseCases.uploadPhotoAuthorized(
+            XFile? result;
+            await context.withAuthVoid(
+              (accessToken) => Navigator.of(context)
+                  .push<XFile>(
+                CupertinoPageRoute(
+                  builder: (context) => ProfilePicturePage(
+                    uploadImage: (image) => UseCases.uploadPhotoAuthorized(
                       accessToken: accessToken,
                       photo: image,
                     ),
                   ),
                 ),
+              )
+                  .then(
+                (photo) {
+                  if (photo != null) {
+                    result = photo;
+                    return null;
+                  }
+                  return Failure("", "");
+                },
               ),
             );
-            if (photo != null) {
-              context.bloc.add(_SetProfilePictureEvent(photo));
+            if (result != null) {
+              context.bloc.add(_SetProfilePictureEvent(result!));
             } else {
               context.bloc.add(_LoadedUserEvent(response: state.response));
             }

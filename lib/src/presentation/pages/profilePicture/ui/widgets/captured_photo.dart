@@ -79,7 +79,7 @@ class _CapturedPhotoBasePage extends StatelessWidget {
   }) : super();
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => StyledScaffold(
         body: Column(
           children: [
             40.verticalSpace,

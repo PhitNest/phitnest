@@ -103,7 +103,9 @@ class HomePage extends StatelessWidget {
                     Expanded(
                       child: Builder(
                         builder: (context) {
-                          if (state.currentPage == NavbarPage.chat) {
+                          if (state.currentPage == NavbarPage.explore) {
+                            return ExplorePage();
+                          } else if (state.currentPage == NavbarPage.chat) {
                             return ChatPage();
                           } else {
                             return OptionsPage(

@@ -15,9 +15,7 @@ import '../../../data/backend/backend.dart';
 import '../../../domain/entities/entities.dart';
 import '../../../domain/repositories/repository.dart';
 import '../../widgets/widgets.dart';
-import '../chat/chat.dart';
-import '../login/login.dart';
-import '../options/options.dart';
+import '../pages.dart';
 
 part 'ui/home_page.dart';
 

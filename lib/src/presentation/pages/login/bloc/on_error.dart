@@ -15,16 +15,19 @@ extension _OnLoginError on _LoginBloc {
         ),
       );
     } else {
+      Set<Tuple2<String, String>> invalidCredentials = {
+        ...state.invalidCredentials,
+        Tuple2(
+          emailController.text.trim(),
+          passwordController.text,
+        ),
+      };
       emit(
         _InitialState(
           autovalidateMode: AutovalidateMode.always,
-          invalidCredentials: {
-            ...state.invalidCredentials,
-            Tuple2(
-              emailController.text.trim(),
-              passwordController.text,
-            ),
-          },
+          invalidCredentials: Failures.invalidPassword.instance == event.failure
+              ? invalidCredentials
+              : state.invalidCredentials,
         ),
       );
       formKey.currentState!.validate();
