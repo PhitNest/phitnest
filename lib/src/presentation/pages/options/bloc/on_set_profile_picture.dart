@@ -5,6 +5,7 @@ extension _OnSetProfilePicture on _OptionsBloc {
     _SetProfilePictureEvent event,
     Emitter<_OptionsState> emit,
   ) {
+    CachedNetworkImage.evictFromCache(Cache.profilePictureImageCache);
     if (state is _EditProfilePictureState) {
       final state = this.state as _EditProfilePictureState;
       emit(

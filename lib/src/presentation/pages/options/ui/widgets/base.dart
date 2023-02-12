@@ -25,7 +25,7 @@ abstract class _BasePage extends StatelessWidget {
               children: [
                 CachedNetworkImage(
                   imageUrl: user.profilePictureUrl,
-                  cacheKey: 'profilePictureImage',
+                  cacheKey: Cache.profilePictureImageCache,
                   progressIndicatorBuilder: (context, child, loadingProgress) =>
                       SizedBox(
                     width: 1.sw,

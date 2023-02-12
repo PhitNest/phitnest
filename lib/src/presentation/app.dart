@@ -10,6 +10,7 @@ import '../data/cache/cache.dart';
 import '../common/theme.dart';
 import '../domain/entities/entities.dart';
 import 'pages/pages.dart';
+import 'widgets/widgets.dart';
 
 class _RedirectedLogin extends StatefulWidget {
   final bool shouldRedirect;
@@ -133,7 +134,7 @@ class _RedirectHomeState extends State<_RedirectHome> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => StyledScaffold(
         body: Container(),
       );
 

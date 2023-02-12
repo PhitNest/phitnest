@@ -46,7 +46,7 @@ abstract class _CameraLoadingBasePage extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => StyledScaffold(
         body: Column(
           children: [
             40.verticalSpace,

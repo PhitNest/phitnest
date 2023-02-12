@@ -13,6 +13,7 @@ enum Failures {
   usernameExists,
   profilePictureNotFound,
   unauthorized,
+  invalidPassword,
 }
 
 extension Instance on Failures {
@@ -52,6 +53,9 @@ extension Instance on Failures {
       case Failures.unauthorized:
         return const Failure(
             "NotAuthorizedException", "Access Token has expired");
+      case Failures.invalidPassword:
+        return const Failure(
+            "NotAuthorizedException", "Incorrect username or password.");
     }
   }
 }

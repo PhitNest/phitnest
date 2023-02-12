@@ -23,6 +23,7 @@ abstract class _Keys {
   static const profilePictureUrl = 'profilePictureUrl';
   static const gymId = 'gym.id';
   static const gymName = 'gym.name';
+  static const profilePictureImage = 'profilePictureImage';
   static const gymAddressCity = 'gym.address.city';
   static const gymAddressState = 'gym.address.state';
   static const gymAddressZipCode = 'gym.address.zipCode';
@@ -47,4 +48,6 @@ abstract class Cache {
 
   static String? get profilePictureUrl => _profilePictureUrl;
   static const cacheProfilePictureUrl = _cacheProfilePictureUrl;
+
+  static String get profilePictureImageCache => _Keys.profilePictureImage;
 }
