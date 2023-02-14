@@ -2,6 +2,7 @@ library cache;
 
 import '../../common/shared_preferences.dart';
 import '../../domain/entities/entities.dart';
+import '../backend/backend.dart';
 
 part 'methods.dart';
 
@@ -9,6 +10,7 @@ part 'auth.dart';
 part 'gym.dart';
 part 'profile_picture.dart';
 part 'user.dart';
+part 'friend_request.dart';
 
 abstract class _Keys {
   static const accessToken = 'accessToken';
@@ -30,6 +32,12 @@ abstract class _Keys {
   static const gymAddressStreet = 'gym.address.street';
   static const gymLocationLongitude = 'gym.location.longitude';
   static const gymLocationLatitude = 'gym.location.latitude';
+  static const userExploreIds = 'user.explore.ids';
+  static const userExploreFriendRequestIds = 'user.explore.friendRequestIds';
+  static const friendRequestFromCognitoId = 'friendRequest.fromCognitoId';
+  static const friendRequestToCognitoId = 'friendRequest.toCognitoId';
+  static const friendRequestDenied = 'friendRequest.denied';
+  static const friendRequestCreatedAt = 'friendRequest.createdAt';
 }
 
 abstract class Cache {
@@ -45,6 +53,8 @@ abstract class Cache {
 
   static UserEntity? get user => _user;
   static const cacheUser = _cacheUser;
+  static UserExploreResponse? get userExplore => _userExploreResponse;
+  static const cacheUserExplore = _cacheUserExploreResponse;
 
   static String? get profilePictureUrl => _profilePictureUrl;
   static const cacheProfilePictureUrl = _cacheProfilePictureUrl;

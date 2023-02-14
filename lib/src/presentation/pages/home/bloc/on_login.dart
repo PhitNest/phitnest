@@ -13,6 +13,7 @@ extension _OnLogin on _HomeBloc {
           accessToken: event.response.accessToken,
           password: state.password,
           refreshToken: event.response.refreshToken,
+          userExploreResponse: state.userExploreResponse,
         ),
       );
 }

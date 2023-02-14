@@ -57,6 +57,8 @@ class OptionsPage extends StatelessWidget {
               context.bloc.add(_LoadedUserEvent(response: state.response));
             }
           } else if (state is _LoadedUserState) {
+            await CachedNetworkImage.evictFromCache(
+                Cache.profilePictureImageCache);
             onLoadedUser(state.response);
           } else if (state is _LoadingErrorState) {
             ScaffoldMessenger.of(context).showMaterialBanner(

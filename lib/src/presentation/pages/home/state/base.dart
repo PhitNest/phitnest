@@ -6,6 +6,7 @@ abstract class _HomeState extends Equatable {
   final String accessToken;
   final String refreshToken;
   final String password;
+  final UserExploreResponse? userExploreResponse;
   final NavbarPage currentPage;
 
   const _HomeState({
@@ -15,6 +16,7 @@ abstract class _HomeState extends Equatable {
     required this.refreshToken,
     required this.password,
     required this.currentPage,
+    required this.userExploreResponse,
   }) : super();
 
   @override
@@ -25,5 +27,6 @@ abstract class _HomeState extends Equatable {
         refreshToken,
         password,
         currentPage,
+        userExploreResponse ?? "",
       ];
 }

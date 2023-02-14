@@ -15,6 +15,7 @@ class _HomeBloc extends Bloc<_HomeEvent, _HomeState> {
             accessToken: initialData.accessToken,
             refreshToken: initialData.refreshToken,
             password: initialPassword,
+            userExploreResponse: Cache.userExplore,
           ),
         ) {
     on<_LoadedUserEvent>(onLoadedUser);
@@ -22,6 +23,7 @@ class _HomeBloc extends Bloc<_HomeEvent, _HomeState> {
     on<_LoginEvent>(onLogin);
     on<_RefreshSessionEvent>(onRefreshSession);
     on<_SetPageEvent>(onSetPage);
+    on<_SetExploreResponseEvent>(onSetExploreResponse);
   }
 
   @override

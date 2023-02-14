@@ -8,5 +8,6 @@ class _InitialState extends _HomeState {
     required super.refreshToken,
     required super.password,
     required super.currentPage,
+    required super.userExploreResponse,
   }) : super();
 }

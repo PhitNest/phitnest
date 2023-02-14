@@ -5,6 +5,9 @@ extension _Bloc on BuildContext {
 
   void loadUser(GetUserResponse response) =>
       bloc.add(_LoadedUserEvent(response));
+
+  void setExploreResponse(UserExploreResponse response) =>
+      bloc.add(_SetExploreResponseEvent(response));
 }
 
 extension Auth on BuildContext {
@@ -94,7 +97,7 @@ class HomePage extends StatelessWidget {
               );
             }
           },
-          builder: (context, state) => Scaffold(
+          builder: (context, state) => StyledScaffold(
             body: SingleChildScrollView(
               child: SizedBox(
                 height: 1.sh,
@@ -103,8 +106,14 @@ class HomePage extends StatelessWidget {
                     Expanded(
                       child: Builder(
                         builder: (context) {
-                          if (state.currentPage == NavbarPage.explore) {
-                            return ExplorePage();
+                          if (state is _ExploreState) {
+                            return ExplorePage(
+                              gymId: state.gym.id,
+                              logoPressStream:
+                                  state.logoPress.stream.asBroadcastStream(),
+                              initialData: state.userExploreResponse,
+                              onLoaded: context.setExploreResponse,
+                            );
                           } else if (state.currentPage == NavbarPage.chat) {
                             return ChatPage();
                           } else {

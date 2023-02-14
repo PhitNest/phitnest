@@ -31,7 +31,23 @@ Future<bool> _cacheDouble(
 ) =>
     _cacheObject(key, value, sharedPreferences.setDouble);
 
+Future<bool> _cacheStringList(
+  String key,
+  List<String>? value,
+) =>
+    _cacheObject(key, value, sharedPreferences.setStringList);
+
+Future<bool> _cacheDateTime(
+  String key,
+  DateTime? value,
+) =>
+    _cacheObject(key, value?.toIso8601String(), sharedPreferences.setString);
+
+final _getStringList = sharedPreferences.getStringList;
 final _getString = sharedPreferences.getString;
 final _getInt = sharedPreferences.getInt;
 final _getBool = sharedPreferences.getBool;
 final _getDouble = sharedPreferences.getDouble;
+final _getDateTime = (String key) => sharedPreferences.getString(key) != null
+    ? DateTime.parse(sharedPreferences.getString(key)!)
+    : null;

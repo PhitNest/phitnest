@@ -24,12 +24,17 @@ class UserExploreResponse extends Equatable {
 }
 
 extension Explore on _User {
-  Future<Either<UserExploreResponse, Failure>> explore(String accessToken) =>
+  Future<Either<UserExploreResponse, Failure>> explore({
+    required String accessToken,
+    required String gymId,
+  }) =>
       _requestJson(
         route: "/user/explore",
         method: HttpMethod.get,
         parser: UserExploreResponse.fromJson,
         authorization: accessToken,
-        data: {},
+        data: {
+          "gymId": gymId,
+        },
       );
 }
