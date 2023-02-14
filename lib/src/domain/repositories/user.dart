@@ -20,4 +20,21 @@ class _User {
               (failure) => Right(failure),
             ),
           );
+
+  Future<Either<UserExploreResponse, Failure>> exploreUsers({
+    required String accessToken,
+    required String gymId,
+  }) =>
+      Backend.user
+          .explore(
+            accessToken: accessToken,
+            gymId: gymId,
+          )
+          .then(
+            (either) => either.fold(
+              (response) =>
+                  Cache.cacheUserExplore(response).then((_) => Left(response)),
+              (failure) => Right(failure),
+            ),
+          );
 }

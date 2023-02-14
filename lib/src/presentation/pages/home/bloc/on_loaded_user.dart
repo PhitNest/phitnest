@@ -6,13 +6,24 @@ extension _OnLoadedUser on _HomeBloc {
     Emitter<_HomeState> emit,
   ) =>
       emit(
-        _InitialState(
-          currentPage: state.currentPage,
-          user: event.response,
-          gym: event.response.gym,
-          accessToken: state.accessToken,
-          password: state.password,
-          refreshToken: state.refreshToken,
-        ),
+        state is _ExploreState
+            ? _ExploreState(
+                user: event.response,
+                gym: event.response.gym,
+                accessToken: state.accessToken,
+                refreshToken: state.refreshToken,
+                password: state.password,
+                userExploreResponse: state.userExploreResponse,
+                logoPress: (state as _ExploreState).logoPress,
+              )
+            : _InitialState(
+                currentPage: state.currentPage,
+                user: event.response,
+                gym: event.response.gym,
+                accessToken: state.accessToken,
+                password: state.password,
+                refreshToken: state.refreshToken,
+                userExploreResponse: state.userExploreResponse,
+              ),
       );
 }

@@ -11,6 +11,7 @@ class _ExploreState extends _HomeState {
     required super.accessToken,
     required super.refreshToken,
     required super.password,
+    required super.userExploreResponse,
     required this.logoPress,
   }) : super(
           currentPage: NavbarPage.explore,

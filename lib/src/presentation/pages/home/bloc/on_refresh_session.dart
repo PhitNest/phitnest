@@ -13,6 +13,7 @@ extension _OnRefreshSession on _HomeBloc {
           accessToken: event.response.accessToken,
           password: state.password,
           refreshToken: state.refreshToken,
+          userExploreResponse: state.userExploreResponse,
         ),
       );
 }

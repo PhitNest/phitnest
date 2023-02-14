@@ -14,6 +14,7 @@ extension _OnSetPage on _HomeBloc {
                 password: state.password,
                 refreshToken: state.refreshToken,
                 logoPress: StreamController(),
+                userExploreResponse: state.userExploreResponse,
               )
             : _InitialState(
                 currentPage: event.page,
@@ -22,6 +23,7 @@ extension _OnSetPage on _HomeBloc {
                 accessToken: state.accessToken,
                 password: state.password,
                 refreshToken: state.refreshToken,
+                userExploreResponse: state.userExploreResponse,
               ),
       );
 }
