@@ -1,18 +1,18 @@
 part of login_page;
 
-abstract class _LoginPageBase extends StatelessWidget {
+abstract class _ILoginPage extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final GlobalKey<FormState> formKey;
   final double keyboardHeight;
   final AutovalidateMode autovalidateMode;
   final VoidCallback? onSubmit;
-  final Widget child;
   final VoidCallback onPressedForgotPassword;
   final VoidCallback onPressedRegister;
   final Set<Tuple2<String, String>> invalidCredentials;
+  final Widget child;
 
-  const _LoginPageBase({
+  const _ILoginPage({
     Key? key,
     required this.emailController,
     required this.passwordController,
@@ -35,7 +35,8 @@ abstract class _LoginPageBase extends StatelessWidget {
             width: double.infinity,
             child: Column(
               children: [
-                (120 - keyboardHeight / 4).verticalSpace,
+                // Responsive padding
+                max(0, 120 - keyboardHeight / 4).verticalSpace,
                 Image.asset(
                   Assets.logo.path,
                   width: 61.59.w,
@@ -61,6 +62,7 @@ abstract class _LoginPageBase extends StatelessWidget {
                           textInputAction: TextInputAction.next,
                           validator: (value) =>
                               validateEmail(value) ??
+                              // Check if invalidCredentials contains the entered credentials
                               (invalidCredentials.any((credentials) =>
                                       credentials.value1 == value &&
                                       credentials.value2 ==

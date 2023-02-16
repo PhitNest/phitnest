@@ -2,7 +2,7 @@ part of explore_page;
 
 extension _OnIncrementCountdown on _ExploreBloc {
   void onIncrementCountdown(
-      _IncrementCountdownEvent event, Emitter<_ExploreState> emit) {
+      _IncrementCountdownEvent event, Emitter<_IExploreState> emit) {
     if (state is _HoldingState) {
       final state = this.state as _HoldingState;
       emit(

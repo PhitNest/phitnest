@@ -1,6 +1,6 @@
 part of profile_picture_page;
 
-class _CaptureErrorState extends _Initialized {
+class _CaptureErrorState extends _IInitializedState {
   final Failure failure;
 
   const _CaptureErrorState({

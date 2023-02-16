@@ -3,12 +3,12 @@ part of registration_page;
 extension _OnRegisterError on _RegistrationBloc {
   void onRegisterError(
     _RegisterErrorEvent event,
-    Emitter<_RegistrationState> emit,
+    Emitter<_IRegistrationState> emit,
   ) {
     final state = this.state as _RegisterLoadingState;
     if (event.failure == Failures.usernameExists.instance) {
       emit(
-        _GymSelectedState(
+        _IGymSelectedStateState(
           autovalidateMode: AutovalidateMode.always,
           gym: state.gym,
           gyms: state.gyms,

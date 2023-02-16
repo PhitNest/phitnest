@@ -3,10 +3,10 @@ part of options_page;
 extension _OnSignOutError on _OptionsBloc {
   void onSignOutError(
     _SignOutErrorEvent event,
-    Emitter<_OptionsState> emit,
+    Emitter<_IOptionsState> emit,
   ) {
-    if (state is _LoadedState) {
-      final state = this.state as _LoadedState;
+    if (state is _ILoadedState) {
+      final state = this.state as _ILoadedState;
       emit(
         _SignOutErrorState(
           response: state.response,

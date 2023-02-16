@@ -44,7 +44,7 @@ class VerificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(
         create: (context) => _VerificationBloc(),
-        child: BlocConsumer<_VerificationBloc, _VerificationState>(
+        child: BlocConsumer<_VerificationBloc, _IVerificationState>(
           listener: (context, state) async {
             if (state is _SuccessState) {
               Navigator.pop(context, state.response);

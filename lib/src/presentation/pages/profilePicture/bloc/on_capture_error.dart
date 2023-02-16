@@ -3,10 +3,10 @@ part of profile_picture_page;
 extension _OnCaptureError on _ProfilePictureBloc {
   void onCaptureError(
     _CaptureErrorEvent event,
-    Emitter<_ProfilePictureState> emit,
+    Emitter<_IProfilePictureState> emit,
   ) {
-    if (state is _Initialized) {
-      final state = this.state as _Initialized;
+    if (state is _IInitializedState) {
+      final state = this.state as _IInitializedState;
       emit(
         _CaptureErrorState(
           cameraController: state.cameraController,

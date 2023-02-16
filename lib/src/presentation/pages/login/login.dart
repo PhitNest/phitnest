@@ -1,5 +1,8 @@
 library login_page;
 
+import 'dart:async';
+import 'dart:math';
+
 import 'package:async/async.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -15,10 +18,7 @@ import '../../../common/utils/utils.dart';
 import '../../../data/backend/backend.dart';
 import '../../../domain/repositories/repository.dart';
 import '../../widgets/widgets.dart';
-import '../confirmEmail/confirm_email.dart';
-import '../forgotPassword/forgot_password.dart';
-import '../home/home.dart';
-import '../registration/registration.dart';
+import '../pages.dart';
 
 part 'bloc/login_bloc.dart';
 part 'bloc/on_cancel.dart';
@@ -37,6 +37,7 @@ part 'state/success.dart';
 part 'state/initial.dart';
 part 'state/loading.dart';
 part 'state/confirming_email.dart';
+part 'state/error.dart';
 
 part 'ui/login_page.dart';
 part 'ui/widgets/base.dart';

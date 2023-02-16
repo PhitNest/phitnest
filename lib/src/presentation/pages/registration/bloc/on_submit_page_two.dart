@@ -3,7 +3,7 @@ part of registration_page;
 extension _OnSubmitPageTwo on _RegistrationBloc {
   void onSubmitPageTwo(
     _SubmitPageTwoEvent event,
-    Emitter<_RegistrationState> emit,
+    Emitter<_IRegistrationState> emit,
   ) {
     if (pageTwoFormKey.currentState!.validate()) {
       pageController.nextPage(
@@ -51,10 +51,10 @@ extension _OnSubmitPageTwo on _RegistrationBloc {
             registerOp: state.registerOp,
           ),
         );
-      } else if (state is _GymSelectedState) {
-        final state = this.state as _GymSelectedState;
+      } else if (state is _IGymSelectedStateState) {
+        final state = this.state as _IGymSelectedStateState;
         emit(
-          _GymSelectedState(
+          _IGymSelectedStateState(
             firstNameConfirmed: state.firstNameConfirmed,
             location: state.location,
             gyms: state.gyms,
@@ -75,10 +75,10 @@ extension _OnSubmitPageTwo on _RegistrationBloc {
             takenEmails: state.takenEmails,
           ),
         );
-      } else if (state is _GymsLoadedState) {
-        final state = this.state as _GymsLoadedState;
+      } else if (state is _IGymsLoadedStateState) {
+        final state = this.state as _IGymsLoadedStateState;
         emit(
-          _GymsLoadedState(
+          _IGymsLoadedStateState(
             firstNameConfirmed: state.firstNameConfirmed,
             currentPage: state.currentPage,
             autovalidateMode: AutovalidateMode.always,

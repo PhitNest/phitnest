@@ -1,6 +1,6 @@
 part of options_page;
 
-class _InitialState extends _OptionsState {
+class _InitialState extends _IOptionsState {
   final CancelableOperation<Either<GetUserResponse, Failure>> getUser;
 
   const _InitialState({

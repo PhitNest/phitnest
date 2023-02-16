@@ -1,6 +1,6 @@
 part of verification_page;
 
-class _ResendErrorEvent extends _VerificationEvent {
+class _ResendErrorEvent extends _IVerificationEvent {
   final Failure failure;
 
   const _ResendErrorEvent(this.failure) : super();

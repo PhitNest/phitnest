@@ -1,6 +1,6 @@
 part of registration_page;
 
-class _GymsLoadingErrorState extends _RegistrationState {
+class _GymsLoadingErrorState extends _IRegistrationState {
   final Failure failure;
 
   const _GymsLoadingErrorState({

@@ -1,6 +1,6 @@
 part of login_page;
 
-class _LoadingPage extends _LoginPageBase {
+class _LoadingPage extends _ILoginPage {
   const _LoadingPage({
     required super.autovalidateMode,
     required super.invalidCredentials,

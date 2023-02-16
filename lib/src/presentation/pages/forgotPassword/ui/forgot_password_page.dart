@@ -42,7 +42,7 @@ class ForgotPasswordPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => _ForgotPasswordBloc(),
-      child: BlocConsumer<_ForgotPasswordBloc, _ForgotPasswordState>(
+      child: BlocConsumer<_ForgotPasswordBloc, _IForgotPasswordState>(
         listener: (context, state) async {
           if (state is _SuccessState) {
             return context.goToSubmitPage();

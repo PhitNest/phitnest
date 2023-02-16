@@ -86,9 +86,9 @@ class HomePage extends StatelessWidget {
           initialData: initialData,
           initialPassword: initialPassword,
         ),
-        child: BlocConsumer<_HomeBloc, _HomeState>(
+        child: BlocConsumer<_HomeBloc, _IHomeState>(
           listener: (context, state) {
-            if (state is _LogOutState) {
+            if (state is _LogOutConnectedState) {
               Navigator.of(context).pushAndRemoveUntil(
                 CupertinoPageRoute(
                   builder: (context) => LoginPage(),
@@ -106,7 +106,7 @@ class HomePage extends StatelessWidget {
                     Expanded(
                       child: Builder(
                         builder: (context) {
-                          if (state is _ExploreState) {
+                          if (state is _IExploreState) {
                             return ExplorePage(
                               gymId: state.gym.id,
                               logoPressStream:
@@ -129,12 +129,12 @@ class HomePage extends StatelessWidget {
                     StyledNavBar(
                       page: state.currentPage,
                       onReleaseLogo: () {
-                        if (state is _ExploreState) {
+                        if (state is _IExploreState) {
                           state.logoPress.add(PressType.up);
                         }
                       },
                       onPressDownLogo: () {
-                        if (state is _ExploreState) {
+                        if (state is _IExploreState) {
                           state.logoPress.add(PressType.down);
                         } else {
                           context.bloc.add(_SetPageEvent(NavbarPage.explore));

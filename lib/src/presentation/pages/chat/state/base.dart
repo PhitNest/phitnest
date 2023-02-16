@@ -1,7 +1,7 @@
 part of chat_page;
 
-abstract class _ChatState extends Equatable {
-  const _ChatState();
+abstract class _IChatState extends Equatable {
+  const _IChatState();
 
   @override
   List<Object> get props => [];

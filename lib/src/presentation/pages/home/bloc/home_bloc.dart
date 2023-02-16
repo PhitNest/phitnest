@@ -1,6 +1,6 @@
 part of home_page;
 
-class _HomeBloc extends Bloc<_HomeEvent, _HomeState> {
+class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
   final LoginResponse initialData;
   final String initialPassword;
 
@@ -8,7 +8,7 @@ class _HomeBloc extends Bloc<_HomeEvent, _HomeState> {
     required this.initialData,
     required this.initialPassword,
   }) : super(
-          _InitialState(
+          _ConnectingState(
             currentPage: NavbarPage.options,
             user: initialData.user,
             gym: initialData.gym,
@@ -16,6 +16,8 @@ class _HomeBloc extends Bloc<_HomeEvent, _HomeState> {
             refreshToken: initialData.refreshToken,
             password: initialPassword,
             userExploreResponse: Cache.userExplore,
+            socketConnection: CancelableOperation.fromFuture(
+                connect(initialData.accessToken)),
           ),
         ) {
     on<_LoadedUserEvent>(onLoadedUser);
@@ -28,8 +30,8 @@ class _HomeBloc extends Bloc<_HomeEvent, _HomeState> {
 
   @override
   Future<void> close() async {
-    if (state is _ExploreState) {
-      final state = this.state as _ExploreState;
+    if (state is _IExploreState) {
+      final state = this.state as _IExploreState;
       await state.logoPress.close();
     }
     return super.close();

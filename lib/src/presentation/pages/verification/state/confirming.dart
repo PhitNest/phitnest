@@ -1,6 +1,6 @@
 part of verification_page;
 
-class _ConfirmingState extends _VerificationState {
+class _ConfirmingState extends _IVerificationState {
   final CancelableOperation<Either<LoginResponse?, Failure>> operation;
 
   const _ConfirmingState({

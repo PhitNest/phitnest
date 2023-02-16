@@ -2,11 +2,11 @@ part of registration_page;
 
 extension _OnGymsLoaded on _RegistrationBloc {
   void onGymsLoaded(
-    _GymsLoadedEvent event,
-    Emitter<_RegistrationState> emit,
+    _IGymsLoadedStateEvent event,
+    Emitter<_IRegistrationState> emit,
   ) =>
       emit(
-        _GymsLoadedState(
+        _IGymsLoadedStateState(
           firstNameConfirmed: state.firstNameConfirmed,
           gyms: event.gyms,
           location: event.location,

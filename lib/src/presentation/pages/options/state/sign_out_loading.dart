@@ -1,6 +1,6 @@
 part of options_page;
 
-class _SignOutLoadingState extends _LoadedState {
+class _SignOutLoadingState extends _ILoadedState {
   final CancelableOperation<Failure?> signOut;
 
   const _SignOutLoadingState({

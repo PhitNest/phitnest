@@ -3,7 +3,7 @@ part of registration_page;
 extension _OnSuccess on _RegistrationBloc {
   void onSuccess(
     _SuccessEvent event,
-    Emitter<_RegistrationState> emit,
+    Emitter<_IRegistrationState> emit,
   ) =>
       emit(
         _SuccessState(

@@ -1,7 +1,7 @@
 part of explore_page;
 
 extension _OnLoad on _ExploreBloc {
-  void onLoad(_LoadEvent event, Emitter<_ExploreState> emit) => emit(
+  void onLoad(_LoadEvent event, Emitter<_IExploreState> emit) => emit(
         _LoadingState(
           explore: CancelableOperation.fromFuture(
             withAuth(

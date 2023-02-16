@@ -1,10 +1,10 @@
 part of registration_page;
 
-class _GymsLoadedEvent extends _RegistrationEvent {
+class _IGymsLoadedStateEvent extends _IRegistrationEvent {
   final List<GymEntity> gyms;
   final LocationEntity location;
 
-  const _GymsLoadedEvent(this.gyms, this.location) : super();
+  const _IGymsLoadedStateEvent(this.gyms, this.location) : super();
 
   @override
   List<Object> get props => [gyms, location];

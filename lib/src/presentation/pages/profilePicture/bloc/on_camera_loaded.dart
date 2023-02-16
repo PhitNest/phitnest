@@ -3,7 +3,7 @@ part of profile_picture_page;
 extension _OnCameraLoaded on _ProfilePictureBloc {
   void onCameraLoaded(
     _CameraLoadedEvent event,
-    Emitter<_ProfilePictureState> emit,
+    Emitter<_IProfilePictureState> emit,
   ) {
     if (state is _CameraLoadingState) {
       final state = this.state as _CameraLoadingState;

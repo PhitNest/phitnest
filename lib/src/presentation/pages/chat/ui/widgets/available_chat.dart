@@ -1,6 +1,6 @@
 part of chat_page;
 
-class _AvailableChatPage extends _BasePage {
+class _AvailableChatPage extends _IChatPageBase {
   final List<FriendsAndMessagesResponse> messages;
 
   _AvailableChatPage({

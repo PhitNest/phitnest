@@ -1,6 +1,6 @@
 part of profile_picture_page;
 
-class _CameraLoadingPage extends _CameraLoadingBasePage {
+class _CameraLoadingPage extends _ICameraLoadingPage {
   const _CameraLoadingPage({
     Key? key,
   }) : super(
@@ -9,7 +9,7 @@ class _CameraLoadingPage extends _CameraLoadingBasePage {
         );
 }
 
-class _CameraLoadingErrorPage extends _CameraLoadingBasePage {
+class _CameraLoadingErrorPage extends _ICameraLoadingPage {
   final String errorMessage;
   final VoidCallback onPressedRetry;
 
@@ -37,10 +37,10 @@ class _CameraLoadingErrorPage extends _CameraLoadingBasePage {
         );
 }
 
-abstract class _CameraLoadingBasePage extends StatelessWidget {
+abstract class _ICameraLoadingPage extends StatelessWidget {
   final Widget child;
 
-  const _CameraLoadingBasePage({
+  const _ICameraLoadingPage({
     Key? key,
     required this.child,
   }) : super(key: key);

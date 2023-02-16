@@ -1,7 +1,7 @@
 part of explore_page;
 
 extension _OnLoadingError on _ExploreBloc {
-  void onLoadingError(_LoadingErrorEvent event, Emitter<_ExploreState> emit) {
+  void onLoadingError(_LoadingErrorEvent event, Emitter<_IExploreState> emit) {
     if (state is _ReloadingState) {
       final state = this.state as _ReloadingState;
       emit(

@@ -1,6 +1,6 @@
 part of verification_page;
 
-class _VerificationBloc extends Bloc<_VerificationEvent, _VerificationState> {
+class _VerificationBloc extends Bloc<_IVerificationEvent, _IVerificationState> {
   final codeController = TextEditingController();
   final codeFocusNode = FocusNode();
 

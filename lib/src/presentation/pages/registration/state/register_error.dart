@@ -1,6 +1,6 @@
 part of registration_page;
 
-class _RegisterErrorState extends _GymSelected {
+class _RegisterErrorState extends _IGymSelectedState {
   final Failure failure;
 
   const _RegisterErrorState({

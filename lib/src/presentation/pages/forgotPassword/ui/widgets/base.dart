@@ -1,6 +1,6 @@
 part of forgot_password_page;
 
-abstract class _BasePage extends StatelessWidget {
+abstract class _IBasePage extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController confirmPassController;
@@ -9,7 +9,7 @@ abstract class _BasePage extends StatelessWidget {
   final Widget child;
   final VoidCallback? onSubmit;
 
-  const _BasePage({
+  const _IBasePage({
     Key? key,
     required this.emailController,
     required this.passwordController,

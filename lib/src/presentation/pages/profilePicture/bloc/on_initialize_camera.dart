@@ -3,7 +3,7 @@ part of profile_picture_page;
 extension _OnInitializeCamera on _ProfilePictureBloc {
   void onInitializeCamera(
     _InitializeCameraEvent event,
-    Emitter<_ProfilePictureState> emit,
+    Emitter<_IProfilePictureState> emit,
   ) {
     final cameraController = CameraController(
       event.cameraDescription,

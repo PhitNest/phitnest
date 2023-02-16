@@ -1,10 +1,12 @@
 part of login_page;
 
 extension _OnLoginError on _LoginBloc {
+  /// The [_ErrorEvent] is emitted when the login request responds with a [Failure].
   void onLoginError(
     _ErrorEvent event,
-    Emitter<_LoginState> emit,
+    Emitter<_ILoginState> emit,
   ) {
+    // If the user is not confirmed, transition to the confirming email state.
     if (event.failure == Failures.userNotConfirmed.instance) {
       emit(
         _ConfirmingEmailState(
@@ -14,23 +16,34 @@ extension _OnLoginError on _LoginBloc {
           password: passwordController.text,
         ),
       );
-    } else {
-      Set<Tuple2<String, String>> invalidCredentials = {
-        ...state.invalidCredentials,
-        Tuple2(
-          emailController.text.trim(),
-          passwordController.text,
-        ),
-      };
+    }
+    // If the password was invalid, transition to the initial state and add the credentials
+    // to invalidCredentials.
+    else if (event.failure == Failures.invalidPassword.instance) {
       emit(
         _InitialState(
           autovalidateMode: AutovalidateMode.always,
-          invalidCredentials: Failures.invalidPassword.instance == event.failure
-              ? invalidCredentials
-              : state.invalidCredentials,
+          invalidCredentials: state.invalidCredentials
+            ..add(
+              Tuple2(
+                emailController.text.trim(),
+                passwordController.text,
+              ),
+            ),
         ),
       );
+      // Call validate on the formkey so it recognizes the invalid credentials and shows an error.
       formKey.currentState!.validate();
+    } else {
+      // Transition to error state
+      emit(
+        _ErrorState(
+          autovalidateMode: AutovalidateMode.always,
+          invalidCredentials: state.invalidCredentials,
+          dismiss: Completer(),
+          failure: event.failure,
+        ),
+      );
     }
   }
 }

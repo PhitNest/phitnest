@@ -2,7 +2,7 @@ part of registration_page;
 
 const pageAnimation = const Duration(milliseconds: 400);
 
-class _RegistrationBloc extends Bloc<_RegistrationEvent, _RegistrationState> {
+class _RegistrationBloc extends Bloc<_IRegistrationEvent, _IRegistrationState> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
@@ -32,16 +32,16 @@ class _RegistrationBloc extends Bloc<_RegistrationEvent, _RegistrationState> {
       (state as _InitialState).loadGymsOp.then(
             (either) => either.fold(
               (success) =>
-                  add(_GymsLoadedEvent(success.value1, success.value2)),
+                  add(_IGymsLoadedStateEvent(success.value1, success.value2)),
               (failure) => add(_GymsLoadingErrorEvent(failure)),
             ),
           );
     }
     on<_RetryLoadGymsEvent>(onRetryLoadGyms);
     on<_EditFirstNameEvent>(onEditFirstName);
-    on<_GymsLoadedEvent>(onGymsLoaded);
+    on<_IGymsLoadedStateEvent>(onGymsLoaded);
     on<_GymsLoadingErrorEvent>(onGymsLoadingError);
-    on<_GymSelectedEvent>(onGymSelected);
+    on<_IGymSelectedStateEvent>(onGymSelected);
     on<_SwipeEvent>(onSwipe);
     on<_SubmitPageOneEvent>(onSubmitPageOne);
     on<_SubmitPageTwoEvent>(onSubmitPageTwo);

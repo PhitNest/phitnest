@@ -1,6 +1,6 @@
 part of registration_page;
 
-class _SuccessState extends _RegistrationState {
+class _SuccessState extends _IRegistrationState {
   final RegisterResponse response;
   final String password;
 

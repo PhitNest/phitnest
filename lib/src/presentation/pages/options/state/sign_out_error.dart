@@ -1,6 +1,6 @@
 part of options_page;
 
-class _SignOutErrorState extends _LoadedState {
+class _SignOutErrorState extends _ILoadedState {
   final Failure failure;
 
   const _SignOutErrorState({

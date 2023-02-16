@@ -2,16 +2,17 @@ part of home_page;
 
 enum PressType { up, down }
 
-class _ExploreState extends _HomeState {
+class _IExploreState extends _ISocketConnectedState {
   final StreamController<PressType> logoPress;
 
-  const _ExploreState({
+  const _IExploreState({
     required super.user,
     required super.gym,
     required super.accessToken,
     required super.refreshToken,
     required super.password,
     required super.userExploreResponse,
+    required super.socketConnection,
     required this.logoPress,
   }) : super(
           currentPage: NavbarPage.explore,

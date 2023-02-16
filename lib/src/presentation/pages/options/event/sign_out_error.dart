@@ -1,6 +1,6 @@
 part of options_page;
 
-class _SignOutErrorEvent extends _OptionsEvent {
+class _SignOutErrorEvent extends _IOptionsEvent {
   final Failure failure;
 
   const _SignOutErrorEvent(this.failure) : super();

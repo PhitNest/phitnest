@@ -1,7 +1,7 @@
 part of explore_page;
 
 extension _OnPressDown on _ExploreBloc {
-  void onPressDown(_PressDownEvent event, Emitter<_ExploreState> emit) => emit(
+  void onPressDown(_PressDownEvent event, Emitter<_IExploreState> emit) => emit(
         _HoldingState(
           userExploreResponse: (state as _Loaded).userExploreResponse,
           logoPressSubscription: (state as _Loaded).logoPressSubscription,

@@ -2,8 +2,8 @@ part of registration_page;
 
 extension _OnGymSelected on _RegistrationBloc {
   void onGymSelected(
-    _GymSelectedEvent event,
-    Emitter<_RegistrationState> emit,
+    _IGymSelectedStateEvent event,
+    Emitter<_IRegistrationState> emit,
   ) async {
     if (state is _RegisterLoadingState) {
       final state = this.state as _RegisterLoadingState;
@@ -20,9 +20,9 @@ extension _OnGymSelected on _RegistrationBloc {
         ),
       );
     } else {
-      final state = this.state as _GymsLoaded;
+      final state = this.state as _IGymsLoadedState;
       emit(
-        _GymSelectedState(
+        _IGymSelectedStateState(
           firstNameConfirmed: state.firstNameConfirmed,
           gyms: state.gyms,
           takenEmails: state.takenEmails,

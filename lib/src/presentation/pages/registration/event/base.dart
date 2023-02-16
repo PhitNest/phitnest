@@ -1,7 +1,7 @@
 part of registration_page;
 
-abstract class _RegistrationEvent extends Equatable {
-  const _RegistrationEvent() : super();
+abstract class _IRegistrationEvent extends Equatable {
+  const _IRegistrationEvent() : super();
 
   @override
   List<Object> get props => [];

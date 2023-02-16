@@ -3,10 +3,10 @@ part of home_page;
 extension _OnLogin on _HomeBloc {
   void onLogin(
     _LoginEvent event,
-    Emitter<_HomeState> emit,
+    Emitter<_IHomeState> emit,
   ) =>
       emit(
-        _InitialState(
+        _ConnectingState(
           currentPage: state.currentPage,
           user: event.response.user,
           gym: event.response.gym,
@@ -14,6 +14,7 @@ extension _OnLogin on _HomeBloc {
           password: state.password,
           refreshToken: event.response.refreshToken,
           userExploreResponse: state.userExploreResponse,
+          socketConnection: (state as _ConnectingState).socketConnection,
         ),
       );
 }

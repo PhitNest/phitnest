@@ -1,7 +1,7 @@
 part of forgot_password_page;
 
 class _ForgotPasswordBloc
-    extends Bloc<_ForgotPasswordEvent, _ForgotPasswordState> {
+    extends Bloc<_IForgotPasswordEvent, _IForgotPasswordState> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPassController = TextEditingController();

@@ -1,5 +1,5 @@
 part of verification_page;
 
-class _ProfilePictureErrorEvent extends _VerificationEvent {
+class _ProfilePictureErrorEvent extends _IVerificationEvent {
   const _ProfilePictureErrorEvent() : super();
 }

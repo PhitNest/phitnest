@@ -1,6 +1,6 @@
 part of login_page;
 
-class _InitialPage extends _LoginPageBase {
+class _InitialPage extends _ILoginPage {
   _InitialPage({
     required VoidCallback onSubmit,
     required super.autovalidateMode,

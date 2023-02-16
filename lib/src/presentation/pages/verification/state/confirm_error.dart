@@ -1,6 +1,6 @@
 part of verification_page;
 
-class _ConfirmErrorState extends _VerificationState {
+class _ConfirmErrorState extends _IVerificationState {
   final Failure failure;
 
   const _ConfirmErrorState({

@@ -1,6 +1,6 @@
 part of registration_page;
 
-class _InitialState extends _RegistrationState {
+class _InitialState extends _IRegistrationState {
   final CancelableOperation<LocationAndGymsResponse> loadGymsOp;
 
   const _InitialState({

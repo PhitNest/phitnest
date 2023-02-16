@@ -3,10 +3,10 @@ part of home_page;
 extension _OnRefreshSession on _HomeBloc {
   void onRefreshSession(
     _RefreshSessionEvent event,
-    Emitter<_HomeState> emit,
+    Emitter<_IHomeState> emit,
   ) =>
       emit(
-        _InitialState(
+        _ConnectingState(
           currentPage: state.currentPage,
           user: state.user,
           gym: state.gym,
@@ -14,6 +14,7 @@ extension _OnRefreshSession on _HomeBloc {
           password: state.password,
           refreshToken: state.refreshToken,
           userExploreResponse: state.userExploreResponse,
+          socketConnection: (state as _ConnectingState).socketConnection,
         ),
       );
 }

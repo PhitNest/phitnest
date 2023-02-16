@@ -1,6 +1,6 @@
 part of login_page;
 
-class _SuccessState extends _LoginState {
+class _SuccessState extends _ILoginState {
   final LoginResponse response;
 
   const _SuccessState({

@@ -1,7 +1,7 @@
 part of registration_page;
 
-class _GymsLoadedState extends _GymsLoaded {
-  const _GymsLoadedState({
+class _IGymsLoadedStateState extends _IGymsLoadedState {
+  const _IGymsLoadedStateState({
     required super.firstNameConfirmed,
     required super.currentPage,
     required super.autovalidateMode,

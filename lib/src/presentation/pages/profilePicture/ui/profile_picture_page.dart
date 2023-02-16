@@ -30,14 +30,14 @@ class ProfilePicturePage extends StatelessWidget {
           initialImage: initialImage,
           uploadImage: uploadImage,
         ),
-        child: BlocConsumer<_ProfilePictureBloc, _ProfilePictureState>(
+        child: BlocConsumer<_ProfilePictureBloc, _IProfilePictureState>(
           listener: (context, state) {
             if (state is _UploadSuccessState) {
               Navigator.pop(context, state.file);
             }
           },
           builder: (context, state) {
-            if (state is _Captured) {
+            if (state is _ICapturedState) {
               if (state is _UploadErrorState) {
                 return _UploadingErrorPage(
                   profilePicture: state.file,
@@ -61,7 +61,7 @@ class ProfilePicturePage extends StatelessWidget {
                   cameraController: state.cameraController,
                 );
               }
-            } else if (state is _Initialized) {
+            } else if (state is _IInitializedState) {
               if (state is _CaptureErrorState) {
                 return _CaptureErrorPage(
                   cameraController: state.cameraController,

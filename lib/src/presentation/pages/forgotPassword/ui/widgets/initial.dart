@@ -1,6 +1,6 @@
 part of forgot_password_page;
 
-class _InitialPage extends _BasePage {
+class _InitialPage extends _IBasePage {
   _InitialPage({
     required VoidCallback onSubmit,
     required super.emailController,

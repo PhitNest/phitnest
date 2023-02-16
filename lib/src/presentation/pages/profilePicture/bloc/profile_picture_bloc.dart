@@ -1,7 +1,7 @@
 part of profile_picture_page;
 
 class _ProfilePictureBloc
-    extends Bloc<_ProfilePictureEvent, _ProfilePictureState> {
+    extends Bloc<_IProfilePictureEvent, _IProfilePictureState> {
   final XFile? initialImage;
   final Future<Failure?> Function(XFile image) uploadImage;
 
@@ -57,8 +57,8 @@ class _ProfilePictureBloc
       final state = this.state as _CameraErrorState;
       await state.cameraController.dispose();
     }
-    if (state is _Initialized) {
-      final state = this.state as _Initialized;
+    if (state is _IInitializedState) {
+      final state = this.state as _IInitializedState;
       await state.cameraController.dispose();
     }
     if (state is _CaptureLoadingState) {

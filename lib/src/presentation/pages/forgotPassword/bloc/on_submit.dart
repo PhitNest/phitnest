@@ -3,7 +3,7 @@ part of forgot_password_page;
 extension _OnSubmit on _ForgotPasswordBloc {
   void onSubmit(
     _SubmitEvent event,
-    Emitter<_ForgotPasswordState> emit,
+    Emitter<_IForgotPasswordState> emit,
   ) =>
       emit(
         formKey.currentState!.validate()

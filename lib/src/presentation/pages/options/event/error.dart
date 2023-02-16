@@ -1,6 +1,6 @@
 part of options_page;
 
-class _ErrorEvent extends _OptionsEvent {
+class _ErrorEvent extends _IOptionsEvent {
   final Failure failure;
 
   const _ErrorEvent({

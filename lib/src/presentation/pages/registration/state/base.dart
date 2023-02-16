@@ -1,12 +1,12 @@
 part of registration_page;
 
-abstract class _RegistrationState extends Equatable {
+abstract class _IRegistrationState extends Equatable {
   final bool firstNameConfirmed;
   final int currentPage;
   final AutovalidateMode autovalidateMode;
   final Set<String> takenEmails;
 
-  const _RegistrationState({
+  const _IRegistrationState({
     required this.firstNameConfirmed,
     required this.currentPage,
     required this.autovalidateMode,
@@ -18,11 +18,11 @@ abstract class _RegistrationState extends Equatable {
       [firstNameConfirmed, currentPage, autovalidateMode, takenEmails];
 }
 
-abstract class _GymsLoaded extends _RegistrationState {
+abstract class _IGymsLoadedState extends _IRegistrationState {
   final LocationEntity location;
   final List<GymEntity> gyms;
 
-  const _GymsLoaded({
+  const _IGymsLoadedState({
     required super.firstNameConfirmed,
     required super.currentPage,
     required super.autovalidateMode,
@@ -35,10 +35,10 @@ abstract class _GymsLoaded extends _RegistrationState {
   List<Object> get props => [super.props, location, gyms];
 }
 
-abstract class _GymSelected extends _GymsLoaded {
+abstract class _IGymSelectedState extends _IGymsLoadedState {
   final GymEntity gym;
 
-  const _GymSelected({
+  const _IGymSelectedState({
     required super.firstNameConfirmed,
     required super.location,
     required super.gyms,
