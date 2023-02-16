@@ -20,7 +20,7 @@ class RefreshSessionResponse extends Equatable {
   List<Object> get props => [accessToken, idToken];
 }
 
-extension RefreshSession on _Auth {
+extension RefreshSession on Auth {
   Future<Either<RefreshSessionResponse, Failure>> refreshSession({
     required String email,
     required String refreshToken,

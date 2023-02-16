@@ -25,7 +25,7 @@ class LoginResponse extends Equatable {
   List<Object> get props => [accessToken, refreshToken, user, gym];
 }
 
-extension Login on _Auth {
+extension Login on Auth {
   Future<Either<LoginResponse, Failure>> login({
     required String email,
     required String password,

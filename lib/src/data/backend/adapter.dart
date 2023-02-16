@@ -9,6 +9,113 @@ enum HttpMethod {
   delete,
 }
 
+class SocketConnection extends Equatable {
+  final IO.Socket _socket;
+  final Stream<void> onDisconnect;
+
+  const SocketConnection._(this._socket, this.onDisconnect) : super();
+
+  Future<Either<Stream<T>, Failure>> stream<T>(SocketEvent event) async {
+    final streamController = StreamController<T>();
+    prettyLogger.d('Opening stream for event: $event.name');
+    final handler = (data) {
+      prettyLogger.d("Received event: ${event.name}\n\tData: $data");
+      streamController.add(data);
+    };
+    final disconnectHandler = (_) async {
+      prettyLogger.d('Closing event stream : ${event.name}');
+      await streamController.close();
+    };
+    _socket
+      ..on(event.name, handler)
+      ..onDisconnect(disconnectHandler);
+    streamController.onCancel = () async {
+      prettyLogger.d("Closing event stream: $event");
+      if (_socket.connected) {
+        _socket
+          ..off(event.name, handler)
+          ..off('disconnect', disconnectHandler);
+      }
+      await streamController.close();
+    };
+    return Left(streamController.stream);
+  }
+
+  Future<Either<dynamic, Failure>> emit(
+    SocketEvent event,
+    dynamic data,
+  ) async {
+    try {
+      prettyLogger.d('Emitting event: $event\n\tData: $data');
+      _socket.emit(event.name, data);
+      final success = Completer<Either<dynamic, Failure>>();
+      final error = Completer<Either<dynamic, Failure>>();
+      _socket.once(
+        SocketEvent.success.name,
+        (data) {
+          prettyLogger
+              .d("Successfully emitted event: $event\n\tReturned data: $data");
+          success.complete(Left(data));
+        },
+      );
+      _socket.once(
+        SocketEvent.error.name,
+        (err) {
+          prettyLogger.e("Failed to emit event: $event\n\tError: $err");
+          error.complete(Right(Failure.fromJson(err)));
+        },
+      );
+      return Left(
+          await Future.any([success.future, error.future]).timeout(_timeout));
+    } catch (err) {
+      prettyLogger.e("Failed to emit event: $event\n\tError: $err");
+      return Right(Failures.networkFailure.instance);
+    }
+  }
+
+  @override
+  List<Object> get props => [_socket.connected];
+}
+
+@override
+Future<Either<SocketConnection, Failure>> connect(String authorization) async {
+  try {
+    prettyLogger.d("Connecting to the websocket server...");
+    final completer = Completer<SocketConnection>();
+    final streamController = StreamController<void>();
+    final IO.Socket _socket = IO.io(
+      '${dotenv.get('BACKEND_HOST')}:${dotenv.get('BACKEND_PORT')}',
+      IO.OptionBuilder()
+          .setTransports(['websocket'])
+          .disableAutoConnect()
+          .setExtraHeaders({'token': authorization})
+          .build(),
+    )..connect();
+    _socket
+      ..onConnect((_) {
+        prettyLogger.d("Connected to the websocket server.");
+        completer.complete(
+          SocketConnection._(
+            _socket,
+            streamController.stream.asBroadcastStream(),
+          ),
+        );
+        return Left(_socket);
+      })
+      ..onDisconnect(
+        (_) {
+          prettyLogger.d("Disconnected from the websocket server.");
+          streamController.add(null);
+          streamController.close();
+        },
+      );
+    return Left(await completer.future.timeout(_timeout));
+  } catch (err) {
+    prettyLogger.e("Failed to connect to the websocket: $err");
+    return Right(Failures.networkFailure.instance);
+  }
+}
+
 Future<Either3<Map<String, dynamic>, List<dynamic>, Failure>> _requestRaw({
   required String route,
   required HttpMethod method,

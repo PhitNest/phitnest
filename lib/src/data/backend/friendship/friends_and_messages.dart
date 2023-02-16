@@ -21,7 +21,7 @@ class FriendsAndMessagesResponse extends Equatable {
   List<Object> get props => [friendship, message ?? ""];
 }
 
-extension FriendsAndMessages on _Friendship {
+extension FriendsAndMessages on Friendship {
   Future<Either<List<FriendsAndMessagesResponse>, Failure>> friendsAndMessages(
           String accessToken) =>
       _requestList(

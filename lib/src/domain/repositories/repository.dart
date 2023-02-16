@@ -11,6 +11,6 @@ part 'auth.dart';
 part 'user.dart';
 
 abstract class Repositories {
-  static const auth = _Auth();
-  static const user = _User();
+  static const auth = Auth();
+  static const user = User();
 }

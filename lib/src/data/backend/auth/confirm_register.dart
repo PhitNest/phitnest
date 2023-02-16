@@ -1,6 +1,6 @@
 part of backend;
 
-extension ConfirmRegister on _Auth {
+extension ConfirmRegister on Auth {
   Future<Either<ProfilePictureUserEntity, Failure>> confirmRegister({
     required String email,
     required String code,

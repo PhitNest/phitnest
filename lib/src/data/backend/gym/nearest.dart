@@ -1,6 +1,6 @@
 part of backend;
 
-extension GetNearest on _Gym {
+extension GetNearest on Gym {
   Future<Either<List<GymEntity>, Failure>> nearest({
     required LocationEntity location,
     required double meters,

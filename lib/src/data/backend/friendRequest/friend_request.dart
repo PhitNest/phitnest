@@ -1,5 +1,5 @@
 part of backend;
 
-class _FriendRequest {
-  const _FriendRequest._();
+class FriendRequest {
+  const FriendRequest._();
 }

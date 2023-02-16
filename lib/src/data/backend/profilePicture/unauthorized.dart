@@ -17,7 +17,7 @@ class GetUnauthorizedUploadUrlResponse extends Equatable {
   List<Object> get props => [url];
 }
 
-extension GetUnauthorized on _ProfilePicture {
+extension GetUnauthorized on ProfilePicture {
   Future<Either<GetUnauthorizedUploadUrlResponse, Failure>>
       getUnauthorizedUploadUrl(String email) => _requestJson(
             route: "/profilePicture/unauthorized",

@@ -1,6 +1,6 @@
 part of backend;
 
-extension SignOut on _Auth {
+extension SignOut on Auth {
   Future<Failure?> signOut({
     required String accessToken,
     required bool allDevices,

@@ -1,6 +1,6 @@
 part of backend;
 
-extension Send on _FriendRequest {
+extension Send on FriendRequest {
   Future<Either3<FriendRequestEntity, FriendshipEntity, Failure>> send({
     required String accessToken,
     required String recipientCognitoId,

@@ -23,7 +23,7 @@ class FriendsAndRequestsResponse extends Equatable {
   List<Object> get props => [friendships, requests];
 }
 
-extension FriendsAndRequests on _Friendship {
+extension FriendsAndRequests on Friendship {
   Future<Either<FriendsAndRequestsResponse, Failure>> friendsAndRequests(
           String accessToken) =>
       _requestJson(
