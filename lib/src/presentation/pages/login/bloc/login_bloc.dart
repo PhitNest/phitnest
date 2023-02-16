@@ -15,7 +15,7 @@ class _LoginBloc extends Bloc<_ILoginEvent, _ILoginState> {
   /// STATE MACHINE:
   ///
   /// * [_InitialState]
-  ///   * on [_SubmitEvent]
+  ///   * on [_SubmitEvent] ->
   ///       * [_LoadingState] if the form is validated correctly
   ///       * [_InitialState] with autovalidate mode on if the form is invalid
   ///
