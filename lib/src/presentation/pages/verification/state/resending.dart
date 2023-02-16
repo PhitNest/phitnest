@@ -1,6 +1,6 @@
 part of verification_page;
 
-class _ResendingState extends _VerificationState {
+class _ResendingState extends _IVerificationState {
   final CancelableOperation<Failure?> operation;
 
   const _ResendingState({

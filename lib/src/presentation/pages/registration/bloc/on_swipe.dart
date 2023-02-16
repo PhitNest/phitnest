@@ -3,7 +3,7 @@ part of registration_page;
 extension _OnSwipe on _RegistrationBloc {
   void onSwipe(
     _SwipeEvent event,
-    Emitter<_RegistrationState> emit,
+    Emitter<_IRegistrationState> emit,
   ) {
     if (state is _SuccessState) {
       final state = this.state as _SuccessState;
@@ -45,10 +45,10 @@ extension _OnSwipe on _RegistrationBloc {
           registerOp: state.registerOp,
         ),
       );
-    } else if (state is _GymSelectedState) {
-      final state = this.state as _GymSelectedState;
+    } else if (state is _IGymSelectedStateState) {
+      final state = this.state as _IGymSelectedStateState;
       emit(
-        _GymSelectedState(
+        _IGymSelectedStateState(
           firstNameConfirmed: state.firstNameConfirmed,
           location: state.location,
           gyms: state.gyms,
@@ -69,10 +69,10 @@ extension _OnSwipe on _RegistrationBloc {
           takenEmails: state.takenEmails,
         ),
       );
-    } else if (state is _GymsLoadedState) {
-      final state = this.state as _GymsLoadedState;
+    } else if (state is _IGymsLoadedStateState) {
+      final state = this.state as _IGymsLoadedStateState;
       emit(
-        _GymsLoadedState(
+        _IGymsLoadedStateState(
           firstNameConfirmed: state.firstNameConfirmed,
           currentPage: event.pageIndex,
           autovalidateMode: state.autovalidateMode,

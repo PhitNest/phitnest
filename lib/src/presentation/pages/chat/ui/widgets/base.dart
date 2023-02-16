@@ -1,9 +1,9 @@
 part of chat_page;
 
-abstract class _BasePage extends StatelessWidget {
+abstract class _IChatPageBase extends StatelessWidget {
   final Widget child;
 
-  const _BasePage({
+  const _IChatPageBase({
     Key? key,
     required this.child,
   }) : super(key: key);

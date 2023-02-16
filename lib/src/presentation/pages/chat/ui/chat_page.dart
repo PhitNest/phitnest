@@ -10,7 +10,7 @@ class ChatPage extends StatelessWidget {
         withAuth: context.withAuth,
         withAuthVoid: context.withAuthVoid,
       ),
-      child: BlocConsumer<_ChatBloc, _ChatState>(listener: (context, state) {
+      child: BlocConsumer<_ChatBloc, _IChatState>(listener: (context, state) {
         if (state is _ErrorState) {
           ScaffoldMessenger.of(context).showMaterialBanner(
             StyledErrorBanner(

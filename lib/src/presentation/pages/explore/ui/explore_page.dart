@@ -28,7 +28,7 @@ class ExplorePage extends StatelessWidget {
         initialData: initialData,
         gymId: gymId,
       ),
-      child: BlocConsumer<_ExploreBloc, _ExploreState>(
+      child: BlocConsumer<_ExploreBloc, _IExploreState>(
         listener: (context, state) {
           if (state is _LoadedState) {
             onLoaded(state.userExploreResponse);

@@ -1,6 +1,6 @@
 part of chat_page;
 
-class _EmptyChatPage extends _BasePage {
+class _EmptyChatPage extends _IChatPageBase {
   _EmptyChatPage({Key? key})
       : super(
           key: key,

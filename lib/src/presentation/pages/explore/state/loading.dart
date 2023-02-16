@@ -1,6 +1,6 @@
 part of explore_page;
 
-class _LoadingState extends _ExploreState {
+class _LoadingState extends _IExploreState {
   final CancelableOperation<Either<UserExploreResponse, Failure>> explore;
 
   const _LoadingState({

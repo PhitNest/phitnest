@@ -3,7 +3,7 @@ part of registration_page;
 extension _OnRetryLoadGyms on _RegistrationBloc {
   void onRetryLoadGyms(
     _RetryLoadGymsEvent event,
-    Emitter<_RegistrationState> emit,
+    Emitter<_IRegistrationState> emit,
   ) =>
       emit(
         _InitialState(
@@ -16,7 +16,7 @@ extension _OnRetryLoadGyms on _RegistrationBloc {
           )..then(
               (either) => either.fold(
                 (success) =>
-                    add(_GymsLoadedEvent(success.value1, success.value2)),
+                    add(_IGymsLoadedStateEvent(success.value1, success.value2)),
                 (failure) => add(_GymsLoadingErrorEvent(failure)),
               ),
             ),

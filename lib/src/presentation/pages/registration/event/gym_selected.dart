@@ -1,9 +1,9 @@
 part of registration_page;
 
-class _GymSelectedEvent extends _RegistrationEvent {
+class _IGymSelectedStateEvent extends _IRegistrationEvent {
   final GymEntity gym;
 
-  const _GymSelectedEvent(this.gym) : super();
+  const _IGymSelectedStateEvent(this.gym) : super();
 
   @override
   List<Object> get props => [gym];

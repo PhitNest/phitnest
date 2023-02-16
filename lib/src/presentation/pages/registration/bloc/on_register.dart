@@ -3,9 +3,9 @@ part of registration_page;
 extension _OnRegister on _RegistrationBloc {
   void onRegister(
     _RegisterEvent event,
-    Emitter<_RegistrationState> emit,
+    Emitter<_IRegistrationState> emit,
   ) {
-    final state = this.state as _GymSelected;
+    final state = this.state as _IGymSelectedState;
     // Validate (we can't use the form key because we aren't currently on these pages)
     if (validateName(firstNameController.text) != null ||
         validateName(lastNameController.text) != null) {

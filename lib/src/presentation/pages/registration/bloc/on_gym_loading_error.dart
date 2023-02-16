@@ -3,7 +3,7 @@ part of registration_page;
 extension _OnGymsLoadingError on _RegistrationBloc {
   void onGymsLoadingError(
     _GymsLoadingErrorEvent event,
-    Emitter<_RegistrationState> emit,
+    Emitter<_IRegistrationState> emit,
   ) =>
       emit(
         _GymsLoadingErrorState(

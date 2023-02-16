@@ -1,7 +1,7 @@
 part of explore_page;
 
-abstract class _ExploreEvent extends Equatable {
-  const _ExploreEvent() : super();
+abstract class _IExploreEvent extends Equatable {
+  const _IExploreEvent() : super();
 
   @override
   List<Object> get props => [];

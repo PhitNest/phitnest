@@ -1,5 +1,5 @@
 part of verification_page;
 
-class _InitialState extends _VerificationState {
+class _InitialState extends _IVerificationState {
   const _InitialState() : super();
 }

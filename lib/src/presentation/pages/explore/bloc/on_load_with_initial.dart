@@ -2,7 +2,7 @@ part of explore_page;
 
 extension _OnLoadWithInitial on _ExploreBloc {
   void onLoadWithInitial(
-          _LoadWithInitialEvent event, Emitter<_ExploreState> emit) =>
+          _LoadWithInitialEvent event, Emitter<_IExploreState> emit) =>
       emit(
         _ReloadingState(
           logoPressSubscription: logoPressStream.listen(

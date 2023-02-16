@@ -1,13 +1,13 @@
 part of explore_page;
 
-abstract class _ExploreState extends Equatable {
-  const _ExploreState() : super();
+abstract class _IExploreState extends Equatable {
+  const _IExploreState() : super();
 
   @override
   List<Object> get props => [];
 }
 
-abstract class _Loaded extends _ExploreState {
+abstract class _Loaded extends _IExploreState {
   final StreamSubscription<void> logoPressSubscription;
   final UserExploreResponse userExploreResponse;
 

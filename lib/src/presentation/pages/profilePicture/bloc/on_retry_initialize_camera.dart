@@ -3,7 +3,7 @@ part of profile_picture_page;
 extension _OnRetryInitializeCamera on _ProfilePictureBloc {
   void onRetryInitializeCamera(
     _RetryInitializeCameraEvent event,
-    Emitter<_ProfilePictureState> emit,
+    Emitter<_IProfilePictureState> emit,
   ) {
     if (state is _CameraErrorState) {
       final state = this.state as _CameraErrorState;

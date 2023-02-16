@@ -1,6 +1,6 @@
 part of home_page;
 
-class _LoadedUserEvent extends _HomeEvent {
+class _LoadedUserEvent extends _IHomeEvent {
   final GetUserResponse response;
 
   const _LoadedUserEvent(this.response) : super();

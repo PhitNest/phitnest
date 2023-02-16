@@ -1,6 +1,6 @@
 part of registration_page;
 
-class _RegisterLoadingState extends _GymSelected {
+class _RegisterLoadingState extends _IGymSelectedState {
   final CancelableOperation<Either<RegisterResponse, Failure>> registerOp;
 
   const _RegisterLoadingState({

@@ -1,6 +1,6 @@
 part of forgot_password_page;
 
-class _LoadingState extends _ForgotPasswordState {
+class _LoadingState extends _IForgotPasswordState {
   final CancelableOperation<Failure?> forgotPassOperation;
 
   _LoadingState({

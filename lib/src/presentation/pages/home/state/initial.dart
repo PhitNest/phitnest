@@ -1,7 +1,9 @@
 part of home_page;
 
-class _InitialState extends _HomeState {
-  const _InitialState({
+class _ConnectingState extends _IHomeState {
+  final CancelableOperation<Either<SocketConnection, Failure>> socketConnection;
+
+  const _ConnectingState({
     required super.user,
     required super.gym,
     required super.accessToken,
@@ -9,5 +11,9 @@ class _InitialState extends _HomeState {
     required super.password,
     required super.currentPage,
     required super.userExploreResponse,
+    required this.socketConnection,
   }) : super();
+
+  @override
+  List<Object> get props => [super.props, socketConnection];
 }

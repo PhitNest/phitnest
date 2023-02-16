@@ -6,6 +6,7 @@ import '../../widgets/styled/styled.dart';
 import '../pages.dart';
 
 class OnBoardingPage extends StatelessWidget {
+  /// POP RESULT: NONE
   const OnBoardingPage({
     Key? key,
   }) : super(key: key);
@@ -36,7 +37,7 @@ class OnBoardingPage extends StatelessWidget {
                   onPressed: () => Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) => RegistrationPage(),
+                      builder: (context) => const RegistrationPage(),
                     ),
                   ),
                   text: "LET'S GET STARTED",
@@ -47,7 +48,7 @@ class OnBoardingPage extends StatelessWidget {
                   onPressed: () => Navigator.pushReplacement(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) => LoginPage(),
+                      builder: (context) => const LoginPage(),
                     ),
                   ),
                 ),

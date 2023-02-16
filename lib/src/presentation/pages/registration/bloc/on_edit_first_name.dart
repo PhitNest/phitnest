@@ -3,7 +3,7 @@ part of registration_page;
 extension _OnEditFirstName on _RegistrationBloc {
   void onEditFirstName(
     _EditFirstNameEvent event,
-    Emitter<_RegistrationState> emit,
+    Emitter<_IRegistrationState> emit,
   ) {
     final validation = validateName(firstNameController.text);
     if (state is _SuccessState) {
@@ -46,10 +46,10 @@ extension _OnEditFirstName on _RegistrationBloc {
           registerOp: state.registerOp,
         ),
       );
-    } else if (state is _GymSelectedState) {
-      final state = this.state as _GymSelectedState;
+    } else if (state is _IGymSelectedStateState) {
+      final state = this.state as _IGymSelectedStateState;
       emit(
-        _GymSelectedState(
+        _IGymSelectedStateState(
           firstNameConfirmed: validation == null,
           location: state.location,
           gyms: state.gyms,
@@ -70,10 +70,10 @@ extension _OnEditFirstName on _RegistrationBloc {
           takenEmails: state.takenEmails,
         ),
       );
-    } else if (state is _GymsLoadedState) {
-      final state = this.state as _GymsLoadedState;
+    } else if (state is _IGymsLoadedStateState) {
+      final state = this.state as _IGymsLoadedStateState;
       emit(
-        _GymsLoadedState(
+        _IGymsLoadedStateState(
           firstNameConfirmed: validation == null,
           currentPage: state.currentPage,
           autovalidateMode: state.autovalidateMode,

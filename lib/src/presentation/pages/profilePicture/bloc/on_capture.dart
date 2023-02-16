@@ -3,10 +3,10 @@ part of profile_picture_page;
 extension _OnCapture on _ProfilePictureBloc {
   void onCapture(
     _CaptureEvent event,
-    Emitter<_ProfilePictureState> emit,
+    Emitter<_IProfilePictureState> emit,
   ) {
-    if (state is _Initialized) {
-      final state = this.state as _Initialized;
+    if (state is _IInitializedState) {
+      final state = this.state as _IInitializedState;
       emit(
         _CaptureLoadingState(
           cameraController: state.cameraController,

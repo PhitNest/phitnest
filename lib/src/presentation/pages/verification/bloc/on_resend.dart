@@ -3,7 +3,7 @@ part of verification_page;
 extension _OnResend on _VerificationBloc {
   void onResend(
     _ResendEvent event,
-    Emitter<_VerificationState> emit,
+    Emitter<_IVerificationState> emit,
   ) =>
       emit(
         _ResendingState(

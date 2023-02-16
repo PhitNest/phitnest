@@ -1,6 +1,6 @@
 part of profile_picture_page;
 
-class _CameraErrorState extends _ProfilePictureState {
+class _CameraErrorState extends _IProfilePictureState {
   final Failure failure;
   final CameraController cameraController;
 

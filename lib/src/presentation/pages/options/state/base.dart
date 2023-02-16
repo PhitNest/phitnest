@@ -1,9 +1,9 @@
 part of options_page;
 
-abstract class _OptionsState extends Equatable {
+abstract class _IOptionsState extends Equatable {
   final GetUserResponse response;
 
-  const _OptionsState({
+  const _IOptionsState({
     required this.response,
   }) : super();
 
@@ -11,8 +11,8 @@ abstract class _OptionsState extends Equatable {
   List<Object> get props => [response];
 }
 
-abstract class _LoadedState extends _OptionsState {
-  const _LoadedState({
+abstract class _ILoadedState extends _IOptionsState {
+  const _ILoadedState({
     required super.response,
   }) : super();
 }

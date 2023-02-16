@@ -1,6 +1,6 @@
 part of options_page;
 
-class _InitialPage extends _BasePage {
+class _InitialPage extends _IBasePage {
   final VoidCallback onSignOut;
 
   _InitialPage({

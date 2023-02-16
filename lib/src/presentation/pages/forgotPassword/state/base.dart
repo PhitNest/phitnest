@@ -1,9 +1,9 @@
 part of forgot_password_page;
 
-abstract class _ForgotPasswordState extends Equatable {
+abstract class _IForgotPasswordState extends Equatable {
   final AutovalidateMode autovalidateMode;
 
-  const _ForgotPasswordState({
+  const _IForgotPasswordState({
     required this.autovalidateMode,
   }) : super();
 

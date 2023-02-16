@@ -2,6 +2,7 @@ library home_page;
 
 import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,8 +22,10 @@ part 'ui/home_page.dart';
 
 part 'state/base.dart';
 part 'state/initial.dart';
-part 'state/log_out.dart';
+part 'state/log_out_connected.dart';
 part 'state/explore.dart';
+part 'state/socket_connected.dart';
+part 'state/socket_disconnected.dart';
 
 part 'bloc/home_bloc.dart';
 part 'bloc/on_loaded_user.dart';

@@ -1,6 +1,6 @@
 part of verification_page;
 
-class _ResendErrorState extends _VerificationState {
+class _ResendErrorState extends _IVerificationState {
   final Failure failure;
 
   const _ResendErrorState({

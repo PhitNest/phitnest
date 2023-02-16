@@ -1,6 +1,6 @@
 part of profile_picture_page;
 
-class _UploadErrorState extends _Captured {
+class _UploadErrorState extends _ICapturedState {
   final Failure failure;
 
   const _UploadErrorState({

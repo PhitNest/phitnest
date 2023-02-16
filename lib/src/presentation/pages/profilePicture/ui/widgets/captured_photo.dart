@@ -25,7 +25,7 @@ class _UploadingErrorPage extends _CapturedPhotoPage {
         );
 }
 
-class _CapturedPhotoPage extends _CapturedPhotoBasePage {
+class _CapturedPhotoPage extends _ICapturedPhotoPage {
   final VoidCallback onPressedConfirm;
   final VoidCallback onPressedRetake;
   final ValueChanged<XFile> onUploadPicture;
@@ -56,7 +56,7 @@ class _CapturedPhotoPage extends _CapturedPhotoBasePage {
         );
 }
 
-class _UploadingPage extends _CapturedPhotoBasePage {
+class _UploadingPage extends _ICapturedPhotoPage {
   _UploadingPage({
     required super.profilePicture,
     required super.cameraController,
@@ -67,12 +67,12 @@ class _UploadingPage extends _CapturedPhotoBasePage {
         );
 }
 
-class _CapturedPhotoBasePage extends StatelessWidget {
+class _ICapturedPhotoPage extends StatelessWidget {
   final XFile profilePicture;
   final CameraController cameraController;
   final List<Widget> children;
 
-  const _CapturedPhotoBasePage({
+  const _ICapturedPhotoPage({
     required this.profilePicture,
     required this.cameraController,
     required this.children,

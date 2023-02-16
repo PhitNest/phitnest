@@ -3,7 +3,7 @@ part of options_page;
 extension _OnSetProfilePicture on _OptionsBloc {
   void onSetProfilePicture(
     _SetProfilePictureEvent event,
-    Emitter<_OptionsState> emit,
+    Emitter<_IOptionsState> emit,
   ) {
     CachedNetworkImage.evictFromCache(Cache.profilePictureImageCache);
     if (state is _EditProfilePictureState) {

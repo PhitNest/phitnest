@@ -1,6 +1,6 @@
 part of chat_page;
 
-class _ChatBloc extends Bloc<_ChatEvent, _ChatState> {
+class _ChatBloc extends Bloc<_IChatEvent, _IChatState> {
   final Future<Either<T, Failure>> Function<T>(
       Future<Either<T, Failure>> Function(String accessToken) f) withAuth;
   final Future<Failure?> Function(

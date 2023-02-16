@@ -1,6 +1,6 @@
 part of chat_page;
 
-class _InitialState extends _ChatState {
+class _InitialState extends _IChatState {
   final CancelableOperation<Either<List<FriendsAndMessagesResponse>, Failure>>
       loadingMessages;
 

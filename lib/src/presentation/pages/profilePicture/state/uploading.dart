@@ -1,6 +1,6 @@
 part of profile_picture_page;
 
-class _UploadingState extends _Captured {
+class _UploadingState extends _ICapturedState {
   final CancelableOperation<Failure?> uploadImage;
 
   const _UploadingState({

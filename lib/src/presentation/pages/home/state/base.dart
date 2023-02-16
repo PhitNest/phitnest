@@ -1,6 +1,6 @@
 part of home_page;
 
-abstract class _HomeState extends Equatable {
+abstract class _IHomeState extends Equatable {
   final ProfilePictureUserEntity user;
   final GymEntity gym;
   final String accessToken;
@@ -9,7 +9,7 @@ abstract class _HomeState extends Equatable {
   final UserExploreResponse? userExploreResponse;
   final NavbarPage currentPage;
 
-  const _HomeState({
+  const _IHomeState({
     required this.user,
     required this.gym,
     required this.accessToken,
@@ -29,4 +29,40 @@ abstract class _HomeState extends Equatable {
         currentPage,
         userExploreResponse ?? "",
       ];
+}
+
+abstract class _ISocketConnectedState extends _IHomeState {
+  final SocketConnection socketConnection;
+
+  const _ISocketConnectedState({
+    required super.user,
+    required super.gym,
+    required super.accessToken,
+    required super.refreshToken,
+    required super.password,
+    required super.currentPage,
+    required super.userExploreResponse,
+    required this.socketConnection,
+  }) : super();
+
+  @override
+  List<Object> get props => [...super.props, socketConnection];
+}
+
+abstract class _ISocketDisconnectedState extends _IHomeState {
+  final Failure failure;
+
+  const _ISocketDisconnectedState({
+    required super.user,
+    required super.gym,
+    required super.accessToken,
+    required super.refreshToken,
+    required super.password,
+    required super.currentPage,
+    required super.userExploreResponse,
+    required this.failure,
+  }) : super();
+
+  @override
+  List<Object> get props => [...super.props, failure];
 }

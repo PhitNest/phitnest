@@ -1,13 +1,13 @@
 part of profile_picture_page;
 
-abstract class _ProfilePictureState extends Equatable {
-  const _ProfilePictureState() : super();
+abstract class _IProfilePictureState extends Equatable {
+  const _IProfilePictureState() : super();
 }
 
-abstract class _Initialized extends _ProfilePictureState {
+abstract class _IInitializedState extends _IProfilePictureState {
   final CameraController cameraController;
 
-  const _Initialized({
+  const _IInitializedState({
     required this.cameraController,
   }) : super();
 
@@ -15,10 +15,10 @@ abstract class _Initialized extends _ProfilePictureState {
   List<Object> get props => [cameraController];
 }
 
-abstract class _Captured extends _Initialized {
+abstract class _ICapturedState extends _IInitializedState {
   final XFile file;
 
-  const _Captured({
+  const _ICapturedState({
     required super.cameraController,
     required this.file,
   }) : super();

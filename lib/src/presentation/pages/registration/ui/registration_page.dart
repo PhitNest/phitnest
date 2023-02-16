@@ -5,7 +5,7 @@ extension _Bloc on BuildContext {
 
   int get scrollLimit {
     if (bloc.state.firstNameConfirmed) {
-      if (bloc.state is _GymSelected) {
+      if (bloc.state is _IGymSelectedState) {
         return 4;
       } else {
         return 3;
@@ -15,12 +15,12 @@ extension _Bloc on BuildContext {
     }
   }
 
-  void selectGym(GymEntity gym) => bloc.add(_GymSelectedEvent(gym));
+  void selectGym(GymEntity gym) => bloc.add(_IGymSelectedStateEvent(gym));
 
   void noGym() {}
 
   void notMyGym() {
-    final state = bloc.state as _GymSelected;
+    final state = bloc.state as _IGymSelectedState;
     Navigator.push(
       this,
       CupertinoPageRoute(
@@ -113,7 +113,7 @@ class RegistrationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(
         create: (context) => _RegistrationBloc(),
-        child: BlocConsumer<_RegistrationBloc, _RegistrationState>(
+        child: BlocConsumer<_RegistrationBloc, _IRegistrationState>(
           listener: (context, state) {},
           builder: (context, state) {
             final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
@@ -193,7 +193,7 @@ class RegistrationPage extends StatelessWidget {
                                       error: state.failure.message,
                                       onPressedRetry: context.retryLoadGyms,
                                     );
-                                  } else if (state is _GymSelected) {
+                                  } else if (state is _IGymSelectedState) {
                                     return _PageThreeSelected(
                                       firstName: context
                                           .bloc.firstNameController.text
@@ -211,7 +211,7 @@ class RegistrationPage extends StatelessWidget {
                                         curve: Curves.easeInOut,
                                       ),
                                     );
-                                  } else if (state is _GymsLoaded) {
+                                  } else if (state is _IGymsLoadedState) {
                                     return _PageThreeNotSelected(
                                       firstName: context
                                           .bloc.firstNameController.text
@@ -233,7 +233,7 @@ class RegistrationPage extends StatelessWidget {
                                       onPressedNo: context.notMyGym,
                                       error: state.failure.message,
                                     );
-                                  } else if (state is _GymSelected) {
+                                  } else if (state is _IGymSelectedState) {
                                     return _PageFour(
                                       gym: state.gym,
                                       onPressedYes: context.submit,

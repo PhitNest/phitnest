@@ -1,6 +1,6 @@
 part of options_page;
 
-class _SignOutLoadingPage extends _BasePage {
+class _SignOutLoadingPage extends _IBasePage {
   _SignOutLoadingPage({
     required super.user,
     required super.gym,

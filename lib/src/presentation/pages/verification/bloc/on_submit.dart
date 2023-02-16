@@ -3,7 +3,7 @@ part of verification_page;
 extension _OnSubmit on _VerificationBloc {
   void onSubmit(
     _SubmitEvent event,
-    Emitter<_VerificationState> emit,
+    Emitter<_IVerificationState> emit,
   ) =>
       emit(
         codeController.text.length != 6

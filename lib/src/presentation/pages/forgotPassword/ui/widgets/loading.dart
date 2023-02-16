@@ -1,6 +1,6 @@
 part of forgot_password_page;
 
-class _LoadingPage extends _BasePage {
+class _LoadingPage extends _IBasePage {
   const _LoadingPage({
     required super.emailController,
     required super.passwordController,

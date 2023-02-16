@@ -1,6 +1,6 @@
 part of explore_page;
 
-class _LoadingErrorState extends _ExploreState {
+class _LoadingErrorState extends _IExploreState {
   final Failure failure;
 
   const _LoadingErrorState({

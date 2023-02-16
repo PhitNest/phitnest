@@ -1,13 +1,13 @@
 part of options_page;
 
-abstract class _BasePage extends StatelessWidget {
+abstract class _IBasePage extends StatelessWidget {
   final GymEntity gym;
   final ProfilePictureUserEntity user;
   final Widget child;
   final VoidCallback onEditProfilePicture;
   final bool showEdit;
 
-  const _BasePage({
+  const _IBasePage({
     Key? key,
     required this.gym,
     required this.user,

@@ -1,6 +1,6 @@
 part of options_page;
 
-class _OptionsBloc extends Bloc<_OptionsEvent, _OptionsState> {
+class _OptionsBloc extends Bloc<_IOptionsEvent, _IOptionsState> {
   final Future<Either<T, Failure>> Function<T>(
       Future<Either<T, Failure>> Function(String accessToken) f) withAuth;
   final Future<Failure?> Function(

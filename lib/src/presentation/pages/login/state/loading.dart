@@ -1,6 +1,6 @@
 part of login_page;
 
-class _LoadingState extends _LoginState {
+class _LoadingState extends _ILoginState {
   final CancelableOperation<Either<LoginResponse, Failure>> loginOperation;
 
   const _LoadingState({
@@ -10,9 +10,5 @@ class _LoadingState extends _LoginState {
   }) : super();
 
   @override
-  List<Object> get props => [
-        super.props,
-        loginOperation.isCanceled,
-        loginOperation.isCompleted,
-      ];
+  List<Object> get props => [super.props, loginOperation.value];
 }

@@ -25,7 +25,7 @@ class OptionsPage extends StatelessWidget {
         initialGym: initialGym,
         initialUser: initialUser,
       ),
-      child: BlocConsumer<_OptionsBloc, _OptionsState>(
+      child: BlocConsumer<_OptionsBloc, _IOptionsState>(
         listener: (context, state) async {
           if (state is _EditProfilePictureState) {
             XFile? result;
@@ -89,7 +89,7 @@ class OptionsPage extends StatelessWidget {
               user: state.response,
               gym: state.response.gym,
             );
-          } else if (state is _LoadedState) {
+          } else if (state is _ILoadedState) {
             return _InitialPage(
               user: state.response,
               gym: state.response.gym,

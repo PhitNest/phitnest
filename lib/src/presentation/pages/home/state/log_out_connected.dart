@@ -1,7 +1,7 @@
 part of home_page;
 
-class _LogOutState extends _HomeState {
-  const _LogOutState({
+class _LogOutConnectedState extends _ISocketConnectedState {
+  const _LogOutConnectedState({
     required super.user,
     required super.gym,
     required super.accessToken,
@@ -9,5 +9,6 @@ class _LogOutState extends _HomeState {
     required super.password,
     required super.currentPage,
     required super.userExploreResponse,
+    required super.socketConnection,
   }) : super();
 }

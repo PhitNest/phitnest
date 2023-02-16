@@ -3,10 +3,10 @@ part of home_page;
 extension _OnLogOut on _HomeBloc {
   void onLogOut(
     _LogOutEvent event,
-    Emitter<_HomeState> emit,
+    Emitter<_IHomeState> emit,
   ) =>
       emit(
-        _LogOutState(
+        _LogOutConnectedState(
           currentPage: state.currentPage,
           user: state.user,
           gym: state.gym,
@@ -14,6 +14,7 @@ extension _OnLogOut on _HomeBloc {
           password: state.password,
           refreshToken: state.refreshToken,
           userExploreResponse: state.userExploreResponse,
+          socketConnection: (state as _SocketConnectedState).socketConnection,
         ),
       );
 }
