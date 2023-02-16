@@ -1,5 +1,5 @@
 part of backend;
 
-class _User {
-  const _User._();
+class User {
+  const User._();
 }

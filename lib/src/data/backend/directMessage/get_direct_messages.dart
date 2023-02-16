@@ -1,6 +1,6 @@
 part of backend;
 
-extension GetDirectMessages on _DirectMessage {
+extension GetDirectMessages on DirectMessage {
   Future<Either<List<DirectMessageEntity>, Failure>> getDirectMessages({
     required String accessToken,
     required String friendCognitoId,

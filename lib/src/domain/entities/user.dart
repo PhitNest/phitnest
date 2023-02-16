@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-abstract class _User extends Equatable {
+abstract class User extends Equatable {
   final String id;
   final String firstName;
   final String lastName;
@@ -8,7 +8,7 @@ abstract class _User extends Equatable {
   final String gymId;
   final bool confirmed;
 
-  const _User({
+  const User({
     required this.id,
     required this.firstName,
     required this.lastName,
@@ -30,7 +30,7 @@ abstract class _User extends Equatable {
   String get fullName => '$firstName $lastName';
 }
 
-class UserEntity extends _User {
+class UserEntity extends User {
   final String email;
 
   const UserEntity({
@@ -61,7 +61,7 @@ class UserEntity extends _User {
       ];
 }
 
-class PublicUserEntity extends _User {
+class PublicUserEntity extends User {
   const PublicUserEntity({
     required super.id,
     required super.firstName,

@@ -16,7 +16,7 @@ class GetUploadUrlResponse extends Equatable {
   List<Object> get props => [url];
 }
 
-extension UploadAuthorized on _ProfilePicture {
+extension UploadAuthorized on ProfilePicture {
   Future<Either<GetUploadUrlResponse, Failure>> getUploadUrl(
           String accessToken) =>
       _requestJson(

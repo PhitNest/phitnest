@@ -1,5 +1,5 @@
 part of backend;
 
-class _Gym {
-  const _Gym._();
+class Gym {
+  const Gym._();
 }

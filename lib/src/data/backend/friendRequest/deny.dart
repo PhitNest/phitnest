@@ -1,6 +1,6 @@
 part of backend;
 
-extension Deny on _FriendRequest {
+extension Deny on FriendRequest {
   Future<Failure?> deny({
     required String accessToken,
     required String senderCognitoId,

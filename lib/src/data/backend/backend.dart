@@ -1,10 +1,13 @@
 library backend;
 
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:basic_utils/basic_utils.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../common/constants/constants.dart';
 import '../../common/failure.dart';
@@ -48,11 +51,11 @@ part 'user/get.dart';
 part 'user/explore.dart';
 
 abstract class Backend {
-  static const auth = _Auth._();
-  static const directMessage = _DirectMessage._();
-  static const friendRequest = _FriendRequest._();
-  static const friendship = _Friendship._();
-  static const gym = _Gym._();
-  static const profilePicture = _ProfilePicture._();
-  static const user = _User._();
+  static const auth = Auth._();
+  static const directMessage = DirectMessage._();
+  static const friendRequest = FriendRequest._();
+  static const friendship = Friendship._();
+  static const gym = Gym._();
+  static const profilePicture = ProfilePicture._();
+  static const user = User._();
 }

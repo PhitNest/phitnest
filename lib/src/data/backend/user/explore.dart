@@ -23,7 +23,7 @@ class UserExploreResponse extends Equatable {
   List<Object> get props => [users, requests];
 }
 
-extension Explore on _User {
+extension Explore on User {
   Future<Either<UserExploreResponse, Failure>> explore({
     required String accessToken,
     required String gymId,

@@ -32,7 +32,7 @@ class GetUserResponse extends ProfilePictureUserEntity {
   List<Object> get props => [super.props, gym];
 }
 
-extension GetUser on _User {
+extension GetUser on User {
   Future<Either<GetUserResponse, Failure>> get(String accessToken) =>
       _requestJson(
         route: "/user",

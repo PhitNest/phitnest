@@ -1,7 +1,7 @@
 part of repository;
 
-class _Auth {
-  const _Auth();
+class Auth {
+  const Auth();
 
   Future<Either<LoginResponse, Failure>> login({
     required String email,

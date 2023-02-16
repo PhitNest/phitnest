@@ -1,5 +1,5 @@
 part of backend;
 
-class _Friendship {
-  const _Friendship._();
+class Friendship {
+  const Friendship._();
 }

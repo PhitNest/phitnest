@@ -1,6 +1,6 @@
 part of backend;
 
-extension ForgotPasswordSubmit on _Auth {
+extension ForgotPasswordSubmit on Auth {
   Future<Failure?> forgotPasswordSubmit({
     required String email,
     required String code,

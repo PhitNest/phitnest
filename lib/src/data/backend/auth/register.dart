@@ -19,7 +19,7 @@ class RegisterResponse extends Equatable {
   List<Object> get props => [user, uploadUrl];
 }
 
-extension Register on _Auth {
+extension Register on Auth {
   Future<Either<RegisterResponse, Failure>> register({
     required String email,
     required String password,

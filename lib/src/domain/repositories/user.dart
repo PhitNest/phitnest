@@ -1,7 +1,7 @@
 part of repository;
 
-class _User {
-  const _User();
+class User {
+  const User();
 
   Future<Either<GetUserResponse, Failure>> getUser({
     required String accessToken,

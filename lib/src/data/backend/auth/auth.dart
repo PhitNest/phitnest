@@ -1,5 +1,5 @@
 part of backend;
 
-class _Auth {
-  const _Auth._();
+class Auth {
+  const Auth._();
 }
