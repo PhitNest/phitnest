@@ -13,6 +13,7 @@ extension _OnForgotPassword on _ForgotPasswordBloc {
             : _ErrorState(
                 failure: event.failure,
                 autovalidateMode: state.autovalidateMode,
+                dismiss: Completer(),
               ),
       );
 }

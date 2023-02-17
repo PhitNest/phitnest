@@ -1,5 +1,7 @@
 library forgot_password_page;
 
+import 'dart:async';
+
 import 'package:async/async.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,13 +24,13 @@ part 'bloc/forgot_password_bloc.dart';
 part 'bloc/on_error.dart';
 part 'bloc/on_submit.dart';
 part 'bloc/on_success.dart';
-part 'event/error.dart';
 part 'event/base.dart';
+part 'event/error.dart';
 part 'event/submit.dart';
 part 'event/success.dart';
+part 'state/base.dart';
 part 'state/confirm_email_error.dart';
 part 'state/error.dart';
-part 'state/base.dart';
 part 'state/initial.dart';
 part 'state/loading.dart';
 part 'state/success.dart';

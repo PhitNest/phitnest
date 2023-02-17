@@ -1,5 +1,7 @@
 library chat_page;
 
+import 'dart:async';
+
 import 'package:async/async.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -13,9 +15,6 @@ import '../../../data/backend/backend.dart';
 import '../../widgets/widgets.dart';
 import '../home/home.dart';
 
-part 'ui/widgets/available_chat.dart';
-part 'ui/widgets/base.dart';
-part 'ui/widgets/empty.dart';
 part 'bloc/chat_bloc.dart';
 part 'bloc/onError.dart';
 part 'bloc/onMessageLoaded.dart';
@@ -27,4 +26,7 @@ part 'state/error.dart';
 part 'state/initial.dart';
 part 'state/message_loaded.dart';
 part 'ui/chat_page.dart';
+part 'ui/widgets/available_chat.dart';
+part 'ui/widgets/base.dart';
+part 'ui/widgets/empty.dart';
 part 'ui/widgets/loading.dart';
