@@ -47,11 +47,10 @@ class ForgotPasswordPage extends StatelessWidget {
           if (state is _SuccessState) {
             return context.goToSubmitPage();
           } else if (state is _ErrorState) {
-            ScaffoldMessenger.of(context).showMaterialBanner(
-              StyledErrorBanner(
-                err: state.failure.message,
-                context: context,
-              ),
+            StyledErrorBanner.show(
+              context,
+              state.failure,
+              state.dismiss,
             );
           } else if (state is _ConfirmingEmailState) {
             final String email = context.bloc.emailController.text.trim();

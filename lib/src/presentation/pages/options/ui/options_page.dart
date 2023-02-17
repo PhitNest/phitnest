@@ -61,18 +61,16 @@ class OptionsPage extends StatelessWidget {
                 Cache.profilePictureImageCache);
             onLoadedUser(state.response);
           } else if (state is _LoadingErrorState) {
-            ScaffoldMessenger.of(context).showMaterialBanner(
-              StyledErrorBanner(
-                err: state.failure.message,
-                context: context,
-              ),
+            StyledErrorBanner.show(
+              context,
+              state.failure,
+              state.dismiss,
             );
           } else if (state is _SignOutErrorState) {
-            ScaffoldMessenger.of(context).showMaterialBanner(
-              StyledErrorBanner(
-                err: state.failure.message,
-                context: context,
-              ),
+            StyledErrorBanner.show(
+              context,
+              state.failure,
+              state.dismiss,
             );
           } else if (state is _SignOutSuccessState) {
             Navigator.of(context).pushAndRemoveUntil(

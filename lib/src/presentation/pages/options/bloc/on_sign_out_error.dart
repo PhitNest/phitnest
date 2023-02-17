@@ -11,6 +11,7 @@ extension _OnSignOutError on _OptionsBloc {
         _SignOutErrorState(
           response: state.response,
           failure: event.failure,
+          dismiss: Completer(),
         ),
       );
     } else {

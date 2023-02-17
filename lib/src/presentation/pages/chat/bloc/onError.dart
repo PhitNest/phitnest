@@ -8,6 +8,7 @@ extension _OnError on _ChatBloc {
       emit(
         _ErrorState(
           failure: event.failure,
+          dismiss: Completer(),
         ),
       );
 }

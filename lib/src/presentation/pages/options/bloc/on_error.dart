@@ -9,6 +9,7 @@ extension _OnError on _OptionsBloc {
         _LoadingErrorState(
           failure: event.failure,
           response: state.response,
+          dismiss: Completer(),
         ),
       );
 }
