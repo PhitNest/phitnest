@@ -5,14 +5,7 @@ extension _Bloc on BuildContext {
 }
 
 class OptionsPage extends StatelessWidget {
-  final ProfilePictureUserEntity initialUser;
-  final GymEntity initialGym;
-
-  const OptionsPage({
-    Key? key,
-    required this.initialUser,
-    required this.initialGym,
-  }) : super(key: key);
+  const OptionsPage() : super();
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +13,6 @@ class OptionsPage extends StatelessWidget {
       create: (context) => _OptionsBloc(
         withAuth: context.withAuth,
         withAuthVoid: context.withAuthVoid,
-        initialGym: initialGym,
-        initialUser: initialUser,
       ),
       child: BlocConsumer<_OptionsBloc, _IOptionsState>(
         listener: (context, state) async {

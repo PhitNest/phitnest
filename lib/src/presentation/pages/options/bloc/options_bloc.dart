@@ -5,26 +5,22 @@ class _OptionsBloc extends Bloc<_IOptionsEvent, _IOptionsState> {
       Future<Either<T, Failure>> Function(String accessToken) f) withAuth;
   final Future<Failure?> Function(
       Future<Failure?> Function(String accessToken) f) withAuthVoid;
-  final ProfilePictureUserEntity initialUser;
-  final GymEntity initialGym;
 
   _OptionsBloc({
     required this.withAuth,
     required this.withAuthVoid,
-    required this.initialUser,
-    required this.initialGym,
   }) : super(
           _InitialState(
             response: GetUserResponse(
-              id: initialUser.id,
-              firstName: initialUser.firstName,
-              email: initialUser.email,
-              lastName: initialUser.lastName,
-              cognitoId: initialUser.cognitoId,
-              confirmed: initialUser.confirmed,
-              profilePictureUrl: initialUser.profilePictureUrl,
-              gymId: initialUser.gymId,
-              gym: initialGym,
+              id: Cache.user!.id,
+              firstName: Cache.user!.firstName,
+              email: Cache.user!.email,
+              lastName: Cache.user!.lastName,
+              cognitoId: Cache.user!.cognitoId,
+              confirmed: Cache.user!.confirmed,
+              profilePictureUrl: Cache.profilePictureUrl!,
+              gymId: Cache.user!.gymId,
+              gym: Cache.gym!,
             ),
             getUser: CancelableOperation.fromFuture(
               withAuth(
