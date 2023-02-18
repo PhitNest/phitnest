@@ -6,13 +6,11 @@ extension _Bloc on BuildContext {
 
 class ExplorePage extends StatelessWidget {
   final Stream<PressType> logoPressStream;
-  final UserExploreResponse? initialData;
   final String gymId;
 
   const ExplorePage({
     Key? key,
     required this.logoPressStream,
-    required this.initialData,
     required this.gymId,
   }) : super(key: key);
 
@@ -23,7 +21,6 @@ class ExplorePage extends StatelessWidget {
         withAuth: context.withAuth,
         withAuthVoid: context.withAuthVoid,
         logoPressStream: logoPressStream,
-        initialData: initialData,
         gymId: gymId,
       ),
       child: BlocConsumer<_ExploreBloc, _IExploreState>(

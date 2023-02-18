@@ -6,14 +6,12 @@ class _ExploreBloc extends Bloc<_IExploreEvent, _IExploreState> {
   final Future<Failure?> Function(
       Future<Failure?> Function(String accessToken) f) withAuthVoid;
   final Stream<PressType> logoPressStream;
-  final UserExploreResponse? initialData;
   final String gymId;
 
   _ExploreBloc({
     required this.withAuth,
     required this.withAuthVoid,
     required this.logoPressStream,
-    required this.initialData,
     required this.gymId,
   }) : super(const _InitialState()) {
     on<_ReleaseEvent>(onRelease);
@@ -24,8 +22,9 @@ class _ExploreBloc extends Bloc<_IExploreEvent, _IExploreState> {
     on<_LoadingErrorEvent>(onLoadingError);
     on<_LoadedEvent>(onLoaded);
     if (state is _InitialState) {
-      if (initialData != null) {
-        add(_LoadWithInitialEvent(initialData!));
+      final cachedResults = Cache.userExplore;
+      if (cachedResults != null) {
+        add(_LoadWithInitialEvent(cachedResults));
       } else {
         add(const _LoadEvent());
       }

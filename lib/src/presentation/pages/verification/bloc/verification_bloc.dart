@@ -46,9 +46,9 @@ class _VerificationBloc extends Bloc<_IVerificationEvent, _IVerificationState> {
   ///   * on *[_ResetEvent]* -> *[_InitialState]*
   _VerificationBloc({
     required this.email,
+    required this.password,
     required this.confirm,
     required this.resend,
-    required this.password,
     required this.shouldLogin,
   }) : super(const _InitialState()) {
     on<_SubmitEvent>(onSubmit);

@@ -31,17 +31,7 @@ extension _OnSignOut on _OptionsBloc {
       await state.getUser.cancel();
       emit(
         _SignOutLoadingState(
-          response: GetUserResponse(
-            id: initialUser.id,
-            email: initialUser.email,
-            cognitoId: initialUser.cognitoId,
-            confirmed: initialUser.confirmed,
-            firstName: initialUser.firstName,
-            gymId: initialUser.gymId,
-            lastName: initialUser.lastName,
-            profilePictureUrl: initialUser.profilePictureUrl,
-            gym: initialGym,
-          ),
+          response: state.response,
           signOut: CancelableOperation.fromFuture(
             withAuthVoid(
               (accessToken) => Repositories.auth.signOut(

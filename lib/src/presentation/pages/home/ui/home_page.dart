@@ -40,25 +40,11 @@ class HomePage extends StatelessWidget {
                                 gymId: Cache.gym!.id,
                                 logoPressStream:
                                     state.logoPress.stream.asBroadcastStream(),
-                                initialData: Cache.userExplore,
                               );
                             case NavbarPage.chat:
                               return const ChatPage();
                             case NavbarPage.options:
-                              final cachedUser = Cache.user!;
-                              return OptionsPage(
-                                initialGym: Cache.gym!,
-                                initialUser: ProfilePictureUserEntity(
-                                  id: cachedUser.id,
-                                  email: cachedUser.email,
-                                  cognitoId: cachedUser.cognitoId,
-                                  confirmed: cachedUser.confirmed,
-                                  firstName: cachedUser.firstName,
-                                  gymId: cachedUser.gymId,
-                                  lastName: cachedUser.lastName,
-                                  profilePictureUrl: Cache.profilePictureUrl!,
-                                ),
-                              );
+                              return const OptionsPage();
                             case NavbarPage.news:
                               return Container();
                           }
