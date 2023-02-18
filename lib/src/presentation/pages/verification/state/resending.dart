@@ -1,12 +1,12 @@
 part of verification_page;
 
 class _ResendingState extends _IVerificationState {
-  final CancelableOperation<Failure?> operation;
+  final CancelableOperation<Failure?> resend;
 
   const _ResendingState({
-    required this.operation,
+    required this.resend,
   }) : super();
 
   @override
-  List<Object> get props => [super.props, operation.value];
+  List<Object> get props => [super.props, resend.value];
 }

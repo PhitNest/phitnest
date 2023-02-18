@@ -59,7 +59,7 @@ class _LoginBloc extends Bloc<_ILoginEvent, _ILoginState> {
     // Close error banner
     if (state is _ErrorState) {
       final state = this.state as _ErrorState;
-      state.dismiss.complete(null);
+      state.dismiss.complete();
     }
     // Dispose of email and password text field controllers
     emailController.dispose();
