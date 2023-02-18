@@ -9,8 +9,6 @@ extension _Bloc on BuildContext {
 
   void upload() => bloc.add(const _UploadEvent());
 
-  void retryInitializeCamera() => bloc.add(const _RetryInitializeCameraEvent());
-
   void uploadFromAlbums(XFile image) => bloc.add(_CaptureSuccessEvent(image));
 }
 

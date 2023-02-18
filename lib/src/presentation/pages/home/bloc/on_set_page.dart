@@ -4,28 +4,16 @@ extension _OnSetPage on _HomeBloc {
   void onSetPage(
     _SetPageEvent event,
     Emitter<_IHomeState> emit,
-  ) =>
+  ) {
+    if (state is _InitialState) {
+      final state = this.state as _InitialState;
       emit(
-        event.page == NavbarPage.explore
-            ? _IExploreState(
-                user: state.user,
-                gym: state.gym,
-                accessToken: state.accessToken,
-                password: state.password,
-                refreshToken: state.refreshToken,
-                logoPress: StreamController(),
-                userExploreResponse: state.userExploreResponse,
-                socketConnection: (state as _IExploreState).socketConnection,
-              )
-            : _ConnectingState(
-                currentPage: event.page,
-                user: state.user,
-                gym: state.gym,
-                accessToken: state.accessToken,
-                password: state.password,
-                refreshToken: state.refreshToken,
-                userExploreResponse: state.userExploreResponse,
-                socketConnection: (state as _ConnectingState).socketConnection,
-              ),
+        _InitialState(
+          currentPage: event.page,
+          logoPress: state.logoPress,
+          socketConnection: state.socketConnection,
+        ),
       );
+    }
+  }
 }

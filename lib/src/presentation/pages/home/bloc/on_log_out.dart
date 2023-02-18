@@ -4,17 +4,16 @@ extension _OnLogOut on _HomeBloc {
   void onLogOut(
     _LogOutEvent event,
     Emitter<_IHomeState> emit,
-  ) =>
+  ) async {
+    if (state is _InitialState) {
+      final state = this.state as _InitialState;
+      await state.socketConnection.cancel();
       emit(
-        _LogOutConnectedState(
+        _LogOutState(
           currentPage: state.currentPage,
-          user: state.user,
-          gym: state.gym,
-          accessToken: state.accessToken,
-          password: state.password,
-          refreshToken: state.refreshToken,
-          userExploreResponse: state.userExploreResponse,
-          socketConnection: (state as _SocketConnectedState).socketConnection,
+          logoPress: state.logoPress,
         ),
       );
+    }
+  }
 }

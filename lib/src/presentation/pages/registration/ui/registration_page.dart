@@ -79,10 +79,7 @@ extension _Bloc on BuildContext {
             Navigator.pushAndRemoveUntil(
               this,
               CupertinoPageRoute(
-                builder: (context) => HomePage(
-                  initialData: confirmEmail,
-                  initialPassword: password,
-                ),
+                builder: (context) => HomePage(),
               ),
               (_) => false,
             );
