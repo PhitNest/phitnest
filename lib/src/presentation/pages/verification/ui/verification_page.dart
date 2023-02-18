@@ -8,6 +8,17 @@ class VerificationPage extends StatelessWidget {
   final String? password;
   final bool shouldLogin;
 
+  /// **POP RESULT: [LoginResponse] if [shouldLogin] is true, otherwise null.**
+  ///
+  /// This page is used to verify the user's email address.
+  ///
+  /// Users may need to visit this page for either forgot password or confirm email.
+  /// The [confirm] and [resend] methods should be provided to this constructor accordingly
+  /// to the use case.
+  ///
+  /// The [shouldLogin] flag controls whether or not this page will attempt to make a login
+  /// request after the user has successfully verified their email address. If [shouldLogin]
+  /// is true, then the [password] must be provided.
   const VerificationPage({
     Key? key,
     required this.headerText,

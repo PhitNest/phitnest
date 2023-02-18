@@ -9,6 +9,9 @@ class ConfirmEmailPage extends StatelessWidget {
   final String? password;
   final bool shouldLogin;
 
+  /// **POP RESULT: [LoginResponse] if [shouldLogin] and the login request succeeds, null otherwise**
+  ///
+  /// if [shouldLogin] is true, then [password] must not be null.
   const ConfirmEmailPage({
     Key? key,
     required this.email,
