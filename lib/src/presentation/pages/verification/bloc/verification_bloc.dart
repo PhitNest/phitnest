@@ -14,31 +14,31 @@ class _VerificationBloc extends Bloc<_IVerificationEvent, _IVerificationState> {
   ///
   /// * **[_InitialState]**
   ///   * on *[_SubmitEvent]* ->
-  ///       * *[_ErrorState]* if the user has not entered a 6 digit code
-  ///       * *[_ConfirmingState]* otherwise
+  ///     * *[_ErrorState]* if the user has not entered a 6 digit code
+  ///     * *[_ConfirmingState]* otherwise
   ///   * on *[_ResendEvent]* -> *[_ResendingState]*
   ///
   /// * **[_ConfirmingState]**
   ///   * on *[_ErrorEvent]* ->
-  ///       * *[_ProfilePictureUploadState]* if [Failures.profilePictureNotFound]
-  ///       * *[_ErrorState]* otherwise
+  ///     * *[_ProfilePictureUploadState]* if [Failures.profilePictureNotFound]
+  ///     * *[_ErrorState]* otherwise
   ///   * on *[_ConfirmSuccessEvent]* ->
-  ///       * *[_LoginLoadingState]* if [shouldLogin] is true
-  ///       * *[_SuccessState]* otherwise
+  ///     * *[_LoginLoadingState]* if [shouldLogin] is true
+  ///     * *[_SuccessState]* otherwise
   ///
   /// * **[_LoginLoadingState]**
   ///   * on *[_LoginResponseEvent]* -> *[_SuccessState]*
   ///
   /// * **[_ProfilePictureUploadState]**
   ///   * on *[_SubmitEvent]* ->
-  ///       * *[_ErrorState]* if the user has not entered a 6 digit code
-  ///       * *[_ConfirmingState]* otherwise
+  ///     * *[_ErrorState]* if the user has not entered a 6 digit code
+  ///     * *[_ConfirmingState]* otherwise
   ///   * on *[_ResendEvent]* -> *[_ResendingState]*
   ///
   /// * **[_ErrorState]**
   ///   * on *[_SubmitEvent]* ->
-  ///       * *[_ErrorState]* if the user has not entered a 6 digit code
-  ///       * *[_ConfirmingState]* otherwise
+  ///     * *[_ErrorState]* if the user has not entered a 6 digit code
+  ///     * *[_ConfirmingState]* otherwise
   ///   * on *[_ResendEvent]* -> *[_ResendingState]*
   ///
   /// * **[_ResendingState]**
