@@ -1,27 +1,44 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/failure.dart';
 import '../../../common/theme.dart';
 
-class StyledErrorBanner extends MaterialBanner {
+class StyledErrorBanner extends Equatable {
+  BuildContext? owningContext;
+  final Failure failure;
+
+  StyledErrorBanner({
+    required this.failure,
+  });
+
+  void show(BuildContext owningContext) {
+    owningContext = owningContext;
+    ScaffoldMessenger.of(owningContext).showMaterialBanner(
+      _StyledErrorBannerWidget(
+        err: failure.message,
+        context: owningContext,
+      ),
+    );
+  }
+
+  void dismiss() async {
+    if (owningContext != null) {
+      ScaffoldMessenger.of(owningContext!).hideCurrentMaterialBanner();
+    }
+  }
+
+  @override
+  List<Object> get props => [failure];
+}
+
+class _StyledErrorBannerWidget extends MaterialBanner {
   final String err;
   final BuildContext context;
 
-  void dismiss() => ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-
-  static void show(BuildContext context, Failure failure, Completer dismiss) {
-    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-    final banner = StyledErrorBanner._(
-      err: failure.message,
-      context: context,
-    );
-    ScaffoldMessenger.of(context).showMaterialBanner(banner);
-    dismiss.future.then((_) => banner.dismiss());
-  }
-
-  StyledErrorBanner._({
+  _StyledErrorBannerWidget({
     required this.err,
     required this.context,
   }) : super(

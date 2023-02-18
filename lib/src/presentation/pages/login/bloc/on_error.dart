@@ -40,8 +40,9 @@ extension _OnLoginError on _LoginBloc {
         _ErrorState(
           autovalidateMode: AutovalidateMode.always,
           invalidCredentials: state.invalidCredentials,
-          dismiss: Completer(),
-          failure: event.failure,
+          errorBanner: StyledErrorBanner(
+            failure: event.failure,
+          ),
         ),
       );
     }
