@@ -7,14 +7,12 @@ extension _Bloc on BuildContext {
 class ExplorePage extends StatelessWidget {
   final Stream<PressType> logoPressStream;
   final UserExploreResponse? initialData;
-  final ValueChanged<UserExploreResponse> onLoaded;
   final String gymId;
 
   const ExplorePage({
     Key? key,
     required this.logoPressStream,
     required this.initialData,
-    required this.onLoaded,
     required this.gymId,
   }) : super(key: key);
 
@@ -29,11 +27,7 @@ class ExplorePage extends StatelessWidget {
         gymId: gymId,
       ),
       child: BlocConsumer<_ExploreBloc, _IExploreState>(
-        listener: (context, state) {
-          if (state is _LoadedState) {
-            onLoaded(state.userExploreResponse);
-          }
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           if (state is _LoadingErrorState) {
             return _ErrorPage(

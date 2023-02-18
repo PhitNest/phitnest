@@ -7,13 +7,11 @@ extension _Bloc on BuildContext {
 class OptionsPage extends StatelessWidget {
   final ProfilePictureUserEntity initialUser;
   final GymEntity initialGym;
-  final ValueChanged<GetUserResponse> onLoadedUser;
 
   const OptionsPage({
     Key? key,
     required this.initialUser,
     required this.initialGym,
-    required this.onLoadedUser,
   }) : super(key: key);
 
   @override
@@ -59,7 +57,6 @@ class OptionsPage extends StatelessWidget {
           } else if (state is _LoadedUserState) {
             await CachedNetworkImage.evictFromCache(
                 Cache.profilePictureImageCache);
-            onLoadedUser(state.response);
           } else if (state is _LoadingErrorState) {
             StyledErrorBanner.show(
               context,

@@ -12,6 +12,7 @@ class StyledErrorBanner extends MaterialBanner {
   void dismiss() => ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
 
   static void show(BuildContext context, Failure failure, Completer dismiss) {
+    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
     final banner = StyledErrorBanner._(
       err: failure.message,
       context: context,

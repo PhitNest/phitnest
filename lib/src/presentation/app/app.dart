@@ -10,7 +10,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../data/backend/backend.dart';
 import '../../data/cache/cache.dart';
 import '../../common/theme.dart';
-import '../../domain/entities/entities.dart';
 import '../pages/pages.dart';
 import '../widgets/widgets.dart';
 
@@ -41,34 +40,18 @@ class App extends StatelessWidget {
               builder: (context) {
                 // If there is user data and a password in the cache, then we know that the user has registered.
                 final user = Cache.user;
-                final password = Cache.password;
-                if (user != null && password != null) {
+                if (user != null && Cache.password != null) {
                   // If the following data is in the cache, then we know that the user is logged in.
                   // This profile picture url is likely expired, but in case it isn't we can use it.
-                  final profilePictureUrl = Cache.profilePictureUrl;
-                  final accessToken = Cache.accessToken;
-                  final refreshToken = Cache.refreshToken;
-                  final gym = Cache.gym;
                   if (user.confirmed &&
-                      accessToken != null &&
-                      refreshToken != null &&
-                      profilePictureUrl != null &&
-                      gym != null) {
-                    return _RedirectHome(
-                      accessToken: accessToken,
-                      refreshToken: refreshToken,
-                      gym: gym,
-                      user: user,
-                      profilePictureUrl: profilePictureUrl,
-                      password: password,
-                    );
+                      Cache.accessToken != null &&
+                      Cache.refreshToken != null &&
+                      Cache.profilePictureUrl != null &&
+                      Cache.gym != null) {
+                    return const _RedirectHome();
                   } else {
                     // The user is either not logged in or their account is not confirmed.
-                    return _LoginOrRedirectToConfirmEmail(
-                      shouldRedirect: !user.confirmed,
-                      email: user.email,
-                      password: password,
-                    );
+                    return const _LoginOrRedirectToConfirmEmail();
                   }
                 }
                 // The user has not registered, or they have signed out and restarted the app.

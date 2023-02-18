@@ -78,7 +78,8 @@ class SocketConnection extends Equatable {
 }
 
 @override
-Future<Either<SocketConnection, Failure>> connect(String authorization) async {
+Future<Either<SocketConnection, Failure>> connectSocket(
+    String authorization) async {
   try {
     prettyLogger.d("Connecting to the websocket server...");
     final completer = Completer<SocketConnection>();

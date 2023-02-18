@@ -1,39 +1,94 @@
 part of home_page;
 
 class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
-  final LoginResponse initialData;
-  final String initialPassword;
-
-  _HomeBloc({
-    required this.initialData,
-    required this.initialPassword,
-  }) : super(
-          _ConnectingState(
+  /// Control unit for the business logic of the [HomePage] widget.
+  ///
+  /// **STATE MACHINE:**
+  ///
+  /// * **[_InitialState]**
+  _HomeBloc()
+      : super(
+          _InitialState(
             currentPage: NavbarPage.options,
-            user: initialData.user,
-            gym: initialData.gym,
-            accessToken: initialData.accessToken,
-            refreshToken: initialData.refreshToken,
-            password: initialPassword,
-            userExploreResponse: Cache.userExplore,
+            logoPress: StreamController(),
             socketConnection: CancelableOperation.fromFuture(
-                connect(initialData.accessToken)),
+              connectSocket(Cache.accessToken!),
+            ),
           ),
         ) {
-    on<_LoadedUserEvent>(onLoadedUser);
     on<_LogOutEvent>(onLogOut);
-    on<_LoginEvent>(onLogin);
     on<_RefreshSessionEvent>(onRefreshSession);
     on<_SetPageEvent>(onSetPage);
-    on<_SetExploreResponseEvent>(onSetExploreResponse);
   }
 
   @override
   Future<void> close() async {
-    if (state is _IExploreState) {
-      final state = this.state as _IExploreState;
-      await state.logoPress.close();
+    await state.logoPress.close();
+    if (state is _InitialState) {
+      final state = this.state as _InitialState;
+      await state.socketConnection.cancel();
     }
     return super.close();
   }
+}
+
+extension _Bloc on BuildContext {
+  _HomeBloc get bloc => read();
+}
+
+extension Auth on BuildContext {
+  Future<Either<T, Failure>> withAuth<T>(
+    Future<Either<T, Failure>> Function(String) f,
+  ) =>
+      f(Cache.accessToken!).then(
+        (either) => either.fold(
+          (response) => Left(response),
+          (failure) {
+            if (failure == Failures.unauthorized.instance) {
+              return Repositories.auth
+                  .refreshSession(
+                    email: Cache.user!.email,
+                    refreshToken: Cache.refreshToken!,
+                  )
+                  .then(
+                    (either) => either.fold(
+                      (refreshResponse) {
+                        bloc.add(_RefreshSessionEvent(refreshResponse));
+                        return f(refreshResponse.accessToken);
+                      },
+                      (failure) => Repositories.auth
+                          .login(
+                            email: Cache.user!.email,
+                            password: Cache.password!,
+                          )
+                          .then(
+                            (either) => either.fold(
+                              (loginResponse) => f(loginResponse.accessToken),
+                              (failure) {
+                                bloc.add(const _LogOutEvent());
+                                return Right(failure);
+                              },
+                            ),
+                          ),
+                    ),
+                  );
+            } else {
+              return Right(failure);
+            }
+          },
+        ),
+      );
+
+  Future<Failure?> withAuthVoid(Future<Failure?> Function(String) f) =>
+      withAuth(
+        (accessToken) => f(accessToken).then(
+          (failure) =>
+              failure != null ? Right<Null, Failure>(failure) : Left(null),
+        ),
+      ).then(
+        (either) => either.fold(
+          (success) => null,
+          (failure) => failure,
+        ),
+      );
 }

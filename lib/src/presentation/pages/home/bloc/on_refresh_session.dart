@@ -4,17 +4,19 @@ extension _OnRefreshSession on _HomeBloc {
   void onRefreshSession(
     _RefreshSessionEvent event,
     Emitter<_IHomeState> emit,
-  ) =>
+  ) async {
+    if (state is _InitialState) {
+      final state = this.state as _InitialState;
+      await state.socketConnection.cancel();
       emit(
-        _ConnectingState(
+        _InitialState(
           currentPage: state.currentPage,
-          user: state.user,
-          gym: state.gym,
-          accessToken: event.response.accessToken,
-          password: state.password,
-          refreshToken: state.refreshToken,
-          userExploreResponse: state.userExploreResponse,
-          socketConnection: (state as _ConnectingState).socketConnection,
+          logoPress: state.logoPress,
+          socketConnection: CancelableOperation.fromFuture(
+            connectSocket(event.response.accessToken),
+          ),
         ),
       );
+    }
+  }
 }

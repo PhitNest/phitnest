@@ -1,22 +1,9 @@
 part of app;
 
 class _RedirectHome extends StatefulWidget {
-  final String accessToken;
-  final String refreshToken;
-  final GymEntity gym;
-  final UserEntity user;
-  final String profilePictureUrl;
-  final String password;
-
   /// This is used to redirect to the home page from the root of [App].
   const _RedirectHome({
     Key? key,
-    required this.accessToken,
-    required this.refreshToken,
-    required this.gym,
-    required this.user,
-    required this.profilePictureUrl,
-    required this.password,
   }) : super(key: key);
 
   @override
@@ -36,18 +23,7 @@ class _RedirectHomeState extends State<_RedirectHome> {
             (_) => Navigator.pushAndRemoveUntil(
               context,
               CupertinoPageRoute(
-                builder: (context) => HomePage(
-                  initialData: LoginResponse(
-                    accessToken: widget.accessToken,
-                    refreshToken: widget.refreshToken,
-                    user: ProfilePictureUserEntity.fromUserEntity(
-                      widget.user,
-                      widget.profilePictureUrl,
-                    ),
-                    gym: widget.gym,
-                  ),
-                  initialPassword: widget.password,
-                ),
+                builder: (context) => HomePage(),
               ),
               (_) => false,
             ),
