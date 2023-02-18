@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/failure.dart';
 import '../../../common/theme.dart';
 
-class StyledErrorBanner extends Equatable {
-  BuildContext? owningContext;
+class StyledErrorBanner {
+  BuildContext? _owningContext;
   final Failure failure;
 
   StyledErrorBanner({
@@ -15,7 +14,7 @@ class StyledErrorBanner extends Equatable {
   });
 
   void show(BuildContext owningContext) {
-    owningContext = owningContext;
+    _owningContext = owningContext;
     ScaffoldMessenger.of(owningContext).showMaterialBanner(
       _StyledErrorBannerWidget(
         err: failure.message,
@@ -25,13 +24,10 @@ class StyledErrorBanner extends Equatable {
   }
 
   void dismiss() async {
-    if (owningContext != null) {
-      ScaffoldMessenger.of(owningContext!).hideCurrentMaterialBanner();
+    if (_owningContext != null) {
+      ScaffoldMessenger.of(_owningContext!).hideCurrentMaterialBanner();
     }
   }
-
-  @override
-  List<Object> get props => [failure];
 }
 
 class _StyledErrorBannerWidget extends MaterialBanner {
