@@ -1,30 +1,5 @@
 part of profile_picture_page;
 
-class _UploadingErrorPage extends _CapturedPhotoPage {
-  final Failure failure;
-
-  _UploadingErrorPage({
-    required super.profilePicture,
-    required super.onUploadPicture,
-    required super.cameraController,
-    required super.onPressedRetake,
-    required super.onPressedConfirm,
-    required this.failure,
-  }) : super(
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: 12.h,
-            ),
-            child: Text(
-              failure.message,
-              style: theme.textTheme.labelLarge!
-                  .copyWith(color: theme.colorScheme.error),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        );
-}
-
 class _CapturedPhotoPage extends _ICapturedPhotoPage {
   final VoidCallback onPressedConfirm;
   final VoidCallback onPressedRetake;

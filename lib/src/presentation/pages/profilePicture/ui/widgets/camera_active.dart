@@ -10,24 +10,6 @@ class _CaptureLoadingPage extends _CameraActiveBasePage {
         );
 }
 
-class _CaptureErrorPage extends _CameraActivePage {
-  final String errorMessage;
-
-  _CaptureErrorPage({
-    required super.cameraController,
-    required super.onUploadPicture,
-    required super.onPressTakePicture,
-    required this.errorMessage,
-  }) : super(
-          child: Text(
-            errorMessage,
-            style: theme.textTheme.labelLarge!
-                .copyWith(color: theme.colorScheme.error),
-            textAlign: TextAlign.center,
-          ),
-        );
-}
-
 class _CameraActivePage extends _CameraActiveBasePage {
   final VoidCallback onPressTakePicture;
   final ValueChanged<XFile> onUploadPicture;
