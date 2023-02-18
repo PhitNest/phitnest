@@ -12,6 +12,7 @@ extension _OnUploadError on _ProfilePictureBloc {
           cameraController: state.cameraController,
           failure: event.failure,
           file: state.file,
+          dismiss: Completer(),
         ),
       );
     } else {

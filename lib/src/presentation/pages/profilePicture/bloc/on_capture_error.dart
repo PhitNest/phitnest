@@ -11,6 +11,7 @@ extension _OnCaptureError on _ProfilePictureBloc {
         _CaptureErrorState(
           cameraController: state.cameraController,
           failure: event.failure,
+          dismiss: Completer(),
         ),
       );
     } else {

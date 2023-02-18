@@ -45,21 +45,33 @@ class ProfilePicturePage extends StatelessWidget {
         child: BlocConsumer<_ProfilePictureBloc, _IProfilePictureState>(
           listener: (context, state) {
             if (state is _UploadSuccessState) {
-              Navigator.pop(context, state.file);
+              Navigator.pop(
+                context,
+                state.file,
+              );
+            } else if (state is _CaptureErrorState) {
+              StyledErrorBanner.show(
+                context,
+                state.failure,
+                state.dismiss,
+              );
+            } else if (state is _UploadErrorState) {
+              StyledErrorBanner.show(
+                context,
+                state.failure,
+                state.dismiss,
+              );
+            } else if (state is _CameraErrorState) {
+              StyledErrorBanner.show(
+                context,
+                state.failure,
+                state.dismiss,
+              );
             }
           },
           builder: (context, state) {
             if (state is _ICapturedState) {
-              if (state is _UploadErrorState) {
-                return _UploadingErrorPage(
-                  profilePicture: state.file,
-                  onUploadPicture: context.uploadFromAlbums,
-                  cameraController: state.cameraController,
-                  onPressedRetake: context.retake,
-                  onPressedConfirm: context.upload,
-                  failure: state.failure,
-                );
-              } else if (state is _CaptureSuccessState) {
+              if (state is _CaptureSuccessState) {
                 return _CapturedPhotoPage(
                   profilePicture: state.file,
                   cameraController: state.cameraController,
@@ -74,14 +86,7 @@ class ProfilePicturePage extends StatelessWidget {
                 );
               }
             } else if (state is _IInitializedState) {
-              if (state is _CaptureErrorState) {
-                return _CaptureErrorPage(
-                  cameraController: state.cameraController,
-                  onUploadPicture: context.uploadFromAlbums,
-                  onPressTakePicture: context.capture,
-                  errorMessage: state.failure.message,
-                );
-              } else if (state is _CaptureLoadingState) {
+              if (state is _CaptureLoadingState) {
                 return _CaptureLoadingPage(
                   cameraController: state.cameraController,
                 );
@@ -92,11 +97,6 @@ class ProfilePicturePage extends StatelessWidget {
                   onPressTakePicture: context.capture,
                 );
               }
-            } else if (state is _CameraErrorState) {
-              return _CameraLoadingErrorPage(
-                errorMessage: state.failure.message,
-                onPressedRetry: context.retryInitializeCamera,
-              );
             } else {
               return const _CameraLoadingPage();
             }
