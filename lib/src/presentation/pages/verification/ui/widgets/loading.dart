@@ -1,6 +1,6 @@
 part of verification_page;
 
-class _LoadingPage extends _BasePage {
+class _LoadingPage extends _IBasePage {
   _LoadingPage({
     Key? key,
     required super.codeController,
@@ -8,6 +8,7 @@ class _LoadingPage extends _BasePage {
     required super.email,
   }) : super(
           key: key,
+          onSubmit: () {},
           child: Column(
             children: [
               20.verticalSpace,

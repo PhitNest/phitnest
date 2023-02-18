@@ -2,12 +2,15 @@ part of verification_page;
 
 extension _OnConfirmError on _VerificationBloc {
   void onConfirmError(
-    _ConfirmErrorEvent event,
+    _ErrorEvent event,
     Emitter<_IVerificationState> emit,
   ) =>
       emit(
         event.failure == Failures.profilePictureNotFound.instance
             ? const _ProfilePictureUploadState()
-            : _ConfirmErrorState(failure: event.failure),
+            : _ErrorState(
+                failure: event.failure,
+                dismiss: Completer(),
+              ),
       );
 }

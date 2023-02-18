@@ -1,7 +1,6 @@
 part of verification_page;
 
-class _InitialPage extends _BasePage {
-  final VoidCallback onCompleted;
+class _InitialPage extends _IBasePage {
   final VoidCallback onPressedResend;
 
   _InitialPage({
@@ -9,7 +8,7 @@ class _InitialPage extends _BasePage {
     required super.codeController,
     required super.headerText,
     required super.email,
-    required this.onCompleted,
+    required super.onSubmit,
     required this.onPressedResend,
   }) : super(
           key: key,
@@ -18,7 +17,7 @@ class _InitialPage extends _BasePage {
               20.verticalSpace,
               StyledButton(
                 text: 'SUBMIT',
-                onPressed: onCompleted,
+                onPressed: onSubmit,
               ),
               Spacer(),
               StyledUnderlinedTextButton(

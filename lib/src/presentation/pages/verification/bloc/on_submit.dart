@@ -4,21 +4,34 @@ extension _OnSubmit on _VerificationBloc {
   void onSubmit(
     _SubmitEvent event,
     Emitter<_IVerificationState> emit,
-  ) =>
+  ) {
+    if (state is _ErrorState ||
+        state is _InitialState ||
+        state is _ProfilePictureUploadState) {
+      if (state is _ErrorState) {
+        final state = this.state as _ErrorState;
+        state.dismiss.complete();
+      }
       emit(
         codeController.text.length != 6
-            ? _ConfirmErrorState(failure: Failures.invalidCode.instance)
+            ? _ErrorState(
+                failure: Failures.invalidCode.instance,
+                dismiss: Completer(),
+              )
             : _ConfirmingState(
-                operation: CancelableOperation.fromFuture(
-                  event.confirmation(
+                confirm: CancelableOperation.fromFuture(
+                  confirm(
                     codeController.text,
                   )..then(
-                      (either) => either.fold(
-                        (response) => add(_SuccessEvent(response)),
-                        (failure) => add(_ConfirmErrorEvent(failure)),
+                      (failure) => add(
+                        failure != null
+                            ? _ErrorEvent(failure)
+                            : const _ConfirmSuccessEvent(),
                       ),
                     ),
                 ),
               ),
       );
+    }
+  }
 }

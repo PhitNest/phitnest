@@ -1,34 +1,12 @@
 part of verification_page;
 
-extension _Bloc on BuildContext {
-  _VerificationBloc get bloc => read();
-}
-
 class VerificationPage extends StatelessWidget {
   final String headerText;
-  final String email;
   final Future<Failure?> Function(String code) confirm;
   final Future<Failure?> Function() resend;
+  final String email;
   final String? password;
   final bool shouldLogin;
-
-  void _onCompleted(BuildContext context) => context.bloc.add(
-        _SubmitEvent(
-          confirmation: (code) => confirm(code).then(
-            (failure) async => failure != null
-                ? Right(failure)
-                : shouldLogin
-                    ? (await Repositories.auth.login(
-                        email: email,
-                        password: password!,
-                      )) as Either<LoginResponse?, Failure>
-                    : Left(null),
-          ),
-        ),
-      );
-
-  void _onPressedResend(BuildContext context) =>
-      context.bloc.add(_ResendEvent(resend));
 
   const VerificationPage({
     Key? key,
@@ -42,65 +20,54 @@ class VerificationPage extends StatelessWidget {
         super(key: key);
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-        create: (context) => _VerificationBloc(),
-        child: BlocConsumer<_VerificationBloc, _IVerificationState>(
-          listener: (context, state) async {
-            if (state is _SuccessState) {
-              Navigator.pop(context, state.response);
-            } else if (state is _ProfilePictureUploadState) {
-              if ((await Navigator.push<XFile>(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => ProfilePicturePage(
-                        uploadImage: (photo) =>
-                            UseCases.uploadPhotoUnauthorized(
-                          email: email,
-                          photo: photo,
-                        ),
+  Widget build(BuildContext context) =>
+      BlocWidget<_VerificationBloc, _IVerificationState>(
+        create: (context) => _VerificationBloc(
+          email: email,
+          confirm: confirm,
+          resend: resend,
+          password: password,
+          shouldLogin: shouldLogin,
+        ),
+        listener: (context, state) async {
+          if (state is _SuccessState) {
+            Navigator.pop(context, state.response);
+          } else if (state is _ProfilePictureUploadState) {
+            if ((await Navigator.push<XFile>(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => ProfilePicturePage(
+                      uploadImage: (photo) => UseCases.uploadPhotoUnauthorized(
+                        email: email,
+                        photo: photo,
                       ),
                     ),
-                  )) !=
-                  null) {
-                _onCompleted(context);
-              }
+                  ),
+                )) !=
+                null) {
+              context.bloc.add(const _SubmitEvent());
             }
-          },
-          builder: (context, state) {
-            if (state is _ConfirmingState || state is _ResendingState) {
-              return _LoadingPage(
-                codeController: context.bloc.codeController,
-                headerText: headerText,
-                email: email,
-              );
-            } else if (state is _ConfirmErrorState) {
-              return _ErrorPage(
-                codeController: context.bloc.codeController,
-                onCompleted: () => _onCompleted(context),
-                onPressedResend: () => _onPressedResend(context),
-                headerText: headerText,
-                error: state.failure,
-                email: email,
-              );
-            } else if (state is _ResendErrorState) {
-              return _ErrorPage(
-                codeController: context.bloc.codeController,
-                onCompleted: () => _onCompleted(context),
-                onPressedResend: () => _onPressedResend(context),
-                headerText: headerText,
-                error: state.failure,
-                email: email,
-              );
-            } else {
-              return _InitialPage(
-                codeController: context.bloc.codeController,
-                onCompleted: () => _onCompleted(context),
-                onPressedResend: () => _onPressedResend(context),
-                headerText: headerText,
-                email: email,
-              );
-            }
-          },
-        ),
+          }
+        },
+        builder: (context, state) {
+          if (state is _ConfirmingState ||
+              state is _ResendingState ||
+              state is _LoginLoadingState) {
+            return _LoadingPage(
+              codeController: context.bloc.codeController,
+              headerText: headerText,
+              email: email,
+            );
+          } else {
+            return _InitialPage(
+              codeController: context.bloc.codeController,
+              onSubmit: () => context.bloc.add(const _SubmitEvent()),
+              onPressedResend: () =>
+                  () => context.bloc.add(const _ResendEvent()),
+              headerText: headerText,
+              email: email,
+            );
+          }
+        },
       );
 }

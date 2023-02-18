@@ -1,17 +1,19 @@
 part of verification_page;
 
-class _BasePage extends StatelessWidget {
+class _IBasePage extends StatelessWidget {
   final String headerText;
-  final Widget child;
+  final VoidCallback onSubmit;
   final TextEditingController codeController;
   final String email;
+  final Widget child;
 
-  const _BasePage({
+  const _IBasePage({
     Key? key,
     required this.headerText,
     required this.child,
     required this.codeController,
     required this.email,
+    required this.onSubmit,
   }) : super(key: key);
 
   @override
@@ -42,7 +44,7 @@ class _BasePage extends StatelessWidget {
                 30.verticalSpace,
                 StyledVerificationField(
                   controller: codeController,
-                  onCompleted: (_) {},
+                  onCompleted: (_) => onSubmit(),
                 ),
                 Expanded(child: child),
               ],

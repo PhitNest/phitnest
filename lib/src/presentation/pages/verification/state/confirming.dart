@@ -1,12 +1,12 @@
 part of verification_page;
 
 class _ConfirmingState extends _IVerificationState {
-  final CancelableOperation<Either<LoginResponse?, Failure>> operation;
+  final CancelableOperation<Failure?> confirm;
 
   const _ConfirmingState({
-    required this.operation,
+    required this.confirm,
   }) : super();
 
   @override
-  List<Object> get props => [super.props, operation.value];
+  List<Object> get props => [super.props, confirm.value];
 }
