@@ -1,7 +1,7 @@
 part of login_page;
 
 class LoginPage extends StatelessWidget {
-  /// POP RESULT: NONE
+  /// **POP RESULT: NONE**
   const LoginPage({Key? key}) : super(key: key);
 
   @override
