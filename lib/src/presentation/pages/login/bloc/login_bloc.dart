@@ -16,16 +16,16 @@ class _LoginBloc extends Bloc<_ILoginEvent, _ILoginState> {
   ///
   /// * **[_InitialState]**
   ///   * on *[_SubmitEvent]* ->
-  ///       * *[_LoadingState]* if the form is validated correctly
-  ///       * *[_InitialState]* with autovalidate mode on if the form is invalid
+  ///     * *[_LoadingState]* if the form is validated correctly
+  ///     * *[_InitialState]* with autovalidate mode on if the form is invalid
   ///
   /// * **[_LoadingState]**
   ///   * on *[_SuccessEvent]* -> *[_SuccessState]*
   ///   * on *[_CancelEvent]* -> *[_InitialState]*
   ///   * on *[_ErrorEvent]* ->
-  ///       * *[_ConfirmingEmailState]* if [Failures.userNotConfirmed]
-  ///       * *[_InitialState]* with an entry in invalidCredentials if [Failures.invalidPassword]
-  ///       * *[_ErrorState]* otherwise
+  ///     * *[_ConfirmingEmailState]* if [Failures.userNotConfirmed]
+  ///     * *[_InitialState]* with an entry in invalidCredentials if [Failures.invalidPassword]
+  ///     * *[_ErrorState]* otherwise
   ///
   /// * **[_ErrorState]**
   ///   * on *[_SubmitEvent]* -> *[_LoadingState]*
