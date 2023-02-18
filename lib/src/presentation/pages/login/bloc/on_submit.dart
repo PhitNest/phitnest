@@ -9,7 +9,7 @@ extension _OnSubmit on _LoginBloc {
     // Close the error banner.
     if (state is _ErrorState) {
       final state = this.state as _ErrorState;
-      state.dismiss.complete();
+      state.errorBanner.dismiss();
     }
     // Validate the email and password fields.
     if (formKey.currentState!.validate()) {

@@ -46,7 +46,7 @@ class LoginPage extends StatelessWidget {
           }
           // Show error banner if state is error state.
           else if (state is _ErrorState) {
-            StyledErrorBanner.show(context, state.failure, state.dismiss);
+            state.errorBanner.show(context);
           }
         },
         builder: (context, state) {
