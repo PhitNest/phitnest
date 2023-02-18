@@ -4,6 +4,7 @@ import '../../../data/backend/backend.dart';
 import '../verification/verification.dart';
 
 class ForgotPasswordSubmitPage extends VerificationPage {
+  /// **POP RESULT: [LoginResponse] if login request succeeds**
   ForgotPasswordSubmitPage({
     Key? key,
     required String password,

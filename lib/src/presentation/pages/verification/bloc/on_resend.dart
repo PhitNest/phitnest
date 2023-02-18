@@ -4,17 +4,20 @@ extension _OnResend on _VerificationBloc {
   void onResend(
     _ResendEvent event,
     Emitter<_IVerificationState> emit,
-  ) =>
-      emit(
-        _ResendingState(
-          operation: CancelableOperation.fromFuture(event.resend())
-            ..then(
-              (failure) => add(
-                failure != null
-                    ? _ResendErrorEvent(failure)
-                    : const _ResetEvent(),
-              ),
+  ) {
+    if (state is _ErrorState) {
+      final state = this.state as _ErrorState;
+      state.dismiss.complete();
+    }
+    emit(
+      _ResendingState(
+        resend: CancelableOperation.fromFuture(resend())
+          ..then(
+            (failure) => add(
+              failure != null ? _ErrorEvent(failure) : const _ResetEvent(),
             ),
-        ),
-      );
+          ),
+      ),
+    );
+  }
 }

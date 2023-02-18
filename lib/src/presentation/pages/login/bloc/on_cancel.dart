@@ -9,7 +9,7 @@ extension _OnLogin on _LoginBloc {
     // Close the error banner.
     if (state is _ErrorState) {
       final state = this.state as _ErrorState;
-      state.dismiss.complete(null);
+      state.dismiss.complete();
     }
     // Cancel the loading operation for sign in.
     if (state is _LoadingState) {

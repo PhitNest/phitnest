@@ -6,7 +6,7 @@ import '../../widgets/styled/styled.dart';
 import '../pages.dart';
 
 class OnBoardingPage extends StatelessWidget {
-  /// POP RESULT: NONE
+  /// **POP RESULT: NONE**
   const OnBoardingPage({
     Key? key,
   }) : super(key: key);

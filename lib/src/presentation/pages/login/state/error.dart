@@ -6,7 +6,7 @@ class _ErrorState extends _ILoginState {
 
   /// This state indicates that there was an error during login. The error is stored in
   /// [failure] and it is shown on a [StyledErrorBanner] that is dismissed when [dismiss]
-  /// is completed via `dismiss.complete(null)`.
+  /// is completed via `dismiss.complete()`.
   const _ErrorState({
     required super.autovalidateMode,
     required super.invalidCredentials,

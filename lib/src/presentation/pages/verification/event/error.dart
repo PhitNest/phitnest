@@ -1,9 +1,9 @@
 part of verification_page;
 
-class _ResendErrorEvent extends _IVerificationEvent {
+class _ErrorEvent extends _IVerificationEvent {
   final Failure failure;
 
-  const _ResendErrorEvent(this.failure) : super();
+  const _ErrorEvent(this.failure) : super();
 
   @override
   List<Object> get props => [failure];

@@ -9,10 +9,10 @@ class _ForgotPasswordBloc
 
   _ForgotPasswordBloc()
       : super(
-    const _InitialState(
-      autovalidateMode: AutovalidateMode.disabled,
-    ),
-  ) {
+          const _InitialState(
+            autovalidateMode: AutovalidateMode.disabled,
+          ),
+        ) {
     on<_SubmitEvent>(onSubmit);
     on<_SuccessEvent>(onSuccess);
     on<_ErrorEvent>(onForgotPasswordError);
@@ -27,7 +27,7 @@ class _ForgotPasswordBloc
 
     if (state is _ErrorState) {
       final state = this.state as _ErrorState;
-      state.dismiss.complete(null);
+      state.dismiss.complete();
     }
     emailController.dispose();
     passwordController.dispose();

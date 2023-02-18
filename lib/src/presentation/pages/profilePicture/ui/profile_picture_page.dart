@@ -18,6 +18,18 @@ class ProfilePicturePage extends StatelessWidget {
   final XFile? initialImage;
   final Future<Failure?> Function(XFile image) uploadImage;
 
+  /// **POP RESULT: [XFile] if the profile picture is uploaded successfully**
+  ///
+  /// This page is used to upload a profile picture. There are different ways a user can
+  /// upload a profile picture: unauthorized or authorized.
+  ///
+  /// The [UseCases.uploadPhotoUnauthorized] method should be used for users who have not yet
+  /// confirmed their account. Once they confirm their account this route will no longer work.
+  /// Once the user has confirmed their account, they will have access to a more secure route,
+  /// [UseCases.uploadPhotoAuthorized].
+  ///
+  /// [initialImage] can be provided if the user has already selected an image before coming to
+  /// this page.
   const ProfilePicturePage({
     Key? key,
     required this.uploadImage,

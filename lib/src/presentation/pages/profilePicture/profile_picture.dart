@@ -15,6 +15,7 @@ import '../../../common/theme.dart';
 import '../../../common/utils/utils.dart';
 import '../../../common/failure.dart';
 import '../../widgets/widgets.dart';
+import '../../../domain/use_cases/use_cases.dart';
 
 part 'ui/profile_picture_page.dart';
 part 'ui/widgets/albums_button.dart';

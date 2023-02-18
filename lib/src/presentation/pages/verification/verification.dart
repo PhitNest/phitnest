@@ -1,5 +1,7 @@
 library verification_page;
 
+import 'dart:async';
+
 import 'package:async/async.dart';
 import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
@@ -20,27 +22,24 @@ import '../profilePicture/profile_picture.dart';
 
 part 'bloc/verification_bloc.dart';
 part 'bloc/on_confirm_error.dart';
-part 'bloc/on_success.dart';
-part 'bloc/on_profile_picture_error.dart';
+part 'bloc/on_login_response.dart';
 part 'bloc/on_reset.dart';
 part 'bloc/on_resend.dart';
-part 'bloc/on_resend_error.dart';
 part 'bloc/on_submit.dart';
+part 'bloc/on_confirm_success.dart';
 
 part 'ui/verification_page.dart';
 part 'ui/widgets/base.dart';
-part 'ui/widgets/error.dart';
 part 'ui/widgets/initial.dart';
 part 'ui/widgets/loading.dart';
 
 part 'event/base.dart';
-part 'event/confirm_error.dart';
-part 'event/success.dart';
-part 'event/profile_picture_error.dart';
+part 'event/error.dart';
+part 'event/login_response.dart';
+part 'event/confirm_success.dart';
 part 'event/reset.dart';
 part 'event/submit.dart';
 part 'event/resend.dart';
-part 'event/resend_error.dart';
 
 part 'state/base.dart';
 part 'state/confirming.dart';
@@ -48,5 +47,5 @@ part 'state/confirm_error.dart';
 part 'state/success.dart';
 part 'state/profile_picture_upload.dart';
 part 'state/initial.dart';
-part 'state/resend_error.dart';
 part 'state/resending.dart';
+part 'state/login_loading.dart';
