@@ -15,6 +15,8 @@ class SocketConnection extends Equatable {
 
   const SocketConnection._(this._socket, this.onDisconnect) : super();
 
+  void disconnect() => this._socket.dispose();
+
   Future<Either<Stream<T>, Failure>> stream<T>(SocketEvent event) async {
     final streamController = StreamController<T>();
     prettyLogger.d('Opening stream for event: $event.name');

@@ -19,7 +19,7 @@ extension _OnLoadWithInitial on _ExploreBloc {
             withAuth(
               (accessToken) => Repositories.user.exploreUsers(
                 accessToken: accessToken,
-                gymId: gymId,
+                gymId: Cache.gym!.id,
               ),
             ),
           )..then(

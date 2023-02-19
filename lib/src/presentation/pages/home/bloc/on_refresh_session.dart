@@ -8,15 +8,26 @@ extension _OnRefreshSession on _HomeBloc {
     if (state is _InitialState) {
       final state = this.state as _InitialState;
       await state.socketConnection.cancel();
-      emit(
-        _InitialState(
-          currentPage: state.currentPage,
-          logoPress: state.logoPress,
-          socketConnection: CancelableOperation.fromFuture(
-            connectSocket(event.response.accessToken),
-          ),
-        ),
-      );
     }
+    if (state is _SocketConnectedState) {
+      final state = this.state as _SocketConnectedState;
+      state.connection.disconnect();
+    }
+    emit(
+      _InitialState(
+        currentPage: state.currentPage,
+        logoPress: state.logoPress,
+        socketConnection: CancelableOperation.fromFuture(
+          connectSocket(event.response.accessToken),
+        )..then(
+            (either) => add(
+              either.fold(
+                (socketConnection) => _SocketConnectedEvent(socketConnection),
+                (failure) => const _SocketConnectErrorEvent(),
+              ),
+            ),
+          ),
+      ),
+    );
   }
 }

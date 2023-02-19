@@ -6,13 +6,11 @@ class _ExploreBloc extends Bloc<_IExploreEvent, _IExploreState> {
   final Future<Failure?> Function(
       Future<Failure?> Function(String accessToken) f) withAuthVoid;
   final Stream<PressType> logoPressStream;
-  final String gymId;
 
   _ExploreBloc({
     required this.withAuth,
     required this.withAuthVoid,
     required this.logoPressStream,
-    required this.gymId,
   }) : super(const _InitialState()) {
     on<_ReleaseEvent>(onRelease);
     on<_PressDownEvent>(onPressDown);

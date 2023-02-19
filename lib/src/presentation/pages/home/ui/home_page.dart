@@ -1,6 +1,14 @@
 part of home_page;
 
 class HomePage extends StatelessWidget {
+  /// **POP RESULT: NONE**
+  ///
+  /// This page is the main page of the app. It contains the [ExplorePage],
+  /// [ChatPage], [OptionsPage] and [StyledNavBar].
+  ///
+  /// This page requires the [Cache] to be initialized with [Cache.user],
+  /// [Cache.accessToken], [Cache.refreshToken], [Cache.profilePictureUrl],
+  /// [Cache.gym] and [Cache.password].
   HomePage({
     Key? key,
   })  : assert(Cache.user != null),
@@ -19,7 +27,7 @@ class HomePage extends StatelessWidget {
             if (state is _LogOutState) {
               Navigator.of(context).pushAndRemoveUntil(
                 CupertinoPageRoute(
-                  builder: (context) => LoginPage(),
+                  builder: (context) => const LoginPage(),
                 ),
                 (_) => false,
               );
@@ -37,7 +45,6 @@ class HomePage extends StatelessWidget {
                           switch (state.currentPage) {
                             case NavbarPage.explore:
                               return ExplorePage(
-                                gymId: Cache.gym!.id,
                                 logoPressStream:
                                     state.logoPress.stream.asBroadcastStream(),
                               );
