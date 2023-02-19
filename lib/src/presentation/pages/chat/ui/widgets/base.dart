@@ -9,20 +9,21 @@ abstract class _IChatPageBase extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Chat',
-                  style: theme.textTheme.headlineLarge,
-                ),
-                Positioned(
-                  right: 0,
-                  child: Stack(
+  Widget build(BuildContext context) => StyledScaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  151.horizontalSpace,
+                  Text(
+                    'Chat',
+                    style: theme.textTheme.headlineLarge,
+                  ),
+                  Spacer(),
+                  Stack(
                     children: [
                       TextButton(
                         onPressed: () {},
@@ -34,23 +35,31 @@ abstract class _IChatPageBase extends StatelessWidget {
                       Positioned(
                         right: 0,
                         top: 0,
-                        child: Chip(
-                          label: Text('2'),
-                          backgroundColor: Colors.red,
-                          clipBehavior: Clip.antiAlias,
-                          shape: RoundedRectangleBorder(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 9.w,
+                            vertical: 2.5.h,
+                          ),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            color: Colors.red,
                             borderRadius: BorderRadius.circular(32.r),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            '5',
+                            style: theme.textTheme.bodySmall,
                           ),
                         ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+              40.verticalSpace,
+              child,
+            ],
           ),
-          40.verticalSpace,
-          child,
-        ],
+        ),
       );
 }

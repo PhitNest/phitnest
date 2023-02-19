@@ -6,9 +6,12 @@ class _EmptyChatPage extends _IChatPageBase {
           key: key,
           child: Expanded(
             child: Center(
-              child: Text(
-                'Opps! Seems like you haven\'t started any conversation yet.',
-                style: theme.textTheme.bodyLarge,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 42.w),
+                child: Text(
+                  'Opps! Seems like you haven\'t started any conversation yet.',
+                  style: theme.textTheme.labelLarge,
+                ),
               ),
             ),
           ),
