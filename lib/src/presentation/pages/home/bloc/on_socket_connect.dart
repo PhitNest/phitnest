@@ -1,6 +1,6 @@
 part of home_page;
 
-extension _OnSocketConnectError on _HomeBloc {
+extension _OnSocketConnected on _HomeBloc {
   void onSocketConnected(
     _SocketConnectedEvent event,
     Emitter<_IHomeState> emit,
