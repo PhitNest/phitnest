@@ -57,18 +57,18 @@ class ProfilePicturePage extends StatelessWidget {
           },
           builder: (context, state) {
             if (state is _ICapturedState) {
-              if (state is _CaptureSuccessState) {
+              if (state is _UploadingState) {
+                return _UploadingPage(
+                  profilePicture: state.file,
+                  cameraController: state.cameraController,
+                );
+              } else {
                 return _CapturedPhotoPage(
                   profilePicture: state.file,
                   cameraController: state.cameraController,
                   onPressedRetake: context.retake,
                   onUploadPicture: context.uploadFromAlbums,
                   onPressedConfirm: context.upload,
-                );
-              } else {
-                return _UploadingPage(
-                  profilePicture: state.file,
-                  cameraController: state.cameraController,
                 );
               }
             } else if (state is _IInitializedState) {

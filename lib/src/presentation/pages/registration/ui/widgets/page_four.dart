@@ -7,22 +7,15 @@ class _PageFourLoading extends StatelessWidget {
   Widget build(BuildContext context) => StyledScaffold(
         body: Column(
           children: [
-            40.verticalSpace,
-            StyledBackButton(),
-            Expanded(
-              child: Column(
-                children: [
-                  180.verticalSpace,
-                  Text(
-                    "Getting you started...",
-                    style: theme.textTheme.headlineLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  40.verticalSpace,
-                  CircularProgressIndicator(),
-                ],
-              ),
+            180.verticalSpace,
+            double.infinity.horizontalSpace,
+            Text(
+              "Getting you started...",
+              style: theme.textTheme.headlineLarge,
+              textAlign: TextAlign.center,
             ),
+            40.verticalSpace,
+            CircularProgressIndicator(),
           ],
         ),
       );
