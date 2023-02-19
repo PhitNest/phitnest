@@ -48,23 +48,11 @@ class ProfilePicturePage extends StatelessWidget {
                 state.file,
               );
             } else if (state is _CaptureErrorState) {
-              StyledErrorBanner.show(
-                context,
-                state.failure,
-                state.dismiss,
-              );
+              state.errorBanner.show(context);
             } else if (state is _UploadErrorState) {
-              StyledErrorBanner.show(
-                context,
-                state.failure,
-                state.dismiss,
-              );
+              state.errorBanner.show(context);
             } else if (state is _CameraErrorState) {
-              StyledErrorBanner.show(
-                context,
-                state.failure,
-                state.dismiss,
-              );
+              state.errorBanner.show(context);
             }
           },
           builder: (context, state) {

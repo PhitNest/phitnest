@@ -27,7 +27,7 @@ class _ForgotPasswordBloc
 
     if (state is _ErrorState) {
       final state = this.state as _ErrorState;
-      state.dismiss.complete();
+      state.errorBanner.dismiss();
     }
     emailController.dispose();
     passwordController.dispose();

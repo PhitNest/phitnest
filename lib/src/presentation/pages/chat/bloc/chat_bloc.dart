@@ -37,7 +37,7 @@ class _ChatBloc extends Bloc<_IChatEvent, _IChatState> {
   Future<void> close() {
     if (state is _ErrorState) {
       final _ErrorState state = this.state as _ErrorState;
-      state.dismiss.complete();
+      state.errorBanner.dismiss();
     }
     return super.close();
   }

@@ -12,11 +12,7 @@ class ChatPage extends StatelessWidget {
       ),
       child: BlocConsumer<_ChatBloc, _IChatState>(listener: (context, state) {
         if (state is _ErrorState) {
-          StyledErrorBanner.show(
-            context,
-            state.failure,
-            state.dismiss,
-          );
+          state.errorBanner.show(context);
         }
       }, builder: (context, state) {
         if (state is _InitialState) {

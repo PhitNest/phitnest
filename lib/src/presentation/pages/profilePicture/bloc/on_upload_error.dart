@@ -10,9 +10,10 @@ extension _OnUploadError on _ProfilePictureBloc {
       emit(
         _UploadErrorState(
           cameraController: state.cameraController,
-          failure: event.failure,
           file: state.file,
-          dismiss: Completer(),
+          errorBanner: StyledErrorBanner(
+            failure: event.failure,
+          ),
         ),
       );
     } else {
