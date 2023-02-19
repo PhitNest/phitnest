@@ -1,15 +1,13 @@
 part of profile_picture_page;
 
 class _CaptureErrorState extends _IInitializedState {
-  final Failure failure;
-  final Completer<void> dismiss;
+  final StyledErrorBanner errorBanner;
 
   const _CaptureErrorState({
     required super.cameraController,
-    required this.failure,
-    required this.dismiss,
+    required this.errorBanner,
   }) : super();
 
   @override
-  List<Object> get props => [super.props, failure, dismiss];
+  List<Object> get props => [super.props, errorBanner];
 }

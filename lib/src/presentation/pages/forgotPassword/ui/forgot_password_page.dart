@@ -44,11 +44,7 @@ class ForgotPasswordPage extends StatelessWidget {
           if (state is _SuccessState) {
             return context.goToSubmitPage();
           } else if (state is _ErrorState) {
-            StyledErrorBanner.show(
-              context,
-              state.failure,
-              state.dismiss,
-            );
+            state.errorBanner.show(context);
           } else if (state is _ConfirmingEmailState) {
             final String email = context.bloc.emailController.text.trim();
             final confirmEmailResponse = await Navigator.push(

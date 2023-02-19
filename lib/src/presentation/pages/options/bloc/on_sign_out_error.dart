@@ -10,8 +10,9 @@ extension _OnSignOutError on _OptionsBloc {
       emit(
         _SignOutErrorState(
           response: state.response,
-          failure: event.failure,
-          dismiss: Completer(),
+          errorBanner: StyledErrorBanner(
+            failure: event.failure,
+          ),
         ),
       );
     } else {

@@ -1,16 +1,14 @@
 part of profile_picture_page;
 
 class _CameraErrorState extends _IProfilePictureState {
-  final Failure failure;
   final CameraController cameraController;
-  final Completer<void> dismiss;
+  final StyledErrorBanner errorBanner;
 
   const _CameraErrorState({
     required this.cameraController,
-    required this.failure,
-    required this.dismiss,
+    required this.errorBanner,
   }) : super();
 
   @override
-  List<Object> get props => [cameraController, failure, dismiss];
+  List<Object> get props => [cameraController, errorBanner];
 }

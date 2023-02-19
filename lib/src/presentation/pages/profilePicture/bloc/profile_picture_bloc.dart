@@ -44,30 +44,33 @@ class _ProfilePictureBloc
     if (state is _UploadingState) {
       final state = this.state as _UploadingState;
       await state.uploadImage.cancel();
-    }
-    if (state is _InitialState) {
+    } else if (state is _InitialState) {
       final state = this.state as _InitialState;
       await state.getFrontCamera.cancel();
-    }
-    if (state is _CameraLoadedState) {
+    } else if (state is _CameraLoadedState) {
       final state = this.state as _CameraLoadedState;
       await state.cameraController.dispose();
-    }
-    if (state is _CameraErrorState) {
+    } else if (state is _CameraErrorState) {
       final state = this.state as _CameraErrorState;
       await state.cameraController.dispose();
-    }
-    if (state is _IInitializedState) {
+    } else if (state is _IInitializedState) {
       final state = this.state as _IInitializedState;
       await state.cameraController.dispose();
-    }
-    if (state is _CaptureLoadingState) {
+    } else if (state is _CaptureLoadingState) {
       final state = this.state as _CaptureLoadingState;
       await state.captureImage.cancel();
-    }
-    if (state is _CameraLoadingState) {
+    } else if (state is _CameraLoadingState) {
       final state = this.state as _CameraLoadingState;
       await state.initializeCamera.cancel();
+    } else if (state is _CaptureErrorState) {
+      final state = this.state as _CaptureErrorState;
+      state.errorBanner.dismiss();
+    } else if (state is _UploadErrorState) {
+      final state = this.state as _UploadErrorState;
+      state.errorBanner.dismiss();
+    } else if (state is _CameraErrorState) {
+      final state = this.state as _CameraErrorState;
+      state.errorBanner.dismiss();
     }
     return super.close();
   }
