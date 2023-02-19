@@ -22,7 +22,7 @@ class DirectMessageEntity extends Equatable {
         text: json['text'],
         senderCognitoId: json['senderCognitoId'],
         friendshipId: json['friendshipId'],
-        createdAt: json['createdAt'],
+        createdAt: DateTime.parse(json['createdAt']),
       );
 
   @override
