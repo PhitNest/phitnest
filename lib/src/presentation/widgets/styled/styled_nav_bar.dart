@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phitnest_mobile/src/presentation/widgets/styled/styled_indicator.dart';
 
 import '../../../common/constants/constants.dart';
 import '../../../common/theme.dart';
@@ -163,11 +164,15 @@ class _StyledNavBarState extends State<StyledNavBar>
                     NavbarPage.explore,
                   ),
                   60.horizontalSpace,
-                  createButton(
-                    context,
-                    'CHAT',
-                    widget.onPressedChat,
-                    NavbarPage.chat,
+                  StyledIndicator(
+                    offset: Size(8, 8),
+                    child: createButton(
+                      context,
+                      'CHAT',
+                      widget.onPressedChat,
+                      NavbarPage.chat,
+                    ),
+                    count: 5,
                   ),
                   createButton(
                     context,

@@ -9,57 +9,36 @@ abstract class _IChatPageBase extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => StyledScaffold(
-        body: SafeArea(
-          child: Column(
+  Widget build(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          40.verticalSpace,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  151.horizontalSpace,
-                  Text(
-                    'Chat',
-                    style: theme.textTheme.headlineLarge,
-                  ),
-                  Spacer(),
-                  Stack(
-                    children: [
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'FRIENDS',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 9.w,
-                            vertical: 2.5.h,
-                          ),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(32.r),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            '5',
-                            style: theme.textTheme.bodySmall,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              151.horizontalSpace,
+              Text(
+                'Chat',
+                style: theme.textTheme.headlineLarge,
               ),
-              40.verticalSpace,
-              child,
+              Spacer(),
+              StyledIndicator(
+                offset: Size(2, 0),
+                child: TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'FRIENDS',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ),
+                count: 5,
+              ),
+              12.horizontalSpace,
             ],
           ),
-        ),
+          40.verticalSpace,
+          child,
+        ],
       );
 }

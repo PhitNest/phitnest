@@ -11,3 +11,4 @@ export './styled_underlined_text_button.dart';
 export './styled_underlined_text_field.dart';
 export './styled_verification_field.dart';
 export 'styled_error_banner.dart';
+export 'styled_indicator.dart';

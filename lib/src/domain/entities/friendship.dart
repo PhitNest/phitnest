@@ -17,8 +17,8 @@ class FriendshipEntity extends Equatable {
   factory FriendshipEntity.fromJson(Map<String, dynamic> json) =>
       FriendshipEntity(
         id: json['_id'],
-        userCognitoIds: json['userCognitoIds'],
-        createdAt: json['createdAt'],
+        userCognitoIds: List<String>.from(json['userCognitoIds']),
+        createdAt: DateTime.parse(json['createdAt']),
       );
 
   @override
@@ -39,8 +39,8 @@ class PopulatedFriendshipEntity extends FriendshipEntity {
   factory PopulatedFriendshipEntity.fromJson(Map<String, dynamic> json) =>
       PopulatedFriendshipEntity(
         id: json['_id'],
-        userCognitoIds: json['userCognitoIds'],
-        createdAt: json['createdAt'],
+        userCognitoIds: List<String>.from(json['userCognitoIds']),
+        createdAt: DateTime.parse(json['createdAt']),
         friend: PublicUserEntity.fromJson(json['friend']),
       );
 
