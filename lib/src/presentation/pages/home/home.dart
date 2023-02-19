@@ -23,13 +23,18 @@ part 'ui/home_page.dart';
 part 'state/base.dart';
 part 'state/initial.dart';
 part 'state/log_out.dart';
+part 'state/socket_connected.dart';
 
 part 'bloc/home_bloc.dart';
 part 'bloc/on_refresh_session.dart';
 part 'bloc/on_log_out.dart';
 part 'bloc/on_set_page.dart';
+part 'bloc/on_socket_connect_error.dart';
+part 'bloc/on_socket_connect.dart';
 
 part 'event/base.dart';
 part 'event/refresh_session.dart';
 part 'event/log_out.dart';
 part 'event/set_page.dart';
+part 'event/socket_connect_error.dart';
+part 'event/socket_connected.dart';
