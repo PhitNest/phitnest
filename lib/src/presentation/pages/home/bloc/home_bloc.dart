@@ -6,6 +6,16 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
   /// **STATE MACHINE:**
   ///
   /// * **[_InitialState]**
+  ///   * on *[_LogOutEvent]* -> *[_LogOutState]*
+  ///   * on *[_RefreshSessionEvent]* -> *[_InitialState]*
+  ///   * on *[_SetPageEvent]* -> *[_InitialState]*
+  ///   * on *[_SocketConnectErrorEvent]* -> *[_InitialState]*
+  ///   * on *[_SocketConnectedEvent]* -> *[_SocketConnectedState]*
+  ///
+  /// * **[_SocketConnectedState]**
+  ///   * on *[_LogOutEvent]* -> *[_LogOutState]*
+  ///   * on *[_RefreshSessionEvent]* -> *[_InitialState]*
+  ///   * on *[_SetPageEvent]* -> *[_SocketConnectedState]*
   _HomeBloc()
       : super(
           _InitialState(
@@ -19,6 +29,19 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
     on<_LogOutEvent>(onLogOut);
     on<_RefreshSessionEvent>(onRefreshSession);
     on<_SetPageEvent>(onSetPage);
+    on<_SocketConnectErrorEvent>(onSocketConnectError);
+    on<_SocketConnectedEvent>(onSocketConnected);
+    if (state is _InitialState) {
+      final state = this.state as _InitialState;
+      state.socketConnection.value.then(
+        (either) => add(
+          either.fold(
+            (socketConnection) => _SocketConnectedEvent(socketConnection),
+            (failure) => const _SocketConnectErrorEvent(),
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -27,6 +50,10 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
     if (state is _InitialState) {
       final state = this.state as _InitialState;
       await state.socketConnection.cancel();
+    }
+    if (state is _SocketConnectedState) {
+      final state = this.state as _SocketConnectedState;
+      state.connection.disconnect();
     }
     return super.close();
   }
@@ -91,4 +118,9 @@ extension Auth on BuildContext {
           (failure) => failure,
         ),
       );
+
+  SocketConnection get socketConnection =>
+      (bloc.state as _SocketConnectedState).connection;
+
+  bool get socketConnected => bloc.state is _SocketConnectedState;
 }

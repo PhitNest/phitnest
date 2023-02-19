@@ -8,12 +8,16 @@ extension _OnLogOut on _HomeBloc {
     if (state is _InitialState) {
       final state = this.state as _InitialState;
       await state.socketConnection.cancel();
-      emit(
-        _LogOutState(
-          currentPage: state.currentPage,
-          logoPress: state.logoPress,
-        ),
-      );
     }
+    if (state is _SocketConnectedState) {
+      final state = this.state as _SocketConnectedState;
+      state.connection.disconnect();
+    }
+    emit(
+      _LogOutState(
+        currentPage: state.currentPage,
+        logoPress: state.logoPress,
+      ),
+    );
   }
 }

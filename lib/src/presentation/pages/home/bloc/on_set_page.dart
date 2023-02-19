@@ -14,6 +14,23 @@ extension _OnSetPage on _HomeBloc {
           socketConnection: state.socketConnection,
         ),
       );
+    } else if (state is _SocketConnectedState) {
+      final state = this.state as _SocketConnectedState;
+      emit(
+        _SocketConnectedState(
+          currentPage: event.page,
+          logoPress: state.logoPress,
+          connection: state.connection,
+        ),
+      );
+    } else if (state is _LogOutState) {
+      final state = this.state as _LogOutState;
+      emit(
+        _LogOutState(
+          currentPage: event.page,
+          logoPress: state.logoPress,
+        ),
+      );
     }
   }
 }
