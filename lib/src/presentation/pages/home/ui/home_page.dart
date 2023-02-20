@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
                             case NavbarPage.explore:
                               return ExplorePage(
                                 logoPressStream: state.logoPressBroadcast,
-                                onSetDarkMode: (darkMode) => context.bloc
+                                onSetDarkMode: (darkMode) => context.homeBloc
                                     .add(_SetDarkModeEvent(darkMode)),
                               );
                             case NavbarPage.chat:
@@ -68,32 +68,35 @@ class HomePage extends StatelessWidget {
                         if (state.currentPage == NavbarPage.explore) {
                           state.logoPress.add(PressType.down);
                         } else {
-                          context.bloc
+                          context.homeBloc
                               .add(const _SetPageEvent(NavbarPage.explore));
                         }
                       },
-                      colorful: Cache.userExplore?.users.isNotEmpty ?? false,
+                      colorful: state.currentPage == NavbarPage.explore &&
+                          (Cache.userExplore?.users.isNotEmpty ?? false),
                       onPressedNews: () {
                         ScaffoldMessenger.of(context)
                             .hideCurrentMaterialBanner();
-                        context.bloc.add(const _SetPageEvent(NavbarPage.news));
+                        context.homeBloc
+                            .add(const _SetPageEvent(NavbarPage.news));
                       },
                       onPressedExplore: () {
                         ScaffoldMessenger.of(context)
                             .hideCurrentMaterialBanner();
-                        context.bloc
+                        context.homeBloc
                             .add(const _SetPageEvent(NavbarPage.explore));
                       },
                       onPressedOptions: () {
                         ScaffoldMessenger.of(context)
                             .hideCurrentMaterialBanner();
-                        context.bloc
+                        context.homeBloc
                             .add(const _SetPageEvent(NavbarPage.options));
                       },
                       onPressedChat: () {
                         ScaffoldMessenger.of(context)
                             .hideCurrentMaterialBanner();
-                        context.bloc.add(const _SetPageEvent(NavbarPage.chat));
+                        context.homeBloc
+                            .add(const _SetPageEvent(NavbarPage.chat));
                       },
                     ),
                   ],

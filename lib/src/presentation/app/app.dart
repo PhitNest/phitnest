@@ -26,7 +26,6 @@ class App extends StatelessWidget {
       // The available devices are listed in the example .env files.
       DevicePreviewProvider(
         builder: (context, usingDevicePreview) => ScreenUtilInit(
-          // TODO: Figure out what minTextAdapt is
           minTextAdapt: true,
           // These dimensions come directly from the Figma design. This is meant to scale our UI to fit the design.
           designSize: const Size(375, 667),

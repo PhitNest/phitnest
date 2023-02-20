@@ -117,6 +117,7 @@ class Auth {
                 Cache.cacheUser(null),
                 Cache.cacheProfilePictureUrl(null),
                 Cache.cacheGym(null),
+                Cache.cacheUserExplore(null),
               ],
             ).then((_) => null);
           }

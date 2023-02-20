@@ -1,6 +1,6 @@
 part of backend;
 
-const _timeout = Duration(seconds: 5);
+const _timeout = Duration(seconds: 15);
 
 enum HttpMethod {
   get,
