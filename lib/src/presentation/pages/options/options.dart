@@ -21,9 +21,7 @@ import '../../../domain/entities/entities.dart';
 import '../../../domain/repositories/repository.dart';
 import '../../../domain/use_cases/use_cases.dart';
 import '../../widgets/widgets.dart';
-import '../home/home.dart';
-import '../login/login.dart';
-import '../profilePicture/profile_picture.dart';
+import '../pages.dart';
 
 part 'bloc/on_edit_profile_picture.dart';
 part 'bloc/on_error.dart';

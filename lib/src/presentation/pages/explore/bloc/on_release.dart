@@ -4,6 +4,7 @@ extension _OnRelease on _ExploreBloc {
   void onRelease(_ReleaseEvent event, Emitter<_IExploreState> emit) {
     if (state is _HoldingState) {
       final state = this.state as _HoldingState;
+      state.incrementCountdown.cancel();
       emit(
         _LoadedState(
           logoPressSubscription: state.logoPressSubscription,

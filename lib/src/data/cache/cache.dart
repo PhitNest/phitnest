@@ -1,10 +1,11 @@
 library cache;
 
+import '../../common/logger.dart';
 import '../../common/shared_preferences.dart';
 import '../../domain/entities/entities.dart';
 import '../backend/backend.dart';
 
-part 'methods.dart';
+part 'helpers.dart';
 
 part 'auth.dart';
 part 'gym.dart';

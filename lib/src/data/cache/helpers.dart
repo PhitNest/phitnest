@@ -4,8 +4,11 @@ Future<bool> _cacheObject<T>(
   String key,
   T? value,
   Future<bool> Function(String, T) setter,
-) =>
-    value != null ? setter(key, value) : sharedPreferences.remove(key);
+) {
+  prettyLogger
+      .d("Caching\n\tkey: $key\n\tType: ${T.toString()}\n\tvalue: $value");
+  return value != null ? setter(key, value) : sharedPreferences.remove(key);
+}
 
 Future<bool> _cacheString(
   String key,

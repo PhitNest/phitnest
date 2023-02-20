@@ -14,17 +14,17 @@ extension _OnIncrementCountdown on _ExploreBloc {
                 incrementCountdown: CancelableOperation.fromFuture(
                   Future.delayed(
                     const Duration(seconds: 1),
-                    () => add(const _IncrementCountdownEvent()),
+                    () {},
                   ),
-                ),
+                )..then(
+                    (_) => add(const _IncrementCountdownEvent()),
+                  ),
               )
             : _MatchedState(
                 userExploreResponse: state.userExploreResponse,
                 logoPressSubscription: state.logoPressSubscription,
               ),
       );
-    } else {
-      throw Exception('Invalid state: $state');
     }
   }
 }

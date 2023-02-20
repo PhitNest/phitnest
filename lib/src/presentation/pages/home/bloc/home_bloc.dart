@@ -44,7 +44,7 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
     on<_SetDarkModeEvent>(onSetDarkMode);
     if (state is _InitialState) {
       final state = this.state as _InitialState;
-      state.socketConnection.value.then(
+      state.socketConnection.then(
         (either) => add(
           either.fold(
             (socketConnection) => _SocketConnectedEvent(socketConnection),
@@ -70,8 +70,10 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
   }
 }
 
-extension _Bloc on BuildContext {
-  _HomeBloc get bloc => read();
+extension HomeBlocExt on BuildContext {
+  _HomeBloc get homeBloc => read();
+
+  void logOut() => homeBloc.add(const _LogOutEvent());
 }
 
 extension Auth on BuildContext {
@@ -91,7 +93,7 @@ extension Auth on BuildContext {
                   .then(
                     (either) => either.fold(
                       (refreshResponse) {
-                        bloc.add(_RefreshSessionEvent(refreshResponse));
+                        homeBloc.add(_RefreshSessionEvent(refreshResponse));
                         return f(refreshResponse.accessToken);
                       },
                       (failure) => Repositories.auth
@@ -103,7 +105,7 @@ extension Auth on BuildContext {
                             (either) => either.fold(
                               (loginResponse) => f(loginResponse.accessToken),
                               (failure) {
-                                bloc.add(const _LogOutEvent());
+                                homeBloc.add(const _LogOutEvent());
                                 return Right(failure);
                               },
                             ),
@@ -131,7 +133,7 @@ extension Auth on BuildContext {
       );
 
   SocketConnection get socketConnection =>
-      (bloc.state as _SocketConnectedState).connection;
+      (homeBloc.state as _SocketConnectedState).connection;
 
-  bool get socketConnected => bloc.state is _SocketConnectedState;
+  bool get socketConnected => homeBloc.state is _SocketConnectedState;
 }

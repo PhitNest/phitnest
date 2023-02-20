@@ -60,15 +60,15 @@ ProfilePicturePublicUserEntity? _publicUser(String id) {
 
 Future<bool> _cachePublicUser(ProfilePicturePublicUserEntity? user) =>
     Future.wait([
-      _cacheString(_Keys.userId, user?.id),
-      _cacheString(_Keys.userCognitoId, user?.cognitoId),
-      _cacheString(_Keys.userFirstName, user?.firstName),
-      _cacheString(_Keys.userLastName, user?.lastName),
+      _cacheString("${user?.id}.${_Keys.userId}", user?.id),
+      _cacheString("${user?.id}.${_Keys.userCognitoId}", user?.cognitoId),
+      _cacheString("${user?.id}.${_Keys.userFirstName}", user?.firstName),
+      _cacheString("${user?.id}.${_Keys.userLastName}", user?.lastName),
       ...(user != null
           ? [_cacheUserProfilePictureUrl(user.id, user.profilePictureUrl)]
           : []),
-      _cacheString(_Keys.gymId, user?.gymId),
-      _cacheBool(_Keys.userConfirmed, user?.confirmed),
+      _cacheString("${user?.id}.${_Keys.gymId}", user?.gymId),
+      _cacheBool("${user?.id}.${_Keys.userConfirmed}", user?.confirmed),
     ]).then((_) => true);
 
 Future<bool> _cacheUser(UserEntity? user) => Future.wait([
