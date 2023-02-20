@@ -1,8 +1,9 @@
 import 'package:equatable/equatable.dart';
 
+import '../../common/utils/utils.dart';
 import 'entities.dart';
 
-class FriendRequestEntity extends Equatable {
+class FriendRequestEntity extends Equatable with Serializable {
   final String id;
   final String fromCognitoId;
   final String toCognitoId;
@@ -21,11 +22,20 @@ class FriendRequestEntity extends Equatable {
   factory FriendRequestEntity.fromJson(Map<String, dynamic> json) =>
       FriendRequestEntity(
         id: json['_id'],
-        createdAt: json['createdAt'],
+        createdAt: DateTime.parse(json['createdAt']),
         denied: json['denied'],
         fromCognitoId: json['fromCognitoId'],
         toCognitoId: json['toCognitoId'],
       );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        '_id': id,
+        'createdAt': createdAt.toIso8601String(),
+        'denied': denied,
+        'fromCognitoId': fromCognitoId,
+        'toCognitoId': toCognitoId,
+      };
 
   @override
   List<Object> get props => [
@@ -53,12 +63,18 @@ class PopulatedFriendRequestEntity extends FriendRequestEntity {
   factory PopulatedFriendRequestEntity.fromJson(Map<String, dynamic> json) =>
       PopulatedFriendRequestEntity(
         id: json['_id'],
-        createdAt: json['createdAt'],
+        createdAt: DateTime.parse(json['createdAt']),
         denied: json['denied'],
         fromCognitoId: json['fromCognitoId'],
         toCognitoId: json['toCognitoId'],
         fromUser: PublicUserEntity.fromJson(json['fromUser']),
       );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        'fromUser': fromUser.toJson(),
+      };
 
   @override
   List<Object> get props => [

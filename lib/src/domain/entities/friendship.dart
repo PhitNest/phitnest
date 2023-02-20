@@ -1,8 +1,9 @@
 import 'package:equatable/equatable.dart';
 
+import '../../common/utils/utils.dart';
 import 'entities.dart';
 
-class FriendshipEntity extends Equatable {
+class FriendshipEntity extends Equatable with Serializable {
   final String id;
   final List<String> userCognitoIds;
   final DateTime createdAt;
@@ -20,6 +21,13 @@ class FriendshipEntity extends Equatable {
         userCognitoIds: List<String>.from(json['userCognitoIds']),
         createdAt: DateTime.parse(json['createdAt']),
       );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        '_id': id,
+        'userCognitoIds': userCognitoIds,
+        'createdAt': createdAt.toIso8601String(),
+      };
 
   @override
   List<Object> get props => [id, userCognitoIds, createdAt];
@@ -43,6 +51,12 @@ class PopulatedFriendshipEntity extends FriendshipEntity {
         createdAt: DateTime.parse(json['createdAt']),
         friend: PublicUserEntity.fromJson(json['friend']),
       );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        'friend': friend.toJson(),
+      };
 
   @override
   List<Object> get props => [super.props, friend];

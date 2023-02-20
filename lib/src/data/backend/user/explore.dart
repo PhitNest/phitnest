@@ -1,6 +1,6 @@
 part of backend;
 
-class UserExploreResponse extends Equatable {
+class UserExploreResponse extends Equatable with Serializable {
   final List<ProfilePicturePublicUserEntity> users;
   final List<FriendRequestEntity> requests;
 
@@ -18,6 +18,12 @@ class UserExploreResponse extends Equatable {
             .map((json) => FriendRequestEntity.fromJson(json))
             .toList(),
       );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'users': users.map((user) => user.toJson()).toList(),
+        'requests': requests.map((request) => request.toJson()).toList(),
+      };
 
   @override
   List<Object> get props => [users, requests];

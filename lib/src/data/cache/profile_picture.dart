@@ -1,13 +1,6 @@
 part of cache;
 
-String? get _profilePictureUrl => _getString(_Keys.profilePictureUrl);
+String? get _profilePictureUrl => getCachedString(_Keys.profilePicture);
 
-String? _getUserProfilePictureUrl(String userId) =>
-    _getString("$userId.${_Keys.profilePictureUrl}");
-
-Future<bool> _cacheProfilePictureUrl(String? profilePictureUrl) =>
-    _cacheString(_Keys.profilePictureUrl, profilePictureUrl);
-
-Future<bool> _cacheUserProfilePictureUrl(
-        String userId, String? profilePictureUrl) =>
-    _cacheString("$userId.${_Keys.profilePictureUrl}", profilePictureUrl);
+Future<void> _cacheProfilePictureUrl(String? profilePictureUrl) =>
+    cacheString(_Keys.profilePicture, profilePictureUrl);

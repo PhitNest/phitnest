@@ -1,44 +1,23 @@
 library cache;
 
-import '../../common/logger.dart';
-import '../../common/shared_preferences.dart';
+import '../../common/secure_storage.dart';
 import '../../domain/entities/entities.dart';
 import '../backend/backend.dart';
-
-part 'helpers.dart';
 
 part 'auth.dart';
 part 'gym.dart';
 part 'profile_picture.dart';
 part 'user.dart';
-part 'friend_request.dart';
 
 abstract class _Keys {
   static const accessToken = 'accessToken';
   static const refreshToken = 'refreshToken';
-  static const email = 'email';
   static const password = 'password';
-  static const userId = 'user.id';
-  static const userCognitoId = 'user.cognitoId';
-  static const userFirstName = 'user.firstName';
-  static const userLastName = 'user.lastName';
-  static const userConfirmed = 'user.confirmed';
-  static const profilePictureUrl = 'profilePictureUrl';
-  static const gymId = 'gym.id';
-  static const gymName = 'gym.name';
+  static const user = 'user';
+  static const profilePicture = 'profilePicture';
   static const profilePictureImage = 'profilePictureImage';
-  static const gymAddressCity = 'gym.address.city';
-  static const gymAddressState = 'gym.address.state';
-  static const gymAddressZipCode = 'gym.address.zipCode';
-  static const gymAddressStreet = 'gym.address.street';
-  static const gymLocationLongitude = 'gym.location.longitude';
-  static const gymLocationLatitude = 'gym.location.latitude';
-  static const userExploreIds = 'user.explore.ids';
-  static const userExploreFriendRequestIds = 'user.explore.friendRequestIds';
-  static const friendRequestFromCognitoId = 'friendRequest.fromCognitoId';
-  static const friendRequestToCognitoId = 'friendRequest.toCognitoId';
-  static const friendRequestDenied = 'friendRequest.denied';
-  static const friendRequestCreatedAt = 'friendRequest.createdAt';
+  static const gym = 'gym';
+  static const userExplore = 'user.explore';
 }
 
 abstract class Cache {

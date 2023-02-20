@@ -1,8 +1,9 @@
 import 'package:equatable/equatable.dart';
 
+import '../../common/utils/utils.dart';
 import 'entities.dart';
 
-class GymEntity extends Equatable {
+class GymEntity extends Equatable with Serializable {
   final String id;
   final String name;
   final AddressEntity address;
@@ -22,6 +23,14 @@ class GymEntity extends Equatable {
         address: AddressEntity.fromJson(json['address']),
         location: LocationEntity.fromJson(json['location']),
       );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        '_id': id,
+        'name': name,
+        'address': address.toJson(),
+        'location': location.toJson(),
+      };
 
   bool containsIgnoreCase(String query) =>
       name.toLowerCase().contains(query.toLowerCase()) ||

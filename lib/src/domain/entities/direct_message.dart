@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-class DirectMessageEntity extends Equatable {
+import '../../common/utils/utils.dart';
+
+class DirectMessageEntity extends Equatable with Serializable {
   final String id;
   final String text;
   final String senderCognitoId;
@@ -24,6 +26,15 @@ class DirectMessageEntity extends Equatable {
         friendshipId: json['friendshipId'],
         createdAt: DateTime.parse(json['createdAt']),
       );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        '_id': id,
+        'text': text,
+        'senderCognitoId': senderCognitoId,
+        'friendshipId': friendshipId,
+        'createdAt': createdAt.toIso8601String(),
+      };
 
   @override
   List<Object> get props => [
