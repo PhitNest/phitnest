@@ -9,8 +9,7 @@ extension _OnConfirmError on _VerificationBloc {
         event.failure == Failures.profilePictureNotFound.instance
             ? const _ProfilePictureUploadState()
             : _ErrorState(
-                failure: event.failure,
-                dismiss: Completer(),
+                banner: StyledErrorBanner(failure: event.failure),
               ),
       );
 }

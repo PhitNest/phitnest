@@ -11,9 +11,11 @@ extension _OnLoad on _ExploreBloc {
               ),
             ),
           )..then(
-              (either) => either.fold(
-                (response) => add(_LoadedEvent(response)),
-                (failure) => add(_LoadingErrorEvent(failure)),
+              (either) => add(
+                either.fold(
+                  (response) => _LoadedEvent(response),
+                  (failure) => _LoadingErrorEvent(failure),
+                ),
               ),
             ),
         ),

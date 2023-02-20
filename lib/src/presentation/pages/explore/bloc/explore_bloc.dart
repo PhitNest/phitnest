@@ -31,6 +31,10 @@ class _ExploreBloc extends Bloc<_IExploreEvent, _IExploreState> {
 
   @override
   Future<void> close() async {
+    if (state is _Loaded) {
+      final _Loaded state = this.state as _Loaded;
+      await state.logoPressSubscription.cancel();
+    }
     if (state is _HoldingState) {
       final _HoldingState state = this.state as _HoldingState;
       await state.incrementCountdown.cancel();

@@ -7,8 +7,10 @@ extension _OnSocketConnectError on _HomeBloc {
   ) =>
       emit(
         _InitialState(
+          darkMode: false,
           currentPage: state.currentPage,
           logoPress: state.logoPress,
+          logoPressBroadcast: state.logoPressBroadcast,
           socketConnection: CancelableOperation.fromFuture(
             connectSocket(Cache.accessToken!),
           )..then(

@@ -7,9 +7,11 @@ extension _OnSocketConnected on _HomeBloc {
   ) =>
       emit(
         _SocketConnectedState(
+          darkMode: false,
           currentPage: state.currentPage,
           logoPress: state.logoPress,
           connection: event.connection,
+          logoPressBroadcast: state.logoPressBroadcast,
         ),
       );
 }

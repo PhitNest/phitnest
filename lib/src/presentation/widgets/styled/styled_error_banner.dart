@@ -25,7 +25,9 @@ class StyledErrorBanner {
 
   void dismiss() async {
     if (_owningContext != null) {
-      ScaffoldMessenger.of(_owningContext!).hideCurrentMaterialBanner();
+      try {
+        ScaffoldMessenger.of(_owningContext!).hideCurrentMaterialBanner();
+      } catch (_) {}
     }
   }
 }

@@ -67,7 +67,7 @@ class _VerificationBloc extends Bloc<_IVerificationEvent, _IVerificationState> {
     }
     if (state is _ErrorState) {
       final state = this.state as _ErrorState;
-      state.dismiss.complete();
+      state.banner.dismiss();
     }
     if (state is _LoginLoadingState) {
       final state = this.state as _LoginLoadingState;

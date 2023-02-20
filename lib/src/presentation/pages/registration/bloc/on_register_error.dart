@@ -37,7 +37,9 @@ extension _OnRegisterError on _RegistrationBloc {
           gyms: state.gyms,
           location: state.location,
           takenEmails: state.takenEmails,
-          failure: event.failure,
+          banner: StyledErrorBanner(
+            failure: event.failure,
+          ),
         ),
       );
       pageController.jumpToPage(3);

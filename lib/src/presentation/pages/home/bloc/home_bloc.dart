@@ -18,12 +18,22 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
   ///   * on *[_SetPageEvent]* -> *[_SocketConnectedState]*
   _HomeBloc()
       : super(
-          _InitialState(
-            currentPage: NavbarPage.options,
-            logoPress: StreamController(),
-            socketConnection: CancelableOperation.fromFuture(
-              connectSocket(Cache.accessToken!),
-            ),
+          Function.apply(
+            () {
+              // ignore: close_sinks
+              final controller = StreamController<PressType>();
+              final broadcast = controller.stream.asBroadcastStream();
+              return _InitialState(
+                currentPage: NavbarPage.options,
+                darkMode: false,
+                logoPress: controller,
+                socketConnection: CancelableOperation.fromFuture(
+                  connectSocket(Cache.accessToken!),
+                ),
+                logoPressBroadcast: broadcast,
+              );
+            },
+            [],
           ),
         ) {
     on<_LogOutEvent>(onLogOut);
@@ -31,6 +41,7 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
     on<_SetPageEvent>(onSetPage);
     on<_SocketConnectErrorEvent>(onSocketConnectError);
     on<_SocketConnectedEvent>(onSocketConnected);
+    on<_SetDarkModeEvent>(onSetDarkMode);
     if (state is _InitialState) {
       final state = this.state as _InitialState;
       state.socketConnection.value.then(

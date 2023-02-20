@@ -3,9 +3,19 @@ part of home_page;
 class _InitialState extends _IHomeState {
   final CancelableOperation<Either<SocketConnection, Failure>> socketConnection;
 
-  const _InitialState({
+  _IHomeState copyWithDarkMode(bool darkMode) => _InitialState(
+        currentPage: currentPage,
+        logoPress: logoPress,
+        logoPressBroadcast: logoPressBroadcast,
+        darkMode: darkMode,
+        socketConnection: socketConnection,
+      );
+
+  _InitialState({
     required super.currentPage,
     required super.logoPress,
+    required super.logoPressBroadcast,
+    required super.darkMode,
     required this.socketConnection,
   }) : super();
 
