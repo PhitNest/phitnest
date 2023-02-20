@@ -36,10 +36,11 @@ class OptionsPage extends StatelessWidget {
                     result = photo;
                     return null;
                   }
-                  return Failure("", "");
+                  return null;
                 },
               ),
             );
+            ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
             if (result != null) {
               context.bloc.add(_SetProfilePictureEvent(result!));
             } else {

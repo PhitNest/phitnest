@@ -52,10 +52,12 @@ class _OptionsBloc extends Bloc<_IOptionsEvent, _IOptionsState> {
     if (state is _InitialState) {
       final state = this.state as _InitialState;
       await state.getUser.cancel();
-    } else if (state is _SignOutLoadingState) {
+    }
+    if (state is _SignOutLoadingState) {
       final state = this.state as _SignOutLoadingState;
       await state.signOut.cancel();
-    } else if (state is _LoadingErrorState) {
+    }
+    if (state is _LoadingErrorState) {
       final state = this.state as _LoadingErrorState;
       state.errorBanner.dismiss();
     }
