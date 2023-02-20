@@ -19,7 +19,7 @@ class DevicePreviewProvider extends StatelessWidget {
     );
     return DevicePreview(
       defaultDevice: device,
-      enabled: device != null ? true : false,
+      enabled: device != null,
       isToolbarVisible: true,
       builder: (context) => builder(context, device != null),
     );
