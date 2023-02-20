@@ -10,10 +10,11 @@ final _secureStorage = FlutterSecureStorage(
 );
 
 late Map<String, String> _cache;
-late Map<String, Serializable> _lazyLoadedCache;
+Map<String, Serializable> _lazyLoadedCache = {};
 
-Future<void> loadSecureStorage() async =>
-    _cache = await _secureStorage.readAll();
+Future<void> loadSecureStorage() async {
+  _cache = await _secureStorage.readAll();
+}
 
 Future<void> cacheObject<T extends Serializable>(String key, T? value) async {
   if (value != null) {

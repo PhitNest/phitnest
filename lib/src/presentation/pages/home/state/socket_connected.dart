@@ -8,6 +8,8 @@ class _SocketConnectedState extends _IHomeState {
     required super.logoPress,
     required super.logoPressBroadcast,
     required super.darkMode,
+    required super.logoPressListener,
+    required super.freezeLogoAnimation,
     required this.connection,
   }) : super();
 
@@ -17,6 +19,19 @@ class _SocketConnectedState extends _IHomeState {
         logoPressBroadcast: logoPressBroadcast,
         darkMode: darkMode,
         connection: connection,
+        logoPressListener: logoPressListener,
+        freezeLogoAnimation: freezeLogoAnimation,
+      );
+
+  _IHomeState copyWithFreezeAnimation(bool freezeAnimation) =>
+      _SocketConnectedState(
+        currentPage: currentPage,
+        logoPress: logoPress,
+        logoPressBroadcast: logoPressBroadcast,
+        darkMode: darkMode,
+        connection: connection,
+        logoPressListener: logoPressListener,
+        freezeLogoAnimation: freezeAnimation,
       );
 
   @override

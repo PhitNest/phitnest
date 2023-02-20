@@ -31,6 +31,8 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
                   connectSocket(Cache.accessToken!),
                 ),
                 logoPressBroadcast: broadcast,
+                logoPressListener: broadcast.listen((_) {}),
+                freezeLogoAnimation: false,
               );
             },
             [],
@@ -42,8 +44,10 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
     on<_SocketConnectErrorEvent>(onSocketConnectError);
     on<_SocketConnectedEvent>(onSocketConnected);
     on<_SetDarkModeEvent>(onSetDarkMode);
+    on<_LogoPressedEvent>(onLogoPressed);
     if (state is _InitialState) {
       final state = this.state as _InitialState;
+      state.logoPressListener.onData((data) => add(_LogoPressedEvent(data)));
       state.socketConnection.then(
         (either) => add(
           either.fold(
@@ -57,6 +61,8 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
 
   @override
   Future<void> close() async {
+    await state.logoPressListener.cancel();
+    await state.logoPressBroadcast.drain();
     await state.logoPress.close();
     if (state is _InitialState) {
       final state = this.state as _InitialState;

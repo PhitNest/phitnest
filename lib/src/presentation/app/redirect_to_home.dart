@@ -17,19 +17,19 @@ class _RedirectHomeState extends State<_RedirectHome> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback(
-      (_) {
-        if (!_disposed) {
-          SchedulerBinding.instance.addPostFrameCallback(
-            (_) => Navigator.pushAndRemoveUntil(
+      (_) => SchedulerBinding.instance.addPostFrameCallback(
+        (_) {
+          if (!_disposed) {
+            Navigator.pushAndRemoveUntil(
               context,
               CupertinoPageRoute(
                 builder: (context) => HomePage(),
               ),
               (_) => false,
-            ),
-          );
-        }
-      },
+            );
+          }
+        },
+      ),
     );
   }
 

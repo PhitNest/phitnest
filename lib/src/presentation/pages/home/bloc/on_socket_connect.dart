@@ -12,6 +12,8 @@ extension _OnSocketConnected on _HomeBloc {
           logoPress: state.logoPress,
           connection: event.connection,
           logoPressBroadcast: state.logoPressBroadcast,
+          logoPressListener: state.logoPressListener,
+          freezeLogoAnimation: state.freezeLogoAnimation,
         ),
       );
 }
