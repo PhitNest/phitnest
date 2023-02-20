@@ -60,6 +60,10 @@ class _RegistrationBloc extends Bloc<_IRegistrationEvent, _IRegistrationState> {
       final state = this.state as _InitialState;
       await state.loadGymsOp.cancel();
     }
+    if (state is _RegisterErrorState) {
+      final state = this.state as _RegisterErrorState;
+      state.banner.dismiss();
+    }
     firstNameController.dispose();
     lastNameController.dispose();
     emailController.dispose();

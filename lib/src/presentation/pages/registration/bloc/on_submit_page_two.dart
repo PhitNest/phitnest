@@ -34,7 +34,7 @@ extension _OnSubmitPageTwo on _RegistrationBloc {
             gyms: state.gyms,
             location: state.location,
             takenEmails: state.takenEmails,
-            failure: state.failure,
+            banner: state.banner,
           ),
         );
       } else if (state is _RegisterLoadingState) {

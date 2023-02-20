@@ -15,8 +15,10 @@ extension _OnLogOut on _HomeBloc {
     }
     emit(
       _LogOutState(
+        darkMode: false,
         currentPage: state.currentPage,
         logoPress: state.logoPress,
+        logoPressBroadcast: state.logoPressBroadcast,
       ),
     );
   }

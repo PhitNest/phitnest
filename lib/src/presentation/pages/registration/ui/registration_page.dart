@@ -111,7 +111,11 @@ class RegistrationPage extends StatelessWidget {
   Widget build(BuildContext context) => BlocProvider(
         create: (context) => _RegistrationBloc(),
         child: BlocConsumer<_RegistrationBloc, _IRegistrationState>(
-          listener: (context, state) {},
+          listener: (context, state) {
+            if (state is _RegisterErrorState) {
+              state.banner.show(context);
+            }
+          },
           builder: (context, state) {
             final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
             if (state is _SuccessState) {
@@ -222,13 +226,8 @@ class RegistrationPage extends StatelessWidget {
                                   break;
                                 case 3:
                                   if (state is _RegisterLoadingState) {
-                                    return const _PageFourLoading();
-                                  } else if (state is _RegisterErrorState) {
-                                    return _PageFourError(
+                                    return _PageFourLoading(
                                       gym: state.gym,
-                                      onPressedYes: context.submit,
-                                      onPressedNo: context.notMyGym,
-                                      error: state.failure.message,
                                     );
                                   } else if (state is _IGymSelectedState) {
                                     return _PageFour(

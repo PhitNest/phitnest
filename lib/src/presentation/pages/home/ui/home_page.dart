@@ -45,8 +45,9 @@ class HomePage extends StatelessWidget {
                           switch (state.currentPage) {
                             case NavbarPage.explore:
                               return ExplorePage(
-                                logoPressStream:
-                                    state.logoPress.stream.asBroadcastStream(),
+                                logoPressStream: state.logoPressBroadcast,
+                                onSetDarkMode: (darkMode) => context.bloc
+                                    .add(_SetDarkModeEvent(darkMode)),
                               );
                             case NavbarPage.chat:
                               return const ChatPage();
@@ -62,6 +63,8 @@ class HomePage extends StatelessWidget {
                       page: state.currentPage,
                       onReleaseLogo: () => state.logoPress.add(PressType.up),
                       onPressDownLogo: () {
+                        ScaffoldMessenger.of(context)
+                            .hideCurrentMaterialBanner();
                         if (state.currentPage == NavbarPage.explore) {
                           state.logoPress.add(PressType.down);
                         } else {
@@ -69,14 +72,29 @@ class HomePage extends StatelessWidget {
                               .add(const _SetPageEvent(NavbarPage.explore));
                         }
                       },
-                      onPressedNews: () => context.bloc
-                          .add(const _SetPageEvent(NavbarPage.news)),
-                      onPressedExplore: () => context.bloc
-                          .add(const _SetPageEvent(NavbarPage.explore)),
-                      onPressedOptions: () => context.bloc
-                          .add(const _SetPageEvent(NavbarPage.options)),
-                      onPressedChat: () => context.bloc
-                          .add(const _SetPageEvent(NavbarPage.chat)),
+                      colorful: Cache.userExplore?.users.isNotEmpty ?? false,
+                      onPressedNews: () {
+                        ScaffoldMessenger.of(context)
+                            .hideCurrentMaterialBanner();
+                        context.bloc.add(const _SetPageEvent(NavbarPage.news));
+                      },
+                      onPressedExplore: () {
+                        ScaffoldMessenger.of(context)
+                            .hideCurrentMaterialBanner();
+                        context.bloc
+                            .add(const _SetPageEvent(NavbarPage.explore));
+                      },
+                      onPressedOptions: () {
+                        ScaffoldMessenger.of(context)
+                            .hideCurrentMaterialBanner();
+                        context.bloc
+                            .add(const _SetPageEvent(NavbarPage.options));
+                      },
+                      onPressedChat: () {
+                        ScaffoldMessenger.of(context)
+                            .hideCurrentMaterialBanner();
+                        context.bloc.add(const _SetPageEvent(NavbarPage.chat));
+                      },
                     ),
                   ],
                 ),

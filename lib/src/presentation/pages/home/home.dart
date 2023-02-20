@@ -6,9 +6,9 @@ import 'package:async/async.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_mobile/src/domain/entities/entities.dart';
 
 import '../../../common/constants/constants.dart';
 import '../../../common/failure.dart';
@@ -31,6 +31,7 @@ part 'bloc/on_log_out.dart';
 part 'bloc/on_set_page.dart';
 part 'bloc/on_socket_connect_error.dart';
 part 'bloc/on_socket_connect.dart';
+part 'bloc/on_set_dark_mode.dart';
 
 part 'event/base.dart';
 part 'event/refresh_session.dart';
@@ -38,3 +39,4 @@ part 'event/log_out.dart';
 part 'event/set_page.dart';
 part 'event/socket_connect_error.dart';
 part 'event/socket_connected.dart';
+part 'event/set_dark_mode.dart';

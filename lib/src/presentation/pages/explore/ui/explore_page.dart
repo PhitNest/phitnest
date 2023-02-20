@@ -6,10 +6,12 @@ extension _Bloc on BuildContext {
 
 class ExplorePage extends StatelessWidget {
   final Stream<PressType> logoPressStream;
+  final ValueChanged<bool> onSetDarkMode;
 
   const ExplorePage({
     Key? key,
     required this.logoPressStream,
+    required this.onSetDarkMode,
   }) : super(key: key);
 
   @override
@@ -29,11 +31,15 @@ class ExplorePage extends StatelessWidget {
               onPressedRetry: () => context.bloc.add(const _LoadEvent()),
             );
           } else if (state is _Loaded) {
-            return _LoadedPage(
-              users: state.userExploreResponse.users,
-              onChangePage: (page) {},
-              countdown: state is _HoldingState ? state.countdown : null,
-            );
+            if (state.userExploreResponse.users.isEmpty) {
+              return const _EmptyNestPage();
+            } else {
+              return _LoadedPage(
+                users: state.userExploreResponse.users,
+                onChangePage: (page) {},
+                countdown: state is _HoldingState ? state.countdown : null,
+              );
+            }
           } else {
             return const _LoadingPage();
           }

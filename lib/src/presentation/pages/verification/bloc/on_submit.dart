@@ -10,13 +10,13 @@ extension _OnSubmit on _VerificationBloc {
         state is _ProfilePictureUploadState) {
       if (state is _ErrorState) {
         final state = this.state as _ErrorState;
-        state.dismiss.complete();
+        state.banner.dismiss();
       }
       emit(
         codeController.text.length != 6
             ? _ErrorState(
-                failure: Failures.invalidCode.instance,
-                dismiss: Completer(),
+                banner:
+                    StyledErrorBanner(failure: Failures.invalidCode.instance),
               )
             : _ConfirmingState(
                 confirm: CancelableOperation.fromFuture(

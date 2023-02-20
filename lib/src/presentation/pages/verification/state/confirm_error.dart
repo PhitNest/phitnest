@@ -1,14 +1,12 @@
 part of verification_page;
 
 class _ErrorState extends _IVerificationState {
-  final Failure failure;
-  final Completer<void> dismiss;
+  final StyledErrorBanner banner;
 
   const _ErrorState({
-    required this.failure,
-    required this.dismiss,
+    required this.banner,
   }) : super();
 
   @override
-  List<Object> get props => [super.props, failure, dismiss];
+  List<Object> get props => [super.props, banner];
 }

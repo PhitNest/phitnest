@@ -7,7 +7,7 @@ extension _OnResend on _VerificationBloc {
   ) {
     if (state is _ErrorState) {
       final state = this.state as _ErrorState;
-      state.dismiss.complete();
+      state.banner.dismiss();
     }
     emit(
       _ResendingState(

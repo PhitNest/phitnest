@@ -1,7 +1,7 @@
 part of registration_page;
 
 class _RegisterErrorState extends _IGymSelectedState {
-  final Failure failure;
+  final StyledErrorBanner banner;
 
   const _RegisterErrorState({
     required super.autovalidateMode,
@@ -11,9 +11,9 @@ class _RegisterErrorState extends _IGymSelectedState {
     required super.gyms,
     required super.location,
     required super.takenEmails,
-    required this.failure,
+    required this.banner,
   }) : super();
 
   @override
-  List<Object> get props => [super.props, failure];
+  List<Object> get props => [super.props, banner];
 }

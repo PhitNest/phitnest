@@ -40,8 +40,7 @@ class _OptionsBloc extends Bloc<_IOptionsEvent, _IOptionsState> {
       );
     }
     on<_SignOutEvent>(onSignOut);
-    on<_SignOutErrorEvent>(onSignOutError);
-    on<_SignOutSuccessEvent>(onSignOutSuccess);
+    on<_SignOutResponseEvent>(onSignOutResponse);
     on<_ErrorEvent>(onLoadingError);
     on<_LoadedUserEvent>(onLoaded);
     on<_EditProfilePictureEvent>(onEditProfilePicture);
@@ -56,9 +55,6 @@ class _OptionsBloc extends Bloc<_IOptionsEvent, _IOptionsState> {
     } else if (state is _SignOutLoadingState) {
       final state = this.state as _SignOutLoadingState;
       await state.signOut.cancel();
-    } else if (state is _SignOutErrorState) {
-      final state = this.state as _SignOutErrorState;
-      state.errorBanner.dismiss();
     } else if (state is _LoadingErrorState) {
       final state = this.state as _LoadingErrorState;
       state.errorBanner.dismiss();

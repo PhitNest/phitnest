@@ -50,9 +50,7 @@ class OptionsPage extends StatelessWidget {
                 Cache.profilePictureImageCache);
           } else if (state is _LoadingErrorState) {
             state.errorBanner.show(context);
-          } else if (state is _SignOutErrorState) {
-            state.errorBanner.show(context);
-          } else if (state is _SignOutSuccessState) {
+          } else if (state is _SignOutState) {
             Navigator.of(context).pushAndRemoveUntil(
               CupertinoPageRoute(
                 builder: (context) => LoginPage(),

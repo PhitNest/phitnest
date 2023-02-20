@@ -41,7 +41,9 @@ class VerificationPage extends StatelessWidget {
           shouldLogin: shouldLogin,
         ),
         listener: (context, state) async {
-          if (state is _SuccessState) {
+          if (state is _ErrorState) {
+            state.banner.show(context);
+          } else if (state is _SuccessState) {
             Navigator.pop(context, state.response);
           } else if (state is _ProfilePictureUploadState) {
             if ((await Navigator.push<XFile>(

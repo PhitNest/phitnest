@@ -1,6 +1,6 @@
 part of backend;
 
-const _timeout = Duration(seconds: 15);
+const _timeout = Duration(seconds: 5);
 
 enum HttpMethod {
   get,
@@ -82,38 +82,38 @@ class SocketConnection extends Equatable {
 @override
 Future<Either<SocketConnection, Failure>> connectSocket(
     String authorization) async {
-  try {
-    prettyLogger.d("Connecting to the websocket server...");
-    final completer = Completer<SocketConnection>();
-    final streamController = StreamController<void>();
-    final IO.Socket _socket = IO.io(
-      '${dotenv.get('BACKEND_HOST')}:${dotenv.get('BACKEND_PORT')}',
-      IO.OptionBuilder()
-          .setTransports(['websocket'])
-          .disableAutoConnect()
-          .setExtraHeaders({'token': authorization})
-          .build(),
-    )..connect();
-    _socket
-      ..onConnect((_) {
-        prettyLogger.d("Connected to the websocket server.");
-        completer.complete(
-          SocketConnection._(
-            _socket,
-            streamController.stream.asBroadcastStream(),
-          ),
-        );
-        return Left(_socket);
-      })
-      ..onDisconnect(
-        (_) {
-          prettyLogger.d("Disconnected from the websocket server.");
-          streamController.add(null);
-          streamController.close();
-        },
+  final IO.Socket _socket;
+  prettyLogger.d("Connecting to the websocket server...");
+  final completer = Completer<SocketConnection>();
+  final streamController = StreamController<void>();
+  _socket = IO.io(
+    '${dotenv.get('BACKEND_HOST')}:${dotenv.get('BACKEND_PORT')}',
+    IO.OptionBuilder()
+        .setTransports(['websocket'])
+        .disableAutoConnect()
+        .setExtraHeaders({'token': authorization})
+        .build(),
+  )..connect();
+  _socket
+    ..onConnect((_) {
+      prettyLogger.d("Connected to the websocket server.");
+      completer.complete(
+        SocketConnection._(
+          _socket,
+          streamController.stream.asBroadcastStream(),
+        ),
       );
-    return Left(await completer.future.timeout(_timeout));
+    })
+    ..onDisconnect(
+      (_) {
+        prettyLogger.d("Disconnected from the websocket server.");
+        streamController.close();
+      },
+    );
+  try {
+    return Left(await (completer.future.timeout(_timeout)));
   } catch (err) {
+    _socket.clearListeners();
     prettyLogger.e("Failed to connect to the websocket: $err");
     return Right(Failures.networkFailure.instance);
   }

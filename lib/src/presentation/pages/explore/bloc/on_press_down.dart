@@ -1,10 +1,13 @@
 part of explore_page;
 
 extension _OnPressDown on _ExploreBloc {
-  void onPressDown(_PressDownEvent event, Emitter<_IExploreState> emit) => emit(
+  void onPressDown(_PressDownEvent event, Emitter<_IExploreState> emit) {
+    final state = this.state as _Loaded;
+    if (state.userExploreResponse.users.isNotEmpty) {
+      emit(
         _HoldingState(
-          userExploreResponse: (state as _Loaded).userExploreResponse,
-          logoPressSubscription: (state as _Loaded).logoPressSubscription,
+          userExploreResponse: state.userExploreResponse,
+          logoPressSubscription: state.logoPressSubscription,
           countdown: 3,
           incrementCountdown: CancelableOperation.fromFuture(
             Future.delayed(
@@ -14,4 +17,6 @@ extension _OnPressDown on _ExploreBloc {
           ),
         ),
       );
+    }
+  }
 }

@@ -36,7 +36,7 @@ abstract class _ILoginPage extends StatelessWidget {
             child: Column(
               children: [
                 // Responsive padding
-                max(0, 120 - keyboardHeight / 4).verticalSpace,
+                max(0, 120 - keyboardHeight / 5).verticalSpace,
                 Image.asset(
                   Assets.logo.path,
                   width: 61.59.w,
