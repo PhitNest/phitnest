@@ -47,7 +47,8 @@ class OptionsPage extends StatelessWidget {
             }
           } else if (state is _LoadedUserState) {
             await CachedNetworkImage.evictFromCache(
-                Cache.profilePictureImageCache);
+              Cache.profilePictureImageCache,
+            );
           } else if (state is _LoadingErrorState) {
             state.errorBanner.show(context);
           } else if (state is _SignOutState) {

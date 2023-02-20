@@ -1,16 +1,16 @@
 part of cache;
 
-String? get _accessToken => _getString(_Keys.accessToken);
+String? get _accessToken => getCachedString(_Keys.accessToken);
 
-Future<bool> _cacheAccessToken(String? accessToken) =>
-    _cacheString(_Keys.accessToken, accessToken);
+Future<void> _cacheAccessToken(String? accessToken) =>
+    cacheString(_Keys.accessToken, accessToken);
 
-String? get _refreshToken => _getString(_Keys.refreshToken);
+String? get _refreshToken => getCachedString(_Keys.refreshToken);
 
-Future<bool> _cacheRefreshToken(String? refreshToken) =>
-    _cacheString(_Keys.refreshToken, refreshToken);
+Future<void> _cacheRefreshToken(String? refreshToken) =>
+    cacheString(_Keys.refreshToken, refreshToken);
 
-String? get _password => _getString(_Keys.password);
+String? get _password => getCachedString(_Keys.password);
 
-Future<bool> _cachePassword(String? password) =>
-    _cacheString(_Keys.password, password);
+Future<void> _cachePassword(String? password) =>
+    cacheString(_Keys.password, password);

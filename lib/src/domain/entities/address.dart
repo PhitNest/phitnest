@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-class AddressEntity extends Equatable {
+import '../../common/utils/utils.dart';
+
+class AddressEntity extends Equatable with Serializable {
   final String street;
   final String city;
   final String state;
@@ -20,6 +22,14 @@ class AddressEntity extends Equatable {
         state: json['state'],
         zipCode: json['zipCode'],
       );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'street': street,
+        'city': city,
+        'state': state,
+        'zipCode': zipCode,
+      };
 
   bool containsIgnoreCase(String query) =>
       street.toLowerCase().contains(query.toLowerCase()) ||

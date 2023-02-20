@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-abstract class User extends Equatable {
+import '../../common/utils/utils.dart';
+
+abstract class User extends Equatable with Serializable {
   final String id;
   final String firstName;
   final String lastName;
@@ -16,6 +18,16 @@ abstract class User extends Equatable {
     required this.gymId,
     required this.confirmed,
   }) : super();
+
+  @override
+  Map<String, dynamic> toJson() => {
+        '_id': id,
+        'firstName': firstName,
+        'lastName': lastName,
+        'cognitoId': cognitoId,
+        'gymId': gymId,
+        'confirmed': confirmed,
+      };
 
   @override
   List<Object> get props => [
@@ -55,13 +67,19 @@ class UserEntity extends User {
       );
 
   @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        'email': email,
+      };
+
+  @override
   List<Object> get props => [
         super.props,
         email,
       ];
 }
 
-class PublicUserEntity extends User {
+class PublicUserEntity extends User with Serializable {
   const PublicUserEntity({
     required super.id,
     required super.firstName,
@@ -110,20 +128,11 @@ class ProfilePictureUserEntity extends UserEntity {
         profilePictureUrl: json['profilePictureUrl'],
       );
 
-  factory ProfilePictureUserEntity.fromUserEntity(
-    UserEntity user,
-    String profilePictureUrl,
-  ) =>
-      ProfilePictureUserEntity(
-        id: user.id,
-        email: user.email,
-        cognitoId: user.cognitoId,
-        confirmed: user.confirmed,
-        firstName: user.firstName,
-        gymId: user.gymId,
-        lastName: user.lastName,
-        profilePictureUrl: profilePictureUrl,
-      );
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        'profilePictureUrl': profilePictureUrl,
+      };
 
   @override
   List<Object> get props => [super.props, profilePictureUrl];
@@ -153,6 +162,12 @@ class ProfilePicturePublicUserEntity extends PublicUserEntity {
         confirmed: json['confirmed'],
         profilePictureUrl: json['profilePictureUrl'],
       );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        ...super.toJson(),
+        'profilePictureUrl': profilePictureUrl,
+      };
 
   @override
   List<Object> get props => [super.props, profilePictureUrl];

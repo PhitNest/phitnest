@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 
-class LocationEntity extends Equatable {
+import '../../common/utils/utils.dart';
+
+class LocationEntity extends Equatable with Serializable {
   final double longitude;
   final double latitude;
 
@@ -15,6 +17,12 @@ class LocationEntity extends Equatable {
         longitude: json['coordinates'][0],
         latitude: json['coordinates'][1],
       );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': 'Point',
+        'coordinates': [longitude, latitude],
+      };
 
   double distanceTo(LocationEntity other) =>
       Geolocator.distanceBetween(
