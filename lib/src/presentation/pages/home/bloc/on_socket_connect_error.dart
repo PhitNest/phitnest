@@ -11,6 +11,8 @@ extension _OnSocketConnectError on _HomeBloc {
           currentPage: state.currentPage,
           logoPress: state.logoPress,
           logoPressBroadcast: state.logoPressBroadcast,
+          logoPressListener: state.logoPressListener,
+          freezeLogoAnimation: state.freezeLogoAnimation,
           socketConnection: CancelableOperation.fromFuture(
             connectSocket(Cache.accessToken!),
           )..then(

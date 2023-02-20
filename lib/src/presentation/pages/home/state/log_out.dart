@@ -6,6 +6,8 @@ class _LogOutState extends _IHomeState {
     required super.logoPress,
     required super.logoPressBroadcast,
     required super.darkMode,
+    required super.logoPressListener,
+    required super.freezeLogoAnimation,
   }) : super();
 
   _IHomeState copyWithDarkMode(bool darkMode) => _LogOutState(
@@ -13,5 +15,16 @@ class _LogOutState extends _IHomeState {
         logoPress: logoPress,
         logoPressBroadcast: logoPressBroadcast,
         darkMode: darkMode,
+        logoPressListener: logoPressListener,
+        freezeLogoAnimation: freezeLogoAnimation,
+      );
+
+  _IHomeState copyWithFreezeAnimation(bool freezeAnimation) => _LogOutState(
+        currentPage: currentPage,
+        logoPress: logoPress,
+        logoPressBroadcast: logoPressBroadcast,
+        darkMode: darkMode,
+        logoPressListener: logoPressListener,
+        freezeLogoAnimation: freezeAnimation,
       );
 }

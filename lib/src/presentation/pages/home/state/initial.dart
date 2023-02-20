@@ -9,6 +9,18 @@ class _InitialState extends _IHomeState {
         logoPressBroadcast: logoPressBroadcast,
         darkMode: darkMode,
         socketConnection: socketConnection,
+        logoPressListener: logoPressListener,
+        freezeLogoAnimation: freezeLogoAnimation,
+      );
+
+  _IHomeState copyWithFreezeAnimation(bool freezeAnimation) => _InitialState(
+        currentPage: currentPage,
+        logoPress: logoPress,
+        logoPressBroadcast: logoPressBroadcast,
+        darkMode: darkMode,
+        socketConnection: socketConnection,
+        logoPressListener: logoPressListener,
+        freezeLogoAnimation: freezeAnimation,
       );
 
   _InitialState({
@@ -16,6 +28,8 @@ class _InitialState extends _IHomeState {
     required super.logoPress,
     required super.logoPressBroadcast,
     required super.darkMode,
+    required super.logoPressListener,
+    required super.freezeLogoAnimation,
     required this.socketConnection,
   }) : super();
 

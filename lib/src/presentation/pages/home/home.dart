@@ -32,6 +32,7 @@ part 'bloc/on_set_page.dart';
 part 'bloc/on_socket_connect_error.dart';
 part 'bloc/on_socket_connect.dart';
 part 'bloc/on_set_dark_mode.dart';
+part 'bloc/on_logo_pressed.dart';
 
 part 'event/base.dart';
 part 'event/refresh_session.dart';
@@ -40,3 +41,4 @@ part 'event/set_page.dart';
 part 'event/socket_connect_error.dart';
 part 'event/socket_connected.dart';
 part 'event/set_dark_mode.dart';
+part 'event/logo_pressed.dart';

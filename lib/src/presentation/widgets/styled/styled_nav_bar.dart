@@ -54,20 +54,18 @@ class StyledNavBar extends StatefulWidget {
 
 class _StyledNavBarState extends State<StyledNavBar>
     with SingleTickerProviderStateMixin {
-  late final AnimationController? controller;
+  late final AnimationController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = widget.colorful
-        ? (AnimationController(vsync: this)
-          ..repeat(
-            min: 0,
-            max: 1,
-            reverse: true,
-            period: Duration(milliseconds: 1200),
-          ))
-        : null;
+    controller = AnimationController(vsync: this)
+      ..repeat(
+        min: 0,
+        max: 1,
+        reverse: true,
+        period: Duration(milliseconds: 1200),
+      );
   }
 
   Widget get logoButton => GestureDetector(
@@ -80,8 +78,7 @@ class _StyledNavBarState extends State<StyledNavBar>
                 ? Assets.darkLogo.path
                 : Assets.coloredLogo.path
             : Assets.logo.path,
-        width:
-            38.62.w + (widget.animateLogo ? (controller?.value ?? 0) : 1) * 5.w,
+        width: 38.62.w + (widget.animateLogo ? controller.value : 1) * 5.w,
       ));
 
   Widget createButton(
@@ -139,12 +136,10 @@ class _StyledNavBarState extends State<StyledNavBar>
               Center(
                 child: Padding(
                   padding: EdgeInsets.only(left: 12.w),
-                  child: controller != null
-                      ? AnimatedBuilder(
-                          animation: controller!,
-                          builder: (context, child) => logoButton,
-                        )
-                      : logoButton,
+                  child: AnimatedBuilder(
+                    animation: controller,
+                    builder: (context, child) => logoButton,
+                  ),
                 ),
               ),
               Row(
@@ -189,7 +184,7 @@ class _StyledNavBarState extends State<StyledNavBar>
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller.dispose();
     super.dispose();
   }
 }

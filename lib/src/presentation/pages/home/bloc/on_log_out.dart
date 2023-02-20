@@ -19,6 +19,8 @@ extension _OnLogOut on _HomeBloc {
         currentPage: state.currentPage,
         logoPress: state.logoPress,
         logoPressBroadcast: state.logoPressBroadcast,
+        logoPressListener: state.logoPressListener,
+        freezeLogoAnimation: state.freezeLogoAnimation,
       ),
     );
   }
