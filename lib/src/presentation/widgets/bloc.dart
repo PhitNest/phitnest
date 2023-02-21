@@ -2,8 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'widgets.dart';
+
 class BlocWidget<B extends Bloc<dynamic, S>, S extends Equatable>
-    extends StatelessWidget {
+    extends StatefulWidget {
   final B Function(BuildContext context) create;
   final Widget Function(BuildContext, S) builder;
   final void Function(BuildContext, S)? listener;
@@ -16,11 +18,23 @@ class BlocWidget<B extends Bloc<dynamic, S>, S extends Equatable>
   }) : super(key: key);
 
   @override
+  _BlocWidgetState<B, S> createState() => _BlocWidgetState<B, S>();
+}
+
+class _BlocWidgetState<B extends Bloc<dynamic, S>, S extends Equatable>
+    extends State<BlocWidget<B, S>> {
+  @override
   Widget build(BuildContext context) => BlocProvider<B>(
-        create: create,
+        create: widget.create,
         child: BlocConsumer<B, S>(
-          builder: builder,
-          listener: listener ?? (_, __) {},
+          builder: widget.builder,
+          listener: widget.listener ?? (_, __) {},
         ),
       );
+
+  @override
+  void dispose() {
+    StyledErrorBanner.dismiss();
+    super.dispose();
+  }
 }

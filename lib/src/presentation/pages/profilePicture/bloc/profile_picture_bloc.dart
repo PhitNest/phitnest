@@ -27,7 +27,6 @@ class _ProfilePictureBloc
           add(_InitializeCameraEvent(cameraDescription)));
     }
     on<_InitializeCameraEvent>(onInitializeCamera);
-    on<_RetryInitializeCameraEvent>(onRetryInitializeCamera);
     on<_CameraLoadedEvent>(onCameraLoaded);
     on<_CameraErrorEvent>(onCameraError);
     on<_CaptureEvent>(onCapture);
@@ -53,10 +52,6 @@ class _ProfilePictureBloc
       final state = this.state as _CameraLoadedState;
       await state.cameraController.dispose();
     }
-    if (state is _CameraErrorState) {
-      final state = this.state as _CameraErrorState;
-      await state.cameraController.dispose();
-    }
     if (state is _IInitializedState) {
       final state = this.state as _IInitializedState;
       await state.cameraController.dispose();
@@ -68,18 +63,6 @@ class _ProfilePictureBloc
     if (state is _CameraLoadingState) {
       final state = this.state as _CameraLoadingState;
       await state.initializeCamera.cancel();
-    }
-    if (state is _CaptureErrorState) {
-      final state = this.state as _CaptureErrorState;
-      state.errorBanner.dismiss();
-    }
-    if (state is _UploadErrorState) {
-      final state = this.state as _UploadErrorState;
-      state.errorBanner.dismiss();
-    }
-    if (state is _CameraErrorState) {
-      final state = this.state as _CameraErrorState;
-      state.errorBanner.dismiss();
     }
     return super.close();
   }

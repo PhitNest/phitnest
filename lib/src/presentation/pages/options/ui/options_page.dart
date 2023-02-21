@@ -8,13 +8,12 @@ class OptionsPage extends StatelessWidget {
   const OptionsPage() : super();
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _OptionsBloc(
-        withAuth: context.withAuth,
-        withAuthVoid: context.withAuthVoid,
-      ),
-      child: BlocConsumer<_OptionsBloc, _IOptionsState>(
+  Widget build(BuildContext context) =>
+      BlocWidget<_OptionsBloc, _IOptionsState>(
+        create: (context) => _OptionsBloc(
+          withAuth: context.withAuth,
+          withAuthVoid: context.withAuthVoid,
+        ),
         listener: (context, state) async {
           if (state is _EditProfilePictureState) {
             XFile? result;
@@ -40,19 +39,13 @@ class OptionsPage extends StatelessWidget {
                 },
               ),
             );
-            ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
             if (result != null) {
               context.bloc.add(_SetProfilePictureEvent(result!));
             } else {
               context.bloc.add(_LoadedUserEvent(response: state.response));
             }
-          } else if (state is _LoadedUserState) {
-            await CachedNetworkImage.evictFromCache(
-              Cache.profilePictureImageCache,
-            );
-          } else if (state is _LoadingErrorState) {
-            state.errorBanner.show(context);
-          } else if (state is _SignOutState) {
+          }
+          if (state is _SignOutState) {
             context.logOut();
             Navigator.of(context).pushAndRemoveUntil(
               CupertinoPageRoute(
@@ -84,7 +77,5 @@ class OptionsPage extends StatelessWidget {
             );
           }
         },
-      ),
-    );
-  }
+      );
 }

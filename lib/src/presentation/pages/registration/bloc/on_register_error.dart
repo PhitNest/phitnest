@@ -8,7 +8,7 @@ extension _OnRegisterError on _RegistrationBloc {
     final state = this.state as _RegisterLoadingState;
     if (event.failure == Failures.usernameExists.instance) {
       emit(
-        _IGymSelectedStateState(
+        _GymSelectedState(
           autovalidateMode: AutovalidateMode.always,
           gym: state.gym,
           gyms: state.gyms,
@@ -28,8 +28,9 @@ extension _OnRegisterError on _RegistrationBloc {
         },
       );
     } else {
+      StyledErrorBanner.show(event.failure);
       emit(
-        _RegisterErrorState(
+        _GymSelectedState(
           autovalidateMode: state.autovalidateMode,
           firstNameConfirmed: state.firstNameConfirmed,
           currentPage: state.currentPage,
@@ -37,12 +38,8 @@ extension _OnRegisterError on _RegistrationBloc {
           gyms: state.gyms,
           location: state.location,
           takenEmails: state.takenEmails,
-          banner: StyledErrorBanner(
-            failure: event.failure,
-          ),
         ),
       );
-      pageController.jumpToPage(3);
     }
   }
 }

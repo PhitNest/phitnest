@@ -10,6 +10,8 @@ class User {
             (either) => either.fold(
               (response) => Future.wait(
                 [
+                  CachedNetworkImage.evictFromCache(
+                      Cache.profilePictureImageCache),
                   Cache.cacheGym(response.gym),
                   Cache.cacheUser(response),
                   Cache.cacheProfilePictureUrl(response.profilePictureUrl),
@@ -33,6 +35,7 @@ class User {
           .then(
             (either) => either.fold(
               (response) =>
+                  // TODO: Cache profile pictures with CachedNetworkImage
                   Cache.cacheUserExplore(response).then((_) => Left(response)),
               (failure) => Right(failure),
             ),

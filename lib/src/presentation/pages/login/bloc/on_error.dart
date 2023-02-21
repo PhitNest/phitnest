@@ -36,14 +36,11 @@ extension _OnLoginError on _LoginBloc {
         (_) => formKey.currentState!.validate(),
       );
     } else {
-      // Transition to error state
+      StyledErrorBanner.show(event.failure);
       emit(
-        _ErrorState(
+        _InitialState(
           autovalidateMode: AutovalidateMode.always,
           invalidCredentials: state.invalidCredentials,
-          errorBanner: StyledErrorBanner(
-            failure: event.failure,
-          ),
         ),
       );
     }

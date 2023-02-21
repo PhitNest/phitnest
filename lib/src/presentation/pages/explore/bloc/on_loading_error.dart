@@ -5,13 +5,45 @@ extension _OnLoadingError on _ExploreBloc {
     if (state is _ReloadingState) {
       final state = this.state as _ReloadingState;
       emit(
-        _LoadedState(
+        _ReloadingState(
           logoPressSubscription: state.logoPressSubscription,
+          explore: CancelableOperation.fromFuture(
+            withAuth(
+              (accessToken) => Repositories.user.exploreUsers(
+                accessToken: accessToken,
+                gymId: Cache.gym!.id,
+              ),
+            ),
+          )..then(
+              (either) => add(
+                either.fold(
+                  (response) => _LoadedEvent(response),
+                  (failure) => _LoadingErrorEvent(failure),
+                ),
+              ),
+            ),
           userExploreResponse: state.userExploreResponse,
         ),
       );
     } else {
-      emit(_LoadingErrorState(failure: event.failure));
+      StyledErrorBanner.show(event.failure);
+      emit(_LoadingState(
+        explore: CancelableOperation.fromFuture(
+          withAuth(
+            (accessToken) => Repositories.user.exploreUsers(
+              accessToken: accessToken,
+              gymId: Cache.gym!.id,
+            ),
+          ),
+        )..then(
+            (either) => add(
+              either.fold(
+                (response) => _LoadedEvent(response),
+                (failure) => _LoadingErrorEvent(failure),
+              ),
+            ),
+          ),
+      ));
     }
   }
 }

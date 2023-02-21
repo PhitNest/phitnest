@@ -22,7 +22,7 @@ extension _OnGymSelected on _RegistrationBloc {
     } else {
       final state = this.state as _IGymsLoadedState;
       emit(
-        _IGymSelectedStateState(
+        _GymSelectedState(
           firstNameConfirmed: state.firstNameConfirmed,
           gyms: state.gyms,
           takenEmails: state.takenEmails,

@@ -1,5 +1,6 @@
 library repository;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../common/failure.dart';

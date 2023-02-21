@@ -1,9 +1,5 @@
 part of explore_page;
 
-extension _Bloc on BuildContext {
-  _ExploreBloc get bloc => read();
-}
-
 class ExplorePage extends StatelessWidget {
   final Stream<PressType> logoPressStream;
   final ValueChanged<bool> onSetDarkMode;
@@ -15,25 +11,20 @@ class ExplorePage extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _ExploreBloc(
-        withAuth: context.withAuth,
-        withAuthVoid: context.withAuthVoid,
-        logoPressStream: logoPressStream,
-      ),
-      child: BlocConsumer<_ExploreBloc, _IExploreState>(
-        listener: (context, state) {},
+  Widget build(BuildContext context) =>
+      BlocWidget<_ExploreBloc, _IExploreState>(
+        create: (context) => _ExploreBloc(
+          withAuth: context.withAuth,
+          withAuthVoid: context.withAuthVoid,
+          logoPressStream: logoPressStream,
+        ),
         builder: (context, state) {
-          if (state is _LoadingErrorState) {
-            return _ErrorPage(
-              failure: state.failure,
-              onPressedRetry: () => context.bloc.add(const _LoadEvent()),
-            );
-          } else if (state is _Loaded) {
+          if (state is _Loaded) {
             if (state.userExploreResponse.users.isEmpty) {
+              context.setFreezeAnimation(true);
               return const _EmptyNestPage();
             } else {
+              context.setFreezeAnimation(state is _HoldingState);
               return _LoadedPage(
                 users: state.userExploreResponse.users,
                 onChangePage: (page) {},
@@ -44,7 +35,5 @@ class ExplorePage extends StatelessWidget {
             return const _LoadingPage();
           }
         },
-      ),
-    );
-  }
+      );
 }

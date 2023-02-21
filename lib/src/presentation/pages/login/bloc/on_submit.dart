@@ -6,11 +6,6 @@ extension _OnSubmit on _LoginBloc {
     _SubmitEvent event,
     Emitter<_ILoginState> emit,
   ) async {
-    // Close the error banner.
-    if (state is _ErrorState) {
-      final state = this.state as _ErrorState;
-      state.errorBanner.dismiss();
-    }
     // Validate the email and password fields.
     if (formKey.currentState!.validate()) {
       // Transition to the loading state.

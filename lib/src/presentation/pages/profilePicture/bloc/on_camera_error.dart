@@ -5,18 +5,29 @@ extension _OnCameraError on _ProfilePictureBloc {
     _CameraErrorEvent event,
     Emitter<_IProfilePictureState> emit,
   ) {
-    if (state is _CameraLoadingState) {
-      final state = this.state as _CameraLoadingState;
-      emit(
-        _CameraErrorState(
-          cameraController: state.cameraController,
-          errorBanner: StyledErrorBanner(
-            failure: event.failure,
+    final state = this.state as _CameraLoadingState;
+    StyledErrorBanner.show(event.failure);
+    emit(
+      _CameraLoadingState(
+        cameraController: state.cameraController,
+        initializeCamera: CancelableOperation.fromFuture(
+          state.cameraController
+              .initialize()
+              .then<Failure?>((_) => null)
+              .catchError(
+                (error) async =>
+                    Failure(error.code, error.description ?? "Camera error"),
+              ),
+        )..then(
+            (failure) => failure != null
+                ? add(_CameraErrorEvent(failure))
+                : add(
+                    initialImage != null
+                        ? _CaptureSuccessEvent(initialImage!)
+                        : const _CameraLoadedEvent(),
+                  ),
           ),
-        ),
-      );
-    } else {
-      throw Exception("Invalid state: $state");
-    }
+      ),
+    );
   }
 }

@@ -33,7 +33,6 @@ part 'event/submit.dart';
 part 'event/success.dart';
 part 'state/base.dart';
 part 'state/confirming_email.dart';
-part 'state/error.dart';
 part 'state/initial.dart';
 part 'state/loading.dart';
 part 'state/success.dart';

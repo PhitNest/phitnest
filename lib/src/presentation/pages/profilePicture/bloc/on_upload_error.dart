@@ -7,13 +7,11 @@ extension _OnUploadError on _ProfilePictureBloc {
   ) {
     if (state is _ICapturedState) {
       final state = this.state as _ICapturedState;
+      StyledErrorBanner.show(event.failure);
       emit(
-        _UploadErrorState(
+        _CaptureSuccessState(
           cameraController: state.cameraController,
           file: state.file,
-          errorBanner: StyledErrorBanner(
-            failure: event.failure,
-          ),
         ),
       );
     } else {

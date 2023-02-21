@@ -6,11 +6,6 @@ extension _OnLogin on _LoginBloc {
     _ILoginEvent event,
     Emitter<_ILoginState> emit,
   ) async {
-    // Close the error banner.
-    if (state is _ErrorState) {
-      final state = this.state as _ErrorState;
-      state.errorBanner.dismiss();
-    }
     // Cancel the loading operation for sign in.
     if (state is _LoadingState) {
       final state = this.state as _LoadingState;

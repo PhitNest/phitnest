@@ -43,7 +43,6 @@ part 'event/resend.dart';
 
 part 'state/base.dart';
 part 'state/confirming.dart';
-part 'state/confirm_error.dart';
 part 'state/success.dart';
 part 'state/profile_picture_upload.dart';
 part 'state/initial.dart';

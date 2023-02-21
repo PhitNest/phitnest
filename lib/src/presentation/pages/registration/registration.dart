@@ -57,7 +57,6 @@ part 'state/gyms_loaded.dart';
 part 'state/gyms_loading_error.dart';
 part 'state/success.dart';
 part 'state/gym_selected.dart';
-part 'state/register_error.dart';
 part 'state/register_loading.dart';
 
 part 'ui/registration_page.dart';

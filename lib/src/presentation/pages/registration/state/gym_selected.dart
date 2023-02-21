@@ -1,7 +1,7 @@
 part of registration_page;
 
-class _IGymSelectedStateState extends _IGymSelectedState {
-  const _IGymSelectedStateState({
+class _GymSelectedState extends _IGymSelectedState {
+  const _GymSelectedState({
     required super.firstNameConfirmed,
     required super.location,
     required super.gyms,

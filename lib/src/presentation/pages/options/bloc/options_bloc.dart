@@ -57,10 +57,6 @@ class _OptionsBloc extends Bloc<_IOptionsEvent, _IOptionsState> {
       final state = this.state as _SignOutLoadingState;
       await state.signOut.cancel();
     }
-    if (state is _LoadingErrorState) {
-      final state = this.state as _LoadingErrorState;
-      state.errorBanner.dismiss();
-    }
     return super.close();
   }
 }

@@ -30,6 +30,7 @@ part 'bloc/on_set_profile_picture.dart';
 part 'bloc/on_sign_out.dart';
 part 'bloc/on_sign_out_response.dart';
 part 'bloc/options_bloc.dart';
+
 part 'event/base.dart';
 part 'event/edit_profile_picture.dart';
 part 'event/error.dart';
@@ -37,13 +38,14 @@ part 'event/loaded.dart';
 part 'event/set_profile_picture.dart';
 part 'event/sign_out.dart';
 part 'event/sign_out_response.dart';
+
 part 'state/base.dart';
 part 'state/edit_profile_picture.dart';
-part 'state/error.dart';
 part 'state/initial.dart';
 part 'state/loaded.dart';
 part 'state/sign_out_loading.dart';
 part 'state/sign_out.dart';
+
 part 'ui/options_page.dart';
 part 'ui/widgets/base.dart';
 part 'ui/widgets/loaded.dart';

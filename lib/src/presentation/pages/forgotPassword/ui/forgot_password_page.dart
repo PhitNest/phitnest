@@ -36,16 +36,14 @@ class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _ForgotPasswordBloc(),
-      child: BlocConsumer<_ForgotPasswordBloc, _IForgotPasswordState>(
+  Widget build(BuildContext context) =>
+      BlocWidget<_ForgotPasswordBloc, _IForgotPasswordState>(
+        create: (context) => _ForgotPasswordBloc(),
         listener: (context, state) async {
           if (state is _SuccessState) {
             return context.goToSubmitPage();
-          } else if (state is _ErrorState) {
-            state.errorBanner.show(context);
-          } else if (state is _ConfirmingEmailState) {
+          }
+          if (state is _ConfirmingEmailState) {
             final String email = context.bloc.emailController.text.trim();
             final confirmEmailResponse = await Navigator.push(
               context,
@@ -82,7 +80,5 @@ class ForgotPasswordPage extends StatelessWidget {
             );
           }
         },
-      ),
-    );
-  }
+      );
 }

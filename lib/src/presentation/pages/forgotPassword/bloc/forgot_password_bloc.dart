@@ -24,11 +24,6 @@ class _ForgotPasswordBloc
       final state = this.state as _LoadingState;
       await state.forgotPassOperation.cancel();
     }
-
-    if (state is _ErrorState) {
-      final state = this.state as _ErrorState;
-      state.errorBanner.dismiss();
-    }
     emailController.dispose();
     passwordController.dispose();
     confirmPassController.dispose();

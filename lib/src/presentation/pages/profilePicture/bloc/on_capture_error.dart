@@ -5,18 +5,8 @@ extension _OnCaptureError on _ProfilePictureBloc {
     _CaptureErrorEvent event,
     Emitter<_IProfilePictureState> emit,
   ) {
-    if (state is _IInitializedState) {
-      final state = this.state as _IInitializedState;
-      emit(
-        _CaptureErrorState(
-          cameraController: state.cameraController,
-          errorBanner: StyledErrorBanner(
-            failure: event.failure,
-          ),
-        ),
-      );
-    } else {
-      throw Exception("Invalid state: $state");
-    }
+    StyledErrorBanner.show(event.failure);
+    final state = this.state as _IInitializedState;
+    emit(_CameraLoadedState(cameraController: state.cameraController));
   }
 }

@@ -18,10 +18,10 @@ extension _OnEditFirstName on _RegistrationBloc {
           password: state.password,
         ),
       );
-    } else if (state is _RegisterErrorState) {
-      final state = this.state as _RegisterErrorState;
+    } else if (state is _GymSelectedState) {
+      final state = this.state as _GymSelectedState;
       emit(
-        _RegisterErrorState(
+        _GymSelectedState(
           autovalidateMode: state.autovalidateMode,
           firstNameConfirmed: validation == null,
           currentPage: state.currentPage,
@@ -29,7 +29,6 @@ extension _OnEditFirstName on _RegistrationBloc {
           gyms: state.gyms,
           location: state.location,
           takenEmails: state.takenEmails,
-          banner: state.banner,
         ),
       );
     } else if (state is _RegisterLoadingState) {
@@ -44,19 +43,6 @@ extension _OnEditFirstName on _RegistrationBloc {
           location: state.location,
           takenEmails: state.takenEmails,
           registerOp: state.registerOp,
-        ),
-      );
-    } else if (state is _IGymSelectedStateState) {
-      final state = this.state as _IGymSelectedStateState;
-      emit(
-        _IGymSelectedStateState(
-          firstNameConfirmed: validation == null,
-          location: state.location,
-          gyms: state.gyms,
-          currentPage: state.currentPage,
-          autovalidateMode: state.autovalidateMode,
-          gym: state.gym,
-          takenEmails: state.takenEmails,
         ),
       );
     } else if (state is _InitialState) {

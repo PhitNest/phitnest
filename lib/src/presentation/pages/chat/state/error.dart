@@ -1,12 +1,12 @@
 part of chat_page;
 
 class _ErrorState extends _IChatState {
-  final StyledErrorBanner errorBanner;
+  final Failure failure;
 
   const _ErrorState({
-    required this.errorBanner,
+    required this.failure,
   }) : super();
 
   @override
-  List<Object> get props => [errorBanner];
+  List<Object> get props => [failure];
 }
