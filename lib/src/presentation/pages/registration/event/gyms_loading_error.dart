@@ -5,7 +5,4 @@ class _GymsLoadingErrorEvent extends _IRegistrationEvent {
   final Failure failure;
 
   const _GymsLoadingErrorEvent(this.failure) : super();
-
-  @override
-  List<Object> get props => [failure];
 }

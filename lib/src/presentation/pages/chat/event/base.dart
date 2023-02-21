@@ -1,8 +1,5 @@
 part of chat_page;
 
-abstract class _IChatEvent extends Equatable {
+abstract class _IChatEvent {
   const _IChatEvent() : super();
-
-  @override
-  List<Object> get props => [];
 }

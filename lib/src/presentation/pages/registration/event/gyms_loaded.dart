@@ -5,7 +5,4 @@ class _IGymsLoadedStateEvent extends _IRegistrationEvent {
   final LocationEntity location;
 
   const _IGymsLoadedStateEvent(this.gyms, this.location) : super();
-
-  @override
-  List<Object> get props => [gyms, location];
 }

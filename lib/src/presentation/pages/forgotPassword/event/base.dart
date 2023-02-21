@@ -1,8 +1,5 @@
 part of forgot_password_page;
 
-abstract class _IForgotPasswordEvent extends Equatable {
+abstract class _IForgotPasswordEvent {
   const _IForgotPasswordEvent() : super();
-
-  @override
-  List<Object> get props => [];
 }

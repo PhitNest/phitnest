@@ -20,13 +20,13 @@ class ExplorePage extends StatelessWidget {
         ),
         builder: (context, state) {
           if (state is _Loaded) {
-            if (state.userExploreResponse.users.isEmpty) {
+            if (state.userExploreResponse.isEmpty) {
               context.setFreezeAnimation(true);
               return const _EmptyNestPage();
             } else {
               context.setFreezeAnimation(state is _HoldingState);
               return _LoadedPage(
-                users: state.userExploreResponse.users,
+                users: state.userExploreResponse,
                 onChangePage: (page) {},
                 countdown: state is _HoldingState ? state.countdown : null,
               );

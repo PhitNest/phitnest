@@ -9,7 +9,7 @@ abstract class _IExploreState extends Equatable {
 
 abstract class _Loaded extends _IExploreState {
   final StreamSubscription<void> logoPressSubscription;
-  final UserExploreResponse userExploreResponse;
+  final List<ProfilePicturePublicUserEntity> userExploreResponse;
 
   const _Loaded({
     required this.logoPressSubscription,

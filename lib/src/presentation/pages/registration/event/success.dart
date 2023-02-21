@@ -4,7 +4,4 @@ class _SuccessEvent extends _IRegistrationEvent {
   final RegisterResponse response;
 
   const _SuccessEvent(this.response) : super();
-
-  @override
-  List<Object> get props => [response];
 }

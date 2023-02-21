@@ -1,8 +1,5 @@
 part of options_page;
 
-abstract class _IOptionsEvent extends Equatable {
+abstract class _IOptionsEvent {
   const _IOptionsEvent() : super();
-
-  @override
-  List<Object> get props => [];
 }

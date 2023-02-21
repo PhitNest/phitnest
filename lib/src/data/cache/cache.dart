@@ -2,7 +2,6 @@ library cache;
 
 import '../../common/secure_storage.dart';
 import '../../domain/entities/entities.dart';
-import '../backend/backend.dart';
 
 part 'auth.dart';
 part 'gym.dart';
@@ -33,7 +32,8 @@ abstract class Cache {
 
   static UserEntity? get user => _user;
   static const cacheUser = _cacheUser;
-  static UserExploreResponse? get userExplore => _userExploreResponse;
+  static List<ProfilePicturePublicUserEntity>? get userExplore =>
+      _userExploreResponse;
   static const cacheUserExplore = _cacheUserExploreResponse;
 
   static String? get profilePictureUrl => _profilePictureUrl;

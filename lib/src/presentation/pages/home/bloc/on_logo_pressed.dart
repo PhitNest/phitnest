@@ -9,7 +9,7 @@ extension _OnLogoPressed on _HomeBloc {
         state.copyWithFreezeAnimation(
           event.press == PressType.down &&
               !state.darkMode &&
-              (Cache.userExplore?.users.isNotEmpty ?? false),
+              (Cache.userExplore?.isNotEmpty ?? false),
         ),
       );
 }

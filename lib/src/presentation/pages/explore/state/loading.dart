@@ -1,7 +1,8 @@
 part of explore_page;
 
 class _LoadingState extends _IExploreState {
-  final CancelableOperation<Either<UserExploreResponse, Failure>> explore;
+  final CancelableOperation<
+      Either<List<ProfilePicturePublicUserEntity>, Failure>> explore;
 
   const _LoadingState({
     required this.explore,
