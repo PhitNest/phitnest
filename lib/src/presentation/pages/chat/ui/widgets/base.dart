@@ -12,7 +12,7 @@ abstract class _IChatPageBase extends StatelessWidget {
   Widget build(BuildContext context) => Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          40.verticalSpace,
+          55.verticalSpace,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
@@ -37,7 +37,6 @@ abstract class _IChatPageBase extends StatelessWidget {
               12.horizontalSpace,
             ],
           ),
-          40.verticalSpace,
           child,
         ],
       );
