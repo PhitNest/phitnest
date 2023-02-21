@@ -35,58 +35,51 @@ class ProfilePicturePage extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
+  Widget build(BuildContext context) =>
+      BlocWidget<_ProfilePictureBloc, _IProfilePictureState>(
         create: (context) => _ProfilePictureBloc(
           initialImage: initialImage,
           uploadImage: uploadImage,
         ),
-        child: BlocConsumer<_ProfilePictureBloc, _IProfilePictureState>(
-          listener: (context, state) {
-            if (state is _UploadSuccessState) {
-              Navigator.pop(
-                context,
-                state.file,
+        listener: (context, state) {
+          if (state is _UploadSuccessState) {
+            Navigator.pop(
+              context,
+              state.file,
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is _ICapturedState) {
+            if (state is _UploadingState) {
+              return _UploadingPage(
+                profilePicture: state.file,
+                cameraController: state.cameraController,
               );
-            } else if (state is _CaptureErrorState) {
-              state.errorBanner.show(context);
-            } else if (state is _UploadErrorState) {
-              state.errorBanner.show(context);
-            } else if (state is _CameraErrorState) {
-              state.errorBanner.show(context);
-            }
-          },
-          builder: (context, state) {
-            if (state is _ICapturedState) {
-              if (state is _UploadingState) {
-                return _UploadingPage(
-                  profilePicture: state.file,
-                  cameraController: state.cameraController,
-                );
-              } else {
-                return _CapturedPhotoPage(
-                  profilePicture: state.file,
-                  cameraController: state.cameraController,
-                  onPressedRetake: context.retake,
-                  onUploadPicture: context.uploadFromAlbums,
-                  onPressedConfirm: context.upload,
-                );
-              }
-            } else if (state is _IInitializedState) {
-              if (state is _CaptureLoadingState) {
-                return _CaptureLoadingPage(
-                  cameraController: state.cameraController,
-                );
-              } else {
-                return _CameraActivePage(
-                  cameraController: state.cameraController,
-                  onUploadPicture: context.uploadFromAlbums,
-                  onPressTakePicture: context.capture,
-                );
-              }
             } else {
-              return const _CameraLoadingPage();
+              return _CapturedPhotoPage(
+                profilePicture: state.file,
+                cameraController: state.cameraController,
+                onPressedRetake: context.retake,
+                onUploadPicture: context.uploadFromAlbums,
+                onPressedConfirm: context.upload,
+              );
             }
-          },
-        ),
+          } else if (state is _IInitializedState) {
+            if (state is _CaptureLoadingState) {
+              return _CaptureLoadingPage(
+                cameraController: state.cameraController,
+              );
+            } else {
+              return _CameraActivePage(
+                cameraController: state.cameraController,
+                onUploadPicture: context.uploadFromAlbums,
+                onPressTakePicture: context.capture,
+              );
+            }
+          } else {
+            return const _CameraLoadingPage();
+          }
+        },
       );
 }

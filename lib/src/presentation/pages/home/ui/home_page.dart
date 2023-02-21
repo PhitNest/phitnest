@@ -20,89 +20,69 @@ class HomePage extends StatelessWidget {
         super(key: key);
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
+  Widget build(BuildContext context) => BlocWidget<_HomeBloc, _IHomeState>(
         create: (context) => _HomeBloc(),
-        child: BlocConsumer<_HomeBloc, _IHomeState>(
-          listener: (context, state) {
-            if (state is _LogOutState) {
-              Navigator.of(context).pushAndRemoveUntil(
-                CupertinoPageRoute(
-                  builder: (context) => const LoginPage(),
-                ),
-                (_) => false,
-              );
-            }
-          },
-          builder: (context, state) => StyledScaffold(
-            body: SingleChildScrollView(
-              child: SizedBox(
-                height: 1.sh,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          switch (state.currentPage) {
-                            case NavbarPage.explore:
-                              return ExplorePage(
-                                logoPressStream: state.logoPressBroadcast,
-                                onSetDarkMode: (darkMode) => context.homeBloc
-                                    .add(_SetDarkModeEvent(darkMode)),
-                              );
-                            case NavbarPage.chat:
-                              return const ChatPage();
-                            case NavbarPage.options:
-                              return const OptionsPage();
-                            case NavbarPage.news:
-                              return Container();
-                          }
-                        },
-                      ),
-                    ),
-                    StyledNavBar(
-                      page: state.currentPage,
-                      onReleaseLogo: () => state.logoPress.add(PressType.up),
-                      onPressDownLogo: () {
-                        ScaffoldMessenger.of(context)
-                            .hideCurrentMaterialBanner();
-                        if (state.currentPage == NavbarPage.explore) {
-                          state.logoPress.add(PressType.down);
-                        } else {
-                          context.homeBloc
-                              .add(const _SetPageEvent(NavbarPage.explore));
+        listener: (context, state) {
+          if (state is _LogOutState) {
+            Navigator.of(context).pushAndRemoveUntil(
+              CupertinoPageRoute(
+                builder: (context) => const LoginPage(),
+              ),
+              (_) => false,
+            );
+          }
+        },
+        builder: (context, state) => StyledScaffold(
+          body: SingleChildScrollView(
+            child: SizedBox(
+              height: 1.sh,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Builder(
+                      builder: (context) {
+                        switch (state.currentPage) {
+                          case NavbarPage.explore:
+                            return ExplorePage(
+                              logoPressStream: state.logoPressBroadcast,
+                              onSetDarkMode: (darkMode) => context.homeBloc
+                                  .add(_SetDarkModeEvent(darkMode)),
+                            );
+                          case NavbarPage.chat:
+                            return const ChatPage();
+                          case NavbarPage.options:
+                            return const OptionsPage();
+                          case NavbarPage.news:
+                            return Container();
                         }
                       },
-                      animateLogo: state.currentPage == NavbarPage.explore &&
-                          !state.freezeLogoAnimation,
-                      colorful: state.currentPage == NavbarPage.explore &&
-                          (Cache.userExplore?.users.isNotEmpty ?? false),
-                      onPressedNews: () {
-                        ScaffoldMessenger.of(context)
-                            .hideCurrentMaterialBanner();
-                        context.homeBloc
-                            .add(const _SetPageEvent(NavbarPage.news));
-                      },
-                      onPressedExplore: () {
-                        ScaffoldMessenger.of(context)
-                            .hideCurrentMaterialBanner();
+                    ),
+                  ),
+                  StyledNavBar(
+                    page: state.currentPage,
+                    onReleaseLogo: () => state.logoPress.add(PressType.up),
+                    onPressDownLogo: () {
+                      if (state.currentPage == NavbarPage.explore) {
+                        state.logoPress.add(PressType.down);
+                      } else {
                         context.homeBloc
                             .add(const _SetPageEvent(NavbarPage.explore));
-                      },
-                      onPressedOptions: () {
-                        ScaffoldMessenger.of(context)
-                            .hideCurrentMaterialBanner();
-                        context.homeBloc
-                            .add(const _SetPageEvent(NavbarPage.options));
-                      },
-                      onPressedChat: () {
-                        ScaffoldMessenger.of(context)
-                            .hideCurrentMaterialBanner();
-                        context.homeBloc
-                            .add(const _SetPageEvent(NavbarPage.chat));
-                      },
-                    ),
-                  ],
-                ),
+                      }
+                    },
+                    animateLogo: state.currentPage == NavbarPage.explore &&
+                        !state.freezeLogoAnimation,
+                    colorful: state.currentPage == NavbarPage.explore &&
+                        (Cache.userExplore?.users.isNotEmpty ?? false),
+                    onPressedNews: () => context.homeBloc
+                        .add(const _SetPageEvent(NavbarPage.news)),
+                    onPressedExplore: () => context.homeBloc
+                        .add(const _SetPageEvent(NavbarPage.explore)),
+                    onPressedOptions: () => context.homeBloc
+                        .add(const _SetPageEvent(NavbarPage.options)),
+                    onPressedChat: () => context.homeBloc
+                        .add(const _SetPageEvent(NavbarPage.chat)),
+                  ),
+                ],
               ),
             ),
           ),

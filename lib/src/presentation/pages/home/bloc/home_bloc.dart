@@ -11,11 +11,17 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
   ///   * on *[_SetPageEvent]* -> *[_InitialState]*
   ///   * on *[_SocketConnectErrorEvent]* -> *[_InitialState]*
   ///   * on *[_SocketConnectedEvent]* -> *[_SocketConnectedState]*
+  ///   * on *[_SetDarkModeEvent]* -> *[_InitialState]*
+  ///   * on *[_LogoPressedEvent]* -> *[_InitialState]*
+  ///   * on *[_SetFreezeAnimationEvent] -> *[_InitialState]*
   ///
   /// * **[_SocketConnectedState]**
   ///   * on *[_LogOutEvent]* -> *[_LogOutState]*
   ///   * on *[_RefreshSessionEvent]* -> *[_InitialState]*
   ///   * on *[_SetPageEvent]* -> *[_SocketConnectedState]*
+  ///   * on *[_SetDarkModeEvent]* -> *[_SocketConnectedState]*
+  ///   * on *[_LogoPressedEvent]* -> *[_SocketConnectedState]*
+  ///   * on *[_SetFreezeAnimationEvent] -> *[_SocketConnectedState]*
   _HomeBloc()
       : super(
           Function.apply(
@@ -32,7 +38,7 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
                 ),
                 logoPressBroadcast: broadcast,
                 logoPressListener: broadcast.listen((_) {}),
-                freezeLogoAnimation: false,
+                freezeLogoAnimation: true,
               );
             },
             [],
@@ -45,6 +51,7 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
     on<_SocketConnectedEvent>(onSocketConnected);
     on<_SetDarkModeEvent>(onSetDarkMode);
     on<_LogoPressedEvent>(onLogoPressed);
+    on<_SetFreezeAnimationEvent>(onSetFreezeAnimation);
     if (state is _InitialState) {
       final state = this.state as _InitialState;
       state.logoPressListener.onData((data) => add(_LogoPressedEvent(data)));
@@ -80,6 +87,9 @@ extension HomeBlocExt on BuildContext {
   _HomeBloc get homeBloc => read();
 
   void logOut() => homeBloc.add(const _LogOutEvent());
+
+  void setFreezeAnimation(bool freeze) =>
+      homeBloc.add(_SetFreezeAnimationEvent(freeze));
 }
 
 extension Auth on BuildContext {

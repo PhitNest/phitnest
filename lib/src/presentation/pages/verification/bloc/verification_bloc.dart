@@ -14,14 +14,14 @@ class _VerificationBloc extends Bloc<_IVerificationEvent, _IVerificationState> {
   ///
   /// * **[_InitialState]**
   ///   * on *[_SubmitEvent]* ->
-  ///     * *[_ErrorState]* if the user has not entered a 6 digit code
+  ///     * *[_InitialState]* if the user has not entered a 6 digit code
   ///     * *[_ConfirmingState]* otherwise
   ///   * on *[_ResendEvent]* -> *[_ResendingState]*
   ///
   /// * **[_ConfirmingState]**
   ///   * on *[_ErrorEvent]* ->
   ///     * *[_ProfilePictureUploadState]* if [Failures.profilePictureNotFound]
-  ///     * *[_ErrorState]* otherwise
+  ///     * *[_InitialState]* otherwise
   ///   * on *[_ConfirmSuccessEvent]* ->
   ///     * *[_LoginLoadingState]* if [shouldLogin] is true
   ///     * *[_SuccessState]* otherwise
@@ -31,18 +31,13 @@ class _VerificationBloc extends Bloc<_IVerificationEvent, _IVerificationState> {
   ///
   /// * **[_ProfilePictureUploadState]**
   ///   * on *[_SubmitEvent]* ->
-  ///     * *[_ErrorState]* if the user has not entered a 6 digit code
+  ///     * *[_InitialState]* if the user has not entered a 6 digit code
   ///     * *[_ConfirmingState]* otherwise
   ///   * on *[_ResendEvent]* -> *[_ResendingState]*
   ///
-  /// * **[_ErrorState]**
-  ///   * on *[_SubmitEvent]* ->
-  ///     * *[_ErrorState]* if the user has not entered a 6 digit code
-  ///     * *[_ConfirmingState]* otherwise
-  ///   * on *[_ResendEvent]* -> *[_ResendingState]*
   ///
   /// * **[_ResendingState]**
-  ///   * on *[_ErrorEvent]* -> *[_ErrorState]*
+  ///   * on *[_ErrorEvent]* -> *[_InitialState]*
   ///   * on *[_ResetEvent]* -> *[_InitialState]*
   _VerificationBloc({
     required this.email,
@@ -64,10 +59,6 @@ class _VerificationBloc extends Bloc<_IVerificationEvent, _IVerificationState> {
     if (state is _ConfirmingState) {
       final state = this.state as _ConfirmingState;
       await state.confirm.cancel();
-    }
-    if (state is _ErrorState) {
-      final state = this.state as _ErrorState;
-      state.banner.dismiss();
     }
     if (state is _LoginLoadingState) {
       final state = this.state as _LoginLoadingState;

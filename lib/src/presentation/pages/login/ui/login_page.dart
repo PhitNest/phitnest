@@ -19,7 +19,7 @@ class LoginPage extends StatelessWidget {
             );
           }
           // Push ConfirmEmailPage if login request results in userNotConfirmed.
-          else if (state is _ConfirmingEmailState) {
+          if (state is _ConfirmingEmailState) {
             Navigator.push<LoginResponse>(
               context,
               CupertinoPageRoute(
@@ -43,10 +43,6 @@ class LoginPage extends StatelessWidget {
                 }
               },
             );
-          }
-          // Show error banner if state is error state.
-          else if (state is _ErrorState) {
-            state.errorBanner.show(context);
           }
         },
         builder: (context, state) {

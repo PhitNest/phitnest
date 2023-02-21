@@ -15,7 +15,7 @@ extension _OnRefreshSession on _HomeBloc {
     }
     emit(
       _InitialState(
-        darkMode: false,
+        darkMode: state.darkMode,
         currentPage: state.currentPage,
         logoPress: state.logoPress,
         logoPressBroadcast: state.logoPressBroadcast,

@@ -15,7 +15,7 @@ extension _OnSetPage on _HomeBloc {
           socketConnection: state.socketConnection,
           logoPressBroadcast: state.logoPressBroadcast,
           logoPressListener: state.logoPressListener,
-          freezeLogoAnimation: state.freezeLogoAnimation,
+          freezeLogoAnimation: true,
         ),
       );
     } else if (state is _SocketConnectedState) {
@@ -28,7 +28,7 @@ extension _OnSetPage on _HomeBloc {
           connection: state.connection,
           logoPressBroadcast: state.logoPressBroadcast,
           logoPressListener: state.logoPressListener,
-          freezeLogoAnimation: state.freezeLogoAnimation,
+          freezeLogoAnimation: true,
         ),
       );
     } else if (state is _LogOutState) {
@@ -40,7 +40,7 @@ extension _OnSetPage on _HomeBloc {
           logoPress: state.logoPress,
           logoPressBroadcast: state.logoPressBroadcast,
           logoPressListener: state.logoPressListener,
-          freezeLogoAnimation: state.freezeLogoAnimation,
+          freezeLogoAnimation: true,
         ),
       );
     }

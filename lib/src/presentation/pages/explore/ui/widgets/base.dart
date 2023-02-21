@@ -19,6 +19,8 @@ class _LoadedPage extends StatelessWidget {
               onPageChanged: onChangePage,
               itemBuilder: (context, index) => _ExploreCard(
                 countdown: countdown,
+                profilePictureUrl:
+                    users[index % users.length].profilePictureUrl,
                 fullName: users[index % users.length].fullName,
               ),
             ),
@@ -27,7 +29,7 @@ class _LoadedPage extends StatelessWidget {
             'Press and hold logo to send friend request',
             style: theme.textTheme.bodySmall,
           ),
-          20.verticalSpace,
+          30.verticalSpace,
         ],
       );
 }

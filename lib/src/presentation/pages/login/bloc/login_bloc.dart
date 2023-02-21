@@ -24,12 +24,7 @@ class _LoginBloc extends Bloc<_ILoginEvent, _ILoginState> {
   ///   * on *[_CancelEvent]* -> *[_InitialState]*
   ///   * on *[_ErrorEvent]* ->
   ///     * *[_ConfirmingEmailState]* if [Failures.userNotConfirmed]
-  ///     * *[_InitialState]* with an entry in invalidCredentials if [Failures.invalidPassword]
-  ///     * *[_ErrorState]* otherwise
-  ///
-  /// * **[_ErrorState]**
-  ///   * on *[_SubmitEvent]* -> *[_LoadingState]*
-  ///   * on *[_CancelEvent]* -> *[_InitialState]*
+  ///     * *[_InitialState]* otherwise with an entry in invalidCredentials if [Failures.invalidPassword]
   ///
   /// * **[_ConfirmingEmailState]**
   ///   * on *[_SubmitEvent]* -> *[_LoadingState]*
@@ -55,11 +50,6 @@ class _LoginBloc extends Bloc<_ILoginEvent, _ILoginState> {
     if (state is _LoadingState) {
       final state = this.state as _LoadingState;
       state.loginOperation.cancel();
-    }
-    // Close error banner
-    if (state is _ErrorState) {
-      final state = this.state as _ErrorState;
-      state.errorBanner.dismiss();
     }
     // Dispose of email and password text field controllers
     emailController.dispose();

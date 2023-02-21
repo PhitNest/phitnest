@@ -7,9 +7,7 @@ extension _OnError on _ChatBloc {
   ) =>
       emit(
         _ErrorState(
-          errorBanner: StyledErrorBanner(
-            failure: event.failure,
-          ),
+          failure: event.failure,
         ),
       );
 }

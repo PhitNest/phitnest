@@ -32,13 +32,4 @@ class _ChatBloc extends Bloc<_IChatEvent, _IChatState> {
     on<_ErrorEvent>(onErrorCaught);
     on<_MessagesLoadedEvent>(onMessageLoaded);
   }
-
-  @override
-  Future<void> close() {
-    if (state is _ErrorState) {
-      final _ErrorState state = this.state as _ErrorState;
-      state.errorBanner.dismiss();
-    }
-    return super.close();
-  }
 }

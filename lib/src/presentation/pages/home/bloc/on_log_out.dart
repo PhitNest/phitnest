@@ -20,7 +20,7 @@ extension _OnLogOut on _HomeBloc {
         logoPress: state.logoPress,
         logoPressBroadcast: state.logoPressBroadcast,
         logoPressListener: state.logoPressListener,
-        freezeLogoAnimation: state.freezeLogoAnimation,
+        freezeLogoAnimation: true,
       ),
     );
   }

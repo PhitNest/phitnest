@@ -95,15 +95,19 @@ Future<Either<SocketConnection, Failure>> connectSocket(
         .build(),
   )..connect();
   _socket
-    ..onConnect((_) {
-      prettyLogger.d("Connected to the websocket server.");
-      completer.complete(
-        SocketConnection._(
-          _socket,
-          streamController.stream.asBroadcastStream(),
-        ),
-      );
-    })
+    ..onConnect(
+      (_) {
+        if (!completer.isCompleted) {
+          prettyLogger.d("Connected to the websocket server.");
+          completer.complete(
+            SocketConnection._(
+              _socket,
+              streamController.stream.asBroadcastStream(),
+            ),
+          );
+        }
+      },
+    )
     ..onDisconnect(
       (_) {
         prettyLogger.d("Disconnected from the websocket server.");

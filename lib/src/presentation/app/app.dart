@@ -32,6 +32,7 @@ class App extends StatelessWidget {
           // We need to inherit media query if we are using DevicePreview.
           useInheritedMediaQuery: usingDevicePreview,
           builder: (context, child) => MaterialApp(
+            scaffoldMessengerKey: StyledErrorBanner.scaffoldMessengerKey,
             title: 'PhitNest',
             theme: theme,
             debugShowCheckedModeBanner: false,

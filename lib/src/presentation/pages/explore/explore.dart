@@ -3,6 +3,7 @@ library explore_page;
 import 'dart:async';
 
 import 'package:async/async.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,6 @@ import '../home/home.dart';
 
 part 'ui/explore_page.dart';
 part 'ui/widgets/base.dart';
-part 'ui/widgets/error.dart';
 part 'ui/widgets/card.dart';
 part 'ui/widgets/loading.dart';
 part 'ui/widgets/empty.dart';
@@ -49,5 +49,4 @@ part 'state/holding.dart';
 part 'state/matched.dart';
 part 'state/loading.dart';
 part 'state/loaded.dart';
-part 'state/loading_error.dart';
 part 'state/reloading.dart';

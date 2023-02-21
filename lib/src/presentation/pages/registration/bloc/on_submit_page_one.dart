@@ -23,20 +23,6 @@ extension _OnSubmitPageOne on _RegistrationBloc {
             password: state.password,
           ),
         );
-      } else if (state is _RegisterErrorState) {
-        final state = this.state as _RegisterErrorState;
-        emit(
-          _RegisterErrorState(
-            autovalidateMode: AutovalidateMode.always,
-            firstNameConfirmed: state.firstNameConfirmed,
-            currentPage: state.currentPage,
-            gym: state.gym,
-            gyms: state.gyms,
-            location: state.location,
-            takenEmails: state.takenEmails,
-            banner: state.banner,
-          ),
-        );
       } else if (state is _RegisterLoadingState) {
         final state = this.state as _RegisterLoadingState;
         emit(
@@ -51,10 +37,10 @@ extension _OnSubmitPageOne on _RegistrationBloc {
             registerOp: state.registerOp,
           ),
         );
-      } else if (state is _IGymSelectedStateState) {
-        final state = this.state as _IGymSelectedStateState;
+      } else if (state is _GymSelectedState) {
+        final state = this.state as _GymSelectedState;
         emit(
-          _IGymSelectedStateState(
+          _GymSelectedState(
             firstNameConfirmed: state.firstNameConfirmed,
             location: state.location,
             gyms: state.gyms,

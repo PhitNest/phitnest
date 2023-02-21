@@ -78,7 +78,11 @@ class _StyledNavBarState extends State<StyledNavBar>
                 ? Assets.darkLogo.path
                 : Assets.coloredLogo.path
             : Assets.logo.path,
-        width: 38.62.w + (widget.animateLogo ? controller.value : 1) * 5.w,
+        width: 38.62.w +
+            (widget.animateLogo
+                    ? (widget.colorful ? controller.value : 0)
+                    : 1) *
+                5.w,
       ));
 
   Widget createButton(

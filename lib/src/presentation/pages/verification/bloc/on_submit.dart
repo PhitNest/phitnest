@@ -5,32 +5,25 @@ extension _OnSubmit on _VerificationBloc {
     _SubmitEvent event,
     Emitter<_IVerificationState> emit,
   ) {
-    if (state is _ErrorState ||
-        state is _InitialState ||
-        state is _ProfilePictureUploadState) {
-      if (state is _ErrorState) {
-        final state = this.state as _ErrorState;
-        state.banner.dismiss();
-      }
+    if (codeController.text.length != 6) {
+      StyledErrorBanner.show(
+        const Failure('', 'Please enter a valid code'),
+      );
+    } else {
       emit(
-        codeController.text.length != 6
-            ? _ErrorState(
-                banner:
-                    StyledErrorBanner(failure: Failures.invalidCode.instance),
-              )
-            : _ConfirmingState(
-                confirm: CancelableOperation.fromFuture(
-                  confirm(
-                    codeController.text,
-                  )..then(
-                      (failure) => add(
-                        failure != null
-                            ? _ErrorEvent(failure)
-                            : const _ConfirmSuccessEvent(),
-                      ),
-                    ),
+        _ConfirmingState(
+          confirm: CancelableOperation.fromFuture(
+            confirm(
+              codeController.text,
+            )..then(
+                (failure) => add(
+                  failure != null
+                      ? _ErrorEvent(failure)
+                      : const _ConfirmSuccessEvent(),
                 ),
               ),
+          ),
+        ),
       );
     }
   }

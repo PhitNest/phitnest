@@ -2,10 +2,12 @@ part of explore_page;
 
 class _ExploreCard extends StatelessWidget {
   final String fullName;
+  final String profilePictureUrl;
   final int? countdown;
 
   const _ExploreCard({
     required this.fullName,
+    required this.profilePictureUrl,
     required this.countdown,
   }) : super();
 
@@ -17,10 +19,7 @@ class _ExploreCard extends StatelessWidget {
               SizedBox(
                 width: 375.w,
                 height: 333.h,
-                child: Image.asset(
-                  'assets/images/selfie.png',
-                  fit: BoxFit.cover,
-                ),
+                child: CachedNetworkImage(imageUrl: profilePictureUrl),
               ),
               Container(
                 padding: EdgeInsets.only(top: 40.h),
@@ -80,7 +79,7 @@ class _ExploreCard extends StatelessWidget {
               ),
             ],
           ),
-          80.verticalSpace,
+          30.verticalSpace,
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: SizedBox(

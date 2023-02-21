@@ -5,43 +5,29 @@ import 'package:flutter/material.dart';
 import '../../../common/failure.dart';
 import '../../../common/theme.dart';
 
-class StyledErrorBanner {
-  BuildContext? _owningContext;
+class StyledErrorBanner extends MaterialBanner {
   final Failure failure;
 
-  StyledErrorBanner({
-    required this.failure,
-  });
+  static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey();
 
-  void show(BuildContext owningContext) {
-    _owningContext = owningContext;
-    ScaffoldMessenger.of(owningContext).showMaterialBanner(
-      _StyledErrorBannerWidget(
-        err: failure.message,
-        context: owningContext,
+  static void show(Failure failure) {
+    scaffoldMessengerKey.currentState?.showMaterialBanner(
+      StyledErrorBanner._(
+        failure: failure,
       ),
     );
   }
 
-  void dismiss() async {
-    if (_owningContext != null) {
-      try {
-        ScaffoldMessenger.of(_owningContext!).hideCurrentMaterialBanner();
-      } catch (_) {}
-    }
+  static void dismiss() {
+    scaffoldMessengerKey.currentState?.hideCurrentMaterialBanner();
   }
-}
 
-class _StyledErrorBannerWidget extends MaterialBanner {
-  final String err;
-  final BuildContext context;
-
-  _StyledErrorBannerWidget({
-    required this.err,
-    required this.context,
+  StyledErrorBanner._({
+    required this.failure,
   }) : super(
           content: Text(
-            err,
+            failure.message,
             style: theme.textTheme.bodySmall!.copyWith(
               color: theme.colorScheme.error,
             ),
@@ -49,11 +35,7 @@ class _StyledErrorBannerWidget extends MaterialBanner {
           padding: EdgeInsets.all(10),
           elevation: 8,
           onVisible: () => Future.delayed(Duration(seconds: 3)).then(
-            (_) {
-              try {
-                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-              } catch (_) {}
-            },
+            (_) => dismiss(),
           ),
           backgroundColor: Colors.white,
           leading: Icon(
@@ -62,9 +44,7 @@ class _StyledErrorBannerWidget extends MaterialBanner {
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-              },
+              onPressed: dismiss,
               child: Text(
                 'Dismiss',
                 style: theme.textTheme.bodySmall,
