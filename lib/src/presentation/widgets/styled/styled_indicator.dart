@@ -36,10 +36,10 @@ class StyledIndicator extends StatelessWidget {
                 borderRadius: BorderRadius.circular(32.r),
               ),
               alignment: Alignment.center,
-              child: Text(
-                count.toString(),
-                style: theme.textTheme.bodySmall,
-              ),
+              child: Text(count.toString(),
+                  style: theme.textTheme.bodySmall!.copyWith(
+                    color: Colors.white,
+                  )),
             ),
           ),
         ),

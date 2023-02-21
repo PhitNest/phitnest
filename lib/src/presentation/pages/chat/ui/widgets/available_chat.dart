@@ -17,6 +17,10 @@ class _AvailableChatPage extends _IChatPageBase {
                   return Column(
                     children: [
                       ListTile(
+                        tileColor: Color(0x84DFDFDF),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
                         title: Text(
                           '${messages[index % messages.length].friendship.friend.firstName} ${messages[index % messages.length].friendship.friend.lastName}',
                           style: theme.textTheme.headlineSmall,
@@ -28,7 +32,7 @@ class _AvailableChatPage extends _IChatPageBase {
                           ),
                         ),
                       ),
-                      40.verticalSpace,
+                      24.verticalSpace,
                     ],
                   );
                 },
