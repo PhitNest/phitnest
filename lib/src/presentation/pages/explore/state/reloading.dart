@@ -1,7 +1,8 @@
 part of explore_page;
 
 class _ReloadingState extends _Loaded {
-  final CancelableOperation<Either<UserExploreResponse, Failure>> explore;
+  final CancelableOperation<
+      Either<List<ProfilePicturePublicUserEntity>, Failure>> explore;
 
   const _ReloadingState({
     required super.logoPressSubscription,

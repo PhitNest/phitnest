@@ -4,7 +4,4 @@ class _LoginResponseEvent extends _IVerificationEvent {
   final LoginResponse? response;
 
   const _LoginResponseEvent(this.response) : super();
-
-  @override
-  List<Object> get props => [response ?? ""];
 }

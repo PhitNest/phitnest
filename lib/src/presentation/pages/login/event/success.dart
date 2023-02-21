@@ -4,7 +4,4 @@ class _SuccessEvent extends _ILoginEvent {
   final LoginResponse response;
 
   const _SuccessEvent(this.response) : super();
-
-  @override
-  List<Object> get props => [response];
 }

@@ -4,7 +4,7 @@ extension _OnPressDown on _ExploreBloc {
   void onPressDown(_PressDownEvent event, Emitter<_IExploreState> emit) {
     if (state is _LoadedState) {
       final state = this.state as _LoadedState;
-      if (state.userExploreResponse.users.isNotEmpty) {
+      if (state.userExploreResponse.isNotEmpty) {
         emit(
           _HoldingState(
             userExploreResponse: state.userExploreResponse,

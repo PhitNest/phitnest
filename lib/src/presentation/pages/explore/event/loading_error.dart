@@ -4,7 +4,4 @@ class _LoadingErrorEvent extends _IExploreEvent {
   final Failure failure;
 
   const _LoadingErrorEvent(this.failure) : super();
-
-  @override
-  List<Object> get props => [failure];
 }

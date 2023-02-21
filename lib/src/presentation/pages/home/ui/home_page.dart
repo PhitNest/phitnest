@@ -72,7 +72,7 @@ class HomePage extends StatelessWidget {
                     animateLogo: state.currentPage == NavbarPage.explore &&
                         !state.freezeLogoAnimation,
                     colorful: state.currentPage == NavbarPage.explore &&
-                        (Cache.userExplore?.users.isNotEmpty ?? false),
+                        (Cache.userExplore?.isNotEmpty ?? false),
                     onPressedNews: () => context.homeBloc
                         .add(const _SetPageEvent(NavbarPage.news)),
                     onPressedExplore: () => context.homeBloc

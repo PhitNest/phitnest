@@ -6,7 +6,4 @@ class _ErrorEvent extends _IOptionsEvent {
   const _ErrorEvent({
     required this.failure,
   }) : super();
-
-  @override
-  List<Object> get props => [failure];
 }

@@ -12,7 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/failure.dart';
 import '../../../common/theme.dart';
-import '../../../data/backend/backend.dart';
+import '../../../common/utils/utils.dart';
 import '../../../data/cache/cache.dart';
 import '../../../domain/entities/entities.dart';
 import '../../../domain/repositories/repository.dart';
@@ -42,6 +42,7 @@ part 'event/loaded.dart';
 part 'event/loading_error.dart';
 part 'event/load_with_initial.dart';
 part 'event/load.dart';
+part 'event/send.dart';
 
 part 'state/base.dart';
 part 'state/initial.dart';
@@ -50,3 +51,4 @@ part 'state/matched.dart';
 part 'state/loading.dart';
 part 'state/loaded.dart';
 part 'state/reloading.dart';
+part 'state/sending.dart';

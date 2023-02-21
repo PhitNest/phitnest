@@ -1,8 +1,5 @@
 part of home_page;
 
-abstract class _IHomeEvent extends Equatable {
+abstract class _IHomeEvent {
   const _IHomeEvent() : super();
-
-  @override
-  List<Object> get props => [];
 }

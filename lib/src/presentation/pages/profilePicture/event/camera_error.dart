@@ -4,7 +4,4 @@ class _CameraErrorEvent extends _IProfilePictureEvent {
   final Failure failure;
 
   const _CameraErrorEvent(this.failure) : super();
-
-  @override
-  List<Object> get props => [failure];
 }

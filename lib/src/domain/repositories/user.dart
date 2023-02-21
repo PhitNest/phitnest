@@ -23,7 +23,7 @@ class User {
             ),
           );
 
-  Future<Either<UserExploreResponse, Failure>> exploreUsers({
+  Future<Either<List<ProfilePicturePublicUserEntity>, Failure>> exploreUsers({
     required String accessToken,
     required String gymId,
   }) =>

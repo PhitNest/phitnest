@@ -1,8 +1,5 @@
 part of verification_page;
 
-abstract class _IVerificationEvent extends Equatable {
+abstract class _IVerificationEvent {
   const _IVerificationEvent() : super();
-
-  @override
-  List<Object> get props => [];
 }
