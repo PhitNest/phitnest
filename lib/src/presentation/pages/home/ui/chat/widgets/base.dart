@@ -26,7 +26,12 @@ abstract class _IChatPageBase extends StatelessWidget {
               StyledIndicator(
                 offset: Size(2, 0),
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => FriendsPage(),
+                    ),
+                  ),
                   child: Text(
                     'FRIENDS',
                     style: theme.textTheme.bodySmall,
