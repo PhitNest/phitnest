@@ -39,15 +39,15 @@ class App extends StatelessWidget {
             home: Builder(
               builder: (context) {
                 // If there is user data and a password in the cache, then we know that the user has registered.
-                final user = Cache.user;
-                if (user != null && Cache.password != null) {
+                final user = Cache.user.user;
+                if (user != null && Cache.auth.password != null) {
                   // If the following data is in the cache, then we know that the user is logged in.
                   // This profile picture url is likely expired, but in case it isn't we can use it.
                   if (user.confirmed &&
-                      Cache.accessToken != null &&
-                      Cache.refreshToken != null &&
-                      Cache.profilePictureUrl != null &&
-                      Cache.gym != null) {
+                      Cache.auth.accessToken != null &&
+                      Cache.auth.refreshToken != null &&
+                      Cache.profilePicture.profilePictureUrl != null &&
+                      Cache.gym.gym != null) {
                     return const _RedirectHome();
                   } else {
                     // The user is either not logged in or their account is not confirmed.

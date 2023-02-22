@@ -51,7 +51,7 @@ class ForgotPasswordPage extends StatelessWidget {
                 builder: (context) => ConfirmEmailPage(
                   email: email,
                   shouldLogin: false,
-                  password: Cache.password,
+                  password: Cache.auth.password,
                 ),
               ),
             );

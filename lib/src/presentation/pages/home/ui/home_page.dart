@@ -1,5 +1,62 @@
 part of home_page;
 
+extension on BuildContext {
+  Future<Either<T, Failure>> withAuth<T>(
+    Future<Either<T, Failure>> Function(String) f,
+  ) =>
+      f(Cache.auth.accessToken!).then(
+        (either) => either.fold(
+          (response) => Left(response),
+          (failure) {
+            if (failure == Failures.unauthorized.instance) {
+              return Repositories.auth
+                  .refreshSession(
+                    email: Cache.user.user!.email,
+                    refreshToken: Cache.auth.refreshToken!,
+                  )
+                  .then(
+                    (either) => either.fold(
+                      (refreshResponse) {
+                        homeBloc.add(_HomeRefreshSessionEvent(refreshResponse));
+                        return f(refreshResponse.accessToken);
+                      },
+                      (failure) => Repositories.auth
+                          .login(
+                            email: Cache.user.user!.email,
+                            password: Cache.auth.password!,
+                          )
+                          .then(
+                            (either) => either.fold(
+                              (loginResponse) => f(loginResponse.accessToken),
+                              (failure) {
+                                homeBloc.add(const _HomeSignOutEvent());
+                                return Right(failure);
+                              },
+                            ),
+                          ),
+                    ),
+                  );
+            } else {
+              return Right(failure);
+            }
+          },
+        ),
+      );
+
+  Future<Failure?> withAuthVoid(Future<Failure?> Function(String) f) =>
+      withAuth(
+        (accessToken) => f(accessToken).then(
+          (failure) =>
+              failure != null ? Right<Null, Failure>(failure) : Left(null),
+        ),
+      ).then(
+        (either) => either.fold(
+          (success) => null,
+          (failure) => failure,
+        ),
+      );
+}
+
 class HomePage extends StatelessWidget {
   /// **POP RESULT: NONE**
   ///
@@ -11,78 +68,102 @@ class HomePage extends StatelessWidget {
   /// [Cache.gym] and [Cache.password].
   HomePage({
     Key? key,
-  })  : assert(Cache.user != null),
-        assert(Cache.accessToken != null),
-        assert(Cache.refreshToken != null),
-        assert(Cache.profilePictureUrl != null),
-        assert(Cache.gym != null),
-        assert(Cache.password != null),
+  })  : assert(Cache.user.user != null),
+        assert(Cache.auth.accessToken != null),
+        assert(Cache.auth.refreshToken != null),
+        assert(Cache.profilePicture.profilePictureUrl != null),
+        assert(Cache.gym.gym != null),
+        assert(Cache.auth.password != null),
         super(key: key);
 
+  bool logoButtonActive(_IHomeState homeState, _IExploreState exploreState) =>
+      homeState.currentPage == NavbarPage.explore &&
+      exploreState is _IExploreLoadedState &&
+      exploreState.userExploreResponse.isNotEmpty;
+
   @override
-  Widget build(BuildContext context) => BlocWidget<_HomeBloc, _IHomeState>(
-        create: (context) => _HomeBloc(),
-        listener: (context, state) {
-          if (state is _LogOutState) {
-            Navigator.of(context).pushAndRemoveUntil(
-              CupertinoPageRoute(
-                builder: (context) => const LoginPage(),
-              ),
-              (_) => false,
-            );
-          }
-        },
-        builder: (context, state) => StyledScaffold(
-          body: SingleChildScrollView(
-            child: SizedBox(
-              height: 1.sh,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Builder(
-                      builder: (context) {
-                        switch (state.currentPage) {
-                          case NavbarPage.explore:
-                            return ExplorePage(
-                              logoPressStream: state.logoPressBroadcast,
-                              onSetDarkMode: (darkMode) => context.homeBloc
-                                  .add(_SetDarkModeEvent(darkMode)),
-                            );
-                          case NavbarPage.chat:
-                            return const ChatPage();
-                          case NavbarPage.options:
-                            return const OptionsPage();
-                          case NavbarPage.news:
-                            return Container();
-                        }
-                      },
+  Widget build(BuildContext context) => MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => _HomeBloc(),
+          ),
+          BlocProvider(
+            create: (context) => _ExploreBloc(
+              withAuth: context.withAuth,
+              withAuthVoid: context.withAuthVoid,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => _ChatBloc(
+              withAuth: context.withAuth,
+              withAuthVoid: context.withAuthVoid,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => _OptionsBloc(
+              withAuth: context.withAuth,
+              withAuthVoid: context.withAuthVoid,
+            ),
+          ),
+        ],
+        child: BlocConsumer<_HomeBloc, _IHomeState>(
+          listener: (context, state) {},
+          builder: (context, state) => StyledScaffold(
+            body: SingleChildScrollView(
+              child: SizedBox(
+                height: 1.sh,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          switch (state.currentPage) {
+                            case NavbarPage.explore:
+                              return const _ExplorePage();
+                            case NavbarPage.chat:
+                              return const _ChatPage();
+                            case NavbarPage.options:
+                              return const _OptionsPage();
+                            case NavbarPage.news:
+                              return Container();
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                  StyledNavBar(
-                    page: state.currentPage,
-                    onReleaseLogo: () => state.logoPress.add(PressType.up),
-                    onPressDownLogo: () {
-                      if (state.currentPage == NavbarPage.explore) {
-                        state.logoPress.add(PressType.down);
-                      } else {
-                        context.homeBloc
-                            .add(const _SetPageEvent(NavbarPage.explore));
-                      }
-                    },
-                    animateLogo: state.currentPage == NavbarPage.explore &&
-                        !state.freezeLogoAnimation,
-                    colorful: state.currentPage == NavbarPage.explore &&
-                        (Cache.userExplore?.isNotEmpty ?? false),
-                    onPressedNews: () => context.homeBloc
-                        .add(const _SetPageEvent(NavbarPage.news)),
-                    onPressedExplore: () => context.homeBloc
-                        .add(const _SetPageEvent(NavbarPage.explore)),
-                    onPressedOptions: () => context.homeBloc
-                        .add(const _SetPageEvent(NavbarPage.options)),
-                    onPressedChat: () => context.homeBloc
-                        .add(const _SetPageEvent(NavbarPage.chat)),
-                  ),
-                ],
+                    BlocConsumer<_ExploreBloc, _IExploreState>(
+                      listener: (context, exploreState) {},
+                      builder: (context, exploreState) => StyledNavBar(
+                        page: state.currentPage,
+                        onReleaseLogo: () {
+                          if (state.currentPage == NavbarPage.explore) {
+                            context.exploreBloc
+                                .add(const _ExploreReleaseEvent());
+                          }
+                        },
+                        onPressDownLogo: () {
+                          if (state.currentPage == NavbarPage.explore) {
+                            context.exploreBloc
+                                .add(const _ExplorePressDownEvent());
+                          } else {
+                            context.homeBloc.add(
+                                const _HomeSetPageEvent(NavbarPage.explore));
+                          }
+                        },
+                        animateLogo: logoButtonActive(state, exploreState) &&
+                            !(exploreState is _IExploreHoldingState),
+                        colorful: logoButtonActive(state, exploreState),
+                        onPressedNews: () => context.homeBloc
+                            .add(const _HomeSetPageEvent(NavbarPage.news)),
+                        onPressedExplore: () => context.homeBloc
+                            .add(const _HomeSetPageEvent(NavbarPage.explore)),
+                        onPressedOptions: () => context.homeBloc
+                            .add(const _HomeSetPageEvent(NavbarPage.options)),
+                        onPressedChat: () => context.homeBloc
+                            .add(const _HomeSetPageEvent(NavbarPage.chat)),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

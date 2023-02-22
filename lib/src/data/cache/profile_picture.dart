@@ -1,6 +1,17 @@
 part of cache;
 
-String? get _profilePictureUrl => getCachedString(_Keys.profilePicture);
+class _ProfilePictureCache {
+  static const kProfilePicture = 'profilePicture';
 
-Future<void> _cacheProfilePictureUrl(String? profilePictureUrl) =>
-    cacheString(_Keys.profilePicture, profilePictureUrl);
+  const _ProfilePictureCache();
+
+  String? get profilePictureUrl => getCachedString(kProfilePicture);
+
+  Future<void> cacheProfilePictureUrl(String? profilePictureUrl) =>
+      cacheString(kProfilePicture, profilePictureUrl);
+
+  String get profilePictureImageCacheKey => 'profilePictureImage';
+
+  String getUserProfilePictureImageCacheKey(String userId) =>
+      '$userId.$profilePictureImageCacheKey';
+}

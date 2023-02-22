@@ -1,9 +1,4 @@
-import 'package:dartz/dartz.dart';
-import 'package:geolocator/geolocator.dart';
-
-import '../../domain/entities/entities.dart';
-import '../constants/constants.dart';
-import '../failure.dart';
+part of utils;
 
 LocationEntity _positionToLocation(Position position) => LocationEntity(
       longitude: position.longitude,

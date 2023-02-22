@@ -1,6 +1,6 @@
 part of backend;
 
-const _timeout = Duration(seconds: 15);
+const _timeout = Duration(seconds: 30);
 
 enum HttpMethod {
   get,
@@ -11,11 +11,13 @@ enum HttpMethod {
 
 class SocketConnection extends Equatable {
   final IO.Socket _socket;
-  final Stream<void> onDisconnect;
+  final Completer<void> disconnectCompleter;
 
-  const SocketConnection._(this._socket, this.onDisconnect) : super();
+  const SocketConnection._(this._socket, this.disconnectCompleter) : super();
 
   void disconnect() => this._socket.dispose();
+
+  Future<void> onDisconnect() => disconnectCompleter.future;
 
   Future<Either<Stream<T>, Failure>> stream<T>(SocketEvent event) async {
     final streamController = StreamController<T>();
@@ -85,7 +87,7 @@ Future<Either<SocketConnection, Failure>> connectSocket(
   final IO.Socket _socket;
   prettyLogger.d("Connecting to the websocket server...");
   final completer = Completer<SocketConnection>();
-  final streamController = StreamController<void>();
+  final disconnectCompleter = Completer<void>();
   _socket = IO.io(
     '${dotenv.get('BACKEND_HOST')}:${dotenv.get('BACKEND_PORT')}',
     IO.OptionBuilder()
@@ -97,21 +99,20 @@ Future<Either<SocketConnection, Failure>> connectSocket(
   _socket
     ..onConnect(
       (_) {
-        if (!completer.isCompleted) {
-          prettyLogger.d("Connected to the websocket server.");
-          completer.complete(
-            SocketConnection._(
-              _socket,
-              streamController.stream.asBroadcastStream(),
-            ),
-          );
-        }
+        prettyLogger.d("Connected to the websocket server.");
+        completer.complete(
+          SocketConnection._(
+            _socket,
+            disconnectCompleter,
+          ),
+        );
       },
     )
     ..onDisconnect(
       (_) {
+        _socket.clearListeners();
         prettyLogger.d("Disconnected from the websocket server.");
-        streamController.close();
+        disconnectCompleter.complete();
       },
     );
   try {

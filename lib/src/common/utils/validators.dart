@@ -1,4 +1,4 @@
-import 'package:email_validator/email_validator.dart';
+part of utils;
 
 /// Max length for the first name and email address
 const int kMaxNameLength = 24;

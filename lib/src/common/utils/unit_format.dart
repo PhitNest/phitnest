@@ -1,3 +1,5 @@
+part of utils;
+
 extension FormatUnits on double {
   /// This will return a rounded string version of this [double] with [unit]
   /// appended as the units of measurement.

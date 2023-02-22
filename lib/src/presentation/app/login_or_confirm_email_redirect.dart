@@ -19,7 +19,7 @@ class _LoginOrRedirectToConfirmEmailState
   @override
   void initState() {
     super.initState();
-    if (!Cache.user!.confirmed) {
+    if (!Cache.user.user!.confirmed) {
       SchedulerBinding.instance.addPostFrameCallback(
         (_) {
           if (!_disposed) {
@@ -30,8 +30,8 @@ class _LoginOrRedirectToConfirmEmailState
               ..push<LoginResponse>(
                 CupertinoPageRoute(
                   builder: (context) => ConfirmEmailPage(
-                    password: Cache.password,
-                    email: Cache.user!.email,
+                    password: Cache.auth.password,
+                    email: Cache.user.user!.email,
                   ),
                 ),
               ).then(

@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../common/constants/assets.dart';
+import '../../../common/constants/constants.dart';
 
 class StyledProfilePictureCamera extends StatelessWidget {
   final CameraController cameraController;

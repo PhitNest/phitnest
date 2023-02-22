@@ -1,14 +1,19 @@
 part of cache;
 
-UserEntity? get _user => getCachedObject(_Keys.user, UserEntity.fromJson);
+class _UserCache {
+  static const kGetUser = 'user';
+  static const kUserExplore = 'user.explore';
 
-Future<void> _cacheUser(UserEntity? user) => cacheObject(_Keys.user, user);
+  const _UserCache();
 
-List<ProfilePicturePublicUserEntity>? get _userExploreResponse => getCachedList(
-      _Keys.userExplore,
-      ProfilePicturePublicUserEntity.fromJson,
-    );
+  UserEntity? get user => getCachedObject(kGetUser, UserEntity.fromJson);
 
-Future<void> _cacheUserExploreResponse(
-        List<ProfilePicturePublicUserEntity>? response) =>
-    cacheList(_Keys.userExplore, response);
+  Future<void> cacheUser(UserEntity? user) => cacheObject(kGetUser, user);
+
+  List<ProfilePicturePublicUserEntity>? get userExploreResponse =>
+      getCachedList(kUserExplore, ProfilePicturePublicUserEntity.fromJson);
+
+  Future<void> cacheUserExplore(
+          List<ProfilePicturePublicUserEntity>? response) =>
+      cacheList(kUserExplore, response);
+}

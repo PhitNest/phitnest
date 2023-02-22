@@ -1,3 +1,5 @@
+part of utils;
+
 abstract class Either3<First, Second, Third> {
   const Either3();
 

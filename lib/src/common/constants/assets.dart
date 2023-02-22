@@ -1,3 +1,5 @@
+part of constants;
+
 enum Assets {
   coloredLogo,
   logo,

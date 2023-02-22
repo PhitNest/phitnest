@@ -6,7 +6,7 @@ extension _OnGymsLoaded on _RegistrationBloc {
     Emitter<_IRegistrationState> emit,
   ) =>
       emit(
-        _IGymsLoadedStateState(
+        _GymsLoadedState(
           firstNameConfirmed: state.firstNameConfirmed,
           gyms: event.gyms,
           location: event.location,

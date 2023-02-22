@@ -6,7 +6,7 @@ Future<Failure?> _uploadPhotoUnauthorized({
 }) =>
     Backend.profilePicture.getUnauthorizedUploadUrl(email).then(
           (res) => res.fold(
-            (res) => uploadPhoto(res.url, photo),
+            (res) => uploadPhotoToS3(res.url, photo),
             (failure) => failure,
           ),
         );

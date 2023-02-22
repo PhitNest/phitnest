@@ -1,13 +1,10 @@
-export 'chat/chat.dart';
 export 'confirmEmail/confirm_email.dart';
-export 'explore/explore.dart';
 export 'forgotPassword/forgot_password.dart';
 export 'forgotPasswordSubmit/forgot_password_submit.dart';
 export 'gymSearch/gym_search.dart';
 export 'home/home.dart';
 export 'login/login.dart';
 export 'onBoarding/on_boarding_page.dart';
-export 'options/options.dart';
 export 'profilePicture/profile_picture.dart';
 export 'registration/registration.dart';
 export 'verification/verification.dart';
