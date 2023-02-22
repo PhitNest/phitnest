@@ -9,45 +9,42 @@ export async function explore(cognitoId: string, gymId: string) {
     databases().friendRequestDatabase.getByFromCognitoId(cognitoId),
     databases().friendRequestDatabase.getByToCognitoId(cognitoId),
   ]);
-  return {
-    users: (
-      await Promise.all(
-        others
-          .filter(
-            (user) =>
-              !(
-                user.cognitoId === cognitoId ||
-                !user.confirmed ||
-                friends.find((friendship) =>
-                  friendship.userCognitoIds.includes(user.cognitoId)
-                ) ||
-                sentRequests.find(
-                  (request) => request.toCognitoId === user.cognitoId
-                ) ||
-                receivedRequests.find(
-                  (request) =>
-                    request.fromCognitoId === user.cognitoId && request.denied
-                )
+  return (
+    await Promise.all(
+      others
+        .filter(
+          (user) =>
+            !(
+              user.cognitoId === cognitoId ||
+              !user.confirmed ||
+              friends.find((friendship) =>
+                friendship.userCognitoIds.includes(user.cognitoId)
+              ) ||
+              sentRequests.find(
+                (request) => request.toCognitoId === user.cognitoId
+              ) ||
+              receivedRequests.find(
+                (request) =>
+                  request.fromCognitoId === user.cognitoId && request.denied
               )
-          )
-          .map(async (user) => {
-            const url =
-              await databases().profilePictureDatabase.getProfilePictureUrl(
-                user.cognitoId
-              );
-            if (url instanceof Failure) {
-              return url;
-            } else {
-              return {
-                ...user,
-                profilePictureUrl: url,
-              };
-            }
-          })
-      )
-    ).filter(
-      (user) => !(user instanceof Failure)
-    ) as IProfilePicturePublicUserEntity[],
-    requests: receivedRequests.filter((request) => !request.denied),
-  };
+            )
+        )
+        .map(async (user) => {
+          const url =
+            await databases().profilePictureDatabase.getProfilePictureUrl(
+              user.cognitoId
+            );
+          if (url instanceof Failure) {
+            return url;
+          } else {
+            return {
+              ...user,
+              profilePictureUrl: url,
+            };
+          }
+        })
+    )
+  ).filter(
+    (user) => !(user instanceof Failure)
+  ) as IProfilePicturePublicUserEntity[];
 }

@@ -67,7 +67,7 @@ export class S3ProfilePictureDatabase implements IProfilePictureDatabase {
           s3,
           new GetObjectCommand({ Bucket: BUCKET_NAME, Key: userCognitoId }),
           {
-            expiresIn: 1000,
+            expiresIn: 10000,
           }
         );
       } catch (err) {
