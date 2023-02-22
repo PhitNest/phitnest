@@ -1,3 +1,5 @@
+part of constants;
+
 /// HTTP Status Code
 const kStatusContinue = 100; // RFC 7231; 6.2.1
 const kStatusSwitchingProtocols = 101; // RFC 7231; 6.2.2

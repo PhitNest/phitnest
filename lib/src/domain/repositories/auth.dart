@@ -16,12 +16,13 @@ class Auth {
             (either) => either.fold(
               (response) => Future.wait(
                 [
-                  Cache.cachePassword(password),
-                  Cache.cacheUser(response.user),
-                  Cache.cacheProfilePictureUrl(response.user.profilePictureUrl),
-                  Cache.cacheAccessToken(response.accessToken),
-                  Cache.cacheRefreshToken(response.refreshToken),
-                  Cache.cacheGym(response.gym),
+                  Cache.auth.cachePassword(password),
+                  Cache.user.cacheUser(response.user),
+                  Cache.profilePicture
+                      .cacheProfilePictureUrl(response.user.profilePictureUrl),
+                  Cache.auth.cacheAccessToken(response.accessToken),
+                  Cache.auth.cacheRefreshToken(response.refreshToken),
+                  Cache.gym.cacheGym(response.gym),
                 ],
               ).then((_) => Left(response)),
               (failure) => Right(failure),
@@ -47,8 +48,8 @@ class Auth {
             (either) => either.fold(
               (response) => Future.wait(
                 [
-                  Cache.cachePassword(password),
-                  Cache.cacheUser(response.user),
+                  Cache.auth.cachePassword(password),
+                  Cache.user.cacheUser(response.user),
                 ],
               ).then((_) => Left(response)),
               (failure) => Right(failure),
@@ -68,8 +69,9 @@ class Auth {
             (either) => either.fold(
               (user) => Future.wait(
                 [
-                  Cache.cacheUser(user),
-                  Cache.cacheProfilePictureUrl(user.profilePictureUrl),
+                  Cache.user.cacheUser(user),
+                  Cache.profilePicture
+                      .cacheProfilePictureUrl(user.profilePictureUrl),
                 ],
               ).then((_) => Left(user)),
               (failure) => Right(failure),
@@ -89,8 +91,8 @@ class Auth {
             (either) => either.fold(
               (user) => Future.wait(
                 [
-                  Cache.cacheRefreshToken(refreshToken),
-                  Cache.cacheAccessToken(user.accessToken),
+                  Cache.auth.cacheRefreshToken(refreshToken),
+                  Cache.auth.cacheAccessToken(user.accessToken),
                 ],
               ).then((_) => Left(user)),
               (failure) => Right(failure),
@@ -111,13 +113,13 @@ class Auth {
           if (failure == null) {
             return Future.wait(
               [
-                Cache.cachePassword(null),
-                Cache.cacheAccessToken(null),
-                Cache.cacheRefreshToken(null),
-                Cache.cacheUser(null),
-                Cache.cacheProfilePictureUrl(null),
-                Cache.cacheGym(null),
-                Cache.cacheUserExplore(null),
+                Cache.auth.cachePassword(null),
+                Cache.auth.cacheAccessToken(null),
+                Cache.auth.cacheRefreshToken(null),
+                Cache.user.cacheUser(null),
+                Cache.profilePicture.cacheProfilePictureUrl(null),
+                Cache.gym.cacheGym(null),
+                Cache.user.cacheUserExplore(null),
               ],
             ).then((_) => null);
           }

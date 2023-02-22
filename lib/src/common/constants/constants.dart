@@ -1,4 +1,8 @@
-export 'assets.dart';
-export 'failures.dart';
-export 'status_codes.dart';
-export 'socket_events.dart';
+library constants;
+
+import '../failure.dart';
+
+part 'assets.dart';
+part 'failures.dart';
+part 'socket_events.dart';
+part 'status_codes.dart';

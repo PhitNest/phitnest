@@ -2,8 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'widgets.dart';
-
 class BlocWidget<B extends Bloc<dynamic, S>, S extends Equatable>
     extends StatefulWidget {
   final B Function(BuildContext context) create;
@@ -31,10 +29,4 @@ class _BlocWidgetState<B extends Bloc<dynamic, S>, S extends Equatable>
           listener: widget.listener ?? (_, __) {},
         ),
       );
-
-  @override
-  void dispose() {
-    StyledErrorBanner.dismiss();
-    super.dispose();
-  }
 }

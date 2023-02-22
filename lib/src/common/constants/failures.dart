@@ -1,4 +1,4 @@
-import '../failure.dart';
+part of constants;
 
 enum Failures {
   networkFailure,

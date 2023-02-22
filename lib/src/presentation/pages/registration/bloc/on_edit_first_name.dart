@@ -56,10 +56,10 @@ extension _OnEditFirstName on _RegistrationBloc {
           takenEmails: state.takenEmails,
         ),
       );
-    } else if (state is _IGymsLoadedStateState) {
-      final state = this.state as _IGymsLoadedStateState;
+    } else if (state is _GymsLoadedState) {
+      final state = this.state as _GymsLoadedState;
       emit(
-        _IGymsLoadedStateState(
+        _GymsLoadedState(
           firstNameConfirmed: validation == null,
           currentPage: state.currentPage,
           autovalidateMode: state.autovalidateMode,

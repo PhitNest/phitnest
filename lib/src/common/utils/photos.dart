@@ -1,15 +1,8 @@
-import 'dart:convert';
+part of utils;
 
-import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
-import 'package:image_editor/image_editor.dart' as editor;
-import 'package:http/http.dart' as http;
+const kProfilePictureAspectRatio = Size(375.0, 330.0);
 
-import '../constants/constants.dart';
-import '../failure.dart';
-import '../logger.dart';
-
-Future<Failure?> uploadPhoto(String uploadUrl, XFile photo) async => http
+Future<Failure?> uploadPhotoToS3(String uploadUrl, XFile photo) async => http
         .put(
       Uri.parse(uploadUrl),
       headers: {
@@ -39,8 +32,6 @@ extension TakeProfilePicture on CameraController {
         (file) => file.centerCrop(),
       );
 }
-
-const kProfilePictureAspectRatio = Size(375.0, 330.0);
 
 extension Crop on XFile {
   Future<XFile> centerCrop() async {

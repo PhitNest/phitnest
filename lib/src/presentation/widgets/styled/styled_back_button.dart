@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../common/constants/assets.dart';
+import '../../../common/constants/constants.dart';
 
 class StyledBackButton extends StatelessWidget {
   const StyledBackButton({Key? key}) : super(key: key);

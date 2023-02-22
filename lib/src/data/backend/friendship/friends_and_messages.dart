@@ -1,6 +1,6 @@
 part of backend;
 
-class FriendsAndMessagesResponse extends Equatable {
+class FriendsAndMessagesResponse extends Equatable with Serializable {
   final PopulatedFriendshipEntity friendship;
   final DirectMessageEntity? message;
 
@@ -8,6 +8,12 @@ class FriendsAndMessagesResponse extends Equatable {
     required this.friendship,
     required this.message,
   }) : super();
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'friendship': friendship.toJson(),
+        ...(message != null ? {'message': message!.toJson()} : {}),
+      };
 
   factory FriendsAndMessagesResponse.fromJson(Map<String, dynamic> json) =>
       FriendsAndMessagesResponse(

@@ -1,16 +1,24 @@
 part of cache;
 
-String? get _accessToken => getCachedString(_Keys.accessToken);
+class _AuthCache {
+  static const kAccessToken = 'accessToken';
+  static const kRefreshToken = 'refreshToken';
+  static const kPassword = 'password';
 
-Future<void> _cacheAccessToken(String? accessToken) =>
-    cacheString(_Keys.accessToken, accessToken);
+  const _AuthCache();
 
-String? get _refreshToken => getCachedString(_Keys.refreshToken);
+  String? get accessToken => getCachedString(kAccessToken);
 
-Future<void> _cacheRefreshToken(String? refreshToken) =>
-    cacheString(_Keys.refreshToken, refreshToken);
+  Future<void> cacheAccessToken(String? accessToken) =>
+      cacheString(kAccessToken, accessToken);
 
-String? get _password => getCachedString(_Keys.password);
+  String? get refreshToken => getCachedString(kRefreshToken);
 
-Future<void> _cachePassword(String? password) =>
-    cacheString(_Keys.password, password);
+  Future<void> cacheRefreshToken(String? refreshToken) =>
+      cacheString(kRefreshToken, refreshToken);
+
+  String? get password => getCachedString(kPassword);
+
+  Future<void> cachePassword(String? password) =>
+      cacheString(kPassword, password);
+}

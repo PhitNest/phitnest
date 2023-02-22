@@ -1,5 +1,11 @@
 part of cache;
 
-GymEntity? get _gym => getCachedObject(_Keys.gym, GymEntity.fromJson);
+class _GymCache {
+  static const kGym = 'gym';
 
-Future<void> _cacheGym(GymEntity? gym) => cacheObject(_Keys.gym, gym);
+  const _GymCache();
+
+  GymEntity? get gym => getCachedObject(kGym, GymEntity.fromJson);
+
+  Future<void> cacheGym(GymEntity? gym) => cacheObject(kGym, gym);
+}

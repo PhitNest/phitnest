@@ -10,8 +10,10 @@ import '../entities/entities.dart';
 
 part 'auth.dart';
 part 'user.dart';
+part 'friendship.dart';
 
 abstract class Repositories {
   static const auth = Auth();
   static const user = User();
+  static const friendship = Friendship();
 }

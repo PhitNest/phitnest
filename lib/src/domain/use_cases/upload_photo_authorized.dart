@@ -6,7 +6,7 @@ Future<Failure?> _uploadPhotoAuthorized({
 }) =>
     Backend.profilePicture.getUploadUrl(accessToken).then(
           (res) => res.fold(
-            (res) => uploadPhoto(res.url, photo),
+            (res) => uploadPhotoToS3(res.url, photo),
             (failure) => failure,
           ),
         );
