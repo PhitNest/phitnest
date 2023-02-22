@@ -1,37 +1,5 @@
 part of forgot_password_page;
 
-extension _Bloc on BuildContext {
-  _ForgotPasswordBloc get bloc => read();
-
-  Future<void> goToSubmitPage() {
-    final email = bloc.emailController.text.trim();
-    final password = bloc.passwordController.text;
-    return Navigator.push<LoginResponse>(
-      this,
-      CupertinoPageRoute(
-        builder: (context) => ForgotPasswordSubmitPage(
-          email: email,
-          password: password,
-        ),
-      ),
-    ).then(
-      (submitResult) {
-        if (submitResult != null) {
-          return Navigator.pushAndRemoveUntil(
-            this,
-            CupertinoPageRoute(
-              builder: (context) => HomePage(),
-            ),
-            (_) => false,
-          );
-        }
-      },
-    );
-  }
-
-  void onPressedSubmit() => bloc.add(const _SubmitEvent());
-}
-
 class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
 
