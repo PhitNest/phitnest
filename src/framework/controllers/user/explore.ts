@@ -12,12 +12,9 @@ import {
 } from "../../../domain/entities";
 import { explore } from "../../../domain/use-cases";
 
-type ExploreResponse = {
-  users: IProfilePicturePublicUserEntity[];
-  requests: IFriendRequestEntity[];
-};
-
-export class ExploreController implements Controller<ExploreResponse> {
+export class ExploreController
+  implements Controller<IProfilePicturePublicUserEntity[]>
+{
   validator = z.object({
     gymId: z.string(),
   });
@@ -30,7 +27,7 @@ export class ExploreController implements Controller<ExploreResponse> {
 
   execute(
     req: IRequest<z.infer<typeof this.validator>>,
-    res: IResponse<ExploreResponse, AuthenticatedLocals>
+    res: IResponse<IProfilePicturePublicUserEntity[], AuthenticatedLocals>
   ) {
     return explore(res.locals.cognitoId, req.body.gymId);
   }
