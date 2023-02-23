@@ -16,6 +16,7 @@ class _ExploreBloc extends Bloc<_IExploreEvent, _IExploreState> {
   }) : super(
           Cache.user.userExploreResponse != null
               ? _ExploreReloadingState(
+                  currentPageIndex: 0,
                   userExploreResponse: Cache.user.userExploreResponse!,
                   explore: CancelableOperation.fromFuture(
                     withAuth(
@@ -42,6 +43,7 @@ class _ExploreBloc extends Bloc<_IExploreEvent, _IExploreState> {
     on<_ExploreIncrementCountdownEvent>(onIncrementCountdown);
     on<_ExploreLoadingErrorEvent>(onLoadingError);
     on<_ExploreLoadedEvent>(onLoaded);
+    on<_ExploreSetPageEvent>(onSetPage);
     if (state is _IExploreLoadingState) {
       final state = this.state as _IExploreLoadingState;
       state.explore.then(

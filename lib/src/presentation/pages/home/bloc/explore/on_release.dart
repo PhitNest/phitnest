@@ -7,6 +7,7 @@ extension _ExploreOnRelease on _ExploreBloc {
       state.incrementCountdown.cancel();
       emit(
         _ExploreLoadedState(
+          currentPageIndex: state.currentPageIndex,
           userExploreResponse: state.userExploreResponse,
         ),
       );
@@ -15,6 +16,7 @@ extension _ExploreOnRelease on _ExploreBloc {
       state.incrementCountdown.cancel();
       emit(
         _ExploreReloadingState(
+          currentPageIndex: state.currentPageIndex,
           userExploreResponse: state.userExploreResponse,
           explore: state.explore,
         ),

@@ -13,6 +13,7 @@ extension _ExploreOnPressDown on _ExploreBloc {
       if (state.userExploreResponse.isNotEmpty) {
         emit(
           _ExploreHoldingState(
+            currentPageIndex: state.currentPageIndex,
             userExploreResponse: state.userExploreResponse,
             countdown: 3,
             incrementCountdown: incrementCountDown,
@@ -24,6 +25,7 @@ extension _ExploreOnPressDown on _ExploreBloc {
       if (state.userExploreResponse.isNotEmpty) {
         emit(
           _ExploreHoldingReloadingState(
+            currentPageIndex: state.currentPageIndex,
             userExploreResponse: state.userExploreResponse,
             countdown: 3,
             incrementCountdown: incrementCountDown,

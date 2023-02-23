@@ -23,6 +23,7 @@ extension _ExploreOnIncrementCountdown on _ExploreBloc {
         emit(
           state.countdown > 1
               ? _ExploreHoldingState(
+                  currentPageIndex: state.currentPageIndex,
                   userExploreResponse: state.userExploreResponse,
                   countdown: state.countdown - 1,
                   incrementCountdown: CancelableOperation.fromFuture(
@@ -35,6 +36,7 @@ extension _ExploreOnIncrementCountdown on _ExploreBloc {
                     ),
                 )
               : _ExploreSendingFriendRequestState(
+                  currentPageIndex: state.currentPageIndex,
                   userExploreResponse: state.userExploreResponse,
                   sendRequest: sendRequest,
                 ),
@@ -44,6 +46,7 @@ extension _ExploreOnIncrementCountdown on _ExploreBloc {
         emit(
           state.countdown > 1
               ? _ExploreHoldingReloadingState(
+                  currentPageIndex: state.currentPageIndex,
                   userExploreResponse: state.userExploreResponse,
                   countdown: state.countdown - 1,
                   explore: state.explore,
@@ -57,6 +60,7 @@ extension _ExploreOnIncrementCountdown on _ExploreBloc {
                     ),
                 )
               : _ExploreSendingFriendRequestReloadingState(
+                  currentPageIndex: state.currentPageIndex,
                   explore: state.explore,
                   sendRequest: sendRequest,
                   userExploreResponse: state.userExploreResponse,

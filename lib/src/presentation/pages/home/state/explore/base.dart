@@ -14,13 +14,17 @@ mixin _IExploreLoadingState on _IExploreState {
 
 abstract class _IExploreLoadedState extends _IExploreState {
   final List<ProfilePicturePublicUserEntity> userExploreResponse;
+  final int currentPageIndex;
+
+  _IExploreLoadedState copyWithPageIndex(int pageIndex);
 
   const _IExploreLoadedState({
     required this.userExploreResponse,
+    required this.currentPageIndex,
   }) : super();
 
   @override
-  List<Object> get props => [userExploreResponse];
+  List<Object> get props => [userExploreResponse, currentPageIndex];
 }
 
 mixin _IExploreHoldingState on _IExploreLoadedState {
@@ -38,8 +42,11 @@ abstract class _IExploreReloadingState extends _IExploreLoadedState
   final CancelableOperation<
       Either<List<ProfilePicturePublicUserEntity>, Failure>> explore;
 
+  _IExploreReloadingState copyWithPageIndex(int pageIndex);
+
   const _IExploreReloadingState({
     required super.userExploreResponse,
+    required super.currentPageIndex,
     required this.explore,
   }) : super();
 
