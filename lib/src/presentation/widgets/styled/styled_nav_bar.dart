@@ -7,91 +7,103 @@ import '../../../common/theme.dart';
 
 enum NavbarPage { news, explore, chat, options }
 
-class NavbarState {
-  final NavbarPage page;
-  final bool animateLogo;
-  final bool darkMode;
-  final bool colorful;
+enum LogoState { animated, holding, disabled, reversed, loading }
 
-  const NavbarState({
-    required this.page,
-    required this.animateLogo,
-    required this.darkMode,
-    required this.colorful,
-  }) : super();
+extension _LogoStateToAsset on LogoState {
+  String? get assetPath {
+    switch (this) {
+      case LogoState.animated:
+      case LogoState.holding:
+        return Assets.coloredLogo.path;
+      case LogoState.disabled:
+        return Assets.logo.path;
+      case LogoState.reversed:
+        return Assets.darkLogo.path;
+      default:
+        return null;
+    }
+  }
 }
 
-class StyledNavBar extends StatefulWidget {
-  static double get kHeight => 66.h;
+class _StyledNavBarLogo extends StatefulWidget {
+  final LogoState state;
+  final VoidCallback onReleased;
+  final VoidCallback onPressed;
 
-  final NavbarPage page;
-  final bool animateLogo;
-  final bool darkMode;
-  final bool colorful;
-  final VoidCallback onPressDownLogo;
-  final VoidCallback onReleaseLogo;
-  final VoidCallback onPressedNews;
-  final VoidCallback onPressedExplore;
-  final VoidCallback onPressedChat;
-  final VoidCallback onPressedOptions;
-
-  const StyledNavBar({
-    required this.page,
-    required this.onReleaseLogo,
-    required this.onPressDownLogo,
-    required this.onPressedNews,
-    required this.onPressedExplore,
-    required this.onPressedChat,
-    required this.onPressedOptions,
-    this.colorful = false,
-    this.darkMode = false,
-    this.animateLogo = false,
-  }) : super();
+  const _StyledNavBarLogo({
+    Key? key,
+    required this.state,
+    required this.onReleased,
+    required this.onPressed,
+  }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _StyledNavBarState();
+  _StyledNavBarLogoState createState() => _StyledNavBarLogoState();
 }
 
-class _StyledNavBarState extends State<StyledNavBar>
+class _StyledNavBarLogoState extends State<_StyledNavBarLogo>
     with SingleTickerProviderStateMixin {
-  late final AnimationController controller;
+  late final AnimationController? controller;
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(vsync: this)
-      ..repeat(
-        min: 0,
-        max: 1,
-        reverse: true,
-        period: Duration(milliseconds: 1200),
-      );
+    if (widget.state.assetPath != null) {
+      controller = AnimationController(vsync: this)
+        ..repeat(
+          min: 0,
+          max: 1,
+          reverse: true,
+          period: Duration(milliseconds: 1200),
+        );
+    }
   }
 
-  Widget get logoButton => GestureDetector(
-      onTapCancel: widget.onReleaseLogo,
-      onTapDown: (_) => widget.onPressDownLogo(),
-      onTapUp: (_) => widget.onReleaseLogo(),
-      child: Image.asset(
-        widget.colorful
-            ? widget.darkMode
-                ? Assets.darkLogo.path
-                : Assets.coloredLogo.path
-            : Assets.logo.path,
-        width: 38.62.w +
-            (widget.animateLogo
-                    ? (widget.colorful ? controller.value : 0)
-                    : 1) *
-                5.w,
-      ));
+  @override
+  Widget build(BuildContext context) => widget.state.assetPath != null
+      ? GestureDetector(
+          onTapCancel: widget.onReleased,
+          onTapDown: (_) => widget.onPressed(),
+          onTapUp: (_) => widget.onReleased(),
+          child: AnimatedBuilder(
+            animation: controller!,
+            builder: (context, child) => Image.asset(
+              widget.state.assetPath!,
+              width: 38.62.w +
+                  (widget.state == LogoState.animated
+                          ? controller!.value
+                          : widget.state == LogoState.holding
+                              ? 1
+                              : 0) *
+                      5.w,
+            ),
+          ),
+        )
+      : CircularProgressIndicator();
 
-  Widget createButton(
-    BuildContext context,
-    String text,
-    VoidCallback onPressed,
-    NavbarPage page,
-  ) =>
-      TextButton(
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+}
+
+class _StyledNavBarPageButton extends StatelessWidget {
+  final String text;
+  final bool selected;
+  final bool reversed;
+  final VoidCallback onPressed;
+
+  const _StyledNavBarPageButton({
+    Key? key,
+    required this.text,
+    required this.selected,
+    required this.reversed,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => TextButton(
         style: ButtonStyle(
             maximumSize: MaterialStateProperty.all(
               Size.fromWidth(78.w),
@@ -104,26 +116,50 @@ class _StyledNavBarState extends State<StyledNavBar>
             )),
         child: Text(
           text,
-          style: page == widget.page
-              ? theme.textTheme.bodySmall!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: widget.darkMode ? Colors.white : Colors.black)
-              : theme.textTheme.bodySmall!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: widget.darkMode
-                      ? Color.fromARGB((0.7 * 255).round(), 255, 255, 255)
-                      : Color.fromARGB((0.4 * 255).round(), 0, 0, 0),
-                ),
+          style: theme.textTheme.bodySmall!.copyWith(
+            fontWeight: FontWeight.bold,
+            color: reversed
+                ? selected
+                    ? Colors.white
+                    : Color.fromARGB((0.7 * 255).round(), 255, 255, 255)
+                : selected
+                    ? Colors.black
+                    : Color.fromARGB((0.4 * 255).round(), 0, 0, 0),
+          ),
         ),
-        onPressed: page != widget.page ? onPressed : null,
+        onPressed: !selected ? onPressed : null,
       );
+}
+
+class StyledNavBar extends StatelessWidget {
+  static double get kHeight => 66.h;
+
+  final NavbarPage page;
+  final LogoState logoState;
+  final VoidCallback onPressDownLogo;
+  final VoidCallback onReleaseLogo;
+  final VoidCallback onPressedNews;
+  final VoidCallback onPressedExplore;
+  final VoidCallback onPressedChat;
+  final VoidCallback onPressedOptions;
+
+  const StyledNavBar({
+    required this.page,
+    required this.logoState,
+    required this.onReleaseLogo,
+    required this.onPressDownLogo,
+    required this.onPressedNews,
+    required this.onPressedExplore,
+    required this.onPressedChat,
+    required this.onPressedOptions,
+  }) : super();
 
   @override
   Widget build(BuildContext context) => Container(
         height: StyledNavBar.kHeight,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: widget.darkMode ? Colors.black : Colors.white,
+          color: logoState == LogoState.reversed ? Colors.black : Colors.white,
           boxShadow: [
             BoxShadow(
               blurRadius: 8.5,
@@ -140,55 +176,55 @@ class _StyledNavBarState extends State<StyledNavBar>
               Center(
                 child: Padding(
                   padding: EdgeInsets.only(left: 12.w),
-                  child: AnimatedBuilder(
-                    animation: controller,
-                    builder: (context, child) => logoButton,
+                  child: _StyledNavBarLogo(
+                    state: logoState,
+                    onReleased: onReleaseLogo,
+                    onPressed: onPressDownLogo,
                   ),
                 ),
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  createButton(
-                    context,
-                    'NEWS',
-                    widget.onPressedNews,
-                    NavbarPage.news,
-                  ),
-                  createButton(
-                    context,
-                    'EXPLORE',
-                    widget.onPressedExplore,
-                    NavbarPage.explore,
-                  ),
-                  60.horizontalSpace,
-                  StyledIndicator(
-                    offset: Size(8, 8),
-                    child: createButton(
-                      context,
-                      'CHAT',
-                      widget.onPressedChat,
-                      NavbarPage.chat,
-                    ),
-                    count: 5,
-                  ),
-                  createButton(
-                    context,
-                    'OPTIONS',
-                    widget.onPressedOptions,
-                    NavbarPage.options,
-                  ),
-                ],
+              Builder(
+                builder: (context) {
+                  final bool reversed = logoState == LogoState.reversed;
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _StyledNavBarPageButton(
+                        text: 'NEWS',
+                        selected: page == NavbarPage.news,
+                        reversed: reversed,
+                        onPressed: onPressedNews,
+                      ),
+                      _StyledNavBarPageButton(
+                        text: 'EXPLORE',
+                        selected: page == NavbarPage.explore,
+                        reversed: reversed,
+                        onPressed: onPressedNews,
+                      ),
+                      60.horizontalSpace,
+                      StyledIndicator(
+                        offset: Size(8, 8),
+                        child: _StyledNavBarPageButton(
+                          text: 'CHAT',
+                          selected: page == NavbarPage.chat,
+                          reversed: reversed,
+                          onPressed: onPressedNews,
+                        ),
+                        count: 5,
+                      ),
+                      _StyledNavBarPageButton(
+                        text: 'OPTIONS',
+                        selected: page == NavbarPage.options,
+                        reversed: reversed,
+                        onPressed: onPressedNews,
+                      ),
+                    ],
+                  );
+                },
               ),
             ],
           ),
         ),
       );
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
 }
