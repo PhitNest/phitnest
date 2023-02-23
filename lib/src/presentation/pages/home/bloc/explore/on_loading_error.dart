@@ -23,6 +23,7 @@ extension _ExploreOnLoadingError on _ExploreBloc {
       final state = this.state as _ExploreHoldingReloadingState;
       emit(
         _ExploreHoldingReloadingState(
+          currentPageIndex: state.currentPageIndex,
           explore: explore,
           userExploreResponse: state.userExploreResponse,
           countdown: state.countdown,
@@ -33,6 +34,7 @@ extension _ExploreOnLoadingError on _ExploreBloc {
       final state = this.state as _ExploreReloadingState;
       emit(
         _ExploreReloadingState(
+          currentPageIndex: state.currentPageIndex,
           explore: explore,
           userExploreResponse: state.userExploreResponse,
         ),

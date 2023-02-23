@@ -18,6 +18,12 @@ import '../../../common/utils/utils.dart';
 import '../../../domain/use_cases/use_cases.dart';
 import '../../widgets/widgets.dart';
 
+// ██████╗ ██╗      ██████╗  ██████╗
+// ██╔══██╗██║     ██╔═══██╗██╔════╝
+// ██████╔╝██║     ██║   ██║██║
+// ██╔══██╗██║     ██║   ██║██║
+// ██████╔╝███████╗╚██████╔╝╚██████╗
+// ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝
 part 'bloc/on_camera_error.dart';
 part 'bloc/on_camera_loaded.dart';
 part 'bloc/on_capture.dart';
@@ -30,6 +36,12 @@ part 'bloc/on_upload_error.dart';
 part 'bloc/on_upload_success.dart';
 part 'bloc/profile_picture_bloc.dart';
 
+// ███████╗██╗   ██╗███████╗███╗   ██╗████████╗
+// ██╔════╝██║   ██║██╔════╝████╗  ██║╚══██╔══╝
+// █████╗  ██║   ██║█████╗  ██╔██╗ ██║   ██║
+// ██╔══╝  ╚██╗ ██╔╝██╔══╝  ██║╚██╗██║   ██║
+// ███████╗ ╚████╔╝ ███████╗██║ ╚████║   ██║
+// ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝   ╚═╝
 part 'event/base.dart';
 part 'event/camera_error.dart';
 part 'event/camera_loaded.dart';
@@ -42,6 +54,12 @@ part 'event/upload.dart';
 part 'event/upload_error.dart';
 part 'event/upload_success.dart';
 
+// ███████╗████████╗ █████╗ ████████╗███████╗
+// ██╔════╝╚══██╔══╝██╔══██╗╚══██╔══╝██╔════╝
+// ███████╗   ██║   ███████║   ██║   █████╗
+// ╚════██║   ██║   ██╔══██║   ██║   ██╔══╝
+// ███████║   ██║   ██║  ██║   ██║   ███████╗
+// ╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚══════╝
 part 'state/base.dart';
 part 'state/camera_loaded.dart';
 part 'state/camera_loading.dart';
@@ -51,6 +69,12 @@ part 'state/initial.dart';
 part 'state/upload_success.dart';
 part 'state/uploading.dart';
 
+// ██╗   ██╗██╗
+// ██║   ██║██║
+// ██║   ██║██║
+// ██║   ██║██║
+// ╚██████╔╝██║
+//  ╚═════╝ ╚═╝
 part 'ui/profile_picture_page.dart';
 part 'ui/widgets/albums_button.dart';
 part 'ui/widgets/camera_active.dart';
