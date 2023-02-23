@@ -1,6 +1,7 @@
 part of home_page;
 
-class _ExploreSendingFriendRequestState extends _IExploreLoadedState {
+class _ExploreSendingFriendRequestState extends _IExploreLoadedState
+    with _IExploreSendingFriendRequestState {
   final CancelableOperation<
       Either3<FriendRequestEntity, FriendshipEntity, Failure>> sendRequest;
 
@@ -13,8 +14,8 @@ class _ExploreSendingFriendRequestState extends _IExploreLoadedState {
   List<Object> get props => [super.props, sendRequest.value];
 }
 
-class _ExploreSendingFriendRequestReloadingState
-    extends _IExploreReloadingState {
+class _ExploreSendingFriendRequestReloadingState extends _IExploreReloadingState
+    with _IExploreSendingFriendRequestState {
   final CancelableOperation<
       Either3<FriendRequestEntity, FriendshipEntity, Failure>> sendRequest;
 

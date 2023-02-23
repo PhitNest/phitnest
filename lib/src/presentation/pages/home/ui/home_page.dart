@@ -56,6 +56,26 @@ extension on BuildContext {
           (failure) => failure,
         ),
       );
+
+  Future<Either3<A, B, Failure>> withAuthEither3<A, B>(
+          Future<Either3<A, B, Failure>> Function(String) f) =>
+      withAuth(
+        (accessToken) => f(accessToken).then(
+          (either3) => either3.fold(
+            (a) => Left(Left<A, B>(a)),
+            (b) => Left(Right<A, B>(b)),
+            (failure) => Right<Either<A, B>, Failure>(failure),
+          ),
+        ),
+      ).then(
+        (either) => either.fold(
+          (res) => res.fold(
+            (a) => First(a),
+            (b) => Second(b),
+          ),
+          (failure) => Third(failure),
+        ),
+      );
 }
 
 class HomePage extends StatelessWidget {
@@ -82,7 +102,8 @@ class HomePage extends StatelessWidget {
     if (homeState.currentPage != NavbarPage.explore) {
       return LogoState.disabled;
     }
-    if (!(exploreState is _IExploreLoadedState)) {
+    if (!(exploreState is _IExploreLoadedState) ||
+        exploreState is _ExploreSendingFriendRequestState) {
       return LogoState.loading;
     } else if (exploreState is _IExploreHoldingState) {
       return LogoState.holding;
@@ -103,6 +124,7 @@ class HomePage extends StatelessWidget {
             create: (context) => _ExploreBloc(
               withAuth: context.withAuth,
               withAuthVoid: context.withAuthVoid,
+              withAuthEither3: context.withAuthEither3,
             ),
           ),
           BlocProvider(

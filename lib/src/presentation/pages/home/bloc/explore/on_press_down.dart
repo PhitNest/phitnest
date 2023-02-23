@@ -2,6 +2,12 @@ part of home_page;
 
 extension _ExploreOnPressDown on _ExploreBloc {
   void onPressDown(_ExplorePressDownEvent event, Emitter<_IExploreState> emit) {
+    final incrementCountDown = CancelableOperation.fromFuture(
+      Future.delayed(
+        const Duration(seconds: 1),
+        () {},
+      ),
+    )..then((_) => add(const _ExploreIncrementCountdownEvent()));
     if (state is _ExploreLoadedState) {
       final state = this.state as _ExploreLoadedState;
       if (state.userExploreResponse.isNotEmpty) {
@@ -9,12 +15,7 @@ extension _ExploreOnPressDown on _ExploreBloc {
           _ExploreHoldingState(
             userExploreResponse: state.userExploreResponse,
             countdown: 3,
-            incrementCountdown: CancelableOperation.fromFuture(
-              Future.delayed(
-                const Duration(seconds: 1),
-                () {},
-              ),
-            )..then((_) => add(const _ExploreIncrementCountdownEvent())),
+            incrementCountdown: incrementCountDown,
           ),
         );
       }
@@ -25,12 +26,7 @@ extension _ExploreOnPressDown on _ExploreBloc {
           _ExploreHoldingReloadingState(
             userExploreResponse: state.userExploreResponse,
             countdown: 3,
-            incrementCountdown: CancelableOperation.fromFuture(
-              Future.delayed(
-                const Duration(seconds: 1),
-                () {},
-              ),
-            )..then((_) => add(const _ExploreIncrementCountdownEvent())),
+            incrementCountdown: incrementCountDown,
             explore: state.explore,
           ),
         );
