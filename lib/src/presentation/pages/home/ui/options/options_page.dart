@@ -48,7 +48,8 @@ class _OptionsPage extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          if (state is _OptionsSignOutLoadingState) {
+          if (state is _OptionsSignOutLoadingState ||
+              state is _OptionsSignOutState) {
             return _OptionsSignOutLoadingPage(
               user: state.response,
               gym: state.response.gym,

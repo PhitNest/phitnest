@@ -32,7 +32,6 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
     on<_HomeSetPageEvent>(onSetPage);
     on<_HomeSocketConnectErrorEvent>(onSocketConnectError);
     on<_HomeSocketConnectedEvent>(onSocketConnected);
-    on<_HomeSignOutEvent>(onSignOut);
     if (state is _HomeInitialState) {
       final state = this.state as _HomeInitialState;
       state.socketConnection.then(
