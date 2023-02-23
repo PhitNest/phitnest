@@ -29,7 +29,8 @@ extension on BuildContext {
                             (either) => either.fold(
                               (loginResponse) => f(loginResponse.accessToken),
                               (failure) {
-                                homeBloc.add(const _HomeSignOutEvent());
+                                optionsBloc
+                                    .add(const _OptionsSignOutResponseEvent());
                                 return Right(failure);
                               },
                             ),

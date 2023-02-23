@@ -22,12 +22,6 @@ extension _HomeOnSetPage on _HomeBloc {
           onDisconnect: state.onDisconnect,
         ),
       );
-    } else if (state is _HomeSignOutState) {
-      emit(
-        _HomeSignOutState(
-          currentPage: event.page,
-        ),
-      );
     }
   }
 }
