@@ -28,6 +28,11 @@ mixin _IExploreHoldingState on _IExploreLoadedState {
   CancelableOperation<void> get incrementCountdown;
 }
 
+mixin _IExploreSendingFriendRequestState on _IExploreLoadedState {
+  CancelableOperation<Either3<FriendRequestEntity, FriendshipEntity, Failure>>
+      get sendRequest;
+}
+
 abstract class _IExploreReloadingState extends _IExploreLoadedState
     with _IExploreLoadingState {
   final CancelableOperation<

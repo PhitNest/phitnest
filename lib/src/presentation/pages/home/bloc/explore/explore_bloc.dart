@@ -3,12 +3,16 @@ part of home_page;
 class _ExploreBloc extends Bloc<_IExploreEvent, _IExploreState> {
   final Future<Either<T, Failure>> Function<T>(
       Future<Either<T, Failure>> Function(String accessToken) f) withAuth;
+  final Future<Either3<A, B, Failure>> Function<A, B>(
+          Future<Either3<A, B, Failure>> Function(String accessToken) f)
+      withAuthEither3;
   final Future<Failure?> Function(
       Future<Failure?> Function(String accessToken) f) withAuthVoid;
 
   _ExploreBloc({
     required this.withAuth,
     required this.withAuthVoid,
+    required this.withAuthEither3,
   }) : super(
           Cache.user.userExploreResponse != null
               ? _ExploreReloadingState(
@@ -64,6 +68,11 @@ class _ExploreBloc extends Bloc<_IExploreEvent, _IExploreState> {
     if (state is _IExploreHoldingState) {
       final _IExploreHoldingState state = this.state as _IExploreHoldingState;
       await state.incrementCountdown.cancel();
+    }
+    if (state is _IExploreSendingFriendRequestState) {
+      final _IExploreSendingFriendRequestState state =
+          this.state as _IExploreSendingFriendRequestState;
+      await state.sendRequest.cancel();
     }
     super.close();
   }
