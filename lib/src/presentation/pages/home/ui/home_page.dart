@@ -76,10 +76,21 @@ class HomePage extends StatelessWidget {
         assert(Cache.auth.password != null),
         super(key: key);
 
-  bool logoButtonActive(_IHomeState homeState, _IExploreState exploreState) =>
-      homeState.currentPage == NavbarPage.explore &&
-      exploreState is _IExploreLoadedState &&
-      exploreState.userExploreResponse.isNotEmpty;
+  LogoState logoButtonState(
+      _IHomeState homeState, _IExploreState exploreState) {
+    if (homeState.currentPage != NavbarPage.explore) {
+      return LogoState.disabled;
+    }
+    if (!(exploreState is _IExploreLoadedState)) {
+      return LogoState.loading;
+    } else if (exploreState is _IExploreHoldingState) {
+      return LogoState.holding;
+    } else if (exploreState is _ExploreMatchedState) {
+      return LogoState.reversed;
+    } else {
+      return LogoState.animated;
+    }
+  }
 
   @override
   Widget build(BuildContext context) => MultiBlocProvider(
@@ -149,9 +160,7 @@ class HomePage extends StatelessWidget {
                                 const _HomeSetPageEvent(NavbarPage.explore));
                           }
                         },
-                        animateLogo: logoButtonActive(state, exploreState) &&
-                            !(exploreState is _IExploreHoldingState),
-                        colorful: logoButtonActive(state, exploreState),
+                        logoState: logoButtonState(state, exploreState),
                         onPressedNews: () => context.homeBloc
                             .add(const _HomeSetPageEvent(NavbarPage.news)),
                         onPressedExplore: () => context.homeBloc
