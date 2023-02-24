@@ -31,6 +31,7 @@ import '../pages.dart';
 //  ██████ ██   ██ ██   ██    ██        ██████  ███████  ██████   ██████
 part 'bloc/chat/chat_bloc.dart';
 part 'bloc/chat/on_loaded.dart';
+part 'bloc/chat/on_received_message.dart';
 part 'bloc/chat/on_loading_error.dart';
 
 // ███████ ██   ██ ██████  ██       ██████  ██████  ███████     ██████  ██       ██████   ██████
@@ -81,6 +82,7 @@ part 'bloc/options/options_bloc.dart';
 part 'event/chat/base.dart';
 part 'event/chat/loaded.dart';
 part 'event/chat/loading_error.dart';
+part 'event/chat/received_message.dart';
 
 // ███████ ██   ██ ██████  ██       ██████  ██████  ███████     ███████ ██    ██ ███████ ███    ██ ████████
 // ██       ██ ██  ██   ██ ██      ██    ██ ██   ██ ██          ██      ██    ██ ██      ████   ██    ██

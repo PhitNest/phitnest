@@ -4,7 +4,7 @@ abstract class _IChatState extends Equatable {
   const _IChatState() : super();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [Cache.friendship.friendsAndMessages ?? ""];
 }
 
 mixin _IChatLoadingState on _IChatState {
