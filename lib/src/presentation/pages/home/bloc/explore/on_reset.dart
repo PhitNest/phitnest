@@ -1,8 +1,7 @@
 part of home_page;
 
-extension _ExploreOnFriendRequestResponse on _ExploreBloc {
-  void onFriendRequestResponse(
-      _ExploreFriendRequestResponseEvent event, Emitter<_IExploreState> emit) {
+extension _ExploreOnReset on _ExploreBloc {
+  void onReset(_ExploreResetEvent event, Emitter<_IExploreState> emit) {
     if (state is _IExploreSendingFriendRequestState) {
       final state = this.state as _IExploreSendingFriendRequestState;
       Cache.user.userExploreResponse!.removeAt(
@@ -23,6 +22,21 @@ extension _ExploreOnFriendRequestResponse on _ExploreBloc {
           ),
         );
       }
+    } else if (state is _ExploreMatchedReloadingState) {
+      final state = this.state as _ExploreMatchedReloadingState;
+      emit(
+        _ExploreReloadingState(
+          currentPageIndex: state.currentPageIndex,
+          explore: state.explore,
+        ),
+      );
+    } else if (state is _ExploreMatchedState) {
+      final state = this.state as _ExploreMatchedState;
+      emit(
+        _ExploreLoadedState(
+          currentPageIndex: state.currentPageIndex,
+        ),
+      );
     }
   }
 }

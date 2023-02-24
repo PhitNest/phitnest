@@ -46,7 +46,7 @@ part 'bloc/explore/on_press_down.dart';
 part 'bloc/explore/on_release.dart';
 part 'bloc/explore/on_set_page.dart';
 part 'bloc/explore/on_friend_request_error.dart';
-part 'bloc/explore/on_friend_request_response.dart';
+part 'bloc/explore/on_reset.dart';
 part 'bloc/explore/on_friendship_response.dart';
 
 // ██   ██  ██████  ███    ███ ███████     ██████  ██       ██████   ██████
@@ -96,7 +96,7 @@ part 'event/explore/release.dart';
 part 'event/explore/matched.dart';
 part 'event/explore/set_page.dart';
 part 'event/explore/send_friend_request_error.dart';
-part 'event/explore/friend_request_response.dart';
+part 'event/explore/reset.dart';
 part 'event/explore/friendship_response.dart';
 
 // ██   ██  ██████  ███    ███ ███████     ███████ ██    ██ ███████ ███    ██ ████████
@@ -189,6 +189,7 @@ part 'ui/explore/widgets/base.dart';
 part 'ui/explore/widgets/card.dart';
 part 'ui/explore/widgets/empty.dart';
 part 'ui/explore/widgets/loading.dart';
+part 'ui/explore/widgets/matched.dart';
 
 // ██   ██  ██████  ███    ███ ███████     ██    ██ ██
 // ██   ██ ██    ██ ████  ████ ██          ██    ██ ██

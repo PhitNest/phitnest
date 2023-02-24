@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_mobile/src/presentation/widgets/styled/styled_indicator.dart';
 
 import '../../../common/constants/constants.dart';
 import '../../../common/theme.dart';
@@ -203,16 +202,22 @@ class StyledNavBar extends StatelessWidget {
                         onPressed: onPressedExplore,
                       ),
                       60.horizontalSpace,
-                      StyledIndicator(
-                        offset: Size(8, 8),
-                        child: _StyledNavBarPageButton(
-                          text: 'CHAT',
-                          selected: page == NavbarPage.chat,
-                          reversed: reversed,
-                          onPressed: onPressedChat,
-                        ),
-                        count: 5,
+                      _StyledNavBarPageButton(
+                        text: 'CHAT',
+                        selected: page == NavbarPage.chat,
+                        reversed: reversed,
+                        onPressed: onPressedChat,
                       ),
+                      // StyledIndicator(
+                      //   offset: Size(8, 8),
+                      //   child: _StyledNavBarPageButton(
+                      //     text: 'CHAT',
+                      //     selected: page == NavbarPage.chat,
+                      //     reversed: reversed,
+                      //     onPressed: onPressedChat,
+                      //   ),
+                      //   count: 5,
+                      // ),
                       _StyledNavBarPageButton(
                         text: 'OPTIONS',
                         selected: page == NavbarPage.options,

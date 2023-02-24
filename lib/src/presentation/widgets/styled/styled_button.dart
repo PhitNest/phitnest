@@ -6,11 +6,13 @@ import '../../../common/theme.dart';
 class StyledButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  final bool darkMode;
 
   const StyledButton({
     Key? key,
     required this.text,
     required this.onPressed,
+    this.darkMode = false,
   }) : super(key: key);
 
   @override
@@ -18,8 +20,10 @@ class StyledButton extends StatelessWidget {
         key: key,
         onPressed: onPressed,
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.black),
-          foregroundColor: MaterialStateProperty.all(Colors.white),
+          backgroundColor:
+              MaterialStateProperty.all(darkMode ? Colors.white : Colors.black),
+          foregroundColor:
+              MaterialStateProperty.all(darkMode ? Colors.black : Colors.white),
           padding: MaterialStateProperty.all(
             EdgeInsets.symmetric(vertical: 10.h, horizontal: 30.w),
           ),
