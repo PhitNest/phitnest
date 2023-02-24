@@ -22,7 +22,8 @@ abstract class _IExploreLoadedState extends _IExploreState {
   }) : super();
 
   @override
-  List<Object> get props => [currentPageIndex];
+  List<Object> get props =>
+      [Cache.user.userExploreResponse ?? "", currentPageIndex];
 }
 
 mixin _IExploreHoldingState on _IExploreLoadedState {
