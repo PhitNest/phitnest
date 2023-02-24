@@ -14,4 +14,4 @@ Create a file named `.env` in your flutter project directory. Copy the contents 
 
 ### ascii art
 
-Throughout the app, you may notice ascii art. This can be generated here: https://patorjk.com/software/taag/#p=display&h=0&v=0&f=ANSI%20Shadow&t=OPTIONS%20BLOC
+Throughout the app, you may notice ascii art. This can be generated here: https://patorjk.com/software/taag/#p=display&h=0&v=0&f=ANSI%20Regular&t=STATE
