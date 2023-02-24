@@ -43,7 +43,7 @@ class _ExploreBloc extends Bloc<_IExploreEvent, _IExploreState> {
     on<_ExploreLoadedEvent>(onLoaded);
     on<_ExploreSetPageEvent>(onSetPage);
     on<_ExploreSendFriendRequestErrorEvent>(onFriendRequestError);
-    on<_ExploreFriendRequestResponseEvent>(onFriendRequestResponse);
+    on<_ExploreResetEvent>(onReset);
     on<_ExploreFriendshipResponseEvent>(onFriendshipResponse);
     if (state is _IExploreLoadingState) {
       final state = this.state as _IExploreLoadingState;

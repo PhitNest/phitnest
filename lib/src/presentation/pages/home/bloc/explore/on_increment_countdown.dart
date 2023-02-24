@@ -19,7 +19,7 @@ extension _ExploreOnIncrementCountdown on _ExploreBloc {
           )..then(
               (res) => add(
                 res.fold(
-                  (request) => _ExploreFriendRequestResponseEvent(request),
+                  (request) => const _ExploreResetEvent(),
                   (friendship) => _ExploreFriendshipResponseEvent(friendship),
                   (failure) => _ExploreSendFriendRequestErrorEvent(failure),
                 ),
