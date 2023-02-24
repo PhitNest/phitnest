@@ -8,10 +8,12 @@ class _ChatPage extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           if (state is _IChatLoadedState) {
-            if (state.response.isEmpty) {
+            if (Cache.friendship.friendsAndMessages!.isEmpty) {
               return _EmptyChatPage();
             } else {
-              return _AvailableChatPage(messages: state.response);
+              return _AvailableChatPage(
+                messages: Cache.friendship.friendsAndMessages!,
+              );
             }
           } else {
             return _LoadingChatPage();

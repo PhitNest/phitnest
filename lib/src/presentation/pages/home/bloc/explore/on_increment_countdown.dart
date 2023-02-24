@@ -4,41 +4,47 @@ extension _ExploreOnIncrementCountdown on _ExploreBloc {
   void onIncrementCountdown(
       _ExploreIncrementCountdownEvent event, Emitter<_IExploreState> emit) {
     if (state is _IExploreHoldingState) {
-      final sendRequest = CancelableOperation.fromFuture(
-        withAuthEither3(
-          (accessToken) => Backend.friendRequest.send(
-            accessToken: accessToken,
-            recipientCognitoId: '',
-          ),
-        ),
-      )..then(
-          (res) => res.fold(
-            (request) {},
-            (friendship) {},
-            (failure) {},
-          ),
-        );
+      final state = this.state as _IExploreHoldingState;
+      final sendRequest = () => CancelableOperation.fromFuture(
+            withAuthEither3(
+              (accessToken) => Backend.friendRequest.send(
+                accessToken: accessToken,
+                recipientCognitoId: Cache
+                    .user
+                    .userExploreResponse![state.currentPageIndex %
+                        Cache.user.userExploreResponse!.length]
+                    .cognitoId,
+              ),
+            ),
+          )..then(
+              (res) => add(
+                res.fold(
+                  (request) => _ExploreFriendRequestResponseEvent(request),
+                  (friendship) => _ExploreFriendshipResponseEvent(friendship),
+                  (failure) => _ExploreSendFriendRequestErrorEvent(failure),
+                ),
+              ),
+            );
+      final incrementCountdown = () => CancelableOperation.fromFuture(
+            Future.delayed(
+              const Duration(seconds: 1),
+              () {},
+            ),
+          )..then(
+              (_) => add(const _ExploreIncrementCountdownEvent()),
+            );
       if (state is _ExploreHoldingState) {
         final state = this.state as _ExploreHoldingState;
         emit(
           state.countdown > 1
               ? _ExploreHoldingState(
                   currentPageIndex: state.currentPageIndex,
-                  userExploreResponse: state.userExploreResponse,
                   countdown: state.countdown - 1,
-                  incrementCountdown: CancelableOperation.fromFuture(
-                    Future.delayed(
-                      const Duration(seconds: 1),
-                      () {},
-                    ),
-                  )..then(
-                      (_) => add(const _ExploreIncrementCountdownEvent()),
-                    ),
+                  incrementCountdown: incrementCountdown(),
                 )
               : _ExploreSendingFriendRequestState(
                   currentPageIndex: state.currentPageIndex,
-                  userExploreResponse: state.userExploreResponse,
-                  sendRequest: sendRequest,
+                  sendRequest: sendRequest(),
                 ),
         );
       } else if (state is _ExploreHoldingReloadingState) {
@@ -47,23 +53,14 @@ extension _ExploreOnIncrementCountdown on _ExploreBloc {
           state.countdown > 1
               ? _ExploreHoldingReloadingState(
                   currentPageIndex: state.currentPageIndex,
-                  userExploreResponse: state.userExploreResponse,
                   countdown: state.countdown - 1,
                   explore: state.explore,
-                  incrementCountdown: CancelableOperation.fromFuture(
-                    Future.delayed(
-                      const Duration(seconds: 1),
-                      () {},
-                    ),
-                  )..then(
-                      (_) => add(const _ExploreIncrementCountdownEvent()),
-                    ),
+                  incrementCountdown: incrementCountdown(),
                 )
               : _ExploreSendingFriendRequestReloadingState(
                   currentPageIndex: state.currentPageIndex,
                   explore: state.explore,
-                  sendRequest: sendRequest,
-                  userExploreResponse: state.userExploreResponse,
+                  sendRequest: sendRequest(),
                 ),
         );
       }

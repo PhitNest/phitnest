@@ -5,7 +5,6 @@ class _ChatReloadingState extends _IChatLoadedState with _IChatLoadingState {
       conversations;
 
   _ChatReloadingState({
-    required super.response,
     required this.conversations,
   }) : super();
 

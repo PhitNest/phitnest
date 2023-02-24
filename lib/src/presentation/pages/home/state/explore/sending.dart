@@ -10,13 +10,11 @@ class _ExploreSendingFriendRequestState extends _IExploreLoadedState
     int pageIndex,
   ) =>
       _ExploreSendingFriendRequestState(
-        userExploreResponse: userExploreResponse,
         currentPageIndex: pageIndex,
         sendRequest: sendRequest,
       );
 
   const _ExploreSendingFriendRequestState({
-    required super.userExploreResponse,
     required super.currentPageIndex,
     required this.sendRequest,
   }) : super();
@@ -35,14 +33,12 @@ class _ExploreSendingFriendRequestReloadingState extends _IExploreReloadingState
     int pageIndex,
   ) =>
       _ExploreSendingFriendRequestReloadingState(
-        userExploreResponse: userExploreResponse,
         explore: explore,
         currentPageIndex: pageIndex,
         sendRequest: sendRequest,
       );
 
   const _ExploreSendingFriendRequestReloadingState({
-    required super.userExploreResponse,
     required super.explore,
     required super.currentPageIndex,
     required this.sendRequest,

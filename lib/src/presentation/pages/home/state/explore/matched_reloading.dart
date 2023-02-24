@@ -1,20 +1,22 @@
 part of home_page;
 
-class _ExploreMatchedState extends _IExploreLoadedState
+class _ExploreMatchedReloadingState extends _IExploreReloadingState
     with _IExploreMatchedState {
   final FriendshipEntity friendship;
 
   @override
-  _ExploreMatchedState copyWithPageIndex(
+  _ExploreMatchedReloadingState copyWithPageIndex(
     int pageIndex,
   ) =>
-      _ExploreMatchedState(
+      _ExploreMatchedReloadingState(
         currentPageIndex: pageIndex,
         friendship: friendship,
+        explore: explore,
       );
 
-  const _ExploreMatchedState({
+  const _ExploreMatchedReloadingState({
     required super.currentPageIndex,
+    required super.explore,
     required this.friendship,
   }) : super();
 

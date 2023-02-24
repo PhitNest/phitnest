@@ -200,7 +200,7 @@ class StyledNavBar extends StatelessWidget {
                         text: 'EXPLORE',
                         selected: page == NavbarPage.explore,
                         reversed: reversed,
-                        onPressed: onPressedNews,
+                        onPressed: onPressedExplore,
                       ),
                       60.horizontalSpace,
                       StyledIndicator(
@@ -209,7 +209,7 @@ class StyledNavBar extends StatelessWidget {
                           text: 'CHAT',
                           selected: page == NavbarPage.chat,
                           reversed: reversed,
-                          onPressed: onPressedNews,
+                          onPressed: onPressedChat,
                         ),
                         count: 5,
                       ),
@@ -217,7 +217,7 @@ class StyledNavBar extends StatelessWidget {
                         text: 'OPTIONS',
                         selected: page == NavbarPage.options,
                         reversed: reversed,
-                        onPressed: onPressedNews,
+                        onPressed: onPressedOptions,
                       ),
                     ],
                   );
