@@ -1,80 +1,101 @@
 part of home_page;
 
+class AuthMethods {
+  final Future<Either<T, Failure>> Function<T>(
+      Future<Either<T, Failure>> Function(String) f) withAuth;
+  final Future<Failure?> Function(Future<Failure?> Function(String) f)
+      withAuthVoid;
+  final Future<Either3<A, B, Failure>> Function<A, B>(
+      Future<Either3<A, B, Failure>> Function(String) f) withAuthEither3;
+
+  const AuthMethods({
+    required this.withAuth,
+    required this.withAuthVoid,
+    required this.withAuthEither3,
+  });
+}
+
 extension on BuildContext {
-  Future<Either<T, Failure>> withAuth<T>(
-    Future<Either<T, Failure>> Function(String) f,
-  ) =>
-      f(Cache.auth.accessToken!).then(
-        (either) => either.fold(
-          (response) => Left(response),
-          (failure) {
-            if (failure == Failures.unauthorized.instance) {
-              return Repositories.auth
-                  .refreshSession(
-                    email: Cache.user.user!.email,
-                    refreshToken: Cache.auth.refreshToken!,
-                  )
-                  .then(
-                    (either) => either.fold(
-                      (refreshResponse) {
-                        homeBloc.add(_HomeRefreshSessionEvent(refreshResponse));
-                        return f(refreshResponse.accessToken);
-                      },
-                      (failure) => Repositories.auth
-                          .login(
-                            email: Cache.user.user!.email,
-                            password: Cache.auth.password!,
-                          )
-                          .then(
-                            (either) => either.fold(
-                              (loginResponse) => f(loginResponse.accessToken),
-                              (failure) {
-                                optionsBloc
-                                    .add(const _OptionsSignOutResponseEvent());
-                                return Right(failure);
-                              },
+  AuthMethods get authMethods => AuthMethods(
+        withAuth: <T>(
+          Future<Either<T, Failure>> Function(String) f,
+        ) =>
+            f(Cache.auth.accessToken!).then(
+          (either) => either.fold(
+            (response) => Left(response),
+            (failure) {
+              if (failure == Failures.unauthorized.instance) {
+                return Repositories.auth
+                    .refreshSession(
+                      email: Cache.user.user!.email,
+                      refreshToken: Cache.auth.refreshToken!,
+                    )
+                    .then(
+                      (either) => either.fold(
+                        (refreshResponse) {
+                          homeBloc
+                              .add(_HomeRefreshSessionEvent(refreshResponse));
+                          return f(refreshResponse.accessToken);
+                        },
+                        (failure) => Repositories.auth
+                            .login(
+                              email: Cache.user.user!.email,
+                              password: Cache.auth.password!,
+                            )
+                            .then(
+                              (either) => either.fold(
+                                (loginResponse) => f(loginResponse.accessToken),
+                                (failure) {
+                                  optionsBloc.add(
+                                      const _OptionsSignOutResponseEvent());
+                                  return Right(failure);
+                                },
+                              ),
                             ),
-                          ),
+                      ),
+                    );
+              } else {
+                return Right(failure);
+              }
+            },
+          ),
+        ),
+        withAuthVoid: (Future<Failure?> Function(String) f) => this
+            .authMethods
+            .withAuth(
+              (accessToken) => f(accessToken).then(
+                (failure) => failure != null
+                    ? Right<Null, Failure>(failure)
+                    : Left(null),
+              ),
+            )
+            .then(
+              (either) => either.fold(
+                (success) => null,
+                (failure) => failure,
+              ),
+            ),
+        withAuthEither3:
+            <A, B>(Future<Either3<A, B, Failure>> Function(String) f) => this
+                .authMethods
+                .withAuth(
+                  (accessToken) => f(accessToken).then(
+                    (either3) => either3.fold(
+                      (a) => Left(Left<A, B>(a)),
+                      (b) => Left(Right<A, B>(b)),
+                      (failure) => Right<Either<A, B>, Failure>(failure),
                     ),
-                  );
-            } else {
-              return Right(failure);
-            }
-          },
-        ),
-      );
-
-  Future<Failure?> withAuthVoid(Future<Failure?> Function(String) f) =>
-      withAuth(
-        (accessToken) => f(accessToken).then(
-          (failure) =>
-              failure != null ? Right<Null, Failure>(failure) : Left(null),
-        ),
-      ).then(
-        (either) => either.fold(
-          (success) => null,
-          (failure) => failure,
-        ),
-      );
-
-  Future<Either3<A, B, Failure>> withAuthEither3<A, B>(
-          Future<Either3<A, B, Failure>> Function(String) f) =>
-      withAuth(
-        (accessToken) => f(accessToken).then(
-          (either3) => either3.fold(
-            (a) => Left(Left<A, B>(a)),
-            (b) => Left(Right<A, B>(b)),
-            (failure) => Right<Either<A, B>, Failure>(failure),
-          ),
-        ),
-      ).then(
-        (either) => either.fold(
-          (res) => res.fold(
-            (a) => First(a),
-            (b) => Second(b),
-          ),
-          (failure) => Third(failure),
-        ),
+                  ),
+                )
+                .then(
+                  (either) => either.fold(
+                    (res) => res.fold(
+                      (a) => First(a),
+                      (b) => Second(b),
+                    ),
+                    (failure) => Third(failure),
+                  ),
+                ),
       );
 }
 
@@ -125,21 +146,17 @@ class HomePage extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => _ExploreBloc(
-              withAuth: context.withAuth,
-              withAuthVoid: context.withAuthVoid,
-              withAuthEither3: context.withAuthEither3,
+              authMethods: context.authMethods,
             ),
           ),
           BlocProvider(
             create: (context) => _ChatBloc(
-              withAuth: context.withAuth,
-              withAuthVoid: context.withAuthVoid,
+              authMethods: context.authMethods,
             ),
           ),
           BlocProvider(
             create: (context) => _OptionsBloc(
-              withAuth: context.withAuth,
-              withAuthVoid: context.withAuthVoid,
+              authMethods: context.authMethods,
             ),
           ),
         ],

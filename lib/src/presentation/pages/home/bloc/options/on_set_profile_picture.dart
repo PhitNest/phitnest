@@ -11,7 +11,7 @@ extension _OptionsOnSetProfilePicture on _OptionsBloc {
         _OptionsInitialState(
           response: state.response,
           getUser: CancelableOperation.fromFuture(
-            withAuth(
+            authMethods.withAuth(
               (accessToken) =>
                   Repositories.user.getUser(accessToken: accessToken),
             ),

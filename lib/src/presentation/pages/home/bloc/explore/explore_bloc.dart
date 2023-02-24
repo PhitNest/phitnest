@@ -1,23 +1,15 @@
 part of home_page;
 
 class _ExploreBloc extends Bloc<_IExploreEvent, _IExploreState> {
-  final Future<Either<T, Failure>> Function<T>(
-      Future<Either<T, Failure>> Function(String accessToken) f) withAuth;
-  final Future<Either3<A, B, Failure>> Function<A, B>(
-          Future<Either3<A, B, Failure>> Function(String accessToken) f)
-      withAuthEither3;
-  final Future<Failure?> Function(
-      Future<Failure?> Function(String accessToken) f) withAuthVoid;
+  final AuthMethods authMethods;
 
   _ExploreBloc({
-    required this.withAuth,
-    required this.withAuthVoid,
-    required this.withAuthEither3,
+    required this.authMethods,
   }) : super(
           Function.apply(
             () {
               final explore = CancelableOperation.fromFuture(
-                withAuth(
+                authMethods.withAuth(
                   (String accessToken) => Repositories.user.exploreUsers(
                     accessToken: accessToken,
                     gymId: Cache.gym.gym!.id,

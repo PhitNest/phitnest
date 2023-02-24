@@ -6,7 +6,7 @@ extension _ExploreOnIncrementCountdown on _ExploreBloc {
     if (state is _IExploreHoldingState) {
       final state = this.state as _IExploreHoldingState;
       final sendRequest = () => CancelableOperation.fromFuture(
-            withAuthEither3(
+            authMethods.withAuthEither3(
               (accessToken) => Backend.friendRequest.send(
                 accessToken: accessToken,
                 recipientCognitoId: Cache

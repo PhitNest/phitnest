@@ -1,14 +1,10 @@
 part of home_page;
 
 class _OptionsBloc extends Bloc<_IOptionsEvent, _IOptionsState> {
-  final Future<Either<T, Failure>> Function<T>(
-      Future<Either<T, Failure>> Function(String accessToken) f) withAuth;
-  final Future<Failure?> Function(
-      Future<Failure?> Function(String accessToken) f) withAuthVoid;
+  final AuthMethods authMethods;
 
   _OptionsBloc({
-    required this.withAuth,
-    required this.withAuthVoid,
+    required this.authMethods,
   }) : super(
           _OptionsInitialState(
             response: GetUserResponse(
@@ -23,7 +19,7 @@ class _OptionsBloc extends Bloc<_IOptionsEvent, _IOptionsState> {
               gym: Cache.gym.gym!,
             ),
             getUser: CancelableOperation.fromFuture(
-              withAuth(
+              authMethods.withAuth(
                 (accessToken) =>
                     Repositories.user.getUser(accessToken: accessToken),
               ),

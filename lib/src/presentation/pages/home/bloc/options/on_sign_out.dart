@@ -6,7 +6,7 @@ extension _OptionsOnSignOut on _OptionsBloc {
     Emitter<_IOptionsState> emit,
   ) async {
     final signOut = CancelableOperation.fromFuture(
-      withAuthVoid(
+      authMethods.withAuthVoid(
         (accessToken) => Repositories.auth.signOut(
           accessToken: accessToken,
           allDevices: true,

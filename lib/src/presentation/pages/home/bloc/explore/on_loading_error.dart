@@ -5,7 +5,7 @@ extension _ExploreOnLoadingError on _ExploreBloc {
       _ExploreLoadingErrorEvent event, Emitter<_IExploreState> emit) {
     StyledErrorBanner.show(event.failure);
     final explore = CancelableOperation.fromFuture(
-      withAuth(
+      authMethods.withAuth(
         (accessToken) => Repositories.user.exploreUsers(
           accessToken: accessToken,
           gymId: Cache.gym.gym!.id,
