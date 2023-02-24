@@ -41,8 +41,12 @@ export class SocketIOServer implements ISocketServer {
         databases()
           .authDatabase.getCognitoId(token as string)
           .then((cognitoId) => {
-            socket.data.cognitoId = cognitoId;
-            next();
+            if (cognitoId instanceof Failure) {
+              next(new Error("Unauthorized"));
+            } else {
+              socket.data.cognitoId = cognitoId;
+              next();
+            }
           });
       } else {
         next(new Error("Unauthorized"));
