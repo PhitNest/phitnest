@@ -1,19 +1,15 @@
 part of home_page;
 
 class _ChatBloc extends Bloc<_IChatEvent, _IChatState> {
-  final Future<Either<T, Failure>> Function<T>(
-      Future<Either<T, Failure>> Function(String accessToken) f) withAuth;
-  final Future<Failure?> Function(
-      Future<Failure?> Function(String accessToken) f) withAuthVoid;
+  final AuthMethods authMethods;
 
   _ChatBloc({
-    required this.withAuth,
-    required this.withAuthVoid,
+    required this.authMethods,
   }) : super(
           Function.apply(
             () {
               final conversations = CancelableOperation.fromFuture(
-                withAuth(
+                authMethods.withAuth(
                   (accessToken) =>
                       Repositories.friendship.friendsAndMessages(accessToken),
                 ),

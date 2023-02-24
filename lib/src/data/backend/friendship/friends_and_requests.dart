@@ -1,6 +1,6 @@
 part of backend;
 
-class FriendsAndRequestsResponse extends Equatable {
+class FriendsAndRequestsResponse extends Equatable with Serializable {
   final List<PopulatedFriendshipEntity> friendships;
   final List<PopulatedFriendRequestEntity> requests;
 
@@ -20,12 +20,21 @@ class FriendsAndRequestsResponse extends Equatable {
       );
 
   @override
+  Map<String, dynamic> toJson() {
+    return {
+      'friendships': friendships.map((e) => e.toJson()).toList(),
+      'requests': requests.map((e) => e.toJson()).toList(),
+    };
+  }
+
+  @override
   List<Object> get props => [friendships, requests];
 }
 
 extension FriendsAndRequests on Friendship {
   Future<Either<FriendsAndRequestsResponse, Failure>> friendsAndRequests(
-          String accessToken) =>
+    String accessToken,
+  ) =>
       _requestJson(
         route: "/friendship/friendsAndRequests",
         method: HttpMethod.get,

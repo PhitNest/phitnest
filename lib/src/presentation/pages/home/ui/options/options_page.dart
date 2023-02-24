@@ -9,7 +9,7 @@ class _OptionsPage extends StatelessWidget {
         listener: (context, state) async {
           if (state is _OptionsEditProfilePictureState) {
             XFile? result;
-            await context.withAuthVoid(
+            await context.authMethods.withAuthVoid(
               (accessToken) => Navigator.of(context)
                   .push<XFile>(
                 CupertinoPageRoute(

@@ -2,6 +2,7 @@ part of cache;
 
 class _FriendshipCache {
   static const kFriendsAndMessages = 'friendship.friendsAndMessages';
+  static const kFriendsAndRequests = 'friendship.friendsAndRequests';
 
   const _FriendshipCache();
 
@@ -9,6 +10,15 @@ class _FriendshipCache {
       getCachedList(kFriendsAndMessages, FriendsAndMessagesResponse.fromJson);
 
   Future<void> cacheFriendsAndMessages(
-          List<FriendsAndMessagesResponse>? friendsAndMessages) =>
+    List<FriendsAndMessagesResponse>? friendsAndMessages,
+  ) =>
       cacheList(kFriendsAndMessages, friendsAndMessages);
+
+  FriendsAndRequestsResponse? get friendsAndRequests =>
+      getCachedObject(kFriendsAndRequests, FriendsAndRequestsResponse.fromJson);
+
+  Future<void> cacheFriendsAndRequests(
+    FriendsAndRequestsResponse? friendsAndRequests,
+  ) =>
+      cacheObject(kFriendsAndRequests, friendsAndRequests);
 }

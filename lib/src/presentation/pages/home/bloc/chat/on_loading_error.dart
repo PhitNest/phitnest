@@ -4,7 +4,7 @@ extension _ChatOnLoadingError on _ChatBloc {
   void onLoadingError(_ChatLoadingErrorEvent event, Emitter<_IChatState> emit) {
     StyledErrorBanner.show(event.failure);
     final conversations = CancelableOperation.fromFuture(
-      withAuth(
+      authMethods.withAuth(
         (accessToken) => Repositories.friendship.friendsAndMessages(
           accessToken,
         ),
