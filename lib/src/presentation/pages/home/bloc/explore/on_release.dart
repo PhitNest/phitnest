@@ -8,7 +8,6 @@ extension _ExploreOnRelease on _ExploreBloc {
       emit(
         _ExploreLoadedState(
           currentPageIndex: state.currentPageIndex,
-          userExploreResponse: state.userExploreResponse,
         ),
       );
     } else if (state is _ExploreHoldingReloadingState) {
@@ -17,7 +16,6 @@ extension _ExploreOnRelease on _ExploreBloc {
       emit(
         _ExploreReloadingState(
           currentPageIndex: state.currentPageIndex,
-          userExploreResponse: state.userExploreResponse,
           explore: state.explore,
         ),
       );

@@ -47,6 +47,9 @@ part 'bloc/explore/on_loading_error.dart';
 part 'bloc/explore/on_press_down.dart';
 part 'bloc/explore/on_release.dart';
 part 'bloc/explore/on_set_page.dart';
+part 'bloc/explore/on_friend_request_error.dart';
+part 'bloc/explore/on_friend_request_response.dart';
+part 'bloc/explore/on_friendship_response.dart';
 
 // ██╗  ██╗ ██████╗ ███╗   ███╗███████╗    ██████╗ ██╗      ██████╗  ██████╗
 // ██║  ██║██╔═══██╗████╗ ████║██╔════╝    ██╔══██╗██║     ██╔═══██╗██╔════╝
@@ -98,6 +101,9 @@ part 'event/explore/press_down.dart';
 part 'event/explore/release.dart';
 part 'event/explore/matched.dart';
 part 'event/explore/set_page.dart';
+part 'event/explore/send_friend_request_error.dart';
+part 'event/explore/friend_request_response.dart';
+part 'event/explore/friendship_response.dart';
 
 // ██╗  ██╗ ██████╗ ███╗   ███╗███████╗    ███████╗██╗   ██╗███████╗███╗   ██╗████████╗
 // ██║  ██║██╔═══██╗████╗ ████║██╔════╝    ██╔════╝██║   ██║██╔════╝████╗  ██║╚══██╔══╝
@@ -149,6 +155,7 @@ part 'state/explore/loading.dart';
 part 'state/explore/matched.dart';
 part 'state/explore/reloading.dart';
 part 'state/explore/sending.dart';
+part 'state/explore/matched_reloading.dart';
 
 // ██╗  ██╗ ██████╗ ███╗   ███╗███████╗    ███████╗████████╗ █████╗ ████████╗███████╗
 // ██║  ██║██╔═══██╗████╗ ████║██╔════╝    ██╔════╝╚══██╔══╝██╔══██╗╚══██╔══╝██╔════╝

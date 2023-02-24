@@ -11,12 +11,15 @@ class _ExplorePage extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           if (state is _IExploreLoadedState) {
-            if (state.userExploreResponse.isEmpty) {
+            if (Cache.user.userExploreResponse!.isEmpty) {
               return const _ExploreEmptyPage();
             } else {
               return _ExploreLoadedPage(
-                users: state.userExploreResponse,
-                onChangePage: (page) {},
+                currentPageIndex: state.currentPageIndex,
+                users: Cache.user.userExploreResponse!,
+                onChangePage: (page) => context.exploreBloc.add(
+                  _ExploreSetPageEvent(page),
+                ),
                 countdown:
                     state is _IExploreHoldingState ? state.countdown : null,
               );

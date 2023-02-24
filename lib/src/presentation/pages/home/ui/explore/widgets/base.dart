@@ -3,11 +3,13 @@ part of home_page;
 class _ExploreLoadedPage extends StatelessWidget {
   final List<ProfilePicturePublicUserEntity> users;
   final void Function(int pageIndex) onChangePage;
+  final int currentPageIndex;
   final int? countdown;
 
   const _ExploreLoadedPage({
     required this.users,
     required this.onChangePage,
+    required this.currentPageIndex,
     this.countdown,
   }) : super();
 
@@ -19,7 +21,7 @@ class _ExploreLoadedPage extends StatelessWidget {
               onPageChanged: onChangePage,
               itemBuilder: (context, index) => _ExploreCard(
                 countdown: countdown,
-                user: users[index % users.length],
+                user: users[currentPageIndex % users.length],
               ),
             ),
           ),

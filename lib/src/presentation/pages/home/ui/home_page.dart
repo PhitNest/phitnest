@@ -82,11 +82,12 @@ class HomePage extends StatelessWidget {
   /// **POP RESULT: NONE**
   ///
   /// This page is the main page of the app. It contains the [ExplorePage],
-  /// [ChatPage], [OptionsPage] and [StyledNavBar].
+  /// [_ChatPage], [_OptionsPage] and [StyledNavBar].
   ///
-  /// This page requires the [Cache] to be initialized with [Cache.user],
-  /// [Cache.accessToken], [Cache.refreshToken], [Cache.profilePictureUrl],
-  /// [Cache.gym] and [Cache.password].
+  /// This page requires the [Cache] to be initialized with [Cache.user.user],
+  /// [Cache.auth.accessToken], [Cache.auth.refreshToken],
+  /// [Cache.profilePicture.profilePictureUrl], [Cache.gym.gym] and
+  /// [Cache.auth.password].
   HomePage({
     Key? key,
   })  : assert(Cache.user.user != null),
@@ -103,12 +104,14 @@ class HomePage extends StatelessWidget {
       return LogoState.disabled;
     }
     if (!(exploreState is _IExploreLoadedState) ||
-        exploreState is _ExploreSendingFriendRequestState) {
+        exploreState is _IExploreSendingFriendRequestState) {
       return LogoState.loading;
     } else if (exploreState is _IExploreHoldingState) {
       return LogoState.holding;
-    } else if (exploreState is _ExploreMatchedState) {
+    } else if (exploreState is _IExploreMatchedState) {
       return LogoState.reversed;
+    } else if (Cache.user.userExploreResponse!.isEmpty) {
+      return LogoState.disabled;
     } else {
       return LogoState.animated;
     }

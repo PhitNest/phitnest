@@ -13,12 +13,5 @@ mixin _IChatLoadingState on _IChatState {
 }
 
 abstract class _IChatLoadedState extends _IChatState {
-  final List<FriendsAndMessagesResponse> response;
-
-  const _IChatLoadedState({
-    required this.response,
-  }) : super();
-
-  @override
-  List<Object> get props => [response];
+  const _IChatLoadedState() : super();
 }

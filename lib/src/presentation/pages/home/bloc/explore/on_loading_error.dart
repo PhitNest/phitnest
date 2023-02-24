@@ -14,18 +14,35 @@ extension _ExploreOnLoadingError on _ExploreBloc {
     )..then(
         (either) => add(
           either.fold(
-            (response) => _ExploreLoadedEvent(response),
+            (response) => const _ExploreLoadedEvent(),
             (failure) => _ExploreLoadingErrorEvent(failure),
           ),
         ),
       );
-    if (state is _ExploreHoldingReloadingState) {
+    if (state is _ExploreSendingFriendRequestReloadingState) {
+      final state = this.state as _ExploreSendingFriendRequestReloadingState;
+      emit(
+        _ExploreSendingFriendRequestReloadingState(
+          currentPageIndex: state.currentPageIndex,
+          sendRequest: state.sendRequest,
+          explore: explore,
+        ),
+      );
+    } else if (state is _ExploreMatchedReloadingState) {
+      final state = this.state as _ExploreMatchedReloadingState;
+      emit(
+        _ExploreMatchedReloadingState(
+          currentPageIndex: state.currentPageIndex,
+          friendship: state.friendship,
+          explore: explore,
+        ),
+      );
+    } else if (state is _ExploreHoldingReloadingState) {
       final state = this.state as _ExploreHoldingReloadingState;
       emit(
         _ExploreHoldingReloadingState(
           currentPageIndex: state.currentPageIndex,
           explore: explore,
-          userExploreResponse: state.userExploreResponse,
           countdown: state.countdown,
           incrementCountdown: state.incrementCountdown,
         ),
@@ -36,7 +53,6 @@ extension _ExploreOnLoadingError on _ExploreBloc {
         _ExploreReloadingState(
           currentPageIndex: state.currentPageIndex,
           explore: explore,
-          userExploreResponse: state.userExploreResponse,
         ),
       );
     } else {

@@ -13,18 +13,16 @@ mixin _IExploreLoadingState on _IExploreState {
 }
 
 abstract class _IExploreLoadedState extends _IExploreState {
-  final List<ProfilePicturePublicUserEntity> userExploreResponse;
   final int currentPageIndex;
 
   _IExploreLoadedState copyWithPageIndex(int pageIndex);
 
   const _IExploreLoadedState({
-    required this.userExploreResponse,
     required this.currentPageIndex,
   }) : super();
 
   @override
-  List<Object> get props => [userExploreResponse, currentPageIndex];
+  List<Object> get props => [currentPageIndex];
 }
 
 mixin _IExploreHoldingState on _IExploreLoadedState {
@@ -37,6 +35,10 @@ mixin _IExploreSendingFriendRequestState on _IExploreLoadedState {
       get sendRequest;
 }
 
+mixin _IExploreMatchedState on _IExploreLoadedState {
+  FriendshipEntity get friendship;
+}
+
 abstract class _IExploreReloadingState extends _IExploreLoadedState
     with _IExploreLoadingState {
   final CancelableOperation<
@@ -45,7 +47,6 @@ abstract class _IExploreReloadingState extends _IExploreLoadedState
   _IExploreReloadingState copyWithPageIndex(int pageIndex);
 
   const _IExploreReloadingState({
-    required super.userExploreResponse,
     required super.currentPageIndex,
     required this.explore,
   }) : super();

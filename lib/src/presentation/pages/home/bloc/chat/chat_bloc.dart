@@ -10,28 +10,24 @@ class _ChatBloc extends Bloc<_IChatEvent, _IChatState> {
     required this.withAuth,
     required this.withAuthVoid,
   }) : super(
-          Cache.friendship.friendsAndMessages != null
-              ? _ChatReloadingState(
-                  response: Cache.friendship.friendsAndMessages!,
-                  conversations: CancelableOperation.fromFuture(
-                    withAuth(
-                      (accessToken) =>
-                          Repositories.friendship.friendsAndMessages(
-                        Cache.auth.accessToken!,
-                      ),
-                    ),
-                  ),
-                )
-              : _ChatLoadingState(
-                  conversations: CancelableOperation.fromFuture(
-                    withAuth(
-                      (accessToken) =>
-                          Repositories.friendship.friendsAndMessages(
-                        accessToken,
-                      ),
-                    ),
-                  ),
+          Function.apply(
+            () {
+              final conversations = CancelableOperation.fromFuture(
+                withAuth(
+                  (accessToken) =>
+                      Repositories.friendship.friendsAndMessages(accessToken),
                 ),
+              );
+              return Cache.friendship.friendsAndMessages != null
+                  ? _ChatReloadingState(
+                      conversations: conversations,
+                    )
+                  : _ChatLoadingState(
+                      conversations: conversations,
+                    );
+            },
+            [],
+          ),
         ) {
     on<_ChatLoadedEvent>(onLoaded);
     on<_ChatLoadingErrorEvent>(onLoadingError);
