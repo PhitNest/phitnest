@@ -5,7 +5,9 @@ class _ReloadingState extends _ILoadedState with _ILoadingState {
       friendsAndRequests;
 
   const _ReloadingState({
-    required super.searchController,
+    required super.sendingRequests,
+    required super.denyingRequests,
+    required super.removingFriends,
     required this.friendsAndRequests,
   }) : super();
 }
