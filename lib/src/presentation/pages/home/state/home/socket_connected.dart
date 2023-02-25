@@ -1,6 +1,6 @@
 part of home_page;
 
-class _HomeSocketConnectedState extends _IHomeState {
+class _HomeSocketConnectedState extends IHomeState {
   final SocketConnection connection;
   final CancelableOperation<void> onDisconnect;
 

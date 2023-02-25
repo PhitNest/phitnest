@@ -1,9 +1,9 @@
 part of home_page;
 
-abstract class _IHomeState {
+abstract class IHomeState {
   final NavbarPage currentPage;
 
-  const _IHomeState({
+  const IHomeState({
     required this.currentPage,
   }) : super();
 }

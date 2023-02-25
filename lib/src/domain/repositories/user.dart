@@ -8,18 +8,9 @@ class User {
   }) =>
       Backend.user.get(accessToken).then(
             (either) => either.fold(
-              (response) => Future.wait(
-                [
-                  CachedNetworkImage.evictFromCache(
-                      Cache.profilePicture.profilePictureImageCacheKey),
-                  Cache.gym.cacheGym(response.gym),
-                  Cache.user.cacheUser(response),
-                  Cache.profilePicture
-                      .cacheProfilePictureUrl(response.profilePictureUrl),
-                ],
-              ).then(
-                (_) => Left(response),
-              ),
+              (response) => Cache.user.cacheGetUserResponse(response).then(
+                    (_) => Left(response),
+                  ),
               (failure) => Right(failure),
             ),
           );

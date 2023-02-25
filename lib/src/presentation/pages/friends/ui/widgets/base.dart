@@ -50,7 +50,6 @@ class _LoadedPage extends StatelessWidget {
                               width: 68.w,
                               height: 32.h,
                               decoration: BoxDecoration(
-                                // color: Color(0xFFFFE3E3),
                                 borderRadius: BorderRadius.circular(8.r),
                                 border: Border.fromBorderSide(
                                   BorderSide(
@@ -82,7 +81,6 @@ class _LoadedPage extends StatelessWidget {
                           width: 68.w,
                           height: 32.h,
                           decoration: BoxDecoration(
-                            // color: Color(0xFFFFE3E3),
                             borderRadius: BorderRadius.circular(8.r),
                             border: Border.fromBorderSide(
                               BorderSide(

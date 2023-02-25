@@ -1,9 +1,9 @@
 part of home_page;
 
-extension _HomeOnRefreshSession on _HomeBloc {
+extension _HomeOnRefreshSession on HomeBloc {
   void onRefreshSession(
     _HomeRefreshSessionEvent event,
-    Emitter<_IHomeState> emit,
+    Emitter<IHomeState> emit,
   ) async {
     if (state is _HomeInitialState) {
       final state = this.state as _HomeInitialState;

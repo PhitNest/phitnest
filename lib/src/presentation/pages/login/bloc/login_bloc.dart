@@ -60,29 +60,4 @@ class _LoginBloc extends Bloc<_ILoginEvent, _ILoginState> {
 
 extension _Bloc on BuildContext {
   _LoginBloc get bloc => read();
-
-  /// Issue a submit event to the bloc.
-  void submit() => bloc.add(const _SubmitEvent());
-
-  /// Issue a cancel event to the bloc and push [ForgotPasswordPage] onto the navigation stack.
-  void goToForgotPassword() {
-    bloc.add(const _CancelEvent());
-    Navigator.push(
-      this,
-      CupertinoPageRoute(
-        builder: (context) => const ForgotPasswordPage(),
-      ),
-    );
-  }
-
-  /// Issue a cancel event to the bloc and push [RegistrationPage] onto the navigation stack.
-  void goToRegistration() {
-    bloc.add(const _CancelEvent());
-    Navigator.push(
-      this,
-      CupertinoPageRoute(
-        builder: (context) => const RegistrationPage(),
-      ),
-    );
-  }
 }

@@ -24,11 +24,7 @@ import '../gymSearch/gym_search.dart';
 import '../home/home.dart';
 import '../profilePicture/profile_picture.dart';
 
-// ██████  ██       ██████   ██████
-// ██   ██ ██      ██    ██ ██
-// ██████  ██      ██    ██ ██
-// ██   ██ ██      ██    ██ ██
-// ██████  ███████  ██████   ██████
+// ======= BLOC =======
 part 'bloc/on_edit_first_name.dart';
 part 'bloc/on_gym_loading_error.dart';
 part 'bloc/on_gyms_loaded.dart';
@@ -42,11 +38,7 @@ part 'bloc/on_submit_page_two.dart';
 part 'bloc/on_swipe.dart';
 part 'bloc/registration_bloc.dart';
 
-// ███████ ██    ██ ███████ ███    ██ ████████
-// ██      ██    ██ ██      ████   ██    ██
-// █████   ██    ██ █████   ██ ██  ██    ██
-// ██       ██  ██  ██      ██  ██ ██    ██
-// ███████   ████   ███████ ██   ████    ██
+// ======= EVENT =======
 part 'event/base.dart';
 part 'event/edit_first_name.dart';
 part 'event/gym_selected.dart';
@@ -60,11 +52,7 @@ part 'event/swipe.dart';
 part 'event/gyms_loading_error.dart';
 part 'event/gyms_loaded.dart';
 
-// ███████ ████████  █████  ████████ ███████
-// ██         ██    ██   ██    ██    ██
-// ███████    ██    ███████    ██    █████
-//      ██    ██    ██   ██    ██    ██
-// ███████    ██    ██   ██    ██    ███████
+// ======= STATE =======
 part 'state/base.dart';
 part 'state/initial.dart';
 part 'state/gyms_loaded.dart';
@@ -73,11 +61,7 @@ part 'state/success.dart';
 part 'state/gym_selected.dart';
 part 'state/register_loading.dart';
 
-// ██    ██ ██
-// ██    ██ ██
-// ██    ██ ██
-// ██    ██ ██
-//  ██████  ██
+// ======= UI =======
 part 'ui/registration_page.dart';
 part 'ui/widgets/page_four.dart';
 part 'ui/widgets/page_one.dart';

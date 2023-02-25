@@ -62,24 +62,68 @@ class VerificationPage extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          if (state is _ConfirmingState ||
+          final loading = state is _ConfirmingState ||
               state is _ResendingState ||
-              state is _LoginLoadingState) {
-            return _LoadingPage(
-              codeController: context.bloc.codeController,
-              headerText: headerText,
-              email: email,
-            );
-          } else {
-            return _InitialPage(
-              codeController: context.bloc.codeController,
-              onSubmit: () => context.bloc.add(const _SubmitEvent()),
-              onPressedResend: () =>
-                  () => context.bloc.add(const _ResendEvent()),
-              headerText: headerText,
-              email: email,
-            );
-          }
+              state is _LoginLoadingState;
+          return StyledScaffold(
+            body: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: SizedBox(
+                height: 1.sh,
+                child: Column(
+                  children: [
+                    StyledBackButton(),
+                    30.verticalSpace,
+                    Text(
+                      headerText,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.headlineLarge,
+                    ),
+                    40.verticalSpace,
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Text(
+                        "Check $email for a verification code from us and enter it below",
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.labelLarge,
+                      ),
+                    ),
+                    30.verticalSpace,
+                    StyledVerificationField(
+                      controller: context.bloc.codeController,
+                      onCompleted: loading
+                          ? (_) {}
+                          : (_) => context.bloc.add(const _SubmitEvent()),
+                    ),
+                    Expanded(
+                      child: loading
+                          ? Padding(
+                              padding: EdgeInsets.only(top: 20.h),
+                              child: CircularProgressIndicator(),
+                            )
+                          : Column(
+                              children: [
+                                20.verticalSpace,
+                                StyledButton(
+                                  text: 'SUBMIT',
+                                  onPressed: () =>
+                                      context.bloc.add(const _SubmitEvent()),
+                                ),
+                                Spacer(),
+                                StyledUnderlinedTextButton(
+                                  onPressed: () => () =>
+                                      context.bloc.add(const _ResendEvent()),
+                                  text: 'RESEND CODE',
+                                ),
+                                37.verticalSpace,
+                              ],
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
         },
       );
 }

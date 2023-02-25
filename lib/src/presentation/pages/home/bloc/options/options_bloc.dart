@@ -7,17 +7,6 @@ class _OptionsBloc extends Bloc<_IOptionsEvent, _IOptionsState> {
     required this.authMethods,
   }) : super(
           _OptionsInitialState(
-            response: GetUserResponse(
-              id: Cache.user.user!.id,
-              firstName: Cache.user.user!.firstName,
-              email: Cache.user.user!.email,
-              lastName: Cache.user.user!.lastName,
-              cognitoId: Cache.user.user!.cognitoId,
-              confirmed: Cache.user.user!.confirmed,
-              profilePictureUrl: Cache.profilePicture.profilePictureUrl!,
-              gymId: Cache.user.user!.gymId,
-              gym: Cache.gym.gym!,
-            ),
             getUser: CancelableOperation.fromFuture(
               authMethods.withAuth(
                 (accessToken) =>
@@ -29,9 +18,11 @@ class _OptionsBloc extends Bloc<_IOptionsEvent, _IOptionsState> {
     if (state is _OptionsInitialState) {
       final getUser = (state as _OptionsInitialState).getUser;
       getUser.then(
-        (either) => either.fold(
-          (response) => add(_OptionsLoadedUserEvent(response: response)),
-          (failure) => add(_OptionsErrorEvent(failure: failure)),
+        (either) => add(
+          either.fold(
+            (response) => const _OptionsLoadedUserEvent(),
+            (failure) => _OptionsErrorEvent(failure: failure),
+          ),
         ),
       );
     }

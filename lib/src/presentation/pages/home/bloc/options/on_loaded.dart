@@ -5,9 +5,5 @@ extension _OptionsOnLoaded on _OptionsBloc {
     _OptionsLoadedUserEvent event,
     Emitter<_IOptionsState> emit,
   ) =>
-      emit(
-        _OptionsLoadedUserState(
-          response: event.response,
-        ),
-      );
+      emit(const _OptionsLoadedUserState());
 }

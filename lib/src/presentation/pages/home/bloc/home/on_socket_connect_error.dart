@@ -1,9 +1,9 @@
 part of home_page;
 
-extension _HomeOnSocketConnectError on _HomeBloc {
+extension _HomeOnSocketConnectError on HomeBloc {
   void onSocketConnectError(
     _HomeSocketConnectErrorEvent event,
-    Emitter<_IHomeState> emit,
+    Emitter<IHomeState> emit,
   ) =>
       emit(
         _HomeInitialState(

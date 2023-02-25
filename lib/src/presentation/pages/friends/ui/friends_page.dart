@@ -1,17 +1,30 @@
 part of friends_page;
 
 class FriendsPage extends StatelessWidget {
-  final Stream<FriendRequestEntity> friendRequests;
-  final Stream<FriendshipEntity> friendships;
+  final HomeBloc homeBloc;
 
   const FriendsPage({
     Key? key,
-    required this.friendRequests,
-    required this.friendships,
+    required this.homeBloc,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return const _LoadedPage();
-  }
+  Widget build(BuildContext context) => BlocProvider.value(
+        value: homeBloc,
+        child: BlocConsumer<HomeBloc, IHomeState>(
+          listener: (context, state) {},
+          builder: (context, homeState) => BlocWidget(
+            create: (context) => _FriendsBloc(
+              authMethods: context.authMethods,
+            ),
+            builder: (context, state) {
+              if (state is _ILoadedState) {
+                return const _LoadedPage();
+              } else {
+                return const _LoadingPage();
+              }
+            },
+          ),
+        ),
+      );
 }

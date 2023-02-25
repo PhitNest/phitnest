@@ -8,16 +8,17 @@ extension _OptionsOnError on _OptionsBloc {
     StyledErrorBanner.show(event.failure);
     emit(
       _OptionsInitialState(
-        response: state.response,
         getUser: CancelableOperation.fromFuture(
           authMethods.withAuth(
             (accessToken) =>
                 Repositories.user.getUser(accessToken: accessToken),
           ),
         )..then(
-            (either) => either.fold(
-              (response) => add(_OptionsLoadedUserEvent(response: response)),
-              (failure) => add(_OptionsErrorEvent(failure: failure)),
+            (either) => add(
+              either.fold(
+                (response) => const _OptionsLoadedUserEvent(),
+                (failure) => _OptionsErrorEvent(failure: failure),
+              ),
             ),
           ),
       ),

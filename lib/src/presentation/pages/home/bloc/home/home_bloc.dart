@@ -1,6 +1,6 @@
 part of home_page;
 
-class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
+class HomeBloc extends Bloc<_IHomeEvent, IHomeState> {
   /// Control unit for the business logic of the [HomePage] widget.
   ///
   /// **STATE MACHINE:**
@@ -14,7 +14,7 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
   /// * **[_HomeSocketConnectedState]**
   ///   * on *[_HomeRefreshSessionEvent]* -> *[_HomeInitialState]*
   ///   * on *[_HomeSetPageEvent]* -> *[_HomeSocketConnectedState]*
-  _HomeBloc()
+  HomeBloc()
       : super(
           Function.apply(
             () {
@@ -61,5 +61,5 @@ class _HomeBloc extends Bloc<_IHomeEvent, _IHomeState> {
 }
 
 extension _HomeBlocExt on BuildContext {
-  _HomeBloc get homeBloc => read();
+  HomeBloc get homeBloc => read();
 }
