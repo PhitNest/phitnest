@@ -38,4 +38,5 @@ part 'state/sending.dart';
 // ======= UI =====
 part 'ui/message_page.dart';
 part 'ui/widgets/base.dart';
-part 'ui/widgets/empty_message.dart';part 'ui/widgets/message_loaded.dart';
+part 'ui/widgets/empty_message.dart';
+part 'ui/widgets/loading.dart';part 'ui/widgets/message_loaded.dart';
