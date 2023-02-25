@@ -37,6 +37,15 @@ class _FriendsBloc extends Bloc<_IFriendsEvent, _IFriendsState> {
     on<_LoadedEvent>(onLoaded);
     on<_LoadingErrorEvent>(onLoadingError);
     on<_EditSearchEvent>(onEditSearch);
+    on<_AddFriendEvent>(onAddFriend);
+    on<_RemoveFriendEvent>(onRemoveFriend);
+    on<_DenyRequestEvent>(onDenyRequest);
+    on<_AddFriendErrorEvent>(onAddFriendError);
+    on<_AddFriendSuccessEvent>(onAddFriendSuccess);
+    on<_RemoveFriendErrorEvent>(onRemoveFriendError);
+    on<_RemoveFriendSuccessEvent>(onRemoveFriendSuccess);
+    on<_DenyRequestErrorEvent>(onDenyRequestError);
+    on<_DenyRequestSuccessEvent>(onDenyRequestSuccess);
     if (state is _ILoadingState) {
       final state = this.state as _ILoadingState;
       state.friendsAndRequests.then(
