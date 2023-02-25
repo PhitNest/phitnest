@@ -15,7 +15,7 @@ class AuthMethods {
   });
 }
 
-extension on BuildContext {
+extension HomeAuthMethods on BuildContext {
   AuthMethods get authMethods => AuthMethods(
         withAuth: <T>(
           Future<Either<T, Failure>> Function(String) f,
@@ -105,22 +105,17 @@ class HomePage extends StatelessWidget {
   /// This page is the main page of the app. It contains the [ExplorePage],
   /// [_ChatPage], [_OptionsPage] and [StyledNavBar].
   ///
-  /// This page requires the [Cache] to be initialized with [Cache.user.user],
-  /// [Cache.auth.accessToken], [Cache.auth.refreshToken],
-  /// [Cache.profilePicture.profilePictureUrl], [Cache.gym.gym] and
-  /// [Cache.auth.password].
+  /// This page requires the [Cache] to be initialized with [Cache.user.userResponse],
+  /// [Cache.auth.accessToken], [Cache.auth.refreshToken], [Cache.auth.password].
   HomePage({
     Key? key,
-  })  : assert(Cache.user.user != null),
-        assert(Cache.auth.accessToken != null),
+  })  : assert(Cache.auth.accessToken != null),
         assert(Cache.auth.refreshToken != null),
-        assert(Cache.profilePicture.profilePictureUrl != null),
-        assert(Cache.gym.gym != null),
         assert(Cache.auth.password != null),
+        assert(Cache.user.userResponse != null),
         super(key: key);
 
-  LogoState logoButtonState(
-      _IHomeState homeState, _IExploreState exploreState) {
+  LogoState logoButtonState(IHomeState homeState, _IExploreState exploreState) {
     if (homeState.currentPage != NavbarPage.explore) {
       return LogoState.disabled;
     }
@@ -142,7 +137,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) => MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => _HomeBloc(),
+            create: (context) => HomeBloc(),
           ),
           BlocProvider(
             create: (context) => _ExploreBloc(
@@ -160,7 +155,7 @@ class HomePage extends StatelessWidget {
             ),
           ),
         ],
-        child: BlocConsumer<_HomeBloc, _IHomeState>(
+        child: BlocConsumer<HomeBloc, IHomeState>(
           listener: (context, state) {},
           builder: (context, state) => StyledScaffold(
             safeArea: false,

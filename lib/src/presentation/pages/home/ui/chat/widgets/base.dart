@@ -27,18 +27,24 @@ abstract class _IChatPageBase extends StatelessWidget {
                 StyledIndicator(
                   offset: Size(2, 0),
                   child: TextButton(
-                    onPressed: () => Navigator.push(
-                      context,
-                      CupertinoPageRoute(builder: (context) => Container()
-                          //FriendsPage(),
+                    onPressed: () {
+                      final homeBloc = context.homeBloc;
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => FriendsPage(
+                            homeBloc: homeBloc,
                           ),
-                    ),
+                        ),
+                      );
+                    },
                     child: Text(
                       'FRIENDS',
                       style: theme.textTheme.bodySmall,
                     ),
                   ),
-                  count: 5,
+                  count:
+                      Cache.friendship.friendsAndRequests?.requests.length ?? 0,
                 ),
                 12.horizontalSpace,
               ],

@@ -1,9 +1,9 @@
 part of home_page;
 
-extension _HomeOnSetPage on _HomeBloc {
+extension _HomeOnSetPage on HomeBloc {
   void onSetPage(
     _HomeSetPageEvent event,
-    Emitter<_IHomeState> emit,
+    Emitter<IHomeState> emit,
   ) {
     if (state is _HomeInitialState) {
       final state = this.state as _HomeInitialState;

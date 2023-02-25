@@ -1,6 +1,6 @@
 part of home_page;
 
-class _HomeInitialState extends _IHomeState {
+class _HomeInitialState extends IHomeState {
   final CancelableOperation<Either<SocketConnection, Failure>> socketConnection;
 
   _HomeInitialState({

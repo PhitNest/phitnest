@@ -19,11 +19,7 @@ import '../../../domain/use_cases/use_cases.dart';
 import '../../widgets/widgets.dart';
 import '../profilePicture/profile_picture.dart';
 
-// ██████  ██       ██████   ██████
-// ██   ██ ██      ██    ██ ██
-// ██████  ██      ██    ██ ██
-// ██   ██ ██      ██    ██ ██
-// ██████  ███████  ██████   ██████
+// ======= BLOC =======
 part 'bloc/verification_bloc.dart';
 part 'bloc/on_confirm_error.dart';
 part 'bloc/on_login_response.dart';
@@ -32,21 +28,10 @@ part 'bloc/on_resend.dart';
 part 'bloc/on_submit.dart';
 part 'bloc/on_confirm_success.dart';
 
-// ██    ██ ██
-// ██    ██ ██
-// ██    ██ ██
-// ██    ██ ██
-//  ██████  ██
+// ======= UI =======
 part 'ui/verification_page.dart';
-part 'ui/widgets/base.dart';
-part 'ui/widgets/initial.dart';
-part 'ui/widgets/loading.dart';
 
-// ███████ ██    ██ ███████ ███    ██ ████████
-// ██      ██    ██ ██      ████   ██    ██
-// █████   ██    ██ █████   ██ ██  ██    ██
-// ██       ██  ██  ██      ██  ██ ██    ██
-// ███████   ████   ███████ ██   ████    ██
+// ======= EVENT =======
 part 'event/base.dart';
 part 'event/error.dart';
 part 'event/login_response.dart';
@@ -55,11 +40,7 @@ part 'event/reset.dart';
 part 'event/submit.dart';
 part 'event/resend.dart';
 
-// ███████ ████████  █████  ████████ ███████
-// ██         ██    ██   ██    ██    ██
-// ███████    ██    ███████    ██    █████
-//      ██    ██    ██   ██    ██    ██
-// ███████    ██    ██   ██    ██    ███████
+// ======= STATE =======
 part 'state/base.dart';
 part 'state/confirming.dart';
 part 'state/success.dart';

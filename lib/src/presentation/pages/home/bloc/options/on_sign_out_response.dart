@@ -5,5 +5,5 @@ extension _OptionsOnSignOutResponse on _OptionsBloc {
     _OptionsSignOutResponseEvent event,
     Emitter<_IOptionsState> emit,
   ) =>
-      emit(_OptionsSignOutState(response: state.response));
+      emit(const _OptionsSignOutState());
 }

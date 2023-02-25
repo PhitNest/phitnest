@@ -1,9 +1,9 @@
 part of home_page;
 
-extension _HomeOnSocketConnected on _HomeBloc {
+extension _HomeOnSocketConnected on HomeBloc {
   void onSocketConnected(
     _HomeSocketConnectedEvent event,
-    Emitter<_IHomeState> emit,
+    Emitter<IHomeState> emit,
   ) =>
       emit(
         _HomeSocketConnectedState(

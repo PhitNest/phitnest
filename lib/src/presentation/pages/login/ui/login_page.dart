@@ -46,28 +46,100 @@ class LoginPage extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          if (state is _LoadingState) {
-            return _LoadingPage(
-              emailController: context.bloc.emailController,
-              passwordController: context.bloc.passwordController,
-              formKey: context.bloc.formKey,
-              autovalidateMode: state.autovalidateMode,
-              invalidCredentials: state.invalidCredentials,
-              onPressedForgotPassword: context.goToForgotPassword,
-              onPressedRegister: context.goToRegistration,
-            );
-          } else {
-            return _InitialPage(
-              autovalidateMode: state.autovalidateMode,
-              emailController: context.bloc.emailController,
-              formKey: context.bloc.formKey,
-              passwordController: context.bloc.passwordController,
-              invalidCredentials: state.invalidCredentials,
-              onPressedForgotPassword: context.goToForgotPassword,
-              onPressedRegister: context.goToRegistration,
-              onSubmit: context.submit,
-            );
-          }
+          return StyledScaffold(
+            body: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: SizedBox(
+                height: 1.sh,
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    80.verticalSpace,
+                    Image.asset(
+                      Assets.logo.path,
+                      width: 61.59.w,
+                    ),
+                    25.verticalSpace,
+                    Text(
+                      'PhitNest is Better Together',
+                      style: theme.textTheme.headlineMedium,
+                    ),
+                    40.verticalSpace,
+                    SizedBox(
+                      width: 291.w,
+                      child: Form(
+                        key: context.bloc.formKey,
+                        autovalidateMode: state.autovalidateMode,
+                        child: Column(
+                          children: [
+                            StyledUnderlinedTextField(
+                              controller: context.bloc.emailController,
+                              hint: 'Email',
+                              errorMaxLines: 1,
+                              keyboardType: TextInputType.emailAddress,
+                              textInputAction: TextInputAction.next,
+                              validator: (value) =>
+                                  validateEmail(value) ??
+                                  // Check if invalidCredentials contains the entered credentials
+                                  (state.invalidCredentials.any((credentials) =>
+                                          credentials.value1 == value &&
+                                          credentials.value2 ==
+                                              context
+                                                  .bloc.passwordController.text)
+                                      ? 'Invalid email/password'
+                                      : null),
+                            ),
+                            StyledPasswordField(
+                              controller: context.bloc.passwordController,
+                              hint: 'Password',
+                              textInputAction: TextInputAction.done,
+                              validator: (value) => validatePassword(value),
+                              onFieldSubmitted: (_) =>
+                                  context.bloc.add(const _SubmitEvent()),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    16.verticalSpace,
+                    state is _LoadingState
+                        ? const CircularProgressIndicator()
+                        : StyledButton(
+                            text: 'SIGN IN',
+                            onPressed: () =>
+                                context.bloc.add(const _SubmitEvent()),
+                          ),
+                    Spacer(),
+                    StyledUnderlinedTextButton(
+                      text: 'FORGOT PASSWORD?',
+                      onPressed: () {
+                        context.bloc.add(const _CancelEvent());
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => const ForgotPasswordPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    StyledUnderlinedTextButton(
+                      text: 'REGISTER',
+                      onPressed: () {
+                        context.bloc.add(const _CancelEvent());
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => const RegistrationPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    48.verticalSpace,
+                  ],
+                ),
+              ),
+            ),
+          );
         },
       );
 }
