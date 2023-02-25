@@ -1,4 +1,4 @@
-part of message_page;
+part of message;
 
 class _MessageCard extends StatelessWidget {
   final bool sentByMe;
