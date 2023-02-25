@@ -8,7 +8,7 @@ class _LoadingPage extends _IBasePage {
     required this.name,
   }) : super(
           key: key,
-          child: CircularProgressIndicator(),
+          child: Expanded(child: Center(child: CircularProgressIndicator())),
           name: name,
         );
 }
