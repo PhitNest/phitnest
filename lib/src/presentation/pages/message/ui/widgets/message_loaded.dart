@@ -1,14 +1,12 @@
 part of message;
 
 class _MessageLoaded extends _IBasePage {
-  final String message;
-  final bool sentByMe;
+  final List<DirectMessageEntity>? message;
   final String name;
 
   _MessageLoaded({
     Key? key,
     required this.message,
-    required this.sentByMe,
     required this.name,
   }) : super(
           key: key,
@@ -25,10 +23,11 @@ class _MessageLoaded extends _IBasePage {
                     keyboardDismissBehavior:
                         ScrollViewKeyboardDismissBehavior.onDrag,
                     physics: ClampingScrollPhysics(),
-                    itemCount: 15,
+                    itemCount: message!.length,
                     itemBuilder: (context, index) => StyledMessageCard(
-                      message: message,
-                      sentByMe: sentByMe,
+                      message: message[index].text,
+                      sentByMe: message[index].senderCognitoId ==
+                          Cache.user.user!.cognitoId,
                     ),
                   ),
                 ),
