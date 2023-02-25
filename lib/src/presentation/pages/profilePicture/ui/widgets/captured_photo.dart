@@ -57,7 +57,6 @@ class _ICapturedPhotoPage extends StatelessWidget {
   Widget build(BuildContext context) => StyledScaffold(
         body: Column(
           children: [
-            40.verticalSpace,
             StyledBackButton(),
             Image(
               image: XFileImage(

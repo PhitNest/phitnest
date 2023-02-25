@@ -62,7 +62,6 @@ class _CameraActiveBasePage extends StatelessWidget {
   Widget build(BuildContext context) => StyledScaffold(
         body: Column(
           children: [
-            40.verticalSpace,
             StyledBackButton(),
             StyledProfilePictureCamera(
               cameraController: cameraController,

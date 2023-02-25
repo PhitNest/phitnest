@@ -8,11 +8,4 @@ class _CameraLoadingState extends _IProfilePictureState {
     required this.cameraController,
     required this.initializeCamera,
   }) : super();
-
-  @override
-  List<Object> get props => [
-        cameraController,
-        initializeCamera.isCanceled,
-        initializeCamera.isCompleted
-      ];
 }

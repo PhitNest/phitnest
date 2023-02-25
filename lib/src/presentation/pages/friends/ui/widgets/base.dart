@@ -1,13 +1,11 @@
-part of friends;
+part of friends_page;
 
-class IBaseFriendsPage extends StatelessWidget {
-  const IBaseFriendsPage({Key? key}) : super(key: key);
+class _LoadedPage extends StatelessWidget {
+  const _LoadedPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return StyledScaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
+  Widget build(BuildContext context) => StyledScaffold(
+        body: SingleChildScrollView(
           child: Column(
             children: [
               StyledBackButton(),
@@ -104,7 +102,5 @@ class IBaseFriendsPage extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
+      );
 }

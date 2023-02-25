@@ -35,11 +35,9 @@ class User {
           )
           .then(
             (either) => either.fold(
-              (response) => Future.value(
+              (response) => Future.wait(
                 [
-                  Cache.user
-                      .cacheUserExplore(response)
-                      .then((_) => Left(response)),
+                  Cache.user.cacheUserExplore(response),
                   ...response.map(
                     (user) => CachedNetworkImage.evictFromCache(
                       Cache.profilePicture

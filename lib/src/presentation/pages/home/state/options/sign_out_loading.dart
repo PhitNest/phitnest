@@ -7,8 +7,4 @@ class _OptionsSignOutLoadingState extends _IOptionsLoadedState {
     required super.response,
     required this.signOut,
   }) : super();
-
-  @override
-  List<Object> get props =>
-      [super.props, signOut.isCanceled, signOut.isCompleted];
 }

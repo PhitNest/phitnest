@@ -1,7 +1,6 @@
 part of registration_page;
 
 class _PageTwo extends StatelessWidget {
-  final double keyboardPadding;
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
@@ -15,7 +14,6 @@ class _PageTwo extends StatelessWidget {
   final Set<String> takenEmails;
 
   const _PageTwo({
-    required this.keyboardPadding,
     required this.emailController,
     required this.passwordController,
     required this.confirmPasswordController,
@@ -32,7 +30,7 @@ class _PageTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          (120 - keyboardPadding / 8).verticalSpace,
+          80.verticalSpace,
           Text(
             "Hi, $firstName.\nLet's make an account.",
             style: theme.textTheme.headlineLarge,
@@ -80,7 +78,7 @@ class _PageTwo extends StatelessWidget {
               ),
             ),
           ),
-          (40 - keyboardPadding / 10).verticalSpace,
+          40.verticalSpace,
           StyledButton(
             onPressed: onSubmit,
             text: "NEXT",

@@ -12,7 +12,4 @@ class _SuccessState extends _IRegistrationState {
     required this.response,
     required this.password,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, response, password];
 }

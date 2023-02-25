@@ -13,7 +13,4 @@ class _RegisterLoadingState extends _IGymSelectedState {
     required super.location,
     required this.registerOp,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, registerOp.value];
 }

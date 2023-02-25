@@ -10,7 +10,4 @@ class _InitialState extends _IRegistrationState {
     required super.takenEmails,
     required this.loadGymsOp,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, loadGymsOp.value];
 }

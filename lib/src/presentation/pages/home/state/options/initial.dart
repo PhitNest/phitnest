@@ -7,7 +7,4 @@ class _OptionsInitialState extends _IOptionsState {
     required super.response,
     required this.getUser,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, getUser.value];
 }

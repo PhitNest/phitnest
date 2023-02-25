@@ -6,8 +6,4 @@ class _InitialState extends _IProfilePictureState {
   const _InitialState({
     required this.getFrontCamera,
   }) : super();
-
-  @override
-  List<Object> get props =>
-      [getFrontCamera.isCanceled, getFrontCamera.isCompleted];
 }

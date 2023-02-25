@@ -7,7 +7,4 @@ class _ExploreLoadingState extends _IExploreState with _IExploreLoadingState {
   const _ExploreLoadingState({
     required this.explore,
   }) : super();
-
-  @override
-  List<Object> get props => [explore.value];
 }

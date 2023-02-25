@@ -18,9 +18,6 @@ class _ExploreSendingFriendRequestState extends _IExploreLoadedState
     required super.currentPageIndex,
     required this.sendRequest,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, sendRequest.value];
 }
 
 class _ExploreSendingFriendRequestReloadingState extends _IExploreReloadingState
@@ -43,7 +40,4 @@ class _ExploreSendingFriendRequestReloadingState extends _IExploreReloadingState
     required super.currentPageIndex,
     required this.sendRequest,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, sendRequest.value];
 }

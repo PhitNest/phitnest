@@ -152,7 +152,6 @@ class RegistrationPage extends StatelessWidget {
                                 );
                               case 1:
                                 return _PageTwo(
-                                  keyboardPadding: keyboardHeight,
                                   formKey: context.bloc.pageTwoFormKey,
                                   takenEmails: state.takenEmails,
                                   emailController: context.bloc.emailController,

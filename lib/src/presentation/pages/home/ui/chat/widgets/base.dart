@@ -9,40 +9,42 @@ abstract class _IChatPageBase extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          55.verticalSpace,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              151.horizontalSpace,
-              Text(
-                'Chat',
-                style: theme.textTheme.headlineLarge,
-              ),
-              Spacer(),
-              StyledIndicator(
-                offset: Size(2, 0),
-                child: TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => FriendsPage(),
+  Widget build(BuildContext context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            15.verticalSpace,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                151.horizontalSpace,
+                Text(
+                  'Chat',
+                  style: theme.textTheme.headlineLarge,
+                ),
+                Spacer(),
+                StyledIndicator(
+                  offset: Size(2, 0),
+                  child: TextButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (context) => Container()
+                          //FriendsPage(),
+                          ),
+                    ),
+                    child: Text(
+                      'FRIENDS',
+                      style: theme.textTheme.bodySmall,
                     ),
                   ),
-                  child: Text(
-                    'FRIENDS',
-                    style: theme.textTheme.bodySmall,
-                  ),
+                  count: 5,
                 ),
-                count: 5,
-              ),
-              12.horizontalSpace,
-            ],
-          ),
-          child,
-        ],
+                12.horizontalSpace,
+              ],
+            ),
+            child,
+          ],
+        ),
       );
 }

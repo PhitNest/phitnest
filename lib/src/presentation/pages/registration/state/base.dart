@@ -1,6 +1,6 @@
 part of registration_page;
 
-abstract class _IRegistrationState extends Equatable {
+abstract class _IRegistrationState {
   final bool firstNameConfirmed;
   final int currentPage;
   final AutovalidateMode autovalidateMode;
@@ -12,10 +12,6 @@ abstract class _IRegistrationState extends Equatable {
     required this.autovalidateMode,
     required this.takenEmails,
   }) : super();
-
-  @override
-  List<Object> get props =>
-      [firstNameConfirmed, currentPage, autovalidateMode, takenEmails];
 }
 
 abstract class _IGymsLoadedState extends _IRegistrationState {
@@ -30,9 +26,6 @@ abstract class _IGymsLoadedState extends _IRegistrationState {
     required this.location,
     required this.gyms,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, location, gyms];
 }
 
 abstract class _IGymSelectedState extends _IGymsLoadedState {
@@ -47,7 +40,4 @@ abstract class _IGymSelectedState extends _IGymsLoadedState {
     required super.takenEmails,
     required this.gym,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, gym];
 }

@@ -7,8 +7,4 @@ class _CaptureLoadingState extends _IInitializedState {
     required super.cameraController,
     required this.captureImage,
   }) : super();
-
-  @override
-  List<Object> get props =>
-      [super.props, captureImage.isCanceled, captureImage.isCompleted];
 }

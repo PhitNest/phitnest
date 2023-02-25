@@ -20,7 +20,7 @@ class OnBoardingPage extends StatelessWidget {
             width: double.infinity,
             child: Column(
               children: [
-                120.verticalSpace,
+                80.verticalSpace,
                 Text(
                   "It takes a village\nto live a healthy life",
                   style: theme.textTheme.headlineLarge,

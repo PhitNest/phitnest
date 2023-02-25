@@ -4,7 +4,6 @@ abstract class _ILoginPage extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final GlobalKey<FormState> formKey;
-  final double keyboardHeight;
   final AutovalidateMode autovalidateMode;
   final VoidCallback? onSubmit;
   final VoidCallback onPressedForgotPassword;
@@ -17,7 +16,6 @@ abstract class _ILoginPage extends StatelessWidget {
     required this.emailController,
     required this.passwordController,
     required this.formKey,
-    required this.keyboardHeight,
     required this.autovalidateMode,
     required this.child,
     required this.onPressedForgotPassword,
@@ -35,8 +33,7 @@ abstract class _ILoginPage extends StatelessWidget {
             width: double.infinity,
             child: Column(
               children: [
-                // Responsive padding
-                max(0, 120 - keyboardHeight / 5).verticalSpace,
+                80.verticalSpace,
                 Image.asset(
                   Assets.logo.path,
                   width: 61.59.w,

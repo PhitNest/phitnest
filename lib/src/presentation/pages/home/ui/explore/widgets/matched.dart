@@ -14,10 +14,11 @@ class _ExploreMatchedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
+        width: double.infinity,
         color: Colors.black,
         child: Column(
           children: [
-            240.verticalSpace,
+            200.verticalSpace,
             Text("$fullName\nwants to meet you too!",
                 textAlign: TextAlign.center,
                 style: theme.textTheme.headlineMedium!
@@ -26,11 +27,13 @@ class _ExploreMatchedPage extends StatelessWidget {
             StyledButton(
               text: "SAY HELLO",
               onPressed: onPressedSayHello,
+              darkMode: true,
             ),
             Spacer(),
             StyledUnderlinedTextButton(
               text: 'MEET MORE FRIENDS',
               onPressed: onPressedMeetMore,
+              darkMode: true,
             ),
             28.verticalSpace,
           ],

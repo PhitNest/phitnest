@@ -1,8 +1,18 @@
-part of friends;
+part of friends_page;
 
-abstract class _IFriendsState extends Equatable {
+abstract class _IFriendsState {
   const _IFriendsState();
+}
 
-  @override
-  List<Object> get props => [];
+abstract class _ILoadedState extends _IFriendsState {
+  final TextEditingController searchController;
+
+  const _ILoadedState({
+    required this.searchController,
+  });
+}
+
+mixin _ILoadingState on _IFriendsState {
+  CancelableOperation<Either<FriendsAndRequestsResponse, Failure>>
+      get friendsAndRequests;
 }

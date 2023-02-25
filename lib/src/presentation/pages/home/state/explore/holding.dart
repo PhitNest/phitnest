@@ -17,9 +17,6 @@ class _ExploreHoldingState extends _IExploreLoadedState
     required this.countdown,
     required this.incrementCountdown,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, countdown, incrementCountdown.value];
 }
 
 class _ExploreHoldingReloadingState extends _IExploreReloadingState
@@ -42,7 +39,4 @@ class _ExploreHoldingReloadingState extends _IExploreReloadingState
     required this.countdown,
     required this.incrementCountdown,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, countdown, incrementCountdown.value];
 }

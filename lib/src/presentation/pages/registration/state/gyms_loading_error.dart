@@ -10,7 +10,4 @@ class _GymsLoadingErrorState extends _IRegistrationState {
     required super.takenEmails,
     required this.failure,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, failure];
 }

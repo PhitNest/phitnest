@@ -8,7 +8,6 @@ class _InitialPage extends _ILoginPage {
     required super.emailController,
     required super.passwordController,
     required super.formKey,
-    required super.keyboardHeight,
     required super.onPressedForgotPassword,
     required super.onPressedRegister,
   }) : super(

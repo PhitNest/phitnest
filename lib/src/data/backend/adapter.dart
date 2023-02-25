@@ -184,14 +184,9 @@ Future<Either3<Map<String, dynamic>, List<dynamic>, Failure>> _requestRaw({
       },
     );
   } catch (e) {
-    if (e is Failure) {
-      prettyLogger.e(
-          "Response failure:${description(e)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
-      return Third(e);
-    } else {
-      prettyLogger.e(e);
-      return Third(Failures.networkFailure.instance);
-    }
+    prettyLogger.e(
+        "Response failure:${description(e)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
+    return e is Failure ? Third(e) : Third(Failures.networkFailure.instance);
   }
 }
 

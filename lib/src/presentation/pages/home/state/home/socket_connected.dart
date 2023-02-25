@@ -9,7 +9,4 @@ class _HomeSocketConnectedState extends _IHomeState {
     required this.connection,
     required this.onDisconnect,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, connection, onDisconnect.value];
 }

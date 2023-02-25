@@ -7,7 +7,4 @@ class _ChatReloadingState extends _IChatLoadedState with _IChatLoadingState {
   _ChatReloadingState({
     required this.conversations,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, conversations.value];
 }

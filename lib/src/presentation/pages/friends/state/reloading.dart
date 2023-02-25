@@ -1,8 +1,11 @@
-part of friends;
+part of friends_page;
 
-class _FriendsReloadingState extends _IFriendsState {
-  const _FriendsReloadingState() : super();
+class _ReloadingState extends _ILoadedState with _ILoadingState {
+  final CancelableOperation<Either<FriendsAndRequestsResponse, Failure>>
+      friendsAndRequests;
 
-  @override
-  List<Object> get props => [];
+  const _ReloadingState({
+    required super.searchController,
+    required this.friendsAndRequests,
+  }) : super();
 }

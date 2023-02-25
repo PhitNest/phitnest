@@ -8,7 +8,4 @@ class _SuccessState extends _ILoginState {
     required super.invalidCredentials,
     required this.response,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, response];
 }

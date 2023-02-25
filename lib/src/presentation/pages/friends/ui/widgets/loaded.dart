@@ -1,1 +1,1 @@
-part of friends;
+part of friends_page;
