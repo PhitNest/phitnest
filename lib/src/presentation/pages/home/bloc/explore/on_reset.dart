@@ -4,9 +4,6 @@ extension _ExploreOnReset on _ExploreBloc {
   void onReset(_ExploreResetEvent event, Emitter<_IExploreState> emit) async {
     if (state is _IExploreSendingFriendRequestState) {
       final state = this.state as _IExploreSendingFriendRequestState;
-      await Cache.user.cacheUserExplore(Cache.user.userExploreResponse!
-        ..removeAt(
-            state.currentPageIndex % Cache.user.userExploreResponse!.length));
       if (state is _ExploreSendingFriendRequestReloadingState) {
         final state = this.state as _ExploreSendingFriendRequestReloadingState;
         emit(

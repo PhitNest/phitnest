@@ -25,6 +25,7 @@ part 'gym/gym.dart';
 part 'profilePicture/profile_picture.dart';
 part 'user/user.dart';
 
+// ====== AUTH ======
 part 'auth/login.dart';
 part 'auth/confirm_register.dart';
 part 'auth/forgot_password_submit.dart';
@@ -34,19 +35,26 @@ part 'auth/resend_confirmation.dart';
 part 'auth/refresh_session.dart';
 part 'auth/sign_out.dart';
 
+// ====== DIRECT MESSAGE ======
 part 'directMessage/get_direct_messages.dart';
 
+// ====== FRIEND REQUEST ======
 part 'friendRequest/deny.dart';
 part 'friendRequest/send.dart';
 
+// ====== FRIENDSHIP ======
 part 'friendship/friends_and_messages.dart';
 part 'friendship/friends_and_requests.dart';
+part 'friendship/remove.dart';
 
+// ====== GYM ======
 part 'gym/nearest.dart';
 
+// ====== PROFILE PICTURE ======
 part 'profilePicture/unauthorized.dart';
 part 'profilePicture/upload.dart';
 
+// ====== USER ======
 part 'user/get.dart';
 part 'user/explore.dart';
 

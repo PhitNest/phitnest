@@ -81,24 +81,25 @@ class FriendsPage extends StatelessWidget {
                                   ),
                             SliverList(
                               delegate: SliverChildListDelegate(
-                                filteredRequests
-                                        ?.map(
-                                          (request) => _FriendRequestCard(
-                                            user: request.fromUser,
-                                            onAdd: () {},
-                                            onIgnore: () {},
+                                filteredRequests?.map(
+                                      (request) {
+                                        state as _ILoadedState;
+                                        return _FriendRequestCard(
+                                          user: request.fromUser,
+                                          loading: state.denyingRequests
+                                                  .containsKey(
+                                                      request.fromUser.id) ||
+                                              state.sendingRequests.containsKey(
+                                                  request.fromUser.id),
+                                          onAdd: () => context.bloc.add(
+                                            _AddFriendEvent(request.fromUser),
                                           ),
-                                        )
-                                        .expand((elem) => [
-                                              elem,
-                                              elem,
-                                              elem,
-                                              elem,
-                                              elem,
-                                              elem,
-                                              elem,
-                                            ])
-                                        .toList() ??
+                                          onIgnore: () => context.bloc.add(
+                                            _DenyRequestEvent(request.fromUser),
+                                          ),
+                                        );
+                                      },
+                                    ).toList() ??
                                     const [CircularProgressIndicator()],
                               ),
                             ),
@@ -130,18 +131,17 @@ class FriendsPage extends StatelessWidget {
                                         .map(
                                           (friendship) => _FriendCard(
                                             name: friendship.friend.fullName,
-                                            onRemove: () {},
+                                            loading: (state as _ILoadedState)
+                                                .removingFriends
+                                                .containsKey(
+                                                    friendship.friend.id),
+                                            onRemove: () => context.bloc.add(
+                                              _RemoveFriendEvent(
+                                                friendship.friend,
+                                              ),
+                                            ),
                                           ),
                                         )
-                                        .expand((elem) => [
-                                              elem,
-                                              elem,
-                                              elem,
-                                              elem,
-                                              elem,
-                                              elem,
-                                              elem,
-                                            ])
                                         .toList() ??
                                     const [CircularProgressIndicator()],
                               ),

@@ -3,11 +3,13 @@ part of friends_page;
 class _FriendCard extends StatelessWidget {
   final String name;
   final VoidCallback onRemove;
+  final bool loading;
 
   const _FriendCard({
     Key? key,
     required this.name,
     required this.onRemove,
+    required this.loading,
   }) : super(key: key);
 
   @override
@@ -25,10 +27,16 @@ class _FriendCard extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             Spacer(),
-            _LightButton(
-              onTap: onRemove,
-              text: 'REMOVE',
-            ),
+            loading
+                ? Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : _LightButton(
+                    onTap: onRemove,
+                    text: 'REMOVE',
+                  ),
           ],
         ),
       );
