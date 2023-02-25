@@ -5,10 +5,18 @@ abstract class _IFriendsState {
 }
 
 abstract class _ILoadedState extends _IFriendsState {
-  final TextEditingController searchController;
+  final Map<
+          String,
+          CancelableOperation<
+              Either3<FriendRequestEntity, FriendshipEntity, Failure>>>
+      sendingRequests;
+  final Map<String, CancelableOperation<Failure?>> denyingRequests;
+  final Map<String, CancelableOperation<Failure?>> removingFriends;
 
   const _ILoadedState({
-    required this.searchController,
+    required this.sendingRequests,
+    required this.denyingRequests,
+    required this.removingFriends,
   });
 }
 

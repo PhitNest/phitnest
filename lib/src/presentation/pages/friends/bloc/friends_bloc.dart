@@ -2,9 +2,11 @@ part of friends_page;
 
 class _FriendsBloc extends Bloc<_IFriendsEvent, _IFriendsState> {
   final AuthMethods authMethods;
+  final searchController = TextEditingController();
 
-  _FriendsBloc({required this.authMethods})
-      : super(
+  _FriendsBloc({
+    required this.authMethods,
+  }) : super(
           Function.apply(
             () {
               final friendsAndRequests = CancelableOperation.fromFuture(
@@ -16,7 +18,9 @@ class _FriendsBloc extends Bloc<_IFriendsEvent, _IFriendsState> {
               return Cache.friendship.friendsAndRequests != null
                   ? _ReloadingState(
                       friendsAndRequests: friendsAndRequests,
-                      searchController: TextEditingController(),
+                      sendingRequests: {},
+                      denyingRequests: {},
+                      removingFriends: {},
                     )
                   : _LoadingState(
                       friendsAndRequests: friendsAndRequests,
@@ -25,8 +29,14 @@ class _FriendsBloc extends Bloc<_IFriendsEvent, _IFriendsState> {
             [],
           ),
         ) {
+    searchController.addListener(
+      () => add(
+        _EditSearchEvent(),
+      ),
+    );
     on<_LoadedEvent>(onLoaded);
     on<_LoadingErrorEvent>(onLoadingError);
+    on<_EditSearchEvent>(onEditSearch);
     if (state is _ILoadingState) {
       final state = this.state as _ILoadingState;
       state.friendsAndRequests.then(
@@ -42,9 +52,17 @@ class _FriendsBloc extends Bloc<_IFriendsEvent, _IFriendsState> {
 
   @override
   Future<void> close() async {
+    searchController.dispose();
     if (state is _ILoadedState) {
       final state = this.state as _ILoadedState;
-      state.searchController.dispose();
+      await Future.wait([
+        state.denyingRequests,
+        state.removingFriends,
+        state.sendingRequests
+      ]
+          .map((map) => map.entries)
+          .expand((entries) => entries)
+          .map((entry) => entry.value.cancel()));
     }
     if (state is _ILoadingState) {
       final state = this.state as _ILoadingState;
@@ -52,4 +70,8 @@ class _FriendsBloc extends Bloc<_IFriendsEvent, _IFriendsState> {
     }
     return super.close();
   }
+}
+
+extension _FriendsBlocExt on BuildContext {
+  _FriendsBloc get bloc => read();
 }
