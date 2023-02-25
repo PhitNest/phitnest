@@ -1,5 +1,5 @@
-part of friends;
+part of friends_page;
 
-class _LoadingPage extends IBaseFriendsPage {
+class _LoadingPage extends _LoadedPage {
   const _LoadingPage() : super();
 }

@@ -16,7 +16,7 @@ class Friendship {
             ),
           );
 
-  Future<Either<FriendsAndRequestsResponse, Failure>> friendsAndRequest(
+  Future<Either<FriendsAndRequestsResponse, Failure>> friendsAndRequests(
     String accessToken,
   ) =>
       Backend.friendship.friendsAndRequests(accessToken).then(

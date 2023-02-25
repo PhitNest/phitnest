@@ -10,27 +10,31 @@ class _AvailableChatPage extends _IChatPageBase {
           key: key,
           child: Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 28.w),
+              padding: EdgeInsets.only(left: 28.w, right: 28.w, top: 16.h),
               child: ListView.builder(
                 itemCount: messages.length,
                 itemBuilder: (context, index) => Column(
                   children: [
                     ListTile(
-                      tileColor: Color(0x84DFDFDF),
+                      tileColor: Color.fromARGB(49, 223, 223, 223),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       title: Text(
-                        messages[index % messages.length]
-                            .friendship
-                            .friend
-                            .fullName,
+                        messages[index].friendship.friend.fullName,
                         style: theme.textTheme.headlineSmall,
                       ),
-                      subtitle: Text(
-                        messages[index % messages.length].message!.text,
-                        style: theme.textTheme.bodyMedium!.copyWith(
-                          color: Color(0xFF6B6B6B),
+                      subtitle: Padding(
+                        padding: EdgeInsets.only(top: 4.h),
+                        child: Text(
+                          messages[index].message?.text ??
+                              "Say hello to your new friend!",
+                          style: theme.textTheme.bodyMedium!.copyWith(
+                            color: Color(0xFF6B6B6B),
+                            fontWeight: messages[index].message == null
+                                ? FontWeight.bold
+                                : null,
+                          ),
                         ),
                       ),
                     ),

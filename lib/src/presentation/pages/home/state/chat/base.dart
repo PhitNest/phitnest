@@ -1,10 +1,7 @@
 part of home_page;
 
-abstract class _IChatState extends Equatable {
+abstract class _IChatState {
   const _IChatState() : super();
-
-  @override
-  List<Object> get props => [Cache.friendship.friendsAndMessages ?? ""];
 }
 
 mixin _IChatLoadingState on _IChatState {

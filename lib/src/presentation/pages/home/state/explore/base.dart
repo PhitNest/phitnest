@@ -1,10 +1,7 @@
 part of home_page;
 
-abstract class _IExploreState extends Equatable {
+abstract class _IExploreState {
   const _IExploreState() : super();
-
-  @override
-  List<Object> get props => [];
 }
 
 mixin _IExploreLoadingState on _IExploreState {
@@ -20,10 +17,6 @@ abstract class _IExploreLoadedState extends _IExploreState {
   const _IExploreLoadedState({
     required this.currentPageIndex,
   }) : super();
-
-  @override
-  List<Object> get props =>
-      [Cache.user.userExploreResponse ?? "", currentPageIndex];
 }
 
 mixin _IExploreHoldingState on _IExploreLoadedState {
@@ -37,7 +30,7 @@ mixin _IExploreSendingFriendRequestState on _IExploreLoadedState {
 }
 
 mixin _IExploreMatchedState on _IExploreLoadedState {
-  FriendshipEntity get friendship;
+  PopulatedFriendshipEntity get friendship;
 }
 
 abstract class _IExploreReloadingState extends _IExploreLoadedState
@@ -51,7 +44,4 @@ abstract class _IExploreReloadingState extends _IExploreLoadedState
     required super.currentPageIndex,
     required this.explore,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, explore.value];
 }

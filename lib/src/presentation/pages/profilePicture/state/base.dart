@@ -1,6 +1,6 @@
 part of profile_picture_page;
 
-abstract class _IProfilePictureState extends Equatable {
+abstract class _IProfilePictureState {
   const _IProfilePictureState() : super();
 }
 
@@ -10,9 +10,6 @@ abstract class _IInitializedState extends _IProfilePictureState {
   const _IInitializedState({
     required this.cameraController,
   }) : super();
-
-  @override
-  List<Object> get props => [cameraController];
 }
 
 abstract class _ICapturedState extends _IInitializedState {
@@ -22,7 +19,4 @@ abstract class _ICapturedState extends _IInitializedState {
     required super.cameraController,
     required this.file,
   }) : super();
-
-  @override
-  List<Object> get props => [file];
 }

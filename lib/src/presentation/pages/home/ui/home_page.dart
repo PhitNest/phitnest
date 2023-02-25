@@ -163,6 +163,7 @@ class HomePage extends StatelessWidget {
         child: BlocConsumer<_HomeBloc, _IHomeState>(
           listener: (context, state) {},
           builder: (context, state) => StyledScaffold(
+            safeArea: false,
             body: SingleChildScrollView(
               child: SizedBox(
                 height: 1.sh,

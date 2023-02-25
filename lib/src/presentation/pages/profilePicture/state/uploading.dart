@@ -8,8 +8,4 @@ class _UploadingState extends _ICapturedState {
     required super.file,
     required this.uploadImage,
   }) : super();
-
-  @override
-  List<Object> get props =>
-      [super.props, uploadImage.isCanceled, uploadImage.isCompleted];
 }

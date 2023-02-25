@@ -1,8 +1,5 @@
-part of friends;
+part of friends_page;
 
-abstract class _IFriendsEvent extends Equatable {
+abstract class _IFriendsEvent {
   const _IFriendsEvent();
-
-  @override
-  List<Object> get props => [];
 }

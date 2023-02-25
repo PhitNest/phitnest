@@ -46,10 +46,8 @@ class LoginPage extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
           if (state is _LoadingState) {
             return _LoadingPage(
-              keyboardHeight: keyboardHeight,
               emailController: context.bloc.emailController,
               passwordController: context.bloc.passwordController,
               formKey: context.bloc.formKey,
@@ -64,7 +62,6 @@ class LoginPage extends StatelessWidget {
               emailController: context.bloc.emailController,
               formKey: context.bloc.formKey,
               passwordController: context.bloc.passwordController,
-              keyboardHeight: keyboardHeight,
               invalidCredentials: state.invalidCredentials,
               onPressedForgotPassword: context.goToForgotPassword,
               onPressedRegister: context.goToRegistration,

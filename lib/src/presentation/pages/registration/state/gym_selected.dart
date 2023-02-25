@@ -10,7 +10,4 @@ class _GymSelectedState extends _IGymSelectedState {
     required super.gym,
     required super.takenEmails,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, gym, takenEmails];
 }

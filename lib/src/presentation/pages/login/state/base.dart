@@ -1,6 +1,6 @@
 part of login_page;
 
-abstract class _ILoginState extends Equatable {
+abstract class _ILoginState {
   final AutovalidateMode autovalidateMode;
 
   /// These are credentials that we received [Failures.invalidPassword] from the backend for.
@@ -11,7 +11,4 @@ abstract class _ILoginState extends Equatable {
     required this.autovalidateMode,
     required this.invalidCredentials,
   }) : super();
-
-  @override
-  List<Object> get props => [autovalidateMode, invalidCredentials];
 }

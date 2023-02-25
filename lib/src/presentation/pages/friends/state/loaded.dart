@@ -1,5 +1,7 @@
-part of friends;
+part of friends_page;
 
-class _FriendsLoadedState extends _IFriendsState {
-  const _FriendsLoadedState() ;
+class _LoadedState extends _ILoadedState {
+  const _LoadedState({
+    required super.searchController,
+  }) : super();
 }

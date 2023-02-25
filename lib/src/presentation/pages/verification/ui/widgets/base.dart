@@ -24,7 +24,6 @@ class _IBasePage extends StatelessWidget {
             height: 1.sh,
             child: Column(
               children: [
-                40.verticalSpace,
                 StyledBackButton(),
                 30.verticalSpace,
                 Text(

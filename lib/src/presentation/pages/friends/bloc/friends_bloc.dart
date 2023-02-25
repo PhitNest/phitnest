@@ -1,29 +1,55 @@
-part of friends;
+part of friends_page;
 
 class _FriendsBloc extends Bloc<_IFriendsEvent, _IFriendsState> {
   final AuthMethods authMethods;
 
   _FriendsBloc({required this.authMethods})
       : super(
-    Function.apply(() {
-      final friendAndReq = CancelableOperation.fromFuture(
-          authMethods.withAuth((accessToken) =>
-              Repositories.friendship.friendsAndRequest(accessToken)));
-
-      return Cache.friendship.friendsAndRequests != null
-          ? _FriendsReloadingState(
-        friendAndReq: friendAndReq,
-      )
-          : _FriendsLoadingState(
-        friendAndReq: friendAndReq,
+          Function.apply(
+            () {
+              final friendsAndRequests = CancelableOperation.fromFuture(
+                authMethods.withAuth(
+                  (accessToken) =>
+                      Repositories.friendship.friendsAndRequests(accessToken),
+                ),
+              );
+              return Cache.friendship.friendsAndRequests != null
+                  ? _ReloadingState(
+                      friendsAndRequests: friendsAndRequests,
+                      searchController: TextEditingController(),
+                    )
+                  : _LoadingState(
+                      friendsAndRequests: friendsAndRequests,
+                    );
+            },
+            [],
+          ),
+        ) {
+    on<_LoadedEvent>(onLoaded);
+    on<_LoadingErrorEvent>(onLoadingError);
+    if (state is _ILoadingState) {
+      final state = this.state as _ILoadingState;
+      state.friendsAndRequests.then(
+        (either) => add(
+          either.fold(
+            (response) => const _LoadedEvent(),
+            (failure) => _LoadingErrorEvent(failure),
+          ),
+        ),
       );
-    }, []),
-  ) {
-    // on<>((event, emit) => null);
+    }
   }
 
   @override
-  Future<void> close() {
+  Future<void> close() async {
+    if (state is _ILoadedState) {
+      final state = this.state as _ILoadedState;
+      state.searchController.dispose();
+    }
+    if (state is _ILoadingState) {
+      final state = this.state as _ILoadingState;
+      await state.friendsAndRequests.cancel();
+    }
     return super.close();
   }
 }

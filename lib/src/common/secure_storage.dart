@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'logger.dart';
 import 'utils/utils.dart';
 
 final _secureStorage = FlutterSecureStorage(
@@ -20,9 +22,13 @@ Future<void> loadSecureStorage() async {
 Future<void> cacheObject<T extends Serializable>(String key, T? value) async {
   if (value != null) {
     _stringifiedCache[key] = jsonEncode(value.toJson());
+    _lazyLoadedCache[key] = value;
+    prettyLogger.d(
+        "Caching Object:\n\tkey: $key${StringUtils.addCharAtPosition("\n\tvalue: $value", '\n\t', 100, repeat: true)}");
     await _secureStorage.write(key: key, value: _stringifiedCache[key]);
   } else {
-    _lazyLoadedCache.remove(key);
+    prettyLogger.d(
+        "Removing Cached Object:\n\tkey: $key${StringUtils.addCharAtPosition("\n\tvalue: ${_lazyLoadedCache.remove(key)}", '\n\t', 100, repeat: true)}");
     _stringifiedCache.remove(key);
     await _secureStorage.delete(key: key);
   }
@@ -65,9 +71,13 @@ Future<void> cacheList<T extends Serializable>(
 ) async {
   if (value != null) {
     _stringifiedCache[key] = jsonEncode(value.map((e) => e.toJson()).toList());
+    _lazyLoadedListCache[key] = value;
+    prettyLogger.d(
+        "Caching List:\n\tkey: $key${StringUtils.addCharAtPosition("\n\tvalue: $value", '\n\t', 100, repeat: true)}");
     await _secureStorage.write(key: key, value: _stringifiedCache[key]);
   } else {
-    _lazyLoadedListCache.remove(key);
+    prettyLogger.d(
+        "Removing Cached List:\n\tkey: $key${StringUtils.addCharAtPosition("\n\tvalue: ${_lazyLoadedListCache.remove(key)}", '\n\t', 100, repeat: true)}");
     _stringifiedCache.remove(key);
     await _secureStorage.delete(key: key);
   }
@@ -75,9 +85,12 @@ Future<void> cacheList<T extends Serializable>(
 
 Future<void> cacheString(String key, String? value) async {
   if (value != null) {
+    prettyLogger.d(
+        "Caching String:\n\tkey: $key${StringUtils.addCharAtPosition("\n\tvalue: $value", '\n\t', 100, repeat: true)}");
     _stringifiedCache[key] = value;
   } else {
-    _stringifiedCache.remove(key);
+    prettyLogger.d(
+        "Removing Cached String:\n\tkey: $key${StringUtils.addCharAtPosition("old value: ${_stringifiedCache.remove(key)}", '\n\t', 100, repeat: true)}");
   }
   await _secureStorage.write(key: key, value: value);
 }

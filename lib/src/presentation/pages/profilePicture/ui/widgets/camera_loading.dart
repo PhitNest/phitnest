@@ -21,7 +21,6 @@ abstract class _ICameraLoadingPage extends StatelessWidget {
   Widget build(BuildContext context) => StyledScaffold(
         body: Column(
           children: [
-            40.verticalSpace,
             StyledBackButton(),
             160.verticalSpace,
             child,

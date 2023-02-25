@@ -2,7 +2,7 @@ part of home_page;
 
 class _ExploreMatchedReloadingState extends _IExploreReloadingState
     with _IExploreMatchedState {
-  final FriendshipEntity friendship;
+  final PopulatedFriendshipEntity friendship;
 
   @override
   _ExploreMatchedReloadingState copyWithPageIndex(
@@ -19,7 +19,4 @@ class _ExploreMatchedReloadingState extends _IExploreReloadingState
     required super.explore,
     required this.friendship,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, friendship];
 }

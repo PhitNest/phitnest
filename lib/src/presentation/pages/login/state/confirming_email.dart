@@ -16,7 +16,4 @@ class _ConfirmingEmailState extends _ILoginState {
     required this.email,
     required this.password,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, email, password];
 }

@@ -6,7 +6,4 @@ class _ResendingState extends _IVerificationState {
   const _ResendingState({
     required this.resend,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, resend.value];
 }

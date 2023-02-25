@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +20,7 @@ import '../../../domain/entities/entities.dart';
 import '../../../domain/repositories/repository.dart';
 import '../../../domain/use_cases/use_cases.dart';
 import '../../widgets/widgets.dart';
-import '../friends/friends.dart';
+import '../message/message.dart';
 import '../pages.dart';
 
 //  ██████ ██   ██  █████  ████████     ██████  ██       ██████   ██████
@@ -95,7 +94,6 @@ part 'event/explore/loaded.dart';
 part 'event/explore/loading_error.dart';
 part 'event/explore/press_down.dart';
 part 'event/explore/release.dart';
-part 'event/explore/matched.dart';
 part 'event/explore/set_page.dart';
 part 'event/explore/send_friend_request_error.dart';
 part 'event/explore/reset.dart';

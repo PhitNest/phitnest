@@ -19,7 +19,7 @@ class _ProfilePictureInstructions extends StatelessWidget {
             child: Column(
               children: [
                 double.infinity.horizontalSpace,
-                96.verticalSpace,
+                56.verticalSpace,
                 Text(
                   "Let's put a face\nto your name",
                   style: theme.textTheme.headlineLarge,

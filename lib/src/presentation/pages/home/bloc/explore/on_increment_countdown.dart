@@ -5,26 +5,33 @@ extension _ExploreOnIncrementCountdown on _ExploreBloc {
       _ExploreIncrementCountdownEvent event, Emitter<_IExploreState> emit) {
     if (state is _IExploreHoldingState) {
       final state = this.state as _IExploreHoldingState;
-      final sendRequest = () => CancelableOperation.fromFuture(
-            authMethods.withAuthEither3(
-              (accessToken) => Backend.friendRequest.send(
-                accessToken: accessToken,
-                recipientCognitoId: Cache
-                    .user
-                    .userExploreResponse![state.currentPageIndex %
-                        Cache.user.userExploreResponse!.length]
-                    .cognitoId,
+      final sendRequest = () {
+        final user = Cache.user.userExploreResponse![
+            state.currentPageIndex % Cache.user.userExploreResponse!.length];
+        return CancelableOperation.fromFuture(
+          authMethods.withAuthEither3(
+            (accessToken) => Backend.friendRequest.send(
+              accessToken: accessToken,
+              recipientCognitoId: user.cognitoId,
+            ),
+          ),
+        )..then(
+            (res) => add(
+              res.fold(
+                (request) => const _ExploreResetEvent(),
+                (friendship) => _ExploreFriendshipResponseEvent(
+                  PopulatedFriendshipEntity(
+                    createdAt: friendship.createdAt,
+                    id: friendship.id,
+                    userCognitoIds: friendship.userCognitoIds,
+                    friend: user,
+                  ),
+                ),
+                (failure) => _ExploreSendFriendRequestErrorEvent(failure),
               ),
             ),
-          )..then(
-              (res) => add(
-                res.fold(
-                  (request) => const _ExploreResetEvent(),
-                  (friendship) => _ExploreFriendshipResponseEvent(friendship),
-                  (failure) => _ExploreSendFriendRequestErrorEvent(failure),
-                ),
-              ),
-            );
+          );
+      };
       final incrementCountdown = () => CancelableOperation.fromFuture(
             Future.delayed(
               const Duration(seconds: 1),

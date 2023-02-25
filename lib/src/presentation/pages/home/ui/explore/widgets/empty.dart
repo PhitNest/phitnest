@@ -6,7 +6,7 @@ class _ExploreEmptyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          200.verticalSpace,
+          160.verticalSpace,
           Text(
             "More friends\nare on the way.",
             style: theme.textTheme.headlineLarge,

@@ -18,7 +18,6 @@ class GymSearchPage extends StatelessWidget {
         builder: (context, child) => StyledScaffold(
           body: Column(
             children: [
-              40.verticalSpace,
               StyledBackButton(),
               Expanded(
                 child: Consumer<_GymSearchState>(

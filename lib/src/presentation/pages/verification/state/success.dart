@@ -6,7 +6,4 @@ class _SuccessState extends _InitialState {
   const _SuccessState({
     required this.response,
   }) : super();
-
-  @override
-  List<Object> get props => [response ?? ""];
 }

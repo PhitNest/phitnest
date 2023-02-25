@@ -1,9 +1,7 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BlocWidget<B extends Bloc<dynamic, S>, S extends Equatable>
-    extends StatefulWidget {
+class BlocWidget<B extends Bloc<dynamic, S>, S> extends StatefulWidget {
   final B Function(BuildContext context) create;
   final Widget Function(BuildContext, S) builder;
   final void Function(BuildContext, S)? listener;
@@ -19,7 +17,7 @@ class BlocWidget<B extends Bloc<dynamic, S>, S extends Equatable>
   _BlocWidgetState<B, S> createState() => _BlocWidgetState<B, S>();
 }
 
-class _BlocWidgetState<B extends Bloc<dynamic, S>, S extends Equatable>
+class _BlocWidgetState<B extends Bloc<dynamic, S>, S>
     extends State<BlocWidget<B, S>> {
   @override
   Widget build(BuildContext context) => BlocProvider<B>(

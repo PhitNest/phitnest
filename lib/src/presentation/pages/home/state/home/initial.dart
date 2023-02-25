@@ -7,7 +7,4 @@ class _HomeInitialState extends _IHomeState {
     required super.currentPage,
     required this.socketConnection,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, socketConnection.value];
 }

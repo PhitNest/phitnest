@@ -6,7 +6,4 @@ class _LoginLoadingState extends _IVerificationState {
   const _LoginLoadingState({
     required this.login,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, login.value];
 }

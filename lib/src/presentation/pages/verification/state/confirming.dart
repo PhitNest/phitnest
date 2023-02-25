@@ -6,7 +6,4 @@ class _ConfirmingState extends _IVerificationState {
   const _ConfirmingState({
     required this.confirm,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, confirm.value];
 }

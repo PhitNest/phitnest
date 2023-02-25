@@ -27,9 +27,8 @@ class _PageOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          40.verticalSpace,
           StyledBackButton(),
-          (32 - keyboardPadding / 10).verticalSpace,
+          32.verticalSpace,
           Text(
             "Let's get started!\nWhat can we call you?",
             style: theme.textTheme.headlineLarge,
@@ -68,7 +67,7 @@ class _PageOne extends StatelessWidget {
               ),
             ),
           ),
-          (105 - keyboardPadding / 4).verticalSpace,
+          105.verticalSpace,
           StyledButton(
             onPressed: onSubmit,
             text: "NEXT",

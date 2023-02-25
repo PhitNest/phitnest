@@ -7,11 +7,4 @@ class _LoadingState extends _IForgotPasswordState {
     required super.autovalidateMode,
     required this.forgotPassOperation,
   }) : super();
-
-  @override
-  List<Object> get props => [
-        super.props,
-        forgotPassOperation.isCompleted,
-        forgotPassOperation.isCanceled
-      ];
 }

@@ -8,7 +8,4 @@ class _LoadingState extends _ILoginState {
     required super.invalidCredentials,
     required this.loginOperation,
   }) : super();
-
-  @override
-  List<Object> get props => [super.props, loginOperation.value];
 }
