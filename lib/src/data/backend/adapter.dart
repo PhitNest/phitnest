@@ -96,25 +96,27 @@ Future<Either<SocketConnection, Failure>> connectSocket(
         .setExtraHeaders({'token': authorization})
         .build(),
   )..connect();
-  _socket
-    ..onConnect(
-      (_) {
-        prettyLogger.d("Connected to the websocket server.");
-        completer.complete(
-          SocketConnection._(
-            _socket,
-            disconnectCompleter,
-          ),
-        );
-      },
-    )
-    ..onDisconnect(
-      (_) {
-        _socket.clearListeners();
-        prettyLogger.d("Disconnected from the websocket server.");
-        disconnectCompleter.complete();
-      },
-    );
+  _socket.once(
+    'connect',
+    (_) {
+      prettyLogger.d("Connected to the websocket server.");
+      completer.complete(
+        SocketConnection._(
+          _socket,
+          disconnectCompleter,
+        ),
+      );
+    },
+  );
+  _socket.once(
+    'disconnect',
+    (_) {
+      print(_socket);
+      _socket.clearListeners();
+      prettyLogger.d("Disconnected from the websocket server.");
+      disconnectCompleter.complete();
+    },
+  );
   try {
     return Left(await (completer.future.timeout(_timeout)));
   } catch (err) {
