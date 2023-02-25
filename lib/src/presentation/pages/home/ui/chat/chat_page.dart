@@ -13,6 +13,18 @@ class _ChatPage extends StatelessWidget {
             } else {
               return _AvailableChatPage(
                 messages: Cache.friendship.friendsAndMessages!,
+                onTap: (conversation) {
+                  final homeBloc = context.homeBloc;
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => MessagePage(
+                        homeBloc: homeBloc,
+                        friendship: conversation.friendship,
+                      ),
+                    ),
+                  );
+                },
               );
             }
           } else {
