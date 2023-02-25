@@ -2,10 +2,12 @@ part of home_page;
 
 class _AvailableChatPage extends _IChatPageBase {
   final List<FriendsAndMessagesResponse> messages;
+  final ValueChanged<FriendsAndMessagesResponse> onTap;
 
   _AvailableChatPage({
     Key? key,
     required this.messages,
+    required this.onTap,
   }) : super(
           key: key,
           child: Expanded(
@@ -16,6 +18,7 @@ class _AvailableChatPage extends _IChatPageBase {
                 itemBuilder: (context, index) => Column(
                   children: [
                     ListTile(
+                      onTap: () => onTap(messages[index]),
                       tileColor: Color.fromARGB(49, 223, 223, 223),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.r),
@@ -31,9 +34,6 @@ class _AvailableChatPage extends _IChatPageBase {
                               "Say hello to your new friend!",
                           style: theme.textTheme.bodyMedium!.copyWith(
                             color: Color(0xFF6B6B6B),
-                            fontWeight: messages[index].message == null
-                                ? FontWeight.bold
-                                : null,
                           ),
                         ),
                       ),

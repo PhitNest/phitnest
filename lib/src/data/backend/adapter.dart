@@ -111,8 +111,7 @@ Future<Either<SocketConnection, Failure>> connectSocket(
   _socket.once(
     'disconnect',
     (_) {
-      print(_socket);
-      _socket.clearListeners();
+      _socket.destroy();
       prettyLogger.d("Disconnected from the websocket server.");
       disconnectCompleter.complete();
     },
@@ -120,7 +119,7 @@ Future<Either<SocketConnection, Failure>> connectSocket(
   try {
     return Left(await (completer.future.timeout(_timeout)));
   } catch (err) {
-    _socket.clearListeners();
+    _socket.destroy();
     prettyLogger.e("Failed to connect to the websocket: $err");
     return Right(Failures.networkFailure.instance);
   }
