@@ -57,3 +57,7 @@ class _MessageBloc extends Bloc<_IMessageEvent, _IMessageState> {
     }
   }
 }
+
+extension _MessageBlocExt on BuildContext {
+  _MessageBloc get bloc => read();
+}

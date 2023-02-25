@@ -26,21 +26,16 @@ class MessagePage extends StatelessWidget {
                         .getDirectMessages(friendship.friend.id) !=
                     null) {
                   return _MessageLoaded(
-                    message: 'message',
-                    sentByMe: false,
-                    name: 'name',
+                    message: context.bloc.messages,
+                    name: friendship.friend.fullName,
                   );
                 } else {
-                  return _EmptyMessagePage(
-                    name: 'name',
-                  );
+                  return _EmptyMessagePage(name: friendship.friend.fullName);
                 }
               } else if (state is _LoadingState) {
-                return _LoadingPage(
-                  name: 'name',
-                );
+                return _LoadingPage(name: friendship.friend.fullName);
               } else {
-                return _LoadingPage(name: 'name');
+                return _LoadingPage(name: friendship.friend.fullName);
               }
             },
           ),
