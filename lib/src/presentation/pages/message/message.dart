@@ -35,5 +35,7 @@ part 'state/loaded.dart';
 part 'state/loading.dart';
 part 'state/reloading.dart';
 part 'state/sending.dart';
-// ======= UI =======
-part 'ui/message_page.dart';part 'ui/widgets/message_card.dart';
+// ======= UI =====
+part 'ui/message_page.dart';
+part 'ui/widgets/base.dart';
+part 'ui/widgets/empty_message.dart';part 'ui/widgets/message_loaded.dart';
