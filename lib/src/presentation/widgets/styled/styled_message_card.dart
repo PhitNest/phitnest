@@ -1,10 +1,11 @@
-part of message;
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class _MessageCard extends StatelessWidget {
+class StyledMessageCard extends StatelessWidget {
   final bool sentByMe;
   final String message;
 
-  const _MessageCard({
+  const StyledMessageCard({
     Key? key,
     required this.message,
     required this.sentByMe,
