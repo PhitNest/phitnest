@@ -1,4 +1,4 @@
-part of message_page;
+part of message;
 
 class MessagePage extends StatelessWidget {
   final HomeBloc homeBloc;

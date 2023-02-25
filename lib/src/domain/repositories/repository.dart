@@ -9,11 +9,13 @@ import '../../data/cache/cache.dart';
 import '../entities/entities.dart';
 
 part 'auth.dart';
-part 'user.dart';
+part 'direct_message.dart';
 part 'friendship.dart';
+part 'user.dart';
 
 abstract class Repositories {
   static const auth = Auth();
   static const user = User();
   static const friendship = Friendship();
+  static const directMessage = DirectMessage();
 }
