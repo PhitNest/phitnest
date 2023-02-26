@@ -28,6 +28,8 @@ class GetUserResponse extends ProfilePictureUserEntity {
         gym: GymEntity.fromJson(json['gym']),
       );
 
+  @override
+  List<Object?> get props => [...super.props, gym];
 }
 
 extension GetUser on User {

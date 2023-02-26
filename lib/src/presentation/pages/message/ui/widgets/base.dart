@@ -57,7 +57,7 @@ abstract class _IBasePage extends StatelessWidget {
                       maxLines: 12,
                       minLines: 1,
                       textInputAction: TextInputAction.send,
-                      onFieldSubmitted: (value) => onSend(),
+                      onFieldSubmitted: loading ? (_) {} : (value) => onSend(),
                       focusNode: focusNode,
                       decoration: InputDecoration(
                         hintText: 'Write a message...',
@@ -88,7 +88,11 @@ abstract class _IBasePage extends StatelessWidget {
                   ),
                   14.horizontalSpace,
                   loading
-                      ? const CircularProgressIndicator()
+                      ? SizedBox(
+                          width: 18.w,
+                          height: 18.w,
+                          child: const CircularProgressIndicator(),
+                        )
                       : TextButton(
                           onPressed: onSend,
                           child: Text(

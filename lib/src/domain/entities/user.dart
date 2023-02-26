@@ -1,6 +1,6 @@
-import '../../common/utils/utils.dart';
+part of entities;
 
-abstract class User with Serializable {
+abstract class User extends Equatable with Serializable {
   final String id;
   final String firstName;
   final String lastName;
@@ -28,6 +28,10 @@ abstract class User with Serializable {
       };
 
   String get fullName => '$firstName $lastName';
+
+  @override
+  List<Object?> get props =>
+      [id, firstName, lastName, cognitoId, gymId, confirmed];
 }
 
 class UserEntity extends User {
@@ -59,6 +63,9 @@ class UserEntity extends User {
         ...super.toJson(),
         'email': email,
       };
+
+  @override
+  List<Object?> get props => [...super.props, email];
 }
 
 class PublicUserEntity extends User with Serializable {
@@ -115,6 +122,9 @@ class ProfilePictureUserEntity extends UserEntity {
         ...super.toJson(),
         'profilePictureUrl': profilePictureUrl,
       };
+
+  @override
+  List<Object?> get props => [...super.props, profilePictureUrl];
 }
 
 class ProfilePicturePublicUserEntity extends PublicUserEntity {
@@ -147,4 +157,7 @@ class ProfilePicturePublicUserEntity extends PublicUserEntity {
         ...super.toJson(),
         'profilePictureUrl': profilePictureUrl,
       };
+
+  @override
+  List<Object?> get props => [...super.props, profilePictureUrl];
 }

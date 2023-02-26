@@ -27,6 +27,11 @@ class _MessageBloc extends Bloc<_IMessageEvent, _IMessageState> {
                 )
               : const _LoadedState(),
         ) {
+    on<_LoadedEvent>(onLoaded);
+    on<_LoadingErrorEvent>(onLoadingError);
+    on<_SendEvent>(onSend);
+    on<_SendErrorEvent>(onSendError);
+    on<_SendSuccessEvent>(onSendSuccess);
     if (state is _LoadingState) {
       (state as _LoadingState).loadingMessage.value.then(
             (either) => add(
@@ -36,12 +41,6 @@ class _MessageBloc extends Bloc<_IMessageEvent, _IMessageState> {
               ),
             ),
           );
-
-      on<_LoadedEvent>(onLoaded);
-      on<_LoadingErrorEvent>(onLoadingError);
-      on<_SendEvent>(onSend);
-      on<_SendErrorEvent>(onSendError);
-      on<_SendSuccessEvent>(onSendSuccess);
     }
   }
 

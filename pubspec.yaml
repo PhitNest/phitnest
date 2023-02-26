@@ -37,6 +37,7 @@ dependencies:
   cached_network_image: ^3.2.3
   flutter_secure_storage: ^8.0.0
   rxdart: ^0.27.7
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:

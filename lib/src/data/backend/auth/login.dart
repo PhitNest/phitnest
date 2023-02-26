@@ -1,6 +1,6 @@
 part of backend;
 
-class LoginResponse {
+class LoginResponse extends Equatable {
   final String accessToken;
   final String refreshToken;
   final ProfilePictureUserEntity user;
@@ -20,6 +20,9 @@ class LoginResponse {
         user: ProfilePictureUserEntity.fromJson(json['user']),
         gym: GymEntity.fromJson(json['gym']),
       );
+
+  @override
+  List<Object?> get props => [accessToken, refreshToken, user, gym];
 }
 
 extension Login on Auth {

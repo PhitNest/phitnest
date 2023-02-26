@@ -1,7 +1,13 @@
-export 'address.dart';
-export 'friend_request.dart';
-export 'friendship.dart';
-export 'gym.dart';
-export 'location.dart';
-export 'user.dart';
-export 'direct_message.dart';
+library entities;
+
+import 'package:equatable/equatable.dart';
+import 'package:geolocator/geolocator.dart';
+import '../../common/utils/utils.dart';
+
+part 'address.dart';
+part 'direct_message.dart';
+part 'friendship.dart';
+part 'gym.dart';
+part 'user.dart';
+part 'location.dart';
+part 'friend_request.dart';
