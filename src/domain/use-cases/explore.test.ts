@@ -107,74 +107,64 @@ test("Explore users", async () => {
     profilePictureDatabase: new MockProfilePictureDatabase(user4.cognitoId),
   });
   let result = await explore(user1.cognitoId, user1.gymId);
-  expect(result.users.length).toBe(0);
-  expect(result.requests.length).toBe(0);
+  expect(result.length).toBe(0);
   await databases().userDatabase.setConfirmed(user1.cognitoId);
   await databases().userDatabase.setConfirmed(user2.cognitoId);
   await databases().userDatabase.setConfirmed(user3.cognitoId);
   await databases().userDatabase.setConfirmed(user4.cognitoId);
   await databases().userDatabase.setConfirmed(user5.cognitoId);
   result = await explore(user1.cognitoId, user1.gymId);
-  expect(result.users.length).toBe(2);
-  compareProfilePicturePublicUsers(result.users[0], {
+  expect(result.length).toBe(2);
+  compareProfilePicturePublicUsers(result[0], {
     ...user2,
     profilePictureUrl: "get",
   });
-  compareProfilePicturePublicUsers(result.users[1], {
+  compareProfilePicturePublicUsers(result[1], {
     ...user3,
     profilePictureUrl: "get",
   });
-  expect(result.requests.length).toBe(0);
   rebindDatabases({
     profilePictureDatabase: new MockProfilePictureDatabase(""),
   });
   result = await explore(user1.cognitoId, user1.gymId);
-  expect(result.users.length).toBe(3);
-  comparePublicUsers(result.users[0], user2);
-  comparePublicUsers(result.users[1], user3);
-  comparePublicUsers(result.users[2], user4);
-  expect(result.requests.length).toBe(0);
+  expect(result.length).toBe(3);
+  comparePublicUsers(result[0], user2);
+  comparePublicUsers(result[1], user3);
+  comparePublicUsers(result[2], user4);
   result = await explore(user2.cognitoId, user2.gymId);
-  expect(result.users.length).toBe(3);
-  comparePublicUsers(result.users[0], user1);
-  comparePublicUsers(result.users[1], user3);
-  comparePublicUsers(result.users[2], user4);
-  expect(result.requests.length).toBe(0);
+  expect(result.length).toBe(3);
+  comparePublicUsers(result[0], user1);
+  comparePublicUsers(result[1], user3);
+  comparePublicUsers(result[2], user4);
   result = await explore(user5.cognitoId, user5.gymId);
-  expect(result.users.length).toBe(0);
-  expect(result.requests.length).toBe(0);
+  expect(result.length).toBe(0);
   const friendRequest1 = await databases().friendRequestDatabase.create(
     user1.cognitoId,
     user2.cognitoId
   );
   result = await explore(user1.cognitoId, user1.gymId);
-  expect(result.users.length).toBe(2);
-  comparePublicUsers(result.users[0], user3);
-  comparePublicUsers(result.users[1], user4);
-  expect(result.requests.length).toBe(0);
+  expect(result.length).toBe(2);
+  comparePublicUsers(result[0], user3);
+  comparePublicUsers(result[1], user4);
   result = await explore(user2.cognitoId, user2.gymId);
-  expect(result.users.length).toBe(3);
-  comparePublicUsers(result.users[0], user1);
-  comparePublicUsers(result.users[1], user3);
-  comparePublicUsers(result.users[2], user4);
-  expect(result.requests.length).toBe(1);
-  compareFriendRequests(result.requests[0], friendRequest1);
+  expect(result.length).toBe(3);
+  comparePublicUsers(result[0], user1);
+  comparePublicUsers(result[1], user3);
+  comparePublicUsers(result[2], user4);
   await databases().friendRequestDatabase.deny(
     user1.cognitoId,
     user2.cognitoId
   );
   result = await explore(user2.cognitoId, user2.gymId);
-  expect(result.users.length).toBe(2);
-  comparePublicUsers(result.users[0], user3);
-  comparePublicUsers(result.users[1], user4);
-  expect(result.requests.length).toBe(0);
+  expect(result.length).toBe(2);
+  comparePublicUsers(result[0], user3);
+  comparePublicUsers(result[1], user4);
   const friendship = await databases().friendshipDatabase.create([
     user2.cognitoId,
     user4.cognitoId,
   ]);
   result = await explore(user2.cognitoId, user2.gymId);
-  expect(result.users.length).toBe(1);
-  comparePublicUsers(result.users[0], user3);
-  expect(result.requests.length).toBe(0);
+  expect(result.length).toBe(1);
+  comparePublicUsers(result[0], user3);
   injectDatabases();
 });

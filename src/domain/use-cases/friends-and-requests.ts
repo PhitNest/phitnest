@@ -46,7 +46,9 @@ export async function getFriendsAndFriendRequests(cognitoId: string) {
         ).then(
           (friendRequests) =>
             friendRequests.filter(
-              (friendRequest) => !(friendRequest.fromUser instanceof Failure)
+              (friendRequest) =>
+                !(friendRequest.fromUser instanceof Failure) &&
+                !friendRequest.denied
             ) as IPopulatedFriendRequestEntity[]
         )
       ),

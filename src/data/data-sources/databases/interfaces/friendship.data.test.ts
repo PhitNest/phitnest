@@ -215,7 +215,11 @@ test("Delete friendships", async () => {
   await friendshipDatabase.create(testFriendship2);
   await friendshipDatabase.create(testFriendship3);
   await friendshipDatabase.create(testFriendship4);
-  expect(await friendshipDatabase.delete(testFriendship1)).toBeUndefined();
+  expect(
+    await friendshipDatabase.delete(
+      testFriendship1.reverse() as [string, string]
+    )
+  ).toBeUndefined();
   expect(await friendshipDatabase.getByUsers(testFriendship1)).toBe(
     kFriendshipNotFound
   );

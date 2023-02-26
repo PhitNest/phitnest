@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { Failure } from "../../common/types";
-import { IDirectMessageEntity } from "../../domain/entities";
+import { IPopulatedDirectMessageEntity } from "../../domain/entities";
 import { sendDirectMessage } from "../../domain/use-cases";
 import { IConnection } from "../adapters/interfaces";
 import { EventHandler } from "./types";
 
 export class SendDirectMessageHandler
-  implements EventHandler<IDirectMessageEntity>
+  implements EventHandler<IPopulatedDirectMessageEntity>
 {
   event = "directMessage";
 
