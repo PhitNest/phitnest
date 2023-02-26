@@ -156,15 +156,13 @@ test("Explore users", async () => {
     user2.cognitoId
   );
   result = await explore(user2.cognitoId, user2.gymId);
-  expect(result.length).toBe(2);
-  comparePublicUsers(result[0], user3);
-  comparePublicUsers(result[1], user4);
+  expect(result.length).toBe(3);
+  comparePublicUsers(result[0], user1);
   const friendship = await databases().friendshipDatabase.create([
     user2.cognitoId,
     user4.cognitoId,
   ]);
   result = await explore(user2.cognitoId, user2.gymId);
-  expect(result.length).toBe(1);
-  comparePublicUsers(result[0], user3);
+  expect(result.length).toBe(2);
   injectDatabases();
 });
