@@ -1,8 +1,9 @@
 import { Failure } from "../../common/types";
-import { IPopulatedFriendshipEntity } from "../entities";
+import { IPopulatedFriendshipEntity, IPublicUserEntity } from "../entities";
 import databases from "../../data/data-sources/injection";
 
 export async function getFriendsAndMessages(cognitoId: string) {
+  const me = await databases().userDatabase.get(cognitoId);
   const friendships = await databases()
     .friendshipDatabase.get(cognitoId)
     .then(
@@ -10,16 +11,24 @@ export async function getFriendsAndMessages(cognitoId: string) {
         (
           await Promise.all(
             friendships.map(async (friendship) => {
-              return {
-                ...friendship,
-                friend: await databases().userDatabase.get(
-                  friendship.userCognitoIds.find((user) => user !== cognitoId)!
-                ),
-              };
+              const friend = await databases().userDatabase.get(
+                friendship.userCognitoIds.find((user) => user !== cognitoId)!
+              );
+              if (friend instanceof Failure) {
+                return friend;
+              } else {
+                return {
+                  ...friendship,
+                  friends: [friend, me] as [
+                    IPublicUserEntity,
+                    IPublicUserEntity
+                  ],
+                };
+              }
             })
           )
         ).filter(
-          (friendship) => !(friendship.friend instanceof Failure)
+          (friendship) => !(friendship instanceof Failure)
         ) as IPopulatedFriendshipEntity[]
     );
   const message = await Promise.all(

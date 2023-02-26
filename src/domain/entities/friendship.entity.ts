@@ -7,5 +7,5 @@ export interface IFriendshipEntity {
 }
 
 export type IPopulatedFriendshipEntity = IFriendshipEntity & {
-  friend: IPublicUserEntity;
+  friends: [IPublicUserEntity, IPublicUserEntity];
 };

@@ -7,6 +7,7 @@ import {
 } from "../../common/failures";
 import { Failure } from "../../common/types";
 import databases from "../../data/data-sources/injection";
+import { IPublicUserEntity } from "../entities";
 
 export async function sendFriendRequest(
   senderCognitoId: string,
@@ -53,6 +54,14 @@ export async function sendFriendRequest(
                     _id: sender._id,
                     confirmed: sender.confirmed,
                   },
+                  toUser: {
+                    cognitoId: recipientCognitoId,
+                    firstName: recipient.firstName,
+                    lastName: recipient.lastName,
+                    gymId: recipient.gymId,
+                    _id: recipient._id,
+                    confirmed: recipient.confirmed,
+                  },
                 };
               } else {
                 return receivedRequest;
@@ -70,14 +79,24 @@ export async function sendFriendRequest(
                     senderCognitoId,
                     recipientCognitoId,
                   ])),
-                  friend: {
-                    cognitoId: senderCognitoId,
-                    firstName: sender.firstName,
-                    lastName: sender.lastName,
-                    gymId: sender.gymId,
-                    _id: sender._id,
-                    confirmed: sender.confirmed,
-                  },
+                  friends: [
+                    {
+                      cognitoId: senderCognitoId,
+                      firstName: sender.firstName,
+                      lastName: sender.lastName,
+                      gymId: sender.gymId,
+                      _id: sender._id,
+                      confirmed: sender.confirmed,
+                    },
+                    {
+                      cognitoId: recipientCognitoId,
+                      firstName: recipient.firstName,
+                      lastName: recipient.lastName,
+                      gymId: recipient.gymId,
+                      _id: recipient._id,
+                      confirmed: recipient.confirmed,
+                    },
+                  ] as [IPublicUserEntity, IPublicUserEntity],
                 };
               }
             }

@@ -10,4 +10,5 @@ export interface IFriendRequestEntity {
 
 export type IPopulatedFriendRequestEntity = IFriendRequestEntity & {
   fromUser: IPublicUserEntity;
+  toUser: IPublicUserEntity;
 };

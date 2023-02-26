@@ -46,7 +46,7 @@ export class SendFriendRequestController
       if (request.fromUser) {
         getSocketServer().emit(
           "friendRequest",
-          result,
+          request,
           req.body.recipientCognitoId
         );
       } else {
