@@ -93,8 +93,13 @@ test("Get friends and friends requests populated", async () => {
   expect(result.requests.length).toBe(1);
   compareFriendRequests(result.requests[0], friendRequest1);
   comparePublicUsers(result.requests[0].fromUser, user1);
+  comparePublicUsers(result.requests[0].toUser, user2);
   expect(result.friendships.length).toBe(1);
-  comparePublicUsers(result.friendships[0].friend, user3);
+  if (result.friendships[0].friends[0].cognitoId === user2.cognitoId) {
+    comparePublicUsers(result.friendships[0].friends[1], user3);
+  } else {
+    comparePublicUsers(result.friendships[0].friends[0], user3);
+  }
   const friendship2 = await databases().friendshipDatabase.create([
     user1.cognitoId,
     user3.cognitoId,
@@ -110,6 +115,14 @@ test("Get friends and friends requests populated", async () => {
   expect(result.friendships.length).toBe(2);
   compareFriendships(result.friendships[0], friendship2);
   compareFriendships(result.friendships[1], friendship1);
-  comparePublicUsers(result.friendships[0].friend, user1);
-  comparePublicUsers(result.friendships[1].friend, user2);
+  if (result.friendships[0].friends[0].cognitoId === user1.cognitoId) {
+    comparePublicUsers(result.friendships[0].friends[1], user3);
+  } else {
+    comparePublicUsers(result.friendships[0].friends[0], user3);
+  }
+  if (result.friendships[1].friends[0].cognitoId === user1.cognitoId) {
+    comparePublicUsers(result.friendships[1].friends[1], user2);
+  } else {
+    comparePublicUsers(result.friendships[1].friends[0], user2);
+  }
 });

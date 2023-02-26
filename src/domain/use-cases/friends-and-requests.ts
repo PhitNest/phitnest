@@ -2,10 +2,12 @@ import { Failure } from "../../common/types";
 import {
   IPopulatedFriendRequestEntity,
   IPopulatedFriendshipEntity,
+  IPublicUserEntity,
 } from "../entities";
 import databases from "../../data/data-sources/injection";
 
 export async function getFriendsAndFriendRequests(cognitoId: string) {
+  const me = await databases().userDatabase.get(cognitoId);
   const [friends, friendRequests] = await Promise.all([
     databases()
       .friendshipDatabase.get(cognitoId)
@@ -13,22 +15,29 @@ export async function getFriendsAndFriendRequests(cognitoId: string) {
         async (friendships) =>
           (
             await Promise.all(
-              friendships.map((friendship) => {
+              friendships.map(async (friendship) => {
                 const friendCognitoId = friendship.userCognitoIds.find(
                   (user) => user !== cognitoId
                 )!;
-                return databases().userDatabase.get(friendCognitoId);
+                const friend = await databases().userDatabase.get(
+                  friendCognitoId
+                );
+                if (friend instanceof Failure) {
+                  return friend;
+                } else {
+                  return [friend, me] as [IPublicUserEntity, IPublicUserEntity];
+                }
               })
             )
           )
-            .map((friend, i) => {
+            .map((friends, i) => {
               return {
                 ...friendships[i],
-                friend: friend,
+                friends: friends,
               };
             })
             .filter(
-              (friendship) => !(friendship.friend instanceof Failure)
+              (friendship) => !(friendship.friends instanceof Failure)
             ) as IPopulatedFriendshipEntity[]
       ),
     databases()
@@ -41,6 +50,7 @@ export async function getFriendsAndFriendRequests(cognitoId: string) {
               fromUser: await databases().userDatabase.get(
                 friendRequest.fromCognitoId
               ),
+              toUser: me,
             };
           })
         ).then(
