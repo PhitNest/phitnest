@@ -67,7 +67,9 @@ class _PageOne extends StatelessWidget {
               ),
             ),
           ),
-          105.verticalSpace,
+          math
+              .max(170 - MediaQuery.of(context).viewInsets.bottom, 0)
+              .verticalSpace,
           StyledButton(
             onPressed: onSubmit,
             text: "NEXT",

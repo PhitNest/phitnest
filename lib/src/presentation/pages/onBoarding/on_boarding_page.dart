@@ -16,7 +16,7 @@ class OnBoardingPage extends StatelessWidget {
         body: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: SizedBox(
-            height: 1.sh,
+            height: 1.sh - MediaQuery.of(context).padding.top,
             width: double.infinity,
             child: Column(
               children: [

@@ -48,6 +48,7 @@ class _PageTwo extends StatelessWidget {
                   StyledUnderlinedTextField(
                     errorMaxLines: 1,
                     hint: 'Email',
+                    keyboardType: TextInputType.emailAddress,
                     controller: emailController,
                     validator: (value) =>
                         validateEmail(value) ??
@@ -78,7 +79,9 @@ class _PageTwo extends StatelessWidget {
               ),
             ),
           ),
-          40.verticalSpace,
+          math
+              .max(110 - MediaQuery.of(context).viewInsets.bottom, 0)
+              .verticalSpace,
           StyledButton(
             onPressed: onSubmit,
             text: "NEXT",

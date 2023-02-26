@@ -25,7 +25,7 @@ abstract class _IBasePage extends StatelessWidget {
         body: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: SizedBox(
-            height: 1.sh,
+            height: 1.sh - MediaQuery.of(context).padding.top,
             width: 1.sw,
             child: Column(
               children: [

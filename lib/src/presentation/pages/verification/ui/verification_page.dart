@@ -69,7 +69,7 @@ class VerificationPage extends StatelessWidget {
             body: SingleChildScrollView(
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: SizedBox(
-                height: 1.sh,
+                height: 1.sh - MediaQuery.of(context).padding.top,
                 child: Column(
                   children: [
                     StyledBackButton(),
