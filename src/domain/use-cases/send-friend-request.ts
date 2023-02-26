@@ -71,12 +71,12 @@ export async function sendFriendRequest(
                     recipientCognitoId,
                   ])),
                   friend: {
-                    cognitoId: recipientCognitoId,
-                    firstName: recipient.firstName,
-                    lastName: recipient.lastName,
-                    gymId: recipient.gymId,
-                    _id: recipient._id,
-                    confirmed: recipient.confirmed,
+                    cognitoId: senderCognitoId,
+                    firstName: sender.firstName,
+                    lastName: sender.lastName,
+                    gymId: sender.gymId,
+                    _id: sender._id,
+                    confirmed: sender.confirmed,
                   },
                 };
               }
