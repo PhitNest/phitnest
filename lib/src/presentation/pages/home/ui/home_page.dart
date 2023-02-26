@@ -156,61 +156,136 @@ class HomePage extends StatelessWidget {
           ),
         ],
         child: BlocConsumer<HomeBloc, IHomeState>(
-          listener: (context, state) {},
-          builder: (context, state) => StyledScaffold(
-            safeArea: false,
-            body: SingleChildScrollView(
-              child: SizedBox(
-                height: 1.sh,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          switch (state.currentPage) {
-                            case NavbarPage.explore:
-                              return const _ExplorePage();
-                            case NavbarPage.chat:
-                              return const _ChatPage();
-                            case NavbarPage.options:
-                              return const _OptionsPage();
-                            case NavbarPage.news:
-                              return Container();
+          buildWhen: true.always,
+          listenWhen: true.always,
+          listener: (context, homeState) {},
+          builder: (context, homeState) =>
+              BlocConsumer<_ExploreBloc, _IExploreState>(
+            buildWhen: true.always,
+            listenWhen: true.always,
+            listener: (context, exploreState) {
+              if (exploreState is _IExploreMatchedState) {
+                context.homeBloc.add(const _HomeDataUpdatedEvent());
+              }
+            },
+            builder: (context, exploreState) =>
+                BlocConsumer<_ChatBloc, _IChatState>(
+              buildWhen: true.always,
+              listenWhen: true.always,
+              listener: (context, chatState) {},
+              builder: (context, chatState) =>
+                  BlocConsumer<_OptionsBloc, _IOptionsState>(
+                buildWhen: true.always,
+                listenWhen: true.always,
+                listener: (context, optionsState) async {
+                  if (optionsState is _OptionsEditProfilePictureState) {
+                    XFile? result;
+                    await context.authMethods.withAuthVoid(
+                      (accessToken) => Navigator.of(context)
+                          .push<XFile>(
+                        CupertinoPageRoute(
+                          builder: (context) => ProfilePicturePage(
+                            uploadImage: (image) =>
+                                UseCases.uploadPhotoAuthorized(
+                              accessToken: accessToken,
+                              photo: image,
+                            ),
+                          ),
+                        ),
+                      )
+                          .then(
+                        (photo) {
+                          if (photo != null) {
+                            result = photo;
+                            return null;
                           }
+                          return null;
                         },
                       ),
-                    ),
-                    BlocConsumer<_ExploreBloc, _IExploreState>(
-                      listener: (context, exploreState) {},
-                      builder: (context, exploreState) => StyledNavBar(
-                        page: state.currentPage,
-                        onReleaseLogo: () {
-                          if (state.currentPage == NavbarPage.explore) {
-                            context.exploreBloc
-                                .add(const _ExploreReleaseEvent());
-                          }
-                        },
-                        onPressDownLogo: () {
-                          if (state.currentPage == NavbarPage.explore) {
-                            context.exploreBloc
-                                .add(const _ExplorePressDownEvent());
-                          } else {
-                            context.homeBloc.add(
-                                const _HomeSetPageEvent(NavbarPage.explore));
-                          }
-                        },
-                        logoState: logoButtonState(state, exploreState),
-                        onPressedNews: () => context.homeBloc
-                            .add(const _HomeSetPageEvent(NavbarPage.news)),
-                        onPressedExplore: () => context.homeBloc
-                            .add(const _HomeSetPageEvent(NavbarPage.explore)),
-                        onPressedOptions: () => context.homeBloc
-                            .add(const _HomeSetPageEvent(NavbarPage.options)),
-                        onPressedChat: () => context.homeBloc
-                            .add(const _HomeSetPageEvent(NavbarPage.chat)),
+                    );
+                    if (result != null) {
+                      context.optionsBloc
+                          .add(_OptionsSetProfilePictureEvent(result!));
+                    } else {
+                      context.optionsBloc.add(const _OptionsLoadedUserEvent());
+                    }
+                  }
+                  if (optionsState is _OptionsSignOutState) {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      CupertinoPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                      (_) => false,
+                    );
+                  }
+                },
+                builder: (context, optionsState) => StyledScaffold(
+                  safeArea: false,
+                  body: SingleChildScrollView(
+                    child: SizedBox(
+                      height: 1.sh,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Builder(
+                              builder: (context) {
+                                switch (homeState.currentPage) {
+                                  case NavbarPage.explore:
+                                    return _ExplorePage(state: exploreState);
+                                  case NavbarPage.chat:
+                                    return _ChatPage(state: chatState);
+                                  case NavbarPage.options:
+                                    return _OptionsPage(state: optionsState);
+                                  case NavbarPage.news:
+                                    return Container();
+                                }
+                              },
+                            ),
+                          ),
+                          StyledNavBar(
+                            friendRequestCount: Cache.friendship
+                                    .friendsAndRequests?.requests.length ??
+                                0,
+                            page: homeState.currentPage,
+                            onReleaseLogo: () {
+                              if (homeState.currentPage == NavbarPage.explore) {
+                                context.exploreBloc
+                                    .add(const _ExploreReleaseEvent());
+                              }
+                            },
+                            onPressDownLogo: () {
+                              if (homeState.currentPage == NavbarPage.explore) {
+                                context.exploreBloc
+                                    .add(const _ExplorePressDownEvent());
+                              } else {
+                                if (exploreState is _IExploreMatchedState) {
+                                  context.exploreBloc
+                                      .add(const _ExploreResetEvent());
+                                }
+                                context.homeBloc.add(const _HomeSetPageEvent(
+                                    NavbarPage.explore));
+                              }
+                            },
+                            logoState: logoButtonState(homeState, exploreState),
+                            onPressedNews: () => context.homeBloc
+                                .add(const _HomeSetPageEvent(NavbarPage.news)),
+                            onPressedExplore: () {
+                              if (exploreState is _IExploreMatchedState) {
+                                context.exploreBloc
+                                    .add(const _ExploreResetEvent());
+                              }
+                              context.homeBloc.add(
+                                  const _HomeSetPageEvent(NavbarPage.explore));
+                            },
+                            onPressedOptions: () => context.homeBloc.add(
+                                const _HomeSetPageEvent(NavbarPage.options)),
+                            onPressedChat: () => context.homeBloc
+                                .add(const _HomeSetPageEvent(NavbarPage.chat)),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),

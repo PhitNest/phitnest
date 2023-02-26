@@ -28,11 +28,9 @@ class _FriendCard extends StatelessWidget {
             ),
             Spacer(),
             loading
-                ? Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
+                ? Padding(
+                    padding: EdgeInsets.only(right: 28.w),
+                    child: const CircularProgressIndicator())
                 : _LightButton(
                     onTap: onRemove,
                     text: 'REMOVE',

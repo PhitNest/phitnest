@@ -1,52 +1,16 @@
 part of home_page;
 
 class _OptionsPage extends StatelessWidget {
-  const _OptionsPage() : super();
+  final _IOptionsState state;
+
+  const _OptionsPage({
+    Key? key,
+    required this.state,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) =>
-      BlocConsumer<_OptionsBloc, _IOptionsState>(
-        listener: (context, state) async {
-          if (state is _OptionsEditProfilePictureState) {
-            XFile? result;
-            await context.authMethods.withAuthVoid(
-              (accessToken) => Navigator.of(context)
-                  .push<XFile>(
-                CupertinoPageRoute(
-                  builder: (context) => ProfilePicturePage(
-                    uploadImage: (image) => UseCases.uploadPhotoAuthorized(
-                      accessToken: accessToken,
-                      photo: image,
-                    ),
-                  ),
-                ),
-              )
-                  .then(
-                (photo) {
-                  if (photo != null) {
-                    result = photo;
-                    return null;
-                  }
-                  return null;
-                },
-              ),
-            );
-            if (result != null) {
-              context.optionsBloc.add(_OptionsSetProfilePictureEvent(result!));
-            } else {
-              context.optionsBloc.add(const _OptionsLoadedUserEvent());
-            }
-          }
-          if (state is _OptionsSignOutState) {
-            Navigator.of(context).pushAndRemoveUntil(
-              CupertinoPageRoute(
-                builder: (context) => LoginPage(),
-              ),
-              (_) => false,
-            );
-          }
-        },
-        builder: (context, state) => SingleChildScrollView(
+  Widget build(BuildContext context) => Builder(
+        builder: (context) => SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Column(
             children: [

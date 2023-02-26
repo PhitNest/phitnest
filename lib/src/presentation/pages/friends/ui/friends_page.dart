@@ -9,14 +9,24 @@ class FriendsPage extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => BlocProvider.value(
-        value: homeBloc,
-        child: BlocConsumer<HomeBloc, IHomeState>(
-          listener: (context, state) {},
-          builder: (context, homeState) => BlocWidget(
+  Widget build(BuildContext context) => MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: homeBloc),
+          BlocProvider<_FriendsBloc>(
             create: (context) => _FriendsBloc(
               authMethods: context.authMethods,
             ),
+          ),
+        ],
+        child: BlocConsumer<HomeBloc, IHomeState>(
+          buildWhen: true.always,
+          listenWhen: true.always,
+          listener: (context, state) {},
+          builder: (context, homeState) =>
+              BlocConsumer<_FriendsBloc, _IFriendsState>(
+            buildWhen: true.always,
+            listenWhen: true.always,
+            listener: (context, state) {},
             builder: (context, state) {
               final filteredRequests =
                   Cache.friendship.friendsAndRequests?.requests.where(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phitnest_mobile/src/common/utils/utils.dart';
 
 class BlocWidget<B extends Bloc<dynamic, S>, S> extends StatefulWidget {
   final B Function(BuildContext context) create;
@@ -23,8 +24,8 @@ class _BlocWidgetState<B extends Bloc<dynamic, S>, S>
   Widget build(BuildContext context) => BlocProvider<B>(
         create: widget.create,
         child: BlocConsumer<B, S>(
-          buildWhen: (_, __) => true,
-          listenWhen: (_, __) => true,
+          buildWhen: true.always,
+          listenWhen: true.always,
           builder: widget.builder,
           listener: widget.listener ?? (_, __) {},
         ),

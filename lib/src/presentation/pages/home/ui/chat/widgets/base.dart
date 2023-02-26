@@ -37,8 +37,7 @@ abstract class _IChatPageBase extends StatelessWidget {
                           ),
                         ),
                       );
-                      context.chatBloc
-                          .add(const _ChatFriendsAndRequestsUpdatedEvent());
+                      context.homeBloc.add(const _HomeDataUpdatedEvent());
                     },
                     child: Text(
                       'FRIENDS',

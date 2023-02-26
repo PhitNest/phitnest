@@ -31,15 +31,10 @@ class _FriendRequestCard extends StatelessWidget {
             ),
             ...(loading
                 ? [
-                    Expanded(
-                      child: Center(
-                        child: SizedBox(
-                          height: 28.h,
-                          width: 28.h,
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 64.w),
+                      child: const CircularProgressIndicator(),
+                    )
                   ]
                 : [
                     TextButton(
