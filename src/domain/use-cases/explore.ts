@@ -3,11 +3,10 @@ import { IProfilePicturePublicUserEntity } from "../entities";
 import databases from "../../data/data-sources/injection";
 
 export async function explore(cognitoId: string, gymId: string) {
-  const [others, friends, sentRequests, receivedRequests] = await Promise.all([
+  const [others, friends, sentRequests] = await Promise.all([
     databases().userDatabase.getByGym(gymId),
     databases().friendshipDatabase.get(cognitoId),
     databases().friendRequestDatabase.getByFromCognitoId(cognitoId),
-    databases().friendRequestDatabase.getByToCognitoId(cognitoId),
   ]);
   return (
     await Promise.all(
