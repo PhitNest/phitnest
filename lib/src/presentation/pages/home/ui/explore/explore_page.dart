@@ -10,19 +10,8 @@ class _ExplorePage extends StatelessWidget {
       BlocConsumer<_ExploreBloc, _IExploreState>(
         listener: (context, state) {
           if (state is _IExploreMatchedState) {
-            if (Cache.friendship.friendsAndMessages == null ||
-                Cache.friendship.friendsAndMessages?.indexWhere((element) =>
-                        element.friendship.id == state.friendship.id) ==
-                    -1) {
-              BlocProvider.of<_ChatBloc>(context).add(
-                _ChatReceivedMessageEvent(
-                  FriendsAndMessagesResponse(
-                    friendship: state.friendship,
-                    message: null,
-                  ),
-                ),
-              );
-            }
+            BlocProvider.of<_ChatBloc>(context)
+                .add(const _ChatFriendsAndRequestsUpdatedEvent());
           }
         },
         builder: (context, state) {
@@ -35,12 +24,10 @@ class _ExplorePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   CupertinoPageRoute(
-                    builder: (context) {
-                      return MessagePage(
-                        friendship: state.friendship,
-                        homeBloc: homeBloc,
-                      );
-                    },
+                    builder: (context) => MessagePage(
+                      friendship: state.friendship,
+                      homeBloc: homeBloc,
+                    ),
                   ),
                 );
               },
@@ -52,11 +39,8 @@ class _ExplorePage extends StatelessWidget {
               return const _ExploreEmptyPage();
             } else {
               return _ExploreLoadedPage(
-                currentPageIndex: state.currentPageIndex,
+                pageController: context.exploreBloc.pageController,
                 users: Cache.user.userExploreResponse!,
-                onChangePage: (page) => context.exploreBloc.add(
-                  _ExploreSetPageEvent(page),
-                ),
                 countdown:
                     state is _IExploreHoldingState ? state.countdown : null,
               );

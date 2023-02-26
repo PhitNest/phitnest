@@ -9,19 +9,12 @@ extension _ExploreOnFriendshipResponse on _ExploreBloc {
         final state = this.state as _IExploreReloadingState;
         emit(
           _ExploreMatchedReloadingState(
-            currentPageIndex: state.currentPageIndex,
             explore: state.explore,
             friendship: event.friendship,
           ),
         );
       } else {
-        final state = this.state as _IExploreLoadedState;
-        emit(
-          _ExploreMatchedState(
-            currentPageIndex: state.currentPageIndex,
-            friendship: event.friendship,
-          ),
-        );
+        emit(_ExploreMatchedState(friendship: event.friendship));
       }
     }
   }

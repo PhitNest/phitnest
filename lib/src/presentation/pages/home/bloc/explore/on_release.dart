@@ -5,20 +5,11 @@ extension _ExploreOnRelease on _ExploreBloc {
     if (state is _ExploreHoldingState) {
       final state = this.state as _ExploreHoldingState;
       state.incrementCountdown.cancel();
-      emit(
-        _ExploreLoadedState(
-          currentPageIndex: state.currentPageIndex,
-        ),
-      );
+      emit(const _ExploreLoadedState());
     } else if (state is _ExploreHoldingReloadingState) {
       final state = this.state as _ExploreHoldingReloadingState;
       state.incrementCountdown.cancel();
-      emit(
-        _ExploreReloadingState(
-          currentPageIndex: state.currentPageIndex,
-          explore: state.explore,
-        ),
-      );
+      emit(_ExploreReloadingState(explore: state.explore));
     }
   }
 }

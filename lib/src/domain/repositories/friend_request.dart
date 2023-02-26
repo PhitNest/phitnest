@@ -18,7 +18,7 @@ class FriendRequest {
               .cacheUserExplore(
                 Cache.user.userExploreResponse
                   ?..removeWhere(
-                    (user) => user.id == recipientCognitoId,
+                    (user) => user.cognitoId == recipientCognitoId,
                   ),
               )
               .then((_) => null);
@@ -59,24 +59,26 @@ class FriendRequest {
         accessToken: accessToken,
         senderCognitoId: senderCognitoId,
       )
-          .then((failure) {
-        if (failure == null) {
-          Future.wait(
-            [
-              Cache.user.cacheUserExplore(
-                Cache.user.userExploreResponse
-                  ?..removeWhere(
-                    (user) => user.id == senderCognitoId,
-                  ),
-              ),
-              Cache.friendship.cacheFriendsAndRequests(
-                Cache.friendship.friendsAndRequests
-                  ?..requests.removeWhere(
-                      (request) => request.fromCognitoId == senderCognitoId),
-              ),
-            ],
-          ).then((_) => null);
-        }
-        return failure;
-      });
+          .then(
+        (failure) {
+          if (failure == null) {
+            Future.wait(
+              [
+                Cache.user.cacheUserExplore(
+                  Cache.user.userExploreResponse
+                    ?..removeWhere(
+                      (user) => user.id == senderCognitoId,
+                    ),
+                ),
+                Cache.friendship.cacheFriendsAndRequests(
+                  Cache.friendship.friendsAndRequests
+                    ?..requests.removeWhere(
+                        (request) => request.fromCognitoId == senderCognitoId),
+                ),
+              ],
+            ).then((_) => null);
+          }
+          return failure;
+        },
+      );
 }

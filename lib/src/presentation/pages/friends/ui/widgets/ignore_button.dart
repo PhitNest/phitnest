@@ -15,8 +15,10 @@ class _LightButton extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(8.r),
         child: Container(
-          width: 64.w,
-          height: 26.h,
+          padding: EdgeInsets.symmetric(
+            horizontal: 12.w,
+            vertical: 8.h,
+          ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.r),
             border: Border.fromBorderSide(

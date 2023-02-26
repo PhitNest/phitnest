@@ -10,13 +10,7 @@ mixin _IExploreLoadingState on _IExploreState {
 }
 
 abstract class _IExploreLoadedState extends _IExploreState {
-  final int currentPageIndex;
-
-  _IExploreLoadedState copyWithPageIndex(int pageIndex);
-
-  const _IExploreLoadedState({
-    required this.currentPageIndex,
-  }) : super();
+  const _IExploreLoadedState() : super();
 }
 
 mixin _IExploreHoldingState on _IExploreLoadedState {
@@ -38,10 +32,7 @@ abstract class _IExploreReloadingState extends _IExploreLoadedState
   final CancelableOperation<
       Either<List<ProfilePicturePublicUserEntity>, Failure>> explore;
 
-  _IExploreReloadingState copyWithPageIndex(int pageIndex);
-
   const _IExploreReloadingState({
-    required super.currentPageIndex,
     required this.explore,
   }) : super();
 }

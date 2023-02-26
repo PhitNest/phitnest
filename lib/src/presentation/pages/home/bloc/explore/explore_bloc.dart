@@ -2,6 +2,7 @@ part of home_page;
 
 class _ExploreBloc extends Bloc<_IExploreEvent, _IExploreState> {
   final AuthMethods authMethods;
+  final pageController = PageController(keepPage: true);
 
   _ExploreBloc({
     required this.authMethods,
@@ -17,13 +18,8 @@ class _ExploreBloc extends Bloc<_IExploreEvent, _IExploreState> {
                 ),
               );
               return Cache.user.userExploreResponse != null
-                  ? _ExploreReloadingState(
-                      currentPageIndex: 0,
-                      explore: explore,
-                    )
-                  : _ExploreLoadingState(
-                      explore: explore,
-                    );
+                  ? _ExploreReloadingState(explore: explore)
+                  : _ExploreLoadingState(explore: explore);
             },
             [],
           ),
@@ -33,7 +29,6 @@ class _ExploreBloc extends Bloc<_IExploreEvent, _IExploreState> {
     on<_ExploreIncrementCountdownEvent>(onIncrementCountdown);
     on<_ExploreLoadingErrorEvent>(onLoadingError);
     on<_ExploreLoadedEvent>(onLoaded);
-    on<_ExploreSetPageEvent>(onSetPage);
     on<_ExploreSendFriendRequestErrorEvent>(onFriendRequestError);
     on<_ExploreResetEvent>(onReset);
     on<_ExploreFriendshipResponseEvent>(onFriendshipResponse);
@@ -52,6 +47,7 @@ class _ExploreBloc extends Bloc<_IExploreEvent, _IExploreState> {
 
   @override
   Future<void> close() async {
+    pageController.dispose();
     if (state is _IExploreLoadingState) {
       final state = this.state as _IExploreLoadingState;
       await state.explore.cancel();

@@ -7,6 +7,7 @@ import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -27,6 +28,7 @@ import '../pages.dart';
 // ======= BLOC =======
 part 'bloc/chat/chat_bloc.dart';
 part 'bloc/chat/on_loaded.dart';
+part 'bloc/chat/on_friends_and_requests_updated.dart';
 part 'bloc/chat/on_received_message.dart';
 part 'bloc/chat/on_loading_error.dart';
 part 'bloc/explore/explore_bloc.dart';
@@ -35,7 +37,6 @@ part 'bloc/explore/on_loaded.dart';
 part 'bloc/explore/on_loading_error.dart';
 part 'bloc/explore/on_press_down.dart';
 part 'bloc/explore/on_release.dart';
-part 'bloc/explore/on_set_page.dart';
 part 'bloc/explore/on_friend_request_error.dart';
 part 'bloc/explore/on_reset.dart';
 part 'bloc/explore/on_friendship_response.dart';
@@ -54,6 +55,7 @@ part 'bloc/options/options_bloc.dart';
 
 // ======= EVENT =======
 part 'event/chat/base.dart';
+part 'event/chat/friends_and_requests_updated.dart';
 part 'event/chat/loaded.dart';
 part 'event/chat/loading_error.dart';
 part 'event/chat/received_message.dart';
@@ -63,7 +65,6 @@ part 'event/explore/loaded.dart';
 part 'event/explore/loading_error.dart';
 part 'event/explore/press_down.dart';
 part 'event/explore/release.dart';
-part 'event/explore/set_page.dart';
 part 'event/explore/send_friend_request_error.dart';
 part 'event/explore/reset.dart';
 part 'event/explore/friendship_response.dart';

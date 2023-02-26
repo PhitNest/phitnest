@@ -33,7 +33,11 @@ class _FriendRequestCard extends StatelessWidget {
                 ? [
                     Expanded(
                       child: Center(
-                        child: CircularProgressIndicator(),
+                        child: SizedBox(
+                          height: 28.h,
+                          width: 28.h,
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
                     ),
                   ]

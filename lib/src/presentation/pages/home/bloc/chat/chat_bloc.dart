@@ -28,6 +28,7 @@ class _ChatBloc extends Bloc<_IChatEvent, _IChatState> {
     on<_ChatLoadedEvent>(onLoaded);
     on<_ChatLoadingErrorEvent>(onLoadingError);
     on<_ChatReceivedMessageEvent>(onReceivedMessage);
+    on<_ChatFriendsAndRequestsUpdatedEvent>(onFriendsAndRequestsUpdated);
     if (state is _IChatLoadingState) {
       final state = this.state as _IChatLoadingState;
       state.conversations.then(

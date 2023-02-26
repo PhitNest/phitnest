@@ -6,35 +6,15 @@ extension _ExploreOnReset on _ExploreBloc {
       final state = this.state as _IExploreSendingFriendRequestState;
       if (state is _ExploreSendingFriendRequestReloadingState) {
         final state = this.state as _ExploreSendingFriendRequestReloadingState;
-        emit(
-          _ExploreReloadingState(
-            currentPageIndex: state.currentPageIndex,
-            explore: state.explore,
-          ),
-        );
+        emit(_ExploreReloadingState(explore: state.explore));
       } else {
-        final state = this.state as _IExploreLoadedState;
-        emit(
-          _ExploreLoadedState(
-            currentPageIndex: state.currentPageIndex,
-          ),
-        );
+        emit(const _ExploreLoadedState());
       }
     } else if (state is _ExploreMatchedReloadingState) {
       final state = this.state as _ExploreMatchedReloadingState;
-      emit(
-        _ExploreReloadingState(
-          currentPageIndex: state.currentPageIndex,
-          explore: state.explore,
-        ),
-      );
+      emit(_ExploreReloadingState(explore: state.explore));
     } else if (state is _ExploreMatchedState) {
-      final state = this.state as _ExploreMatchedState;
-      emit(
-        _ExploreLoadedState(
-          currentPageIndex: state.currentPageIndex,
-        ),
-      );
+      emit(const _ExploreLoadedState());
     }
   }
 }

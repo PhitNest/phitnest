@@ -7,10 +7,11 @@ extension _ExploreOnIncrementCountdown on _ExploreBloc {
       final state = this.state as _IExploreHoldingState;
       final sendRequest = () {
         final user = Cache.user.userExploreResponse![
-            state.currentPageIndex % Cache.user.userExploreResponse!.length];
+            pageController.page!.round() %
+                Cache.user.userExploreResponse!.length];
         return CancelableOperation.fromFuture(
           authMethods.withAuthEither3(
-            (accessToken) => Backend.friendRequest.send(
+            (accessToken) => Repositories.friendRequest.send(
               accessToken: accessToken,
               recipientCognitoId: user.cognitoId,
             ),
@@ -45,27 +46,21 @@ extension _ExploreOnIncrementCountdown on _ExploreBloc {
         emit(
           state.countdown > 1
               ? _ExploreHoldingState(
-                  currentPageIndex: state.currentPageIndex,
                   countdown: state.countdown - 1,
                   incrementCountdown: incrementCountdown(),
                 )
-              : _ExploreSendingFriendRequestState(
-                  currentPageIndex: state.currentPageIndex,
-                  sendRequest: sendRequest(),
-                ),
+              : _ExploreSendingFriendRequestState(sendRequest: sendRequest()),
         );
       } else if (state is _ExploreHoldingReloadingState) {
         final state = this.state as _ExploreHoldingReloadingState;
         emit(
           state.countdown > 1
               ? _ExploreHoldingReloadingState(
-                  currentPageIndex: state.currentPageIndex,
                   countdown: state.countdown - 1,
                   explore: state.explore,
                   incrementCountdown: incrementCountdown(),
                 )
               : _ExploreSendingFriendRequestReloadingState(
-                  currentPageIndex: state.currentPageIndex,
                   explore: state.explore,
                   sendRequest: sendRequest(),
                 ),
