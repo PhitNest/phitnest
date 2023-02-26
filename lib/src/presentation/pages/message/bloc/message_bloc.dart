@@ -13,27 +13,35 @@ class _MessageBloc extends Bloc<_IMessageEvent, _IMessageState> {
     required this.authMethods,
     required this.friendship,
   }) : super(
-          Cache.directMessage.getDirectMessages(friendship.friend.cognitoId) ==
-                  null
-              ? _LoadingState(
-                  loadingMessage: CancelableOperation.fromFuture(
-                    authMethods.withAuth(
-                      (accessToken) => Repositories.directMessage
-                          .getDirectMessage(
-                              accessToken: accessToken,
-                              friendCognitoId: friendship.friend.cognitoId),
-                    ),
-                  ),
-                )
-              : const _LoadedState(),
+          Function.apply(
+            () {
+              final loading = CancelableOperation.fromFuture(
+                authMethods.withAuth(
+                  (accessToken) => Repositories.directMessage.getDirectMessage(
+                      accessToken: accessToken,
+                      friendCognitoId: friendship.friend.cognitoId),
+                ),
+              );
+              return Cache.directMessage
+                          .getDirectMessages(friendship.friend.cognitoId) ==
+                      null
+                  ? _LoadingState(
+                      loadingMessage: loading,
+                    )
+                  : _ReloadingState(
+                      loadingMessage: loading,
+                    );
+            },
+            [],
+          ),
         ) {
     on<_LoadedEvent>(onLoaded);
     on<_LoadingErrorEvent>(onLoadingError);
     on<_SendEvent>(onSend);
     on<_SendErrorEvent>(onSendError);
     on<_SendSuccessEvent>(onSendSuccess);
-    if (state is _LoadingState) {
-      (state as _LoadingState).loadingMessage.value.then(
+    if (state is _ILoadingState) {
+      (state as _ILoadingState).loadingMessage.value.then(
             (either) => add(
               either.fold(
                 (messages) => const _LoadedEvent(),
