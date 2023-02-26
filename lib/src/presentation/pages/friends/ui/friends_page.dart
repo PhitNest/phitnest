@@ -36,7 +36,7 @@ class FriendsPage extends StatelessWidget {
               );
               return StyledScaffold(
                 body: SizedBox(
-                  height: 1.sh,
+                  height: 1.sh - MediaQuery.of(context).padding.top,
                   child: Column(
                     children: [
                       StyledBackButton(),

@@ -223,7 +223,7 @@ class HomePage extends StatelessWidget {
                   safeArea: false,
                   body: SingleChildScrollView(
                     child: SizedBox(
-                      height: 1.sh,
+                      height: 1.sh - MediaQuery.of(context).padding.top,
                       child: Column(
                         children: [
                           Expanded(

@@ -1,5 +1,7 @@
 library registration_page;
 
+import 'dart:math' as math;
+
 import 'package:async/async.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';

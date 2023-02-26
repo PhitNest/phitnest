@@ -124,7 +124,7 @@ class RegistrationPage extends StatelessWidget {
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
                 child: SizedBox(
-                  height: 1.sh,
+                  height: 1.sh - MediaQuery.of(context).padding.top,
                   child: Column(
                     children: [
                       Expanded(
