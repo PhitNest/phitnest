@@ -85,58 +85,56 @@ class FriendRequest {
         },
       );
 
-  Future<Either<Stream<Future<PopulatedFriendRequestEntity>>, Failure>> stream({
+  Either<Stream<Future<PopulatedFriendRequestEntity>>, Failure> stream({
     required SocketConnection connection,
   }) =>
-      Backend.friendRequest.stream(connection: connection).then(
-            (either) => either.fold(
-              (stream) => Left(
-                stream.map(
-                  (friendRequest) => Future.wait(
-                    [
-                      Cache.friendship.cacheFriendsAndMessages(
-                        Cache.friendship.friendsAndMessages
-                          ?..removeWhere(
-                            (conversation) =>
-                                conversation.friendship.friend.cognitoId ==
-                                friendRequest.fromCognitoId,
-                          ),
-                      ),
-                      Cache.friendship.cacheFriendsAndRequests(
-                        Function.apply(
-                          () {
-                            final requests =
-                                Cache.friendship.friendsAndRequests?.requests;
-                            final friendships = Cache
-                                .friendship.friendsAndRequests?.friendships;
-                            if (requests != null && friendships != null) {
-                              return FriendsAndRequestsResponse(
-                                friendships: friendships
-                                  ..removeWhere(
-                                    (friendship) =>
-                                        friendship.friend.cognitoId ==
-                                        friendRequest.fromCognitoId,
-                                  ),
-                                requests: requests
-                                  ..removeWhere(
-                                    (element) =>
-                                        element.fromCognitoId ==
-                                            friendRequest.fromCognitoId ||
-                                        element.fromCognitoId ==
-                                            friendRequest.toCognitoId,
-                                  )
-                                  ..insert(0, friendRequest),
-                              );
-                            }
-                          },
-                          [],
+      Backend.friendRequest.stream(connection: connection).fold(
+            (stream) => Left(
+              stream.map(
+                (friendRequest) => Future.wait(
+                  [
+                    Cache.friendship.cacheFriendsAndMessages(
+                      Cache.friendship.friendsAndMessages
+                        ?..removeWhere(
+                          (conversation) =>
+                              conversation.friendship.friend.cognitoId ==
+                              friendRequest.fromCognitoId,
                         ),
-                      )
-                    ],
-                  ).then((_) => friendRequest),
-                ),
+                    ),
+                    Cache.friendship.cacheFriendsAndRequests(
+                      Function.apply(
+                        () {
+                          final requests =
+                              Cache.friendship.friendsAndRequests?.requests;
+                          final friendships =
+                              Cache.friendship.friendsAndRequests?.friendships;
+                          if (requests != null && friendships != null) {
+                            return FriendsAndRequestsResponse(
+                              friendships: friendships
+                                ..removeWhere(
+                                  (friendship) =>
+                                      friendship.friend.cognitoId ==
+                                      friendRequest.fromCognitoId,
+                                ),
+                              requests: requests
+                                ..removeWhere(
+                                  (element) =>
+                                      element.fromCognitoId ==
+                                          friendRequest.fromCognitoId ||
+                                      element.fromCognitoId ==
+                                          friendRequest.toCognitoId,
+                                )
+                                ..insert(0, friendRequest),
+                            );
+                          }
+                        },
+                        [],
+                      ),
+                    )
+                  ],
+                ).then((_) => friendRequest),
               ),
-              (failure) => Right(failure),
             ),
+            (failure) => Right(failure),
           );
 }

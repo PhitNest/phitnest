@@ -23,14 +23,70 @@ class DirectMessage {
             ),
           );
 
-  Future<Either<Stream<Future<PopulatedDirectMessageEntity>>, Failure>> stream({
+  Either<Stream<Future<PopulatedDirectMessageEntity>>, Failure> stream({
     required SocketConnection connection,
   }) =>
-      Backend.directMessage.stream(connection: connection).then(
-            (either) => either.fold(
-              (stream) => Left(
-                stream.map(
-                  (directMessage) => Future.wait(
+      Backend.directMessage.stream(connection: connection).fold(
+            (stream) => Left(
+              stream.map(
+                (directMessage) => Future.wait(
+                  [
+                    Cache.friendship.cacheFriendsAndMessages(
+                      Function.apply(
+                        () {
+                          final conversations =
+                              Cache.friendship.friendsAndMessages ?? [];
+                          final conversationIndex = conversations.indexWhere(
+                            (element) =>
+                                element.friendship.id ==
+                                directMessage.friendshipId,
+                          );
+                          FriendsAndMessagesResponse? conversation;
+                          if (conversationIndex != -1) {
+                            conversation =
+                                conversations.removeAt(conversationIndex);
+                            return conversations
+                              ..insert(
+                                0,
+                                FriendsAndMessagesResponse(
+                                  friendship: conversation.friendship,
+                                  message: directMessage,
+                                ),
+                              );
+                          }
+                        },
+                        [],
+                      ),
+                    ),
+                    Cache.directMessage.cacheDirectMessages(
+                      Cache.directMessage
+                          .getDirectMessages(directMessage.senderCognitoId)
+                        ?..insert(
+                          0,
+                          directMessage,
+                        ),
+                      directMessage.senderCognitoId,
+                    ),
+                  ],
+                ).then((_) => directMessage),
+              ),
+            ),
+            (failure) => Right(failure),
+          );
+
+  Future<Either<PopulatedDirectMessageEntity, Failure>> send({
+    required SocketConnection connection,
+    required String recipientCognitoId,
+    required String text,
+  }) =>
+      Backend.directMessage
+          .send(
+            connection: connection,
+            recipientCognitoId: recipientCognitoId,
+            text: text,
+          )
+          .then((res) => res.fold(
+              (message) => Future.wait(
                     [
                       Cache.friendship.cacheFriendsAndMessages(
                         Function.apply(
@@ -39,8 +95,7 @@ class DirectMessage {
                                 Cache.friendship.friendsAndMessages ?? [];
                             final conversationIndex = conversations.indexWhere(
                               (element) =>
-                                  element.friendship.id ==
-                                  directMessage.friendshipId,
+                                  element.friendship.id == message.friendshipId,
                             );
                             FriendsAndMessagesResponse? conversation;
                             if (conversationIndex != -1) {
@@ -51,7 +106,7 @@ class DirectMessage {
                                   0,
                                   FriendsAndMessagesResponse(
                                     friendship: conversation.friendship,
-                                    message: directMessage,
+                                    message: message,
                                   ),
                                 );
                             }
@@ -60,19 +115,13 @@ class DirectMessage {
                         ),
                       ),
                       Cache.directMessage.cacheDirectMessages(
-                        Cache.directMessage
-                            .getDirectMessages(directMessage.senderCognitoId)
-                          ?..insert(
-                            0,
-                            directMessage,
-                          ),
-                        directMessage.senderCognitoId,
+                        Cache.directMessage.getDirectMessages(
+                                message.recipient.cognitoId) ??
+                            []
+                          ..insert(0, message),
+                        message.recipient.cognitoId,
                       ),
                     ],
-                  ).then((_) => directMessage),
-                ),
-              ),
-              (failure) => Right(failure),
-            ),
-          );
+                  ).then((_) => Left(message)),
+              (failure) => Right(failure)));
 }

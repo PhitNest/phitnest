@@ -1,5 +1,7 @@
 part of message;
 
 class _SendEvent extends _IMessageEvent {
-  const _SendEvent();
+  final SocketConnection connection;
+
+  const _SendEvent(this.connection) : super();
 }

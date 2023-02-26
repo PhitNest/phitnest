@@ -5,6 +5,10 @@ class _LoadingPage extends _IBasePage {
 
   _LoadingPage({
     Key? key,
+    required super.controller,
+    required super.focusNode,
+    required super.onSend,
+    required super.loading,
     required this.name,
   }) : super(
           key: key,

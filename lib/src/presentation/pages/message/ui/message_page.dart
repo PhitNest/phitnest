@@ -38,16 +38,45 @@ class MessagePage extends StatelessWidget {
                         .getDirectMessages(friendship.friend.id) !=
                     null) {
                   return _MessageLoaded(
+                    loading: !(homeState is HomeSocketConnectedState) ||
+                        state is _SendingState,
+                    controller: context.bloc.messageController,
+                    focusNode: context.bloc.messageFocus,
+                    onSend: () => context.bloc.add(_SendEvent(
+                        (homeState as HomeSocketConnectedState).connection)),
                     message: context.bloc.messages,
                     name: friendship.friend.fullName,
                   );
                 } else {
-                  return _EmptyMessagePage(name: friendship.friend.fullName);
+                  return _EmptyMessagePage(
+                    loading: !(homeState is HomeSocketConnectedState) ||
+                        state is _SendingState,
+                    name: friendship.friend.fullName,
+                    controller: context.bloc.messageController,
+                    focusNode: context.bloc.messageFocus,
+                    onSend: () => context.bloc.add(_SendEvent(
+                        (homeState as HomeSocketConnectedState).connection)),
+                  );
                 }
               } else if (state is _LoadingState) {
-                return _LoadingPage(name: friendship.friend.fullName);
+                return _LoadingPage(
+                  loading: true,
+                  name: friendship.friend.fullName,
+                  controller: context.bloc.messageController,
+                  focusNode: context.bloc.messageFocus,
+                  onSend: () => context.bloc.add(_SendEvent(
+                      (homeState as HomeSocketConnectedState).connection)),
+                );
               } else {
-                return _LoadingPage(name: friendship.friend.fullName);
+                return _LoadingPage(
+                  loading: !(homeState is HomeSocketConnectedState) ||
+                      state is _SendingState,
+                  name: friendship.friend.fullName,
+                  controller: context.bloc.messageController,
+                  focusNode: context.bloc.messageFocus,
+                  onSend: () => context.bloc.add(_SendEvent(
+                      (homeState as HomeSocketConnectedState).connection)),
+                );
               }
             },
           ),

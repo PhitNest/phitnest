@@ -19,8 +19,8 @@ class SocketConnection {
 
   Future<void> onDisconnect() => disconnectCompleter.future;
 
-  Future<Either<Stream<T>, Failure>> stream<T>(
-      SocketEvent event, T Function(Map<String, dynamic>) parser) async {
+  Either<Stream<T>, Failure> stream<T>(
+      SocketEvent event, T Function(Map<String, dynamic>) parser) {
     final streamController = StreamController<T>();
     prettyLogger.d('Opening stream for event: $event.name');
     final handler = (data) {
@@ -46,10 +46,11 @@ class SocketConnection {
     return Left(streamController.stream);
   }
 
-  Future<Either<dynamic, Failure>> emit(
-    SocketEvent event,
-    dynamic data,
-  ) async {
+  Future<Either<ResType, Failure>> emit<ResType>({
+    required SocketEvent event,
+    required dynamic data,
+    required ResType Function(Map<String, dynamic> json) parser,
+  }) async {
     try {
       prettyLogger.d('Emitting event: $event\n\tData: $data');
       _socket.emit(event.name, data);
@@ -70,8 +71,8 @@ class SocketConnection {
           error.complete(Right(Failure.fromJson(err)));
         },
       );
-      return Left(
-          await Future.any([success.future, error.future]).timeout(_timeout));
+      return Left(parser((await Future.any([success.future, error.future])
+          .timeout(_timeout)) as Map<String, dynamic>));
     } catch (err) {
       prettyLogger.e("Failed to emit event: $event\n\tError: $err");
       return Right(Failures.networkFailure.instance);
@@ -81,7 +82,8 @@ class SocketConnection {
 
 @override
 Future<Either<SocketConnection, Failure>> connectSocket(
-    String authorization) async {
+  String authorization,
+) async {
   prettyLogger.d("Connecting to the websocket server...");
   final completer = Completer<SocketConnection>();
   final IO.Socket _socket = IO.io(

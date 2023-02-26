@@ -23,9 +23,6 @@ part 'friendship/friendship.dart';
 part 'gym/gym.dart';
 part 'profilePicture/profile_picture.dart';
 part 'user/user.dart';
-part 'friendRequest/stream.dart';
-part 'friendship/stream.dart';
-part 'directMessage/stream.dart';
 
 // ====== AUTH ======
 part 'auth/login.dart';
@@ -39,15 +36,19 @@ part 'auth/sign_out.dart';
 
 // ====== DIRECT MESSAGE ======
 part 'directMessage/get_direct_messages.dart';
+part 'directMessage/stream.dart';
+part 'directMessage/send.dart';
 
 // ====== FRIEND REQUEST ======
 part 'friendRequest/deny.dart';
 part 'friendRequest/send.dart';
+part 'friendRequest/stream.dart';
 
 // ====== FRIENDSHIP ======
 part 'friendship/friends_and_messages.dart';
 part 'friendship/friends_and_requests.dart';
 part 'friendship/remove.dart';
+part 'friendship/stream.dart';
 
 // ====== GYM ======
 part 'gym/nearest.dart';

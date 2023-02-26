@@ -9,6 +9,7 @@ import 'package:phitnest_mobile/src/common/utils/utils.dart';
 
 import '../../../common/failure.dart';
 import '../../../common/theme.dart';
+import '../../../data/backend/backend.dart';
 import '../../../data/cache/cache.dart';
 import '../../../domain/entities/entities.dart';
 import '../../../domain/repositories/repository.dart';

@@ -10,6 +10,10 @@ class _LoginBloc extends Bloc<_ILoginEvent, _ILoginState> {
   /// Validates the email and password fields together.
   final formKey = GlobalKey<FormState>();
 
+  final emailFocus = FocusNode();
+
+  final passwordFocus = FocusNode();
+
   /// Control unit for the business logic of the [LoginPage] widget.
   ///
   /// **STATE MACHINE:**
@@ -54,6 +58,8 @@ class _LoginBloc extends Bloc<_ILoginEvent, _ILoginState> {
     // Dispose of email and password text field controllers
     emailController.dispose();
     passwordController.dispose();
+    emailFocus.dispose();
+    passwordFocus.dispose();
     return super.close();
   }
 }

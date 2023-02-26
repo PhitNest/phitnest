@@ -9,6 +9,8 @@ extension _OnSubmit on _LoginBloc {
     if (!(state is _LoadingState)) {
       // Validate the email and password fields.
       if (formKey.currentState!.validate()) {
+        emailFocus.unfocus();
+        passwordFocus.unfocus();
         // Transition to the loading state.
         emit(
           _LoadingState(

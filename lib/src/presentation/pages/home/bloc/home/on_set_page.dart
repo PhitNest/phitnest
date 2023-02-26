@@ -5,32 +5,22 @@ extension _HomeOnSetPage on HomeBloc {
     _HomeSetPageEvent event,
     Emitter<IHomeState> emit,
   ) {
-    if (state is _HomeInitialState) {
-      final state = this.state as _HomeInitialState;
+    if (state is HomeInitialState) {
+      final state = this.state as HomeInitialState;
       emit(
-        _HomeInitialState(
+        HomeInitialState(
           currentPage: event.page,
           socketConnection: state.socketConnection,
         ),
       );
-    } else if (state is _HomeSocketInitializedState) {
-      final state = this.state as _HomeSocketInitializedState;
+    } else if (state is HomeSocketConnectedState) {
+      final state = this.state as HomeSocketConnectedState;
       emit(
-        _HomeSocketInitializedState(
+        HomeSocketConnectedState(
           currentPage: event.page,
           connection: state.connection,
           onDisconnect: state.onDisconnect,
           onDataUpdated: state.onDataUpdated,
-        ),
-      );
-    } else if (state is _HomeSocketInitializingState) {
-      final state = this.state as _HomeSocketInitializingState;
-      emit(
-        _HomeSocketInitializingState(
-          currentPage: event.page,
-          connection: state.connection,
-          onDisconnect: state.onDisconnect,
-          initializingStream: state.initializingStream,
         ),
       );
     }

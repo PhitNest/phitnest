@@ -6,6 +6,10 @@ class _MessageLoaded extends _IBasePage {
 
   _MessageLoaded({
     Key? key,
+    required super.controller,
+    required super.focusNode,
+    required super.onSend,
+    required super.loading,
     required this.message,
     required this.name,
   }) : super(

@@ -3,6 +3,8 @@ part of message;
 class _MessageBloc extends Bloc<_IMessageEvent, _IMessageState> {
   final AuthMethods authMethods;
   final PopulatedFriendshipEntity friendship;
+  final messageController = TextEditingController();
+  final messageFocus = FocusNode();
 
   List<DirectMessageEntity>? get messages =>
       Cache.directMessage.getDirectMessages(friendship.friend.cognitoId);
@@ -41,6 +43,21 @@ class _MessageBloc extends Bloc<_IMessageEvent, _IMessageState> {
       on<_SendErrorEvent>(onSendError);
       on<_SendSuccessEvent>(onSendSuccess);
     }
+  }
+
+  @override
+  Future<void> close() async {
+    messageController.dispose();
+    messageFocus.dispose();
+    if (state is _ILoadingState) {
+      final state = this.state as _LoadingState;
+      await state.loadingMessage.cancel();
+    }
+    if (state is _SendingState) {
+      final state = this.state as _SendingState;
+      await state.sending.cancel();
+    }
+    return super.close();
   }
 }
 
