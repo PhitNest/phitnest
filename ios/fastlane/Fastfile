@@ -78,7 +78,7 @@ platform :ios do
       workspace: "Runner.xcworkspace",
       scheme: "Runner",
       output_directory: "../build/ios/archive",
-      skip_codesigning: true,
+      xcargs: "CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM="
     )
 
     upload_to_testflight(
