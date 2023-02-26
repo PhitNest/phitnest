@@ -1,6 +1,6 @@
 part of backend;
 
-class RefreshSessionResponse extends Equatable {
+class RefreshSessionResponse {
   final String accessToken;
   final String idToken;
 
@@ -15,9 +15,6 @@ class RefreshSessionResponse extends Equatable {
         accessToken: json['accessToken'],
         idToken: json['idToken'],
       );
-
-  @override
-  List<Object> get props => [accessToken, idToken];
 }
 
 extension RefreshSession on Auth {

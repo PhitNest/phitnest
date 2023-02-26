@@ -1,6 +1,6 @@
 part of backend;
 
-class GetUnauthorizedUploadUrlResponse extends Equatable {
+class GetUnauthorizedUploadUrlResponse {
   final String url;
 
   const GetUnauthorizedUploadUrlResponse({
@@ -12,9 +12,6 @@ class GetUnauthorizedUploadUrlResponse extends Equatable {
       GetUnauthorizedUploadUrlResponse(
         url: json['url'],
       );
-
-  @override
-  List<Object> get props => [url];
 }
 
 extension GetUnauthorized on ProfilePicture {

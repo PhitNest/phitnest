@@ -1,9 +1,7 @@
-import 'package:equatable/equatable.dart';
-
 import '../../common/utils/utils.dart';
 import 'entities.dart';
 
-class FriendRequestEntity extends Equatable with Serializable {
+class FriendRequestEntity with Serializable {
   final String id;
   final String fromCognitoId;
   final String toCognitoId;
@@ -36,15 +34,6 @@ class FriendRequestEntity extends Equatable with Serializable {
         'fromCognitoId': fromCognitoId,
         'toCognitoId': toCognitoId,
       };
-
-  @override
-  List<Object> get props => [
-        id,
-        createdAt,
-        denied,
-        fromCognitoId,
-        toCognitoId,
-      ];
 }
 
 class PopulatedFriendRequestEntity extends FriendRequestEntity {
@@ -75,10 +64,4 @@ class PopulatedFriendRequestEntity extends FriendRequestEntity {
         ...super.toJson(),
         'fromUser': fromUser.toJson(),
       };
-
-  @override
-  List<Object> get props => [
-        super.props,
-        fromUser,
-      ];
 }

@@ -1,9 +1,7 @@
-import 'package:equatable/equatable.dart';
-
 import '../../common/utils/utils.dart';
 import 'entities.dart';
 
-class GymEntity extends Equatable with Serializable {
+class GymEntity with Serializable {
   final String id;
   final String name;
   final AddressEntity address;
@@ -38,7 +36,4 @@ class GymEntity extends Equatable with Serializable {
 
   @override
   String toString() => '$name, ${address.city}, ${address.state}';
-
-  @override
-  List<Object> get props => [id, name, address, location];
 }

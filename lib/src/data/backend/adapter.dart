@@ -9,7 +9,7 @@ enum HttpMethod {
   delete,
 }
 
-class SocketConnection extends Equatable {
+class SocketConnection {
   final IO.Socket _socket;
   final Completer<void> disconnectCompleter;
 
@@ -19,12 +19,13 @@ class SocketConnection extends Equatable {
 
   Future<void> onDisconnect() => disconnectCompleter.future;
 
-  Future<Either<Stream<T>, Failure>> stream<T>(SocketEvent event) async {
+  Future<Either<Stream<T>, Failure>> stream<T>(
+      SocketEvent event, T Function(Map<String, dynamic>) parser) async {
     final streamController = StreamController<T>();
     prettyLogger.d('Opening stream for event: $event.name');
     final handler = (data) {
       prettyLogger.d("Received event: ${event.name}\n\tData: $data");
-      streamController.add(data);
+      streamController.add(parser(data));
     };
     final disconnectHandler = (_) async {
       prettyLogger.d('Closing event stream : ${event.name}');
@@ -76,9 +77,6 @@ class SocketConnection extends Equatable {
       return Right(Failures.networkFailure.instance);
     }
   }
-
-  @override
-  List<Object> get props => [_socket.connected];
 }
 
 @override

@@ -1,8 +1,6 @@
-import 'package:equatable/equatable.dart';
-
 import '../../common/utils/utils.dart';
 
-class AddressEntity extends Equatable with Serializable {
+class AddressEntity with Serializable {
   final String street;
   final String city;
   final String state;
@@ -36,9 +34,6 @@ class AddressEntity extends Equatable with Serializable {
       city.toLowerCase().contains(query.toLowerCase()) ||
       state.toLowerCase().contains(query.toLowerCase()) ||
       zipCode.toLowerCase().contains(query.toLowerCase());
-
-  @override
-  List<Object> get props => [street, city, state, zipCode];
 
   @override
   String toString() => '$street,\n$city, $state $zipCode';

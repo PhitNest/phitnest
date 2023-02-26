@@ -1,6 +1,6 @@
 part of backend;
 
-class FriendsAndRequestsResponse extends Equatable with Serializable {
+class FriendsAndRequestsResponse with Serializable {
   final List<PopulatedFriendshipEntity> friendships;
   final List<PopulatedFriendRequestEntity> requests;
 
@@ -26,9 +26,6 @@ class FriendsAndRequestsResponse extends Equatable with Serializable {
       'requests': requests.map((e) => e.toJson()).toList(),
     };
   }
-
-  @override
-  List<Object> get props => [friendships, requests];
 }
 
 extension FriendsAndRequests on Friendship {
