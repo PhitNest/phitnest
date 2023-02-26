@@ -7,7 +7,8 @@ class _MessageBloc extends Bloc<_IMessageEvent, _IMessageState> {
   final messageFocus = FocusNode();
 
   List<DirectMessageEntity>? get messages =>
-      Cache.directMessage.getDirectMessages(friendship.friend.cognitoId);
+      Cache.directMessage.getDirectMessages(
+          friendship.notMe(Cache.user.user!.cognitoId).cognitoId);
 
   _MessageBloc({
     required this.authMethods,
@@ -19,11 +20,14 @@ class _MessageBloc extends Bloc<_IMessageEvent, _IMessageState> {
                 authMethods.withAuth(
                   (accessToken) => Repositories.directMessage.getDirectMessage(
                       accessToken: accessToken,
-                      friendCognitoId: friendship.friend.cognitoId),
+                      friendCognitoId: friendship
+                          .notMe(Cache.user.user!.cognitoId)
+                          .cognitoId),
                 ),
               );
-              return Cache.directMessage
-                          .getDirectMessages(friendship.friend.cognitoId) ==
+              return Cache.directMessage.getDirectMessages(friendship
+                          .notMe(Cache.user.user!.cognitoId)
+                          .cognitoId) ==
                       null
                   ? _LoadingState(
                       loadingMessage: loading,

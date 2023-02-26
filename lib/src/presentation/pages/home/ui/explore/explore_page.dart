@@ -14,7 +14,8 @@ class _ExplorePage extends StatelessWidget {
           final state = this.state;
           if (state is _IExploreMatchedState) {
             return _ExploreMatchedPage(
-              fullName: state.friendship.friend.fullName,
+              fullName:
+                  state.friendship.notMe(Cache.user.user!.cognitoId).fullName,
               onPressedSayHello: () {
                 context.exploreBloc.add(const _ExploreResetEvent());
                 final homeBloc = context.homeBloc;

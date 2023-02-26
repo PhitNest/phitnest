@@ -47,15 +47,16 @@ class Friendship {
                   Cache.friendship.friendsAndRequests
                     ?..friendships.removeWhere(
                       (friendship) =>
-                          friendship.friend.cognitoId == friendCognitoId,
+                          friendship.userCognitoIds.contains(friendCognitoId),
                     ),
                 ),
                 Cache.friendship.cacheFriendsAndMessages(
                   Cache.friendship.friendsAndMessages
                     ?..removeWhere(
                       (friendsAndMessages) =>
-                          friendsAndMessages.friendship.friend.cognitoId ==
-                          friendCognitoId,
+                          friendsAndMessages.friendship.userCognitoIds.contains(
+                        friendCognitoId,
+                      ),
                     ),
                 ),
               ],
@@ -79,8 +80,10 @@ class Friendship {
                       Cache.friendship.friendsAndMessages
                         ?..removeWhere(
                           (conversations) =>
-                              conversations.friendship.friend.cognitoId ==
-                              friendship.friend.cognitoId,
+                              conversations.friendship.userCognitoIds
+                                  .contains(friendship.userCognitoIds[0]) &&
+                              conversations.friendship.userCognitoIds
+                                  .contains(friendship.userCognitoIds[1]),
                         )
                         ..insert(
                           0,
@@ -102,21 +105,21 @@ class Friendship {
                               friendships: friendships
                                 ..removeWhere(
                                   (element) =>
-                                      element.friend.cognitoId ==
-                                      friendship.friend.cognitoId,
+                                      element.userCognitoIds.contains(
+                                          friendship.userCognitoIds[0]) &&
+                                      element.userCognitoIds.contains(
+                                          friendship.userCognitoIds[1]),
                                 )
                                 ..insert(
                                   0,
                                   friendship,
                                 ),
                               requests: requests
-                                ..removeWhere(
-                                  (element) =>
-                                      element.fromCognitoId ==
-                                          friendship.friend.cognitoId ||
-                                      element.toCognitoId ==
-                                          friendship.friend.cognitoId,
-                                ),
+                                ..removeWhere((element) =>
+                                    friendship.userCognitoIds
+                                        .contains(element.fromCognitoId) &&
+                                    friendship.userCognitoIds
+                                        .contains(element.toCognitoId)),
                             );
                           }
                         },

@@ -1,6 +1,6 @@
 part of message;
 
-class _LoadingState extends _IMessageState {
+class _LoadingState extends _IMessageState with _ILoadingState {
   final CancelableOperation<Either<List<DirectMessageEntity>, Failure>>
       loadingMessage;
 

@@ -1,6 +1,6 @@
 part of entities;
 
-class FriendRequestEntity with Serializable {
+class FriendRequestEntity extends Equatable with Serializable {
   final String id;
   final String fromCognitoId;
   final String toCognitoId;
@@ -33,10 +33,15 @@ class FriendRequestEntity with Serializable {
         'fromCognitoId': fromCognitoId,
         'toCognitoId': toCognitoId,
       };
+
+  @override
+  List<Object?> get props =>
+      [id, createdAt, denied, fromCognitoId, toCognitoId];
 }
 
 class PopulatedFriendRequestEntity extends FriendRequestEntity {
   final PublicUserEntity fromUser;
+  final PublicUserEntity toUser;
 
   PopulatedFriendRequestEntity({
     required super.id,
@@ -45,6 +50,7 @@ class PopulatedFriendRequestEntity extends FriendRequestEntity {
     required super.fromCognitoId,
     required super.toCognitoId,
     required this.fromUser,
+    required this.toUser,
   }) : super();
 
   @override
@@ -56,11 +62,16 @@ class PopulatedFriendRequestEntity extends FriendRequestEntity {
         fromCognitoId: json['fromCognitoId'],
         toCognitoId: json['toCognitoId'],
         fromUser: PublicUserEntity.fromJson(json['fromUser']),
+        toUser: PublicUserEntity.fromJson(json['toUser']),
       );
 
   @override
   Map<String, dynamic> toJson() => {
         ...super.toJson(),
         'fromUser': fromUser.toJson(),
+        'toUser': toUser.toJson(),
       };
+
+  @override
+  List<Object?> get props => [super.props, fromUser, toUser];
 }

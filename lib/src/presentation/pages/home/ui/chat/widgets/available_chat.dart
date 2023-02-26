@@ -24,7 +24,10 @@ class _AvailableChatPage extends _IChatPageBase {
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       title: Text(
-                        messages[index].friendship.friend.fullName,
+                        messages[index]
+                            .friendship
+                            .notMe(Cache.user.user!.cognitoId)
+                            .fullName,
                         style: theme.textTheme.headlineSmall,
                       ),
                       subtitle: Padding(

@@ -47,7 +47,7 @@ part 'bloc/home/on_socket_connect_error.dart';
 part 'bloc/options/on_edit_profile_picture.dart';
 part 'bloc/options/on_error.dart';
 part 'bloc/options/on_loaded.dart';
-part 'bloc/options/on_set_profile_picture.dart';
+part 'bloc/options/on_reload.dart';
 part 'bloc/options/on_sign_out.dart';
 part 'bloc/options/on_sign_out_response.dart';
 part 'bloc/options/options_bloc.dart';
@@ -75,7 +75,7 @@ part 'event/options/base.dart';
 part 'event/options/edit_profile_picture.dart';
 part 'event/options/error.dart';
 part 'event/options/loaded.dart';
-part 'event/options/set_profile_picture.dart';
+part 'event/options/reload.dart';
 part 'event/options/sign_out.dart';
 part 'event/options/sign_out_response.dart';
 
