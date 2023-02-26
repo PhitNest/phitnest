@@ -1,6 +1,6 @@
 part of entities;
 
-class FriendshipEntity with Serializable {
+class FriendshipEntity extends Equatable with Serializable {
   final String id;
   final List<String> userCognitoIds;
   final DateTime createdAt;
@@ -25,6 +25,9 @@ class FriendshipEntity with Serializable {
         'userCognitoIds': userCognitoIds,
         'createdAt': createdAt.toIso8601String(),
       };
+
+  @override
+  List<Object?> get props => [id, userCognitoIds, createdAt];
 }
 
 class PopulatedFriendshipEntity extends FriendshipEntity {
@@ -51,4 +54,7 @@ class PopulatedFriendshipEntity extends FriendshipEntity {
         ...super.toJson(),
         'friend': friend.toJson(),
       };
+
+  @override
+  List<Object?> get props => [super.props, friend];
 }

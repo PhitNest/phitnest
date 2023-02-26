@@ -1,7 +1,7 @@
 part of registration_page;
 
 class _PageOne extends StatelessWidget {
-  final double keyboardPadding;
+  final double keyboardHeight;
   final GlobalKey<FormState> formKey;
   final AutovalidateMode autovalidateMode;
   final TextEditingController firstNameController;
@@ -13,7 +13,7 @@ class _PageOne extends StatelessWidget {
 
   const _PageOne({
     Key? key,
-    required this.keyboardPadding,
+    required this.keyboardHeight,
     required this.formKey,
     required this.autovalidateMode,
     required this.firstNameController,
@@ -67,9 +67,7 @@ class _PageOne extends StatelessWidget {
               ),
             ),
           ),
-          math
-              .max(170 - MediaQuery.of(context).viewInsets.bottom, 0)
-              .verticalSpace,
+          math.max(170 - keyboardHeight, 0).verticalSpace,
           StyledButton(
             onPressed: onSubmit,
             text: "NEXT",

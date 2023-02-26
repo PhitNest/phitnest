@@ -136,7 +136,7 @@ class RegistrationPage extends StatelessWidget {
                             switch (index) {
                               case 0:
                                 return _PageOne(
-                                  keyboardPadding: keyboardHeight,
+                                  keyboardHeight: keyboardHeight,
                                   formKey: context.bloc.pageOneFormKey,
                                   firstNameController:
                                       context.bloc.firstNameController,
@@ -152,6 +152,7 @@ class RegistrationPage extends StatelessWidget {
                                 );
                               case 1:
                                 return _PageTwo(
+                                  keyboardHeight: keyboardHeight,
                                   formKey: context.bloc.pageTwoFormKey,
                                   takenEmails: state.takenEmails,
                                   emailController: context.bloc.emailController,

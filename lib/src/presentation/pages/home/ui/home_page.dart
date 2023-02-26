@@ -220,10 +220,11 @@ class HomePage extends StatelessWidget {
                   }
                 },
                 builder: (context, optionsState) => StyledScaffold(
-                  safeArea: true,
+                  safeArea: false,
+                  lightMode: exploreState is _IExploreMatchedState,
                   body: SingleChildScrollView(
                     child: SizedBox(
-                      height: 1.sh - MediaQuery.of(context).padding.top,
+                      height: 1.sh,
                       child: Column(
                         children: [
                           Expanded(
