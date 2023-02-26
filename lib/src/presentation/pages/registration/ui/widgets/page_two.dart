@@ -12,6 +12,7 @@ class _PageTwo extends StatelessWidget {
   final String firstName;
   final VoidCallback onSubmit;
   final Set<String> takenEmails;
+  final double keyboardHeight;
 
   const _PageTwo({
     required this.emailController,
@@ -25,6 +26,7 @@ class _PageTwo extends StatelessWidget {
     required this.firstName,
     required this.onSubmit,
     required this.takenEmails,
+    required this.keyboardHeight,
   }) : super();
 
   @override
@@ -79,9 +81,7 @@ class _PageTwo extends StatelessWidget {
               ),
             ),
           ),
-          math
-              .max(110 - MediaQuery.of(context).viewInsets.bottom, 0)
-              .verticalSpace,
+          math.max(110 - keyboardHeight, 0).verticalSpace,
           StyledButton(
             onPressed: onSubmit,
             text: "NEXT",

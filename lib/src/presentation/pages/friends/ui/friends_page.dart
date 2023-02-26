@@ -110,7 +110,14 @@ class FriendsPage extends StatelessWidget {
                                         );
                                       },
                                     ).toList() ??
-                                    const [CircularProgressIndicator()],
+                                    [
+                                      Container(
+                                        alignment: Alignment.center,
+                                        padding: EdgeInsets.all(48.r),
+                                        child:
+                                            const CircularProgressIndicator(),
+                                      ),
+                                    ],
                               ),
                             ),
                             SliverAppBar(
@@ -153,7 +160,14 @@ class FriendsPage extends StatelessWidget {
                                           ),
                                         )
                                         .toList() ??
-                                    const [CircularProgressIndicator()],
+                                    [
+                                      Container(
+                                        alignment: Alignment.center,
+                                        padding: EdgeInsets.all(48.r),
+                                        child:
+                                            const CircularProgressIndicator(),
+                                      ),
+                                    ],
                               ),
                             ),
                           ],

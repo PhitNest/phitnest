@@ -95,13 +95,13 @@ class VerificationPage extends StatelessWidget {
                           ? (_) {}
                           : (_) => context.bloc.add(const _SubmitEvent()),
                     ),
-                    Expanded(
-                      child: loading
-                          ? Padding(
-                              padding: EdgeInsets.only(top: 20.h),
-                              child: CircularProgressIndicator(),
-                            )
-                          : Column(
+                    loading
+                        ? Padding(
+                            padding: EdgeInsets.only(top: 20.h),
+                            child: const CircularProgressIndicator(),
+                          )
+                        : Expanded(
+                            child: Column(
                               children: [
                                 20.verticalSpace,
                                 StyledButton(
@@ -118,7 +118,7 @@ class VerificationPage extends StatelessWidget {
                                 37.verticalSpace,
                               ],
                             ),
-                    ),
+                          ),
                   ],
                 ),
               ),

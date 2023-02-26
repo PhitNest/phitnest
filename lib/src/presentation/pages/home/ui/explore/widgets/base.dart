@@ -19,10 +19,20 @@ class _ExploreLoadedPage extends StatelessWidget {
               key: PageStorageKey("explore_page_view"),
               controller: pageController,
               itemBuilder: (context, index) => _ExploreCard(
-                countdown: (index % users.length) ==
-                        (pageController.page?.round() ?? 0 % users.length)
-                    ? countdown
-                    : null,
+                countdown: Function.apply(
+                  () {
+                    try {
+                      return (index % users.length) ==
+                              ((pageController.page?.round() ?? 0) %
+                                  users.length)
+                          ? countdown
+                          : null;
+                    } catch (_) {
+                      return countdown;
+                    }
+                  },
+                  [],
+                ),
                 user: users[index % users.length],
               ),
             ),
