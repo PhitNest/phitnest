@@ -43,13 +43,13 @@ class MessagePage extends StatelessWidget {
                     onSend: () => context.bloc.add(_SendEvent(
                         (homeState as HomeSocketConnectedState).connection)),
                     message: context.bloc.messages,
-                    name: friendship.friend.fullName,
+                    name: friendship.notMe(Cache.user.user!.cognitoId).fullName,
                   );
                 } else {
                   return _EmptyMessagePage(
                     loading: !(homeState is HomeSocketConnectedState) ||
                         state is _SendingState,
-                    name: friendship.friend.fullName,
+                    name: friendship.notMe(Cache.user.user!.cognitoId).fullName,
                     controller: context.bloc.messageController,
                     focusNode: context.bloc.messageFocus,
                     onSend: () => context.bloc.add(_SendEvent(
@@ -61,7 +61,7 @@ class MessagePage extends StatelessWidget {
                   loading: !(homeState is HomeSocketConnectedState) ||
                       state is _SendingState ||
                       state is _LoadingState,
-                  name: friendship.friend.fullName,
+                  name: friendship.notMe(Cache.user.user!.cognitoId).fullName,
                   controller: context.bloc.messageController,
                   focusNode: context.bloc.messageFocus,
                   onSend: () => context.bloc.add(_SendEvent(

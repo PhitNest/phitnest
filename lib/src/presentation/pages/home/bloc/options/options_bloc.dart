@@ -31,7 +31,7 @@ class _OptionsBloc extends Bloc<_IOptionsEvent, _IOptionsState> {
     on<_OptionsErrorEvent>(onLoadingError);
     on<_OptionsLoadedUserEvent>(onLoaded);
     on<_OptionsEditProfilePictureEvent>(onEditProfilePicture);
-    on<_OptionsSetProfilePictureEvent>(onSetProfilePicture);
+    on<_OptionsReloadEvent>(onReload);
   }
 
   @override

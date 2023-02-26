@@ -204,8 +204,7 @@ class HomePage extends StatelessWidget {
                       ),
                     );
                     if (result != null) {
-                      context.optionsBloc
-                          .add(_OptionsSetProfilePictureEvent(result!));
+                      context.optionsBloc.add(const _OptionsReloadEvent());
                     } else {
                       context.optionsBloc.add(const _OptionsLoadedUserEvent());
                     }

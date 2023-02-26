@@ -31,13 +31,16 @@ class FriendshipEntity extends Equatable with Serializable {
 }
 
 class PopulatedFriendshipEntity extends FriendshipEntity {
-  final PublicUserEntity friend;
+  final Tuple2<PublicUserEntity, PublicUserEntity> friends;
+
+  PublicUserEntity notMe(String myCognitoId) =>
+      friends.value1.cognitoId == myCognitoId ? friends.value2 : friends.value1;
 
   PopulatedFriendshipEntity({
     required super.id,
     required super.userCognitoIds,
     required super.createdAt,
-    required this.friend,
+    required this.friends,
   }) : super();
 
   @override
@@ -46,15 +49,16 @@ class PopulatedFriendshipEntity extends FriendshipEntity {
         id: json['_id'],
         userCognitoIds: List<String>.from(json['userCognitoIds']),
         createdAt: DateTime.parse(json['createdAt']),
-        friend: PublicUserEntity.fromJson(json['friend']),
+        friends: Tuple2(PublicUserEntity.fromJson(json['friends'][0]),
+            PublicUserEntity.fromJson(json['friends'][1])),
       );
 
   @override
   Map<String, dynamic> toJson() => {
         ...super.toJson(),
-        'friend': friend.toJson(),
+        'friends': [friends.value1.toJson(), friends.value2.toJson()],
       };
 
   @override
-  List<Object?> get props => [super.props, friend];
+  List<Object?> get props => [super.props, friends];
 }

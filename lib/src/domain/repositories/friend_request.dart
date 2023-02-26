@@ -3,7 +3,9 @@ part of repository;
 class FriendRequest {
   const FriendRequest();
 
-  Future<Either3<FriendRequestEntity, FriendshipEntity, Failure>> send({
+  Future<
+      Either3<PopulatedFriendRequestEntity, PopulatedFriendshipEntity,
+          Failure>> send({
     required String accessToken,
     required String recipientCognitoId,
   }) =>
@@ -34,9 +36,9 @@ class FriendRequest {
                 ),
                 Cache.friendship.cacheFriendsAndMessages(
                   (Cache.friendship.friendsAndMessages ?? [])
-                    ..removeWhere((conversation) =>
-                        conversation.friendship.friend.cognitoId ==
-                        recipientCognitoId)
+                    ..removeWhere((conversation) => conversation
+                        .friendship.userCognitoIds
+                        .contains(recipientCognitoId))
                     ..insert(
                       0,
                       FriendsAndMessagesResponse(
@@ -63,23 +65,15 @@ class FriendRequest {
         senderCognitoId: senderCognitoId,
       )
           .then(
-        (failure) {
+        (failure) async {
           if (failure == null) {
-            Future.wait(
-              [
-                Cache.user.cacheUserExplore(
-                  Cache.user.userExploreResponse
-                    ?..removeWhere(
-                      (user) => user.id == senderCognitoId,
-                    ),
+            await Cache.friendship.cacheFriendsAndRequests(
+              Cache.friendship.friendsAndRequests
+                ?..requests.removeWhere(
+                  (request) => request.fromCognitoId == senderCognitoId,
                 ),
-                Cache.friendship.cacheFriendsAndRequests(
-                  Cache.friendship.friendsAndRequests
-                    ?..requests.removeWhere(
-                        (request) => request.fromCognitoId == senderCognitoId),
-                ),
-              ],
-            ).then((_) => null);
+            );
+            return null;
           }
           return failure;
         },
@@ -97,8 +91,9 @@ class FriendRequest {
                       Cache.friendship.friendsAndMessages
                         ?..removeWhere(
                           (conversation) =>
-                              conversation.friendship.friend.cognitoId ==
-                              friendRequest.fromCognitoId,
+                              conversation.friendship.userCognitoIds.contains(
+                            friendRequest.fromCognitoId,
+                          ),
                         ),
                     ),
                     Cache.friendship.cacheFriendsAndRequests(
@@ -113,16 +108,17 @@ class FriendRequest {
                               friendships: friendships
                                 ..removeWhere(
                                   (friendship) =>
-                                      friendship.friend.cognitoId ==
-                                      friendRequest.fromCognitoId,
+                                      friendship.userCognitoIds.contains(
+                                    friendRequest.fromCognitoId,
+                                  ),
                                 ),
                               requests: requests
                                 ..removeWhere(
                                   (element) =>
                                       element.fromCognitoId ==
-                                          friendRequest.fromCognitoId ||
-                                      element.fromCognitoId ==
-                                          friendRequest.toCognitoId,
+                                          friendRequest.fromCognitoId &&
+                                      element.toCognitoId ==
+                                          friendRequest.fromCognitoId,
                                 )
                                 ..insert(0, friendRequest),
                             );

@@ -1,5 +1,6 @@
 library entities;
 
+import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../common/utils/utils.dart';

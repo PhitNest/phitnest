@@ -138,7 +138,8 @@ class FriendsPage extends StatelessWidget {
                                 Cache.friendship.friendsAndRequests?.friendships
                                         .where(
                                           (friendship) => friendship
-                                              .friend.fullName
+                                              .notMe(Cache.user.user!.cognitoId)
+                                              .fullName
                                               .toLowerCase()
                                               .contains(
                                                 context
@@ -148,14 +149,20 @@ class FriendsPage extends StatelessWidget {
                                         )
                                         .map(
                                           (friendship) => _FriendCard(
-                                            name: friendship.friend.fullName,
+                                            name: friendship
+                                                .notMe(
+                                                    Cache.user.user!.cognitoId)
+                                                .fullName,
                                             loading: (state as _ILoadedState)
                                                 .removingFriends
-                                                .containsKey(
-                                                    friendship.friend.id),
+                                                .containsKey(friendship
+                                                  ..notMe(Cache
+                                                          .user.user!.cognitoId)
+                                                      .id),
                                             onRemove: () => context.bloc.add(
                                               _RemoveFriendEvent(
-                                                friendship.friend,
+                                                friendship.notMe(
+                                                    Cache.user.user!.cognitoId),
                                               ),
                                             ),
                                           ),

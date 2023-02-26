@@ -1,8 +1,8 @@
 part of home_page;
 
-extension _OptionsOnSetProfilePicture on _OptionsBloc {
-  void onSetProfilePicture(
-    _OptionsSetProfilePictureEvent event,
+extension _OptionsOnReload on _OptionsBloc {
+  void onReload(
+    _OptionsReloadEvent event,
     Emitter<_IOptionsState> emit,
   ) =>
       emit(

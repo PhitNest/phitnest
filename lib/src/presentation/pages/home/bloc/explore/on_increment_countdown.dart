@@ -20,14 +20,7 @@ extension _ExploreOnIncrementCountdown on _ExploreBloc {
             (res) => add(
               res.fold(
                 (request) => const _ExploreResetEvent(),
-                (friendship) => _ExploreFriendshipResponseEvent(
-                  PopulatedFriendshipEntity(
-                    createdAt: friendship.createdAt,
-                    id: friendship.id,
-                    userCognitoIds: friendship.userCognitoIds,
-                    friend: user,
-                  ),
-                ),
+                (friendship) => _ExploreFriendshipResponseEvent(friendship),
                 (failure) => _ExploreSendFriendRequestErrorEvent(failure),
               ),
             ),

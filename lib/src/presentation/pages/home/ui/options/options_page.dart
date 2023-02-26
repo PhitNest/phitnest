@@ -16,9 +16,12 @@ class _OptionsPage extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  StyledNetworkProfilePicture(
-                    url: Cache.profilePicture.profilePictureUrl!,
-                    cacheKey: Cache.profilePicture.profilePictureImageCacheKey,
+                  Builder(
+                    builder: (context) => StyledNetworkProfilePicture(
+                      url: Cache.profilePicture.profilePictureUrl!,
+                      cacheKey:
+                          Cache.profilePicture.profilePictureImageCacheKey,
+                    ),
                   ),
                   Visibility(
                     visible: context.optionsBloc.state is _IOptionsLoadedState,

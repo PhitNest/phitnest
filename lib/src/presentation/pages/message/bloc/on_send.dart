@@ -8,7 +8,8 @@ extension _OnSend on _MessageBloc {
           sending: CancelableOperation.fromFuture(
             Repositories.directMessage.send(
               connection: event.connection,
-              recipientCognitoId: friendship.friend.cognitoId,
+              recipientCognitoId:
+                  friendship.notMe(Cache.user.user!.cognitoId).cognitoId,
               text: messageController.text.trim(),
             ),
           )..then(

@@ -8,7 +8,8 @@ extension _OnLoadingError on _MessageBloc {
       authMethods.withAuth(
         (accessToken) => Repositories.directMessage.getDirectMessage(
           accessToken: accessToken,
-          friendCognitoId: friendship.friend.cognitoId,
+          friendCognitoId:
+              friendship.notMe(Cache.user.user!.cognitoId).cognitoId,
         ),
       ),
     )..then(
