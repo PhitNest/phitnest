@@ -1,5 +1,4 @@
-import '../../common/utils/utils.dart';
-import 'entities.dart';
+part of entities;
 
 class FriendshipEntity with Serializable {
   final String id;

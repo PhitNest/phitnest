@@ -1,6 +1,6 @@
-import '../../common/utils/utils.dart';
+part of entities;
 
-class AddressEntity with Serializable {
+class AddressEntity extends Equatable with Serializable {
   final String street;
   final String city;
   final String state;
@@ -37,4 +37,7 @@ class AddressEntity with Serializable {
 
   @override
   String toString() => '$street,\n$city, $state $zipCode';
+
+  @override
+  List<Object?> get props => [street, city, state, zipCode];
 }

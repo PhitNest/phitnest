@@ -1,6 +1,6 @@
 part of backend;
 
-class FriendsAndMessagesResponse with Serializable {
+class FriendsAndMessagesResponse extends Equatable with Serializable {
   final PopulatedFriendshipEntity friendship;
   final DirectMessageEntity? message;
 
@@ -22,6 +22,9 @@ class FriendsAndMessagesResponse with Serializable {
             ? DirectMessageEntity.fromJson(json['message'])
             : null,
       );
+
+  @override
+  List<Object?> get props => [friendship, message];
 }
 
 extension FriendsAndMessages on Friendship {

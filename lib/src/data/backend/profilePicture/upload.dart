@@ -1,6 +1,6 @@
 part of backend;
 
-class GetUploadUrlResponse {
+class GetUploadUrlResponse extends Equatable {
   final String url;
 
   const GetUploadUrlResponse({
@@ -11,6 +11,9 @@ class GetUploadUrlResponse {
       GetUploadUrlResponse(
         url: json['url'],
       );
+
+  @override
+  List<Object?> get props => [url];
 }
 
 extension UploadAuthorized on ProfilePicture {

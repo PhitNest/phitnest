@@ -22,7 +22,7 @@ class SocketConnection {
   Either<Stream<T>, Failure> stream<T>(
       SocketEvent event, T Function(Map<String, dynamic>) parser) {
     final streamController = StreamController<T>();
-    prettyLogger.d('Opening stream for event: $event.name');
+    prettyLogger.d('Opening stream for event: ${event.name}');
     final handler = (data) {
       prettyLogger.d("Received event: ${event.name}\n\tData: $data");
       streamController.add(parser(data));
@@ -54,14 +54,14 @@ class SocketConnection {
     try {
       prettyLogger.d('Emitting event: $event\n\tData: $data');
       _socket.emit(event.name, data);
-      final success = Completer<Either<dynamic, Failure>>();
-      final error = Completer<Either<dynamic, Failure>>();
+      final success = Completer<Either<ResType, Failure>>();
+      final error = Completer<Either<ResType, Failure>>();
       _socket.once(
         SocketEvent.success.name,
         (data) {
           prettyLogger
               .d("Successfully emitted event: $event\n\tReturned data: $data");
-          success.complete(Left(data));
+          success.complete(Left(parser(data as Map<String, dynamic>)));
         },
       );
       _socket.once(
@@ -71,8 +71,7 @@ class SocketConnection {
           error.complete(Right(Failure.fromJson(err)));
         },
       );
-      return Left(parser((await Future.any([success.future, error.future])
-          .timeout(_timeout)) as Map<String, dynamic>));
+      return await Future.any([success.future, error.future]).timeout(_timeout);
     } catch (err) {
       prettyLogger.e("Failed to emit event: $event\n\tError: $err");
       return Right(Failures.networkFailure.instance);

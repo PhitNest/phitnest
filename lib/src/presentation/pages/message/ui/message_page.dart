@@ -33,10 +33,8 @@ class MessagePage extends StatelessWidget {
             listenWhen: true.always,
             listener: (context, state) {},
             builder: (context, state) {
-              if (state is _LoadedState) {
-                if (Cache.directMessage
-                        .getDirectMessages(friendship.friend.id) !=
-                    null) {
+              if (context.bloc.messages != null) {
+                if (context.bloc.messages!.isNotEmpty) {
                   return _MessageLoaded(
                     loading: !(homeState is HomeSocketConnectedState) ||
                         state is _SendingState,
@@ -58,19 +56,11 @@ class MessagePage extends StatelessWidget {
                         (homeState as HomeSocketConnectedState).connection)),
                   );
                 }
-              } else if (state is _LoadingState) {
-                return _LoadingPage(
-                  loading: true,
-                  name: friendship.friend.fullName,
-                  controller: context.bloc.messageController,
-                  focusNode: context.bloc.messageFocus,
-                  onSend: () => context.bloc.add(_SendEvent(
-                      (homeState as HomeSocketConnectedState).connection)),
-                );
               } else {
                 return _LoadingPage(
                   loading: !(homeState is HomeSocketConnectedState) ||
-                      state is _SendingState,
+                      state is _SendingState ||
+                      state is _LoadingState,
                   name: friendship.friend.fullName,
                   controller: context.bloc.messageController,
                   focusNode: context.bloc.messageFocus,

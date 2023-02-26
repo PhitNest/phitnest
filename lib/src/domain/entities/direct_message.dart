@@ -1,7 +1,6 @@
-import '../../common/utils/utils.dart';
-import 'entities.dart';
+part of entities;
 
-class DirectMessageEntity with Serializable {
+class DirectMessageEntity extends Equatable with Serializable {
   final String id;
   final String text;
   final String senderCognitoId;
@@ -34,6 +33,10 @@ class DirectMessageEntity with Serializable {
         'friendshipId': friendshipId,
         'createdAt': createdAt.toIso8601String(),
       };
+
+  @override
+  List<Object?> get props =>
+      [id, text, senderCognitoId, friendshipId, createdAt];
 }
 
 class PopulatedDirectMessageEntity extends DirectMessageEntity {
@@ -68,4 +71,7 @@ class PopulatedDirectMessageEntity extends DirectMessageEntity {
         'sender': sender.toJson(),
         'recipient': recipient.toJson(),
       };
+
+  @override
+  List<Object?> get props => [...super.props, sender, recipient];
 }
