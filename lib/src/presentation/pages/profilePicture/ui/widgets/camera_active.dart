@@ -60,9 +60,10 @@ class _CameraActiveBasePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => StyledScaffold(
+        showAppBar: true,
+        leadingAppBarWidget: StyledBackButton(),
         body: Column(
           children: [
-            StyledBackButton(),
             StyledProfilePictureCamera(
               cameraController: cameraController,
             ),

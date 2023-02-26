@@ -35,11 +35,12 @@ class FriendsPage extends StatelessWidget {
                     ),
               );
               return StyledScaffold(
+                showAppBar: true,
+                leadingAppBarWidget: StyledBackButton(),
                 body: SizedBox(
                   height: 1.sh - MediaQuery.of(context).padding.top,
                   child: Column(
                     children: [
-                      StyledBackButton(),
                       Expanded(
                         child: CustomScrollView(
                           keyboardDismissBehavior:
@@ -49,7 +50,7 @@ class FriendsPage extends StatelessWidget {
                               leading: Container(),
                               elevation: 0,
                               leadingWidth: 0,
-                              backgroundColor: Colors.grey[50],
+                              backgroundColor: Colors.white,
                               floating: true,
                               snap: true,
                               primary: false,
@@ -124,7 +125,7 @@ class FriendsPage extends StatelessWidget {
                               leading: Container(),
                               elevation: 0,
                               leadingWidth: 0,
-                              backgroundColor: Colors.grey[50],
+                              backgroundColor: Colors.white,
                               centerTitle: true,
                               pinned: true,
                               title: Text(
