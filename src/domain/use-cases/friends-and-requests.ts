@@ -16,11 +16,8 @@ export async function getFriendsAndFriendRequests(cognitoId: string) {
           (
             await Promise.all(
               friendships.map(async (friendship) => {
-                const friendCognitoId = friendship.userCognitoIds.find(
-                  (user) => user !== cognitoId
-                )!;
                 const friend = await databases().userDatabase.get(
-                  friendCognitoId
+                  friendship.userCognitoIds.find((user) => user !== cognitoId)!
                 );
                 if (friend instanceof Failure) {
                   return friend;
