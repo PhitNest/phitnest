@@ -27,9 +27,9 @@ abstract class _IChatPageBase extends StatelessWidget {
                 StyledIndicator(
                   offset: Size(2, 0),
                   child: TextButton(
-                    onPressed: () {
+                    onPressed: () async {
                       final homeBloc = context.homeBloc;
-                      Navigator.push(
+                      await Navigator.push(
                         context,
                         CupertinoPageRoute(
                           builder: (context) => FriendsPage(
@@ -37,6 +37,8 @@ abstract class _IChatPageBase extends StatelessWidget {
                           ),
                         ),
                       );
+                      context.chatBloc
+                          .add(const _ChatFriendsAndRequestsUpdatedEvent());
                     },
                     child: Text(
                       'FRIENDS',

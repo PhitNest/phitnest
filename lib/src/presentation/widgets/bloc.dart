@@ -23,6 +23,8 @@ class _BlocWidgetState<B extends Bloc<dynamic, S>, S>
   Widget build(BuildContext context) => BlocProvider<B>(
         create: widget.create,
         child: BlocConsumer<B, S>(
+          buildWhen: (_, __) => true,
+          listenWhen: (_, __) => true,
           builder: widget.builder,
           listener: widget.listener ?? (_, __) {},
         ),

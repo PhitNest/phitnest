@@ -9,6 +9,7 @@ class StyledBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         padding: EdgeInsets.only(
+          top: 10.h,
           left: 8.w,
         ),
         alignment: Alignment.centerLeft,

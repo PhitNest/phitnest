@@ -6,19 +6,9 @@ extension _ExploreOnFriendRequestError on _ExploreBloc {
     StyledErrorBanner.show(event.failure);
     if (state is _ExploreSendingFriendRequestReloadingState) {
       final state = this.state as _ExploreSendingFriendRequestReloadingState;
-      emit(
-        _ExploreReloadingState(
-          currentPageIndex: state.currentPageIndex,
-          explore: state.explore,
-        ),
-      );
+      emit(_ExploreReloadingState(explore: state.explore));
     } else {
-      final state = this.state as _IExploreLoadedState;
-      emit(
-        _ExploreLoadedState(
-          currentPageIndex: state.currentPageIndex,
-        ),
-      );
+      emit(const _ExploreLoadedState());
     }
   }
 }

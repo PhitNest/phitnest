@@ -5,9 +5,10 @@ class _ExploreCard extends StatelessWidget {
   final int? countdown;
 
   const _ExploreCard({
+    Key? key,
     required this.user,
     required this.countdown,
-  }) : super();
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Column(

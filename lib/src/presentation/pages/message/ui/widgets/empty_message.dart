@@ -11,9 +11,13 @@ class _EmptyMessagePage extends _IBasePage {
           name: name,
           child: Expanded(
             child: Center(
-              child: Text(
-                'Seems like you have no messages yet.',
-                style: theme.textTheme.labelLarge,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 40.w),
+                child: Text(
+                  'Say hello! :)',
+                  style: theme.textTheme.labelLarge,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ),

@@ -15,7 +15,7 @@ class SocketConnection extends Equatable {
 
   const SocketConnection._(this._socket, this.disconnectCompleter) : super();
 
-  void disconnect() => this._socket.dispose();
+  void disconnect() => this._socket.destroy();
 
   Future<void> onDisconnect() => disconnectCompleter.future;
 
@@ -84,36 +84,35 @@ class SocketConnection extends Equatable {
 @override
 Future<Either<SocketConnection, Failure>> connectSocket(
     String authorization) async {
-  final IO.Socket _socket;
   prettyLogger.d("Connecting to the websocket server...");
   final completer = Completer<SocketConnection>();
-  final disconnectCompleter = Completer<void>();
-  _socket = IO.io(
+  final IO.Socket _socket = IO.io(
     '${dotenv.get('BACKEND_HOST')}:${dotenv.get('BACKEND_PORT')}',
     IO.OptionBuilder()
         .setTransports(['websocket'])
+        .disableReconnection()
+        .enableForceNewConnection()
         .disableAutoConnect()
         .setExtraHeaders({'token': authorization})
         .build(),
   )..connect();
+  final connection = SocketConnection._(
+    _socket,
+    Completer(),
+  );
   _socket.once(
     'connect',
     (_) {
       prettyLogger.d("Connected to the websocket server.");
-      completer.complete(
-        SocketConnection._(
-          _socket,
-          disconnectCompleter,
-        ),
-      );
+      completer.complete(connection);
     },
   );
   _socket.once(
     'disconnect',
     (_) {
-      _socket.destroy();
       prettyLogger.d("Disconnected from the websocket server.");
-      disconnectCompleter.complete();
+      _socket.destroy();
+      connection.disconnectCompleter.complete();
     },
   );
   try {

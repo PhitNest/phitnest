@@ -23,7 +23,6 @@ extension _ExploreOnLoadingError on _ExploreBloc {
       final state = this.state as _ExploreSendingFriendRequestReloadingState;
       emit(
         _ExploreSendingFriendRequestReloadingState(
-          currentPageIndex: state.currentPageIndex,
           sendRequest: state.sendRequest,
           explore: explore,
         ),
@@ -32,7 +31,6 @@ extension _ExploreOnLoadingError on _ExploreBloc {
       final state = this.state as _ExploreMatchedReloadingState;
       emit(
         _ExploreMatchedReloadingState(
-          currentPageIndex: state.currentPageIndex,
           friendship: state.friendship,
           explore: explore,
         ),
@@ -41,26 +39,15 @@ extension _ExploreOnLoadingError on _ExploreBloc {
       final state = this.state as _ExploreHoldingReloadingState;
       emit(
         _ExploreHoldingReloadingState(
-          currentPageIndex: state.currentPageIndex,
           explore: explore,
           countdown: state.countdown,
           incrementCountdown: state.incrementCountdown,
         ),
       );
     } else if (state is _ExploreReloadingState) {
-      final state = this.state as _ExploreReloadingState;
-      emit(
-        _ExploreReloadingState(
-          currentPageIndex: state.currentPageIndex,
-          explore: explore,
-        ),
-      );
+      emit(_ExploreReloadingState(explore: explore));
     } else {
-      emit(
-        _ExploreLoadingState(
-          explore: explore,
-        ),
-      );
+      emit(_ExploreLoadingState(explore: explore));
     }
   }
 }

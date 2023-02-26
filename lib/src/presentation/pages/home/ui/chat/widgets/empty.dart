@@ -9,8 +9,9 @@ class _EmptyChatPage extends _IChatPageBase {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 42.w),
                 child: Text(
-                  'Opps! Seems like you haven\'t started any conversation yet.',
+                  'You don\'t have any friends yet. Go to the explore page and send some friend requests!',
                   style: theme.textTheme.labelLarge,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),

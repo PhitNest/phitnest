@@ -2,14 +2,12 @@ part of home_page;
 
 class _ExploreLoadedPage extends StatelessWidget {
   final List<ProfilePicturePublicUserEntity> users;
-  final void Function(int pageIndex) onChangePage;
-  final int currentPageIndex;
+  final PageController pageController;
   final int? countdown;
 
   const _ExploreLoadedPage({
     required this.users,
-    required this.onChangePage,
-    required this.currentPageIndex,
+    required this.pageController,
     this.countdown,
   }) : super();
 
@@ -18,10 +16,11 @@ class _ExploreLoadedPage extends StatelessWidget {
         children: [
           Flexible(
             child: PageView.builder(
-              onPageChanged: onChangePage,
+              key: PageStorageKey("explore_page_view"),
+              controller: pageController,
               itemBuilder: (context, index) => _ExploreCard(
                 countdown: countdown,
-                user: users[currentPageIndex % users.length],
+                user: users[index % users.length],
               ),
             ),
           ),
