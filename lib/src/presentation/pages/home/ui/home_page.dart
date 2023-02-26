@@ -220,7 +220,7 @@ class HomePage extends StatelessWidget {
                   }
                 },
                 builder: (context, optionsState) => StyledScaffold(
-                  safeArea: false,
+                  safeArea: true,
                   body: SingleChildScrollView(
                     child: SizedBox(
                       height: 1.sh - MediaQuery.of(context).padding.top,
