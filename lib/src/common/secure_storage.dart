@@ -2,9 +2,12 @@ import 'dart:convert';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'logger.dart';
 import 'utils/utils.dart';
+
+late final SharedPreferences _sharedPreferences;
 
 final _secureStorage = FlutterSecureStorage(
   aOptions: AndroidOptions(encryptedSharedPreferences: true),
@@ -16,6 +19,11 @@ Map<String, Serializable> _lazyLoadedCache = {};
 Map<String, List<Serializable>> _lazyLoadedListCache = {};
 
 Future<void> loadSecureStorage() async {
+  _sharedPreferences = await SharedPreferences.getInstance();
+  if (_sharedPreferences.getBool('first_run') ?? true) {
+    await _secureStorage.deleteAll();
+    _sharedPreferences.setBool('first_run', false);
+  }
   _stringifiedCache = await _secureStorage.readAll();
 }
 
