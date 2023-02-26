@@ -1,20 +1,17 @@
 part of home_page;
 
 class _ExplorePage extends StatelessWidget {
+  final _IExploreState state;
+
   const _ExplorePage({
     Key? key,
+    required this.state,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) =>
-      BlocConsumer<_ExploreBloc, _IExploreState>(
-        listener: (context, state) {
-          if (state is _IExploreMatchedState) {
-            BlocProvider.of<_ChatBloc>(context)
-                .add(const _ChatFriendsAndRequestsUpdatedEvent());
-          }
-        },
-        builder: (context, state) {
+  Widget build(BuildContext context) => Builder(
+        builder: (context) {
+          final state = this.state;
           if (state is _IExploreMatchedState) {
             return _ExploreMatchedPage(
               fullName: state.friendship.friend.fullName,

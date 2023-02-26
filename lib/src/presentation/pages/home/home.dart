@@ -7,7 +7,6 @@ import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -28,8 +27,7 @@ import '../pages.dart';
 // ======= BLOC =======
 part 'bloc/chat/chat_bloc.dart';
 part 'bloc/chat/on_loaded.dart';
-part 'bloc/chat/on_friends_and_requests_updated.dart';
-part 'bloc/chat/on_received_message.dart';
+part 'bloc/home/on_data_updated.dart';
 part 'bloc/chat/on_loading_error.dart';
 part 'bloc/explore/explore_bloc.dart';
 part 'bloc/explore/on_increment_countdown.dart';
@@ -55,10 +53,9 @@ part 'bloc/options/options_bloc.dart';
 
 // ======= EVENT =======
 part 'event/chat/base.dart';
-part 'event/chat/friends_and_requests_updated.dart';
+part 'event/home/data_updated.dart';
 part 'event/chat/loaded.dart';
 part 'event/chat/loading_error.dart';
-part 'event/chat/received_message.dart';
 part 'event/explore/base.dart';
 part 'event/explore/increment_countdown.dart';
 part 'event/explore/loaded.dart';

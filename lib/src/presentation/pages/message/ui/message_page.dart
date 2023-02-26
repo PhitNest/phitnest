@@ -11,15 +11,27 @@ class MessagePage extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => BlocProvider.value(
-        value: homeBloc,
-        child: BlocConsumer<HomeBloc, IHomeState>(
-          listener: (context, state) {},
-          builder: (context, homeState) => BlocWidget(
+  Widget build(BuildContext context) => MultiBlocProvider(
+        providers: [
+          BlocProvider.value(
+            value: homeBloc,
+          ),
+          BlocProvider(
             create: (context) => _MessageBloc(
               authMethods: context.authMethods,
               friendship: friendship,
             ),
+          ),
+        ],
+        child: BlocConsumer<HomeBloc, IHomeState>(
+          buildWhen: true.always,
+          listenWhen: true.always,
+          listener: (context, state) {},
+          builder: (context, homeState) =>
+              BlocConsumer<_MessageBloc, _IMessageState>(
+            buildWhen: true.always,
+            listenWhen: true.always,
+            listener: (context, state) {},
             builder: (context, state) {
               if (state is _LoadedState) {
                 if (Cache.directMessage

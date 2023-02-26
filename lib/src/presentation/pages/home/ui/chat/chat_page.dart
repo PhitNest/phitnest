@@ -1,12 +1,16 @@
 part of home_page;
 
 class _ChatPage extends StatelessWidget {
-  const _ChatPage({Key? key}) : super(key: key);
+  final _IChatState state;
+
+  const _ChatPage({
+    Key? key,
+    required this.state,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => BlocConsumer<_ChatBloc, _IChatState>(
-        listener: (context, state) {},
-        builder: (context, state) {
+  Widget build(BuildContext context) => Builder(
+        builder: (context) {
           if (state is _IChatLoadedState) {
             if (Cache.friendship.friendsAndMessages!.isEmpty) {
               return _EmptyChatPage();

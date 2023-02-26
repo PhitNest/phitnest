@@ -1,11 +1,11 @@
 library message;
 
-
 import 'package:async/async.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phitnest_mobile/src/common/utils/utils.dart';
 
 import '../../../common/failure.dart';
 import '../../../common/theme.dart';
@@ -39,4 +39,5 @@ part 'state/sending.dart';
 part 'ui/message_page.dart';
 part 'ui/widgets/base.dart';
 part 'ui/widgets/empty_message.dart';
-part 'ui/widgets/loading.dart';part 'ui/widgets/message_loaded.dart';
+part 'ui/widgets/loading.dart';
+part 'ui/widgets/message_loaded.dart';

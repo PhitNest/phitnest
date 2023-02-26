@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/constants/constants.dart';
 import '../../../common/theme.dart';
+import '../widgets.dart';
 
 enum NavbarPage { news, explore, chat, options }
 
@@ -141,6 +142,7 @@ class StyledNavBar extends StatelessWidget {
   final VoidCallback onPressedExplore;
   final VoidCallback onPressedChat;
   final VoidCallback onPressedOptions;
+  final int friendRequestCount;
 
   const StyledNavBar({
     required this.page,
@@ -151,6 +153,7 @@ class StyledNavBar extends StatelessWidget {
     required this.onPressedExplore,
     required this.onPressedChat,
     required this.onPressedOptions,
+    required this.friendRequestCount,
   }) : super();
 
   @override
@@ -202,22 +205,16 @@ class StyledNavBar extends StatelessWidget {
                         onPressed: onPressedExplore,
                       ),
                       60.horizontalSpace,
-                      _StyledNavBarPageButton(
-                        text: 'CHAT',
-                        selected: page == NavbarPage.chat,
-                        reversed: reversed,
-                        onPressed: onPressedChat,
+                      StyledIndicator(
+                        offset: Size(8, 8),
+                        child: _StyledNavBarPageButton(
+                          text: 'CHAT',
+                          selected: page == NavbarPage.chat,
+                          reversed: reversed,
+                          onPressed: onPressedChat,
+                        ),
+                        count: friendRequestCount,
                       ),
-                      // StyledIndicator(
-                      //   offset: Size(8, 8),
-                      //   child: _StyledNavBarPageButton(
-                      //     text: 'CHAT',
-                      //     selected: page == NavbarPage.chat,
-                      //     reversed: reversed,
-                      //     onPressed: onPressedChat,
-                      //   ),
-                      //   count: 5,
-                      // ),
                       _StyledNavBarPageButton(
                         text: 'OPTIONS',
                         selected: page == NavbarPage.options,

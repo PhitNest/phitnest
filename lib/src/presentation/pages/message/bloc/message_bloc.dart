@@ -11,33 +11,19 @@ class _MessageBloc extends Bloc<_IMessageEvent, _IMessageState> {
     required this.authMethods,
     required this.friendship,
   }) : super(
-          Function.apply(
-            () {
-              final directMessage = CancelableOperation.fromFuture(
-                authMethods.withAuth(
-                  (accessToken) => Repositories.directMessage.getDirectMessage(
-                    accessToken: accessToken,
-                    friendCognitoId: friendship.friend.cognitoId,
+          Cache.directMessage.getDirectMessages(friendship.friend.cognitoId) ==
+                  null
+              ? _LoadingState(
+                  loadingMessage: CancelableOperation.fromFuture(
+                    authMethods.withAuth(
+                      (accessToken) => Repositories.directMessage
+                          .getDirectMessage(
+                              accessToken: accessToken,
+                              friendCognitoId: friendship.friend.cognitoId),
+                    ),
                   ),
-                ),
-              );
-              return Cache.directMessage
-                          .getDirectMessages(friendship.friend.cognitoId) ==
-                      null
-                  ? _LoadingState(
-                      loadingMessage: CancelableOperation.fromFuture(
-                        authMethods.withAuth(
-                          (accessToken) => Repositories.directMessage
-                              .getDirectMessage(
-                                  accessToken: accessToken,
-                                  friendCognitoId: friendship.friend.cognitoId),
-                        ),
-                      ),
-                    )
-                  : const _LoadedState();
-            },
-            [],
-          ),
+                )
+              : const _LoadedState(),
         ) {
     if (state is _LoadingState) {
       (state as _LoadingState).loadingMessage.value.then(
