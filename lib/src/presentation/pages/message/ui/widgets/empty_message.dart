@@ -5,6 +5,10 @@ class _EmptyMessagePage extends _IBasePage {
 
   _EmptyMessagePage({
     Key? key,
+    required super.controller,
+    required super.focusNode,
+    required super.onSend,
+    required super.loading,
     required this.name,
   }) : super(
           key: key,

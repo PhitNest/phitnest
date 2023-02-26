@@ -1,9 +1,9 @@
 part of home_page;
 
-class _HomeInitialState extends IHomeState {
+class HomeInitialState extends IHomeState {
   final CancelableOperation<Either<SocketConnection, Failure>> socketConnection;
 
-  _HomeInitialState({
+  HomeInitialState({
     required super.currentPage,
     required this.socketConnection,
   }) : super();

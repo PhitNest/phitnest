@@ -75,6 +75,7 @@ class LoginPage extends StatelessWidget {
                             StyledUnderlinedTextField(
                               controller: context.bloc.emailController,
                               hint: 'Email',
+                              focusNode: context.bloc.emailFocus,
                               errorMaxLines: 1,
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.next,
@@ -92,6 +93,7 @@ class LoginPage extends StatelessWidget {
                             StyledPasswordField(
                               controller: context.bloc.passwordController,
                               hint: 'Password',
+                              focusNode: context.bloc.passwordFocus,
                               textInputAction: TextInputAction.done,
                               validator: (value) => validatePassword(value),
                               onFieldSubmitted: (_) =>

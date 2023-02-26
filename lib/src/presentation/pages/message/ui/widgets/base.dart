@@ -3,11 +3,19 @@ part of message;
 abstract class _IBasePage extends StatelessWidget {
   final String name;
   final Widget child;
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final VoidCallback onSend;
+  final bool loading;
 
   const _IBasePage({
     Key? key,
     required this.child,
     required this.name,
+    required this.controller,
+    required this.focusNode,
+    required this.onSend,
+    required this.loading,
   }) : super(key: key);
 
   @override
@@ -45,12 +53,12 @@ abstract class _IBasePage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextFormField(
-                      controller: TextEditingController(),
+                      controller: controller,
                       maxLines: 12,
                       minLines: 1,
                       textInputAction: TextInputAction.send,
-                      onFieldSubmitted: (value) => {},
-                      focusNode: FocusNode(),
+                      onFieldSubmitted: (value) => onSend(),
+                      focusNode: focusNode,
                       decoration: InputDecoration(
                         hintText: 'Write a message...',
                         hintStyle: Theme.of(context).textTheme.bodySmall,
@@ -79,15 +87,18 @@ abstract class _IBasePage extends StatelessWidget {
                     ),
                   ),
                   14.horizontalSpace,
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'SEND',
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            fontWeight: FontWeight.w600,
+                  loading
+                      ? const CircularProgressIndicator()
+                      : TextButton(
+                          onPressed: onSend,
+                          child: Text(
+                            'SEND',
+                            style:
+                                Theme.of(context).textTheme.bodySmall!.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
                           ),
-                    ),
-                  ),
+                        ),
                 ],
               ),
             ),

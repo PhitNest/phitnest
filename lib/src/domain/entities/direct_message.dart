@@ -1,4 +1,5 @@
 import '../../common/utils/utils.dart';
+import 'entities.dart';
 
 class DirectMessageEntity with Serializable {
   final String id;
@@ -36,12 +37,17 @@ class DirectMessageEntity with Serializable {
 }
 
 class PopulatedDirectMessageEntity extends DirectMessageEntity {
+  final PublicUserEntity sender;
+  final PublicUserEntity recipient;
+
   const PopulatedDirectMessageEntity({
     required super.createdAt,
     required super.friendshipId,
     required super.id,
     required super.senderCognitoId,
     required super.text,
+    required this.sender,
+    required this.recipient,
   }) : super();
 
   @override
@@ -52,14 +58,14 @@ class PopulatedDirectMessageEntity extends DirectMessageEntity {
         senderCognitoId: json['senderCognitoId'],
         friendshipId: json['friendshipId'],
         createdAt: DateTime.parse(json['createdAt']),
+        sender: PublicUserEntity.fromJson(json['sender']),
+        recipient: PublicUserEntity.fromJson(json['recipient']),
       );
 
   @override
   Map<String, dynamic> toJson() => {
-        '_id': id,
-        'text': text,
-        'senderCognitoId': senderCognitoId,
-        'friendshipId': friendshipId,
-        'createdAt': createdAt.toIso8601String(),
+        ...super.toJson(),
+        'sender': sender.toJson(),
+        'recipient': recipient.toJson(),
       };
 }

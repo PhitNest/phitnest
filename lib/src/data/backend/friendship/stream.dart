@@ -1,7 +1,7 @@
 part of backend;
 
 extension StreamFriendships on Friendship {
-  Future<Either<Stream<PopulatedFriendshipEntity>, Failure>> stream({
+  Either<Stream<PopulatedFriendshipEntity>, Failure> stream({
     required SocketConnection connection,
   }) =>
       connection.stream(

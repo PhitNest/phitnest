@@ -5,22 +5,18 @@ extension _HomeOnRefreshSession on HomeBloc {
     _HomeRefreshSessionEvent event,
     Emitter<IHomeState> emit,
   ) async {
-    if (state is _HomeInitialState) {
-      final state = this.state as _HomeInitialState;
+    if (state is HomeInitialState) {
+      final state = this.state as HomeInitialState;
       await state.socketConnection.cancel();
     }
-    if (state is _IHomeSocketConnectedState) {
-      final state = this.state as _HomeSocketInitializedState;
+    if (state is HomeSocketConnectedState) {
+      final state = this.state as HomeSocketConnectedState;
       state.connection.disconnect();
       await state.onDisconnect.cancel();
       await state.onDataUpdated.cancel();
     }
-    if (state is _HomeSocketInitializingState) {
-      final state = this.state as _HomeSocketInitializingState;
-      await state.initializingStream.cancel();
-    }
     emit(
-      _HomeInitialState(
+      HomeInitialState(
         currentPage: state.currentPage,
         socketConnection: CancelableOperation.fromFuture(
           connectSocket(event.response.accessToken),

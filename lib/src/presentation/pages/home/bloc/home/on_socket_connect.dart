@@ -5,52 +5,36 @@ extension _HomeOnSocketConnected on HomeBloc {
     _HomeSocketConnectedEvent event,
     Emitter<IHomeState> emit,
   ) =>
-      emit(
-        _HomeSocketInitializingState(
-          currentPage: state.currentPage,
-          connection: event.connection,
-          initializingStream: CancelableOperation.fromFuture(
-            Future.wait(
-              [
-                Repositories.directMessage.stream(connection: event.connection),
-                Repositories.friendship.stream(connection: event.connection),
-                Repositories.friendRequest.stream(connection: event.connection),
-              ],
-            ).then(
-              (streams) {
-                final invalidIndex =
-                    streams.indexWhere((stream) => stream.isRight());
-                return invalidIndex != -1
-                    ? Right(streams[invalidIndex].getOrElse(
-                        () => throw Exception("This should never happen")))
-                    : Left(
-                        MergeStream(
-                          streams.map(
-                            (stream) => stream
-                                .swap()
-                                .getOrElse(() =>
-                                    throw Exception("This should never happen"))
-                                .map((_) => null),
+      Repositories.directMessage.stream(connection: event.connection).fold(
+            (directMessageStream) => Repositories.friendRequest
+                .stream(connection: event.connection)
+                .fold(
+                  (friendRequestStream) => Repositories.friendship
+                      .stream(connection: event.connection)
+                      .fold(
+                        (friendshipStream) => emit(
+                          HomeSocketConnectedState(
+                            currentPage: state.currentPage,
+                            connection: event.connection,
+                            onDisconnect: CancelableOperation.fromFuture(
+                              event.connection.onDisconnect(),
+                            )..then(
+                                (_) =>
+                                    add(const _HomeSocketConnectErrorEvent()),
+                              ),
+                            onDataUpdated: MergeStream([
+                              directMessageStream.map((_) => null),
+                              friendRequestStream.map((_) => null),
+                              friendshipStream.map((_) => null),
+                            ]).listen(
+                              (_) => add(const _HomeDataUpdatedEvent()),
+                            ),
                           ),
                         ),
-                      );
-              },
-            ),
-          )..then(
-              (res) => add(
-                res.fold(
-                  (stream) => _HomeSocketInitializeSuccessEvent(stream),
-                  (failure) => const _HomeSocketInitializeErrorEvent(),
+                        (failure) => add(const _HomeSocketConnectErrorEvent()),
+                      ),
+                  (failure) => add(const _HomeSocketConnectErrorEvent()),
                 ),
-              ),
-            ),
-          onDisconnect: CancelableOperation.fromFuture(
-            event.connection.onDisconnect(),
-          )..then(
-              (_) => add(
-                const _HomeSocketConnectErrorEvent(),
-              ),
-            ),
-        ),
-      );
+            (failure) => add(const _HomeSocketConnectErrorEvent()),
+          );
 }

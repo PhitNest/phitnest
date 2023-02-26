@@ -5,20 +5,20 @@ class HomeBloc extends Bloc<_IHomeEvent, IHomeState> {
   ///
   /// **STATE MACHINE:**
   ///
-  /// * **[_HomeInitialState]**
-  ///   * on *[_HomeRefreshSessionEvent]* -> *[_HomeInitialState]*
-  ///   * on *[_HomeSetPageEvent]* -> *[_HomeInitialState]*
-  ///   * on *[_HomeSocketConnectErrorEvent]* -> *[_HomeInitialState]*
-  ///   * on *[_HomeSocketConnectedEvent]* -> *[_HomeSocketInitializedState]*
+  /// * **[HomeInitialState]**
+  ///   * on *[_HomeRefreshSessionEvent]* -> *[HomeInitialState]*
+  ///   * on *[_HomeSetPageEvent]* -> *[HomeInitialState]*
+  ///   * on *[_HomeSocketConnectErrorEvent]* -> *[HomeInitialState]*
+  ///   * on *[_HomeSocketConnectedEvent]* -> *[HomeSocketConnectedState]*
   ///
-  /// * **[_HomeSocketInitializedState]**
-  ///   * on *[_HomeRefreshSessionEvent]* -> *[_HomeInitialState]*
-  ///   * on *[_HomeSetPageEvent]* -> *[_HomeSocketInitializedState]*
+  /// * **[HomeSocketConnectedState]**
+  ///   * on *[_HomeRefreshSessionEvent]* -> *[HomeInitialState]*
+  ///   * on *[_HomeSetPageEvent]* -> *[HomeSocketConnectedState]*
   HomeBloc()
       : super(
           Function.apply(
             () {
-              return _HomeInitialState(
+              return HomeInitialState(
                 currentPage: NavbarPage.options,
                 socketConnection: CancelableOperation.fromFuture(
                   connectSocket(Cache.auth.accessToken!),
@@ -33,10 +33,8 @@ class HomeBloc extends Bloc<_IHomeEvent, IHomeState> {
     on<_HomeSocketConnectErrorEvent>(onSocketConnectError);
     on<_HomeSocketConnectedEvent>(onSocketConnected);
     on<_HomeDataUpdatedEvent>(onDataUpdated);
-    on<_HomeSocketInitializeErrorEvent>(onSocketInitializeError);
-    on<_HomeSocketInitializeSuccessEvent>(onSocketInitializeSuccess);
-    if (state is _HomeInitialState) {
-      final state = this.state as _HomeInitialState;
+    if (state is HomeInitialState) {
+      final state = this.state as HomeInitialState;
       state.socketConnection.then(
         (either) => add(
           either.fold(
@@ -50,22 +48,15 @@ class HomeBloc extends Bloc<_IHomeEvent, IHomeState> {
 
   @override
   Future<void> close() async {
-    if (state is _HomeInitialState) {
-      final state = this.state as _HomeInitialState;
+    if (state is HomeInitialState) {
+      final state = this.state as HomeInitialState;
       await state.socketConnection.cancel();
     }
-    if (state is _IHomeSocketConnectedState) {
-      final state = this.state as _IHomeSocketConnectedState;
+    if (state is HomeSocketConnectedState) {
+      final state = this.state as HomeSocketConnectedState;
       await state.onDisconnect.cancel();
-      state.connection.disconnect();
-    }
-    if (state is _HomeSocketInitializedState) {
-      final state = this.state as _HomeSocketInitializedState;
       await state.onDataUpdated.cancel();
-    }
-    if (state is _HomeSocketInitializingState) {
-      final state = this.state as _HomeSocketInitializingState;
-      await state.initializingStream.cancel();
+      state.connection.disconnect();
     }
     return super.close();
   }
