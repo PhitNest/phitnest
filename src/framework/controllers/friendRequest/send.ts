@@ -8,13 +8,15 @@ import { z } from "zod";
 import { Controller, HttpMethod } from "../types";
 import { authMiddleware } from "../../middleware";
 import {
-  IFriendRequestEntity,
-  IFriendshipEntity,
+  IPopulatedFriendRequestEntity,
+  IPopulatedFriendshipEntity,
 } from "../../../domain/entities";
 import { sendFriendRequest } from "../../../domain/use-cases";
 import { getSocketServer } from "../../adapters/injection";
 
-type SendFriendRequestResponse = IFriendRequestEntity | IFriendshipEntity;
+type SendFriendRequestResponse =
+  | IPopulatedFriendRequestEntity
+  | IPopulatedFriendshipEntity;
 
 export class SendFriendRequestController
   implements Controller<SendFriendRequestResponse>
@@ -40,11 +42,20 @@ export class SendFriendRequestController
     if (result instanceof Failure) {
       return result;
     } else {
-      getSocketServer().emit(
-        "friendRequest",
-        result,
-        req.body.recipientCognitoId
-      );
+      const request = result as IPopulatedFriendRequestEntity;
+      if (request.fromUser) {
+        getSocketServer().emit(
+          "friendRequest",
+          result,
+          req.body.recipientCognitoId
+        );
+      } else {
+        getSocketServer().emit(
+          "friendship",
+          result,
+          req.body.recipientCognitoId
+        );
+      }
       return result;
     }
   }

@@ -22,10 +22,6 @@ export async function explore(cognitoId: string, gymId: string) {
               ) ||
               sentRequests.find(
                 (request) => request.toCognitoId === user.cognitoId
-              ) ||
-              receivedRequests.find(
-                (request) =>
-                  request.fromCognitoId === user.cognitoId && request.denied
               )
             )
         )

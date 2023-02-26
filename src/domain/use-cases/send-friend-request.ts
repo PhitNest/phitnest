@@ -12,9 +12,10 @@ export async function sendFriendRequest(
   senderCognitoId: string,
   recipientCognitoId: string
 ) {
-  const [haveSameGym, sentRequest, receivedRequest, friendship] =
+  const [sender, recipient, sentRequest, receivedRequest, friendship] =
     await Promise.all([
-      databases().userDatabase.haveSameGym(senderCognitoId, recipientCognitoId),
+      databases().userDatabase.get(senderCognitoId),
+      databases().userDatabase.get(recipientCognitoId),
       databases().friendRequestDatabase.getByCognitoIds(
         senderCognitoId,
         recipientCognitoId
@@ -28,17 +29,31 @@ export async function sendFriendRequest(
         recipientCognitoId,
       ]),
     ]);
-  if (haveSameGym) {
+  if (sender instanceof Failure) {
+    return sender;
+  } else if (recipient instanceof Failure) {
+    return recipient;
+  } else if (sender.gymId.toString() === recipient.gymId.toString()) {
     if (sentRequest instanceof Failure) {
       if (sentRequest === kFriendRequestNotFound) {
         if (friendship instanceof Failure) {
           if (friendship === kFriendshipNotFound) {
             if (receivedRequest instanceof Failure) {
               if (receivedRequest === kFriendRequestNotFound) {
-                return databases().friendRequestDatabase.create(
-                  senderCognitoId,
-                  recipientCognitoId
-                );
+                return {
+                  ...(await databases().friendRequestDatabase.create(
+                    senderCognitoId,
+                    recipientCognitoId
+                  )),
+                  fromUser: {
+                    cognitoId: senderCognitoId,
+                    firstName: sender.firstName,
+                    lastName: sender.lastName,
+                    gymId: sender.gymId,
+                    _id: sender._id,
+                    confirmed: sender.confirmed,
+                  },
+                };
               } else {
                 return receivedRequest;
               }
@@ -50,10 +65,20 @@ export async function sendFriendRequest(
               if (deletion instanceof Failure) {
                 return deletion;
               } else {
-                return databases().friendshipDatabase.create([
-                  senderCognitoId,
-                  recipientCognitoId,
-                ]);
+                return {
+                  ...(await databases().friendshipDatabase.create([
+                    senderCognitoId,
+                    recipientCognitoId,
+                  ])),
+                  friend: {
+                    cognitoId: recipientCognitoId,
+                    firstName: recipient.firstName,
+                    lastName: recipient.lastName,
+                    gymId: recipient.gymId,
+                    _id: recipient._id,
+                    confirmed: recipient.confirmed,
+                  },
+                };
               }
             }
           } else {

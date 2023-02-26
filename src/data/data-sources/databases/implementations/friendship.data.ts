@@ -39,12 +39,16 @@ export class MongoFriendshipDatabase implements IFriendshipDatabase {
   }
 
   async delete(userCognitoIds: [string, string]) {
-    if (
-      !(await FriendshipModel.findOneAndDelete({
-        userCognitoIds: userCognitoIds,
-      }))
-    ) {
-      return kFriendshipNotFound;
+    let deletion = await FriendshipModel.findOneAndDelete({
+      userCognitoIds: userCognitoIds,
+    });
+    if (!deletion) {
+      deletion = await FriendshipModel.findOneAndDelete({
+        userCognitoIds: [userCognitoIds[1], userCognitoIds[0]],
+      });
+      if (!deletion) {
+        return kFriendshipNotFound;
+      }
     }
   }
 }

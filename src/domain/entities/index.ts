@@ -8,7 +8,10 @@ export {
   IProfilePictureUserEntity,
   IProfilePicturePublicUserEntity,
 } from "./user.entity";
-export { IDirectMessageEntity } from "./direct-message.entity";
+export {
+  IDirectMessageEntity,
+  IPopulatedDirectMessageEntity,
+} from "./direct-message.entity";
 export { IAuthEntity, IRefreshSessionEntity } from "./auth.entity";
 export {
   IFriendRequestEntity,
