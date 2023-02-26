@@ -14,7 +14,8 @@ class DevicePreviewProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     DeviceInfo? device = <DeviceInfo?>[...Devices.all].firstWhere(
       (device) =>
-          dotenv.get("DEVICE").toLowerCase() == device!.name.toLowerCase(),
+          dotenv.get("DEVICE", fallback: "null").toLowerCase() ==
+          device!.name.toLowerCase(),
       orElse: () => null,
     );
     return DevicePreview(
