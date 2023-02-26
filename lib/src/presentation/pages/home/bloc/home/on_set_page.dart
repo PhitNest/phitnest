@@ -13,13 +13,24 @@ extension _HomeOnSetPage on HomeBloc {
           socketConnection: state.socketConnection,
         ),
       );
-    } else if (state is _HomeSocketConnectedState) {
-      final state = this.state as _HomeSocketConnectedState;
+    } else if (state is _HomeSocketInitializedState) {
+      final state = this.state as _HomeSocketInitializedState;
       emit(
-        _HomeSocketConnectedState(
+        _HomeSocketInitializedState(
           currentPage: event.page,
           connection: state.connection,
           onDisconnect: state.onDisconnect,
+          onDataUpdated: state.onDataUpdated,
+        ),
+      );
+    } else if (state is _HomeSocketInitializingState) {
+      final state = this.state as _HomeSocketInitializingState;
+      emit(
+        _HomeSocketInitializingState(
+          currentPage: event.page,
+          connection: state.connection,
+          onDisconnect: state.onDisconnect,
+          initializingStream: state.initializingStream,
         ),
       );
     }

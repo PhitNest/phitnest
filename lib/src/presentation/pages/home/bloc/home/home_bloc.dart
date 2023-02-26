@@ -9,11 +9,11 @@ class HomeBloc extends Bloc<_IHomeEvent, IHomeState> {
   ///   * on *[_HomeRefreshSessionEvent]* -> *[_HomeInitialState]*
   ///   * on *[_HomeSetPageEvent]* -> *[_HomeInitialState]*
   ///   * on *[_HomeSocketConnectErrorEvent]* -> *[_HomeInitialState]*
-  ///   * on *[_HomeSocketConnectedEvent]* -> *[_HomeSocketConnectedState]*
+  ///   * on *[_HomeSocketConnectedEvent]* -> *[_HomeSocketInitializedState]*
   ///
-  /// * **[_HomeSocketConnectedState]**
+  /// * **[_HomeSocketInitializedState]**
   ///   * on *[_HomeRefreshSessionEvent]* -> *[_HomeInitialState]*
-  ///   * on *[_HomeSetPageEvent]* -> *[_HomeSocketConnectedState]*
+  ///   * on *[_HomeSetPageEvent]* -> *[_HomeSocketInitializedState]*
   HomeBloc()
       : super(
           Function.apply(
@@ -33,6 +33,8 @@ class HomeBloc extends Bloc<_IHomeEvent, IHomeState> {
     on<_HomeSocketConnectErrorEvent>(onSocketConnectError);
     on<_HomeSocketConnectedEvent>(onSocketConnected);
     on<_HomeDataUpdatedEvent>(onDataUpdated);
+    on<_HomeSocketInitializeErrorEvent>(onSocketInitializeError);
+    on<_HomeSocketInitializeSuccessEvent>(onSocketInitializeSuccess);
     if (state is _HomeInitialState) {
       final state = this.state as _HomeInitialState;
       state.socketConnection.then(
@@ -52,10 +54,18 @@ class HomeBloc extends Bloc<_IHomeEvent, IHomeState> {
       final state = this.state as _HomeInitialState;
       await state.socketConnection.cancel();
     }
-    if (state is _HomeSocketConnectedState) {
-      final state = this.state as _HomeSocketConnectedState;
-      state.connection.disconnect();
+    if (state is _IHomeSocketConnectedState) {
+      final state = this.state as _IHomeSocketConnectedState;
       await state.onDisconnect.cancel();
+      state.connection.disconnect();
+    }
+    if (state is _HomeSocketInitializedState) {
+      final state = this.state as _HomeSocketInitializedState;
+      await state.onDataUpdated.cancel();
+    }
+    if (state is _HomeSocketInitializingState) {
+      final state = this.state as _HomeSocketInitializingState;
+      await state.initializingStream.cancel();
     }
     return super.close();
   }

@@ -1,6 +1,6 @@
 part of backend;
 
-class RegisterResponse extends Equatable {
+class RegisterResponse {
   final String uploadUrl;
   final UserEntity user;
 
@@ -14,9 +14,6 @@ class RegisterResponse extends Equatable {
         user: UserEntity.fromJson(json['user']),
         uploadUrl: json['uploadUrl'],
       );
-
-  @override
-  List<Object> get props => [user, uploadUrl];
 }
 
 extension Register on Auth {

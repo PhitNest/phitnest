@@ -1,9 +1,8 @@
-import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../common/utils/utils.dart';
 
-class LocationEntity extends Equatable with Serializable {
+class LocationEntity with Serializable {
   final double longitude;
   final double latitude;
 
@@ -32,7 +31,4 @@ class LocationEntity extends Equatable with Serializable {
         other.longitude,
       ) /
       1600;
-
-  @override
-  List<Object> get props => [longitude, latitude];
 }

@@ -9,9 +9,15 @@ extension _HomeOnRefreshSession on HomeBloc {
       final state = this.state as _HomeInitialState;
       await state.socketConnection.cancel();
     }
-    if (state is _HomeSocketConnectedState) {
-      final state = this.state as _HomeSocketConnectedState;
+    if (state is _IHomeSocketConnectedState) {
+      final state = this.state as _HomeSocketInitializedState;
       state.connection.disconnect();
+      await state.onDisconnect.cancel();
+      await state.onDataUpdated.cancel();
+    }
+    if (state is _HomeSocketInitializingState) {
+      final state = this.state as _HomeSocketInitializingState;
+      await state.initializingStream.cancel();
     }
     emit(
       _HomeInitialState(

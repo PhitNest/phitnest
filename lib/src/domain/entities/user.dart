@@ -1,8 +1,6 @@
-import 'package:equatable/equatable.dart';
-
 import '../../common/utils/utils.dart';
 
-abstract class User extends Equatable with Serializable {
+abstract class User with Serializable {
   final String id;
   final String firstName;
   final String lastName;
@@ -28,16 +26,6 @@ abstract class User extends Equatable with Serializable {
         'gymId': gymId,
         'confirmed': confirmed,
       };
-
-  @override
-  List<Object> get props => [
-        id,
-        firstName,
-        lastName,
-        cognitoId,
-        gymId,
-        confirmed,
-      ];
 
   String get fullName => '$firstName $lastName';
 }
@@ -71,12 +59,6 @@ class UserEntity extends User {
         ...super.toJson(),
         'email': email,
       };
-
-  @override
-  List<Object> get props => [
-        super.props,
-        email,
-      ];
 }
 
 class PublicUserEntity extends User with Serializable {
@@ -133,9 +115,6 @@ class ProfilePictureUserEntity extends UserEntity {
         ...super.toJson(),
         'profilePictureUrl': profilePictureUrl,
       };
-
-  @override
-  List<Object> get props => [super.props, profilePictureUrl];
 }
 
 class ProfilePicturePublicUserEntity extends PublicUserEntity {
@@ -168,7 +147,4 @@ class ProfilePicturePublicUserEntity extends PublicUserEntity {
         ...super.toJson(),
         'profilePictureUrl': profilePictureUrl,
       };
-
-  @override
-  List<Object> get props => [super.props, profilePictureUrl];
 }

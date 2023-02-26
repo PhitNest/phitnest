@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-class Failure extends Equatable {
+class Failure {
   final String code;
   final String message;
   final dynamic details;
@@ -12,7 +10,4 @@ class Failure extends Equatable {
         json['message'],
         details: json['details'],
       );
-
-  @override
-  List<Object> get props => [code, message, details ?? ""];
 }

@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -24,6 +23,9 @@ part 'friendship/friendship.dart';
 part 'gym/gym.dart';
 part 'profilePicture/profile_picture.dart';
 part 'user/user.dart';
+part 'friendRequest/stream.dart';
+part 'friendship/stream.dart';
+part 'directMessage/stream.dart';
 
 // ====== AUTH ======
 part 'auth/login.dart';
