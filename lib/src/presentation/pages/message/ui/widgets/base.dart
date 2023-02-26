@@ -20,11 +20,21 @@ abstract class _IBasePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => StyledScaffold(
-        showAppBar: true,
-        appBarTitle: name,
-        leadingAppBarWidget: StyledBackButton(),
         body: Column(
           children: [
+            Stack(
+              children: [
+                StyledBackButton(),
+                Container(
+                  padding: EdgeInsets.only(top: 8.h),
+                  alignment: Alignment.center,
+                  child: Text(
+                    name,
+                    style: theme.textTheme.headlineLarge,
+                  ),
+                ),
+              ],
+            ),
             child,
             Container(
               decoration: BoxDecoration(
