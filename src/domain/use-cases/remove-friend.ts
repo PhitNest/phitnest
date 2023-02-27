@@ -5,17 +5,19 @@ export async function removeFriend(
   senderCognitoId: string,
   recipientCognitoId: string
 ) {
-  const [deletion] = await Promise.all([
-    databases().friendshipDatabase.delete([
-      senderCognitoId,
-      recipientCognitoId,
-    ]),
-    databases().friendRequestDatabase.create(
-      recipientCognitoId,
-      senderCognitoId
-    ),
+  const deletion = await databases().friendshipDatabase.delete([
+    senderCognitoId,
+    recipientCognitoId,
   ]);
   if (deletion instanceof Failure) {
     return deletion;
+  } else {
+    const creation = await databases().friendRequestDatabase.create(
+      recipientCognitoId,
+      senderCognitoId
+    );
+    if (creation instanceof Failure) {
+      return creation;
+    }
   }
 }
