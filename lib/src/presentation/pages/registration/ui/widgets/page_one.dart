@@ -30,6 +30,7 @@ class _PageOne extends StatelessWidget {
           const StyledBackButton(),
           Expanded(
             child: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: Column(
                 children: [
                   32.verticalSpace,

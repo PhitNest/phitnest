@@ -30,62 +30,65 @@ class _PageTwo extends StatelessWidget {
   }) : super();
 
   @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          80.verticalSpace,
-          Text(
-            "Hi, $firstName.\nLet's make an account.",
-            style: theme.textTheme.headlineLarge,
-            textAlign: TextAlign.center,
-          ),
-          32.verticalSpace,
-          SizedBox(
-            width: 291.w,
-            child: Form(
-              key: formKey,
-              autovalidateMode: autovalidateMode,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  StyledUnderlinedTextField(
-                    errorMaxLines: 1,
-                    hint: 'Email',
-                    keyboardType: TextInputType.emailAddress,
-                    controller: emailController,
-                    validator: (value) =>
-                        validateEmail(value) ??
-                        (takenEmails.contains(emailController.text)
-                            ? 'Email already in use.'
-                            : null),
-                    textInputAction: TextInputAction.next,
-                    focusNode: emailFocusNode,
-                  ),
-                  StyledPasswordField(
-                    hint: 'Password',
-                    controller: passwordController,
-                    validator: (value) => validatePassword(value),
-                    textInputAction: TextInputAction.next,
-                    focusNode: passwordFocusNode,
-                  ),
-                  StyledPasswordField(
-                    hint: 'Confirm password',
-                    controller: confirmPasswordController,
-                    onFieldSubmitted: (val) => onSubmit(),
-                    focusNode: confirmPasswordFocusNode,
-                    validator: (value) => passwordController.text ==
-                            confirmPasswordController.text
-                        ? null
-                        : "Passwords don't match",
-                  ),
-                ],
+  Widget build(BuildContext context) => SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: Column(
+          children: [
+            80.verticalSpace,
+            Text(
+              "Hi, $firstName.\nLet's make an account.",
+              style: theme.textTheme.headlineLarge,
+              textAlign: TextAlign.center,
+            ),
+            32.verticalSpace,
+            SizedBox(
+              width: 291.w,
+              child: Form(
+                key: formKey,
+                autovalidateMode: autovalidateMode,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    StyledUnderlinedTextField(
+                      errorMaxLines: 1,
+                      hint: 'Email',
+                      keyboardType: TextInputType.emailAddress,
+                      controller: emailController,
+                      validator: (value) =>
+                          validateEmail(value) ??
+                          (takenEmails.contains(emailController.text)
+                              ? 'Email already in use.'
+                              : null),
+                      textInputAction: TextInputAction.next,
+                      focusNode: emailFocusNode,
+                    ),
+                    StyledPasswordField(
+                      hint: 'Password',
+                      controller: passwordController,
+                      validator: (value) => validatePassword(value),
+                      textInputAction: TextInputAction.next,
+                      focusNode: passwordFocusNode,
+                    ),
+                    StyledPasswordField(
+                      hint: 'Confirm password',
+                      controller: confirmPasswordController,
+                      onFieldSubmitted: (val) => onSubmit(),
+                      focusNode: confirmPasswordFocusNode,
+                      validator: (value) => passwordController.text ==
+                              confirmPasswordController.text
+                          ? null
+                          : "Passwords don't match",
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          math.max(110 - keyboardHeight, 0).verticalSpace,
-          StyledButton(
-            onPressed: onSubmit,
-            text: "NEXT",
-          ),
-        ],
+            math.max(120 - keyboardHeight, 0).verticalSpace,
+            StyledButton(
+              onPressed: onSubmit,
+              text: "NEXT",
+            ),
+          ],
+        ),
       );
 }

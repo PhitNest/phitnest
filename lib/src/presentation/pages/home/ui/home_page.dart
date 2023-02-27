@@ -221,71 +221,87 @@ class HomePage extends StatelessWidget {
                 builder: (context, optionsState) => StyledScaffold(
                   safeArea: false,
                   lightMode: exploreState is _IExploreMatchedState,
-                  body: SingleChildScrollView(
-                    child: SizedBox(
-                      height: 1.sh,
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Builder(
-                              builder: (context) {
-                                switch (homeState.currentPage) {
-                                  case NavbarPage.explore:
-                                    return _ExplorePage(state: exploreState);
-                                  case NavbarPage.chat:
-                                    return _ChatPage(state: chatState);
-                                  case NavbarPage.options:
-                                    return _OptionsPage(state: optionsState);
-                                  case NavbarPage.news:
-                                    return Container();
-                                }
-                              },
+                  body: optionsState is _OptionsSignOutState
+                      ? Container(
+                          child:
+                              Center(child: const CircularProgressIndicator()))
+                      : SingleChildScrollView(
+                          child: SizedBox(
+                            height: 1.sh,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: Builder(
+                                    builder: (context) {
+                                      switch (homeState.currentPage) {
+                                        case NavbarPage.explore:
+                                          return _ExplorePage(
+                                              state: exploreState);
+                                        case NavbarPage.chat:
+                                          return _ChatPage(state: chatState);
+                                        case NavbarPage.options:
+                                          return _OptionsPage(
+                                              state: optionsState);
+                                        case NavbarPage.news:
+                                          return Container();
+                                      }
+                                    },
+                                  ),
+                                ),
+                                StyledNavBar(
+                                  friendRequestCount: Cache
+                                          .friendship
+                                          .friendsAndRequests
+                                          ?.requests
+                                          .length ??
+                                      0,
+                                  page: homeState.currentPage,
+                                  onReleaseLogo: () {
+                                    if (homeState.currentPage ==
+                                        NavbarPage.explore) {
+                                      context.exploreBloc
+                                          .add(const _ExploreReleaseEvent());
+                                    }
+                                  },
+                                  onPressDownLogo: () {
+                                    if (homeState.currentPage ==
+                                        NavbarPage.explore) {
+                                      context.exploreBloc
+                                          .add(const _ExplorePressDownEvent());
+                                    } else {
+                                      if (exploreState
+                                          is _IExploreMatchedState) {
+                                        context.exploreBloc
+                                            .add(const _ExploreResetEvent());
+                                      }
+                                      context.homeBloc.add(
+                                          const _HomeSetPageEvent(
+                                              NavbarPage.explore));
+                                    }
+                                  },
+                                  logoState:
+                                      logoButtonState(homeState, exploreState),
+                                  onPressedNews: () => context.homeBloc.add(
+                                      const _HomeSetPageEvent(NavbarPage.news)),
+                                  onPressedExplore: () {
+                                    if (exploreState is _IExploreMatchedState) {
+                                      context.exploreBloc
+                                          .add(const _ExploreResetEvent());
+                                    }
+                                    context.homeBloc.add(
+                                        const _HomeSetPageEvent(
+                                            NavbarPage.explore));
+                                  },
+                                  onPressedOptions: () => context.homeBloc.add(
+                                      const _HomeSetPageEvent(
+                                          NavbarPage.options)),
+                                  onPressedChat: () => context.homeBloc.add(
+                                      const _HomeSetPageEvent(NavbarPage.chat)),
+                                ),
+                              ],
                             ),
                           ),
-                          StyledNavBar(
-                            friendRequestCount: Cache.friendship
-                                    .friendsAndRequests?.requests.length ??
-                                0,
-                            page: homeState.currentPage,
-                            onReleaseLogo: () {
-                              if (homeState.currentPage == NavbarPage.explore) {
-                                context.exploreBloc
-                                    .add(const _ExploreReleaseEvent());
-                              }
-                            },
-                            onPressDownLogo: () {
-                              if (homeState.currentPage == NavbarPage.explore) {
-                                context.exploreBloc
-                                    .add(const _ExplorePressDownEvent());
-                              } else {
-                                if (exploreState is _IExploreMatchedState) {
-                                  context.exploreBloc
-                                      .add(const _ExploreResetEvent());
-                                }
-                                context.homeBloc.add(const _HomeSetPageEvent(
-                                    NavbarPage.explore));
-                              }
-                            },
-                            logoState: logoButtonState(homeState, exploreState),
-                            onPressedNews: () => context.homeBloc
-                                .add(const _HomeSetPageEvent(NavbarPage.news)),
-                            onPressedExplore: () {
-                              if (exploreState is _IExploreMatchedState) {
-                                context.exploreBloc
-                                    .add(const _ExploreResetEvent());
-                              }
-                              context.homeBloc.add(
-                                  const _HomeSetPageEvent(NavbarPage.explore));
-                            },
-                            onPressedOptions: () => context.homeBloc.add(
-                                const _HomeSetPageEvent(NavbarPage.options)),
-                            onPressedChat: () => context.homeBloc
-                                .add(const _HomeSetPageEvent(NavbarPage.chat)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                        ),
                 ),
               ),
             ),
