@@ -47,7 +47,7 @@ class GymSearchPage extends StatelessWidget {
                           leading: Container(),
                           elevation: 0,
                           leadingWidth: 0,
-                          backgroundColor: Colors.grey[50],
+                          backgroundColor: Colors.white,
                           floating: true,
                           snap: true,
                           primary: false,

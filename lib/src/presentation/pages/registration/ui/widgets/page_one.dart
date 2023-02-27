@@ -27,50 +27,58 @@ class _PageOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          StyledBackButton(),
-          32.verticalSpace,
-          Text(
-            "Let's get started!\nWhat can we call you?",
-            style: theme.textTheme.headlineLarge,
-            textAlign: TextAlign.center,
-          ),
-          36.verticalSpace,
-          SizedBox(
-            width: 291.w,
-            child: Form(
-              key: formKey,
-              autovalidateMode: autovalidateMode,
+          const StyledBackButton(),
+          Expanded(
+            child: SingleChildScrollView(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  StyledUnderlinedTextField(
-                    errorMaxLines: 1,
-                    hint: 'First name',
-                    controller: firstNameController,
-                    validator: (value) => validateName(value),
-                    textInputAction: TextInputAction.next,
-                    textCapitalization: TextCapitalization.words,
-                    onChanged: onFirstNameEdited,
-                    focusNode: firstNameFocusNode,
+                  32.verticalSpace,
+                  Text(
+                    "Let's get started!\nWhat can we call you?",
+                    style: theme.textTheme.headlineLarge,
+                    textAlign: TextAlign.center,
                   ),
-                  8.verticalSpace,
-                  StyledUnderlinedTextField(
-                    errorMaxLines: 1,
-                    hint: 'Last name',
-                    controller: lastNameController,
-                    validator: (value) => validateName(value),
-                    textCapitalization: TextCapitalization.words,
-                    onFieldSubmitted: (val) => onSubmit(),
-                    focusNode: lastNameFocusNode,
+                  36.verticalSpace,
+                  SizedBox(
+                    width: 291.w,
+                    child: Form(
+                      key: formKey,
+                      autovalidateMode: autovalidateMode,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          StyledUnderlinedTextField(
+                            errorMaxLines: 1,
+                            hint: 'First name',
+                            controller: firstNameController,
+                            validator: (value) => validateName(value),
+                            textInputAction: TextInputAction.next,
+                            textCapitalization: TextCapitalization.words,
+                            onChanged: onFirstNameEdited,
+                            focusNode: firstNameFocusNode,
+                          ),
+                          8.verticalSpace,
+                          StyledUnderlinedTextField(
+                            errorMaxLines: 1,
+                            hint: 'Last name',
+                            controller: lastNameController,
+                            validator: (value) => validateName(value),
+                            textCapitalization: TextCapitalization.words,
+                            onFieldSubmitted: (val) => onSubmit(),
+                            focusNode: lastNameFocusNode,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  math.max(170 - keyboardHeight, 0).verticalSpace,
+                  StyledButton(
+                    onPressed: onSubmit,
+                    text: "NEXT",
                   ),
                 ],
               ),
             ),
-          ),
-          math.max(170 - keyboardHeight, 0).verticalSpace,
-          StyledButton(
-            onPressed: onSubmit,
-            text: "NEXT",
           ),
         ],
       );

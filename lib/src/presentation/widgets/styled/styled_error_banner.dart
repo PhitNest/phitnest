@@ -20,7 +20,7 @@ class StyledErrorBanner extends MaterialBanner {
   }
 
   static void dismiss() {
-    scaffoldMessengerKey.currentState?.hideCurrentMaterialBanner();
+    scaffoldMessengerKey.currentState?.clearMaterialBanners();
   }
 
   StyledErrorBanner._({

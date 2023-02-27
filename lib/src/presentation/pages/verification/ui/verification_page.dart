@@ -66,62 +66,69 @@ class VerificationPage extends StatelessWidget {
               state is _ResendingState ||
               state is _LoginLoadingState;
           return StyledScaffold(
-            body: SingleChildScrollView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              child: SizedBox(
-                height: 1.sh - MediaQuery.of(context).padding.top,
-                child: Column(
-                  children: [
-                    StyledBackButton(),
-                    30.verticalSpace,
-                    Text(
-                      headerText,
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.headlineLarge,
-                    ),
-                    40.verticalSpace,
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      child: Text(
-                        "Check $email for a verification code from us and enter it below",
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.labelLarge,
-                      ),
-                    ),
-                    30.verticalSpace,
-                    StyledVerificationField(
-                      controller: context.bloc.codeController,
-                      onCompleted: loading
-                          ? (_) {}
-                          : (_) => context.bloc.add(const _SubmitEvent()),
-                    ),
-                    loading
-                        ? Padding(
-                            padding: EdgeInsets.only(top: 20.h),
-                            child: const CircularProgressIndicator(),
-                          )
-                        : Expanded(
-                            child: Column(
-                              children: [
-                                20.verticalSpace,
-                                StyledButton(
-                                  text: 'SUBMIT',
-                                  onPressed: () =>
-                                      context.bloc.add(const _SubmitEvent()),
-                                ),
-                                Spacer(),
-                                StyledUnderlinedTextButton(
-                                  onPressed: () => () =>
-                                      context.bloc.add(const _ResendEvent()),
-                                  text: 'RESEND CODE',
-                                ),
-                                37.verticalSpace,
-                              ],
+            body: Column(
+              children: [
+                const StyledBackButton(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    child: SizedBox(
+                      height: 1.sh - MediaQuery.of(context).padding.top - 46.h,
+                      child: Column(
+                        children: [
+                          30.verticalSpace,
+                          Text(
+                            headerText,
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.headlineLarge,
+                          ),
+                          40.verticalSpace,
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: Text(
+                              "Check $email for a verification code from us and enter it below",
+                              textAlign: TextAlign.center,
+                              style: theme.textTheme.labelLarge,
                             ),
                           ),
-                  ],
+                          30.verticalSpace,
+                          StyledVerificationField(
+                            controller: context.bloc.codeController,
+                            onCompleted: loading
+                                ? (_) {}
+                                : (_) => context.bloc.add(const _SubmitEvent()),
+                          ),
+                          loading
+                              ? Padding(
+                                  padding: EdgeInsets.only(top: 20.h),
+                                  child: const CircularProgressIndicator(),
+                                )
+                              : Expanded(
+                                  child: Column(
+                                    children: [
+                                      20.verticalSpace,
+                                      StyledButton(
+                                        text: 'SUBMIT',
+                                        onPressed: () => context.bloc
+                                            .add(const _SubmitEvent()),
+                                      ),
+                                      Spacer(),
+                                      StyledUnderlinedTextButton(
+                                        onPressed: () => () => context.bloc
+                                            .add(const _ResendEvent()),
+                                        text: 'RESEND CODE',
+                                      ),
+                                      37.verticalSpace,
+                                    ],
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           );
         },
