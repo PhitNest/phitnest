@@ -120,6 +120,8 @@ class Auth {
                 Cache.profilePicture.cacheProfilePictureUrl(null),
                 Cache.gym.cacheGym(null),
                 Cache.user.cacheUserExplore(null),
+                Cache.friendship.cacheFriendsAndMessages(null),
+                Cache.friendship.cacheFriendsAndRequests(null),
               ],
             ).then((_) => null);
           }
