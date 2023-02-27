@@ -20,6 +20,7 @@ class StyledScaffold extends StatelessWidget {
         value:
             lightMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           body: safeArea
               ? SafeArea(
                   child: body,

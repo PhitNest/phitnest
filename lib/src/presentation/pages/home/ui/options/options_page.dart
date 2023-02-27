@@ -11,6 +11,7 @@ class _OptionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Builder(
         builder: (context) => SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           physics: BouncingScrollPhysics(),
           child: Column(
             children: [

@@ -92,7 +92,7 @@ class _PageThreeSelected extends _PageThreeBase {
               onChanged: onSelected,
               initialValue: gym,
             ),
-            24.verticalSpace,
+            110.verticalSpace,
             StyledButton(
               onPressed: onPressedNext,
               text: "NEXT",

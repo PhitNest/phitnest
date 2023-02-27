@@ -120,128 +120,122 @@ class RegistrationPage extends StatelessWidget {
             );
           } else {
             return StyledScaffold(
-              body: SingleChildScrollView(
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
-                child: SizedBox(
-                  height: 1.sh - MediaQuery.of(context).padding.top,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: PageView.builder(
-                          onPageChanged: context.swipe,
-                          controller: context.bloc.pageController,
-                          itemCount: context.scrollLimit,
-                          itemBuilder: (context, index) {
-                            switch (index) {
-                              case 0:
-                                return _PageOne(
-                                  keyboardHeight: keyboardHeight,
-                                  formKey: context.bloc.pageOneFormKey,
-                                  firstNameController:
-                                      context.bloc.firstNameController,
-                                  lastNameController:
-                                      context.bloc.lastNameController,
-                                  autovalidateMode: state.autovalidateMode,
-                                  onFirstNameEdited: context.editFirstName,
-                                  firstNameFocusNode:
-                                      context.bloc.firstNameFocusNode,
-                                  lastNameFocusNode:
-                                      context.bloc.lastNameFocusNode,
-                                  onSubmit: context.submitPageOne,
-                                );
-                              case 1:
-                                return _PageTwo(
-                                  keyboardHeight: keyboardHeight,
-                                  formKey: context.bloc.pageTwoFormKey,
-                                  takenEmails: state.takenEmails,
-                                  emailController: context.bloc.emailController,
-                                  passwordController:
-                                      context.bloc.passwordController,
-                                  autovalidateMode: state.autovalidateMode,
-                                  emailFocusNode: context.bloc.emailFocusNode,
-                                  passwordFocusNode:
-                                      context.bloc.passwordFocusNode,
-                                  onSubmit: context.submitPageTwo,
-                                  confirmPasswordController:
-                                      context.bloc.confirmPasswordController,
-                                  confirmPasswordFocusNode:
-                                      context.bloc.confirmPasswordFocusNode,
+              body: OverflowBox(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: PageView.builder(
+                        onPageChanged: context.swipe,
+                        controller: context.bloc.pageController,
+                        itemCount: context.scrollLimit,
+                        itemBuilder: (context, index) {
+                          switch (index) {
+                            case 0:
+                              return _PageOne(
+                                keyboardHeight: keyboardHeight,
+                                formKey: context.bloc.pageOneFormKey,
+                                firstNameController:
+                                    context.bloc.firstNameController,
+                                lastNameController:
+                                    context.bloc.lastNameController,
+                                autovalidateMode: state.autovalidateMode,
+                                onFirstNameEdited: context.editFirstName,
+                                firstNameFocusNode:
+                                    context.bloc.firstNameFocusNode,
+                                lastNameFocusNode:
+                                    context.bloc.lastNameFocusNode,
+                                onSubmit: context.submitPageOne,
+                              );
+                            case 1:
+                              return _PageTwo(
+                                keyboardHeight: keyboardHeight,
+                                formKey: context.bloc.pageTwoFormKey,
+                                takenEmails: state.takenEmails,
+                                emailController: context.bloc.emailController,
+                                passwordController:
+                                    context.bloc.passwordController,
+                                autovalidateMode: state.autovalidateMode,
+                                emailFocusNode: context.bloc.emailFocusNode,
+                                passwordFocusNode:
+                                    context.bloc.passwordFocusNode,
+                                onSubmit: context.submitPageTwo,
+                                confirmPasswordController:
+                                    context.bloc.confirmPasswordController,
+                                confirmPasswordFocusNode:
+                                    context.bloc.confirmPasswordFocusNode,
+                                firstName: context.bloc.firstNameController.text
+                                    .trim(),
+                              );
+                            case 2:
+                              if (state is _InitialState) {
+                                return _PageThreeLoading(
                                   firstName: context
                                       .bloc.firstNameController.text
                                       .trim(),
+                                  onPressedNoGym: context.noGym,
                                 );
-                              case 2:
-                                if (state is _InitialState) {
-                                  return _PageThreeLoading(
-                                    firstName: context
-                                        .bloc.firstNameController.text
-                                        .trim(),
-                                    onPressedNoGym: context.noGym,
-                                  );
-                                } else if (state is _GymsLoadingErrorState) {
-                                  return _PageThreeLoadingError(
-                                    onPressedNoGym: context.noGym,
-                                    firstName: context
-                                        .bloc.firstNameController.text
-                                        .trim(),
-                                    error: state.failure.message,
-                                    onPressedRetry: context.retryLoadGyms,
-                                  );
-                                } else if (state is _IGymSelectedState) {
-                                  return _PageThreeSelected(
-                                    firstName: context
-                                        .bloc.firstNameController.text
-                                        .trim(),
-                                    gyms: _filterGymsWithDuplicateNames(
-                                        state.gyms),
-                                    onSelected: context.selectGym,
-                                    onPressedNoGym: context.noGym,
-                                    gym: state.gym,
-                                    onPressedNext: () =>
-                                        context.bloc.pageController.nextPage(
-                                      duration: const Duration(
-                                        milliseconds: 400,
-                                      ),
-                                      curve: Curves.easeInOut,
+                              } else if (state is _GymsLoadingErrorState) {
+                                return _PageThreeLoadingError(
+                                  onPressedNoGym: context.noGym,
+                                  firstName: context
+                                      .bloc.firstNameController.text
+                                      .trim(),
+                                  error: state.failure.message,
+                                  onPressedRetry: context.retryLoadGyms,
+                                );
+                              } else if (state is _IGymSelectedState) {
+                                return _PageThreeSelected(
+                                  firstName: context
+                                      .bloc.firstNameController.text
+                                      .trim(),
+                                  gyms:
+                                      _filterGymsWithDuplicateNames(state.gyms),
+                                  onSelected: context.selectGym,
+                                  onPressedNoGym: context.noGym,
+                                  gym: state.gym,
+                                  onPressedNext: () =>
+                                      context.bloc.pageController.nextPage(
+                                    duration: const Duration(
+                                      milliseconds: 400,
                                     ),
-                                  );
-                                } else if (state is _IGymsLoadedState) {
-                                  return _PageThreeNotSelected(
-                                    firstName: context
-                                        .bloc.firstNameController.text
-                                        .trim(),
-                                    onPressedNoGym: context.noGym,
-                                    gyms: _filterGymsWithDuplicateNames(
-                                        state.gyms),
-                                    onSelected: context.selectGym,
-                                  );
-                                }
-                                break;
-                              case 3:
-                                if (state is _RegisterLoadingState) {
-                                  return _PageFourLoading(
-                                    gym: state.gym,
-                                  );
-                                } else if (state is _IGymSelectedState) {
-                                  return _PageFour(
-                                    gym: state.gym,
-                                    onPressedYes: context.submit,
-                                    onPressedNo: context.notMyGym,
-                                  );
-                                }
-                            }
-                            throw Exception('Invalid index: $index');
-                          },
-                        ),
+                                    curve: Curves.easeInOut,
+                                  ),
+                                );
+                              } else if (state is _IGymsLoadedState) {
+                                return _PageThreeNotSelected(
+                                  firstName: context
+                                      .bloc.firstNameController.text
+                                      .trim(),
+                                  onPressedNoGym: context.noGym,
+                                  gyms:
+                                      _filterGymsWithDuplicateNames(state.gyms),
+                                  onSelected: context.selectGym,
+                                );
+                              }
+                              break;
+                            case 3:
+                              if (state is _RegisterLoadingState) {
+                                return _PageFourLoading(
+                                  gym: state.gym,
+                                );
+                              } else if (state is _IGymSelectedState) {
+                                return _PageFour(
+                                  gym: state.gym,
+                                  onPressedYes: context.submit,
+                                  onPressedNo: context.notMyGym,
+                                );
+                              }
+                          }
+                          throw Exception('Invalid index: $index');
+                        },
                       ),
-                      StyledPageIndicator(
-                        currentPage: state.currentPage,
-                        totalPages: 4,
-                      ),
-                      48.verticalSpace,
-                    ],
-                  ),
+                    ),
+                    StyledPageIndicator(
+                      currentPage: state.currentPage,
+                      totalPages: 4,
+                    ),
+                    48.verticalSpace,
+                  ],
                 ),
               ),
             );

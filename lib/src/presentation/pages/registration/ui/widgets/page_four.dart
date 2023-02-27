@@ -71,7 +71,7 @@ class _PageFourBase extends StatelessWidget {
             style: theme.textTheme.labelLarge,
             textAlign: TextAlign.center,
           ),
-          100.verticalSpace,
+          130.verticalSpace,
           child,
         ],
       );
