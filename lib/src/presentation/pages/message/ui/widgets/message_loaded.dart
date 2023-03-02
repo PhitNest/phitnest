@@ -20,7 +20,6 @@ class _MessageLoaded extends _IBasePage {
               children: [
                 Flexible(
                   child: ListView.builder(
-                    controller: ScrollController(),
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     reverse: true,
