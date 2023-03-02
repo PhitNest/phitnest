@@ -3,14 +3,12 @@ import 'package:flutter/services.dart';
 
 class StyledScaffold extends StatelessWidget {
   final Widget body;
-  final Widget? bottomNavigationBar;
   final bool safeArea;
   final bool lightMode;
 
   const StyledScaffold({
     Key? key,
     required this.body,
-    this.bottomNavigationBar,
     this.safeArea = true,
     this.lightMode = false,
   }) : super(key: key);
@@ -20,7 +18,6 @@ class StyledScaffold extends StatelessWidget {
         value:
             lightMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
         child: Scaffold(
-          resizeToAvoidBottomInset: false,
           body: safeArea
               ? SafeArea(
                   child: body,
@@ -29,7 +26,6 @@ class StyledScaffold extends StatelessWidget {
                   bottom: false,
                 )
               : body,
-          bottomNavigationBar: bottomNavigationBar,
         ),
       );
 }
