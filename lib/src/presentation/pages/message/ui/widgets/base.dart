@@ -109,6 +109,7 @@ abstract class _IBasePage extends StatelessWidget {
                 ),
               ),
             ),
+            MediaQuery.of(context).viewInsets.bottom.verticalSpace,
           ],
         ),
       );
