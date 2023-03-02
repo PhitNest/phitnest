@@ -47,7 +47,7 @@ export class ExpressServer implements IServer {
     this.expressApp = express();
     this.expressApp.use(bodyParser.json());
     this.expressApp.use(morgan("dev"));
-    this.expressApp.get("/", (req, res) => res.status(200).send());
+    this.expressApp.post("/", (req, res) => res.status(200).send());
   }
 
   listen(port: number) {
