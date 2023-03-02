@@ -78,7 +78,7 @@ class FriendsPage extends StatelessWidget {
                                     leading: Container(),
                                     elevation: 0,
                                     leadingWidth: 0,
-                                    backgroundColor: Colors.white,
+                                    backgroundColor: Colors.grey[50],
                                     centerTitle: true,
                                     pinned: false,
                                     title: Text(
