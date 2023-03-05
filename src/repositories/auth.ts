@@ -10,13 +10,22 @@ import {
     ClientId: process.env.COGNITO_USER_POOL_APP_ID ?? "",
   });
 
-  type LoginResponse = {
+  export type LoginResponse = {
     accessToken: string;
     refreshToken: string;
     idToken: string;
   }
 
-  export function login(email: string, password: string) {
+  export const kMockLoginResponse = {
+    accessToken: "mockAccessToken",
+    refreshToken: "mockRefreshToken",
+    idToken: "mockIdToken"
+  } as const;
+
+  export async function login(email: string, password: string): Promise<LoginResponse | Failure> {
+    if (process.env.NODE_ENV === "development") {
+        return kMockLoginResponse;
+    }
     const user = new CognitoUser({
       Username: email,
       Pool: userPool,
