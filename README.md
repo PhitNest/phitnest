@@ -24,7 +24,7 @@ When this command runs successfully, you will see the endpoints you can invoke
 ## Make targets
 ```
 help            Prints this help screen
-install         Install npm dependencies
+webpack-build   Build webpack
 deploy          Deploy application code (template.yml) to aws environment
 run             Run the lambda functions locally
 logs            Display logs of certain function (ex: make logs function=FUNCTION-NAME)
