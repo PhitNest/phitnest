@@ -1,46 +1,97 @@
-AWSTemplateFormatVersion: "2010-09-09"
+
+AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: >
+Description: PhitNest-API
 
-  PhitNest-API
-
-#####  Globals for Lambda functions #####
+#### GLOBALS ####
 Globals:
   Function:
     Timeout: 5
     Environment:
       Variables:
-        Region: "us-east-1"
-
-#####  Input Parameters #####
-Parameters:
-  Stage:
-    Type: String
-    Description: Parameter for getting the deployment stage
-    Default: default
-
-#####  Environment Variables #####
-Mappings:
-  StagesMap:
-    prod:
-      VariableName: Value
-
+        Region: us-east-1
 Resources:
-  #####  Lambda Functions #####
-  HelloWorldFunction:
+
+  #### API GATEWAY ####
+  PhitNestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors: '''*'''
+      Name: PhitNest-Prod-API
+      Auth:
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn:
+              Fn::GetAtt:
+              - CognitoUserPool
+              - Arn
+            Identity:
+              Header: Authorization
+              ValidationExpression: Bearer.*
+  
+  #### COGNITO ####
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: PhitNest-Production
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          RequireUppercase: true
+      UsernameAttributes:
+      - email
+      - phone_number
+      Schema:
+      - AttributeDataType: String
+        Name: email
+        Required: true
+      - AttributeDataType: String
+        Name: family_name
+        Required: true
+      - AttributeDataType: String
+        Name: given_name
+        Required: true
+  CognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId:
+        Ref: CognitoUserPool
+      ClientName: PhitNest-Production
+      GenerateSecret: false
+
+  #### LAMBDA FUNCTIONS ####
+  GetUserFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: cmd/lambdas/hello-world/app.lambdaHandler
+      Handler: lambdas/user/app
       CodeUri: src/
       Runtime: nodejs16.x
       Events:
         CatchAll:
           Type: Api
           Properties:
-            Path: /hello-world
+            RestApiId:
+              Ref: PhitNestApi
+            Auth:
+              Authorizer: CognitoAuthorizer
+            Path: /user
             Method: GET
 
-Outputs:
-  HelloWorldApi:
-    Description: "API Gateway endpoint URL to print Hello, World!"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello-world/"
+  GetNearestGymsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambdas/user/app
+      CodeUri: src/
+      Runtime: nodejs16.x
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: PhitNestApi
+            Path: /gym/nearest
+            Method: GET
