@@ -27,13 +27,13 @@ webpack-build:
 
 ## Deploy application code (template.yml) to aws environment
 deploy: webpack-build
-	scripts/deploy.sh prod $(S3_BUCKET) phitnest-api "template" sam-cli
+	sam deploy --template-file build/templates/prod-template-out.yaml --s3-bucket $(S3_BUCKET) --stack-name phitnest-api --capabilities CAPABILITY_NAMED_IAM --profile prod --no-fail-on-empty-changeset --parameter-overrides Stage=prod Username=sam-cli
 
 ## Run the lambda functions locally
 run: webpack-build
 	cp configs/lambdas-env.json /tmp/lambdas-env.json && sed -n 's/#USERNAME#/sam-cli/g' /tmp/lambdas-env.json
-	cd .aws-sam/build/ && sam.cmd local start-api --env-vars /tmp/lambdas-env.json 
+	cd .aws-sam/build/ && sam local start-api --env-vars /tmp/lambdas-env.json 
 	
 ## Display logs of certain function (ex: make logs function=FUNCTION-NAME)
 logs:
-	sam.cmd logs -n $(function) --stack-name phitnest-api
+	sam logs -n $(function) --stack-name phitnest-api
