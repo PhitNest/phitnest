@@ -3,7 +3,7 @@ let response
 /**
  * Get user
  */
-export default async (): Promise<{
+export const getUser = async (): Promise<{
   statusCode: number
   body: string
 }> => {
