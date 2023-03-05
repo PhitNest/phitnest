@@ -8,8 +8,14 @@ Serverless REST API running with Node.js and AWS SAM framework.
 * [AWS Command Line Interface](https://docs.aws.amazon.com/cli/latest/userguide/installing.html)
 * [SAM CLI](https://aws.amazon.com/serverless/sam/)
 
+### Setup
+```
+npm ci
+npm i -g webpack
+```
+
 ### Local Development
-To invoke the function locally through API Gateway
+Emulates the backend locally
 ```
 make run
 ```
