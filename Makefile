@@ -21,6 +21,10 @@ help:
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 
+## Build webpack
+webpack-build:
+	NODE_ENV=production npm run build
+
 ## Deploy application code (template.yml) to aws environment
 deploy: webpack-build
 	scripts/deploy.sh prod $(S3_BUCKET) phitnest-api "template" sam-cli
