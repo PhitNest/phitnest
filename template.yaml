@@ -2,8 +2,7 @@ AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
 
-  nodejs-sam-bootstrap
-  SAM Template for nodejs-sam-bootstrap
+  PhitNest-API
 
 #####  Globals for Lambda functions #####
 Globals:
@@ -11,7 +10,7 @@ Globals:
     Timeout: 5
     Environment:
       Variables:
-        Region: "eu-west-1"
+        Region: "us-east-1"
 
 #####  Input Parameters #####
 Parameters:
@@ -23,16 +22,8 @@ Parameters:
 #####  Environment Variables #####
 Mappings:
   StagesMap:
-    sandbox:
+    prod:
       VariableName: Value
-    staging:
-      VariableName: Value
-    production:
-      VariableName: Value
-
-#####  Template Conditions #####
-Conditions:
-  CreateSandboxResources: !Equals [!Ref Stage, sandbox]
 
 Resources:
   #####  Lambda Functions #####
