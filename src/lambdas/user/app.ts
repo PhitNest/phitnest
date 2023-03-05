@@ -1,18 +1,16 @@
-import messages from '@/internal/app/hello-world/messages'
-
 let response
 
 /**
- * Hello World
+ * Get user
  */
-export const lambdaHandler = async (): Promise<{
+export default async (): Promise<{
   statusCode: number
   body: string
 }> => {
   try {
     response = {
       statusCode: 200,
-      body: messages.getHelloWorld()
+      body: "hey"
     }
   } catch (err: any) {
     response = {
@@ -22,8 +20,4 @@ export const lambdaHandler = async (): Promise<{
   }
 
   return response
-}
-
-export default {
-  lambdaHandler
 }
