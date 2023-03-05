@@ -4,10 +4,10 @@ import { Context, APIGatewayEvent } from 'aws-lambda';
 /**
  * Get user
 */
-export const nearestGyms = async (event: APIGatewayEvent, context: Context): Promise<{
+export async function nearestGyms (event: APIGatewayEvent, context: Context): Promise<{
   statusCode: number
   body: string
-}> => {
+}> {
   try {
     return  {
       statusCode: 200,
