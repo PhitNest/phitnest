@@ -9,7 +9,9 @@ Globals:
     Timeout: 5
     Environment:
       Variables:
-        Region: us-east-1
+        REGION: us-east-1
+        COGNITO_USER_POOL_ID: !Ref CognitoUserPool
+        COGNITO_USER_POOL_APP_ID: !Ref CognitoUserPoolClient
 
 #### Input Parameters ####
 Parameters:
