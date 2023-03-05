@@ -73,36 +73,4 @@ Resources:
       ClientName: !Sub "PhitNest-${Stage}"
       GenerateSecret: false
 
-  #### LAMBDA FUNCTIONS ####
-
-  #### GET /user ####
-  GetUserFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: lambdas/user/get.getUser
-      CodeUri: src/
-      Runtime: nodejs16.x
-      Events:
-        CatchAll:
-          Type: Api
-          Properties:
-            RestApiId: !Ref PhitNestApi
-            Auth:
-              Authorizer: CognitoAuthorizer
-            Path: /user
-            Method: GET
-
-  #### GET /gym/nearest ####
-  GetNearestGymsFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: lambdas/gym/nearest/get.nearestGyms
-      CodeUri: src/
-      Runtime: nodejs16.x
-      Events:
-        CatchAll:
-          Type: Api
-          Properties:
-            RestApiId: !Ref PhitNestApi
-            Path: /gym/nearest
-            Method: GET
+  #### CODEGEN STARTS BELOW HERE ####
