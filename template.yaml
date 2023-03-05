@@ -18,6 +18,7 @@ Parameters:
     Description: Parameter for getting the deployment stage
     Default: default
 
+#### Conditions ####
 Conditions:
   CreateSandboxResources: !Equals [!Ref Stage, sandbox]
 
@@ -71,6 +72,8 @@ Resources:
       GenerateSecret: false
 
   #### LAMBDA FUNCTIONS ####
+
+  #### GET /user ####
   GetUserFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -87,6 +90,7 @@ Resources:
             Path: /user
             Method: GET
 
+  #### GET /gym/nearest ####
   GetNearestGymsFunction:
     Type: AWS::Serverless::Function
     Properties:

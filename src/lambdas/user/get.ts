@@ -1,23 +1,22 @@
-let response
+import { Context, APIGatewayEvent } from 'aws-lambda';
+
 
 /**
  * Get user
- */
-export const getUser = async (): Promise<{
+*/
+export const getUser = async (event: APIGatewayEvent, context: Context): Promise<{
   statusCode: number
   body: string
 }> => {
   try {
-    response = {
+    return  {
       statusCode: 200,
-      body: "hey"
+      body: `Event: ${JSON.stringify(event, null, 2)}\nContext: ${JSON.stringify(context, null, 2)}`
     }
   } catch (err: any) {
-    response = {
+    return {
       statusCode: 500,
       body: err.message
     }
   }
-
-  return response
 }
