@@ -10,22 +10,30 @@ Globals:
     Environment:
       Variables:
         Region: us-east-1
+
+#### Input Parameters ####
+Parameters:
+  Stage:
+    Type: String
+    Description: Parameter for getting the deployment stage
+    Default: default
+
+Conditions:
+  CreateSandboxResources: !Equals [!Ref Stage, sandbox]
+
 Resources:
 
   #### API GATEWAY ####
   PhitNestApi:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: Prod
+      StageName: !Ref Stage
       Cors: '''*'''
-      Name: PhitNest-Prod-API
+      Name: !Sub "PhitNest-${Stage}-API"
       Auth:
         Authorizers:
           CognitoAuthorizer:
-            UserPoolArn:
-              Fn::GetAtt:
-              - CognitoUserPool
-              - Arn
+            UserPoolArn: !GetAtt CognitoUserPool.Arn
             Identity:
               Header: Authorization
               ValidationExpression: Bearer.*
@@ -34,7 +42,7 @@ Resources:
   CognitoUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
-      UserPoolName: PhitNest-Production
+      UserPoolName: !Sub "PhitNest-${Stage}"
       Policies:
         PasswordPolicy:
           MinimumLength: 8
@@ -58,24 +66,22 @@ Resources:
   CognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
-      UserPoolId:
-        Ref: CognitoUserPool
-      ClientName: PhitNest-Production
+      UserPoolId: !Ref CognitoUserPool
+      ClientName: !Sub "PhitNest-${Stage}"
       GenerateSecret: false
 
   #### LAMBDA FUNCTIONS ####
   GetUserFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: lambdas/user/app
+      Handler: lambdas/user/get.getUser
       CodeUri: src/
       Runtime: nodejs16.x
       Events:
         CatchAll:
           Type: Api
           Properties:
-            RestApiId:
-              Ref: PhitNestApi
+            RestApiId: !Ref PhitNestApi
             Auth:
               Authorizer: CognitoAuthorizer
             Path: /user
@@ -84,14 +90,13 @@ Resources:
   GetNearestGymsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: lambdas/user/app
+      Handler: lambdas/gym/nearest/get.nearestGyms
       CodeUri: src/
       Runtime: nodejs16.x
       Events:
         CatchAll:
           Type: Api
           Properties:
-            RestApiId:
-              Ref: PhitNestApi
+            RestApiId: !Ref PhitNestApi
             Path: /gym/nearest
             Method: GET
