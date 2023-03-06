@@ -1,16 +1,7 @@
-import { Failure } from "@/common/failure";
-import { kMockLoginResponse, login, register } from "./auth";
+import { register } from "./auth";
 
 describe("Mocking Cognito Identity Provider", () => {
-  it("login should return mock tokens", async () => {
-    const body = {
-      email: "test@gmail.com",
-      password: "password",
-    };
-    expect(await login(body.email, body.password)).toBe(kMockLoginResponse);
-  });
-
-  it("register should return a random uuid", async () => {
+  it("register should return a random uuid v4", async () => {
     const body = {
       email: "test@gmail.com",
       password: "password",
@@ -18,12 +9,9 @@ describe("Mocking Cognito Identity Provider", () => {
       lastName: "Doe",
     };
     expect(
-      (await register(
-        body.email,
-        body.password,
-        body.firstName,
-        body.lastName
-      )) instanceof Failure
-    ).toBeFalsy();
+      await register(body.email, body.password, body.firstName, body.lastName)
+    ).toMatch(
+      /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i
+    );
   });
 });

@@ -68,6 +68,7 @@ Resources:
       - AttributeDataType: String
         Name: given_name
         Required: true
+
   UserCognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
@@ -79,6 +80,6 @@ Resources:
       - ALLOW_CUSTOM_AUTH
       - ALLOW_USER_PASSWORD_AUTH
       ClientName: !Sub "PhitNest-${Stage}"
-      GenerateSecret: true
+      GenerateSecret: false
 
   #### CODEGEN STARTS BELOW HERE ####
