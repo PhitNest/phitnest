@@ -79,6 +79,6 @@ Resources:
       - ALLOW_CUSTOM_AUTH
       - ALLOW_USER_PASSWORD_AUTH
       ClientName: !Sub "PhitNest-${Stage}"
-      GenerateSecret: false
+      GenerateSecret: true
 
   #### CODEGEN STARTS BELOW HERE ####
