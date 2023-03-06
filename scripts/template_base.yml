@@ -72,16 +72,12 @@ Resources:
     Type: AWS::Cognito::UserPoolClient
     Properties:
       UserPoolId: !Ref UserCognitoUserPool
-      AllowedOAuthFlows:
-      - implicit
       EnableTokenRevocation: true
       ExplicitAuthFlows:
       - ALLOW_USER_SRP_AUTH
       - ALLOW_REFRESH_TOKEN_AUTH
       - ALLOW_CUSTOM_AUTH
       - ALLOW_USER_PASSWORD_AUTH
-      CallbackURLs:
-      - "http://localhost"
       ClientName: !Sub "PhitNest-${Stage}"
       GenerateSecret: false
 
