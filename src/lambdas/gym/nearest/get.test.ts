@@ -1,6 +1,5 @@
 describe('Example', () => {
-    it('Example', async () => {
-      expect(true).toBe(true);
-    })
+  it('Example', async () => {
+    expect(true).toBe(true)
   })
-  
+})

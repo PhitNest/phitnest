@@ -1,4 +1,3 @@
-
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: PhitNest-API
@@ -10,8 +9,8 @@ Globals:
     Environment:
       Variables:
         REGION: us-east-1
-        COGNITO_USER_POOL_ID: !Ref CognitoUserPool
-        COGNITO_USER_POOL_APP_ID: !Ref CognitoUserPoolClient
+        COGNITO_USER_POOL_ID: !Ref UserCognitoUserPool
+        COGNITO_USER_POOL_APP_ID: !Ref UserCognitoUserPoolClient
 
 #### Input Parameters ####
 Parameters:
@@ -25,7 +24,6 @@ Conditions:
   CreateSandboxResources: !Equals [!Ref Stage, sandbox]
 
 Resources:
-
   #### API GATEWAY ####
   PhitNestApi:
     Type: AWS::Serverless::Api
@@ -35,14 +33,14 @@ Resources:
       Name: !Sub "PhitNest-${Stage}-API"
       Auth:
         Authorizers:
-          CognitoAuthorizer:
-            UserPoolArn: !GetAtt CognitoUserPool.Arn
+          UserCognitoAuthorizer:
+            UserPoolArn: !GetAtt UserCognitoUserPool.Arn
             Identity:
               Header: Authorization
               ValidationExpression: Bearer.*
   
   #### COGNITO ####
-  CognitoUserPool:
+  UserCognitoUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
       UserPoolName: !Sub "PhitNest-${Stage}"
@@ -66,10 +64,10 @@ Resources:
       - AttributeDataType: String
         Name: given_name
         Required: true
-  CognitoUserPoolClient:
+  UserCognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
-      UserPoolId: !Ref CognitoUserPool
+      UserPoolId: !Ref UserCognitoUserPool
       ClientName: !Sub "PhitNest-${Stage}"
       GenerateSecret: false
 

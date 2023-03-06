@@ -1,22 +1,17 @@
-import { Context, APIGatewayEvent } from 'aws-lambda';
+import { respond } from "@/common/respond";
+import { login } from "@/repositories/auth";
+import { APIGatewayEvent } from "aws-lambda";
+import { z } from "zod";
 
+const validator = z.object({
+  email: z.string().trim(),
+  password: z.string().min(8),
+});
 
-/**
- * Get user
-*/
-export async function nearestGyms (event: APIGatewayEvent, context: Context): Promise<{
-  statusCode: number
-  body: string
+export function invoke(event: APIGatewayEvent): Promise<{
+  statusCode: number;
+  body: string;
 }> {
-  try {
-    return  {
-      statusCode: 200,
-      body: `Event: ${JSON.stringify(event, null, 2)}\nContext: ${JSON.stringify(context, null, 2)}`
-    }
-  } catch (err: any) {
-    return {
-      statusCode: 500,
-      body: err.message
-    }
-  }
+  const body = validator.parse(JSON.parse(event.body ?? ""));
+  return respond(async () => await login(body.email, body.password));
 }

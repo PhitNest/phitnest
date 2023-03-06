@@ -3,10 +3,12 @@ export SAM_CLI_TELEMETRY=0
 
 ## Build webpack for prod
 webpack-build-prod:
+	scripts/template_gen.sh
 	NODE_ENV=production npm run build
 
 ## Build webpack for local sandbox
 webpack-build-sandbox:
+	scripts/template_gen.sh
 	NODE_ENV=development npm run build
 
 ## Deploy application code (template.yml) to aws environment

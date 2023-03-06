@@ -1,13 +1,13 @@
 module.exports = {
   parserOptions: {
-    project: './tsconfig.json',
-    sourceType: 'module',
+    project: "./tsconfig.json",
+    sourceType: "module",
   },
   plugins: [],
   extends: [
-    'standard-with-typescript',
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended'
+    "standard-with-typescript",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
   ],
   root: true,
   env: {
@@ -16,7 +16,8 @@ module.exports = {
   },
   rules: {
     // note you must disable the base rule as it can report incorrect errors
-    'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': ['error'],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error"],
+    "@typescript-eslint/no-explicit-any": "off",
   },
 };
