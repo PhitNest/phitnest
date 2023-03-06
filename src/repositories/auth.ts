@@ -26,6 +26,25 @@ function userPool() {
   });
 }
 
+export function confirmRegister(
+  email: string,
+  code: string
+): Promise<void | Failure> {
+  return new Promise<void | Failure>((resolve) => {
+    new CognitoUser({ Username: email, Pool: userPool() }).confirmRegistration(
+      code,
+      true,
+      (err) => {
+        if (err) {
+          resolve(new Failure(err.name, err.message));
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+}
+
 export async function register(
   email: string,
   password: string,

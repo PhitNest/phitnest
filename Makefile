@@ -1,6 +1,10 @@
 #!make
 export SAM_CLI_TELEMETRY=0
 
+test:
+	scripts/template_gen.sh
+	NODE_ENV=development npm run test
+
 ## Build webpack for prod
 webpack-build-prod:
 	scripts/template_gen.sh

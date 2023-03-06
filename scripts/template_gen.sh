@@ -72,8 +72,6 @@ find $root -type f | while read file; do
     echo "            Method: $method" >> $out
     # Search for this substring
     substring="@CognitoAuth"
-    # Search for the substring in the file and set the variable to the token following it
-    # with whitespace as a delimiter
     userPool=$(grep -oP "(@CognitoAuth\s+)\S+" "$file")
     # If the substring does not exist or there is no such token existing after the substring,
     # set the variable to "N/A"

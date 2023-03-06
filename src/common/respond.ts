@@ -1,31 +1,38 @@
+import { z } from "zod";
 import { Failure } from "./failure";
 
 function errorResponse(error: any): {
   statusCode: number;
-  body: any;
+  body: string;
 } {
   return {
     statusCode: 500,
-    body: error,
+    body: JSON.stringify(error),
   };
 }
 
 function successResponse(body: any): {
   statusCode: number;
-  body: any;
+  body: string;
 } {
   return {
     statusCode: 200,
-    body: body,
+    body: JSON.stringify(body),
   };
 }
 
-export async function respond(controller: () => Promise<any>): Promise<{
+export async function respond<T>(params: {
+  controller: (body: T) => Promise<any>;
+  body: string | null;
+  validator: z.ZodSchema<T>;
+}): Promise<{
   statusCode: number;
   body: any;
 }> {
   try {
-    const response = await controller();
+    const response = await params.controller(
+      params.validator.parse(JSON.parse(params.body ?? ""))
+    );
     if (response instanceof Failure) {
       return errorResponse(response);
     } else {

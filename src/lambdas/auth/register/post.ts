@@ -14,9 +14,15 @@ export function invoke(event: APIGatewayEvent): Promise<{
   statusCode: number;
   body: string;
 }> {
-  const body = validator.parse(JSON.parse(event.body ?? ""));
-  return respond(
-    async () =>
-      await register(body.email, body.password, body.firstName, body.lastName)
-  );
+  return respond({
+    controller: async (response: z.infer<typeof validator>) =>
+      await register(
+        response.email,
+        response.password,
+        response.firstName,
+        response.lastName
+      ),
+    body: event.body,
+    validator: validator,
+  });
 }
