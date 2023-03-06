@@ -5,7 +5,7 @@ Description: PhitNest-API
 #### GLOBALS ####
 Globals:
   Function:
-    Timeout: 5
+    Timeout: 25
     Environment:
       Variables:
         REGION: us-east-1
@@ -35,9 +35,6 @@ Resources:
         Authorizers:
           UserCognitoAuthorizer:
             UserPoolArn: !GetAtt UserCognitoUserPool.Arn
-            Identity:
-              Header: Authorization
-              ValidationExpression: Bearer.*
   
   #### COGNITO ####
   UserCognitoUserPool:
@@ -51,6 +48,13 @@ Resources:
           RequireNumbers: true
           RequireSymbols: true
           RequireUppercase: true
+      EmailConfiguration:
+        EmailSendingAccount: DEVELOPER
+        From: "PhitNest <verify@phitnest.com>"
+        ReplyToEmailAddress: "verify@phitnest.com"
+        SourceArn: arn:aws:ses:us-east-1:235601651768:identity/phitnest.com
+      AutoVerifiedAttributes:
+      - email
       UsernameAttributes:
       - email
       - phone_number
@@ -68,6 +72,16 @@ Resources:
     Type: AWS::Cognito::UserPoolClient
     Properties:
       UserPoolId: !Ref UserCognitoUserPool
+      AllowedOAuthFlows:
+      - implicit
+      EnableTokenRevocation: true
+      ExplicitAuthFlows:
+      - ALLOW_USER_SRP_AUTH
+      - ALLOW_REFRESH_TOKEN_AUTH
+      - ALLOW_CUSTOM_AUTH
+      - ALLOW_USER_PASSWORD_AUTH
+      CallbackURLs:
+      - "http://localhost"
       ClientName: !Sub "PhitNest-${Stage}"
       GenerateSecret: false
 
