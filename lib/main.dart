@@ -1,14 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/material.dart';
+import 'package:phitnest_utils/http_adapter.dart';
 
-import 'src/common/secure_storage.dart';
-import 'src/presentation/app/app.dart';
+import 'src/app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await ScreenUtil.ensureScreenSize();
   await dotenv.load();
-  await loadSecureStorage();
+  initializeHttpAdapter(dotenv.get('BACKEND_HOST'), dotenv.get('BACKEND_PORT'));
   runApp(const App());
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 ThemeData get theme => ThemeData(
@@ -19,43 +18,43 @@ ThemeData get theme => ThemeData(
       ),
       textTheme: TextTheme(
         headlineLarge: GoogleFonts.baskervville(
-          fontSize: 32.sp,
+          fontSize: 32,
           letterSpacing: -0.02,
           height: 1.3,
           color: Colors.black,
         ),
         headlineMedium: GoogleFonts.baskervville(
-          fontSize: 24.sp,
+          fontSize: 24,
           letterSpacing: -0.02,
           height: 1.3,
           color: Colors.black,
         ),
         headlineSmall: GoogleFonts.baskervville(
-          fontSize: 18.sp,
+          fontSize: 18,
           letterSpacing: -0.02,
           height: 1.3,
           color: Colors.black,
         ),
         labelLarge: TextStyle(
-          fontSize: 18.sp,
+          fontSize: 18,
           height: 1.3,
           fontFamily: 'Metropolis',
           color: Colors.black,
         ),
         labelMedium: TextStyle(
-          fontSize: 16.sp,
+          fontSize: 16,
           height: 1.3,
           fontFamily: 'Metropolis',
           color: Colors.black,
         ),
         bodyMedium: TextStyle(
-          fontSize: 14.sp,
+          fontSize: 14,
           fontFamily: 'Metropolis',
           letterSpacing: 0.02,
           color: Colors.black,
         ),
         bodySmall: TextStyle(
-          fontSize: 12.sp,
+          fontSize: 12,
           fontFamily: 'Metropolis',
           letterSpacing: 0.02,
           color: Colors.black,
