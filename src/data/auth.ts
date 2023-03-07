@@ -13,8 +13,14 @@ function userPool() {
 }
 
 export const kCognitoCredentials = {
-  userPoolId: process.env.COGNITO_USER_POOL_ID ?? "sandbox",
-  clientId: process.env.COGNITO_USER_POOL_APP_ID ?? "sandbox",
+  userPoolId:
+    (process.env.NODE_ENV == "development"
+      ? null
+      : process.env.COGNITO_USER_POOL_ID) ?? "sandbox",
+  clientId:
+    (process.env.NODE_ENV == "development"
+      ? null
+      : process.env.COGNITO_USER_POOL_APP_ID) ?? "sandbox",
 };
 
 class Auth {
