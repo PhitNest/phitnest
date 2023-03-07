@@ -1,0 +1,14 @@
+name: phitnest_utils
+description: Utilities for PhitNest
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.6 <=3.3.9"
+
+dependencies:
+  dartz: ^0.10.1
+  dio: ^5.0.1
+  equatable: ^2.0.5
+  logger: ^1.1.0
+  basic_utils: ^5.4.2
