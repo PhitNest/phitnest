@@ -23,17 +23,23 @@ enum HttpMethod {
 }
 
 class NetworkConnectionFailure {
-  static const String message = "Network connection failed. Please try again.";
+  static const message = "Network connection failure.";
 
   const NetworkConnectionFailure() : super();
 }
 
-Future<
-    Either4<Map<String, dynamic>, List<dynamic>, FailType,
-        NetworkConnectionFailure>> _requestRaw<FailType extends Object>({
+class InvalidResponseFailure {
+  static const String message = "Invalid response from server.";
+
+  const InvalidResponseFailure() : super();
+}
+
+Future<Either3<SuccessType, FailType, NetworkConnectionFailure>>
+    _requestRaw<SuccessType, FailType extends Object>({
   required String route,
   required HttpMethod method,
   required Map<String, dynamic> data,
+  required SuccessType Function(dynamic response) successParser,
   required FailType Function(Map<String, dynamic> json) failureParser,
   Map<String, dynamic>? headers,
   String? authorization,
@@ -42,7 +48,7 @@ Future<
 }) async {
   final startTime = DateTime.now();
   final String url =
-      '$_backendHost${_backendPort.isEmpty ? "" : ":$_backendPort"}$route';
+      '${overrideHost ?? _backendHost}${(overridePort ?? _backendPort).isEmpty ? "" : ":${overridePort ?? _backendPort}"}$route';
   final String Function(dynamic data) description = (data) =>
       '\n\tmethod: $method\n\tpath: $route${StringUtils.addCharAtPosition("\n\tdata: $data", '\n\t', 100, repeat: true)}';
   prettyLogger.d(
@@ -81,13 +87,7 @@ Future<
         if (response.statusCode == 200) {
           prettyLogger.d(
               "Response success:${description(response.data)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
-          if (response.data is List) {
-            return Second(response.data);
-          } else if (response.data is Map<String, dynamic>) {
-            return First(response.data);
-          } else {
-            return First(Map<String, dynamic>.from({}));
-          }
+          return Alpha(successParser(response.data));
         } else {
           throw failureParser(response.data);
         }
@@ -96,12 +96,17 @@ Future<
   } catch (e) {
     prettyLogger.e(
         "Response failure:${description(e)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
-    return e is FailType ? Third(e) : Fourth(const NetworkConnectionFailure());
+    if (e is InvalidResponseFailure) {
+      throw e;
+    }
+    return e is FailType ? Beta(e) : Gamma(const NetworkConnectionFailure());
   }
 }
 
 @override
-Future<Either3<ResType, FailType, NetworkConnectionFailure>>
+Future<
+        Either4<ResType, FailType, InvalidResponseFailure,
+            NetworkConnectionFailure>>
     requestJson<ResType, FailType extends Object>({
   required String route,
   required HttpMethod method,
@@ -112,25 +117,38 @@ Future<Either3<ResType, FailType, NetworkConnectionFailure>>
   String? authorization,
   String? overrideHost,
   String? overridePort,
-}) =>
-        _requestRaw(
-          route: route,
-          method: method,
-          data: data,
-          headers: headers,
-          authorization: authorization,
-          failureParser: failureParser,
-        ).then(
-          (either) => either.fold(
-            (success) => Alpha(successParser(success)),
-            (list) => Gamma(const NetworkConnectionFailure()),
-            (failure) => Beta(failure),
-            (networkFailure) => Gamma(networkFailure),
-          ),
-        );
+}) async {
+  try {
+    return await _requestRaw(
+      route: route,
+      method: method,
+      data: data,
+      headers: headers,
+      authorization: authorization,
+      successParser: (response) {
+        if (response is Map<String, dynamic>) {
+          return successParser(response);
+        } else {
+          throw const InvalidResponseFailure();
+        }
+      },
+      failureParser: failureParser,
+    ).then(
+      (either) => either.fold(
+        (success) => First(success),
+        (failure) => Second(failure),
+        (networkFailure) => Fourth(networkFailure),
+      ),
+    );
+  } catch (_) {
+    return Third(const InvalidResponseFailure());
+  }
+}
 
 @override
-Future<Either3<List<ResType>, FailType, NetworkConnectionFailure>>
+Future<
+        Either4<List<ResType>, FailType, InvalidResponseFailure,
+            NetworkConnectionFailure>>
     requestList<ResType, FailType extends Object>({
   required String route,
   required HttpMethod method,
@@ -141,25 +159,33 @@ Future<Either3<List<ResType>, FailType, NetworkConnectionFailure>>
   String? authorization,
   String? overrideHost,
   String? overridePort,
-}) =>
-        _requestRaw(
-          route: route,
-          method: method,
-          data: data,
-          headers: headers,
-          authorization: authorization,
-          failureParser: failureParser,
-        ).then(
-          (either) => either.fold(
-            (json) => Gamma(const NetworkConnectionFailure()),
-            (list) => Alpha(list.map((json) => successParser(json)).toList()),
-            (failure) => Beta(failure),
-            (networkFailure) => Gamma(networkFailure),
-          ),
-        );
+}) async {
+  try {
+    return await _requestRaw(
+      route: route,
+      method: method,
+      data: data,
+      headers: headers,
+      authorization: authorization,
+      successParser: (response) => (response as List<dynamic>)
+          .map((json) => successParser(json))
+          .toList(),
+      failureParser: failureParser,
+    ).then(
+      (either) => either.fold(
+        (list) => First(list),
+        (failure) => Second(failure),
+        (networkFailure) => Fourth(networkFailure),
+      ),
+    );
+  } catch (_) {
+    return Third(const InvalidResponseFailure());
+  }
+}
 
-Future<Either3<void, FailType, NetworkConnectionFailure>>
-    request<FailType extends Object>({
+Future<
+    Either4<void, FailType, InvalidResponseFailure,
+        NetworkConnectionFailure>> request<FailType extends Object>({
   required String route,
   required HttpMethod method,
   required Map<String, dynamic> data,
@@ -169,18 +195,19 @@ Future<Either3<void, FailType, NetworkConnectionFailure>>
   String? overrideHost,
   String? overridePort,
 }) =>
-        requestJson(
-          route: route,
-          method: method,
-          data: data,
-          successParser: (json) {},
-          failureParser: failureParser,
-          headers: headers,
-          authorization: authorization,
-        ).then(
-          (either) => either.fold(
-            (json) => Alpha(null),
-            (failure) => Beta(failure),
-            (networkFailure) => Gamma(networkFailure),
-          ),
-        );
+    requestJson(
+      route: route,
+      method: method,
+      data: data,
+      successParser: (_) {},
+      failureParser: failureParser,
+      headers: headers,
+      authorization: authorization,
+    ).then(
+      (either) => either.fold(
+        (json) => First(null),
+        (failure) => Second(failure),
+        (invalidResponse) => Third(invalidResponse),
+        (networkFailure) => Fourth(networkFailure),
+      ),
+    );
