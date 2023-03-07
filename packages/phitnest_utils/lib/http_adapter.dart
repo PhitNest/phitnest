@@ -1,9 +1,8 @@
 import 'package:basic_utils/basic_utils.dart';
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 import 'either3.dart';
-import 'failure.dart';
+import 'either4.dart';
 import 'logger.dart';
 
 const _timeout = Duration(seconds: 30);
@@ -23,33 +22,42 @@ enum HttpMethod {
   delete,
 }
 
-const kNetworkConnectionFailure = Failure("NetworkConnectionFailure",
-    "Could not connect to the server. Please check your internet connection.");
+class NetworkConnectionFailure {
+  static const String message = "Network connection failed. Please try again.";
 
-Future<Either3<Map<String, dynamic>, List<dynamic>, Failure>> _requestRaw({
+  const NetworkConnectionFailure() : super();
+}
+
+Future<
+    Either4<Map<String, dynamic>, List<dynamic>, FailType,
+        NetworkConnectionFailure>> _requestRaw<FailType extends Object>({
   required String route,
   required HttpMethod method,
   required Map<String, dynamic> data,
+  required FailType Function(Map<String, dynamic> json) failureParser,
   Map<String, dynamic>? headers,
   String? authorization,
   String? overrideHost,
   String? overridePort,
 }) async {
   final startTime = DateTime.now();
-  final String url = '$_backendHost:$_backendPort$route';
+  final String url =
+      '$_backendHost${_backendPort.isEmpty ? "" : ":$_backendPort"}$route';
   final String Function(dynamic data) description = (data) =>
       '\n\tmethod: $method\n\tpath: $route${StringUtils.addCharAtPosition("\n\tdata: $data", '\n\t', 100, repeat: true)}';
   prettyLogger.d(
       'Request${authorization != null ? " (Authorized)" : ""}:${description(data)}');
   final headerMap = {
     ...headers ?? Map<String, dynamic>.from({}),
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive",
     ...authorization != null
-        ? {'authorization': authorization}
+        ? {'Authorization': authorization}
         : Map<String, dynamic>.from({}),
   };
-  final options = BaseOptions(
-      headers: headerMap,
-      validateStatus: (status) => status == 200 || status == 500);
+  final options =
+      BaseOptions(headers: headerMap, validateStatus: (status) => true);
   if (method == HttpMethod.get || method == HttpMethod.delete) {
     options.queryParameters = data;
   }
@@ -81,49 +89,24 @@ Future<Either3<Map<String, dynamic>, List<dynamic>, Failure>> _requestRaw({
             return First(Map<String, dynamic>.from({}));
           }
         } else {
-          throw Failure.fromJson(response.data);
+          throw failureParser(response.data);
         }
       },
     );
   } catch (e) {
     prettyLogger.e(
         "Response failure:${description(e)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
-    return e is Failure ? Third(e) : Third(kNetworkConnectionFailure);
+    return e is FailType ? Third(e) : Fourth(const NetworkConnectionFailure());
   }
 }
 
 @override
-Future<Either<ResType, Failure>> requestJson<ResType>({
+Future<Either3<ResType, FailType, NetworkConnectionFailure>>
+    requestJson<ResType, FailType extends Object>({
   required String route,
   required HttpMethod method,
-  required ResType Function(Map<String, dynamic> json) parser,
-  required Map<String, dynamic> data,
-  Map<String, dynamic>? headers,
-  String? authorization,
-  String? overrideHost,
-  String? overridePort,
-}) =>
-    _requestRaw(
-      route: route,
-      method: method,
-      data: data,
-      headers: headers,
-      authorization: authorization,
-    ).then(
-      (either) => either.fold(
-        (json) => Left(parser(json)),
-        (list) => Right(kNetworkConnectionFailure),
-        (failure) => Right(failure),
-      ),
-    );
-
-@override
-Future<Either3<LeftResType, RightResType, Failure>>
-    requestEither<LeftResType, RightResType>({
-  required String route,
-  required HttpMethod method,
-  required LeftResType Function(Map<String, dynamic> json) parserLeft,
-  required RightResType Function(Map<String, dynamic> json) parserRight,
+  required ResType Function(Map<String, dynamic> json) successParser,
+  required FailType Function(Map<String, dynamic> json) failureParser,
   required Map<String, dynamic> data,
   Map<String, dynamic>? headers,
   String? authorization,
@@ -136,64 +119,68 @@ Future<Either3<LeftResType, RightResType, Failure>>
           data: data,
           headers: headers,
           authorization: authorization,
+          failureParser: failureParser,
         ).then(
           (either) => either.fold(
-            (json) {
-              try {
-                return First(parserLeft(json));
-              } catch (_) {
-                return Second(parserRight(json));
-              }
-            },
-            (list) => Third(kNetworkConnectionFailure),
-            (failure) => Third(failure),
+            (success) => Alpha(successParser(success)),
+            (list) => Gamma(const NetworkConnectionFailure()),
+            (failure) => Beta(failure),
+            (networkFailure) => Gamma(networkFailure),
           ),
         );
 
 @override
-Future<Either<List<ResType>, Failure>> requestList<ResType>({
+Future<Either3<List<ResType>, FailType, NetworkConnectionFailure>>
+    requestList<ResType, FailType extends Object>({
   required String route,
   required HttpMethod method,
-  required ResType Function(Map<String, dynamic> json) parser,
+  required ResType Function(Map<String, dynamic> json) successParser,
+  required FailType Function(Map<String, dynamic> json) failureParser,
   required Map<String, dynamic> data,
   Map<String, dynamic>? headers,
   String? authorization,
   String? overrideHost,
   String? overridePort,
 }) =>
-    _requestRaw(
-      route: route,
-      method: method,
-      data: data,
-      headers: headers,
-      authorization: authorization,
-    ).then(
-      (either) => either.fold(
-        (json) => Right(kNetworkConnectionFailure),
-        (list) => Left(list.map((json) => parser(json)).toList()),
-        (failure) => Right(failure),
-      ),
-    );
+        _requestRaw(
+          route: route,
+          method: method,
+          data: data,
+          headers: headers,
+          authorization: authorization,
+          failureParser: failureParser,
+        ).then(
+          (either) => either.fold(
+            (json) => Gamma(const NetworkConnectionFailure()),
+            (list) => Alpha(list.map((json) => successParser(json)).toList()),
+            (failure) => Beta(failure),
+            (networkFailure) => Gamma(networkFailure),
+          ),
+        );
 
-Future<Failure?> request({
+Future<Either3<void, FailType, NetworkConnectionFailure>>
+    request<FailType extends Object>({
   required String route,
   required HttpMethod method,
   required Map<String, dynamic> data,
+  required FailType Function(Map<String, dynamic> json) failureParser,
   Map<String, dynamic>? headers,
   String? authorization,
   String? overrideHost,
   String? overridePort,
 }) =>
-    requestJson(
-      route: route,
-      method: method,
-      data: data,
-      parser: (json) {},
-      headers: headers,
-      authorization: authorization,
-    ).then(
-      (either) => either.fold(
-        (json) => null,
-        (failure) => failure,
-      ),
-    );
+        requestJson(
+          route: route,
+          method: method,
+          data: data,
+          successParser: (json) {},
+          failureParser: failureParser,
+          headers: headers,
+          authorization: authorization,
+        ).then(
+          (either) => either.fold(
+            (json) => Alpha(null),
+            (failure) => Beta(failure),
+            (networkFailure) => Gamma(networkFailure),
+          ),
+        );
