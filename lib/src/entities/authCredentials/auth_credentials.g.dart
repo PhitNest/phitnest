@@ -12,6 +12,10 @@ _$_AuthCredentialsEntity _$$_AuthCredentialsEntityFromJson(
       accessToken: json['accessToken'] as String,
       idToken: json['idToken'] as String,
       refreshToken: json['refreshToken'] as String,
+      accessTokenExpiresAt: json['accessTokenExpiresAt'] as int,
+      idTokenExpiresAt: json['idTokenExpiresAt'] as int,
+      clockDrift: json['clockDrift'] as int?,
+      invalidated: json['invalidated'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_AuthCredentialsEntityToJson(
@@ -20,4 +24,8 @@ Map<String, dynamic> _$$_AuthCredentialsEntityToJson(
       'accessToken': instance.accessToken,
       'idToken': instance.idToken,
       'refreshToken': instance.refreshToken,
+      'accessTokenExpiresAt': instance.accessTokenExpiresAt,
+      'idTokenExpiresAt': instance.idTokenExpiresAt,
+      'clockDrift': instance.clockDrift,
+      'invalidated': instance.invalidated,
     };

@@ -24,6 +24,10 @@ mixin _$AuthCredentialsEntity {
   String get accessToken => throw _privateConstructorUsedError;
   String get idToken => throw _privateConstructorUsedError;
   String get refreshToken => throw _privateConstructorUsedError;
+  int get accessTokenExpiresAt => throw _privateConstructorUsedError;
+  int get idTokenExpiresAt => throw _privateConstructorUsedError;
+  int? get clockDrift => throw _privateConstructorUsedError;
+  bool get invalidated => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +41,14 @@ abstract class $AuthCredentialsEntityCopyWith<$Res> {
           $Res Function(AuthCredentialsEntity) then) =
       _$AuthCredentialsEntityCopyWithImpl<$Res, AuthCredentialsEntity>;
   @useResult
-  $Res call({String accessToken, String idToken, String refreshToken});
+  $Res call(
+      {String accessToken,
+      String idToken,
+      String refreshToken,
+      int accessTokenExpiresAt,
+      int idTokenExpiresAt,
+      int? clockDrift,
+      bool invalidated});
 }
 
 /// @nodoc
@@ -57,6 +68,10 @@ class _$AuthCredentialsEntityCopyWithImpl<$Res,
     Object? accessToken = null,
     Object? idToken = null,
     Object? refreshToken = null,
+    Object? accessTokenExpiresAt = null,
+    Object? idTokenExpiresAt = null,
+    Object? clockDrift = freezed,
+    Object? invalidated = null,
   }) {
     return _then(_value.copyWith(
       accessToken: null == accessToken
@@ -71,6 +86,22 @@ class _$AuthCredentialsEntityCopyWithImpl<$Res,
           ? _value.refreshToken
           : refreshToken // ignore: cast_nullable_to_non_nullable
               as String,
+      accessTokenExpiresAt: null == accessTokenExpiresAt
+          ? _value.accessTokenExpiresAt
+          : accessTokenExpiresAt // ignore: cast_nullable_to_non_nullable
+              as int,
+      idTokenExpiresAt: null == idTokenExpiresAt
+          ? _value.idTokenExpiresAt
+          : idTokenExpiresAt // ignore: cast_nullable_to_non_nullable
+              as int,
+      clockDrift: freezed == clockDrift
+          ? _value.clockDrift
+          : clockDrift // ignore: cast_nullable_to_non_nullable
+              as int?,
+      invalidated: null == invalidated
+          ? _value.invalidated
+          : invalidated // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -83,7 +114,14 @@ abstract class _$$_AuthCredentialsEntityCopyWith<$Res>
       __$$_AuthCredentialsEntityCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String accessToken, String idToken, String refreshToken});
+  $Res call(
+      {String accessToken,
+      String idToken,
+      String refreshToken,
+      int accessTokenExpiresAt,
+      int idTokenExpiresAt,
+      int? clockDrift,
+      bool invalidated});
 }
 
 /// @nodoc
@@ -100,6 +138,10 @@ class __$$_AuthCredentialsEntityCopyWithImpl<$Res>
     Object? accessToken = null,
     Object? idToken = null,
     Object? refreshToken = null,
+    Object? accessTokenExpiresAt = null,
+    Object? idTokenExpiresAt = null,
+    Object? clockDrift = freezed,
+    Object? invalidated = null,
   }) {
     return _then(_$_AuthCredentialsEntity(
       accessToken: null == accessToken
@@ -114,19 +156,39 @@ class __$$_AuthCredentialsEntityCopyWithImpl<$Res>
           ? _value.refreshToken
           : refreshToken // ignore: cast_nullable_to_non_nullable
               as String,
+      accessTokenExpiresAt: null == accessTokenExpiresAt
+          ? _value.accessTokenExpiresAt
+          : accessTokenExpiresAt // ignore: cast_nullable_to_non_nullable
+              as int,
+      idTokenExpiresAt: null == idTokenExpiresAt
+          ? _value.idTokenExpiresAt
+          : idTokenExpiresAt // ignore: cast_nullable_to_non_nullable
+              as int,
+      clockDrift: freezed == clockDrift
+          ? _value.clockDrift
+          : clockDrift // ignore: cast_nullable_to_non_nullable
+              as int?,
+      invalidated: null == invalidated
+          ? _value.invalidated
+          : invalidated // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$_AuthCredentialsEntity
-    with DiagnosticableTreeMixin
-    implements _AuthCredentialsEntity {
+class _$_AuthCredentialsEntity extends _AuthCredentialsEntity
+    with DiagnosticableTreeMixin {
   const _$_AuthCredentialsEntity(
       {required this.accessToken,
       required this.idToken,
-      required this.refreshToken});
+      required this.refreshToken,
+      required this.accessTokenExpiresAt,
+      required this.idTokenExpiresAt,
+      this.clockDrift,
+      this.invalidated = false})
+      : super._();
 
   factory _$_AuthCredentialsEntity.fromJson(Map<String, dynamic> json) =>
       _$$_AuthCredentialsEntityFromJson(json);
@@ -137,10 +199,19 @@ class _$_AuthCredentialsEntity
   final String idToken;
   @override
   final String refreshToken;
+  @override
+  final int accessTokenExpiresAt;
+  @override
+  final int idTokenExpiresAt;
+  @override
+  final int? clockDrift;
+  @override
+  @JsonKey()
+  final bool invalidated;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'AuthCredentialsEntity(accessToken: $accessToken, idToken: $idToken, refreshToken: $refreshToken)';
+    return 'AuthCredentialsEntity(accessToken: $accessToken, idToken: $idToken, refreshToken: $refreshToken, accessTokenExpiresAt: $accessTokenExpiresAt, idTokenExpiresAt: $idTokenExpiresAt, clockDrift: $clockDrift, invalidated: $invalidated)';
   }
 
   @override
@@ -150,7 +221,11 @@ class _$_AuthCredentialsEntity
       ..add(DiagnosticsProperty('type', 'AuthCredentialsEntity'))
       ..add(DiagnosticsProperty('accessToken', accessToken))
       ..add(DiagnosticsProperty('idToken', idToken))
-      ..add(DiagnosticsProperty('refreshToken', refreshToken));
+      ..add(DiagnosticsProperty('refreshToken', refreshToken))
+      ..add(DiagnosticsProperty('accessTokenExpiresAt', accessTokenExpiresAt))
+      ..add(DiagnosticsProperty('idTokenExpiresAt', idTokenExpiresAt))
+      ..add(DiagnosticsProperty('clockDrift', clockDrift))
+      ..add(DiagnosticsProperty('invalidated', invalidated));
   }
 
   @override
@@ -162,13 +237,28 @@ class _$_AuthCredentialsEntity
                 other.accessToken == accessToken) &&
             (identical(other.idToken, idToken) || other.idToken == idToken) &&
             (identical(other.refreshToken, refreshToken) ||
-                other.refreshToken == refreshToken));
+                other.refreshToken == refreshToken) &&
+            (identical(other.accessTokenExpiresAt, accessTokenExpiresAt) ||
+                other.accessTokenExpiresAt == accessTokenExpiresAt) &&
+            (identical(other.idTokenExpiresAt, idTokenExpiresAt) ||
+                other.idTokenExpiresAt == idTokenExpiresAt) &&
+            (identical(other.clockDrift, clockDrift) ||
+                other.clockDrift == clockDrift) &&
+            (identical(other.invalidated, invalidated) ||
+                other.invalidated == invalidated));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, accessToken, idToken, refreshToken);
+  int get hashCode => Object.hash(
+      runtimeType,
+      accessToken,
+      idToken,
+      refreshToken,
+      accessTokenExpiresAt,
+      idTokenExpiresAt,
+      clockDrift,
+      invalidated);
 
   @JsonKey(ignore: true)
   @override
@@ -185,11 +275,16 @@ class _$_AuthCredentialsEntity
   }
 }
 
-abstract class _AuthCredentialsEntity implements AuthCredentialsEntity {
+abstract class _AuthCredentialsEntity extends AuthCredentialsEntity {
   const factory _AuthCredentialsEntity(
       {required final String accessToken,
       required final String idToken,
-      required final String refreshToken}) = _$_AuthCredentialsEntity;
+      required final String refreshToken,
+      required final int accessTokenExpiresAt,
+      required final int idTokenExpiresAt,
+      final int? clockDrift,
+      final bool invalidated}) = _$_AuthCredentialsEntity;
+  const _AuthCredentialsEntity._() : super._();
 
   factory _AuthCredentialsEntity.fromJson(Map<String, dynamic> json) =
       _$_AuthCredentialsEntity.fromJson;
@@ -200,6 +295,14 @@ abstract class _AuthCredentialsEntity implements AuthCredentialsEntity {
   String get idToken;
   @override
   String get refreshToken;
+  @override
+  int get accessTokenExpiresAt;
+  @override
+  int get idTokenExpiresAt;
+  @override
+  int? get clockDrift;
+  @override
+  bool get invalidated;
   @override
   @JsonKey(ignore: true)
   _$$_AuthCredentialsEntityCopyWith<_$_AuthCredentialsEntity> get copyWith =>
