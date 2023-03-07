@@ -1,39 +1,39 @@
-abstract class Either3<First, Second, Third> {
+abstract class Either3<Alpha, Beta, Gamma> {
   const Either3();
 
-  B fold<B>(B Function(First l) ifFirst, B Function(Second m) ifSecond,
-      B Function(Third r) ifThird);
+  B fold<B>(B Function(Alpha l) ifAlpha, B Function(Beta m) ifBeta,
+      B Function(Gamma r) ifGamma);
 }
 
-class First<F, S, T> extends Either3<F, S, T> {
+class Alpha<F, S, T> extends Either3<F, S, T> {
   final F _f;
 
-  const First(this._f) : super();
+  const Alpha(this._f) : super();
 
   @override
-  B fold<B>(B Function(F l) ifFirst, B Function(S m) ifSecond,
-          B Function(T r) ifThird) =>
-      ifFirst(_f);
+  B fold<B>(B Function(F l) ifAlpha, B Function(S m) ifBeta,
+          B Function(T r) ifGamma) =>
+      ifAlpha(_f);
 }
 
-class Second<F, S, T> extends Either3<F, S, T> {
+class Beta<F, S, T> extends Either3<F, S, T> {
   final S _s;
 
-  const Second(this._s) : super();
+  const Beta(this._s) : super();
 
   @override
-  B fold<B>(B Function(F l) ifFirst, B Function(S m) ifSecond,
-          B Function(T r) ifThird) =>
-      ifSecond(_s);
+  B fold<B>(B Function(F l) ifAlpha, B Function(S m) ifBeta,
+          B Function(T r) ifGamma) =>
+      ifBeta(_s);
 }
 
-class Third<F, S, T> extends Either3<F, S, T> {
+class Gamma<F, S, T> extends Either3<F, S, T> {
   final T _t;
 
-  const Third(this._t) : super();
+  const Gamma(this._t) : super();
 
   @override
-  B fold<B>(B Function(F l) ifFirst, B Function(S m) ifSecond,
-          B Function(T r) ifThird) =>
-      ifThird(_t);
+  B fold<B>(B Function(F l) ifAlpha, B Function(S m) ifBeta,
+          B Function(T r) ifGamma) =>
+      ifGamma(_t);
 }
