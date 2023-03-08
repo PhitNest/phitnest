@@ -7,13 +7,20 @@ part of 'user.dart';
 // **************************************************************************
 
 _$_UserEntity _$$_UserEntityFromJson(Map<String, dynamic> json) =>
-    _$_UserEntity(
-      id: json['id'] as String,
-      email: json['email'] as String,
-      gymId: json['gymId'] as String,
-      firstName: json['firstName'] as String,
-      lastName: json['lastName'] as String,
-      confirmed: json['confirmed'] as bool,
+    $checkedCreate(
+      r'_$_UserEntity',
+      json,
+      ($checkedConvert) {
+        final val = _$_UserEntity(
+          id: $checkedConvert('id', (v) => v as String),
+          email: $checkedConvert('email', (v) => v as String),
+          gymId: $checkedConvert('gymId', (v) => v as String),
+          firstName: $checkedConvert('firstName', (v) => v as String),
+          lastName: $checkedConvert('lastName', (v) => v as String),
+          confirmed: $checkedConvert('confirmed', (v) => v as bool),
+        );
+        return val;
+      },
     );
 
 Map<String, dynamic> _$$_UserEntityToJson(_$_UserEntity instance) =>
