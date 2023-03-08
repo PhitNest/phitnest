@@ -1,8 +1,8 @@
 import 'package:basic_utils/basic_utils.dart';
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
-import 'either3.dart';
-import 'either4.dart';
+import 'failure.dart';
 import 'logger.dart';
 
 const _timeout = Duration(seconds: 30);
@@ -22,25 +22,15 @@ enum HttpMethod {
   delete,
 }
 
-class NetworkConnectionFailure {
-  static const message = "Network connection failure.";
-
-  const NetworkConnectionFailure() : super();
+class NetworkConnectionFailure extends Failure {
+  const NetworkConnectionFailure() : super("Network connection failure.");
 }
 
-class InvalidResponseFailure {
-  static const String message = "Invalid response from server.";
-
-  const InvalidResponseFailure() : super();
-}
-
-Future<Either3<SuccessType, FailType, NetworkConnectionFailure>>
-    _requestRaw<SuccessType, FailType extends Object>({
+Future<Either<ResType, NetworkConnectionFailure>> request<ResType>({
   required String route,
   required HttpMethod method,
   required Map<String, dynamic> data,
-  required SuccessType Function(dynamic response) successParser,
-  required FailType Function(Map<String, dynamic> json) failureParser,
+  required ResType? Function(Response) parser,
   Map<String, dynamic>? headers,
   String? authorization,
   String? overrideHost,
@@ -84,130 +74,31 @@ Future<Either3<SuccessType, FailType, NetworkConnectionFailure>>
         .timeout(_timeout)
         .then(
       (response) {
-        if (response.statusCode == 200) {
+        if (ResType == Null &&
+            response.data == null &&
+            response.statusCode == 200) {
           prettyLogger.d(
-              "Response success:${description(response.data)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
-          return Alpha(successParser(response.data));
+              "Response success:${description(null)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
+          return Left(null as ResType);
+        }
+        final parsed = parser(response);
+        if (parsed != null) {
+          if (parsed is Failure) {
+            prettyLogger.e(
+                "Response failure:${description(parsed)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
+          } else {
+            prettyLogger.d(
+                "Response success:${description(parsed)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
+          }
+          return Left(parsed);
         } else {
-          throw failureParser(response.data);
+          throw response.data;
         }
       },
     );
   } catch (e) {
     prettyLogger.e(
-        "Response failure:${description(e)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
-    if (e is InvalidResponseFailure) {
-      throw e;
-    }
-    return e is FailType ? Beta(e) : Gamma(const NetworkConnectionFailure());
+        "Request failure:${description(e)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
+    return Right(const NetworkConnectionFailure());
   }
 }
-
-@override
-Future<
-        Either4<ResType, FailType, InvalidResponseFailure,
-            NetworkConnectionFailure>>
-    requestJson<ResType, FailType extends Object>({
-  required String route,
-  required HttpMethod method,
-  required ResType Function(Map<String, dynamic> json) successParser,
-  required FailType Function(Map<String, dynamic> json) failureParser,
-  required Map<String, dynamic> data,
-  Map<String, dynamic>? headers,
-  String? authorization,
-  String? overrideHost,
-  String? overridePort,
-}) async {
-  try {
-    return await _requestRaw(
-      route: route,
-      method: method,
-      data: data,
-      headers: headers,
-      authorization: authorization,
-      successParser: (response) {
-        if (response is Map<String, dynamic>) {
-          return successParser(response);
-        } else {
-          throw const InvalidResponseFailure();
-        }
-      },
-      failureParser: failureParser,
-    ).then(
-      (either) => either.fold(
-        (success) => First(success),
-        (failure) => Second(failure),
-        (networkFailure) => Fourth(networkFailure),
-      ),
-    );
-  } catch (_) {
-    return Third(const InvalidResponseFailure());
-  }
-}
-
-@override
-Future<
-        Either4<List<ResType>, FailType, InvalidResponseFailure,
-            NetworkConnectionFailure>>
-    requestList<ResType, FailType extends Object>({
-  required String route,
-  required HttpMethod method,
-  required ResType Function(Map<String, dynamic> json) successParser,
-  required FailType Function(Map<String, dynamic> json) failureParser,
-  required Map<String, dynamic> data,
-  Map<String, dynamic>? headers,
-  String? authorization,
-  String? overrideHost,
-  String? overridePort,
-}) async {
-  try {
-    return await _requestRaw(
-      route: route,
-      method: method,
-      data: data,
-      headers: headers,
-      authorization: authorization,
-      successParser: (response) => (response as List<dynamic>)
-          .map((json) => successParser(json))
-          .toList(),
-      failureParser: failureParser,
-    ).then(
-      (either) => either.fold(
-        (list) => First(list),
-        (failure) => Second(failure),
-        (networkFailure) => Fourth(networkFailure),
-      ),
-    );
-  } catch (_) {
-    return Third(const InvalidResponseFailure());
-  }
-}
-
-Future<
-    Either4<void, FailType, InvalidResponseFailure,
-        NetworkConnectionFailure>> request<FailType extends Object>({
-  required String route,
-  required HttpMethod method,
-  required Map<String, dynamic> data,
-  required FailType Function(Map<String, dynamic> json) failureParser,
-  Map<String, dynamic>? headers,
-  String? authorization,
-  String? overrideHost,
-  String? overridePort,
-}) =>
-    requestJson(
-      route: route,
-      method: method,
-      data: data,
-      successParser: (_) {},
-      failureParser: failureParser,
-      headers: headers,
-      authorization: authorization,
-    ).then(
-      (either) => either.fold(
-        (json) => First(null),
-        (failure) => Second(failure),
-        (invalidResponse) => Third(invalidResponse),
-        (networkFailure) => Fourth(networkFailure),
-      ),
-    );

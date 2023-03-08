@@ -11,11 +11,9 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   google_fonts: ^4.0.3
-  geolocator: ^9.0.1
   dartz: ^0.10.1
   flutter_dotenv: ^5.0.2
   flutter_launcher_icons: ^0.12.0
-  email_validator: ^2.1.17
   logger: ^1.1.0
   device_preview: ^1.1.0
   amazon_cognito_identity_dart_2: ^3.2.0
@@ -23,9 +21,8 @@ dependencies:
   phitnest_utils:
     path: packages/phitnest_utils
   flutter_bloc: ^8.1.2
-  freezed_annotation: ^2.2.0
+  async: ^2.10.0
   json_annotation: ^4.8.0
-  meta: ^1.8.0
 
 dev_dependencies:
   flutter_test:

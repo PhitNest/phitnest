@@ -16,14 +16,63 @@ final _privateConstructorUsedError = UnsupportedError(
 
 CognitoCredentialsEntity _$CognitoCredentialsEntityFromJson(
     Map<String, dynamic> json) {
-  return _CognitoCredentialsEntity.fromJson(json);
+  switch (json['runtimeType']) {
+    case 'default':
+      return _CognitoCredentialsEntity.fromJson(json);
+    case 'sandbox':
+      return CognitoCredentialsSandboxEntity.fromJson(json);
+
+    default:
+      throw CheckedFromJsonException(
+          json,
+          'runtimeType',
+          'CognitoCredentialsEntity',
+          'Invalid union type "${json['runtimeType']}"!');
+  }
 }
 
 /// @nodoc
 mixin _$CognitoCredentialsEntity {
   String get userPoolId => throw _privateConstructorUsedError;
   String get clientId => throw _privateConstructorUsedError;
-
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(String userPoolId, String clientId) $default, {
+    required TResult Function(String userPoolId, String clientId) sandbox,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(String userPoolId, String clientId)? $default, {
+    TResult? Function(String userPoolId, String clientId)? sandbox,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(String userPoolId, String clientId)? $default, {
+    TResult Function(String userPoolId, String clientId)? sandbox,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_CognitoCredentialsEntity value) $default, {
+    required TResult Function(CognitoCredentialsSandboxEntity value) sandbox,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_CognitoCredentialsEntity value)? $default, {
+    TResult? Function(CognitoCredentialsSandboxEntity value)? sandbox,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_CognitoCredentialsEntity value)? $default, {
+    TResult Function(CognitoCredentialsSandboxEntity value)? sandbox,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $CognitoCredentialsEntityCopyWith<CognitoCredentialsEntity> get copyWith =>
@@ -111,11 +160,12 @@ class __$$_CognitoCredentialsEntityCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_CognitoCredentialsEntity
-    with DiagnosticableTreeMixin
-    implements _CognitoCredentialsEntity {
+class _$_CognitoCredentialsEntity extends _CognitoCredentialsEntity
+    with DiagnosticableTreeMixin {
   const _$_CognitoCredentialsEntity(
-      {required this.userPoolId, required this.clientId});
+      {required this.userPoolId, required this.clientId, final String? $type})
+      : $type = $type ?? 'default',
+        super._();
 
   factory _$_CognitoCredentialsEntity.fromJson(Map<String, dynamic> json) =>
       _$$_CognitoCredentialsEntityFromJson(json);
@@ -124,6 +174,9 @@ class _$_CognitoCredentialsEntity
   final String userPoolId;
   @override
   final String clientId;
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -162,6 +215,68 @@ class _$_CognitoCredentialsEntity
           _$_CognitoCredentialsEntity>(this, _$identity);
 
   @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(String userPoolId, String clientId) $default, {
+    required TResult Function(String userPoolId, String clientId) sandbox,
+  }) {
+    return $default(userPoolId, clientId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(String userPoolId, String clientId)? $default, {
+    TResult? Function(String userPoolId, String clientId)? sandbox,
+  }) {
+    return $default?.call(userPoolId, clientId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(String userPoolId, String clientId)? $default, {
+    TResult Function(String userPoolId, String clientId)? sandbox,
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(userPoolId, clientId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_CognitoCredentialsEntity value) $default, {
+    required TResult Function(CognitoCredentialsSandboxEntity value) sandbox,
+  }) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_CognitoCredentialsEntity value)? $default, {
+    TResult? Function(CognitoCredentialsSandboxEntity value)? sandbox,
+  }) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_CognitoCredentialsEntity value)? $default, {
+    TResult Function(CognitoCredentialsSandboxEntity value)? sandbox,
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
+
+  @override
   Map<String, dynamic> toJson() {
     return _$$_CognitoCredentialsEntityToJson(
       this,
@@ -169,10 +284,11 @@ class _$_CognitoCredentialsEntity
   }
 }
 
-abstract class _CognitoCredentialsEntity implements CognitoCredentialsEntity {
+abstract class _CognitoCredentialsEntity extends CognitoCredentialsEntity {
   const factory _CognitoCredentialsEntity(
       {required final String userPoolId,
       required final String clientId}) = _$_CognitoCredentialsEntity;
+  const _CognitoCredentialsEntity._() : super._();
 
   factory _CognitoCredentialsEntity.fromJson(Map<String, dynamic> json) =
       _$_CognitoCredentialsEntity.fromJson;
@@ -184,5 +300,197 @@ abstract class _CognitoCredentialsEntity implements CognitoCredentialsEntity {
   @override
   @JsonKey(ignore: true)
   _$$_CognitoCredentialsEntityCopyWith<_$_CognitoCredentialsEntity>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$CognitoCredentialsSandboxEntityCopyWith<$Res>
+    implements $CognitoCredentialsEntityCopyWith<$Res> {
+  factory _$$CognitoCredentialsSandboxEntityCopyWith(
+          _$CognitoCredentialsSandboxEntity value,
+          $Res Function(_$CognitoCredentialsSandboxEntity) then) =
+      __$$CognitoCredentialsSandboxEntityCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String userPoolId, String clientId});
+}
+
+/// @nodoc
+class __$$CognitoCredentialsSandboxEntityCopyWithImpl<$Res>
+    extends _$CognitoCredentialsEntityCopyWithImpl<$Res,
+        _$CognitoCredentialsSandboxEntity>
+    implements _$$CognitoCredentialsSandboxEntityCopyWith<$Res> {
+  __$$CognitoCredentialsSandboxEntityCopyWithImpl(
+      _$CognitoCredentialsSandboxEntity _value,
+      $Res Function(_$CognitoCredentialsSandboxEntity) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? userPoolId = null,
+    Object? clientId = null,
+  }) {
+    return _then(_$CognitoCredentialsSandboxEntity(
+      userPoolId: null == userPoolId
+          ? _value.userPoolId
+          : userPoolId // ignore: cast_nullable_to_non_nullable
+              as String,
+      clientId: null == clientId
+          ? _value.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CognitoCredentialsSandboxEntity extends CognitoCredentialsSandboxEntity
+    with DiagnosticableTreeMixin {
+  const _$CognitoCredentialsSandboxEntity(
+      {this.userPoolId = "sandbox",
+      this.clientId = "sandbox",
+      final String? $type})
+      : $type = $type ?? 'sandbox',
+        super._();
+
+  factory _$CognitoCredentialsSandboxEntity.fromJson(
+          Map<String, dynamic> json) =>
+      _$$CognitoCredentialsSandboxEntityFromJson(json);
+
+  @override
+  @JsonKey()
+  final String userPoolId;
+  @override
+  @JsonKey()
+  final String clientId;
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'CognitoCredentialsEntity.sandbox(userPoolId: $userPoolId, clientId: $clientId)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'CognitoCredentialsEntity.sandbox'))
+      ..add(DiagnosticsProperty('userPoolId', userPoolId))
+      ..add(DiagnosticsProperty('clientId', clientId));
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CognitoCredentialsSandboxEntity &&
+            (identical(other.userPoolId, userPoolId) ||
+                other.userPoolId == userPoolId) &&
+            (identical(other.clientId, clientId) ||
+                other.clientId == clientId));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, userPoolId, clientId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CognitoCredentialsSandboxEntityCopyWith<_$CognitoCredentialsSandboxEntity>
+      get copyWith => __$$CognitoCredentialsSandboxEntityCopyWithImpl<
+          _$CognitoCredentialsSandboxEntity>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(String userPoolId, String clientId) $default, {
+    required TResult Function(String userPoolId, String clientId) sandbox,
+  }) {
+    return sandbox(userPoolId, clientId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(String userPoolId, String clientId)? $default, {
+    TResult? Function(String userPoolId, String clientId)? sandbox,
+  }) {
+    return sandbox?.call(userPoolId, clientId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(String userPoolId, String clientId)? $default, {
+    TResult Function(String userPoolId, String clientId)? sandbox,
+    required TResult orElse(),
+  }) {
+    if (sandbox != null) {
+      return sandbox(userPoolId, clientId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_CognitoCredentialsEntity value) $default, {
+    required TResult Function(CognitoCredentialsSandboxEntity value) sandbox,
+  }) {
+    return sandbox(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_CognitoCredentialsEntity value)? $default, {
+    TResult? Function(CognitoCredentialsSandboxEntity value)? sandbox,
+  }) {
+    return sandbox?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_CognitoCredentialsEntity value)? $default, {
+    TResult Function(CognitoCredentialsSandboxEntity value)? sandbox,
+    required TResult orElse(),
+  }) {
+    if (sandbox != null) {
+      return sandbox(this);
+    }
+    return orElse();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CognitoCredentialsSandboxEntityToJson(
+      this,
+    );
+  }
+}
+
+abstract class CognitoCredentialsSandboxEntity
+    extends CognitoCredentialsEntity {
+  const factory CognitoCredentialsSandboxEntity(
+      {final String userPoolId,
+      final String clientId}) = _$CognitoCredentialsSandboxEntity;
+  const CognitoCredentialsSandboxEntity._() : super._();
+
+  factory CognitoCredentialsSandboxEntity.fromJson(Map<String, dynamic> json) =
+      _$CognitoCredentialsSandboxEntity.fromJson;
+
+  @override
+  String get userPoolId;
+  @override
+  String get clientId;
+  @override
+  @JsonKey(ignore: true)
+  _$$CognitoCredentialsSandboxEntityCopyWith<_$CognitoCredentialsSandboxEntity>
       get copyWith => throw _privateConstructorUsedError;
 }

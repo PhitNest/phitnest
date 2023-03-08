@@ -1,11 +1,13 @@
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
+import 'package:dartz/dartz.dart';
 import 'package:phitnest_utils/utils.dart';
 
 import '../../../entities/entities.dart';
-import 'failure.dart';
+import 'response/response.dart';
 
-Future<Either3<AuthCredentialsEntity, LoginFailure, NetworkConnectionFailure>>
-    login({
+export './response/response.dart';
+
+Future<Either<LoginResponse, NetworkConnectionFailure>> login({
   required String email,
   required String password,
   required CognitoCredentialsEntity cognitoCredentials,
@@ -27,8 +29,8 @@ Future<Either3<AuthCredentialsEntity, LoginFailure, NetworkConnectionFailure>>
       final idToken = authResponse.idToken.getJwtToken();
       final refreshToken = authResponse.refreshToken?.token;
       if (accessToken != null && idToken != null && refreshToken != null) {
-        return Alpha(
-          AuthCredentialsEntity(
+        return Left(
+          LoginResponse.success(
             accessToken: accessToken,
             idToken: idToken,
             refreshToken: refreshToken,
@@ -39,21 +41,21 @@ Future<Either3<AuthCredentialsEntity, LoginFailure, NetworkConnectionFailure>>
         );
       }
     }
-    return Beta(const LoginFailure.unknown());
+    return Right(const NetworkConnectionFailure());
   } on CognitoUserConfirmationNecessaryException catch (_) {
-    return Beta(const LoginFailure.confirmationRequired());
+    return Left(const LoginResponse.confirmationRequired());
   } on CognitoClientException catch (error) {
     switch (error.code) {
       case "ResourceNotFoundException":
-        return Beta(const LoginFailure.invalidCognitoPool());
+        return Left(const LoginResponse.invalidCognitoPool());
       case "NotAuthorizedException":
-        return Beta(const LoginFailure.invalidLogin());
+        return Left(const LoginResponse.invalidLogin());
       case "UserNotFoundException":
-        return Beta(const LoginFailure.userNotFound());
+        return Left(const LoginResponse.userNotFound());
       default:
-        return Beta(const LoginFailure.unknown());
+        return Right(const NetworkConnectionFailure());
     }
   } on ArgumentError catch (_) {
-    return Beta(const LoginFailure.invalidCognitoPool());
+    return Left(const LoginResponse.invalidCognitoPool());
   }
 }

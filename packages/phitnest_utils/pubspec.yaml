@@ -8,7 +8,8 @@ environment:
 
 dependencies:
   dartz: ^0.10.1
-  equatable: ^2.0.5
   logger: ^1.1.0
   basic_utils: ^5.4.2
   dio: ^5.0.1
+  shared_preferences: ^2.0.18
+  flutter_secure_storage: ^8.0.0
