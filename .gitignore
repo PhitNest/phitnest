@@ -12,8 +12,8 @@ migrate_working_dir/
 .env
 
 # Freezed
-lib/**.freezed.dart
-lib/**.g.dart
+**/*.freezed.dart
+**/*.g.dart
 
 # IntelliJ related
 *.iml

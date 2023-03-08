@@ -1,6 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
-import 'package:phitnest_utils/cache_adapter.dart';
 import 'package:phitnest_utils/utils.dart';
 
 import 'src/app.dart';
