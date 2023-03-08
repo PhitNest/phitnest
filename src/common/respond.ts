@@ -21,18 +21,20 @@ function successResponse(body: any): {
   };
 }
 
-export async function respond<T>(params: {
-  controller: (body: T) => Promise<any>;
+export async function respond<InputType>(params: {
+  controller: (body: InputType) => Promise<any>;
   body?: string | null;
-  validator?: z.ZodSchema<T>;
+  validator?: z.ZodSchema<InputType>;
 }): Promise<{
   statusCode: number;
   body: any;
 }> {
   try {
     const response = await (params.validator != null
-      ? params.controller(params.validator.parse(JSON.parse(params.body ?? "")))
-      : params.controller(undefined as T));
+      ? params.controller(
+          params.validator.parse(JSON.parse(params.body ?? "{}"))
+        )
+      : params.controller(undefined as InputType));
     if (response instanceof Failure) {
       return errorResponse(response);
     } else {
