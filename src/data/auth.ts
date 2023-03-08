@@ -1,5 +1,5 @@
 import { Failure } from "@/common/failure";
-import { createUuid } from "@/common/uuid";
+import { randomUUID } from "crypto";
 import {
   CognitoUserAttribute,
   CognitoUserPool,
@@ -31,7 +31,7 @@ class Auth {
     lastName: string
   ): Promise<string | Failure> {
     if (process.env.NODE_ENV === "development") {
-      return createUuid();
+      return randomUUID();
     }
     return await new Promise<string | Failure>((resolve) => {
       userPool().signUp(

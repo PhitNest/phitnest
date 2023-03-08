@@ -8,7 +8,6 @@ import {
 import mockContext from "aws-lambda-mock-context";
 
 function mockHttp(
-  method: string,
   body?: any,
   pathParams?: APIGatewayProxyEventPathParameters,
   queryParams?: APIGatewayProxyEventQueryStringParameters,
@@ -16,7 +15,7 @@ function mockHttp(
 ): [APIGatewayEvent, Context] {
   return [
     {
-      httpMethod: method,
+      httpMethod: "",
       body: body ? JSON.stringify(body) : null,
       path: "",
       headers: { "Content-Type": "application/json", ...headers },
@@ -67,26 +66,26 @@ export function mockPost(
   body: any,
   pathParams?: APIGatewayProxyEventPathParameters
 ) {
-  return mockHttp("POST", body, pathParams, {});
+  return mockHttp(body, pathParams, {});
 }
 
 export function mockPut(
   body: any,
   pathParams?: APIGatewayProxyEventPathParameters
 ) {
-  return mockHttp("PUT", body, pathParams, {});
+  return mockHttp(body, pathParams, {});
 }
 
 export function mockGet(
   pathParams?: APIGatewayProxyEventPathParameters,
   queryParams?: APIGatewayProxyEventQueryStringParameters
 ) {
-  return mockHttp("GET", undefined, pathParams, queryParams);
+  return mockHttp(undefined, pathParams, queryParams);
 }
 
 export function mockDelete(
   pathParams?: APIGatewayProxyEventPathParameters,
   queryParams?: APIGatewayProxyEventQueryStringParameters
 ) {
-  return mockHttp("DELETE", undefined, pathParams, queryParams);
+  return mockHttp(undefined, pathParams, queryParams);
 }

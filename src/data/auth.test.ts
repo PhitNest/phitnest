@@ -1,7 +1,7 @@
 import Auth, { kCognitoCredentials } from "./auth";
 
 describe("Mocking Cognito Identity Provider", () => {
-  it("Register should return a random uuid v4", async () => {
+  it("Register should return a random uuid v4 in unit tests", async () => {
     const body = {
       email: "test@gmail.com",
       password: "password",
@@ -20,7 +20,7 @@ describe("Mocking Cognito Identity Provider", () => {
     );
   });
 
-  it("User pool should not be loaded in CI", async () => {
+  it("User pool should run in sandbox mode in unit tests", async () => {
     expect(kCognitoCredentials).toEqual({
       userPoolId: "sandbox",
       clientId: "sandbox",
