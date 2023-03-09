@@ -30,3 +30,24 @@ run: webpack-build-sandbox
 	sed -n 's/#USERNAME#/sam-cli/g' configs/lambdas-env.json
 	cd .aws-sam/build/
 	sam local start-api --env-vars configs/lambdas-env.json --parameter-overrides Stage=sandbox
+
+# Get the platform specific open command
+ifeq ($(OS),Windows_NT)
+    OPEN := bash start
+else
+    UNAME := $(shell uname -s)
+    ifeq ($(UNAME),Linux)
+        OPEN := xdg-open
+    endif
+endif
+
+## Runs dgraph standalone locally
+dgraph:
+	$(OPEN) https://play.dgraph.io
+	docker run -it -p 8080:8080 -p 9080:9080 -p 8000:8000 -v ~/dgraph:/dgraph dgraph/standalone:v20.03.0
+
+## Installs all dependencies
+install:
+	npm ci
+	npm i -g webpack
+	docker pull dgraph/standalone:latest
