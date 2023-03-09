@@ -1,1 +1,0 @@
-export { kUserNotFound } from "./failures";

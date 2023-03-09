@@ -4,9 +4,7 @@
   "description": "PhitNest REST API using AWS SAM framework",
   "repository": "https://github.com/PhitNest/phitnest-api/",
   "dependencies": {
-    "amazon-cognito-identity-js": "^6.1.2",
     "aws-sdk": "2.1208.0",
-    "crypto": "^1.0.1",
     "source-map-support": "0.5.21",
     "zod": "^3.21.0"
   },

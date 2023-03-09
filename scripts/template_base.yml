@@ -76,4 +76,43 @@ Resources:
       ClientName: !Sub "PhitNest-${Stage}"
       GenerateSecret: false
 
+  #### DGRAPH EC2 ####
+  DGraphEC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0a887e401f7654935
+      InstanceType:
+      - t2.micro
+      KeyName: DGraph-KeyPair
+      SecurityGroupIds:
+      - !Ref DGraphSecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          # Pull DGraph docker image and run it
+
+  DGraphKeyPair:
+    Type: AWS::EC2::KeyPair
+    Properties:
+      KeyName: DGraph-KeyPair
+
+  DGraphSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: DGraphSecurityGroup
+      GroupDescription: "Security group for DGraph production database"
+      VpcId: !Ref DGraphVPC
+      SecurityGroupIngress:
+        - IpProtocol: "tcp"
+          FromPort: <FROM-PORT>
+          ToPort: <TO-PORT>
+          CidrIp: <CIDR-IP-RANGE>
+
+  DGraphVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: "10.0.0.0/24"
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+
   #### CODEGEN STARTS BELOW HERE ####
