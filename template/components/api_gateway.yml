@@ -1,0 +1,13 @@
+PhitNestApi:
+  Type: AWS::Serverless::Api
+  Properties:
+    StageName: !Ref Stage
+    Name: !Sub "PhitNest-${Stage}-API"
+    EndpointConfiguration:
+      Type: EDGE
+      VPCEndpointIds:
+        - !Ref DGraphVPCEndpoint
+    Auth:
+      Authorizers:
+        UserCognitoAuthorizer:
+          UserPoolArn: !GetAtt UserCognitoUserPool.Arn

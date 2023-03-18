@@ -1,20 +1,25 @@
 #!/bin/bash
 
-# The name of the file to append to the new file
-base="scripts/template_base.yml"
+stack="template/stacks/$1.yml"
+componentDir="template/components/"
+lambdaDir="src/lambdas"
 
 out="template.yml"
 
-# Create or replace the new file
 > $out
 
-# Append the contents of the append file to the new file
-cat $base >> $out
+cat $stack >> $out
 
-root="src/lambdas"
+find $componentDir -type f | while read file; do
+  filename=$(basename $file)
+  componentName=${filename%.yml}
+  componentContents=$(cat "$file" | sed ':a;N;$!ba;s/\n/\\n  /g')
+  sed -i "s/@@$componentName/# $filename\\n  $componentContents/g" "$out"
+done
+
 # Loop through every file in the directory recursively
-find $root -type f | while read file; do
-  fileRootless=${file#$root}
+find $lambdaDir -type f | while read file; do
+  fileRootless=${file#$lambdaDir}
   filename=$(basename $fileRootless)
   path=${fileRootless%"/$filename"}
   methodLower=${filename%.ts}

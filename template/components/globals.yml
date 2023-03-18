@@ -1,0 +1,7 @@
+Function:
+  Timeout: 25
+  Environment:
+    Variables:
+      REGION: us-east-1
+      COGNITO_USER_POOL_ID: !Ref UserCognitoUserPool
+      COGNITO_USER_POOL_APP_ID: !Ref UserCognitoUserPoolClient
