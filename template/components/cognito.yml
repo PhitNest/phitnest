@@ -1,0 +1,38 @@
+UserCognitoUserPool:
+  Type: AWS::Cognito::UserPool
+  Properties:
+    UserPoolName: !Sub "PhitNest-${Stage}"
+    Policies:
+      PasswordPolicy:
+        MinimumLength: 8
+        RequireLowercase: true
+        RequireNumbers: true
+        RequireSymbols: true
+        RequireUppercase: true
+    EmailConfiguration:
+      EmailSendingAccount: DEVELOPER
+      From: PhitNest <verify@phitnest.com>
+      ReplyToEmailAddress: verify@phitnest.com
+      SourceArn: arn:aws:ses:us-east-1:235601651768:identity\/phitnest.com
+    AutoVerifiedAttributes:
+      - email
+    UsernameAttributes:
+      - email
+      - phone_number
+    Schema:
+      - AttributeDataType: String
+        Name: email
+        Required: true
+
+UserCognitoUserPoolClient:
+  Type: AWS::Cognito::UserPoolClient
+  Properties:
+    UserPoolId: !Ref UserCognitoUserPool
+    EnableTokenRevocation: true
+    ExplicitAuthFlows:
+      - ALLOW_USER_SRP_AUTH
+      - ALLOW_REFRESH_TOKEN_AUTH
+      - ALLOW_CUSTOM_AUTH
+      - ALLOW_USER_PASSWORD_AUTH
+    ClientName: !Sub "PhitNest-${Stage}"
+    GenerateSecret: false

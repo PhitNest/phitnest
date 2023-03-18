@@ -1,0 +1,4 @@
+Stage:
+  Type: String
+  Description: Parameter for getting the deployment stage
+  Default: default
