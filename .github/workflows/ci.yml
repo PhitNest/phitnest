@@ -23,8 +23,7 @@ jobs:
 
       - name: Permit execution of the codegen scripts
         run: 
-          - chmod +x ./scripts/gen_combined_schema.sh
-          - chmod +x ./scripts/template_gen.sh
+          - chmod +x ./scripts/gen_combined_schema.sh && chmod +x ./scripts/template_gen.sh
 
       - name: Run tests
         run: make test
