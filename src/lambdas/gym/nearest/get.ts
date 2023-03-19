@@ -16,7 +16,7 @@ export function invoke(event: APIGatewayEvent): Promise<{
   return respond({
     body: event.queryStringParameters,
     validator: validator,
-    controller: (body: z.infer<typeof validator>) => {
+    controller: (_: z.infer<typeof validator>) => {
       return useDgraph(async (client) => {
         const txn = client.newTxn();
         await txn.mutate({

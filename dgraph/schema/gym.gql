@@ -1,0 +1,4 @@
+type Gym {
+    id: ID!
+    name: String!
+}

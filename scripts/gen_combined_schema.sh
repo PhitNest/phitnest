@@ -1,5 +1,6 @@
+#!/bin/bash
 output="schema.gql"
-schemaDir="schema/"
+schemaDir="dgraph/schema/"
 
 while IFS= read -r file; do
   filename=$(basename "$file")
