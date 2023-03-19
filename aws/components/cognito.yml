@@ -13,7 +13,7 @@ UserCognitoUserPool:
       EmailSendingAccount: DEVELOPER
       From: PhitNest <verify@phitnest.com>
       ReplyToEmailAddress: verify@phitnest.com
-      SourceArn: arn:aws:ses:us-east-1:235601651768:identity\/phitnest.com
+      SourceArn: arn:aws:ses:us-east-1:235601651768:identity/phitnest.com
     AutoVerifiedAttributes:
       - email
     UsernameAttributes:

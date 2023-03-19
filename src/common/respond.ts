@@ -23,7 +23,7 @@ function successResponse(body: any): {
 
 export async function respond<InputType>(params: {
   controller: (body: InputType) => Promise<any>;
-  body?: string | null;
+  body?: any | null;
   validator?: z.ZodSchema<InputType>;
 }): Promise<{
   statusCode: number;

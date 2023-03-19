@@ -8,6 +8,9 @@
 # Template configuration
 template.yml
 
+# DGraph Schema
+schema.gql
+
 # Env variables file
 configs/.env
 
