@@ -2,7 +2,7 @@ DGraphSSMAgentProfile:
   Type: AWS::IAM::InstanceProfile
   Properties:
     InstanceProfileName: !Sub "dgraph-ssm-access-${Stage}"
-    Path: !Sub "\/dgraph-ec2\/${Stage}\/"
+    Path: !Sub "/dgraph-ec2/${Stage}/"
     Roles:
       - !Ref DGraphSSMAgentRole
 
@@ -16,9 +16,9 @@ DGraphSSMAgentRole:
           Principal:
             Service: ec2.amazonaws.com
           Action: sts:AssumeRole
-    Path: !Sub "\/dgraph-ec2\/${Stage}\/"
+    Path: !Sub "/dgraph-ec2/${Stage}/"
     ManagedPolicyArns:
-      - arn:aws:iam::aws:policy\/AmazonSSMManagedInstanceCore
+      - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
 
 DGraphSSMEndpoint:
   Type: AWS::EC2::VPCEndpoint
@@ -72,4 +72,4 @@ SSMEndpointSecurityGroup:
       - IpProtocol: tcp
         FromPort: 443
         ToPort: 443
-        CidrIp: 10.0.1.0\/24
+        CidrIp: 10.0.1.0/24

@@ -2,22 +2,22 @@
 export SAM_CLI_TELEMETRY=0
 
 test:
-	template/scripts/template_gen.sh dev
+	scripts/template_gen.sh dev
 	NODE_ENV=development npm run test
 
 ## Build webpack for prod
 webpack-build-prod:
-	template/scripts/template_gen.sh prod
+	scripts/template_gen.sh prod
 	NODE_ENV=production npm run build
 
 ## Build webpack for dev
 webpack-build-dev:
-	template/scripts/template_gen.sh dev
+	scripts/template_gen.sh dev
 	NODE_ENV=production npm run build
 
 ## Build webpack for local sandbox
 webpack-build-sandbox:
-	template/scripts/template_gen.sh dev
+	scripts/template_gen.sh dev
 	NODE_ENV=development npm run build
 
 ## Deploy application code (template.yml) to aws environment
@@ -32,6 +32,8 @@ dev-deploy: webpack-build-dev
 
 ## Run the lambda functions locally
 run: webpack-build-sandbox
+	scripts/gen_combined_schema.sh
+	dgraph live -f ./schema.gql
 	sed -n 's/#USERNAME#/sam-cli/g' configs/lambdas-env.json
 	cd .aws-sam/build/
 	sam local start-api --env-vars configs/lambdas-env.json --parameter-overrides Stage=sandbox

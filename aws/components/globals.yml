@@ -5,3 +5,4 @@ Function:
       REGION: us-east-1
       COGNITO_USER_POOL_ID: !Ref UserCognitoUserPool
       COGNITO_USER_POOL_APP_ID: !Ref UserCognitoUserPoolClient
+      DGRAPH_HOST: !GetAtt DGraphEC2.PrivateIp
