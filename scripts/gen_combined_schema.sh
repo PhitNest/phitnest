@@ -6,7 +6,7 @@ while IFS= read -r file; do
   filename=$(basename "$file")
   if [[ "${filename#*.}" == "gql" ]]; then
     contents=$(cat "$file")
-    schema="$schema$contents\r"
+    schema="$schema$contents\n"
   fi
 done < <(find "$schemaDir" -type f)
 

@@ -93,13 +93,16 @@ while IFS= read -r file; do
   sed -i "s^$scriptPrefix$scriptName^# $filename$scriptSpacer$scriptContents\r^g" "$out"
 done < <(find "$scriptDir" -type f)
 
+
 schema=""
 
 while IFS= read -r file; do
   contents=$(cat "$file")
-  schema="$schema$contents$scriptSpacer"
+  schema+="$contents\r"
 done < <(find "$schemaDir" -type f)
-schema=${schema%$scriptSpacer}
+
+schema=${schema%"\r"}
+schema=$(echo -e "$schema" |  tr -d '\n' | sed "s/\r/$scriptSpacer/g")
 sed -i "s^$gqlTag^$schema^g" "$out"
 
 find $lambdaDir -type f | while read file; do
