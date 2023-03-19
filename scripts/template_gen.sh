@@ -61,7 +61,7 @@ stack="aws/stacks/$1.yml"
 componentDir="aws/components/"
 scriptDir="aws/scripts/"
 lambdaDir="src/lambdas"
-schemaDir="schema/"
+schemaDir="dgraph/schema/"
 
 out="template.yml"
 
