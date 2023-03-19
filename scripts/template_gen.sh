@@ -76,10 +76,12 @@ cat $stack >> $out
 find $componentDir -type f | while read file; do
   filename=$(basename $file)
   componentName=${filename%.yml}
-  spacer=$(cat "$out" | grep -o "\s*$componentPrefix$componentName")
+  currentOutput=$(cat "$out")
+  spacer=$(echo -e "$currentOutput" | grep -o "\s*$componentPrefix$componentName")
   spacer=${spacer%"$componentPrefix$componentName"}
-  componentContents=$(cat "$file" | tr -d '\n' | sed "s/\r/\r$spacer/g")
-  sed -i "s^$componentPrefix$componentName^# $filename\r$spacer$componentContents^g" "$out"
+  componentContents=$(cat "$file")
+  componentContents=${componentContents//$'\n'/$'\n'$spacer}
+  echo $"${currentOutput//$componentPrefix$componentName/# $filename$'\n'$spacer$componentContents}" > "$out"
 done
 
 scriptSpacer=""
@@ -87,23 +89,25 @@ scriptSpacer=""
 while IFS= read -r file; do
   filename=$(basename $file)
   scriptName=${filename%.sh}
+  currentOutput=$(cat "$out")
   scriptSpacer=$(cat "$out" | grep -o "\s*$scriptPrefix$scriptName")
   scriptSpacer=${scriptSpacer%"$scriptPrefix$scriptName"}
-  scriptContents=$(cat "$file" |  tr '\n' '\r' | sed "s/\r/$scriptSpacer/g")
-  sed -i "s^$scriptPrefix$scriptName^# $filename$scriptSpacer$scriptContents\r^g" "$out"
+  scriptContents=$(cat "$file")
+  scriptContents=${scriptContents//$'\n'/$'\n'$scriptSpacer}
+  echo $"${currentOutput//$scriptPrefix$scriptName/# $filename$'\n'$scriptSpacer$scriptContents}" > "$out"
 done < <(find "$scriptDir" -type f)
-
 
 schema=""
 
 while IFS= read -r file; do
   contents=$(cat "$file")
-  schema+="$contents\r"
+  schema+="$contents"$'\n'
 done < <(find "$schemaDir" -type f)
 
-schema=${schema%"\r"}
-schema=$(echo -e "$schema" |  tr -d '\n' | sed "s/\r/$scriptSpacer/g")
-sed -i "s^$gqlTag^$schema^g" "$out"
+schema=${schema%"\n"}
+schema=${schema//$'\n'/$'\n'$scriptSpacer}
+currentOutput=$(cat "$out")
+echo $"${currentOutput//$gqlTag/$schema}" > "$out"
 
 find $lambdaDir -type f | while read file; do
   fileRootless=${file#$lambdaDir}
@@ -175,4 +179,4 @@ find $lambdaDir -type f | while read file; do
       echo "              Authorizer: $userPool" >> $out
     fi
   fi
-  done
+done
