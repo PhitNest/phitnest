@@ -31,3 +31,6 @@ node_modules/
 
 # Generated files
 src/generated
+
+# DGraph data
+dgraph/data

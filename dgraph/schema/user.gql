@@ -1,6 +1,13 @@
+enum RegistrationStatus {
+    Unconfirmed
+    WaitingForProfilePicture
+    Confirmed
+}
+
 type User {
     id: ID!
     firstName: String!
     lastName: String!
     createdAt: DateTime!
+    registrationStatus: RegistrationStatus!
 }
