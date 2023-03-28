@@ -34,7 +34,7 @@ dev-deploy: webpack-build-dev
 
 ## Run the lambda functions locally
 run: webpack-build-sandbox
-	dgraph live -f ./schema.gql
+	curl -X POST -H "Content-Type: application/graphql" --data-binary '@schema.gql' http://localhost:8080/admin/schema
 	sed -n 's/#USERNAME#/sam-cli/g' lambdas-env.json
 	cd .aws-sam/build/
 	sam local start-api --env-vars lambdas-env.json --parameter-overrides Stage=sandbox
@@ -49,10 +49,12 @@ else
     endif
 endif
 
-## Runs dgraph standalone locally
+stop-dgraph:
+	docker stop DGraph
+
 dgraph:
 	$(OPEN) https://play.dgraph.io
-	docker run -it -p 8080:8080 -p 9080:9080 -p 8000:8000 -v ~/dgraph:/dgraph dgraph/standalone:v20.03.0
+	docker run -d -p 8080:8080 -p 9080:9080 -p 8000:8000 --mount type=bind,source=C:/dgraph/data,target=/dgraph --rm --name DGraph dgraph/standalone:latest
 
 ## Installs all dependencies
 install:
