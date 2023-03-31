@@ -15,10 +15,7 @@
     "test:watch": "jest --watchAll",
     "test": "jest --coverage",
     "build": "webpack-cli",
-    "clean": "rimraf .aws-sam .vscode",
-    "prebuild": "rimraf .aws-sam .vscode",
-    "prewatch": "rimraf .aws-sam .vscode",
-    "watch": "webpack-cli -w"
+    "clean": "rimraf .aws-sam schema.gql template.yml node_modules "
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^3.2.2",

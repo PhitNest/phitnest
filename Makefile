@@ -2,6 +2,9 @@
 export SAM_CLI_TELEMETRY=0
 .PHONY: dgraph
 
+clean:
+	npm run clean
+
 gen-schema:
 	scripts/gen_combined_schema.sh
 	npx graphql-code-generator --config ./codegen.ts
