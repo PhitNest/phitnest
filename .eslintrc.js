@@ -3,6 +3,7 @@ module.exports = {
     project: "./tsconfig.json",
     sourceType: "module",
   },
+  ignorePatterns: ["src/generated/**/*.ts"],
   plugins: [],
   extends: [
     "plugin:prettier/recommended",

@@ -24,9 +24,14 @@ Emulates the backend locally
 ```
 make run
 ```
+When this command runs successfully, you will see the endpoints you can invoke
 
 Stops DGraph
 ```
 make stop-dgraph
 ```
-When this command runs successfully, you will see the endpoints you can invoke
+
+Runs tests
+```
+make test
+```
