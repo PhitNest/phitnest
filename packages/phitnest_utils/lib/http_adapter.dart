@@ -29,8 +29,8 @@ class NetworkConnectionFailure extends Failure {
 Future<Either<ResType, NetworkConnectionFailure>> request<ResType>({
   required String route,
   required HttpMethod method,
-  required Map<String, dynamic> data,
   required ResType? Function(Response) parser,
+  Map<String, dynamic>? data,
   Map<String, dynamic>? headers,
   String? authorization,
   String? overrideHost,
@@ -54,7 +54,8 @@ Future<Either<ResType, NetworkConnectionFailure>> request<ResType>({
   };
   final options =
       BaseOptions(headers: headerMap, validateStatus: (status) => true);
-  if (method == HttpMethod.get || method == HttpMethod.delete) {
+  if (data != null &&
+      (method == HttpMethod.get || method == HttpMethod.delete)) {
     options.queryParameters = data;
   }
   final dio = Dio(options);
