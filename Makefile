@@ -5,13 +5,19 @@ export SAM_CLI_TELEMETRY=0
 clean:
 	npm run clean
 
+commit-schema:
+	curl -X POST -H "Content-Type: application/graphql" --data-binary '@schema.gql' http://localhost:8080/admin/schema
+
 gen-schema:
 	scripts/gen_combined_schema.sh
 	npx graphql-code-generator --config ./codegen.ts
 
 test: gen-schema
 	scripts/template_gen.sh dev
-	NODE_ENV=development npm run test
+	make dgraph-test
+	make commit-schema
+	NODE_ENV=development DGRAPH_PORT=3080 npm run test
+	make stop-dgraph-test
 
 webpack-build-prod: gen-schema
 	scripts/template_gen.sh prod
@@ -37,7 +43,7 @@ dev-deploy: webpack-build-dev
 
 ## Run the lambda functions locally
 run: webpack-build-sandbox
-	curl -X POST -H "Content-Type: application/graphql" --data-binary '@schema.gql' http://localhost:8080/admin/schema
+	make commit-schema
 	sed -n 's/#USERNAME#/sam-cli/g' lambdas-env.json
 	cd .aws-sam/build/
 	sam local start-api --env-vars lambdas-env.json --parameter-overrides Stage=sandbox
@@ -58,6 +64,13 @@ stop-dgraph:
 dgraph:
 	$(OPEN) https://play.dgraph.io
 	docker run -d -p 8080:8080 -p 9080:9080 -p 8000:8000 --mount type=bind,source=C:/dgraph/data,target=/dgraph --rm --name DGraph dgraph/standalone:latest
+
+dgraph-test:
+	docker run -d -p 3080:8080 -p 4080:9080 -p 3000:8000 --mount type=bind,source=C:/dgraph-test/data,target=/dgraph --rm --name DGraph-Test dgraph/standalone:latest
+	
+stop-dgraph-test:
+	rm -Rf C:/dgraph-test
+	docker stop DGraph-Test
 
 ## Installs all dependencies
 install:

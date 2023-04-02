@@ -8,7 +8,7 @@ export async function useDgraph<T>(
       (process.env.NODE_ENV != "development"
         ? process.env.DGRAPH_HOST
         : null) ?? "http://localhost"
-    }:8080`
+    }:${process.env.DGRAPH_PORT ?? "8080"}`
   );
   const client = new DgraphClient(stub);
   try {
