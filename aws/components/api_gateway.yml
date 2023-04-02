@@ -11,3 +11,5 @@ PhitNestApi:
       Authorizers:
         UserCognitoAuthorizer:
           UserPoolArn: !GetAtt UserCognitoUserPool.Arn
+        AdminCognitoAuthorizer:
+          UserPoolArn: !GetAtt AdminCognitoUserPool.Arn

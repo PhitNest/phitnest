@@ -5,6 +5,7 @@
   "repository": "https://github.com/PhitNest/phitnest-api/",
   "dependencies": {
     "aws-sdk": "2.1208.0",
+    "cross-fetch": "^3.1.5",
     "dgraph-js-http": "^21.3.1",
     "source-map-support": "0.5.21",
     "zod": "^3.21.0"
@@ -22,6 +23,7 @@
     "@graphql-codegen/typescript": "^3.0.2",
     "@types/aws-lambda": "8.10.102",
     "@types/jest": "28.1.1",
+    "@types/node": "^18.15.11",
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/parser": "5.36.1",
     "aws-lambda-mock-context": "^3.2.1",

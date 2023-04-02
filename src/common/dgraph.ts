@@ -1,20 +1,20 @@
-import dgraph from "dgraph-js-http";
+import { DgraphClientStub, DgraphClient, ERR_ABORTED } from "dgraph-js-http";
 
 export async function useDgraph<T>(
-  operation: (client: dgraph.DgraphClient) => Promise<T>
+  operation: (client: DgraphClient) => Promise<T>
 ): Promise<T> {
-  const stub = new dgraph.DgraphClientStub(
+  const stub = new DgraphClientStub(
     `${
       (process.env.NODE_ENV != "development"
         ? process.env.DGRAPH_HOST
-        : null) ?? "localhost"
+        : null) ?? "http://localhost"
     }:8080`
   );
-  const client = new dgraph.DgraphClient(stub);
+  const client = new DgraphClient(stub);
   try {
     return await operation(client);
   } catch (e) {
-    if (e === dgraph.ERR_ABORTED) {
+    if (e === ERR_ABORTED) {
       return await operation(client);
     } else {
       throw e;

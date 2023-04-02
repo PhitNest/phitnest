@@ -5,6 +5,7 @@ function errorResponse(error: any): {
   statusCode: number;
   body: string;
 } {
+  console.log(error);
   return {
     statusCode: 500,
     body: JSON.stringify(error),

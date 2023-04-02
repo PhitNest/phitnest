@@ -1,6 +1,6 @@
 type Gym {
     id: ID!
-    name: String!
+    name: String! @id
     address: Address!
     location: Point!
 }
