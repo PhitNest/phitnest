@@ -1,3 +1,4 @@
+// @CognitoAuth User
 import { respond } from "@/common/respond";
 import { useDgraph } from "@/common/dgraph";
 import { APIGatewayEvent } from "aws-lambda";
@@ -19,10 +20,6 @@ export function invoke(event: APIGatewayEvent): Promise<{
     controller: (body: z.infer<typeof validator>) => {
       return useDgraph(async (client) => {
         const txn = client.newTxn();
-        await txn.mutate({
-          setJson: { name: "Alice", age: 26 },
-          commitNow: true,
-        });
         const res = await txn.queryWithVars(
           gql`
             query all($a: string) {

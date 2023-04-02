@@ -13,6 +13,8 @@ Resources:
 
   @@cognito
 
+  @@admin_cognito
+
   @@dgraph_network
 
   @@dgraph_ec2
