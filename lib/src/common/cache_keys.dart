@@ -1,1 +1,1 @@
-const kCognitoCredentialsCacheKey = 'cognito-credentials';
+
