@@ -28,4 +28,4 @@ jobs:
         run: mkdir -p ${{ github.workspace }}/dgraph-test/data
 
       - name: Run tests
-        run: make test DGRAPH_TEST_DIR=${{ github.workspace }}/dgraph-test/data
+        run: sudo make test DGRAPH_TEST_DIR=${{ github.workspace }}/dgraph-test/data
