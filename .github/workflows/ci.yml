@@ -24,5 +24,8 @@ jobs:
       - name: Permit execution of the codegen scripts
         run: chmod +x ./scripts/gen_combined_schema.sh && chmod +x ./scripts/template_gen.sh
 
+      - name: Create bind mount source directory for Dgraph
+        run: mkdir -p ${{ github.workspace }}/dgraph-test/data
+
       - name: Run tests
         run: make test DGRAPH_TEST_DIR=${{ github.workspace }}/dgraph-test/data
