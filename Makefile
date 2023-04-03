@@ -7,7 +7,23 @@ DGRAPH_PORT ?= 8080
 DGRAPH_HTTP_PORT := $(shell expr $(DGRAPH_PORT) + 1000)
 DGRAPH_GRPC_PORT := $(shell expr $(DGRAPH_PORT) - 80)
 
-DGRAPH_DATA_DIR ?= $(DGRAPH_DIR)
+# Get the platform specific information
+ifeq ($(OS),Windows_NT)
+    OPEN := bash start
+	DEFAULT_DGRAPH_DIR := C:/dgraph/data
+	DEFAULT_TEST_DGRAPH_DIR := C:/dgraph-test/data
+else
+    UNAME := $(shell uname -s)
+    ifeq ($(UNAME),Linux)
+        OPEN := xdg-open
+		DEFAULT_DGRAPH_DIR := /dgraph/data
+		DEFAULT_TEST_DGRAPH_DIR := /dgraph-test/data
+    endif
+endif
+
+DGRAPH_DATA_DIR ?= $(DEFAULT_DGRAPH_DIR)
+
+DGRAPH_TEST_DIR ?= $(DEFAULT_TEST_DGRAPH_DIR)
 
 DGRAPH_STARTUP_TIMEOUT ?= 30
 
@@ -26,11 +42,11 @@ gen-schema:
 
 # Run the tests
 test: gen-schema
-	make dgraph DGRAPH_PORT=3080 DGRAPH_DATA_DIR=$(TEST_DGRAPH_DIR) DGRAPH_NAME=DGraph-Test
+	make dgraph DGRAPH_PORT=3080 DGRAPH_DATA_DIR=$(DGRAPH_TEST_DIR) DGRAPH_NAME=DGraph-Test
 	sleep $(DGRAPH_STARTUP_TIMEOUT)
 	- make commit-schema-local DGRAPH_PORT=3080
 	- NODE_ENV=test npm run test
-	- rm -Rf $(TEST_DGRAPH_DIR)
+	- rm -Rf $(DGRAPH_TEST_DIR)
 	make stop-dgraph DGRAPH_NAME=DGraph-Test
 
 # Build the application for production
@@ -65,20 +81,6 @@ run: webpack-build-sandbox
 	cd .aws-sam/build/
 	$(OPEN) https://play.dgraph.io
 	sam local start-api --env-vars lambdas-env.json --parameter-overrides Stage=sandbox
-
-# Get the platform specific information
-ifeq ($(OS),Windows_NT)
-    OPEN := bash start
-	TEST_DGRAPH_DIR := C:/dgraph-test/data
-	DGRAPH_DIR := C:/dgraph/data
-else
-    UNAME := $(shell uname -s)
-    ifeq ($(UNAME),Linux)
-        OPEN := xdg-open
-		TEST_DGRAPH_DIR := /dgraph-test/data
-		DGRAPH_DIR := /dgraph/data
-    endif
-endif
 
 # Stop DGraph instance
 stop-dgraph:
