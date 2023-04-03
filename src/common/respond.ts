@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Failure } from "./failure";
+import { Failure } from "./failures";
 
 function errorResponse(error: any): {
   statusCode: number;

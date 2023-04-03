@@ -1,6 +1,0 @@
-type Address {
-    street: String!
-    city: String!
-    state: String!
-    zipCode: String!
-}

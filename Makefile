@@ -2,31 +2,48 @@
 export SAM_CLI_TELEMETRY=0
 .PHONY: dgraph
 
+DGRAPH_NAME ?= DGraph
+DGRAPH_PORT ?= 8080
+DGRAPH_HTTP_PORT := $(shell expr $(DGRAPH_PORT) + 1000)
+DGRAPH_GRPC_PORT := $(shell expr $(DGRAPH_PORT) - 80)
+
+DGRAPH_DATA_DIR ?= $(DGRAPH_DIR)
+
+DGRAPH_STARTUP_TIMEOUT ?= 30
+
+# Remove all non-version controlled files
 clean:
 	npm run clean
 
-commit-schema:
-	curl -X POST -H "Content-Type: application/graphql" --data-binary '@schema.gql' http://localhost:8080/admin/schema
+# Commit GraphQL schema to DGraph instance running on localhost
+commit-schema-local:
+	curl -X POST -H "Content-Type: application/graphql" --data-binary '@schema.gql' http://localhost:$(DGRAPH_PORT)/admin/schema
 
+# Combine the GraphQL schema files into one file and generate the TypeScript types
 gen-schema:
 	scripts/gen_combined_schema.sh
 	npx graphql-code-generator --config ./codegen.ts
 
+# Run the tests
 test: gen-schema
-	scripts/template_gen.sh dev
-	make dgraph-test
-	make commit-schema
-	NODE_ENV=development DGRAPH_PORT=3080 npm run test
-	make stop-dgraph-test
+	make dgraph DGRAPH_PORT=3080 DGRAPH_DATA_DIR=$(TEST_DGRAPH_DIR) DGRAPH_NAME=DGraph-Test
+	sleep $(DGRAPH_STARTUP_TIMEOUT)
+	- make commit-schema-local DGRAPH_PORT=3080
+	- NODE_ENV=test npm run test
+	- rm -Rf $(TEST_DGRAPH_DIR)
+	make stop-dgraph DGRAPH_NAME=DGraph-Test
 
+# Build the application for production
 webpack-build-prod: gen-schema
 	scripts/template_gen.sh prod
 	NODE_ENV=production npm run build
 
+# Build the application for development environment on AWS
 webpack-build-dev: gen-schema
 	scripts/template_gen.sh dev
 	NODE_ENV=production npm run build
 
+# Build the application for local development
 webpack-build-sandbox: gen-schema
 	scripts/template_gen.sh dev
 	NODE_ENV=development npm run build
@@ -43,38 +60,37 @@ dev-deploy: webpack-build-dev
 
 ## Run the lambda functions locally
 run: webpack-build-sandbox
-	make commit-schema
+	make commit-schema-local
 	sed -n 's/#USERNAME#/sam-cli/g' lambdas-env.json
 	cd .aws-sam/build/
+	$(OPEN) https://play.dgraph.io
 	sam local start-api --env-vars lambdas-env.json --parameter-overrides Stage=sandbox
 
-# Get the platform specific open command
+# Get the platform specific information
 ifeq ($(OS),Windows_NT)
     OPEN := bash start
+	TEST_DGRAPH_DIR := C:/dgraph-test/data
+	DGRAPH_DIR := C:/dgraph/data
 else
     UNAME := $(shell uname -s)
     ifeq ($(UNAME),Linux)
         OPEN := xdg-open
+		TEST_DGRAPH_DIR := /dgraph-test/data
+		DGRAPH_DIR := /dgraph/data
     endif
 endif
 
+# Stop DGraph instance
 stop-dgraph:
-	docker stop DGraph
+	docker stop $(DGRAPH_NAME)
 
+# Start DGraph instance
 dgraph:
-	$(OPEN) https://play.dgraph.io
-	docker run -d -p 8080:8080 -p 9080:9080 -p 8000:8000 --mount type=bind,source=C:/dgraph/data,target=/dgraph --rm --name DGraph dgraph/standalone:latest
-
-dgraph-test:
-	docker run -d -p 3080:8080 -p 4080:9080 -p 3000:8000 --mount type=bind,source=C:/dgraph-test/data,target=/dgraph --rm --name DGraph-Test dgraph/standalone:latest
-	
-stop-dgraph-test:
-	rm -Rf C:/dgraph-test
-	docker stop DGraph-Test
+	docker run -d -p $(DGRAPH_PORT):8080 -p $(DGRAPH_HTTP_PORT):9080 -p $(DGRAPH_GRPC_PORT):8000 --mount type=bind,source=$(DGRAPH_DATA_DIR),target=/dgraph --rm --name $(DGRAPH_NAME) dgraph/standalone:latest
 
 ## Installs all dependencies
 install:
-	npm ci
+	npm i
 	npm i -g webpack
 	make gen-schema
 	docker pull dgraph/standalone:latest

@@ -5,13 +5,13 @@ export async function invoke(): Promise<{
   return {
     statusCode: 200,
     body:
-      process.env.NODE_ENV == "development" ||
-      !process.env.COGNITO_USER_POOL_ID ||
-      !process.env.COGNITO_USER_POOL_APP_ID
-        ? "sandbox"
-        : JSON.stringify({
+      process.env.NODE_ENV == "production" &&
+      process.env.COGNITO_USER_POOL_ID &&
+      process.env.COGNITO_USER_POOL_APP_ID
+        ? JSON.stringify({
             userPoolId: process.env.COGNITO_USER_POOL_ID,
             clientId: process.env.COGNITO_USER_POOL_APP_ID,
-          }),
+          })
+        : "sandbox",
   };
 }
