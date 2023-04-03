@@ -1,17 +1,17 @@
 module.exports = {
-  preset: 'ts-jest',
-  roots: ['<rootDir>/src/'],
+  preset: "ts-jest",
+  roots: ["<rootDir>/src/"],
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
-  testEnvironment: 'node',
+  testEnvironment: "node",
   verbose: true,
   // Coverage options
   collectCoverageFrom: [
-    'src/cmd/**/*.ts',
-    'src/internal/**/*.ts',
-    '!src/internal/**/*.test.ts',
-    '!src/cmd/**/*.test.ts',
+    "src/cmd/**/*.ts",
+    "src/internal/**/*.ts",
+    "!src/internal/**/*.test.ts",
+    "!src/cmd/**/*.test.ts",
   ],
-  coverageDirectory: 'build/coverage',
+  coverageDirectory: "build/coverage",
 };
