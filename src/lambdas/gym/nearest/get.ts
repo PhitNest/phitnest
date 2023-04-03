@@ -1,6 +1,5 @@
 // @CognitoAuth User
 import { respond } from "@/common/respond";
-import { useDgraph } from "@/common/dgraph";
 import { APIGatewayEvent } from "aws-lambda";
 import { z } from "zod";
 
@@ -16,10 +15,8 @@ export function invoke(event: APIGatewayEvent): Promise<{
   return respond({
     body: event.queryStringParameters,
     validator: validator,
-    controller: (body: z.infer<typeof validator>) => {
-      return useDgraph(async (client) => {
-        const txn = client.newTxn();
-      });
+    controller: async (body: z.infer<typeof validator>) => {
+      return body;
     },
   });
 }
