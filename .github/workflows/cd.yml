@@ -17,14 +17,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install webpack
-        run: npm install -g webpack
-
       - name: Permit execution of the codegen scripts
         run: chmod +x ./scripts/gen_combined_schema.sh && chmod +x ./scripts/template_gen.sh
+      
+      - name: Install dependencies
+        run: make install
 
       - name: Setup SAM CLI
         uses: aws-actions/setup-sam@v2
