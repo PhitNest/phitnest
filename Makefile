@@ -1,6 +1,6 @@
 #!make
 export SAM_CLI_TELEMETRY=0
-.PHONY: dgraph
+.PHONY: dgraph dgraph-test stop-dgraph stop-dgraph-test clean commit-schema-local gen-schema test copy-modules build-prod build-dev build-sandbox deploy dev-deploy setup-run run debug install
 
 DGRAPH_NAME ?= DGraph
 DGRAPH_PORT ?= 8080
