@@ -5,9 +5,10 @@ enum RegistrationStatus {
 }
 
 type User {
-    id: ID!
+    id: String! @id
     firstName: String!
     lastName: String!
-    createdAt: DateTime!
+    createdAt: Int64!
     registrationStatus: RegistrationStatus!
+    gym: Gym!
 }
