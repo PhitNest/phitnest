@@ -12,13 +12,10 @@ template.yml
 schema.gql
 
 # Env variables file
-configs/.env
+.env
 
-# test coverage files
-build/coverage/*
-
-# SAM templates
-build/templates/*
+# Test reports
+test
 
 # IDEs
 .idea/
@@ -31,6 +28,3 @@ node_modules/
 
 # Generated files
 src/generated
-
-# DGraph data
-dgraph/data

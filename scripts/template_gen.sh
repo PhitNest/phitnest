@@ -157,7 +157,6 @@ find $lambdaDir -type f | while read file; do
     echo "    Type: AWS::Serverless::Function" >> $out
     echo "    Properties:" >> $out
     echo "      Handler: lambdas$path/$methodLower.invoke" >> $out
-    echo "      CodeUri: .aws-sam/build/" >> $out
     echo "      Runtime: nodejs16.x" >> $out
     echo "      Events:" >> $out
     echo "        CatchAll:" >> $out
