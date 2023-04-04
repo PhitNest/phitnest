@@ -25,7 +25,7 @@ DGRAPH_DATA_DIR ?= $(DEFAULT_DGRAPH_DIR)
 
 DGRAPH_TEST_DIR ?= $(DEFAULT_TEST_DGRAPH_DIR)
 
-DGRAPH_STARTUP_TIMEOUT ?= 30
+DGRAPH_STARTUP_TIMEOUT ?= 15
 
 # Remove all non-version controlled files
 clean:
@@ -42,48 +42,69 @@ gen-schema:
 
 # Run the tests
 test: gen-schema
-	make dgraph DGRAPH_PORT=3080 DGRAPH_DATA_DIR=$(DGRAPH_TEST_DIR) DGRAPH_NAME=DGraph-Test
+	make dgraph-test
 	sleep $(DGRAPH_STARTUP_TIMEOUT)
 	- NODE_ENV=test npm run test
-	- rm -Rf $(DGRAPH_TEST_DIR)
-	make stop-dgraph DGRAPH_NAME=DGraph-Test
+	make stop-dgraph-test
+
+# Copies node_modules to .aws-sam/build/node_modules
+copy-modules:
+	mkdir -p .aws-sam/build
+	cp package.json .aws-sam/build
+	cp package-lock.json .aws-sam/build
+	cd .aws-sam/build && npm i
 
 # Build the application for production
-webpack-build-prod: gen-schema
+build-prod: gen-schema
 	scripts/template_gen.sh prod
 	NODE_ENV=production npm run build
 
 # Build the application for development environment on AWS
-webpack-build-dev: gen-schema
+build-dev: gen-schema
 	scripts/template_gen.sh dev
 	NODE_ENV=production npm run build
 
 # Build the application for local development
-webpack-build-sandbox: gen-schema
+build-sandbox: gen-schema
 	scripts/template_gen.sh dev
 	NODE_ENV=development npm run build
 
 ## Deploy application code (template.yml) to aws environment
-deploy: webpack-build-prod
+deploy: build-prod
 	sam package --template-file .aws-sam/build/template.yaml --s3-bucket phitnest-api-sam-prod --output-template-file build/templates/prod-out.yaml
 	sam deploy --template-file build/templates/prod-out.yaml --s3-bucket phitnest-api-sam-prod --stack-name phitnest-api-prod --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset --parameter-overrides Stage=Prod Username=sam-cli
 
 ## Deploy application code (template.yml) to dev aws environment
-dev-deploy: webpack-build-dev
+dev-deploy: build-dev
 	sam package --template-file .aws-sam/build/template.yaml --s3-bucket phitnest-api-sam-dev --output-template-file build/templates/dev-out.yaml
 	sam deploy --template-file build/templates/dev-out.yaml --s3-bucket phitnest-api-sam-dev --stack-name phitnest-api-dev --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset --parameter-overrides Stage=Dev Username=sam-cli
 
-## Run the lambda functions locally
-run: webpack-build-sandbox
+# Setup for run and debug
+setup-run: build-sandbox
 	make commit-schema-local
-	sed -n 's/#USERNAME#/sam-cli/g' lambdas-env.json
 	cd .aws-sam/build/
 	$(OPEN) https://play.dgraph.io
-	sam local start-api --env-vars lambdas-env.json --parameter-overrides Stage=sandbox
+
+## Run the lambda functions locally
+run: setup-run
+	sam local start-api --parameter-overrides Stage=sandbox
+
+## Debug the lambda functions locally
+debug: setup-run
+	sam local start-api --parameter-overrides Stage=sandbox -d 5858
 
 # Stop DGraph instance
 stop-dgraph:
 	docker stop $(DGRAPH_NAME)
+
+# Stop DGraph instance and remove test data directory
+stop-dgraph-test:
+	make stop-dgraph DGRAPH_NAME=DGraph-Test
+	rm -Rf $(DGRAPH_TEST_DIR)
+
+# Start DGraph instance for testing
+dgraph-test:
+	make dgraph DGRAPH_PORT=3080 DGRAPH_DATA_DIR=$(DGRAPH_TEST_DIR) DGRAPH_NAME=DGraph-Test
 
 # Start DGraph instance
 dgraph:
@@ -92,6 +113,6 @@ dgraph:
 ## Installs all dependencies
 install:
 	npm i
-	npm i -g webpack
+	make copy-modules
 	make gen-schema
 	docker pull dgraph/standalone:latest
