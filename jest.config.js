@@ -14,5 +14,5 @@ module.exports = {
     "!src/internal/**/*.test.ts",
     "!src/cmd/**/*.test.ts",
   ],
-  coverageDirectory: "build/coverage",
+  coverageDirectory: "test/coverage",
 };

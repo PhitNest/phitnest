@@ -1,5 +1,7 @@
 #!make
 export SAM_CLI_TELEMETRY=0
+export SAM_CLI_BETA_ESBUILD=1
+
 .PHONY: dgraph dgraph-test stop-dgraph stop-dgraph-test clean commit-schema-local gen-schema test copy-modules build-prod build-dev build-sandbox deploy dev-deploy setup-run run debug install
 
 DGRAPH_NAME ?= DGraph
@@ -58,26 +60,29 @@ copy-modules:
 build-prod: gen-schema
 	scripts/template_gen.sh prod
 	NODE_ENV=production npm run build
+	sam build
 
 # Build the application for development environment on AWS
 build-dev: gen-schema
 	scripts/template_gen.sh dev
 	NODE_ENV=production npm run build
+	sam build
 
 # Build the application for local development
 build-sandbox: gen-schema
 	scripts/template_gen.sh dev
 	NODE_ENV=development npm run build
+	sam build
 
 ## Deploy application code (template.yml) to aws environment
 deploy: build-prod
-	sam package --template-file .aws-sam/build/template.yaml --s3-bucket phitnest-api-sam-prod --output-template-file build/templates/prod-out.yaml
-	sam deploy --template-file build/templates/prod-out.yaml --s3-bucket phitnest-api-sam-prod --stack-name phitnest-api-prod --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset --parameter-overrides Stage=Prod Username=sam-cli
+	sam package --template-file .aws-sam/build/template.yaml --s3-bucket phitnest-api-sam-prod --output-template-file .aws-sam/prod-out.yaml
+	sam deploy --template-file .aws-sam/prod-out.yaml --s3-bucket phitnest-api-sam-prod --stack-name phitnest-api-prod --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset --parameter-overrides Stage=Prod Username=sam-cli
 
 ## Deploy application code (template.yml) to dev aws environment
 dev-deploy: build-dev
-	sam package --template-file .aws-sam/build/template.yaml --s3-bucket phitnest-api-sam-dev --output-template-file build/templates/dev-out.yaml
-	sam deploy --template-file build/templates/dev-out.yaml --s3-bucket phitnest-api-sam-dev --stack-name phitnest-api-dev --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset --parameter-overrides Stage=Dev Username=sam-cli
+	sam package --template-file .aws-sam/build/template.yaml --s3-bucket phitnest-api-sam-dev --output-template-file .aws-sam/dev-out.yaml
+	sam deploy --template-file .aws-sam/dev-out.yaml --s3-bucket phitnest-api-sam-dev --stack-name phitnest-api-dev --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset --parameter-overrides Stage=Dev Username=sam-cli
 
 # Setup for run and debug
 setup-run: build-sandbox
