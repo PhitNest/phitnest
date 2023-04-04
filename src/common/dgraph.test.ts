@@ -1,4 +1,4 @@
-import { Gym, RegistrationStatus, User } from "@/generated/dgraph-schema";
+import { Gym, RegistrationStatus, User } from "../generated/dgraph-schema";
 import {
   SchemaType,
   fromPredicateMap,

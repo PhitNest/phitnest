@@ -1,5 +1,5 @@
 // @CognitoAuth User
-import { respond } from "@/common/respond";
+import { respond } from "../../../common/respond";
 import { APIGatewayEvent } from "aws-lambda";
 import { z } from "zod";
 

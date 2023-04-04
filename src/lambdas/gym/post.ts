@@ -1,7 +1,8 @@
 // @CognitoAuth Admin
-import { respond } from "@/common/respond";
-import { getLocation } from "@/common/open-street-maps";
-import { Failure } from "@/common/failures";
+import { respond } from "common/respond";
+import { getLocation } from "common/open-street-maps";
+import { Failure } from "common/failures";
+import { useDgraph } from "common/dgraph";
 import { APIGatewayEvent } from "aws-lambda";
 import { z } from "zod";
 
@@ -25,6 +26,9 @@ export function invoke(event: APIGatewayEvent): Promise<{
       if (location instanceof Failure) {
         return location;
       }
+      return await useDgraph(async (hook) => {
+        return await hook.getHealth();
+      });
     },
   });
 }
