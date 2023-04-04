@@ -63,7 +63,7 @@ scriptDir="aws/scripts/"
 lambdaDir="src/lambdas"
 schemaDir="dgraph/schema/"
 
-out="template.yml"
+out=".aws-sam/build/template.yml"
 
 componentPrefix="@@"
 scriptPrefix="\$\$"
