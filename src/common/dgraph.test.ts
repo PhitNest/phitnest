@@ -1,4 +1,4 @@
-import { Gym } from "@/generated/dgraph-schema";
+import { Gym, RegistrationStatus, User } from "@/generated/dgraph-schema";
 import {
   SchemaType,
   fromPredicateMap,
@@ -7,43 +7,120 @@ import {
 } from "./dgraph";
 const gql = String.raw;
 
-describe("predicateMap roundtrip", () => {
-  const name = "Planet Fitness";
-  const street = "123 Main St";
-  const city = "Anytown";
-  const state = "NY";
-  const zipCode = "12345";
-  const latitude = 40.123;
-  const longitude = -73.456;
-  const gym: Omit<SchemaType<Gym>, "id"> = {
-    __typename: "Gym",
-    name: name,
-    street: street,
-    city: city,
-    state: state,
-    zipCode: zipCode,
-    location: {
-      __typename: "Point",
-      latitude: latitude,
-      longitude: longitude,
+const testGym: SchemaType<Gym> = {
+  __typename: "Gym",
+  name: "Planet Fitness",
+  street: "123 Main St",
+  city: "Anytown",
+  state: "NY",
+  zipCode: "12345",
+  location: {
+    __typename: "Point",
+    latitude: 40.123,
+    longitude: -73.456,
+  },
+};
+
+const gymPredicateMap = {
+  "Gym.name": testGym.name,
+  "Gym.street": testGym.street,
+  "Gym.city": testGym.city,
+  "Gym.state": testGym.state,
+  "Gym.zipCode": testGym.zipCode,
+  "Gym.location": {
+    type: "Point",
+    coordinates: [testGym.location.longitude, testGym.location.latitude],
+  },
+};
+
+const userFirstName = "John";
+const userLastName = "Doe";
+const userRegistrationStatus = RegistrationStatus.Unconfirmed;
+const userCreatedAt = Date.now();
+const userId = "1";
+
+function getTestUser(gymUid: string): SchemaType<User, "gym"> {
+  return {
+    __typename: "User",
+    firstName: userFirstName,
+    lastName: userLastName,
+    id: userId,
+    registrationStatus: userRegistrationStatus,
+    createdAt: userCreatedAt,
+    gym: {
+      __typename: "Gym",
+      uid: gymUid,
     },
   };
-  const predicateMap = {
-    "Gym.name": name,
-    "Gym.street": street,
-    "Gym.city": city,
-    "Gym.state": state,
-    "Gym.zipCode": zipCode,
-    "Gym.location": {
+}
+
+function getPredicateMapForUser(gymUid: string) {
+  return {
+    "User.firstName": userFirstName,
+    "User.lastName": userLastName,
+    "User.id": userId,
+    "User.registrationStatus": userRegistrationStatus,
+    "User.createdAt": userCreatedAt,
+    "User.gym": {
+      uid: gymUid,
+    },
+  };
+}
+
+describe("fromPredicateMap", () => {
+  it("should throw for invalid points", async () => {
+    let invalidPoint = {
       type: "Point",
-      coordinates: [longitude, latitude],
-    },
-  };
+      coordinates: [0, 0, 0],
+    } as any;
+    await expect(async () =>
+      fromPredicateMap(invalidPoint)
+    ).rejects.toThrowError("Invalid coordinates");
+    invalidPoint = {
+      type: "Point",
+      coordinates: [0, 0],
+      otherField: "hi",
+    };
+    await expect(async () =>
+      fromPredicateMap(invalidPoint)
+    ).rejects.toThrowError("Invalid point");
+  });
+
+  it("should throw for invalid typename", async () => {
+    const invalidPredicateMap = {
+      "User.firstName": userFirstName,
+      "User.lastName": userLastName,
+      "User.id": userId,
+      "User.registrationStatus": userRegistrationStatus,
+      "NotUser.createdAt": userCreatedAt,
+    };
+    await expect(async () =>
+      fromPredicateMap(invalidPredicateMap)
+    ).rejects.toThrowError("Invalid typename");
+  });
+});
+
+describe("predicateMap roundtrip", () => {
+  const gymUid = "0x1";
+  const testUser = getTestUser(gymUid);
+  const userPredicateMap = getPredicateMapForUser(gymUid);
   it("toPredicateMap", () => {
-    expect(toPredicateMap(gym)).toEqual(predicateMap);
+    expect(toPredicateMap(testGym)).toEqual(gymPredicateMap);
+    expect(toPredicateMap(testUser)).toEqual(userPredicateMap);
   });
   it("fromPredicateMap", () => {
-    expect(fromPredicateMap(predicateMap)).toEqual(gym);
+    expect(fromPredicateMap(gymPredicateMap)).toEqual(testGym);
+    const userPredicateMapWithExtraGymData = {
+      ...userPredicateMap,
+      "User.gym": { uid: gymUid, "Gym.name": testGym.name },
+    };
+    const userWithExtraGymData = {
+      ...testUser,
+      gym: { __typename: "Gym", uid: gymUid, name: testGym.name },
+    };
+    expect(fromPredicateMap(userPredicateMapWithExtraGymData)).toEqual(
+      userWithExtraGymData
+    );
   });
 });
 
@@ -76,26 +153,15 @@ describe("useDgraph", () => {
   it("should allow simple mutations and queries", async () => {
     await expect(
       useDgraph(async (hook) => {
-        const name = "Planet Fitness";
-        const gym: Omit<SchemaType<Gym>, "id"> = {
-          __typename: "Gym",
-          name: name,
-          street: "123 Main St",
-          city: "Anytown",
-          state: "NY",
-          zipCode: "12345",
-          location: {
-            __typename: "Point",
-            latitude: 40.73061,
-            longitude: -73.935242,
-          },
-        };
-        const mutResult = await hook.setJson(gym);
-        expect(Object.keys(mutResult.data.uids)).toHaveLength(1);
-        const queryResult = await hook.getJson(
+        const gymMutResult = await hook.setJson(testGym);
+        const gymUids = Object.keys(gymMutResult.data.uids);
+        expect(gymUids).toHaveLength(1);
+        const gymUid = gymMutResult.data.uids[gymUids[0]];
+        const gymQueryResult = await hook.getJson(
           gql`
             query {
-              queryTest(func: eq(Gym.name, "Planet Fitness")) {
+              gymQueryTest(func: eq(Gym.name, "${testGym.name}")) {
+                uid
                 Gym.name
                 Gym.street
                 Gym.city
@@ -106,9 +172,47 @@ describe("useDgraph", () => {
             }
           `
         );
-        expect(queryResult["queryTest"]).toBeDefined();
-        expect(queryResult["queryTest"]).toHaveLength(1);
-        expect(queryResult["queryTest"][0]).toEqual(gym);
+        expect(gymQueryResult["gymQueryTest"]).toBeDefined();
+        expect(gymQueryResult["gymQueryTest"]).toHaveLength(1);
+        expect(gymQueryResult["gymQueryTest"][0]).toEqual({
+          ...testGym,
+          uid: gymUid,
+        });
+        const testUser = getTestUser(gymUid);
+        const userMutResult = await hook.setJson(testUser);
+        const userUids = Object.keys(userMutResult.data.uids);
+        expect(userUids).toHaveLength(1);
+        const userUid = userMutResult.data.uids[userUids[0]];
+        const userQueryResult = await hook.getJson(
+          gql`
+            query {
+              userQueryTest(func: eq(User.id, "${userId}")) {
+                uid
+                User.firstName
+                User.lastName
+                User.id
+                User.registrationStatus
+                User.createdAt
+                User.gym {
+                  uid
+                  Gym.name
+                  Gym.street
+                  Gym.city
+                  Gym.state
+                  Gym.zipCode
+                  Gym.location
+                }
+              }
+            }
+          `
+        );
+        expect(userQueryResult["userQueryTest"]).toBeDefined();
+        expect(userQueryResult["userQueryTest"]).toHaveLength(1);
+        expect(userQueryResult["userQueryTest"][0]).toEqual({
+          ...testUser,
+          uid: userUid,
+          gym: { ...testGym, uid: gymUid },
+        });
       })
     ).resolves.toBe(void 0);
   });

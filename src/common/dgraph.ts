@@ -22,7 +22,23 @@ export async function useDgraph<T>(
   }
 }
 
-export type SchemaType<T> = T & { __typename: string };
+type WithTypename<T> = T & { __typename: string };
+
+type WithRelationships<
+  T,
+  Relationships extends keyof T | undefined = undefined
+> = Relationships extends keyof T
+  ? Omit<WithTypename<T>, Relationships> & {
+      [K in Relationships]: SchemaType<Partial<T[Relationships]>>;
+    }
+  : WithTypename<T>;
+
+export type SchemaType<
+  T,
+  Relationships extends keyof T | undefined = undefined
+> =
+  | WithRelationships<T, Relationships>
+  | (WithRelationships<T, Relationships> & { uid: string });
 
 function recursivePredicateMap(obj: any) {
   const typename = obj.__typename;
@@ -103,25 +119,32 @@ function recursiveReversePredicateMap(obj: any) {
   }, {});
 }
 
-export function fromPredicateMap<T>(obj: { [k: string]: any }): SchemaType<T> {
+export function fromPredicateMap(obj: { [k: string]: any }) {
   return recursiveReversePredicateMap(obj);
 }
 
-export function toPredicateMap<T>(obj: SchemaType<T>): {
+export function toPredicateMap<
+  T,
+  Relationships extends keyof T | undefined = undefined
+>(
+  obj: SchemaType<T, Relationships>
+): {
   [k: string]: any;
 } {
   return recursivePredicateMap(obj);
 }
 
 class DgraphHook extends DgraphClient {
-  setJson<T>(obj: SchemaType<T>) {
+  setJson<T, Relationships extends keyof T | undefined = undefined>(
+    obj: SchemaType<T, Relationships>
+  ) {
     return this.newTxn().mutate({
       setJson: toPredicateMap(obj),
       commitNow: true,
     });
   }
 
-  async getJson<T>(query: string): Promise<{ [k: string]: SchemaType<T>[] }> {
+  async getJson(query: string): Promise<{ [k: string]: any[] }> {
     return Object.fromEntries(
       Object.entries((await this.newTxn().query(query)).data as any).map(
         ([key, value]) => [

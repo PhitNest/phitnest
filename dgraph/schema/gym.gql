@@ -1,5 +1,4 @@
 type Gym {
-    id: ID!
     name: String! @id
     street: String!
     city: String!

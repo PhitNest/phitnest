@@ -44,7 +44,6 @@ gen-schema:
 test: gen-schema
 	make dgraph DGRAPH_PORT=3080 DGRAPH_DATA_DIR=$(DGRAPH_TEST_DIR) DGRAPH_NAME=DGraph-Test
 	sleep $(DGRAPH_STARTUP_TIMEOUT)
-	- make commit-schema-local DGRAPH_PORT=3080
 	- NODE_ENV=test npm run test
 	- rm -Rf $(DGRAPH_TEST_DIR)
 	make stop-dgraph DGRAPH_NAME=DGraph-Test
