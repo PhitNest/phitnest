@@ -9,29 +9,51 @@ Serverless REST API running with Node.js and AWS SAM framework.
 * [Docker](https://www.docker.com/)
 
 ### Install Dependencies
-```
-make install
-```
 
-### Local Development
+`./phitnest-api install`
 
-Run DGraph
-```
-make dgraph
-```
+### CLI Commands
 
-Emulates the backend locally
-```
-make run
-```
-When this command runs successfully, you will see the endpoints you can invoke
+`./phitnest-api install`
 
-Stops DGraph
-```
-make stop-dgraph
-```
+Installs the necessary dependencies and pulls the latest Docker image of the DGraph database.
 
-Runs tests
-```
-make test
-```
+`./phitnest-api run`
+
+Runs the server locally using the AWS SAM CLI.
+
+`./phitnest-api debug`
+
+Runs the server locally in debug mode using the AWS SAM CLI.
+
+`./phitnest-api test`
+
+Runs tests against the server using a test database.
+
+`./phitnest-api deploy`
+
+Builds the server and deploys it to the production environment.
+
+`./phitnest-api dev-deploy`
+
+Builds the server and deploys it to the development environment.
+
+`./phitnest-api dgraph`
+
+Starts a DGraph database instance on your local machine.
+
+`./phitnest-api stop-dgraph`
+
+Stops the DGraph database instance that is running on your local machine.
+
+`./phitnest-api dgraph-test`
+
+Starts a test DGraph database instance on your local machine.
+
+`./phitnest-api stop-dgraph-test`
+
+Stops the test DGraph database instance that is running on your local machine.
+
+`./phitnest-api clean`
+
+Cleans the project by removing generated files.
