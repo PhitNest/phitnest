@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: PhitNest-API-Dev
+
+Globals:
+  @@globals
+
+Parameters:
+  @@parameters
+
+Resources:
+  @@api_gateway
+
+  @@cognito
+
+  @@admin_cognito
+
+  @@dgraph_network
+
+  @@dev_dgraph_ec2
+
+  @@dgraph_ssm
+
+  #### LAMBDAS START BELOW HERE ####
