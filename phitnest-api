@@ -1,0 +1,183 @@
+#!/bin/bash
+
+set -e
+
+export SAM_CLI_TELEMETRY=0
+export SAM_CLI_BETA_ESBUILD=1
+
+DGRAPH_NAME=DGraph
+DGRAPH_PORT=8080
+DGRAPH_HTTP_PORT=$((DGRAPH_PORT + 1000))
+DGRAPH_GRPC_PORT=$((DGRAPH_PORT - 80))
+DGRAPH_TEST_PORT=3080
+DGRAPH_TEST_HTTP_PORT=$((DGRAPH_TEST_PORT + 1000))
+DGRAPH_TEST_GRPC_PORT=$((DGRAPH_TEST_PORT - 80))
+
+# Get platform-specific information
+if [[ "$(uname)" == "Linux" ]]; then
+    OPEN="xdg-open"
+    DEFAULT_DGRAPH_DIR="/dgraph/data"
+    DEFAULT_TEST_DGRAPH_DIR="/dgraph-test/data"
+else
+    OPEN="bash start"
+    DEFAULT_DGRAPH_DIR="C:/dgraph/data"
+    DEFAULT_TEST_DGRAPH_DIR="C:/dgraph-test/data"
+fi
+
+DGRAPH_DATA_DIR=${DEFAULT_DGRAPH_DIR}
+DGRAPH_TEST_DIR=${DEFAULT_TEST_DGRAPH_DIR}
+DGRAPH_STARTUP_TIMEOUT=15
+
+function install() {
+    npm i
+    copy_modules
+    gen_schema
+    docker pull dgraph/standalone:latest
+}
+
+function run() {
+    setup_run
+    sam.cmd local start-api --parameter-overrides Stage=sandbox -t .aws-sam/build/template.yml
+}
+
+function debug() {
+    setup_run
+    sam.cmd local start-api --parameter-overrides Stage=sandbox -t .aws-sam/build/template.yml -d 5858
+}
+
+function test() {
+    gen_schema
+    dgraph_test
+    sleep ${DGRAPH_STARTUP_TIMEOUT}
+    NODE_ENV=test npm run test || true
+    stop_dgraph_test
+}
+
+function deploy() {
+    build_prod
+    sam.cmd package --template-file .aws-sam/build/.aws-sam/build/template.yaml --s3-bucket phitnest-api-sam-prod --output-template-file .aws-sam/prod-out.yaml
+    sam.cmd deploy --template-file .aws-sam/prod-out.yaml --s3-bucket phitnest-api-sam-prod --stack-name phitnest-api-prod --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset --parameter-overrides Stage=Prod Username=sam-cli
+}
+
+function dev_deploy() {
+    build_dev
+    sam.cmd package --template-file .aws-sam/build/.aws-sam/build/template.yaml --s3-bucket phitnest-api-sam-dev --output-template-file .aws-sam/dev-out.yaml
+    sam.cmd deploy --template-file .aws-sam/dev-out.yaml --s3-bucket phitnest-api-sam-dev --stack-name phitnest-api-dev --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset --parameter-overrides Stage=Dev Username=sam-cli
+}
+
+function dgraph() {
+    docker run -d -p ${DGRAPH_PORT}:8080 -p ${DGRAPH_HTTP_PORT}:9080 -p ${DGRAPH_GRPC_PORT}:8000 --mount type=bind,source=${DGRAPH_DATA_DIR},target=/dgraph --rm --name DGraph dgraph/standalone:latest
+}
+
+function stop_dgraph() {
+    docker stop ${DGRAPH_NAME}
+}
+
+function dgraph_test() {
+    docker run -d -p ${DGRAPH_TEST_PORT}:8080 -p ${DGRAPH_TEST_HTTP_PORT}:9080 -p ${DGRAPH_TEST_GRPC_PORT}:8000 --mount type=bind,source=${DGRAPH_TEST_DIR},target=/dgraph --rm --name DGraph-Test dgraph/standalone:latest
+}
+
+function stop_dgraph_test() {
+    export DGRAPH_NAME=DGraph-Test
+    stop_dgraph
+    rm -rf ${DGRAPH_TEST_DIR}
+}
+
+function clean() {
+    npm run clean
+}
+
+function commit_schema_local() {
+    curl -X POST -H "Content-Type: application/graphql" --data-binary '@schema.gql' http://localhost:${DGRAPH_PORT}/admin/schema
+}
+
+function gen_schema() {
+    schemaOutput="./schema.gql"
+    schemaDir="./dgraph/schema/"
+
+    while IFS= read -r file; do
+    filename=$(basename "$file")
+    if [[ "${filename#*.}" == "gql" ]]; then
+        contents=$(cat "$file")
+        schema="$schema$contents\n"
+    fi
+    done < <(find "$schemaDir" -type f)
+
+    echo -e "$schema" > "$schemaOutput"
+    npx graphql-code-generator --config ./codegen.ts
+}
+
+function copy_modules() {
+    mkdir -p .aws-sam/build
+    cp package.json .aws-sam/build
+    cp package-lock.json .aws-sam/build
+    cd .aws-sam/build
+    npm i
+    cd ../..
+}
+
+function build_prod() {
+    gen_schema
+    ./build_tools/template_gen.sh prod
+    NODE_ENV=production npm run build
+    sam.cmd build -t .aws-sam/build/template.yml -b .aws-sam/build/.aws-sam/build
+}
+
+function build_dev() {
+    gen_schema
+    ./build_tools/template_gen.sh dev
+    NODE_ENV=production npm run build
+    sam.cmd build -t .aws-sam/build/template.yml -b .aws-sam/build/.aws-sam/build
+}
+
+function build_sandbox() {
+    gen_schema
+    ./build_tools/template_gen.sh dev
+    NODE_ENV=development npm run build
+}
+
+function setup_run() {
+    build_sandbox
+    commit_schema_local
+    ${OPEN} https://play.dgraph.io
+}
+
+case $1 in
+    install)
+        install
+        ;;
+    run)
+        run
+        ;;
+    debug)
+        debug
+        ;;
+    test)
+        test
+        ;;
+    deploy)
+        deploy
+        ;;
+    dev-deploy)
+        dev_deploy
+        ;;
+    dgraph)
+        dgraph
+        ;;
+    stop-dgraph)
+        stop_dgraph
+        ;;
+    dgraph-test)
+        dgraph_test
+        ;;
+    stop-dgraph-test)
+        stop_dgraph_test
+        ;;
+    clean)
+        clean
+        ;;
+    *)
+        echo "Unknown command: $1"
+        exit 1
+        ;;
+esac

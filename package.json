@@ -14,7 +14,7 @@
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
     "test:watch": "jest --watchAll",
     "test": "jest --coverage",
-    "clean": "rimraf .aws-sam schema.gql template.yml node_modules src/generated",
+    "clean": "rimraf .aws-sam schema.gql template.yml node_modules src/generated test",
     "build": "tsc"
   },
   "devDependencies": {

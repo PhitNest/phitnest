@@ -17,7 +17,7 @@ Resources:
 
   @@dgraph_network
 
-  @@dgraph_ec2
+  @@dgraph_ec2_dev
 
   @@dgraph_ssm
 
