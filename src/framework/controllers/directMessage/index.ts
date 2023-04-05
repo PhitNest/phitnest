@@ -1,1 +1,0 @@
-export { GetDirectMessagesController } from "./get";
