@@ -2,6 +2,8 @@
 
 set -e
 
+cd "$(dirname "$0")"
+
 export SAM_CLI_TELEMETRY=0
 export SAM_CLI_BETA_ESBUILD=1
 
@@ -18,10 +20,12 @@ if [[ "$(uname)" == "Linux" ]]; then
     OPEN="xdg-open"
     DEFAULT_DGRAPH_DIR="/dgraph/data"
     DEFAULT_TEST_DGRAPH_DIR="/dgraph-test/data"
+    SAM_CMD="sam"
 else
     OPEN="bash start"
     DEFAULT_DGRAPH_DIR="C:/dgraph/data"
     DEFAULT_TEST_DGRAPH_DIR="C:/dgraph-test/data"
+    SAM_CMD="sam.cmd"
 fi
 
 DGRAPH_DATA_DIR=${DEFAULT_DGRAPH_DIR}
@@ -37,12 +41,12 @@ function install() {
 
 function run() {
     setup_run
-    sam.cmd local start-api --parameter-overrides Stage=sandbox -t .aws-sam/build/template.yml
+    $SAM_CMD local start-api --parameter-overrides Stage=sandbox -t .aws-sam/build/template.yml
 }
 
 function debug() {
     setup_run
-    sam.cmd local start-api --parameter-overrides Stage=sandbox -t .aws-sam/build/template.yml -d 5858
+    $SAM_CMD local start-api --parameter-overrides Stage=sandbox -t .aws-sam/build/template.yml -d 5858
 }
 
 function test() {
@@ -56,14 +60,14 @@ function test() {
 
 function deploy() {
     build_prod
-    sam.cmd package --template-file .aws-sam/build/.aws-sam/build/template.yaml --s3-bucket phitnest-api-sam-prod --output-template-file .aws-sam/prod-out.yaml
-    sam.cmd deploy --template-file .aws-sam/prod-out.yaml --s3-bucket phitnest-api-sam-prod --stack-name phitnest-api-prod --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset --parameter-overrides Stage=Prod Username=sam-cli
+    $SAM_CMD package --template-file .aws-sam/build/.aws-sam/build/template.yaml --s3-bucket phitnest-api-sam-prod --output-template-file .aws-sam/prod-out.yaml
+    $SAM_CMD deploy --template-file .aws-sam/prod-out.yaml --s3-bucket phitnest-api-sam-prod --stack-name phitnest-api-prod --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset --parameter-overrides Stage=Prod Username=sam-cli
 }
 
 function dev_deploy() {
     build_dev
-    sam.cmd package --template-file .aws-sam/build/.aws-sam/build/template.yaml --s3-bucket phitnest-api-sam-dev --output-template-file .aws-sam/dev-out.yaml
-    sam.cmd deploy --template-file .aws-sam/dev-out.yaml --s3-bucket phitnest-api-sam-dev --stack-name phitnest-api-dev --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset --parameter-overrides Stage=Dev Username=sam-cli
+    $SAM_CMD package --template-file .aws-sam/build/.aws-sam/build/template.yaml --s3-bucket phitnest-api-sam-dev --output-template-file .aws-sam/dev-out.yaml
+    $SAM_CMD deploy --template-file .aws-sam/dev-out.yaml --s3-bucket phitnest-api-sam-dev --stack-name phitnest-api-dev --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset --parameter-overrides Stage=Dev Username=sam-cli
 }
 
 function dgraph() {
@@ -123,14 +127,14 @@ function build_prod() {
     gen_schema
     ./build_tools/template_gen.sh prod
     NODE_ENV=production npm run build
-    sam.cmd build -t .aws-sam/build/template.yml -b .aws-sam/build/.aws-sam/build
+    $SAM_CMD build -t .aws-sam/build/template.yml -b .aws-sam/build/.aws-sam/build
 }
 
 function build_dev() {
     gen_schema
     ./build_tools/template_gen.sh dev
     NODE_ENV=production npm run build
-    sam.cmd build -t .aws-sam/build/template.yml -b .aws-sam/build/.aws-sam/build
+    $SAM_CMD build -t .aws-sam/build/template.yml -b .aws-sam/build/.aws-sam/build
 }
 
 function build_sandbox() {
@@ -143,6 +147,30 @@ function setup_run() {
     build_sandbox
     commit_schema_local
     ${OPEN} https://play.dgraph.io
+}
+
+function help() {
+    echo "    phitnest-api install...............Installs the necessary dependencies and pulls the latest Docker image of the DGraph database."
+    echo ""
+    echo "    phitnest-api run...................Runs the server locally using the AWS SAM CLI."
+    echo ""
+    echo "    phitnest-api debug.................Runs the server locally in debug mode using the AWS SAM CLI."
+    echo ""
+    echo "    phitnest-api test..................Runs tests against the server using a test database."
+    echo ""
+    echo "    phitnest-api deploy................Builds the server and deploys it to the production environment."
+    echo ""
+    echo "    phitnest-api dev-deploy............Builds the server and deploys it to the development environment."
+    echo ""
+    echo "    phitnest-api dgraph................Starts a DGraph database instance on your local machine."
+    echo ""
+    echo "    phitnest-api stop-dgraph...........Stops the DGraph database instance that is running on your local machine."
+    echo ""
+    echo "    phitnest-api dgraph-test...........Starts a test DGraph database instance on your local machine."
+    echo ""
+    echo "    phitnest-api stop-dgraph-test......Stops the test DGraph database instance that is running on your local machine."
+    echo ""
+    echo "    phitnest-api clean.................Cleans the project by removing generated files."
 }
 
 case $1 in
@@ -180,7 +208,6 @@ case $1 in
         clean
         ;;
     *)
-        echo "Unknown command: $1"
-        exit 1
+        help
         ;;
 esac

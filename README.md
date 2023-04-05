@@ -8,6 +8,12 @@ Serverless REST API running with Node.js and AWS SAM framework.
 * [SAM CLI](https://aws.amazon.com/serverless/sam/)
 * [Docker](https://www.docker.com/)
 
+### Install
+
+First, pull this repository
+
+Next, add this repository to your $PATH so you can easily call `phitnest-api` commands.
+
 ### CLI Commands
 
 `./phitnest-api install`
