@@ -1,0 +1,39 @@
+name: CD
+
+on:
+  release:
+    types: [published]
+    tags:
+      - "v*"
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  deploy:
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+
+      - name: Permit execution of the codegen scripts
+        run: chmod +x ./scripts/gen_combined_schema.sh && chmod +x ./scripts/template_gen.sh
+      
+      - name: Install dependencies
+        run: make install
+
+      - name: Setup SAM CLI
+        uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+
+      - name: Setup AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+          aws-region: us-east-1
+
+      - name: Build and deploy
+        run: make deploy
