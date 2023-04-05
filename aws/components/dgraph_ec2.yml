@@ -16,18 +16,6 @@ DGraphEC2:
       - Key: Name
         Value: !Sub "DGraph-${Stage}"
 
-DGraphVPCEndpoint:
-  Type: AWS::EC2::VPCEndpoint
-  Properties:
-    VpcId: !Ref DGraphVPC
-    ServiceName: !Sub "com.amazonaws.${AWS::Region}.ec2"
-    VpcEndpointType: Interface
-    PrivateDnsEnabled: true
-    SecurityGroupIds:
-      - !Ref DGraphSecurityGroup
-    SubnetIds:
-      - !Ref DGraphPrivateSubnet
-
 DGraphSecurityGroup:
   Type: AWS::EC2::SecurityGroup
   Properties:
@@ -36,14 +24,6 @@ DGraphSecurityGroup:
     VpcId: !Ref DGraphVPC
     SecurityGroupIngress:
       - IpProtocol: tcp
-        FromPort: 8000
-        ToPort: 8000
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: tcp
         FromPort: 8080
         ToPort: 8080
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: tcp
-        FromPort: 9080
-        ToPort: 9080
-        CidrIp: 0.0.0.0/0
+        SourceSecurityGroupId: !Ref LambdaSecurityGroup

@@ -43,7 +43,8 @@ gen-schema:
 	npx graphql-code-generator --config ./codegen.ts
 
 # Run the tests
-test: gen-schema
+test: 
+	make gen-schema
 	make dgraph-test
 	sleep $(DGRAPH_STARTUP_TIMEOUT)
 	- NODE_ENV=test npm run test
@@ -57,43 +58,51 @@ copy-modules:
 	cd .aws-sam/build && npm i
 
 # Build the application for production
-build-prod: gen-schema
+build-prod: 
+	make gen-schema
 	scripts/template_gen.sh prod
 	NODE_ENV=production npm run build
 	sam build -t .aws-sam/build/template.yml -b .aws-sam/build/.aws-sam/build
 
 # Build the application for development environment on AWS
-build-dev: gen-schema
+build-dev:
+	make gen-schema
 	scripts/template_gen.sh dev
 	NODE_ENV=production npm run build
 	sam build -t .aws-sam/build/template.yml -b .aws-sam/build/.aws-sam/build
 
 # Build the application for local development
-build-sandbox: gen-schema
+build-sandbox: 
+	make gen-schema
 	scripts/template_gen.sh dev
 	NODE_ENV=development npm run build
 
 ## Deploy application code (template.yml) to aws environment
-deploy: build-prod
+deploy: 
+	make build-prod
 	sam package --template-file .aws-sam/build/.aws-sam/build/template.yaml --s3-bucket phitnest-api-sam-prod --output-template-file .aws-sam/prod-out.yaml
 	sam deploy --template-file .aws-sam/prod-out.yaml --s3-bucket phitnest-api-sam-prod --stack-name phitnest-api-prod --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset --parameter-overrides Stage=Prod Username=sam-cli
 
 ## Deploy application code (template.yml) to dev aws environment
-dev-deploy: build-dev
+dev-deploy: 
+	make build-dev
 	sam package --template-file .aws-sam/build/.aws-sam/build/template.yaml --s3-bucket phitnest-api-sam-dev --output-template-file .aws-sam/dev-out.yaml
 	sam deploy --template-file .aws-sam/dev-out.yaml --s3-bucket phitnest-api-sam-dev --stack-name phitnest-api-dev --capabilities CAPABILITY_NAMED_IAM --no-fail-on-empty-changeset --parameter-overrides Stage=Dev Username=sam-cli
 
 # Setup for run and debug
-setup-run: build-sandbox
+setup-run: 
+	make build-sandbox
 	make commit-schema-local
 	$(OPEN) https://play.dgraph.io
 
 ## Run the lambda functions locally
-run: setup-run
+run: 
+	make setup-run
 	sam local start-api --parameter-overrides Stage=sandbox -t .aws-sam/build/template.yml
 
 ## Debug the lambda functions locally
-debug: setup-run
+debug: 
+	make setup-run
 	sam local start-api --parameter-overrides Stage=sandbox -t .aws-sam/build/template.yml -d 5858
 
 # Stop DGraph instance

@@ -5,11 +5,16 @@ PhitNestApi:
     Name: !Sub "PhitNest-${Stage}-API"
     EndpointConfiguration:
       Type: EDGE
-      VPCEndpointIds:
-        - !Ref DGraphVPCEndpoint
     Auth:
       Authorizers:
         UserCognitoAuthorizer:
           UserPoolArn: !GetAtt UserCognitoUserPool.Arn
         AdminCognitoAuthorizer:
           UserPoolArn: !GetAtt AdminCognitoUserPool.Arn
+
+LambdaSecurityGroup:
+  Type: AWS::EC2::SecurityGroup
+  Properties:
+    GroupName: !Sub "LambdaSecurityGroup-${Stage}"
+    GroupDescription: Lambda Security Group
+    VpcId: !Ref DGraphVPC
