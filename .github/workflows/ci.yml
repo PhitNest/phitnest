@@ -1,6 +1,10 @@
 name: CI
 
 on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
   workflow_dispatch:
   workflow_call:
 
@@ -11,7 +15,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
 
-      - name: Permit execution of build tools
+      - name: Permit execution of the build tools
         run: chmod +x ./phitnest-api && chmod +x ./build_tools/template_gen.sh
 
       - name: Install dependencies

@@ -16,46 +16,46 @@ Next, add this repository to your $PATH so you can easily call `phitnest-api` co
 
 ### CLI Commands
 
-`./phitnest-api install`
+`phitnest-api install`
 
 Installs the necessary dependencies and pulls the latest Docker image of the DGraph database.
 
-`./phitnest-api run`
+`phitnest-api run`
 
 Runs the server locally using the AWS SAM CLI.
 
-`./phitnest-api debug`
+`phitnest-api debug`
 
 Runs the server locally in debug mode using the AWS SAM CLI.
 
-`./phitnest-api test`
+`phitnest-api test`
 
 Runs tests against the server using a test database.
 
-`./phitnest-api deploy`
+`phitnest-api deploy`
 
 Builds the server and deploys it to the production environment.
 
-`./phitnest-api dev-deploy`
+`phitnest-api dev-deploy`
 
 Builds the server and deploys it to the development environment.
 
-`./phitnest-api dgraph`
+`phitnest-api dgraph`
 
 Starts a DGraph database instance on your local machine.
 
-`./phitnest-api stop-dgraph`
+`phitnest-api stop-dgraph`
 
 Stops the DGraph database instance that is running on your local machine.
 
-`./phitnest-api dgraph-test`
+`phitnest-api dgraph-test`
 
 Starts a test DGraph database instance on your local machine.
 
-`./phitnest-api stop-dgraph-test`
+`phitnest-api stop-dgraph-test`
 
 Stops the test DGraph database instance that is running on your local machine.
 
-`./phitnest-api clean`
+`phitnest-api clean`
 
 Cleans the project by removing generated files.
