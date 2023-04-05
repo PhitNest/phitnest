@@ -48,6 +48,7 @@ function debug() {
 function test() {
     gen_schema
     dgraph_test
+    echo "Waiting for DGraph to start..."
     sleep ${DGRAPH_STARTUP_TIMEOUT}
     NODE_ENV=test npm run test || true
     stop_dgraph_test
@@ -74,13 +75,13 @@ function stop_dgraph() {
 }
 
 function dgraph_test() {
-    DGRAPH_TEST_DIR=${1:-$DEFAULT_TEST_DGRAPH_DIR}
+    DGRAPH_TEST_DIR=${2:-$DEFAULT_TEST_DGRAPH_DIR}
     docker run -d -p ${DGRAPH_TEST_PORT}:8080 -p ${DGRAPH_TEST_HTTP_PORT}:9080 -p ${DGRAPH_TEST_GRPC_PORT}:8000 --mount type=bind,source=${DGRAPH_TEST_DIR},target=/dgraph --rm --name DGraph-Test dgraph/standalone:latest
 }
 
 function stop_dgraph_test() {
     export DGRAPH_NAME=DGraph-Test
-    DGRAPH_TEST_DIR=${1:-$DEFAULT_TEST_DGRAPH_DIR}
+    DGRAPH_TEST_DIR=${2:-$DEFAULT_TEST_DGRAPH_DIR}
     stop_dgraph
     rm -rf ${DGRAPH_TEST_DIR}
 }
