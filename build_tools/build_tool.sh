@@ -2,7 +2,7 @@
 
 set -e
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 
 export SAM_CLI_TELEMETRY=0
 export SAM_CLI_BETA_ESBUILD=1

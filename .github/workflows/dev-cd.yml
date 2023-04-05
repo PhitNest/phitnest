@@ -16,10 +16,10 @@ jobs:
       - uses: actions/setup-node@v3
 
       - name: Permit execution of build tools
-        run: chmod +x ./phitnest-api && chmod +x ./build_tools/template_gen.sh
+        run: chmod +x ./build_tools/build_tool.sh && chmod +x ./build_tools/template_gen.sh
 
       - name: Install dependencies
-        run: ./phitnest-api install
+        run: ./build_tools/build_tool.sh install
 
       - name: Setup SAM CLI
         uses: aws-actions/setup-sam@v2
@@ -34,4 +34,4 @@ jobs:
           aws-region: us-east-1
 
       - name: Build and deploy
-        run: ./phitnest-api dev-deploy
+        run: ./build_tools/build_tool.sh dev-deploy
