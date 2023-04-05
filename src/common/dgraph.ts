@@ -3,9 +3,9 @@ import { DgraphClientStub, DgraphClient, ERR_ABORTED } from "dgraph-js-http";
 export const dgraphHost =
   process.env.NODE_ENV === "test"
     ? "http://localhost:3080"
-    : `${
+    : `http://${
         !!!process.env.DGRAPH_HOST || process.env.DGRAPH_HOST === ""
-          ? "http://host.docker.internal"
+          ? "host.docker.internal"
           : process.env.DGRAPH_HOST
       }:${process.env.DGRAPH_PORT ?? "8080"}`;
 

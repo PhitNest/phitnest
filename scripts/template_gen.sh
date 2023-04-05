@@ -158,6 +158,11 @@ find $lambdaDir -type f | while read file; do
     echo "    Properties:" >> $out
     echo "      Handler: lambdas$path/$methodLower.invoke" >> $out
     echo "      Runtime: nodejs16.x" >> $out
+    echo "      VpcConfig:" >> $out
+    echo "        SecurityGroupIds:" >> $out
+    echo "          - !Ref LambdaSecurityGroup" >> $out
+    echo "        SubnetIds:" >> $out
+    echo "          - !Ref DGraphPrivateSubnet" >> $out
     echo "      Events:" >> $out
     echo "        CatchAll:" >> $out
     echo "          Type: Api" >> $out
