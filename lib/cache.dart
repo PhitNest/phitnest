@@ -5,6 +5,12 @@ import 'package:phitnest_core/serializable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'logger.dart';
 
+// This will be set to true when the cache is initialized
+bool _loaded = false;
+
+/// Getter for whether the cache is loaded
+bool get loaded => _loaded;
+
 // Declare late-initialized SharedPreferences instance
 late final SharedPreferences _sharedPreferences;
 
@@ -29,11 +35,11 @@ Future<void> initializeCache() async {
   }
   // Read all secure storage values into cache
   _stringifiedSecureCache = await _secureStorage.readAll();
+  _loaded = true;
 }
 
 /// Function to cache secure objects
-Future<void> cacheSecureObject<T extends Serializable>(
-    String key, T? value) async {
+Future<void> cacheSecureObject(String key, Serializable? value) async {
   if (value != null) {
     _stringifiedSecureCache[key] = jsonEncode(value.toJson());
     _lazyLoadedSecureCache[key] = value;
@@ -82,9 +88,9 @@ List<T>? getSecureCachedList<T extends Serializable>(
 }
 
 /// Function to cache secure list of objects
-Future<void> cacheSecureList<T extends Serializable>(
+Future<void> cacheSecureList(
   String key,
-  List<T>? value,
+  List<Serializable>? value,
 ) async {
   if (value != null) {
     _stringifiedSecureCache[key] =
