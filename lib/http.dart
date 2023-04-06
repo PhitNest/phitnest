@@ -1,6 +1,6 @@
 import 'package:basic_utils/basic_utils.dart';
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:sealed_unions/sealed_unions.dart';
 
 import 'failure.dart';
 import 'logger.dart';
@@ -23,12 +23,12 @@ enum HttpMethod {
 }
 
 /// Custom Failure class for network connection issues
-class NetworkConnectionFailure extends Failure {
+class HttpFailure extends Failure {
   final dynamic _error;
 
   dynamic get error => _error;
 
-  const NetworkConnectionFailure(dynamic error)
+  const HttpFailure(dynamic error)
       : _error = error,
         super("Network connection failure.");
 }
@@ -54,7 +54,7 @@ class Http {
       '${overrideHost ?? _host}${(overridePort ?? _port).isEmpty ? "" : ":${overridePort ?? _port}"}$route';
 
   /// Asynchronous method to perform the HTTP request and handle the response
-  Future<Either<ResType, NetworkConnectionFailure>> request<ResType>({
+  Future<Union2<ResType, HttpFailure>> request<ResType>({
     required String route,
     required HttpMethod method,
     required ResType? Function(Response) parser,
@@ -121,7 +121,7 @@ class Http {
               response.statusCode == 200) {
             prettyLogger.d(
                 "Response success:${descriptionLog(null)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
-            return Left(null as ResType);
+            return Union2First(null as ResType);
           }
           // Parse the response data
           final parsed = parser(response);
@@ -134,7 +134,7 @@ class Http {
               prettyLogger.d(
                   "Response success:${descriptionLog(parsed)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
             }
-            return Left(parsed);
+            return Union2First(parsed);
           } else {
             // Throw an exception if the response cannot be parsed
             throw response.data;
@@ -145,7 +145,7 @@ class Http {
       // Log and return a NetworkConnectionFailure on request failure
       prettyLogger.e(
           "Request failure:${descriptionLog(e)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
-      return Right(NetworkConnectionFailure(e));
+      return Union2Second(HttpFailure(e));
     }
   }
 }
@@ -159,7 +159,7 @@ void initializeHttp({String? host, String? port, Duration? timeout}) {
 }
 
 /// Shortcut function for making requests using the Http instance
-Future<Either<ResType, NetworkConnectionFailure>> request<ResType>({
+Future<Union2<ResType, HttpFailure>> Function<ResType>({
   required String route,
   required HttpMethod method,
   required ResType? Function(Response) parser,
@@ -168,14 +168,4 @@ Future<Either<ResType, NetworkConnectionFailure>> request<ResType>({
   String? authorization,
   String? overrideHost,
   String? overridePort,
-}) =>
-    instance.request(
-      route: route,
-      method: method,
-      parser: parser,
-      data: data,
-      headers: headers,
-      authorization: authorization,
-      overrideHost: overrideHost,
-      overridePort: overridePort,
-    );
+}) request = instance.request;

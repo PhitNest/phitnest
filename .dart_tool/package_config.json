@@ -2,6 +2,12 @@
   "configVersion": 2,
   "packages": [
     {
+      "name": "amazon_cognito_identity_dart_2",
+      "rootUri": "file:///C:/Users/jpsie/AppData/Local/Pub/Cache/hosted/pub.dev/amazon_cognito_identity_dart_2-3.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.13"
+    },
+    {
       "name": "async",
       "rootUri": "file:///C:/Users/jpsie/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.10.0",
       "packageUri": "lib/",
@@ -32,16 +38,22 @@
       "languageVersion": "2.18"
     },
     {
-      "name": "dartz",
-      "rootUri": "file:///C:/Users/jpsie/AppData/Local/Pub/Cache/hosted/pub.dev/dartz-0.10.1",
+      "name": "crypto",
+      "rootUri": "file:///C:/Users/jpsie/AppData/Local/Pub/Cache/hosted/pub.dev/crypto-3.0.2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "dio",
       "rootUri": "file:///C:/Users/jpsie/AppData/Local/Pub/Cache/hosted/pub.dev/dio-5.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.15"
+    },
+    {
+      "name": "equatable",
+      "rootUri": "file:///C:/Users/jpsie/AppData/Local/Pub/Cache/hosted/pub.dev/equatable-2.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "ffi",
@@ -200,6 +212,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "sealed_unions",
+      "rootUri": "file:///C:/Users/jpsie/AppData/Local/Pub/Cache/hosted/pub.dev/sealed_unions-3.0.3+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "shared_preferences",
       "rootUri": "file:///C:/Users/jpsie/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences-2.0.18",
       "packageUri": "lib/",
@@ -296,7 +314,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2023-04-05T19:54:58.944130Z",
+  "generated": "2023-04-05T20:38:42.412299Z",
   "generator": "pub",
   "generatorVersion": "2.19.3"
 }
