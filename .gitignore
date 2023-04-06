@@ -11,6 +11,10 @@
 migrate_working_dir/
 .env
 
+# Freezed
+**/*.freezed.dart
+**/*.g.dart
+
 # IntelliJ related
 *.iml
 *.ipr

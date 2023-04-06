@@ -1,2 +1,1 @@
-export 'styled/styled.dart';
-export 'bloc.dart';
+export 'device_preview_provider.dart';
