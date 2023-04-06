@@ -1,0 +1,18 @@
+{
+    "name": "phitnest_admin",
+    "short_name": "phitnest_admin",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#FFFFFF",
+    "description": "PhitNest Admin Dashboard",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/logo_440_huge.png",
+            "sizes": "440x440",
+            "type": "image/png"
+        }
+    ]
+}
