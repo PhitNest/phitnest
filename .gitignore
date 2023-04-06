@@ -28,6 +28,3 @@ node_modules/
 
 # Generated files
 src/generated
-
-# Mono repo file
-.mono
