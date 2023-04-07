@@ -6,7 +6,7 @@
   "dependencies": {
     "aws-sdk": "2.1208.0",
     "cross-fetch": "^3.1.5",
-    "dgraph-js-http": "file:../phitnest-dgraph-js",
+    "dgraph-js-http": "git+https://github.com/PhitNest/phitnest-dgraph-js.git",
     "zod": "^3.21.0"
   },
   "scripts": {
