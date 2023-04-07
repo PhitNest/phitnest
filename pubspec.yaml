@@ -10,13 +10,13 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+  phitnest_core:
+    path: ../phitnest-core
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  phitnest_core:
-    path: ../phitnest-core
 
 flutter:
   uses-material-design: true

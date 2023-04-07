@@ -305,7 +305,7 @@ packages:
     source: hosted
     version: "2.1.5"
   phitnest_core:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       path: "../phitnest-core"
       relative: true
