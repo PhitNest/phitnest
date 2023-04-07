@@ -1,13 +1,12 @@
 import 'dart:math';
 
-import 'package:phitnest_core/auth/failures.dart';
 import 'package:sealed_unions/sealed_unions.dart';
 
 import '../../cache.dart' as cache;
-import '../../failure.dart';
+import '../../serializable.dart';
 import '../../validators/validators.dart';
 import '../auth.dart';
-import 'tokens.dart';
+import '../failures.dart';
 import 'user_data.dart';
 
 const kSandboxTokenDuration = Duration(seconds: 45);
@@ -15,6 +14,7 @@ const kMaxUserId = 100000000;
 const kSandboxEmailToUserMapJsonKey = "email_to_user_map";
 const kSandboxIdToUserMapJsonKey = "id_to_user_map";
 const kSandboxDataCacheKey = "sandbox_data";
+const kCurrentUserJsonKey = "current_user";
 
 bool validSandboxConfirmationCode(String code) =>
     code.endsWith("1") ||
@@ -23,9 +23,10 @@ bool validSandboxConfirmationCode(String code) =>
     code.endsWith("7") ||
     code.endsWith("9");
 
-class Sandbox extends Auth {
+class Sandbox extends Auth with Serializable {
   final Map<String, SandboxUserData> emailToUserMap;
   final Map<String, SandboxUserData> idToUserMap;
+  SandboxUserData? currentUser;
 
   static Sandbox? getFromCache() => cache.loaded
       ? cache.getSecureCachedObject(
@@ -37,45 +38,36 @@ class Sandbox extends Auth {
   static Future<void> clearSandboxCache() =>
       cache.cacheSecureObject(kSandboxDataCacheKey, null);
 
-  const Sandbox({
+  Sandbox({
     required this.emailToUserMap,
     required this.idToUserMap,
+    required this.currentUser,
   });
 
   @override
-  List<Object?> get props => [
-        emailToUserMap,
-        idToUserMap,
-      ];
-
-  @override
-  Future<Union4<Tokens, ConfirmationRequired, InvalidEmailPassword, Failure>>
-      login(
+  Future<Union2<String, LoginFailure>> login(
     String email,
     String password,
   ) async {
     final user = emailToUserMap[email];
     if (user == null) {
-      return Union4Fourth(const Failure(kNoSuchUserMessage));
+      return Union2Second(LoginFailure(LoginFailureType.noSuchUser));
     } else if (!user.confirmed) {
-      return Union4Second(const ConfirmationRequired());
+      return Union2Second(LoginFailure(LoginFailureType.confirmationRequired));
     } else if (user.password != password) {
-      return Union4Third(const InvalidEmailPassword());
+      return Union2Second(LoginFailure(LoginFailureType.invalidEmailPassword));
     } else {
-      return Union4First(
-        SandboxTokens(
-          expiresAt: DateTime.fromMillisecondsSinceEpoch(
-            DateTime.now().millisecondsSinceEpoch +
-                kSandboxTokenDuration.inMilliseconds,
-          ),
-        ),
+      currentUser = user;
+      await cache.cacheSecureObject(
+        kSandboxDataCacheKey,
+        this,
       );
+      return Union2First(user.userId);
     }
   }
 
   @override
-  Future<Union5<String, UserExists, InvalidEmail, InvalidPassword, Failure>>
-      register(
+  Future<Union2<String, RegistrationFailure>> register(
     String email,
     String password,
   ) async {
@@ -84,7 +76,16 @@ class Sandbox extends Auth {
       if (EmailValidator.validateEmail(email)) {
         final passwordProblems = validatePassword(password);
         if (passwordProblems != null) {
-          return Union5Fourth(InvalidPassword(passwordProblems));
+          return Union2Second(
+            RegistrationFailure(
+              Union2Second(
+                ValidationFailure(
+                  ValidationFailureType.invalidPassword,
+                  passwordProblems,
+                ),
+              ),
+            ),
+          );
         } else {
           String userId = Random().nextInt(kMaxUserId).toString();
           while (idToUserMap.containsKey(userId)) {
@@ -98,20 +99,33 @@ class Sandbox extends Auth {
           );
           emailToUserMap[email] = newUser;
           idToUserMap[userId] = newUser;
+          // Don't save the unconfirmed user in the cache
           await cache.cacheSecureObject(
             kSandboxDataCacheKey,
-            Sandbox(
-              emailToUserMap: emailToUserMap,
-              idToUserMap: idToUserMap,
-            ),
+            this,
           );
-          return Union5First(userId);
+          return Union2First(userId);
         }
       } else {
-        return Union5Third(const InvalidEmail("Invalid email."));
+        return Union2Second(
+          RegistrationFailure(
+            Union2Second(
+              const ValidationFailure(
+                ValidationFailureType.invalidEmail,
+                "Invalid email.",
+              ),
+            ),
+          ),
+        );
       }
     } else {
-      return Union5Second(const UserExists());
+      return Union2Second(
+        RegistrationFailure(
+          Union2First(
+            RegistrationFailureType.userExists,
+          ),
+        ),
+      );
     }
   }
 
@@ -124,6 +138,11 @@ class Sandbox extends Auth {
         kSandboxIdToUserMapJsonKey: idToUserMap.map(
           (key, value) => MapEntry(key, value.toJson()),
         ),
+        ...(currentUser != null
+            ? {
+                kCurrentUserJsonKey: currentUser!.toJson(),
+              }
+            : {}),
       };
 
   factory Sandbox.fromJson(Map<String, dynamic> json) => Sandbox(
@@ -143,20 +162,24 @@ class Sandbox extends Auth {
                 ),
               ),
         ),
+        currentUser: json[kCurrentUserJsonKey] == null
+            ? null
+            : SandboxUserData.fromJson(json[kCurrentUserJsonKey]),
       );
 
-  Future<Union2<void, Failure>> confirmEmail(
+  @override
+  Future<bool> confirmEmail(
     String email,
     String code,
   ) async {
-    final user = emailToUserMap[email];
-    if (user == null) {
-      return Union2Second(const Failure(kNoSuchUserMessage));
-    } else if (user.confirmed) {
-      return Union2First(null);
+    if (!emailToUserMap.containsKey(email)) {
+      return false;
+    } else if (emailToUserMap[email]!.confirmed) {
+      return true;
     } else if (!validSandboxConfirmationCode(code)) {
-      return Union2Second(const Failure(kIncorrectCodeMessage));
+      return false;
     } else {
+      final user = emailToUserMap[email]!;
       final updatedUser = SandboxUserData(
         userId: user.userId,
         email: user.email,
@@ -167,11 +190,63 @@ class Sandbox extends Auth {
       idToUserMap[user.userId] = updatedUser;
       await cache.cacheSecureObject(
         kSandboxDataCacheKey,
-        Sandbox(
-          emailToUserMap: emailToUserMap,
-          idToUserMap: idToUserMap,
-        ),
+        this,
       );
+      return true;
+    }
+  }
+
+  @override
+  Future<bool> resendConfirmationEmail(String email) async =>
+      emailToUserMap.containsKey(email);
+
+  @override
+  Future<Union2<void, SubmitForgotPasswordFailure>> submitForgotPassword(
+    String email,
+    String code,
+    String newPassword,
+  ) async {
+    if (!emailToUserMap.containsKey(email)) {
+      return Union2Second(SubmitForgotPasswordFailure(
+          SubmitForgotPasswordFailureType.noSuchUser));
+    } else if (!validSandboxConfirmationCode(code)) {
+      return Union2Second(SubmitForgotPasswordFailure(
+          SubmitForgotPasswordFailureType.invalidCode));
+    } else {
+      final user = emailToUserMap[email]!;
+      final updatedUser = SandboxUserData(
+        userId: user.userId,
+        email: user.email,
+        password: newPassword,
+        confirmed: user.confirmed,
+      );
+      emailToUserMap[email] = updatedUser;
+      idToUserMap[user.userId] = updatedUser;
+      await cache.cacheSecureObject(
+        kSandboxDataCacheKey,
+        this,
+      );
+      return Union2First(null);
+    }
+  }
+
+  @override
+  Future<Union2<void, ForgotPasswordFailure>> forgotPassword(
+      String email) async {
+    if (!emailToUserMap.containsKey(email)) {
+      return Union2Second(
+          ForgotPasswordFailure(ForgotPasswordFailureType.noSuchUser));
+    } else {
+      return Union2First(null);
+    }
+  }
+
+  @override
+  Future<Union2<void, RefreshSessionFailure>> refreshSession() async {
+    if (currentUser == null) {
+      return Union2Second(
+          RefreshSessionFailure(RefreshSessionFailureType.noSuchUser));
+    } else {
       return Union2First(null);
     }
   }
