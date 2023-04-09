@@ -158,6 +158,7 @@ find $lambdaDir -type f | while read file; do
     echo "    Properties:" >> $out
     echo "      Handler: lambdas$path/$methodLower.invoke" >> $out
     echo "      Runtime: nodejs16.x" >> $out
+    echo "      Timeout: 15" >> $out
     echo "      VpcConfig:" >> $out
     echo "        SecurityGroupIds:" >> $out
     echo "          - !Ref LambdaSecurityGroup" >> $out

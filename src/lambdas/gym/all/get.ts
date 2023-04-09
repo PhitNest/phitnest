@@ -1,8 +1,8 @@
 // @CognitoAuth Admin
-import { respond } from "common/respond";
+import { respond } from "../../../common/respond";
+import { useDgraph } from "../../../common/dgraph";
 import { APIGatewayEvent } from "aws-lambda";
 import { z } from "zod";
-import { useDgraph } from "common/dgraph";
 const gql = String.raw;
 
 const kDefaultPageLength = 50;
