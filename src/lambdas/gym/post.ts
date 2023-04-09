@@ -1,8 +1,8 @@
 // @CognitoAuth Admin
-import { respond } from "common/respond";
-import { getLocation } from "common/open-street-maps";
-import { Failure } from "common/failures";
-import { useDgraph } from "common/dgraph";
+import { respond } from "../../common/respond";
+import { getLocation } from "../../common/open-street-maps";
+import { Failure } from "../../common/failures";
+import { useDgraph } from "../../common/dgraph";
 import { APIGatewayEvent } from "aws-lambda";
 import { z } from "zod";
 
@@ -36,7 +36,7 @@ export function invoke(event: APIGatewayEvent): Promise<{
             state: body.state,
             zipCode: body.zipCode,
             location: {
-              __typename: "Location",
+              __typename: "Point",
               latitude: location.latitude,
               longitude: location.longitude,
             },
