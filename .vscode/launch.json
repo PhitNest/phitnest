@@ -2,6 +2,19 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug Tests",
+      "request": "launch",
+      "runtimeArgs": [
+        "run",
+        "test"
+      ],
+      "runtimeExecutable": "npm",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    },
+    {
       "name": "Attach to SAM CLI",
       "type": "node",
       "request": "attach",
