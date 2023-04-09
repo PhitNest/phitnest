@@ -1,13 +1,7 @@
 import { dgraphHost, useDgraph } from "./common/dgraph";
+import { APIError } from "dgraph-js-http";
 import fs from "fs";
 import fetch from "cross-fetch";
-
-const success = {
-  data: {
-    code: "Success",
-    message: "Done",
-  },
-};
 
 beforeEach(async () => {
   const request = async () =>
@@ -18,20 +12,31 @@ beforeEach(async () => {
         headers: { "Content-Type": "application/graphql" },
       })
     ).json();
-  try {
-    await request();
-  } catch (err) {
-    await expect(request()).resolves.toEqual(success);
+  let repeat = true;
+  while (repeat) {
+    repeat = false;
+    await request().catch((err) => {
+      if (err instanceof APIError) {
+        repeat = true;
+      } else {
+        throw err;
+      }
+    });
   }
 });
 
 afterEach(async () => {
-  await useDgraph(async (hook) => {
-    const request = () => hook.alter({ dropAll: true });
-    try {
-      await request();
-    } catch (err) {
-      await expect(request()).resolves.toEqual(success);
+  await useDgraph(async (client) => {
+    let repeat = true;
+    while (repeat) {
+      repeat = false;
+      await client.alter({ dropAll: true }).catch((err) => {
+        if (err instanceof APIError) {
+          repeat = true;
+        } else {
+          throw err;
+        }
+      });
     }
   });
 });

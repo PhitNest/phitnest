@@ -1,11 +1,13 @@
-// @CognitoAuth User
-import { respond } from "../../../common/respond";
+// @CognitoAuth Admin
+import { respond } from "common/respond";
 import { APIGatewayEvent } from "aws-lambda";
 import { z } from "zod";
 
+const kDefaultPageLength = 50;
+
 const validator = z.object({
-  longitude: z.number().min(-180).max(180),
-  latitude: z.number().min(-90).max(90),
+  limit: z.number().int().optional().default(kDefaultPageLength),
+  page: z.number().int().optional().default(0),
 });
 
 export function invoke(event: APIGatewayEvent): Promise<{
@@ -13,7 +15,7 @@ export function invoke(event: APIGatewayEvent): Promise<{
   body: string;
 }> {
   return respond({
-    body: event.queryStringParameters,
+    body: event.body,
     validator: validator,
     controller: async (body) => {
       return body;

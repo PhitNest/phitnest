@@ -21,13 +21,28 @@ export function invoke(event: APIGatewayEvent): Promise<{
   return respond({
     body: event.body,
     validator: validator,
-    controller: async (body: z.infer<typeof validator>) => {
+    controller: async (body) => {
       const location = await getLocation(body);
       if (location instanceof Failure) {
         return location;
       }
-      return await useDgraph(async (hook) => {
-        return await hook.getHealth();
+      return await useDgraph((client) => {
+        return client.newTxn().mutateGraphQL({
+          obj: {
+            __typename: "Gym",
+            name: body.name,
+            street: body.street,
+            city: body.city,
+            state: body.state,
+            zipCode: body.zipCode,
+            location: {
+              __typename: "Location",
+              latitude: location.latitude,
+              longitude: location.longitude,
+            },
+          },
+          commitNow: true,
+        });
       });
     },
   });

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Failure } from "./failures";
 
-function errorResponse(error: any): {
+export function errorResponse(error: any): {
   statusCode: number;
   body: string;
 } {
@@ -11,7 +11,7 @@ function errorResponse(error: any): {
   };
 }
 
-function successResponse(body: any): {
+export function successResponse(body: any): {
   statusCode: number;
   body: string;
 } {
@@ -21,20 +21,20 @@ function successResponse(body: any): {
   };
 }
 
-export async function respond<InputType>(params: {
-  controller: (body: InputType) => Promise<any>;
+export async function respond<InputSchema extends z.ZodSchema>(params: {
+  controller: (body: z.output<InputSchema>) => Promise<any>;
   body?: any | null;
-  validator?: z.ZodSchema<InputType>;
+  validator?: InputSchema;
 }): Promise<{
   statusCode: number;
   body: any;
 }> {
   try {
-    const response = await (params.validator != null
+    const response = await (params.validator
       ? params.controller(
           params.validator.parse(JSON.parse(params.body ?? "{}"))
         )
-      : params.controller(undefined as InputType));
+      : params.controller(undefined));
     if (response instanceof Failure) {
       return errorResponse(response);
     } else {
