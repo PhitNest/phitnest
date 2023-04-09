@@ -12,6 +12,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   phitnest_core:
     path: ../phitnest-core
+  go_router: ^6.5.5
+  flutter_riverpod: ^2.3.4
+  google_fonts: ^4.0.3
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:
