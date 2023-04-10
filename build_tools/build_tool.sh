@@ -54,7 +54,14 @@ function test() {
     dgraph_test $1
     echo "Waiting for DGraph to start..."
     sleep ${DGRAPH_STARTUP_TIMEOUT}
-    NODE_ENV=test npm run test || true
+
+    # Set a trap to call stop_dgraph_test when the script exits or is interrupted
+    trap "stop_dgraph_test $1" EXIT
+
+    NODE_ENV=test npm run test
+
+    # Explicitly call stop_dgraph_test and remove the trap
+    trap - EXIT
     stop_dgraph_test $1
 }
 
