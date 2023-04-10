@@ -9,16 +9,24 @@ export async function getLocation(address: {
   state: string;
   zipCode: string;
 }): Promise<Point | Failure> {
-  const response = await fetch(
-    `https://nominatim.openstreetmap.org/search?q=${address.street},+${address.city},+${address.state}+${address.zipCode}&format=json&polygon=1&addressdetails=1`,
-    {
-      method: "GET",
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${address.street},+${address.city},+${address.state}+${address.zipCode}&format=json&polygon=1&addressdetails=1`,
+      {
+        method: "GET",
+      }
+    );
+    const data = (await response.json()) as { lon: string; lat: string }[];
+    if (data && data.length > 0) {
+      const { lon, lat } = data[0];
+      return {
+        __typename: "Point",
+        longitude: parseFloat(lon),
+        latitude: parseFloat(lat),
+      };
     }
-  );
-  const data = (await response.json()) as { lon: string; lat: string }[];
-  if (data && data.length > 0) {
-    const { lon, lat } = data[0];
-    return { longitude: parseFloat(lon), latitude: parseFloat(lat) };
+    return kLocationNotFound;
+  } catch (err) {
+    return kLocationNotFound;
   }
-  return kLocationNotFound;
 }
