@@ -5,8 +5,8 @@
   "repository": "https://github.com/PhitNest/phitnest-api/",
   "dependencies": {
     "aws-sdk": "2.1353.0",
-    "cross-fetch": "^3.1.5",
     "dgraph-js-http": "git+https://github.com/PhitNest/phitnest-dgraph-js.git",
+    "isomorphic-fetch": "^3.0.0",
     "zod": "^3.21.4"
   },
   "scripts": {
@@ -21,6 +21,7 @@
     "@graphql-codegen/cli": "^3.3.0",
     "@graphql-codegen/typescript": "^3.0.3",
     "@types/aws-lambda": "8.10.102",
+    "@types/isomorphic-fetch": "^0.0.36",
     "@types/jest": "28.1.1",
     "@types/node": "^18.15.11",
     "@typescript-eslint/eslint-plugin": "5.36.1",

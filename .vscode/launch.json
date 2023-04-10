@@ -5,10 +5,10 @@
       "name": "Debug Tests",
       "request": "launch",
       "runtimeArgs": [
-        "api",
+        "run",
         "test"
       ],
-      "runtimeExecutable": "phitnest",
+      "runtimeExecutable": "npm",
       "skipFiles": [
         "<node_internals>/**"
       ],
