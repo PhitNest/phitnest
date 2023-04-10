@@ -5,6 +5,7 @@ import { Failure } from "../../common/failures";
 import { useDgraph } from "../../common/dgraph";
 import { APIGatewayEvent } from "aws-lambda";
 import { z } from "zod";
+import { Gym } from "generated/dgraph-schema";
 
 const validator = z.object({
   street: z.string(),
@@ -27,18 +28,16 @@ export function invoke(event: APIGatewayEvent): Promise<{
         return location;
       }
       return await useDgraph((client) => {
-        return client.newTxn().mutateGraphQL({
+        return client.newTxn().mutateGraphQL<Gym>({
           obj: {
-            __typename: "Gym",
-            name: body.name,
-            street: body.street,
-            city: body.city,
-            state: body.state,
-            zipCode: body.zipCode,
-            location: {
-              __typename: "Point",
-              latitude: location.latitude,
-              longitude: location.longitude,
+            "Gym.name": body.name,
+            "Gym.street": body.street,
+            "Gym.city": body.city,
+            "Gym.state": body.state,
+            "Gym.zipCode": body.zipCode,
+            "Gym.location": {
+              type: "Point",
+              coordinates: [location.latitude, location.longitude],
             },
           },
           commitNow: true,
