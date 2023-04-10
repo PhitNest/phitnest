@@ -1,7 +1,7 @@
 import { Point } from "../generated/dgraph-schema";
 import { kLocationNotFound } from "./failures";
 import { Failure } from "./failures";
-import fetch from "isomorphic-fetch";
+import fetch from "cross-fetch";
 
 export async function getLocation(address: {
   street: string;

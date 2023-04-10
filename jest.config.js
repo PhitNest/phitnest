@@ -15,4 +15,5 @@ module.exports = {
     "!src/cmd/**/*.test.ts",
   ],
   coverageDirectory: "test/coverage",
+  openHandlesTimeout: 2 * 1000, // 2 seconds
 };
