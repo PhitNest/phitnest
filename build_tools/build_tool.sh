@@ -112,6 +112,7 @@ function gen_schema() {
 
     echo -e "$schema" > "$schemaOutput"
     npx graphql-code-generator --config ./codegen.ts
+    sed -i 's/__typename?/__typename/g' ./src/generated/dgraph-schema.ts
 }
 
 function copy_modules() {

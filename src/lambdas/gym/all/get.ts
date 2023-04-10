@@ -22,19 +22,21 @@ export function invoke(event: APIGatewayEvent): Promise<{
     controller: async (body) => {
       return useDgraph(async (client) => {
         const txn = client.newTxn();
-        txn.queryGraphQL(gql`
+        return (
+          await txn.queryGraphQL(gql`
           query {
             allGyms(skip: ${body.page * body.limit}, first: ${body.limit}) {
               uid
-              name
-              street
-              city
-              state
-              zipCode
-              location
+              Gym.name
+              Gym.street
+              Gym.city
+              Gym.state
+              Gym.zipCode
+              Gym.location
             }
           }
-        `);
+        `)
+        )["allGyms"];
       });
     },
   });
