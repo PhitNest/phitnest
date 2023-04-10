@@ -18,7 +18,7 @@ const mockValidator = z.object({
 });
 
 // Mock a controller that throws an error
-const mockControllerWithError = async (input: any) => {
+const mockControllerWithError = async () => {
   throw new Error("Unexpected error");
 };
 
