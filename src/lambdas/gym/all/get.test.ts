@@ -16,4 +16,10 @@ describe("GET /gym/all", () => {
     expect(response.statusCode).toBe(500);
     expect(JSON.parse(response.body)).toHaveProperty("name", "ZodError");
   });
+
+  it("should pass for page zero", async () => {
+    const response = await invoke(mockGet({ page: "0" }));
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toBe("[]");
+  });
 });

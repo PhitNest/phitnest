@@ -5,8 +5,8 @@
   "repository": "https://github.com/PhitNest/phitnest-api/",
   "dependencies": {
     "aws-sdk": "2.1353.0",
+    "cross-fetch": "^3.1.5",
     "dgraph-js-http": "git+https://github.com/PhitNest/phitnest-dgraph-js.git",
-    "isomorphic-fetch": "^3.0.0",
     "zod": "^3.21.4"
   },
   "scripts": {
@@ -20,22 +20,21 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^3.3.0",
     "@graphql-codegen/typescript": "^3.0.3",
-    "@types/aws-lambda": "8.10.102",
-    "@types/isomorphic-fetch": "^0.0.36",
-    "@types/jest": "28.1.1",
+    "@types/aws-lambda": "^8.10.114",
+    "@types/jest": "^29.5.0",
     "@types/node": "^18.15.11",
-    "@typescript-eslint/eslint-plugin": "5.36.1",
-    "@typescript-eslint/parser": "5.36.1",
-    "eslint": "8.23.0",
-    "eslint-config-prettier": "8.5.0",
-    "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-prettier": "4.2.1",
-    "eslint-plugin-promise": "6.0.1",
-    "jest": "28.1.3",
-    "prettier": "2.7.1",
-    "ts-jest": "28.0.8",
-    "ts-loader": "9.3.1",
-    "typescript": "4.8.2"
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "eslint": "^8.38.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "jest": "^29.5.0",
+    "prettier": "^2.8.7",
+    "ts-jest": "^29.1.0",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.0.4"
   }
 }

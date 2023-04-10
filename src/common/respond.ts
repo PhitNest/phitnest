@@ -56,22 +56,9 @@ export async function respond<
                 } else if (value === "false") {
                   return [key, false];
                 }
-                try {
-                  const parsedInt = parseInt(value);
-                  if (parsedInt) {
-                    return [key, parsedInt];
-                  } else {
-                    throw new Error();
-                  }
-                } catch {
-                  try {
-                    const parsedFloat = parseFloat(value);
-                    if (parsedFloat) {
-                      return [key, parsedFloat];
-                    } else {
-                      throw new Error();
-                    }
-                  } catch {}
+                const parsedNum = parseFloat(value);
+                if (!isNaN(parsedNum)) {
+                  return [key, parsedNum];
                 }
               }
               return [key, value];

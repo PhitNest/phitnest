@@ -1,7 +1,7 @@
 import { dgraphHost, useDgraph } from "./common/dgraph";
 import { APIError } from "dgraph-js-http";
 import fs from "fs";
-import fetch from "isomorphic-fetch";
+import fetch from "cross-fetch";
 
 beforeEach(async () => {
   const request = async () =>
