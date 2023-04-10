@@ -17,7 +17,7 @@
 #   To run the shell script, simply execute it in your terminal with the stack      #
 #   name as the first argument:                                                     #
 #                                                                                   #
-#   scripts/template_gen.sh stack_name                                              #
+#   build_tools/template_gen.sh stack_name                                          #
 #                                                                                   #
 #####################################################################################
 
