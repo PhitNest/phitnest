@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { Failure } from "./failures";
-import { APIGatewayProxyEventPathParameters } from "aws-lambda";
+import {
+  APIGatewayProxyEventPathParameters,
+  APIGatewayProxyEventQueryStringParameters,
+} from "aws-lambda";
 
 export function errorResponse(error: any): {
   statusCode: number;
@@ -26,6 +29,7 @@ export async function respond<
   InputSchema extends z.ZodSchema,
   BodyType extends
     | APIGatewayProxyEventPathParameters
+    | APIGatewayProxyEventQueryStringParameters
     | string
     | null
     | undefined

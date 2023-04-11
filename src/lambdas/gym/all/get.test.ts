@@ -1,63 +1,71 @@
 import { useDgraph } from "../../../common/dgraph";
-import { mockGet } from "../../../common/mock";
+import { mockGet } from "../../../testing/mock";
 import { Gym } from "../../../generated/dgraph-schema";
 import { invoke } from "./get";
 
 describe("validating GET /gym/all", () => {
   it("should fail for a negative or 0 limit", async () => {
-    let response = await invoke(mockGet({ limit: "-10" }));
+    let response = await invoke(mockGet({}, { limit: "-10" }));
     expect(response.statusCode).toBe(500);
     expect(JSON.parse(response.body)).toHaveProperty("name", "ZodError");
-    response = await invoke(mockGet({ limit: "0" }));
+    response = await invoke(mockGet({}, { limit: "0" }));
     expect(response.statusCode).toBe(500);
     expect(JSON.parse(response.body)).toHaveProperty("name", "ZodError");
   });
 
   it("should fail for a negative page", async () => {
-    const response = await invoke(mockGet({ page: "-10" }));
+    const response = await invoke(mockGet({}, { page: "-10" }));
     expect(response.statusCode).toBe(500);
     expect(JSON.parse(response.body)).toHaveProperty("name", "ZodError");
   });
 
   it("should pass for page zero", async () => {
-    const response = await invoke(mockGet({ page: "0" }));
+    const response = await invoke(mockGet({}, { page: "0" }));
     expect(response.statusCode).toBe(200);
     expect(response.body).toBe("[]");
   });
 });
 
+const NUM_TEST_GYMS = 50;
+
+const testGyms: Gym[] = Array(NUM_TEST_GYMS)
+  .fill(void 0, 0, NUM_TEST_GYMS)
+  .map((_, i) => {
+    return {
+      __typename: "Gym",
+      name: `Gym ${i}`,
+      city: `City ${i}`,
+      state: `State ${i}`,
+      zipCode: `Zip Code ${i}`,
+      street: `Street ${i}`,
+      location: {
+        __typename: "Point",
+        latitude: i,
+        longitude: i === 0 ? 0 : -i,
+      },
+    };
+  });
+
 describe("GET /gym/all", () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     await useDgraph(async (client) => {
       const txn = client.newTxn();
-      await txn.mutateGraphQL<Gym>({
-        obj: {
-          "Gym.name": "Gym 1",
-          "Gym.city": "City 1",
-          "Gym.state": "State 1",
-          "Gym.zipCode": "Zip Code 1",
-          "Gym.street": "Street 1",
-          "Gym.location": {
-            type: "Point",
-            coordinates: [20, -20],
+      for (const gym of testGyms) {
+        await txn.mutateGraphQL<Gym>({
+          obj: {
+            "Gym.name": gym.name,
+            "Gym.city": gym.city,
+            "Gym.state": gym.state,
+            "Gym.zipCode": gym.zipCode,
+            "Gym.street": gym.street,
+            "Gym.location": {
+              type: "Point",
+              coordinates: [gym.location.longitude, gym.location.latitude],
+            },
           },
-        },
-        commitNow: false,
-      });
-      await txn.mutateGraphQL<Gym>({
-        obj: {
-          "Gym.name": "Gym 2",
-          "Gym.city": "City 2",
-          "Gym.state": "State 2",
-          "Gym.zipCode": "Zip Code 2",
-          "Gym.street": "Street 2",
-          "Gym.location": {
-            type: "Point",
-            coordinates: [0, 0],
-          },
-        },
-        commitNow: false,
-      });
+          commitNow: false,
+        });
+      }
       await txn.commit();
     });
   });
@@ -66,28 +74,31 @@ describe("GET /gym/all", () => {
     const response = await invoke(mockGet());
     expect(response.statusCode).toBe(200);
     const body = JSON.parse(response.body);
-    expect(body).toHaveLength(2);
-    expect(body[0]).toHaveProperty("__typename", "Gym");
-    expect(body[1]).toHaveProperty("__typename", "Gym");
-    expect(body[0]).toHaveProperty("name", "Gym 1");
-    expect(body[1]).toHaveProperty("name", "Gym 2");
-    expect(body[0]).toHaveProperty("city", "City 1");
-    expect(body[1]).toHaveProperty("city", "City 2");
-    expect(body[0]).toHaveProperty("state", "State 1");
-    expect(body[1]).toHaveProperty("state", "State 2");
-    expect(body[0]).toHaveProperty("zipCode", "Zip Code 1");
-    expect(body[1]).toHaveProperty("zipCode", "Zip Code 2");
-    expect(body[0]).toHaveProperty("street", "Street 1");
-    expect(body[1]).toHaveProperty("street", "Street 2");
-    expect(body[0]).toHaveProperty("location", {
-      __typename: "Point",
-      longitude: 20,
-      latitude: -20,
-    });
-    expect(body[1]).toHaveProperty("location", {
-      __typename: "Point",
-      longitude: 0,
-      latitude: 0,
-    });
+    expect(body).toHaveLength(NUM_TEST_GYMS);
+    expect(body).toMatchObject<Gym[]>(testGyms);
+  });
+
+  it("should return the first half of the test gyms", async () => {
+    const half = Math.floor(NUM_TEST_GYMS / 2);
+    const response = await invoke(mockGet({}, { limit: half.toString() }));
+    expect(response.statusCode).toBe(200);
+    const body = JSON.parse(response.body);
+    expect(body).toHaveLength(half);
+    expect(body).toMatchObject<Gym[]>(testGyms.slice(0, half));
+  });
+
+  it("should return 10 gyms from the middle", async () => {
+    const limit = 10;
+    const skip = Math.floor((NUM_TEST_GYMS - limit) / 2);
+    const response = await invoke(
+      mockGet(
+        {},
+        { limit: limit.toString(), page: Math.floor(skip / limit).toString() }
+      )
+    );
+    expect(response.statusCode).toBe(200);
+    const body = JSON.parse(response.body);
+    expect(body).toHaveLength(limit);
+    expect(body).toMatchObject<Gym[]>(testGyms.slice(skip, skip + limit));
   });
 });
