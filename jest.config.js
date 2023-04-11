@@ -6,7 +6,7 @@ module.exports = {
   },
   testEnvironment: "node",
   verbose: true,
-  setupFilesAfterEnv: ["<rootDir>/src/setup-tests.ts"],
+  setupFilesAfterEnv: ["<rootDir>/src/testing/setup-tests.ts"],
   // Coverage options
   collectCoverageFrom: [
     "src/cmd/**/*.ts",

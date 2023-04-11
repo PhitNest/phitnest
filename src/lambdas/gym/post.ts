@@ -5,7 +5,7 @@ import { Failure } from "../../common/failures";
 import { useDgraph } from "../../common/dgraph";
 import { APIGatewayEvent } from "aws-lambda";
 import { z } from "zod";
-import { Gym } from "generated/dgraph-schema";
+import { Gym } from "../../generated/dgraph-schema";
 
 const validator = z.object({
   street: z.string(),

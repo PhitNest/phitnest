@@ -13,10 +13,10 @@ export function invoke(event: APIGatewayEvent): Promise<{
   body: string;
 }> {
   return respond({
-    body: event.queryStringParameters,
-    validator: validator,
+    body: event.body,
     controller: async (body) => {
       return body;
     },
+    validator: validator,
   });
 }

@@ -5,16 +5,16 @@ import { APIGatewayEvent } from "aws-lambda";
 import { z } from "zod";
 const gql = String.raw;
 
-const kMaxPageLength = 50;
+export const MAX_PAGE_LENGTH = 50;
 
 const validator = z.object({
   limit: z
     .number()
     .int()
     .positive()
-    .max(kMaxPageLength)
+    .max(MAX_PAGE_LENGTH)
     .optional()
-    .default(kMaxPageLength),
+    .default(MAX_PAGE_LENGTH),
   page: z.number().int().nonnegative().optional().default(0),
 });
 
@@ -23,10 +23,10 @@ export function invoke(event: APIGatewayEvent): Promise<{
   body: string;
 }> {
   return respond({
-    body: event.pathParameters,
+    body: event.queryStringParameters,
     validator: validator,
     controller: async (body) => {
-      return useDgraph(async (client) => {
+      return await useDgraph(async (client) => {
         const txn = client.newTxn();
         return (
           await txn.queryGraphQL(

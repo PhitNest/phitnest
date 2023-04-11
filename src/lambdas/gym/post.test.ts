@@ -1,4 +1,4 @@
-import { mockPost } from "../../common/mock";
+import { mockPost } from "../../testing/mock";
 import { kLocationNotFound } from "../../common/failures";
 import { invoke } from "./post";
 
