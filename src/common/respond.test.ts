@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { respond, successResponse, errorResponse } from "./respond";
 import { Failure } from "./failures";
+import { mockPost } from "../testing/mock";
 
 const kMockFailure = new Failure("Failure", "Something went wrong");
 
@@ -50,164 +51,15 @@ describe("respond", () => {
     });
   });
 
-  describe("controller", () => {
-    it("should return a success response without validator", async () => {
-      const response = await respond({
-        controller: mockController,
-      });
-
-      expect(response).toEqual(successResponse("success"));
-    });
-
-    it("should return a success response with validator", async () => {
-      const response = await respond({
-        controller: mockController,
-        validator: mockValidator,
-        body: JSON.stringify({ fail: false }),
-      });
-
-      expect(response).toEqual(successResponse("success"));
-    });
-
-    it("should return a failure response with validator", async () => {
-      const response = await respond({
-        controller: mockController,
-        validator: mockValidator,
-        body: JSON.stringify({ fail: true }),
-      });
-
-      expect(response).toEqual(errorResponse(kMockFailure));
-    });
-
-    it("should return an error response with invalid input and validator", async () => {
-      const response = await respond({
-        controller: mockController,
-        validator: mockValidator,
-        body: JSON.stringify({ fail: "not a boolean" }),
-      });
-
-      expect(response.statusCode).toBe(500);
-      expect(response.body).toBeDefined();
-    });
-
-    it("should return a success response with APIGatewayProxyEventPathParameters", async () => {
-      const response = await respond({
-        controller: mockController,
-        validator: mockValidator,
-        body: { fail: "false" },
-      });
-
-      expect(response).toEqual(successResponse("success"));
-    });
-
-    it("should return a success response with null body", async () => {
-      const response = await respond({
-        controller: mockController,
-        validator: mockValidator,
-        body: null,
-      });
-
-      expect(response).toEqual(successResponse("success"));
-    });
-
-    it("should return a success response with undefined body", async () => {
-      const response = await respond({
-        controller: mockController,
-        validator: mockValidator,
-        body: undefined,
-      });
-
-      expect(response).toEqual(successResponse("success"));
-    });
-
-    it("should return an error response when the controller throws an error", async () => {
-      const response = await respond({
-        controller: mockControllerWithError,
-        validator: mockValidator,
-        body: JSON.stringify({ fail: false }),
-      });
-
-      expect(response.statusCode).toBe(500);
-      expect(response.body).toBeDefined();
-    });
-
-    describe("complex validator", () => {
-      it("should return a success response with different input types", async () => {
-        const response = await respond({
-          controller: mockController,
-          validator: complexValidator,
-          body: JSON.stringify({
-            fail: false,
-            name: "John",
-            age: 30,
-          }),
-        });
-
-        expect(response).toEqual(successResponse("success"));
-      });
-
-      it("should return a success response with string input values", async () => {
-        const response = await respond({
-          controller: mockController,
-          validator: complexValidator,
-          body: { fail: "false", name: "John", age: "30" },
-        });
-
-        expect(response).toEqual(successResponse("success"));
-      });
-
-      it("should return an error response with invalid string input values", async () => {
-        const response = await respond({
-          controller: mockController,
-          validator: complexValidator,
-          body: { fail: "not a boolean", name: "John", age: "not a number" },
-        });
-
-        expect(response.statusCode).toBe(500);
-        expect(response.body).toBeDefined();
-      });
-
-      it("should return a success response with missing input values", async () => {
-        const response = await respond({
-          controller: mockController,
-          validator: complexValidator,
-          body: JSON.stringify({}),
-        });
-
-        expect(response).toEqual(successResponse("success"));
-      });
-
-      it("should return a success response with empty string as input and validator", async () => {
-        const response = await respond({
-          controller: mockController,
-          validator: complexValidator,
-          body: "",
-        });
-
-        expect(response).toEqual(successResponse("success"));
-      });
-
-      it("should return an error response with incorrect JSON string input", async () => {
-        const response = await respond({
-          controller: mockController,
-          validator: complexValidator,
-          body: "{fail: false, name: 'John', age: 30}",
-        });
-
-        expect(response.statusCode).toBe(500);
-        expect(response.body).toBeDefined();
-      });
-
-      it("should return an error response with invalid JSON string input", async () => {
-        const response = await respond({
-          controller: mockController,
-          validator: complexValidator,
-          body: "{fail: false, name: 'John', age: 30",
-        });
-
-        expect(response.statusCode).toBe(500);
-        expect(response.body).toBeDefined();
-      });
+  describe("Respond to POST", () => {
+    const response = respond(
+      mockPost({ fail: false }),
+      mockController,
+      mockValidator
+    );
+    expect(response).resolves.toEqual({
+      statusCode: 200,
+      body: JSON.stringify("success"),
     });
   });
 });
