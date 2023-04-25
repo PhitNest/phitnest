@@ -19,10 +19,9 @@ export function invoke(event: APIGatewayEvent): Promise<{
   statusCode: number;
   body: string;
 }> {
-  return respond({
-    body: event.body,
-    validator: validator,
-    controller: async (body) => {
+  return respond(
+    event,
+    async (body) => {
       const location = await getLocation(body);
       if (location instanceof Failure) {
         return location;
@@ -44,5 +43,6 @@ export function invoke(event: APIGatewayEvent): Promise<{
         });
       });
     },
-  });
+    validator
+  );
 }

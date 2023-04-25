@@ -22,10 +22,9 @@ export function invoke(event: APIGatewayEvent): Promise<{
   statusCode: number;
   body: string;
 }> {
-  return respond({
-    body: event.queryStringParameters,
-    validator: validator,
-    controller: async (body) => {
+  return respond(
+    event,
+    async (body) => {
       return await useDgraph(async (client) => {
         const txn = client.newTxn();
         return (
@@ -49,5 +48,6 @@ export function invoke(event: APIGatewayEvent): Promise<{
         )["allGyms"];
       });
     },
-  });
+    validator
+  );
 }

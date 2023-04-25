@@ -12,11 +12,11 @@ export function invoke(event: APIGatewayEvent): Promise<{
   statusCode: number;
   body: string;
 }> {
-  return respond({
-    body: event.body,
-    controller: async (body) => {
+  return respond(
+    event,
+    async (body) => {
       return body;
     },
-    validator: validator,
-  });
+    validator
+  );
 }
