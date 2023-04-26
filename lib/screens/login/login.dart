@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:phitnest_core/auth/auth.dart';
 
-import '../../common/widgets/styled_button.dart';
-import '../../common/widgets/styled_password_field.dart';
-import '../../common/widgets/styled_underline_text_field.dart';
+import '../../common/widgets/styled_widgets.dart';
+import '../../provider/global_provider.dart';
 import '../../theme.dart';
-
-final Provider<Auth> authProvider =
-    Provider<Auth>((ref) => Auth.fromServerStatus('sandbox'));
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
