@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:phitnest_web_admin/router.dart';
-import 'package:phitnest_web_admin/theme.dart';
+import 'package:routemaster/routemaster.dart';
+
+import 'router.dart';
+import 'theme.dart';
 
 void main() {
-  usePathUrlStrategy();
+  Routemaster.setPathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     const ProviderScope(
@@ -14,17 +15,20 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appRouter = ref.watch(appRouterProvider);
     return MaterialApp.router(
       title: 'PhitNest Admin',
       theme: theme,
       debugShowCheckedModeBanner: false,
-      routeInformationParser: appRouter.router.routeInformationParser,
-      routerDelegate: appRouter.router.routerDelegate,
+      routeInformationParser: const RoutemasterParser(),
+      routerDelegate: RoutemasterDelegate(
+        routesBuilder: (context) => appRouter.loggedOutRoute,
+      ),
     );
   }
 }

@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 import 'screens/login/login.dart';
 
-class AppRouter {
-  GoRouter _router() {
-    return GoRouter(
-      routes: [
-        GoRoute(
-          path: AppRouterName.login,
-          pageBuilder: (context, state) => const MaterialPage(
-            child: LoginScreen(),
-          ),
-        ),
-      ],
-    );
-  }
+/// This is the main router provider for the app.
+final Provider<AppRouter> appRouterProvider = Provider<AppRouter>(
+  (ref) => AppRouter(),
+);
 
-  GoRouter get router => _router();
+/// [AppRouter] holds the all the routes config
+class AppRouter {
+  RouteMap get loggedOutRoute => _loggedOutRoute;
+
+  final _loggedOutRoute = RouteMap(routes: {
+    AppRouterPath.login: (context) => const MaterialPage(child: LoginScreen()),
+  });
 }
 
-class AppRouterName {
+/// [AppRouterPath] holds the path of all the routes
+abstract class AppRouterPath {
   static const String login = '/';
 }
-
-AppRouter appRouter = AppRouter();

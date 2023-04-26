@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:phitnest_web_admin/common/widgets/styled_button.dart';
-import 'package:phitnest_web_admin/common/widgets/styled_password_field.dart';
-import 'package:phitnest_web_admin/common/widgets/styled_underline_text_field.dart';
-import 'package:phitnest_web_admin/theme.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginScreen extends StatelessWidget {
+import '../../common/widgets/styled_widgets.dart';
+import '../../provider/global_provider.dart';
+import '../../theme.dart';
+
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.of(context).size;
+    final auth = ref.watch(authProvider);
+
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -57,6 +62,7 @@ class LoginScreen extends StatelessWidget {
                       StyledUnderlinedTextField(
                         hint: 'Email',
                         textInputAction: TextInputAction.next,
+                        controller: emailController,
                         onFieldSubmitted: (_) =>
                             FocusScope.of(context).nextFocus(),
                       ),
@@ -64,13 +70,17 @@ class LoginScreen extends StatelessWidget {
                       StyledPasswordField(
                         hint: 'Password',
                         textInputAction: TextInputAction.done,
+                        controller: passwordController,
                         onFieldSubmitted: (_) =>
                             FocusScope.of(context).unfocus(),
                       ),
                       const SizedBox(height: 20),
                       StyledButton(
                         text: 'Submit',
-                        onPressed: () {},
+                        onPressed: () => auth.login(
+                          emailController.text.trim(),
+                          passwordController.text.trim(),
+                        ),
                       ),
                     ],
                   ),
