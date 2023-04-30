@@ -126,12 +126,30 @@ describe("GET /gym/all", () => {
 
   it("should return first 3 gyms using search query", async () => {
     const response = await invoke(
-      mockGet({}, { searchQuery: "State0 State1 State2" })
+      mockGet({}, { searchQuery: "State0 City1 ZipCode2" })
     );
     expect(response.statusCode).toBe(200);
     const body = JSON.parse(response.body);
     expect(body.gyms).toHaveLength(3);
     expect(body.gyms).toMatchObject<Gym[]>(testGyms.slice(0, 3));
     expect(body.count).toBe(3);
+  });
+
+  it("should return first Gym2 and Gym3 using search query", async () => {
+    const response = await invoke(
+      mockGet(
+        {},
+        {
+          searchQuery: "State0 City1 ZipCode2 State3 ZipCode3 City3 Gym4",
+          limit: "2",
+          page: "1",
+        }
+      )
+    );
+    expect(response.statusCode).toBe(200);
+    const body = JSON.parse(response.body);
+    expect(body.gyms).toHaveLength(2);
+    expect(body.gyms).toMatchObject<Gym[]>(testGyms.slice(2, 4));
+    expect(body.count).toBe(5);
   });
 });
