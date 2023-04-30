@@ -22,7 +22,6 @@ describe("validating GET /gym/all", () => {
 
   it("should pass for page zero", async () => {
     const response = await invoke(mockGet({}, { page: "0" }));
-    console.log(response.body);
     expect(response.statusCode).toBe(200);
     const parsedBody = JSON.parse(response.body);
     expect(parsedBody).toHaveProperty("gyms", []);
@@ -37,11 +36,11 @@ const testGyms: Gym[] = Array(NUM_TEST_GYMS)
   .map((_, i) => {
     return {
       __typename: "Gym",
-      name: `Gym ${i}`,
-      city: `City ${i}`,
-      state: `State ${i}`,
-      zipCode: `Zip Code ${i}`,
-      street: `Street ${i}`,
+      name: `Gym${i}`,
+      city: `City${i}`,
+      state: `State${i}`,
+      zipCode: `ZipCode${i}`,
+      street: `Street${i}`,
       location: {
         __typename: "Point",
         latitude: i,
@@ -55,7 +54,7 @@ describe("GET /gym/all", () => {
     await useDgraph(async (client) => {
       const txn = client.newTxn();
       for (const gym of testGyms) {
-        await txn.mutateGraphQL<Gym>({
+        await txn.mutate<Gym>({
           obj: {
             "Gym.name": gym.name,
             "Gym.city": gym.city,
@@ -123,5 +122,16 @@ describe("GET /gym/all", () => {
     expect(body.gyms).toHaveLength(limit);
     expect(body.gyms).toMatchObject<Gym[]>(testGyms.slice(skip));
     expect(body.count).toBe(NUM_TEST_GYMS);
+  });
+
+  it("should return first 3 gyms using search query", async () => {
+    const response = await invoke(
+      mockGet({}, { searchQuery: "State0 State1 State2" })
+    );
+    expect(response.statusCode).toBe(200);
+    const body = JSON.parse(response.body);
+    expect(body.gyms).toHaveLength(3);
+    expect(body.gyms).toMatchObject<Gym[]>(testGyms.slice(0, 3));
+    expect(body.count).toBe(3);
   });
 });

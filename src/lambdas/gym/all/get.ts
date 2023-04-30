@@ -8,7 +8,7 @@ const gql = String.raw;
 
 const validator = z
   .object({
-    searchQuery: z.string().optional().default(""),
+    searchQuery: z.string().optional(),
   })
   .merge(paginator);
 
@@ -20,13 +20,19 @@ export function invoke(event: APIGatewayEvent): Promise<{
     event,
     async (body) => {
       return await useDgraph(async (client) => {
-        const searchQuery = gql`has(Gym.name) AND anyofterms(${body.searchQuery})`;
+        const searchQuery = body.searchQuery
+          ? gql`@filter(anyofterms(Gym.name, "${body.searchQuery}") 
+                OR anyofterms(Gym.city, "${body.searchQuery}") 
+                OR anyofterms(Gym.state, "${body.searchQuery}")
+                OR anyofterms(Gym.zipCode, "${body.searchQuery}")
+                OR anyofterms(Gym.street, "${body.searchQuery}"))`
+          : "";
         const queryResult = await client.newTxn().query(
           gql`
             query {
-              allGyms(func: ${searchQuery}, first: ${body.limit}, offset: ${
+              allGyms(func: has(Gym.name), first: ${body.limit}, offset: ${
             body.page * body.limit
-          }){
+          }) ${searchQuery} {
                 uid
                 Gym.name
                 Gym.street
@@ -38,7 +44,7 @@ export function invoke(event: APIGatewayEvent): Promise<{
             }
 
             query {
-              countGyms(func: ${searchQuery}) {
+              countGyms(func: has(Gym.name)) ${searchQuery} {
                 count(uid)
               }
             }

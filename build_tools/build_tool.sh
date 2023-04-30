@@ -158,27 +158,27 @@ function setup_run() {
 }
 
 function help() {
-    echo "    phitnest-api install...............Installs the necessary dependencies and pulls the latest Docker image of the DGraph database."
+    echo "    install...............Installs the necessary dependencies and pulls the latest Docker image of the DGraph database."
     echo ""
-    echo "    phitnest-api run...................Runs the server locally using the AWS SAM CLI."
+    echo "    run...................Runs the server locally using the AWS SAM CLI."
     echo ""
-    echo "    phitnest-api debug.................Runs the server locally in debug mode using the AWS SAM CLI."
+    echo "    debug.................Runs the server locally in debug mode using the AWS SAM CLI."
     echo ""
-    echo "    phitnest-api test..................Runs tests against the server using a test database."
+    echo "    test..................Runs tests against the server using a test database."
     echo ""
-    echo "    phitnest-api deploy................Builds the server and deploys it to the production environment."
+    echo "    deploy................Builds the server and deploys it to the production environment."
     echo ""
-    echo "    phitnest-api dev-deploy............Builds the server and deploys it to the development environment."
+    echo "    dev-deploy............Builds the server and deploys it to the development environment."
     echo ""
-    echo "    phitnest-api dgraph................Starts a DGraph database instance on your local machine."
+    echo "    dgraph................Starts a DGraph database instance on your local machine."
     echo ""
-    echo "    phitnest-api stop-dgraph...........Stops the DGraph database instance that is running on your local machine."
+    echo "    stop-dgraph...........Stops the DGraph database instance that is running on your local machine."
     echo ""
-    echo "    phitnest-api dgraph-test...........Starts a test DGraph database instance on your local machine."
+    echo "    dgraph-test...........Starts a test DGraph database instance on your local machine."
     echo ""
-    echo "    phitnest-api stop-dgraph-test......Stops the test DGraph database instance that is running on your local machine."
+    echo "    stop-dgraph-test......Stops the test DGraph database instance that is running on your local machine."
     echo ""
-    echo "    phitnest-api clean.................Cleans the project by removing generated files."
+    echo "    clean.................Cleans the project by removing generated files."
 }
 
 case $1 in

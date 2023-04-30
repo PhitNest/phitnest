@@ -18,11 +18,6 @@ const mockValidator = z.object({
   fail: z.boolean().optional(),
 });
 
-// Mock a controller that throws an error
-const mockControllerWithError = async () => {
-  throw new Error("Unexpected error");
-};
-
 // Mock a more complex validator
 const complexValidator = z.object({
   fail: z.boolean().optional(),
@@ -36,7 +31,7 @@ describe("respond", () => {
       const response = successResponse("success");
       expect(response).toEqual({
         statusCode: 200,
-        body: JSON.stringify("success"),
+        body: '"success"',
       });
     });
   });
@@ -52,14 +47,24 @@ describe("respond", () => {
   });
 
   describe("Respond to POST", () => {
-    const response = respond(
+    let response = respond(
       mockPost({ fail: false }),
       mockController,
       mockValidator
     );
     expect(response).resolves.toEqual({
       statusCode: 200,
-      body: JSON.stringify("success"),
+      body: '"success"',
+    });
+    response = respond(mockPost({}), mockController, mockValidator);
+    expect(response).resolves.toEqual({
+      statusCode: 200,
+      body: '"success"',
+    });
+    response = respond(mockPost({ fail: true }), mockController, mockValidator);
+    expect(response).resolves.toEqual({
+      statusCode: 500,
+      body: JSON.stringify(kMockFailure),
     });
   });
 });

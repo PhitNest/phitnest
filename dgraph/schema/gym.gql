@@ -1,5 +1,5 @@
 type Gym {
-    name: String! @id
+    name: String! @search
     street: String! @search
     city: String! @search
     state: String! @search
