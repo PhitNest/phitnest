@@ -27,7 +27,7 @@ export function invoke(event: APIGatewayEvent): Promise<{
         return location;
       }
       return await useDgraph((client) => {
-        return client.newTxn().mutateGraphQL<Gym>({
+        return client.newTxn().mutate<Gym>({
           obj: {
             "Gym.name": body.name,
             "Gym.street": body.street,

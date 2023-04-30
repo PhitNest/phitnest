@@ -1,8 +1,8 @@
 type Gym {
     name: String! @id
-    street: String!
-    city: String!
-    state: String!
-    zipCode: String!
+    street: String! @search
+    city: String! @search
+    state: String! @search
+    zipCode: String! @search
     location: Point!
 }
