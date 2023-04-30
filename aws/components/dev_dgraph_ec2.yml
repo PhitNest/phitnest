@@ -15,15 +15,3 @@ DGraphEC2:
     Tags:
       - Key: Name
         Value: !Sub "DGraph-${Stage}"
-
-DGraphSecurityGroup:
-  Type: AWS::EC2::SecurityGroup
-  Properties:
-    GroupName: !Sub "DGraphSecurityGroup-${Stage}"
-    GroupDescription: DGraph Security Group
-    VpcId: !Ref DGraphVPC
-    SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: 8080
-        ToPort: 8080
-        SourceSecurityGroupId: !GetAtt LambdaSecurityGroup.GroupId

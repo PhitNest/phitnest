@@ -98,7 +98,7 @@ function stop_dgraph_test() {
 }
 
 function clean() {
-    npm run clean
+    rm -rf .aws-sam schema.gql template.yml node_modules src/generated test package-lock.json
 }
 
 function commit_schema_local() {
