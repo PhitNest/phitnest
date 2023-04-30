@@ -3,12 +3,13 @@ import { respond, successResponse, errorResponse } from "./respond";
 import { Failure } from "./failures";
 import { mockPost } from "../testing/mock";
 
-const kMockFailure = new Failure("Failure", "Something went wrong");
+const FAILURE_RESPONSE = new Failure("Failure", "Something went wrong");
+const SUCCESS_RESPONSE = '"success"';
 
 // Mock a simple controller
 const mockController = async (input: any) => {
   if (input && input.fail) {
-    return kMockFailure;
+    return FAILURE_RESPONSE;
   }
   return "success";
 };
@@ -31,17 +32,17 @@ describe("respond", () => {
       const response = successResponse("success");
       expect(response).toEqual({
         statusCode: 200,
-        body: '"success"',
+        body: SUCCESS_RESPONSE,
       });
     });
   });
 
   describe("errorResponse", () => {
     it("should return an error response", () => {
-      const response = errorResponse(kMockFailure);
+      const response = errorResponse(FAILURE_RESPONSE);
       expect(response).toEqual({
         statusCode: 500,
-        body: JSON.stringify(kMockFailure),
+        body: JSON.stringify(FAILURE_RESPONSE),
       });
     });
   });
@@ -54,17 +55,39 @@ describe("respond", () => {
     );
     expect(response).resolves.toEqual({
       statusCode: 200,
-      body: '"success"',
+      body: SUCCESS_RESPONSE,
     });
     response = respond(mockPost({}), mockController, mockValidator);
     expect(response).resolves.toEqual({
       statusCode: 200,
-      body: '"success"',
+      body: SUCCESS_RESPONSE,
     });
     response = respond(mockPost({ fail: true }), mockController, mockValidator);
     expect(response).resolves.toEqual({
       statusCode: 500,
-      body: JSON.stringify(kMockFailure),
+      body: JSON.stringify(FAILURE_RESPONSE),
+    });
+  });
+
+  describe("Respond to GET", () => {
+    let response = respond(
+      mockPost({ fail: false }),
+      mockController,
+      mockValidator
+    );
+    expect(response).resolves.toEqual({
+      statusCode: 200,
+      body: SUCCESS_RESPONSE,
+    });
+    response = respond(mockPost({}), mockController, mockValidator);
+    expect(response).resolves.toEqual({
+      statusCode: 200,
+      body: SUCCESS_RESPONSE,
+    });
+    response = respond(mockPost({ fail: true }), mockController, mockValidator);
+    expect(response).resolves.toEqual({
+      statusCode: 500,
+      body: JSON.stringify(FAILURE_RESPONSE),
     });
   });
 });

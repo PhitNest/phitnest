@@ -1,4 +1,66 @@
-import { useDgraph } from "./dgraph";
+import {
+  allOfTerms,
+  allOfText,
+  anyOfTerms,
+  anyOfText,
+  useDgraph,
+} from "./dgraph";
+
+describe("anyOfTerms", () => {
+  it("should return a proper dql filter", () => {
+    expect(anyOfTerms(["name", "description"], "test")).toBe(
+      '@filter(anyofterms(name, "test") OR anyofterms(description, "test"))'
+    );
+
+    expect(anyOfTerms(["name"], "test")).toBe(
+      '@filter(anyofterms(name, "test"))'
+    );
+
+    expect(anyOfTerms([], "test")).toBe("");
+  });
+});
+
+describe("allOfTerms", () => {
+  it("should return a proper dql filter", () => {
+    expect(allOfTerms(["name", "description"], "test")).toBe(
+      '@filter(allofterms(name, "test") AND allofterms(description, "test"))'
+    );
+
+    expect(allOfTerms(["name"], "test")).toBe(
+      '@filter(allofterms(name, "test"))'
+    );
+
+    expect(allOfTerms([], "test")).toBe("");
+  });
+});
+
+describe("anyOfText", () => {
+  it("should return a proper dql filter", () => {
+    expect(anyOfText(["name", "description"], "test")).toBe(
+      '@filter(anyoftext(name, "test") OR anyoftext(description, "test"))'
+    );
+
+    expect(anyOfText(["name"], "test")).toBe(
+      '@filter(anyoftext(name, "test"))'
+    );
+
+    expect(anyOfText([], "test")).toBe("");
+  });
+});
+
+describe("allOfText", () => {
+  it("should return a proper dql filter", () => {
+    expect(allOfText(["name", "description"], "test")).toBe(
+      '@filter(alloftext(name, "test") AND alloftext(description, "test"))'
+    );
+
+    expect(allOfText(["name"], "test")).toBe(
+      '@filter(alloftext(name, "test"))'
+    );
+
+    expect(allOfText([], "test")).toBe("");
+  });
+});
 
 describe("useDgraph", () => {
   it("should connect to localhost for test cases", async () => {

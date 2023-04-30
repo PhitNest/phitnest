@@ -1,6 +1,6 @@
 // @CognitoAuth Admin
 import { respond } from "../../../common/respond";
-import { useDgraph } from "../../../common/dgraph";
+import { anyOfText, useDgraph } from "../../../common/dgraph";
 import { APIGatewayEvent } from "aws-lambda";
 import { paginator } from "../../../common/zod-schema";
 import { z } from "zod";
@@ -21,11 +21,16 @@ export function invoke(event: APIGatewayEvent): Promise<{
     async (body) => {
       return await useDgraph(async (client) => {
         const searchQuery = body.searchQuery
-          ? gql`@filter(anyofterms(Gym.name, "${body.searchQuery}") 
-                OR anyofterms(Gym.city, "${body.searchQuery}") 
-                OR anyofterms(Gym.state, "${body.searchQuery}")
-                OR anyofterms(Gym.zipCode, "${body.searchQuery}")
-                OR anyofterms(Gym.street, "${body.searchQuery}"))`
+          ? anyOfText(
+              [
+                "Gym.name",
+                "Gym.city",
+                "Gym.state",
+                "Gym.zipCode",
+                "Gym.street",
+              ],
+              body.searchQuery
+            )
           : "";
         const queryResult = await client.newTxn().query(
           gql`
