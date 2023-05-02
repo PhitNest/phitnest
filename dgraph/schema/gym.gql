@@ -1,8 +1,0 @@
-type Gym {
-    name: String! @search(by: [fulltext])
-    street: String! @search(by: [fulltext])
-    city: String! @search(by: [fulltext])
-    state: String! @search(by: [fulltext])
-    zipCode: String! @search(by: [fulltext])
-    location: Point! @search
-}
