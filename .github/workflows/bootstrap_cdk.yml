@@ -1,17 +1,11 @@
-name: CD
+name: CI
 
 on:
-  release:
-    types: [published]
-    tags:
-      - "v*"
+  workflow_dispatch:
+  workflow_call:
 
 jobs:
-  ci:
-    uses: ./.github/workflows/ci.yml
-
-  deploy:
-    needs: ci
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -26,6 +20,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
           aws-region: us-east-1
-
-      - name: Deploy
-        run: cdk deploy
+          
+      - name: Bootstrap cdk
+        run: cdk bootstrap
