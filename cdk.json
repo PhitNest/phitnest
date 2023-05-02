@@ -1,5 +1,5 @@
 {
-  "app": "npx ts-node --prefer-ts-exts bin/phitnest-aws.ts",
+  "app": "npx ts-node --prefer-ts-exts src/index.ts",
   "watch": {
     "include": [
       "**"
@@ -7,13 +7,13 @@
     "exclude": [
       "README.md",
       "cdk*.json",
+      "**/*.test.ts",
       "**/*.d.ts",
       "**/*.js",
       "tsconfig.json",
       "package*.json",
       "yarn.lock",
-      "node_modules",
-      "test"
+      "node_modules"
     ]
   },
   "context": {

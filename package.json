@@ -2,7 +2,7 @@
   "name": "phitnest-aws",
   "version": "0.1.0",
   "bin": {
-    "phitnest-aws": "bin/phitnest-aws.js"
+    "phitnest-aws": "src/index.ts"
   },
   "scripts": {
     "build": "tsc",
