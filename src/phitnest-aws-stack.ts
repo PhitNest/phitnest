@@ -1,4 +1,5 @@
 import { Stack, StackProps } from "aws-cdk-lib";
+import * as apigateway from "aws-cdk-lib/aws-apigatewayv2";
 import { Construct } from "constructs";
 
 export class PhitnestAwsStack extends Stack {
