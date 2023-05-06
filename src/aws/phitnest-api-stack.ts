@@ -1,10 +1,9 @@
 import { HttpApi, HttpMethod } from "@aws-cdk/aws-apigatewayv2";
-import { Construct } from "@aws-cdk/core";
-import { CfnStack, CfnStackProps } from "@aws-cdk/aws-cloudformation";
+import { Construct, Stack, StackProps } from "@aws-cdk/core";
 import { Code, Function as LambdaFunction, Runtime } from "@aws-cdk/aws-lambda";
+import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations";
 import { getFilesRecursive, getProjectRoot } from "../common/helpers";
 import * as path from "path";
-import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations";
 
 const API_ROUTES_DIRECTORY_PATH = "src/api/routes";
 
@@ -48,10 +47,10 @@ export function getRoutesFromFilesystem(routeDir: string): Route[] {
   return routes;
 }
 
-export class PhitnestApiStack extends CfnStack {
+export class PhitnestApiStack extends Stack {
   constructor(
     scope: Construct,
-    props: CfnStackProps,
+    props?: StackProps,
     apiRoutesDir: string = API_ROUTES_DIRECTORY_PATH
   ) {
     super(scope, "PhitnestApiStack", props);

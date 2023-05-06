@@ -1,4 +1,4 @@
-import { App } from "aws-cdk-lib";
+import { App } from "@aws-cdk/core";
 import { PhitnestApiStack } from "./aws/phitnest-api-stack";
 
 const app = new App();
