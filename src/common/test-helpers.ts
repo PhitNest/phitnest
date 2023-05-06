@@ -8,7 +8,7 @@ export function getTestDataDirectoryPath(): string {
   const testPathString = expect.getState().testPath;
   expect(testPathString);
   const testOutputPath = path.join(process.cwd(), TEST_OUTPUT_DIRECTORY_PATH);
-  let testPath = path.relative(
+  const testPath = path.relative(
     path.join(process.cwd(), "src"),
     testPathString!
   );
