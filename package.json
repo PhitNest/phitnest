@@ -1,8 +1,8 @@
 {
-  "name": "phitnest-aws",
-  "version": "0.1.0",
+  "name": "phitnest-api",
+  "version": "2.0.0",
   "bin": {
-    "phitnest-aws": "src/index.ts"
+    "phitnest-api": "src/index.ts"
   },
   "scripts": {
     "build": "tsc",
@@ -10,14 +10,15 @@
     "test": "jest",
     "cdk": "cdk",
     "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix"
+    "lint:fix": "eslint . --ext .ts --fix",
+    "clean": "rm -rf test-output && rm -rf cdk.out && rm -rf node_modules && rm -rf package-lock.json"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",
-    "@types/node": "18.14.6",
+    "@types/node": "^18.14.6",
     "@typescript-eslint/eslint-plugin": "^5.59.2",
     "@typescript-eslint/parser": "^5.59.2",
-    "aws-cdk": "2.77.0",
+    "aws-cdk": "^2.77.0",
     "eslint": "^8.39.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -25,9 +26,12 @@
     "prettier": "^2.8.8",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
-    "typescript": "~4.9.5"
+    "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@aws-cdk/aws-apigatewayv2": "^1.200.0",
+    "@aws-cdk/aws-apigatewayv2-integrations": "^1.200.0",
+    "@aws-cdk/aws-lambda": "^1.200.0",
     "aws-cdk-lib": "2.77.0",
     "constructs": "^10.0.0"
   }
