@@ -1,0 +1,17 @@
+name: CD Production
+
+on:
+  release:
+    types: [published]
+    tags:
+      - "v*"
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  cd:
+    needs: ci
+    uses: ./.github/workflows/cd.yml
+    with:
+      deployment_env: prod

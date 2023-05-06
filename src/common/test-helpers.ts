@@ -1,7 +1,8 @@
 import * as path from "path";
 import * as process from "process";
 
-const TEST_OUTPUT_DIRECTORY_PATH = "test_data";
+export const TEST_OUTPUT_DIRECTORY_PATH = "test_data";
+export const SHARED_TEST_DATA_DIRECTORY_PATH = "shared_test_data";
 
 export function getTestDataDirectoryPath(): string {
   const testPathString = expect.getState().testPath;
@@ -16,4 +17,12 @@ export function getTestDataDirectoryPath(): string {
 
 export function getTestFilePath(file: string) {
   return path.join(getTestDataDirectoryPath(), file);
+}
+
+export function getSharedTestDataDirectoryPath(): string {
+  return path.join(
+    process.cwd(),
+    TEST_OUTPUT_DIRECTORY_PATH,
+    SHARED_TEST_DATA_DIRECTORY_PATH
+  );
 }
