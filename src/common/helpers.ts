@@ -14,3 +14,7 @@ export function getFilesRecursive(dirName: string): string[] {
   }
   return files;
 }
+
+export function getProjectRoot(): string {
+  return process.cwd();
+}

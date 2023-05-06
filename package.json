@@ -31,8 +31,8 @@
   "dependencies": {
     "@aws-cdk/aws-apigatewayv2": "^1.200.0",
     "@aws-cdk/aws-apigatewayv2-integrations": "^1.200.0",
+    "@aws-cdk/aws-cloudformation": "^1.200.0",
     "@aws-cdk/aws-lambda": "^1.200.0",
-    "aws-cdk-lib": "2.77.0",
-    "constructs": "^10.0.0"
+    "@aws-cdk/core": "^1.200.0"
   }
 }
