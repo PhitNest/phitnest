@@ -1,6 +1,5 @@
-#!/usr/bin/env node
-import * as cdk from "aws-cdk-lib";
-import { PhitnestAwsStack } from "../lib/phitnest-aws-stack";
+import { App } from "aws-cdk-lib";
+import { PhitnestApiStack } from "./aws/phitnest-api-stack";
 
-const app = new cdk.App();
-new PhitnestAwsStack(app, "PhitnestAwsStack");
+const app = new App();
+new PhitnestApiStack(app);
