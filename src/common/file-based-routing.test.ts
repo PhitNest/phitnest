@@ -63,27 +63,27 @@ describe("getRoutesFromFilesystem", () => {
     const result = getRoutesFromFilesystem(apiRoutesDir);
     expect(result).toHaveLength(5);
     expect(result).toContainEqual({
-      path: "route1",
+      path: "/route1",
       method: HttpMethod.GET,
       filesystemPath: path.parse(route1GetPath).dir,
     });
     expect(result).toContainEqual({
-      path: "route2/subRoute",
+      path: "/route2/subRoute",
       method: HttpMethod.GET,
       filesystemPath: path.parse(route2GetPath).dir,
     });
     expect(result).toContainEqual({
-      path: "route1",
+      path: "/route1",
       method: HttpMethod.POST,
       filesystemPath: path.parse(route1PostPath).dir,
     });
     expect(result).toContainEqual({
-      path: "route2/subRoute",
+      path: "/route2/subRoute",
       method: HttpMethod.POST,
       filesystemPath: path.parse(route2PostPath).dir,
     });
     expect(result).toContainEqual({
-      path: "",
+      path: "/",
       method: HttpMethod.POST,
       filesystemPath: apiRoutesDir,
     });
