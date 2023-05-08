@@ -1,7 +1,12 @@
 import { HttpMethod } from "@aws-cdk/aws-apigatewayv2";
 import { getFilesRecursive } from "./helpers";
+import { transpileModule, TranspileOptions } from "typescript";
 import * as path from "path";
 import * as fs from "fs";
+
+export const tsconfig: TranspileOptions = JSON.parse(
+  fs.readFileSync(path.join(process.cwd(), "tsconfig.json")).toString()
+);
 
 export type Route = {
   path: string;
@@ -57,8 +62,12 @@ export function createDeploymentPackage(outputDir: string, route: Route) {
     route.method.toLowerCase()
   );
   fs.mkdirSync(packageDir, { recursive: true });
-  fs.copyFileSync(
-    path.join(route.filesystemAbsolutePath, `${route.method.toLowerCase()}.ts`),
-    path.join(packageDir, "index.ts")
+  const outputPath = path.join(packageDir, "index.js");
+  const source = fs.readFileSync(
+    path.join(route.filesystemAbsolutePath, `${route.method.toLowerCase()}.ts`)
+  );
+  fs.writeFileSync(
+    outputPath,
+    transpileModule(source.toString(), tsconfig).outputText
   );
 }
