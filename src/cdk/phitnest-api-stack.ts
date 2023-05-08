@@ -121,7 +121,8 @@ export class PhitnestApiStack extends Stack {
             process.cwd(),
             "build",
             "lambda_deployment",
-            route.filesystemRelativePath
+            route.filesystemRelativePath,
+            route.method.toLowerCase()
           )
         ),
       }
