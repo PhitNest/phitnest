@@ -19,7 +19,7 @@ jobs:
         run: npm i
 
       - name: Install API dependencies
-        run: cd api/src && npm i
+        run: cd src/api && npm i
 
       - name: Run audit
         run: npm audit
