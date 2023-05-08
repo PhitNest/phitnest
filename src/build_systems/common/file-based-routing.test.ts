@@ -1,40 +1,8 @@
 import { HttpMethod } from "@aws-cdk/aws-apigatewayv2";
-import {
-  createDeploymentPackage,
-  getRoutesFromFilesystem,
-  tsconfig,
-} from "./file-based-routing";
-import { getSharedTestDataPath, getTestOutputPath } from "./test-helpers";
+import { getRoutesFromFilesystem } from "./file-based-routing";
+import { getSharedTestDataPath } from "../../test-helpers";
 import * as path from "path";
 import * as fs from "fs";
-import { transpileModule } from "typescript";
-
-describe("createDeploymentPackage", () => {
-  const apiRouteAbsolutePath = getSharedTestDataPath("api_routes", "route1");
-  const apiRouteRelativePath = path.relative(
-    getSharedTestDataPath("api_routes"),
-    apiRouteAbsolutePath
-  );
-  createDeploymentPackage(getTestOutputPath("deployment_packages"), {
-    filesystemAbsolutePath: apiRouteAbsolutePath,
-    filesystemRelativePath: apiRouteRelativePath,
-    path: "/route1",
-    method: HttpMethod.POST,
-  });
-  const outputPath = getTestOutputPath(
-    "deployment_packages",
-    "route1",
-    "post",
-    "index.js"
-  );
-  expect(fs.existsSync(outputPath));
-  const fileData = fs.readFileSync(outputPath).toString();
-  const expectedFileData = transpileModule(
-    fs.readFileSync(path.join(apiRouteAbsolutePath, "post.ts")).toString(),
-    tsconfig
-  ).outputText;
-  expect(fileData).toEqual(expectedFileData);
-});
 
 describe("getRoutesFromFilesystem", () => {
   it("should return all routes in a directory", () => {

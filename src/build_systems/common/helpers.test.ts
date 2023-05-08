@@ -1,4 +1,4 @@
-import { getSharedTestDataPath } from "./test-helpers";
+import { getSharedTestDataPath } from "../../test-helpers";
 import { getFilesRecursive } from "./helpers";
 import * as path from "path";
 import * as fs from "fs";
@@ -21,7 +21,10 @@ describe("getFilesRecursive", () => {
     expect(fs.existsSync(route2Get));
     expect(fs.existsSync(route2Post));
     const result = getFilesRecursive(apiRoutesDir);
-    expect(result).toHaveLength(6);
+    expect(result).toHaveLength(36);
+    expect(result.filter((file) => file.includes("node_modules"))).toHaveLength(
+      30
+    );
     expect(result).toContainEqual(rootPost);
     expect(result).toContainEqual(route1Get);
     expect(result).toContainEqual(route1Post);

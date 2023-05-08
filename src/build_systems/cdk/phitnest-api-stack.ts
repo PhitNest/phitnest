@@ -14,12 +14,9 @@ import {
   UserPoolClient,
   UserPoolEmail,
 } from "@aws-cdk/aws-cognito";
-import {
-  Route,
-  createDeploymentPackage,
-  getRoutesFromFilesystem,
-} from "../common/file-based-routing";
+import { Route, getRoutesFromFilesystem } from "../common/file-based-routing";
 import * as path from "path";
+import { createDeploymentPackage } from "./lambda-deployment";
 
 const API_ROUTES_DIRECTORY_PATH = "src/api";
 const DEPLOYMENT_ENV = process.env.DEPLOYMENT_ENV || "dev";
@@ -136,11 +133,12 @@ export class PhitnestApiStack extends Stack {
       "build",
       "lambda_deployment"
     );
+    const apiNodeModulesDir = path.join(apiRoutesDir, "node_modules");
     for (const route of getRoutesFromFilesystem(
       path.join(process.cwd(), apiRoutesDir, "private")
     )) {
       privateRoutes.push([route.path, route.method]);
-      createDeploymentPackage(deploymentOutput, route);
+      createDeploymentPackage(deploymentOutput, route, apiNodeModulesDir);
       const lambdaFunction = this.createLambdaFunction(route);
       this.httpApi.addRoutes(
         this.createHttpApiRoute(route, lambdaFunction, true)
@@ -156,7 +154,7 @@ export class PhitnestApiStack extends Stack {
           `Route is defined in both public and private: ${route.method} ${route.path}`
         );
       }
-      createDeploymentPackage(deploymentOutput, route);
+      createDeploymentPackage(deploymentOutput, route, apiNodeModulesDir);
       const lambdaFunction = this.createLambdaFunction(route);
       this.httpApi.addRoutes(
         this.createHttpApiRoute(route, lambdaFunction, false)

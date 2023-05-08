@@ -1,8 +1,8 @@
 {
   "name": "phitnest-api",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "bin": {
-    "phitnest-api": "src/cdk/index.ts"
+    "phitnest-api": "src/build_systems/cdk/index.ts"
   },
   "scripts": {
     "test": "jest",
@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.115",
+    "@types/fs-extra": "^11.0.1",
     "@types/jest": "^29.4.0",
     "@types/node": "^18.14.6",
     "@typescript-eslint/eslint-plugin": "^5.59.2",
@@ -33,6 +34,7 @@
     "@aws-cdk/aws-cognito": "^1.200.0",
     "@aws-cdk/aws-lambda": "^1.200.0",
     "@aws-cdk/core": "^1.200.0",
+    "fs-extra": "^11.1.1",
     "typescript": "^5.0.0"
   }
 }
