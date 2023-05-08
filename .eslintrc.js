@@ -14,6 +14,7 @@ module.exports = {
     node: true,
     jest: true,
   },
+  ignorePatterns: ["test_data/**/*", "test_output/**/*", "node_modules/**/*"],
   rules: {
     // note you must disable the base rule as it can report incorrect errors
     "no-unused-vars": "off",
