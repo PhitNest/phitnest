@@ -30,4 +30,4 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy
-        run: DEPLOYMENT_ENV=${{ inputs.deployment_env }} cdk deploy
+        run: DEPLOYMENT_ENV=${{ inputs.deployment_env }} cdk deploy --require-approval never
