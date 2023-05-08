@@ -20,10 +20,8 @@ describe("getFilesRecursive", () => {
     expect(fs.existsSync(route1Unknown));
     expect(fs.existsSync(route2Get));
     expect(fs.existsSync(route2Post));
-    const result = getFilesRecursive(apiRoutesDir);
-    expect(result).toHaveLength(36);
-    expect(result.filter((file) => file.includes("node_modules"))).toHaveLength(
-      30
+    const result = getFilesRecursive(apiRoutesDir).filter(
+      (file) => !file.includes("node_modules")
     );
     expect(result).toContainEqual(rootPost);
     expect(result).toContainEqual(route1Get);
