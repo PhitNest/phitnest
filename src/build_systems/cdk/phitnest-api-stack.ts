@@ -133,7 +133,11 @@ export class PhitnestApiStack extends Stack {
       "build",
       "lambda_deployment"
     );
-    const apiNodeModulesDir = path.join(apiRoutesDir, "node_modules");
+    const apiNodeModulesDir = path.join(
+      process.cwd(),
+      apiRoutesDir,
+      "node_modules"
+    );
     for (const route of getRoutesFromFilesystem(
       path.join(process.cwd(), apiRoutesDir, "private")
     )) {
