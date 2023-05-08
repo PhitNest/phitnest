@@ -17,7 +17,7 @@ import {
 import { Route, getRoutesFromFilesystem } from "../common/file-based-routing";
 import * as path from "path";
 
-const API_ROUTES_DIRECTORY_PATH = "src/api/routes";
+const API_ROUTES_DIRECTORY_PATH = "src/api";
 const DEPLOYMENT_ENV = process.env.DEPLOYMENT_ENV || "dev";
 const DEPLOYMENT_REGION = "us-east-1";
 
