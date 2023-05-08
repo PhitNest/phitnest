@@ -42,8 +42,15 @@ export function getRoutesFromFilesystem(routeDir: string): Route[] {
         return [];
     }
     const relativePath = path.relative(routeDir, path.parse(file).dir);
+    let apiRoutePath = relativePath.replace(path.sep, "/");
+    while (apiRoutePath.endsWith("/")) {
+      apiRoutePath = apiRoutePath.substring(0, apiRoutePath.length - 1);
+    }
+    if (!apiRoutePath.startsWith("/")) {
+      apiRoutePath = `/${apiRoutePath}`;
+    }
     return {
-      path: relativePath.replace(path.sep, "/"),
+      path: apiRoutePath,
       filesystemPath: path.join(routeDir, relativePath),
       method,
     };
