@@ -1,22 +1,13 @@
 import { HttpMethod } from "@aws-cdk/aws-apigatewayv2";
+import { getFilesRecursive } from "./helpers";
 import * as path from "path";
 import * as fs from "fs";
-
-export function getFilesRecursive(dirName: string): string[] {
-  return fs.readdirSync(dirName, { withFileTypes: true }).flatMap((item) => {
-    const filePath = path.join(dirName, item.name);
-    if (item.isDirectory()) {
-      return getFilesRecursive(filePath);
-    } else {
-      return filePath;
-    }
-  });
-}
 
 export type Route = {
   path: string;
   method: HttpMethod;
-  filesystemPath: string;
+  filesystemRelativePath: string;
+  filesystemAbsolutePath: string;
 };
 
 export function getRoutesFromFilesystem(routeDir: string): Route[] {
@@ -42,6 +33,7 @@ export function getRoutesFromFilesystem(routeDir: string): Route[] {
         return [];
     }
     const relativePath = path.relative(routeDir, path.parse(file).dir);
+    const absolutePath = path.join(routeDir, relativePath);
     let apiRoutePath = relativePath.replace(path.sep, "/");
     while (apiRoutePath.endsWith("/")) {
       apiRoutePath = apiRoutePath.substring(0, apiRoutePath.length - 1);
@@ -51,8 +43,22 @@ export function getRoutesFromFilesystem(routeDir: string): Route[] {
     }
     return {
       path: apiRoutePath,
-      filesystemPath: path.join(routeDir, relativePath),
+      filesystemRelativePath: relativePath,
+      filesystemAbsolutePath: absolutePath,
       method,
     };
   });
+}
+
+export function createDeploymentPackage(outputDir: string, route: Route) {
+  const packageDir = path.join(
+    outputDir,
+    route.filesystemRelativePath,
+    route.method.toLowerCase()
+  );
+  fs.mkdirSync(packageDir, { recursive: true });
+  fs.copyFileSync(
+    path.join(route.filesystemAbsolutePath, `${route.method.toLowerCase()}.ts`),
+    path.join(packageDir, "index.ts")
+  );
 }

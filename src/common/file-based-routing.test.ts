@@ -1,43 +1,34 @@
 import { HttpMethod } from "@aws-cdk/aws-apigatewayv2";
 import {
-  getFilesRecursive,
+  createDeploymentPackage,
   getRoutesFromFilesystem,
 } from "./file-based-routing";
+import { getSharedTestDataPath, getTestOutputPath } from "./test-helpers";
 import * as path from "path";
 import * as fs from "fs";
-import { getSharedTestFilePath } from "./test-helpers";
 
-describe("getFilesRecursive", () => {
-  it("should return all files in a directory recursively", () => {
-    const apiRoutesDir = getSharedTestFilePath("api_routes");
-    const rootPost = path.join(apiRoutesDir, "post.ts");
-    const route1 = path.join(apiRoutesDir, "route1");
-    const route1Get = path.join(route1, "get.js");
-    const route1Post = path.join(route1, "post.ts");
-    const route1Unknown = path.join(route1, "unknown.ts");
-    const route2 = path.join(apiRoutesDir, "route2", "subRoute");
-    const route2Get = path.join(route2, "get.ts");
-    const route2Post = path.join(route2, "post.js");
-    expect(fs.existsSync(rootPost));
-    expect(fs.existsSync(route1Get));
-    expect(fs.existsSync(route1Post));
-    expect(fs.existsSync(route1Unknown));
-    expect(fs.existsSync(route2Get));
-    expect(fs.existsSync(route2Post));
-    const result = getFilesRecursive(apiRoutesDir);
-    expect(result).toHaveLength(6);
-    expect(result).toContainEqual(rootPost);
-    expect(result).toContainEqual(route1Get);
-    expect(result).toContainEqual(route1Post);
-    expect(result).toContainEqual(route1Unknown);
-    expect(result).toContainEqual(route2Get);
-    expect(result).toContainEqual(route2Post);
+describe("createDeploymentPackage", () => {
+  const apiRouteAbsolutePath = getSharedTestDataPath("api_routes", "route1");
+  const apiRouteRelativePath = path.relative(
+    getSharedTestDataPath("api_routes"),
+    apiRouteAbsolutePath
+  );
+  createDeploymentPackage(getTestOutputPath("deployment_packages"), {
+    filesystemAbsolutePath: apiRouteAbsolutePath,
+    filesystemRelativePath: apiRouteRelativePath,
+    path: "/route1",
+    method: HttpMethod.POST,
   });
+  expect(
+    fs.existsSync(
+      getTestOutputPath("deployment_packages", "route1", "post", "index.ts")
+    )
+  );
 });
 
 describe("getRoutesFromFilesystem", () => {
   it("should return all routes in a directory", () => {
-    const apiRoutesDir = getSharedTestFilePath("api_routes");
+    const apiRoutesDir = getSharedTestDataPath("api_routes");
     const route1GetPath = path.join(apiRoutesDir, "route1", "get.js");
     const route1PostPath = path.join(apiRoutesDir, "route1", "post.ts");
     const route1UnknownPath = path.join(apiRoutesDir, "route1", "unknown.ts");
@@ -62,30 +53,51 @@ describe("getRoutesFromFilesystem", () => {
     expect(fs.existsSync(rootPostPath));
     const result = getRoutesFromFilesystem(apiRoutesDir);
     expect(result).toHaveLength(5);
+    const route1GetAbsolutePath = path.parse(route1GetPath).dir;
     expect(result).toContainEqual({
       path: "/route1",
       method: HttpMethod.GET,
-      filesystemPath: path.parse(route1GetPath).dir,
+      filesystemAbsolutePath: route1GetAbsolutePath,
+      filesystemRelativePath: path.relative(
+        apiRoutesDir,
+        route1GetAbsolutePath
+      ),
     });
+    const route2GetAbsolutePath = path.parse(route2GetPath).dir;
     expect(result).toContainEqual({
       path: "/route2/subRoute",
       method: HttpMethod.GET,
-      filesystemPath: path.parse(route2GetPath).dir,
+      filesystemAbsolutePath: route2GetAbsolutePath,
+      filesystemRelativePath: path.relative(
+        apiRoutesDir,
+        route2GetAbsolutePath
+      ),
     });
+    const route1PostAbsolutePath = path.parse(route1PostPath).dir;
     expect(result).toContainEqual({
       path: "/route1",
       method: HttpMethod.POST,
-      filesystemPath: path.parse(route1PostPath).dir,
+      filesystemAbsolutePath: route1PostAbsolutePath,
+      filesystemRelativePath: path.relative(
+        apiRoutesDir,
+        route1PostAbsolutePath
+      ),
     });
+    const route2PostAbsolutePath = path.parse(route2PostPath).dir;
     expect(result).toContainEqual({
       path: "/route2/subRoute",
       method: HttpMethod.POST,
-      filesystemPath: path.parse(route2PostPath).dir,
+      filesystemAbsolutePath: route2PostAbsolutePath,
+      filesystemRelativePath: path.relative(
+        apiRoutesDir,
+        route2PostAbsolutePath
+      ),
     });
     expect(result).toContainEqual({
       path: "/",
       method: HttpMethod.POST,
-      filesystemPath: apiRoutesDir,
+      filesystemAbsolutePath: apiRoutesDir,
+      filesystemRelativePath: "",
     });
   });
 });

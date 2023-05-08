@@ -1,3 +1,5 @@
 node_modules
 .cdk.staging
 cdk.out
+build
+test_output
