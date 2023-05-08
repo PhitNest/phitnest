@@ -4,7 +4,6 @@ module.exports = {
     sourceType: "module",
     ecmaVersion: "latest",
   },
-  ignorePatterns: ["src/generated/**/*.ts"],
   plugins: [],
   extends: [
     "plugin:prettier/recommended",

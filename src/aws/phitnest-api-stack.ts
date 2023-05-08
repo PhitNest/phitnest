@@ -1,79 +1,154 @@
-import { HttpApi, HttpMethod } from "@aws-cdk/aws-apigatewayv2";
-import { Construct, Stack, StackProps } from "@aws-cdk/core";
+import {
+  AddRoutesOptions,
+  HttpApi,
+  HttpNoneAuthorizer,
+} from "@aws-cdk/aws-apigatewayv2";
+import { Construct, Stack } from "@aws-cdk/core";
 import { Code, Function as LambdaFunction, Runtime } from "@aws-cdk/aws-lambda";
 import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations";
-import { getFilesRecursive, getProjectRoot } from "../common/helpers";
+import { HttpUserPoolAuthorizer } from "@aws-cdk/aws-apigatewayv2-authorizers";
+import {
+  AccountRecovery,
+  BooleanAttribute,
+  UserPool,
+  UserPoolClient,
+  UserPoolEmail,
+} from "@aws-cdk/aws-cognito";
+import { Route, getRoutesFromFilesystem } from "../common/file-based-routing";
 import * as path from "path";
 
 const API_ROUTES_DIRECTORY_PATH = "src/api/routes";
-
-export type Route = {
-  path: string;
-  method: HttpMethod;
-  filesystemPath: string;
-};
-
-export function getRoutesFromFilesystem(routeDir: string): Route[] {
-  const files = getFilesRecursive(routeDir);
-  const routes: Route[] = [];
-  for (const file of files) {
-    let method: HttpMethod;
-    switch (path.parse(file).name) {
-      case "get":
-        method = HttpMethod.GET;
-        break;
-      case "post":
-        method = HttpMethod.POST;
-        break;
-      case "put":
-        method = HttpMethod.PUT;
-        break;
-      case "patch":
-        method = HttpMethod.PATCH;
-        break;
-      case "delete":
-        method = HttpMethod.DELETE;
-        break;
-      default:
-        continue;
-    }
-    const relativePath = path.relative(routeDir, path.parse(file).dir);
-    routes.push({
-      path: relativePath.replace(path.sep, "/"),
-      filesystemPath: path.join(routeDir, relativePath),
-      method,
-    });
-  }
-  return routes;
-}
+const DEPLOYMENT_ENV = process.env.DEPLOYMENT_ENV || "dev";
+const DEPLOYMENT_REGION = "us-east-1";
 
 export class PhitnestApiStack extends Stack {
+  private readonly httpApi: HttpApi;
+  private readonly cognitoUserPool: UserPool;
+  private readonly cognitoClient: UserPoolClient;
+  private readonly cognitoAuthorizer: HttpUserPoolAuthorizer;
+
   constructor(
     scope: Construct,
-    props?: StackProps,
     apiRoutesDir: string = API_ROUTES_DIRECTORY_PATH
   ) {
-    super(scope, "PhitnestApiStack", props);
-    const httpApi = new HttpApi(this, "PhitnestApi", {
-      description: "Phitnest API",
+    super(scope, `PhitnestApiStack-${DEPLOYMENT_ENV}`, {
+      env: {
+        region: DEPLOYMENT_REGION,
+      },
     });
-    for (const route of getRoutesFromFilesystem(
-      path.join(getProjectRoot(), apiRoutesDir)
-    )) {
-      const id = `${route.path.replace("/", "-")}-${route.method}`;
-      const lambdaFunction = new LambdaFunction(this, id, {
+    this.httpApi = this.createHttpApi();
+    this.cognitoUserPool = this.createCognitoUserPool();
+    this.cognitoClient = this.createCognitoClient();
+    this.cognitoAuthorizer = this.createCognitoAuthorizer();
+    this.createApiRoutes(apiRoutesDir);
+  }
+
+  private createCognitoAuthorizer(): HttpUserPoolAuthorizer {
+    return new HttpUserPoolAuthorizer(
+      `PhitnestCognitoAuthorizer-${DEPLOYMENT_ENV}`,
+      this.cognitoUserPool,
+      {
+        userPoolClients: [this.cognitoClient],
+        identitySource: ["$request.header.Authorization"],
+      }
+    );
+  }
+
+  private createCognitoUserPool(): UserPool {
+    return new UserPool(this, `PhitnestUserPool-${DEPLOYMENT_ENV}`, {
+      userPoolName: `Phitnest-User-Pool-${DEPLOYMENT_ENV}`,
+      selfSignUpEnabled: true,
+      signInAliases: {
+        email: true,
+        username: false,
+      },
+      accountRecovery: AccountRecovery.EMAIL_ONLY,
+      email: UserPoolEmail.withSES({
+        fromEmail: "verify@phitnest.com",
+        fromName: "Phitnest Verification",
+        replyTo: "verify@phitnest.com",
+        sesVerifiedDomain: "phitnest.com",
+      }),
+      customAttributes: {
+        admin: new BooleanAttribute({ mutable: true }),
+      },
+    });
+  }
+
+  private createHttpApiRoute(
+    route: Route,
+    func: LambdaFunction,
+    authorized: boolean
+  ): AddRoutesOptions {
+    return {
+      path: route.path,
+      methods: [route.method],
+      integration: new HttpLambdaIntegration(
+        `integration-${route.path.replace("/", "-")}-${
+          route.method
+        }-${DEPLOYMENT_ENV}`,
+        func
+      ),
+      authorizer: authorized
+        ? this.cognitoAuthorizer
+        : new HttpNoneAuthorizer(),
+    };
+  }
+
+  private createCognitoClient(): UserPoolClient {
+    return new UserPoolClient(
+      this,
+      `PhitnestUserPoolClient-${DEPLOYMENT_ENV}`,
+      {
+        userPool: this.cognitoUserPool,
+      }
+    );
+  }
+
+  private createLambdaFunction(route: Route): LambdaFunction {
+    return new LambdaFunction(
+      this,
+      `lambda-${route.path.replace("/", "-")}-${route.method}`,
+      {
         runtime: Runtime.NODEJS_16_X,
         handler: `${route.method.toLowerCase()}.invoke`,
         code: Code.fromAsset(route.filesystemPath),
-      });
-      httpApi.addRoutes({
-        path: route.path,
-        methods: [route.method],
-        integration: new HttpLambdaIntegration(
-          `integration-${id}`,
-          lambdaFunction
-        ),
-      });
+      }
+    );
+  }
+
+  private createApiRoutes(apiRoutesDir: string): void {
+    const privateRoutes: [string, string][] = [];
+    for (const route of getRoutesFromFilesystem(
+      path.join(process.cwd(), apiRoutesDir, "private")
+    )) {
+      privateRoutes.push([route.path, route.method]);
+      const lambdaFunction = this.createLambdaFunction(route);
+      this.httpApi.addRoutes(
+        this.createHttpApiRoute(route, lambdaFunction, true)
+      );
     }
+    for (const route of getRoutesFromFilesystem(
+      path.join(process.cwd(), apiRoutesDir, "public")
+    )) {
+      if (
+        privateRoutes.some((r) => r[0] === route.path && r[1] === route.method)
+      ) {
+        throw new Error(
+          `Route is defined in both public and private: ${route.method} ${route.path}`
+        );
+      }
+      const lambdaFunction = this.createLambdaFunction(route);
+      this.httpApi.addRoutes(
+        this.createHttpApiRoute(route, lambdaFunction, false)
+      );
+    }
+  }
+
+  private createHttpApi(): HttpApi {
+    return new HttpApi(this, `PhitnestApi-${DEPLOYMENT_ENV}`, {
+      description: `Phitnest API ${DEPLOYMENT_ENV}`,
+      apiName: `Phitnest-API-${DEPLOYMENT_ENV}`,
+    });
   }
 }
