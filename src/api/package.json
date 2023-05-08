@@ -1,0 +1,10 @@
+{
+    "name": "phitnest-lambda",
+    "version": "1.0.0",
+    "description": "",
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@aws-sdk/client-dynamodb": "^3.329.0"
+    }
+}
