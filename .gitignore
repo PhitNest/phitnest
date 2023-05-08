@@ -3,3 +3,4 @@ node_modules
 cdk.out
 build
 test_output
+!test_data/shared_test_data/api_routes/node_modules
