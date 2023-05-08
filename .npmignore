@@ -1,5 +1,6 @@
 *.ts
-
+build
+test_output
 # CDK asset staging directory
 .cdk.staging
 cdk.out
