@@ -2,14 +2,13 @@ name: CD
 
 on:
   workflow_call:
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_ACCESS_KEY_SECRET:
+        required: true
     inputs:
       deployment_env:
-        required: true
-        type: string
-      aws_access_key_id:
-        required: true
-        type: string
-      aws_access_key_secret:
         required: true
         type: string
 
@@ -26,8 +25,8 @@ jobs:
       - name: Setup AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ inputs.aws_access_key_id }}
-          aws-secret-access-key: ${{ inputs.aws_access_key_secret }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
           aws-region: us-east-1
 
       - name: Deploy
