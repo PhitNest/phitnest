@@ -15,3 +15,5 @@ jobs:
     uses: ./.github/workflows/cd.yml
     with:
       deployment_env: prod
+      aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws_access_key_secret: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
