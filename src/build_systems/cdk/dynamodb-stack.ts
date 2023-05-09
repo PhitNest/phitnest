@@ -46,7 +46,11 @@ export class DynamoDBStack {
         ],
         attributeDefinitions: [
           {
-            attributeName: "user_cognito_id",
+            attributeName: "gym_user_id",
+            attributeType: AttributeType.STRING,
+          },
+          {
+            attributeName: "gym_user_secondary_id",
             attributeType: AttributeType.STRING,
           },
           {
@@ -55,10 +59,6 @@ export class DynamoDBStack {
           },
           {
             attributeName: "user_last_name",
-            attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "gym_id",
             attributeType: AttributeType.STRING,
           },
           {
@@ -91,7 +91,11 @@ export class DynamoDBStack {
         ],
         attributeDefinitions: [
           {
-            attributeName: "message_id",
+            attributeName: "conversation_message_id",
+            attributeType: AttributeType.STRING,
+          },
+          {
+            attributeName: "conversation_message_secondary_id",
             attributeType: AttributeType.STRING,
           },
           {
@@ -100,10 +104,6 @@ export class DynamoDBStack {
           },
           {
             attributeName: "message_time",
-            attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "conversation_id",
             attributeType: AttributeType.STRING,
           },
           {
