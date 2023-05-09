@@ -36,11 +36,11 @@ export class DynamoDBStack {
         billingMode: BillingMode.PAY_PER_REQUEST,
         keySchema: [
           {
-            attributeName: "id",
+            attributeName: "gym_user_id",
             keyType: "HASH",
           },
           {
-            attributeName: "secondary_id",
+            attributeName: "gym_user_secondary_id",
             keyType: "RANGE",
           },
         ],
@@ -73,19 +73,19 @@ export class DynamoDBStack {
       }
     );
     gymUserTable.applyRemovalPolicy(RemovalPolicy.DESTROY);
-    const conversationsTable = new CfnGlobalTable(
+    const conversationMessageTable = new CfnGlobalTable(
       scope,
-      `PhitnestConversationsTable-${DEPLOYMENT_ENV}`,
+      `PhitnestConversationMessageTable-${DEPLOYMENT_ENV}`,
       {
         replicas: DYNAMODB_REPLICAS,
         billingMode: BillingMode.PAY_PER_REQUEST,
         keySchema: [
           {
-            attributeName: "id",
+            attributeName: "conversation_message_id",
             keyType: "HASH",
           },
           {
-            attributeName: "secondary_id",
+            attributeName: "conversation_message_secondary_id",
             keyType: "RANGE",
           },
         ],
@@ -113,6 +113,6 @@ export class DynamoDBStack {
         ],
       }
     );
-    conversationsTable.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    conversationMessageTable.applyRemovalPolicy(RemovalPolicy.DESTROY);
   }
 }
