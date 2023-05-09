@@ -3,8 +3,8 @@ import {
   BillingMode,
   CfnGlobalTable,
 } from "@aws-cdk/aws-dynamodb";
-import { DEPLOYMENT_ENV, PhitnestApiStack } from "./phitnest-api-stack";
 import { IResolvable, RemovalPolicy } from "@aws-cdk/core";
+import { DEPLOYMENT_ENV, PhitnestApiStack } from "./phitnest-api-stack";
 
 const DYNAMODB_REPLICAS:
   | Array<CfnGlobalTable.ReplicaSpecificationProperty | IResolvable>
@@ -36,83 +36,55 @@ export class DynamoDBStack {
         billingMode: BillingMode.PAY_PER_REQUEST,
         keySchema: [
           {
-            attributeName: "gym_user_id",
+            attributeName: "gym_user_part",
             keyType: "HASH",
           },
           {
-            attributeName: "gym_user_secondary_id",
+            attributeName: "gym_user_sort",
             keyType: "RANGE",
           },
         ],
         attributeDefinitions: [
           {
-            attributeName: "gym_user_id",
+            attributeName: "gym_user_part",
             attributeType: AttributeType.STRING,
           },
           {
-            attributeName: "gym_user_secondary_id",
-            attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "user_first_name",
-            attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "user_last_name",
-            attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "gym_name",
-            attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "gym_address",
+            attributeName: "gym_user_sort",
             attributeType: AttributeType.STRING,
           },
         ],
       }
     );
     gymUserTable.applyRemovalPolicy(RemovalPolicy.DESTROY);
-    const conversationMessageTable = new CfnGlobalTable(
+    const conversationsTable = new CfnGlobalTable(
       scope,
-      `PhitnestConversationMessageTable-${DEPLOYMENT_ENV}`,
+      `PhitnestConversationTable-${DEPLOYMENT_ENV}`,
       {
         replicas: DYNAMODB_REPLICAS,
         billingMode: BillingMode.PAY_PER_REQUEST,
         keySchema: [
           {
-            attributeName: "conversation_message_id",
+            attributeName: "conversation_part",
             keyType: "HASH",
           },
           {
-            attributeName: "conversation_message_secondary_id",
+            attributeName: "conversation_sort",
             keyType: "RANGE",
           },
         ],
         attributeDefinitions: [
           {
-            attributeName: "conversation_message_id",
+            attributeName: "conversation_part",
             attributeType: AttributeType.STRING,
           },
           {
-            attributeName: "conversation_message_secondary_id",
-            attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "message_text",
-            attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "message_time",
-            attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "user_data",
+            attributeName: "conversation_sort",
             attributeType: AttributeType.STRING,
           },
         ],
       }
     );
-    conversationMessageTable.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    conversationsTable.applyRemovalPolicy(RemovalPolicy.DESTROY);
   }
 }
