@@ -28,74 +28,91 @@ const DYNAMODB_REPLICAS:
 
 export class DynamoDBStack {
   constructor(scope: PhitnestApiStack) {
-    const dynamoTable = new CfnGlobalTable(
+    const gymUserTable = new CfnGlobalTable(
       scope,
-      `PhitnestTable-${DEPLOYMENT_ENV}`,
+      `PhitnestGymUserTable-${DEPLOYMENT_ENV}`,
       {
         replicas: DYNAMODB_REPLICAS,
         billingMode: BillingMode.PAY_PER_REQUEST,
         keySchema: [
           {
-            attributeName: "gymId",
+            attributeName: "id",
             keyType: "HASH",
           },
           {
-            attributeName: "gymName",
-            keyType: "RANGE",
-          },
-          {
-            attributeName: "userCognitoId",
+            attributeName: "secondary_id",
             keyType: "RANGE",
           },
         ],
         attributeDefinitions: [
           {
-            attributeName: "gymId",
+            attributeName: "user_cognito_id",
             attributeType: AttributeType.STRING,
           },
           {
-            attributeName: "gymName",
+            attributeName: "user_first_name",
             attributeType: AttributeType.STRING,
           },
           {
-            attributeName: "userCognitoId",
+            attributeName: "user_last_name",
             attributeType: AttributeType.STRING,
           },
           {
-            attributeName: "firstName",
+            attributeName: "gym_id",
             attributeType: AttributeType.STRING,
           },
           {
-            attributeName: "lastName",
+            attributeName: "gym_name",
             attributeType: AttributeType.STRING,
           },
           {
-            attributeName: "gymStreet",
+            attributeName: "gym_address",
             attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "gymState",
-            attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "gymCity",
-            attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "gymZipCode",
-            attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "gymLongitude",
-            attributeType: AttributeType.NUMBER,
-          },
-          {
-            attributeName: "gymLatitude",
-            attributeType: AttributeType.NUMBER,
           },
         ],
       }
     );
-    dynamoTable.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    gymUserTable.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    const conversationsTable = new CfnGlobalTable(
+      scope,
+      `PhitnestConversationsTable-${DEPLOYMENT_ENV}`,
+      {
+        replicas: DYNAMODB_REPLICAS,
+        billingMode: BillingMode.PAY_PER_REQUEST,
+        keySchema: [
+          {
+            attributeName: "id",
+            keyType: "HASH",
+          },
+          {
+            attributeName: "secondary_id",
+            keyType: "RANGE",
+          },
+        ],
+        attributeDefinitions: [
+          {
+            attributeName: "message_id",
+            attributeType: AttributeType.STRING,
+          },
+          {
+            attributeName: "message_text",
+            attributeType: AttributeType.STRING,
+          },
+          {
+            attributeName: "message_time",
+            attributeType: AttributeType.STRING,
+          },
+          {
+            attributeName: "conversation_id",
+            attributeType: AttributeType.STRING,
+          },
+          {
+            attributeName: "user_data",
+            attributeType: AttributeType.STRING,
+          },
+        ],
+      }
+    );
+    conversationsTable.applyRemovalPolicy(RemovalPolicy.DESTROY);
   }
 }
