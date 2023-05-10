@@ -11,7 +11,8 @@ export const tsconfig: TranspileOptions = JSON.parse(
 export function createDeploymentPackage(
   outputDir: string,
   route: Route,
-  nodeModulesDir: string
+  nodeModulesDir: string,
+  commonDir: string
 ) {
   const packageDir = path.join(
     outputDir,
@@ -28,4 +29,5 @@ export function createDeploymentPackage(
     transpileModule(source.toString(), tsconfig).outputText
   );
   fse.copySync(nodeModulesDir, path.join(packageDir, "node_modules"));
+  fse.copySync(commonDir, path.join(packageDir, "common"));
 }

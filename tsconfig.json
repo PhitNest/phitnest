@@ -5,6 +5,8 @@
     "lib": [
       "es2020"
     ],
+    "baseUrl": "./src",
+    "rootDir": "./src",
     "declaration": true,
     "strict": true,
     "noImplicitAny": true,

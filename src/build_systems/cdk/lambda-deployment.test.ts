@@ -1,6 +1,10 @@
 import { HttpMethod } from "@aws-cdk/aws-apigatewayv2";
 import { transpileModule } from "typescript";
-import { getSharedTestDataPath, getTestOutputPath } from "../../test-helpers";
+import {
+  getSharedTestDataPath,
+  getTestDataPath,
+  getTestOutputPath,
+} from "test-helpers";
 import { createDeploymentPackage, tsconfig } from "./lambda-deployment";
 import * as path from "path";
 import * as fs from "fs";
@@ -14,6 +18,7 @@ describe("createDeploymentPackage", () => {
       apiRouteAbsolutePath
     );
     const nodeModulesDir = getSharedTestDataPath("api_routes", "node_modules");
+    const commonDir = getTestDataPath("common");
     createDeploymentPackage(
       getTestOutputPath("deployment_packages"),
       {
@@ -22,7 +27,8 @@ describe("createDeploymentPackage", () => {
         path: "/route1",
         method: HttpMethod.POST,
       },
-      nodeModulesDir
+      nodeModulesDir,
+      commonDir
     );
     const outputPath = getTestOutputPath(
       "deployment_packages",
@@ -48,5 +54,16 @@ describe("createDeploymentPackage", () => {
       )
     );
     expect(copiedNodeModules).toEqual(expectedNodeModules);
+    const copiedCommonFiles = new Set(
+      getFilesRecursive(path.join(outputPath, "common")).map((file) =>
+        fs.readFileSync(file).toString()
+      )
+    );
+    const expectedCommonFiles = new Set(
+      getFilesRecursive(commonDir).map((file) =>
+        fs.readFileSync(file).toString()
+      )
+    );
+    expect(copiedCommonFiles).toEqual(expectedCommonFiles);
   });
 });
