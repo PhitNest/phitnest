@@ -7,15 +7,11 @@ import {
 import { Construct, RemovalPolicy, Stack } from "@aws-cdk/core";
 import { Code, Function as LambdaFunction, Runtime } from "@aws-cdk/aws-lambda";
 import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations";
-import { Route, getRoutesFromFilesystem } from "../common/file-based-routing";
-import { getFilesRecursive } from "../common/helpers";
-import { createDeploymentPackage } from "./lambda-deployment";
+import { Route, getRoutesFromFilesystem } from "../utils/file-based-routing";
+import { createDeploymentPackage, transpileFiles } from "./lambda-deployment";
 import { CognitoStack } from "./cognito-stack";
 import { DynamoDBStack } from "./dynamodb-stack";
-import { transpileModule } from "typescript";
 import * as path from "path";
-import * as fs from "fs";
-import { tsconfig } from "helpers";
 
 export const DEPLOYMENT_ENV = process.env.DEPLOYMENT_ENV || "dev";
 
@@ -77,14 +73,7 @@ export class PhitnestApiStack extends Stack {
     const cognito = new CognitoStack(this);
     const dynamo = new DynamoDBStack(this);
     const privateRoutes: [string, string][] = [];
-    for (const commonFile of getFilesRecursive(params.commonSrcDir)) {
-      const relativePath = path.relative(params.commonSrcDir, commonFile);
-      const outputPath = path.join(params.commonDeploymentDir, relativePath);
-      const src = fs.readFileSync(commonFile).toString();
-      const transpiledSrc = transpileModule(src, tsconfig).outputText;
-      fs.mkdirSync(path.parse(outputPath).dir, { recursive: true });
-      fs.writeFileSync(outputPath, transpiledSrc);
-    }
+    transpileFiles(params.commonSrcDir, params.commonDeploymentDir);
     const apiNodeModulesDir = path.join(params.apiRoutesDir, "node_modules");
     for (const route of getRoutesFromFilesystem(
       path.join(params.apiRoutesDir, "private")

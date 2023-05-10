@@ -5,11 +5,11 @@ import {
   getTestDataPath,
   getTestOutputPath,
 } from "test-helpers";
-import { tsconfig } from "helpers";
+import { tsconfig } from "./lambda-deployment";
 import { createDeploymentPackage } from "./lambda-deployment";
 import * as path from "path";
 import * as fs from "fs";
-import { getFilesRecursive } from "../common/helpers";
+import { getFilesRecursive } from "../utils/helpers";
 
 describe("createDeploymentPackage", () => {
   it("should create a deployment package for a route", () => {
