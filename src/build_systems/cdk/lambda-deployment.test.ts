@@ -7,9 +7,9 @@ import {
 } from "test-helpers";
 import { tsconfig } from "./lambda-deployment";
 import { createDeploymentPackage } from "./lambda-deployment";
+import { getFilesRecursive } from "../utils/helpers";
 import * as path from "path";
 import * as fs from "fs";
-import { getFilesRecursive } from "../utils/helpers";
 
 describe("createDeploymentPackage", () => {
   it("should create a deployment package for a route", () => {
@@ -56,7 +56,7 @@ describe("createDeploymentPackage", () => {
     );
     expect(copiedNodeModules).toEqual(expectedNodeModules);
     const copiedCommonFiles = new Set(
-      getFilesRecursive(path.join(outputPath, "common")).map((file) =>
+      getFilesRecursive(path.join(outputPath, "api", "common")).map((file) =>
         fs.readFileSync(file).toString()
       )
     );
