@@ -1,6 +1,6 @@
 import { HttpMethod } from "@aws-cdk/aws-apigatewayv2";
 import { getRoutesFromFilesystem } from "./file-based-routing";
-import { getSharedTestDataPath } from "../../test-helpers";
+import { getSharedTestDataPath } from "test-helpers";
 import * as path from "path";
 import * as fs from "fs";
 

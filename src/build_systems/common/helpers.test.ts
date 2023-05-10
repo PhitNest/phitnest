@@ -1,4 +1,4 @@
-import { getSharedTestDataPath } from "../../test-helpers";
+import { getSharedTestDataPath } from "test-helpers";
 import { getFilesRecursive } from "./helpers";
 import * as path from "path";
 import * as fs from "fs";

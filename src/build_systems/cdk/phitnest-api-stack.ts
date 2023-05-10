@@ -21,6 +21,7 @@ const LAMBDA_DEPLOYMENT_DIRECTORY_PATH = path.join(
   "build",
   "lambda_deployment"
 );
+const COMMON_DIR = path.join(process.cwd(), "src", "common");
 const DEPLOYMENT_REGION = "us-east-1";
 
 function createHttpApiRoute(
@@ -45,7 +46,8 @@ export class PhitnestApiStack extends Stack {
   constructor(
     scope: Construct,
     apiRoutesDir: string = API_ROUTES_DIRECTORY_PATH,
-    lambdaDeploymentDir: string = LAMBDA_DEPLOYMENT_DIRECTORY_PATH
+    lambdaDeploymentDir: string = LAMBDA_DEPLOYMENT_DIRECTORY_PATH,
+    commonDir: string = COMMON_DIR
   ) {
     super(scope, `PhitnestApiStack-${DEPLOYMENT_ENV}`, {
       env: {
@@ -65,12 +67,17 @@ export class PhitnestApiStack extends Stack {
       path.join(apiRoutesDir, "private")
     )) {
       privateRoutes.push([route.path, route.method]);
-      createDeploymentPackage(lambdaDeploymentDir, route, apiNodeModulesDir);
+      createDeploymentPackage(
+        lambdaDeploymentDir,
+        route,
+        apiNodeModulesDir,
+        commonDir
+      );
       const lambdaFunction = this.createLambdaFunction(
         lambdaDeploymentDir,
         route,
         {
-          DYNAMO_TABLE_CONN_STRING: dynamo.table.tableName || "",
+          DYNAMO_TABLE_NAME: dynamo.table.tableName || "",
         }
       );
       httpApi.addRoutes(
@@ -87,7 +94,12 @@ export class PhitnestApiStack extends Stack {
           `Route is defined in both public and private: ${route.method} ${route.path}`
         );
       }
-      createDeploymentPackage(lambdaDeploymentDir, route, apiNodeModulesDir);
+      createDeploymentPackage(
+        lambdaDeploymentDir,
+        route,
+        apiNodeModulesDir,
+        commonDir
+      );
       const lambdaFunction = this.createLambdaFunction(
         lambdaDeploymentDir,
         route
