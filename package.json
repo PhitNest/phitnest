@@ -9,7 +9,7 @@
     "cdk": "cdk",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "clean": "rm -rf test_output && rm -rf cdk.out && rm -rf node_modules && rm -rf package-lock.json"
+    "clean": "rm -rf test_output && rm -rf cdk.out && rm -rf node_modules && rm -rf package-lock.json && rm -rf build"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.115",
