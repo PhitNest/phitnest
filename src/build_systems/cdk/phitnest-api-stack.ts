@@ -21,7 +21,7 @@ const LAMBDA_DEPLOYMENT_DIRECTORY_PATH = path.join(
   BUILD_DIR,
   "lambda_deployment"
 );
-const COMMON_SRC_DIR = path.join(process.cwd(), "src", "common");
+const COMMON_SRC_DIR = path.join(process.cwd(), "src", "api", "common");
 const COMMON_DEPLOYMENT_DIR = path.join(BUILD_DIR, "common");
 const DEPLOYMENT_REGION = "us-east-1";
 
