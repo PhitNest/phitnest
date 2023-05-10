@@ -5,7 +5,8 @@ import {
   getTestDataPath,
   getTestOutputPath,
 } from "test-helpers";
-import { createDeploymentPackage, tsconfig } from "./lambda-deployment";
+import { tsconfig } from "helpers";
+import { createDeploymentPackage } from "./lambda-deployment";
 import * as path from "path";
 import * as fs from "fs";
 import { getFilesRecursive } from "../common/helpers";

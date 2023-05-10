@@ -8,20 +8,25 @@ import { Construct, RemovalPolicy, Stack } from "@aws-cdk/core";
 import { Code, Function as LambdaFunction, Runtime } from "@aws-cdk/aws-lambda";
 import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations";
 import { Route, getRoutesFromFilesystem } from "../common/file-based-routing";
+import { getFilesRecursive } from "../common/helpers";
 import { createDeploymentPackage } from "./lambda-deployment";
 import { CognitoStack } from "./cognito-stack";
 import { DynamoDBStack } from "./dynamodb-stack";
+import { transpileModule } from "typescript";
 import * as path from "path";
+import * as fs from "fs";
+import { tsconfig } from "helpers";
 
 export const DEPLOYMENT_ENV = process.env.DEPLOYMENT_ENV || "dev";
 
+const BUILD_DIR = path.join(process.cwd(), "build");
 const API_ROUTES_DIRECTORY_PATH = path.join(process.cwd(), "src", "api");
 const LAMBDA_DEPLOYMENT_DIRECTORY_PATH = path.join(
-  process.cwd(),
-  "build",
+  BUILD_DIR,
   "lambda_deployment"
 );
-const COMMON_DIR = path.join(process.cwd(), "src", "common");
+const COMMON_SRC_DIR = path.join(process.cwd(), "src", "common");
+const COMMON_DEPLOYMENT_DIR = path.join(BUILD_DIR, "common");
 const DEPLOYMENT_REGION = "us-east-1";
 
 function createHttpApiRoute(
@@ -42,12 +47,22 @@ function createHttpApiRoute(
   };
 }
 
+type PhitnestApiStackParams = {
+  apiRoutesDir: string;
+  lambdaDeploymentDir: string;
+  commonDeploymentDir: string;
+  commonSrcDir: string;
+};
+
 export class PhitnestApiStack extends Stack {
   constructor(
     scope: Construct,
-    apiRoutesDir: string = API_ROUTES_DIRECTORY_PATH,
-    lambdaDeploymentDir: string = LAMBDA_DEPLOYMENT_DIRECTORY_PATH,
-    commonDir: string = COMMON_DIR
+    params: PhitnestApiStackParams = {
+      apiRoutesDir: API_ROUTES_DIRECTORY_PATH,
+      lambdaDeploymentDir: LAMBDA_DEPLOYMENT_DIRECTORY_PATH,
+      commonDeploymentDir: COMMON_DEPLOYMENT_DIR,
+      commonSrcDir: COMMON_SRC_DIR,
+    }
   ) {
     super(scope, `PhitnestApiStack-${DEPLOYMENT_ENV}`, {
       env: {
@@ -62,19 +77,27 @@ export class PhitnestApiStack extends Stack {
     const cognito = new CognitoStack(this);
     const dynamo = new DynamoDBStack(this);
     const privateRoutes: [string, string][] = [];
-    const apiNodeModulesDir = path.join(apiRoutesDir, "node_modules");
+    for (const commonFile of getFilesRecursive(params.commonSrcDir)) {
+      const relativePath = path.relative(params.commonSrcDir, commonFile);
+      const outputPath = path.join(params.commonDeploymentDir, relativePath);
+      const src = fs.readFileSync(commonFile).toString();
+      const transpiledSrc = transpileModule(src, tsconfig).outputText;
+      fs.mkdirSync(path.parse(outputPath).dir, { recursive: true });
+      fs.writeFileSync(outputPath, transpiledSrc);
+    }
+    const apiNodeModulesDir = path.join(params.apiRoutesDir, "node_modules");
     for (const route of getRoutesFromFilesystem(
-      path.join(apiRoutesDir, "private")
+      path.join(params.apiRoutesDir, "private")
     )) {
       privateRoutes.push([route.path, route.method]);
       createDeploymentPackage(
-        lambdaDeploymentDir,
+        params.lambdaDeploymentDir,
         route,
         apiNodeModulesDir,
-        commonDir
+        params.commonDeploymentDir
       );
       const lambdaFunction = this.createLambdaFunction(
-        lambdaDeploymentDir,
+        params.lambdaDeploymentDir,
         route,
         {
           DYNAMO_TABLE_NAME: dynamo.table.tableName || "",
@@ -85,7 +108,7 @@ export class PhitnestApiStack extends Stack {
       );
     }
     for (const route of getRoutesFromFilesystem(
-      path.join(apiRoutesDir, "public")
+      path.join(params.apiRoutesDir, "public")
     )) {
       if (
         privateRoutes.some((r) => r[0] === route.path && r[1] === route.method)
@@ -95,13 +118,13 @@ export class PhitnestApiStack extends Stack {
         );
       }
       createDeploymentPackage(
-        lambdaDeploymentDir,
+        params.lambdaDeploymentDir,
         route,
         apiNodeModulesDir,
-        commonDir
+        params.commonDeploymentDir
       );
       const lambdaFunction = this.createLambdaFunction(
-        lambdaDeploymentDir,
+        params.lambdaDeploymentDir,
         route
       );
       httpApi.addRoutes(createHttpApiRoute(route, lambdaFunction));
