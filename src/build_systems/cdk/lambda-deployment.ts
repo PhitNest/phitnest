@@ -12,7 +12,9 @@ export const tsconfig: TranspileOptions = JSON.parse(
 export function transpileFiles(srcDir: string, outputDir: string) {
   for (const commonFile of getFilesRecursive(srcDir)) {
     const relativePath = path.relative(srcDir, commonFile);
-    const outputPath = path.join(outputDir, relativePath);
+    const outputPath = path
+      .join(outputDir, relativePath)
+      .replace(/\.ts$/, ".js");
     const src = fs.readFileSync(commonFile).toString();
     const transpiledSrc = transpileModule(src, tsconfig).outputText;
     fs.mkdirSync(path.parse(outputPath).dir, { recursive: true });
