@@ -71,7 +71,6 @@ export class PhitnestApiStack extends Stack {
         route,
         {
           DYNAMO_TABLE_CONN_STRING: dynamo.table.tableName || "",
-          AWS_REGION: DEPLOYMENT_REGION,
         }
       );
       httpApi.addRoutes(
