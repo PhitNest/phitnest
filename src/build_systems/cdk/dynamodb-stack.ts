@@ -27,64 +27,33 @@ const DYNAMODB_REPLICAS:
     : [{ region: "us-east-1" }];
 
 export class DynamoDBStack {
+  public readonly table;
+
   constructor(scope: PhitnestApiStack) {
-    const gymUserTable = new CfnGlobalTable(
-      scope,
-      `PhitnestGymUserTable-${DEPLOYMENT_ENV}`,
-      {
-        replicas: DYNAMODB_REPLICAS,
-        billingMode: BillingMode.PAY_PER_REQUEST,
-        keySchema: [
-          {
-            attributeName: "gym_user_part",
-            keyType: "HASH",
-          },
-          {
-            attributeName: "gym_user_sort",
-            keyType: "RANGE",
-          },
-        ],
-        attributeDefinitions: [
-          {
-            attributeName: "gym_user_part",
-            attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "gym_user_sort",
-            attributeType: AttributeType.STRING,
-          },
-        ],
-      }
-    );
-    gymUserTable.applyRemovalPolicy(RemovalPolicy.DESTROY);
-    const conversationsTable = new CfnGlobalTable(
-      scope,
-      `PhitnestConversationTable-${DEPLOYMENT_ENV}`,
-      {
-        replicas: DYNAMODB_REPLICAS,
-        billingMode: BillingMode.PAY_PER_REQUEST,
-        keySchema: [
-          {
-            attributeName: "conversation_part",
-            keyType: "HASH",
-          },
-          {
-            attributeName: "conversation_sort",
-            keyType: "RANGE",
-          },
-        ],
-        attributeDefinitions: [
-          {
-            attributeName: "conversation_part",
-            attributeType: AttributeType.STRING,
-          },
-          {
-            attributeName: "conversation_sort",
-            attributeType: AttributeType.STRING,
-          },
-        ],
-      }
-    );
-    conversationsTable.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    this.table = new CfnGlobalTable(scope, `PhitnestTable-${DEPLOYMENT_ENV}`, {
+      replicas: DYNAMODB_REPLICAS,
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      keySchema: [
+        {
+          attributeName: "part_id",
+          keyType: "HASH",
+        },
+        {
+          attributeName: "sort_id",
+          keyType: "RANGE",
+        },
+      ],
+      attributeDefinitions: [
+        {
+          attributeName: "part_id",
+          attributeType: AttributeType.STRING,
+        },
+        {
+          attributeName: "sort_id",
+          attributeType: AttributeType.STRING,
+        },
+      ],
+    });
+    this.table.applyRemovalPolicy(RemovalPolicy.DESTROY);
   }
 }
