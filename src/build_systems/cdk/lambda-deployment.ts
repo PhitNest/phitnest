@@ -1,12 +1,9 @@
-import { TranspileOptions, transpileModule } from "typescript";
+import { transpileModule } from "typescript";
+import { tsconfig } from "helpers";
 import { Route } from "../common/file-based-routing";
 import * as path from "path";
 import * as fse from "fs-extra";
 import * as fs from "fs";
-
-export const tsconfig: TranspileOptions = JSON.parse(
-  fs.readFileSync(path.join(process.cwd(), "tsconfig.json")).toString()
-);
 
 export function createDeploymentPackage(
   outputDir: string,
