@@ -9,16 +9,25 @@ export const tsconfig: TranspileOptions = JSON.parse(
   fs.readFileSync(path.join(process.cwd(), "tsconfig.json")).toString()
 );
 
-export function transpileFiles(srcDir: string, outputDir: string) {
+export function transpileFiles(
+  srcDir: string,
+  outputDir: string,
+  ignoreTests: boolean = true
+) {
   for (const commonFile of getFilesRecursive(srcDir)) {
-    const relativePath = path.relative(srcDir, commonFile);
-    const outputPath = path
-      .join(outputDir, relativePath)
-      .replace(/\.ts$/, ".js");
-    const src = fs.readFileSync(commonFile).toString();
-    const transpiledSrc = transpileModule(src, tsconfig).outputText;
-    fs.mkdirSync(path.parse(outputPath).dir, { recursive: true });
-    fs.writeFileSync(outputPath, transpiledSrc);
+    if (
+      commonFile.endsWith(".ts") &&
+      !(ignoreTests && commonFile.endsWith(".test.ts"))
+    ) {
+      const relativePath = path.relative(srcDir, commonFile);
+      const outputPath = path
+        .join(outputDir, relativePath)
+        .replace(/\.ts$/, ".js");
+      const src = fs.readFileSync(commonFile).toString();
+      const transpiledSrc = transpileModule(src, tsconfig).outputText;
+      fs.mkdirSync(path.parse(outputPath).dir, { recursive: true });
+      fs.writeFileSync(outputPath, transpiledSrc);
+    }
   }
 }
 
