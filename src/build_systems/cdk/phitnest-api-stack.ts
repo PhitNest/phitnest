@@ -2,7 +2,6 @@ import {
   AddRoutesOptions,
   HttpApi,
   HttpNoneAuthorizer,
-  IHttpRouteAuthorizer,
 } from "@aws-cdk/aws-apigatewayv2";
 import { Construct, RemovalPolicy, Stack } from "@aws-cdk/core";
 import { Code, Function as LambdaFunction, Runtime } from "@aws-cdk/aws-lambda";
@@ -25,24 +24,6 @@ const COMMON_SRC_DIR = path.join(process.cwd(), "src", "api", "common");
 const COMMON_DEPLOYMENT_DIR = path.join(BUILD_DIR, "common");
 const DEPLOYMENT_REGION = "us-east-1";
 
-function createHttpApiRoute(
-  route: Route,
-  func: LambdaFunction,
-  authorizer?: IHttpRouteAuthorizer
-): AddRoutesOptions {
-  return {
-    path: route.path,
-    methods: [route.method],
-    integration: new HttpLambdaIntegration(
-      `integration-${route.path.replace("/", "-")}-${
-        route.method
-      }-${DEPLOYMENT_ENV}`,
-      func
-    ),
-    authorizer: authorizer ?? new HttpNoneAuthorizer(),
-  };
-}
-
 type PhitnestApiStackParams = {
   apiRoutesDir: string;
   lambdaDeploymentDir: string;
@@ -51,6 +32,9 @@ type PhitnestApiStackParams = {
 };
 
 export class PhitnestApiStack extends Stack {
+  private readonly dynamo: DynamoDBStack;
+  private readonly cognito: CognitoStack;
+
   constructor(
     scope: Construct,
     params: PhitnestApiStackParams = {
@@ -70,8 +54,8 @@ export class PhitnestApiStack extends Stack {
       apiName: `Phitnest-API-${DEPLOYMENT_ENV}`,
     });
     httpApi.applyRemovalPolicy(RemovalPolicy.DESTROY);
-    const cognito = new CognitoStack(this);
-    const dynamo = new DynamoDBStack(this);
+    this.cognito = new CognitoStack(this);
+    this.dynamo = new DynamoDBStack(this);
     const privateRoutes: [string, string][] = [];
     transpileFiles(params.commonSrcDir, params.commonDeploymentDir);
     const apiNodeModulesDir = path.join(params.apiRoutesDir, "node_modules");
@@ -87,14 +71,9 @@ export class PhitnestApiStack extends Stack {
       );
       const lambdaFunction = this.createLambdaFunction(
         params.lambdaDeploymentDir,
-        route,
-        {
-          DYNAMO_TABLE_NAME: dynamo.table.tableName || "",
-        }
+        route
       );
-      httpApi.addRoutes(
-        createHttpApiRoute(route, lambdaFunction, cognito.cognitoAuthorizer)
-      );
+      httpApi.addRoutes(this.createHttpApiRoute(route, lambdaFunction, true));
     }
     for (const route of getRoutesFromFilesystem(
       path.join(params.apiRoutesDir, "public")
@@ -116,14 +95,33 @@ export class PhitnestApiStack extends Stack {
         params.lambdaDeploymentDir,
         route
       );
-      httpApi.addRoutes(createHttpApiRoute(route, lambdaFunction));
+      httpApi.addRoutes(this.createHttpApiRoute(route, lambdaFunction, false));
     }
+  }
+
+  private createHttpApiRoute(
+    route: Route,
+    func: LambdaFunction,
+    authorized: boolean
+  ): AddRoutesOptions {
+    return {
+      path: route.path,
+      methods: [route.method],
+      integration: new HttpLambdaIntegration(
+        `integration-${route.path.replace("/", "-")}-${
+          route.method
+        }-${DEPLOYMENT_ENV}`,
+        func
+      ),
+      authorizer: authorized
+        ? this.cognito.cognitoAuthorizer
+        : new HttpNoneAuthorizer(),
+    };
   }
 
   private createLambdaFunction(
     lambdaDeploymentPath: string,
-    route: Route,
-    environmentVars: { [key: string]: string } = {}
+    route: Route
   ): LambdaFunction {
     const func = new LambdaFunction(
       this,
@@ -131,7 +129,9 @@ export class PhitnestApiStack extends Stack {
       {
         runtime: Runtime.NODEJS_16_X,
         handler: `index.invoke`,
-        environment: environmentVars,
+        environment: {
+          DYNAMO_TABLE_NAME: this.dynamo.table.tableName || "",
+        },
         code: Code.fromAsset(
           path.join(
             lambdaDeploymentPath,
