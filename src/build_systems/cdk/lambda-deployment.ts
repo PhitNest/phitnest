@@ -12,7 +12,7 @@ export const tsconfig: TranspileOptions = JSON.parse(
 export function transpileFiles(
   srcDir: string,
   outputDir: string,
-  ignoreTests: boolean = true
+  ignoreTests = true
 ) {
   for (const commonFile of getFilesRecursive(srcDir)) {
     if (
