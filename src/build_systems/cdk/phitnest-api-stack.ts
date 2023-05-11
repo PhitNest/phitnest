@@ -125,12 +125,15 @@ export class PhitnestApiStack extends Stack {
   ): LambdaFunction {
     const func = new LambdaFunction(
       this,
-      `lambda-${route.path.replace("/", "-")}-${route.method}`,
+      `lambda-${route.path.replace("/", "-")}-${
+        route.method
+      }-${DEPLOYMENT_ENV}`,
       {
         runtime: Runtime.NODEJS_16_X,
         handler: `index.invoke`,
         environment: {
-          DYNAMO_TABLE_NAME: this.dynamo.table.tableName || "",
+          DYNAMO_TABLE_NAME:
+            this.dynamo.table.tableName || `PhitnestTable-${DEPLOYMENT_ENV}`,
         },
         code: Code.fromAsset(
           path.join(
