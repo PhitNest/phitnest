@@ -1,5 +1,7 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
-export const client = new DynamoDBClient({
-  region: process.env.AWS_REGION,
-});
+export function connectDynamo(): DynamoDBClient {
+  return new DynamoDBClient({
+    region: process.env.AWS_REGION,
+  });
+}
