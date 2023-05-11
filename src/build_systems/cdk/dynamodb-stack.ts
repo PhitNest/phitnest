@@ -32,7 +32,7 @@ export class DynamoDBStack {
   constructor(scope: PhitnestApiStack) {
     this.table = new CfnGlobalTable(scope, `PhitnestTable-${DEPLOYMENT_ENV}`, {
       replicas: DYNAMODB_REPLICAS,
-      tableName: `Phitnest-${DEPLOYMENT_ENV}`,
+      tableName: `PhitnestTable-${DEPLOYMENT_ENV}`,
       billingMode: BillingMode.PAY_PER_REQUEST,
       keySchema: [
         {
