@@ -1,20 +1,10 @@
-import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
+import { APIGatewayProxyResult } from "aws-lambda";
 import { connectDynamo } from "api/common/dynamo";
-import { z } from "zod";
 import * as uuid from "uuid";
 
-export async function invoke(
-  event: APIGatewayEvent
-): Promise<APIGatewayProxyResult> {
+export async function invoke(): Promise<APIGatewayProxyResult> {
+  //event: APIGatewayEvent
   try {
-    const validator = z.object({
-      name: z.string(),
-      street: z.string(),
-      city: z.string(),
-      state: z.string(),
-      zipCode: z.string(),
-    });
-    const body = validator.parse(JSON.parse(event.body || ""));
     const client = connectDynamo();
     const gymId = uuid.v4();
     return {
@@ -22,7 +12,6 @@ export async function invoke(
       body: JSON.stringify({
         gymId: gymId,
         client: client,
-        body: body,
       }),
     };
   } catch (err) {
