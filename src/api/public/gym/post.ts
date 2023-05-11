@@ -34,17 +34,26 @@ export async function invoke(
     );
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "text/plain",
+      },
       body: gymId,
     };
   } catch (err) {
     if (err instanceof ZodError) {
       return {
         statusCode: 400,
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(err.issues),
       };
     }
     return {
       statusCode: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(err),
     };
   }
