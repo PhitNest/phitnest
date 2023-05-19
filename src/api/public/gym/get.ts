@@ -8,7 +8,7 @@ export async function invoke(): Promise<APIGatewayProxyResult> {
     return {
       statusCode: 200,
       body: JSON.stringify(
-        client.send(
+        await client.send(
           new QueryCommand({
             TableName: process.env.DYNAMO_TABLE_NAME,
             KeyConditions: {
