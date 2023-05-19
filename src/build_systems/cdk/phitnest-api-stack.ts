@@ -6,6 +6,13 @@ import {
 import { Construct, RemovalPolicy, Stack } from "@aws-cdk/core";
 import { Code, Function as LambdaFunction, Runtime } from "@aws-cdk/aws-lambda";
 import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations";
+import {
+  Effect,
+  PolicyDocument,
+  PolicyStatement,
+  Role,
+  ServicePrincipal,
+} from "@aws-cdk/aws-iam";
 import { Route, getRoutesFromFilesystem } from "../utils/file-based-routing";
 import { createDeploymentPackage, transpileFiles } from "./lambda-deployment";
 import { CognitoStack } from "./cognito-stack";
@@ -34,6 +41,7 @@ type PhitnestApiStackParams = {
 export class PhitnestApiStack extends Stack {
   private readonly dynamo: DynamoDBStack;
   private readonly cognito: CognitoStack;
+  private readonly lambdaRole: Role;
 
   constructor(
     scope: Construct,
@@ -56,6 +64,21 @@ export class PhitnestApiStack extends Stack {
     httpApi.applyRemovalPolicy(RemovalPolicy.DESTROY);
     this.cognito = new CognitoStack(this);
     this.dynamo = new DynamoDBStack(this);
+    this.lambdaRole = new Role(this, `PhitnestLambdaRole-${DEPLOYMENT_ENV}`, {
+      assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
+      inlinePolicies: {
+        dynamoAccess: new PolicyDocument({
+          statements: [
+            new PolicyStatement({
+              sid: "AllowDynamoAccessForApi",
+              effect: Effect.ALLOW,
+              actions: ["dynamodb:*"],
+              resources: [this.dynamo.table.attrArn],
+            }),
+          ],
+        }),
+      },
+    });
     const privateRoutes: [string, string][] = [];
     transpileFiles(params.commonSrcDir, params.commonDeploymentDir);
     const apiNodeModulesDir = path.join(params.apiRoutesDir, "node_modules");
@@ -142,6 +165,7 @@ export class PhitnestApiStack extends Stack {
             route.method.toLowerCase()
           )
         ),
+        role: this.lambdaRole,
       }
     );
     func.applyRemovalPolicy(RemovalPolicy.DESTROY);
