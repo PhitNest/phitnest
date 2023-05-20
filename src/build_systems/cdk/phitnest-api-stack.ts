@@ -21,15 +21,18 @@ import * as path from "path";
 
 export const DEPLOYMENT_ENV = process.env.DEPLOYMENT_ENV || "dev";
 
-const BUILD_DIR = path.join(process.cwd(), "build");
-const API_ROUTES_DIRECTORY_PATH = path.join(process.cwd(), "src", "api");
-const LAMBDA_DEPLOYMENT_DIRECTORY_PATH = path.join(
-  BUILD_DIR,
-  "lambda_deployment"
-);
-const COMMON_SRC_DIR = path.join(process.cwd(), "src", "api", "common");
-const COMMON_DEPLOYMENT_DIR = path.join(BUILD_DIR, "common");
-const DEPLOYMENT_REGION = "us-east-1";
+export const BUILD_DIR = path.join(process.cwd(), "build");
+export const API_DIR = path.join(process.cwd(), "src", "api");
+export const LAMBDA_DEPLOYMENT_DIR = path.join(BUILD_DIR, "lambda_deployment");
+export const COMMON_SRC_DIR = path.join(process.cwd(), "src", "api", "common");
+export const COMMON_DEPLOYMENT_DIR = path.join(BUILD_DIR, "common");
+export const DEPLOYMENT_REGION = "us-east-1";
+
+enum AuthLevel {
+  PUBLIC = "public",
+  PRIVATE = "private",
+  ADMIN = "admin",
+}
 
 type PhitnestApiStackParams = {
   apiRoutesDir: string;
@@ -39,15 +42,15 @@ type PhitnestApiStackParams = {
 };
 
 export class PhitnestApiStack extends Stack {
-  private readonly dynamo: DynamoDBStack;
+  public readonly dynamo: DynamoDBStack;
+  public readonly lambdaRole: Role;
   private readonly cognito: CognitoStack;
-  private readonly lambdaRole: Role;
 
   constructor(
     scope: Construct,
     params: PhitnestApiStackParams = {
-      apiRoutesDir: API_ROUTES_DIRECTORY_PATH,
-      lambdaDeploymentDir: LAMBDA_DEPLOYMENT_DIRECTORY_PATH,
+      apiRoutesDir: API_DIR,
+      lambdaDeploymentDir: LAMBDA_DEPLOYMENT_DIR,
       commonDeploymentDir: COMMON_DEPLOYMENT_DIR,
       commonSrcDir: COMMON_SRC_DIR,
     }
@@ -62,7 +65,6 @@ export class PhitnestApiStack extends Stack {
       apiName: `Phitnest-API-${DEPLOYMENT_ENV}`,
     });
     httpApi.applyRemovalPolicy(RemovalPolicy.DESTROY);
-    this.cognito = new CognitoStack(this);
     this.dynamo = new DynamoDBStack(this);
     this.lambdaRole = new Role(this, `PhitnestLambdaRole-${DEPLOYMENT_ENV}`, {
       assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
@@ -79,53 +81,52 @@ export class PhitnestApiStack extends Stack {
         }),
       },
     });
-    const privateRoutes: [string, string][] = [];
     transpileFiles(params.commonSrcDir, params.commonDeploymentDir);
     const apiNodeModulesDir = path.join(params.apiRoutesDir, "node_modules");
-    for (const route of getRoutesFromFilesystem(
-      path.join(params.apiRoutesDir, "private")
-    )) {
-      privateRoutes.push([route.path, route.method]);
-      createDeploymentPackage(
-        params.lambdaDeploymentDir,
-        route,
-        apiNodeModulesDir,
-        params.commonDeploymentDir
-      );
-      const lambdaFunction = this.createLambdaFunction(
-        params.lambdaDeploymentDir,
-        route
-      );
-      httpApi.addRoutes(this.createHttpApiRoute(route, lambdaFunction, true));
-    }
-    for (const route of getRoutesFromFilesystem(
-      path.join(params.apiRoutesDir, "public")
-    )) {
-      if (
-        privateRoutes.some((r) => r[0] === route.path && r[1] === route.method)
-      ) {
-        throw new Error(
-          `Route is defined in both public and private: ${route.method} ${route.path}`
+    this.cognito = new CognitoStack(this, {
+      cognitoHooksDir: path.join(params.apiRoutesDir, "cognito_hooks"),
+      nodeModulesDir: apiNodeModulesDir,
+      ...params,
+    });
+    const routes: Route[] = [];
+    for (const authLevel of Object.entries(AuthLevel)) {
+      for (const route of getRoutesFromFilesystem(
+        path.join(params.apiRoutesDir, authLevel[1])
+      )) {
+        if (routes.includes(route)) {
+          throw new Error(
+            `Route is defined twice: ${route.method} ${route.path}`
+          );
+        }
+        routes.push(route);
+        createDeploymentPackage(
+          path.join(
+            route.filesystemAbsolutePath,
+            `${route.method.toLowerCase()}.ts`
+          ),
+          path.join(
+            params.lambdaDeploymentDir,
+            route.filesystemRelativePath,
+            route.method.toLowerCase()
+          ),
+          apiNodeModulesDir,
+          params.commonDeploymentDir
+        );
+        const lambdaFunction = this.createLambdaFunction(
+          params.lambdaDeploymentDir,
+          route
+        );
+        httpApi.addRoutes(
+          this.createHttpApiRoute(route, lambdaFunction, authLevel[1])
         );
       }
-      createDeploymentPackage(
-        params.lambdaDeploymentDir,
-        route,
-        apiNodeModulesDir,
-        params.commonDeploymentDir
-      );
-      const lambdaFunction = this.createLambdaFunction(
-        params.lambdaDeploymentDir,
-        route
-      );
-      httpApi.addRoutes(this.createHttpApiRoute(route, lambdaFunction, false));
     }
   }
 
   private createHttpApiRoute(
     route: Route,
     func: LambdaFunction,
-    authorized: boolean
+    authLevel: AuthLevel
   ): AddRoutesOptions {
     return {
       path: route.path,
@@ -136,9 +137,12 @@ export class PhitnestApiStack extends Stack {
         }-${DEPLOYMENT_ENV}`,
         func
       ),
-      authorizer: authorized
-        ? this.cognito.cognitoAuthorizer
-        : new HttpNoneAuthorizer(),
+      authorizer:
+        authLevel === AuthLevel.PRIVATE
+          ? this.cognito.userAuthorizer
+          : authLevel === AuthLevel.ADMIN
+          ? this.cognito.adminAuthorizer
+          : new HttpNoneAuthorizer(),
     };
   }
 
@@ -157,6 +161,10 @@ export class PhitnestApiStack extends Stack {
         environment: {
           DYNAMO_TABLE_NAME:
             this.dynamo.table.tableName || `PhitnestTable-${DEPLOYMENT_ENV}`,
+          USER_POOL_ID: this.cognito.userPool.userPoolId,
+          ADMIN_POOL_ID: this.cognito.adminPool.userPoolId,
+          USER_POOL_CLIENT_ID: this.cognito.userClient.userPoolClientId,
+          ADMIN_POOL_CLIENT_ID: this.cognito.adminClient.userPoolClientId,
         },
         code: Code.fromAsset(
           path.join(

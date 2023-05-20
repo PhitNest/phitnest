@@ -8,21 +8,23 @@ export async function invoke(): Promise<APIGatewayProxyResult> {
     return {
       statusCode: 200,
       body: JSON.stringify(
-        await client.send(
-          new QueryCommand({
-            TableName: process.env.DYNAMO_TABLE_NAME,
-            KeyConditions: {
-              part_id: {
-                ComparisonOperator: "EQ",
-                AttributeValueList: [{ S: "GYMS" }],
+        (
+          await client.send(
+            new QueryCommand({
+              TableName: process.env.DYNAMO_TABLE_NAME,
+              KeyConditions: {
+                part_id: {
+                  ComparisonOperator: "EQ",
+                  AttributeValueList: [{ S: "GYMS" }],
+                },
+                sort_id: {
+                  ComparisonOperator: "BEGINS_WITH",
+                  AttributeValueList: [{ S: "GYM#" }],
+                },
               },
-              sort_id: {
-                ComparisonOperator: "BEGINS_WITH",
-                AttributeValueList: [{ S: "GYM#" }],
-              },
-            },
-          })
-        )
+            })
+          )
+        ).Items
       ),
     };
   });

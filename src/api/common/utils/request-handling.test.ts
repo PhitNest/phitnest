@@ -6,7 +6,7 @@ const basicValidator = z.object({
   number: z.number(),
 });
 
-async function basicController(data: any) {
+async function basicController(data: object) {
   return {
     statusCode: 200,
     body: JSON.stringify(data),

@@ -1,4 +1,3 @@
-import { HttpMethod } from "@aws-cdk/aws-apigatewayv2";
 import { transpileModule } from "typescript";
 import {
   getSharedTestDataPath,
@@ -13,34 +12,16 @@ import * as fs from "fs";
 
 describe("createDeploymentPackage", () => {
   it("should create a deployment package for a route", () => {
-    const apiRouteAbsolutePath = getSharedTestDataPath("api_routes", "route1");
-    const apiRouteRelativePath = path.relative(
-      getSharedTestDataPath("api_routes"),
-      apiRouteAbsolutePath
-    );
+    const sourcePath = getSharedTestDataPath("api_routes", "route1", "post.ts");
     const nodeModulesDir = getSharedTestDataPath("api_routes", "node_modules");
     const commonDir = getTestDataPath("common");
-    createDeploymentPackage(
-      getTestOutputPath("deployment_packages"),
-      {
-        filesystemAbsolutePath: apiRouteAbsolutePath,
-        filesystemRelativePath: apiRouteRelativePath,
-        path: "/route1",
-        method: HttpMethod.POST,
-      },
-      nodeModulesDir,
-      commonDir
-    );
-    const outputPath = getTestOutputPath(
-      "deployment_packages",
-      "route1",
-      "post"
-    );
+    const outputPath = getTestOutputPath("deployment_package");
+    createDeploymentPackage(sourcePath, outputPath, nodeModulesDir, commonDir);
     const outputFilePath = path.join(outputPath, "index.js");
     expect(fs.existsSync(outputFilePath));
     const fileData = fs.readFileSync(outputFilePath).toString();
     const expectedFileData = transpileModule(
-      fs.readFileSync(path.join(apiRouteAbsolutePath, "post.ts")).toString(),
+      fs.readFileSync(sourcePath).toString(),
       tsconfig
     ).outputText;
     expect(fileData).toEqual(expectedFileData);
