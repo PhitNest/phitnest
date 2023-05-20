@@ -3,16 +3,16 @@ import { APIGatewayProxyResult } from "aws-lambda";
 
 export async function invoke(): Promise<APIGatewayProxyResult> {
   return await handleRequest(async () => {
-    const { userPoolId, userClientId, adminPoolId, adminClientId } =
+    const { USER_POOL_ID, USER_CLIENT_ID, ADMIN_POOL_ID, ADMIN_CLIENT_ID } =
       process.env;
-    if (userPoolId && userClientId && adminPoolId && adminClientId) {
+    if (USER_POOL_ID && USER_CLIENT_ID && ADMIN_POOL_ID && ADMIN_CLIENT_ID) {
       return {
         statusCode: 200,
         body: JSON.stringify({
-          userPoolId: userPoolId,
-          userClientId: userClientId,
-          adminPoolId: adminPoolId,
-          adminClientId: adminClientId,
+          userPoolId: USER_POOL_ID,
+          userClientId: USER_CLIENT_ID,
+          adminPoolId: ADMIN_POOL_ID,
+          adminClientId: ADMIN_CLIENT_ID,
         }),
       };
     } else {
