@@ -4,7 +4,9 @@ import { z } from "zod";
 import { validateRequest, connectDynamo, getLocation } from "api/common/utils";
 import * as uuid from "uuid";
 
-export const UNABLE_TO_FIND_LOCATION_MSG = "Unable to fetch gym location";
+export const UNABLE_TO_FIND_LOCATION = {
+  message: "Unable to fetch gym location",
+};
 
 const validator = z.object({
   name: z.string(),
@@ -57,13 +59,7 @@ export async function invoke(
           }),
         };
       } else {
-        return {
-          statusCode: 500,
-          headers: {
-            "Content-Type": "text/plain",
-          },
-          body: UNABLE_TO_FIND_LOCATION_MSG,
-        };
+        throw UNABLE_TO_FIND_LOCATION;
       }
     },
   });

@@ -8,7 +8,7 @@ const basicValidator = z.object({
 
 async function basicController(data: object) {
   return {
-    statusCode: 200,
+    statusCode: 200 as const,
     body: JSON.stringify(data),
   };
 }
@@ -18,7 +18,7 @@ const ERROR_RESPONSE = { message: "Test Error" };
 async function errorController() {
   throw ERROR_RESPONSE;
   return {
-    statusCode: 200,
+    statusCode: 200 as const,
   };
 }
 
@@ -35,15 +35,9 @@ describe("validateRequest", () => {
     });
     expect(response.statusCode).toBe(400);
     expect(response.body).toBe(
-      JSON.stringify([
-        {
-          code: "invalid_type",
-          expected: "number",
-          received: "string",
-          path: ["number"],
-          message: "Expected number, received string",
-        },
-      ])
+      JSON.stringify({
+        message: "number: Expected number, received string",
+      })
     );
   });
 
@@ -111,12 +105,12 @@ describe("validateRequest", () => {
         },
         validator: basicValidator,
         controller: async () => ({
-          statusCode: 201,
+          statusCode: 200,
           headers: expectedHeaders,
         }),
       })
     ).toEqual({
-      statusCode: 201,
+      statusCode: 200,
       body: "",
       headers: expectedHeaders,
     });
