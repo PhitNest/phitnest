@@ -39,6 +39,12 @@ export class CognitoStack {
       "user_presignup"
     );
     const userPoolPrefix = "PhitnestUser";
+    createDeploymentPackage(
+      this.params.cognitoHooksDir,
+      userPresignupDeploymentDir,
+      this.params.nodeModulesDir,
+      this.params.commonDeploymentDir
+    );
     const userPresignupHook = this.createPresignupHook(
       scope,
       userPoolPrefix,
@@ -88,6 +94,12 @@ export class CognitoStack {
       "admin_presignup"
     );
     const adminPoolPrefix = "PhitnestAdmin";
+    createDeploymentPackage(
+      this.params.cognitoHooksDir,
+      adminPresignupDeploymentDir,
+      this.params.nodeModulesDir,
+      this.params.commonDeploymentDir
+    );
     const adminPresignupHook = this.createPresignupHook(
       scope,
       adminPoolPrefix,
@@ -138,12 +150,6 @@ export class CognitoStack {
     prefix: string,
     deploymentDir: string
   ) {
-    createDeploymentPackage(
-      this.params.cognitoHooksDir,
-      deploymentDir,
-      this.params.nodeModulesDir,
-      this.params.commonDeploymentDir
-    );
     return new Function(scope, `${prefix}Presignup-${DEPLOYMENT_ENV}`, {
       runtime: Runtime.NODEJS_16_X,
       handler: `index.invoke`,
