@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:basic_utils/basic_utils.dart';
 import 'package:dio/dio.dart';
-import 'package:sealed_unions/sealed_unions.dart';
 
-import 'failure.dart';
-import 'logger.dart';
+import '../failure.dart';
+import '../logger.dart';
+import 'response.dart';
 
 /// Default HTTP timeout
 const kDefaultTimeout = Duration(seconds: 30);
@@ -22,18 +24,7 @@ enum HttpMethod {
   delete,
 }
 
-/// Custom Failure class for network connection issues
-class HttpFailure extends Failure {
-  final dynamic _error;
-
-  dynamic get error => _error;
-
-  const HttpFailure(dynamic error)
-      : _error = error,
-        super("Network connection failure.");
-}
-
-/// Http class for handling HTTP requests
+/// For handling HTTP requests
 class Http {
   final String _host;
   final String _port;
@@ -54,10 +45,10 @@ class Http {
       '${overrideHost ?? _host}${(overridePort ?? _port).isEmpty ? "" : ":${overridePort ?? _port}"}$route';
 
   /// Asynchronous method to perform the HTTP request and handle the response
-  Future<Union2<ResType, HttpFailure>> request<ResType>({
+  Future<HttpResponse> request<ResType>({
     required String route,
     required HttpMethod method,
-    required ResType? Function(Response) parser,
+    required ResType Function(dynamic) parser,
     Map<String, dynamic>? data,
     Map<String, dynamic>? headers,
     String? authorization,
@@ -98,54 +89,44 @@ class Http {
     }
     final dio = Dio(options);
 
+    final String Function(
+        String situation, dynamic data) responseLog = (situation,
+            data) =>
+        "Request $situation:${descriptionLog(data)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms";
     // Perform the request and handle the response
     try {
-      return await () async {
-        switch (method) {
-          case HttpMethod.get:
-            return dio.get(url);
-          case HttpMethod.post:
-            return dio.post(url, data: data);
-          case HttpMethod.put:
-            return dio.put(url, data: data);
-          case HttpMethod.delete:
-            return dio.delete(url);
-        }
-      }()
+      return await switch (method) {
+        HttpMethod.get => dio.get(url),
+        HttpMethod.post => dio.post(url, data: data),
+        HttpMethod.put => dio.put(url, data: data),
+        HttpMethod.delete => dio.delete(url),
+      }
           .timeout(_timeout)
           .then(
         (response) {
           // Handle successful responses
-          if (ResType == Null &&
-              response.data == null &&
-              response.statusCode == 200) {
-            prettyLogger.d(
-                "Response success:${descriptionLog(null)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
-            return Union2First(null as ResType);
+          if (response.statusCode == 200) {
+            // Parse the response data
+            final parsed = parser(response.data);
+            // Log success
+            prettyLogger.d(responseLog("success", parsed));
+            return HttpResponseOk<ResType>(parsed, response.headers);
           }
-          // Parse the response data
-          final parsed = parser(response);
-          if (parsed != null) {
-            // Log success or failure based on the parsed data
-            if (parsed is Failure) {
-              prettyLogger.e(
-                  "Response failure:${descriptionLog(parsed)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
-            } else {
-              prettyLogger.d(
-                  "Response success:${descriptionLog(parsed)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
-            }
-            return Union2First(parsed);
-          } else {
-            // Throw an exception if the response cannot be parsed
-            throw response.data;
-          }
+          // Handle unsuccessful responses
+          final failure = Failure.fromJson(response.data);
+          prettyLogger.e(responseLog("failure", failure));
+          return HttpResponseFailure(failure, response.headers);
         },
       );
+    } on TimeoutException {
+      // Log and return a NetworkConnectionFailure on timeout
+      prettyLogger.e(responseLog("timeout", data));
+      return HttpResponseFailure(const Failure("Request timeout"), Headers());
     } catch (e) {
-      // Log and return a NetworkConnectionFailure on request failure
-      prettyLogger.e(
-          "Request failure:${descriptionLog(e)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms");
-      return Union2Second(HttpFailure(e));
+      // Log and return failure by value
+      final failure = invalidFailure(e);
+      prettyLogger.e(responseLog("failure", failure));
+      return HttpResponseFailure(failure, Headers());
     }
   }
 }
@@ -159,10 +140,10 @@ void initializeHttp({String? host, String? port, Duration? timeout}) {
 }
 
 /// Shortcut function for making requests using the Http instance
-Future<Union2<ResType, HttpFailure>> Function<ResType>({
+Future<HttpResponse> Function<ResType>({
   required String route,
   required HttpMethod method,
-  required ResType? Function(Response) parser,
+  required ResType Function(dynamic) parser,
   Map<String, dynamic>? data,
   Map<String, dynamic>? headers,
   String? authorization,

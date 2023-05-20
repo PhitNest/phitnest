@@ -116,7 +116,6 @@ class EmailValidator {
     return false;
   }
 
-  // TODO: Documentation for this function is required
   static bool _skipAtom(String text, bool allowInternational) {
     final startIndex = _index;
 
@@ -215,7 +214,6 @@ class EmailValidator {
     return true;
   }
 
-  // TODO: Documentation for this function is required
   static bool _skipIPv4Literal(String text) {
     var groups = 0;
 

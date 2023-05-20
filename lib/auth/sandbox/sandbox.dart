@@ -1,15 +1,5 @@
-import 'dart:math';
+part of '../auth.dart';
 
-import 'package:sealed_unions/sealed_unions.dart';
-
-import '../../cache.dart' as cache;
-import '../../serializable.dart';
-import '../../validators/validators.dart';
-import '../auth.dart';
-import '../failures.dart';
-import 'user_data.dart';
-
-const kSandboxTokenDuration = Duration(seconds: 45);
 const kMaxUserId = 100000000;
 const kSandboxEmailToUserMapJsonKey = "email_to_user_map";
 const kSandboxIdToUserMapJsonKey = "id_to_user_map";
@@ -23,20 +13,20 @@ bool validSandboxConfirmationCode(String code) =>
     code.endsWith("7") ||
     code.endsWith("9");
 
-class Sandbox extends Auth with Serializable {
+class Sandbox extends Auth {
   final Map<String, SandboxUserData> emailToUserMap;
   final Map<String, SandboxUserData> idToUserMap;
   SandboxUserData? currentUser;
 
-  static Sandbox? getFromCache() => cache.loaded
-      ? cache.getSecureCachedObject(
+  static Sandbox? getFromCache() => cacheLoaded
+      ? getSecureCachedObject(
           kSandboxDataCacheKey,
           (json) => Sandbox.fromJson(json),
         )
       : null;
 
   static Future<void> clearSandboxCache() =>
-      cache.cacheSecureObject(kSandboxDataCacheKey, null);
+      cacheSecureObject(kSandboxDataCacheKey, null);
 
   Sandbox({
     required this.emailToUserMap,
@@ -45,46 +35,41 @@ class Sandbox extends Auth with Serializable {
   });
 
   @override
-  Future<Union2<String, LoginFailure>> login(
+  Future<LoginResponse> login(
     String email,
     String password,
   ) async {
     final user = emailToUserMap[email];
     if (user == null) {
-      return Union2Second(LoginFailure(LoginFailureType.noSuchUser));
+      return const LoginFailure(LoginFailureType.noSuchUser);
     } else if (!user.confirmed) {
-      return Union2Second(LoginFailure(LoginFailureType.confirmationRequired));
+      return const LoginFailure(LoginFailureType.confirmationRequired);
     } else if (user.password != password) {
-      return Union2Second(LoginFailure(LoginFailureType.invalidEmailPassword));
+      return const LoginFailure(LoginFailureType.invalidEmailPassword);
     } else {
       currentUser = user;
-      await cache.cacheSecureObject(
+      await cacheSecureObject(
         kSandboxDataCacheKey,
         this,
       );
-      return Union2First(user.userId);
+      return LoginSuccess(user.userId);
     }
   }
 
   @override
-  Future<Union2<String, RegistrationFailure>> register(
+  Future<RegisterResponse> register(
     String email,
     String password,
+    List<AttributeArg> userAttributes,
   ) async {
     final user = emailToUserMap[email];
     if (user == null) {
       if (EmailValidator.validateEmail(email)) {
         final passwordProblems = validatePassword(password);
         if (passwordProblems != null) {
-          return Union2Second(
-            RegistrationFailure(
-              Union2Second(
-                ValidationFailure(
-                  ValidationFailureType.invalidPassword,
-                  passwordProblems,
-                ),
-              ),
-            ),
+          return ValidationFailure(
+            ValidationFailureType.invalidPassword,
+            passwordProblems,
           );
         } else {
           String userId = Random().nextInt(kMaxUserId).toString();
@@ -96,76 +81,62 @@ class Sandbox extends Auth with Serializable {
             email: email,
             password: password,
             confirmed: false,
+            userAttributes: userAttributes,
           );
           emailToUserMap[email] = newUser;
           idToUserMap[userId] = newUser;
           // Don't save the unconfirmed user in the cache
-          await cache.cacheSecureObject(
+          await cacheSecureObject(
             kSandboxDataCacheKey,
             this,
           );
-          return Union2First(userId);
+          return RegisterSuccess(userId);
         }
       } else {
-        return Union2Second(
-          RegistrationFailure(
-            Union2Second(
-              const ValidationFailure(
-                ValidationFailureType.invalidEmail,
-                "Invalid email.",
-              ),
-            ),
-          ),
+        return const ValidationFailure(
+          ValidationFailureType.invalidEmail,
+          "Invalid email.",
         );
       }
     } else {
-      return Union2Second(
-        RegistrationFailure(
-          Union2First(
-            RegistrationFailureType.userExists,
-          ),
-        ),
+      return const RegisterFailure(
+        RegisterFailureType.userExists,
       );
     }
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-        "mode": "sandbox",
-        kSandboxEmailToUserMapJsonKey: emailToUserMap.map(
-          (key, value) => MapEntry(key, value.toJson()),
-        ),
-        kSandboxIdToUserMapJsonKey: idToUserMap.map(
-          (key, value) => MapEntry(key, value.toJson()),
-        ),
-        ...(currentUser != null
-            ? {
-                kCurrentUserJsonKey: currentUser!.toJson(),
-              }
-            : {}),
+  Map<String, Serializable> toJson() => {
+        kSandboxEmailToUserMapJsonKey: SerializableMap(emailToUserMap),
+        kSandboxIdToUserMapJsonKey: SerializableMap(idToUserMap),
+        ...(currentUser != null ? {kCurrentUserJsonKey: currentUser!} : {}),
       };
 
-  factory Sandbox.fromJson(Map<String, dynamic> json) => Sandbox(
-        emailToUserMap: Map.fromEntries(
-          json[kSandboxEmailToUserMapJsonKey].entries.map(
-                (entry) => MapEntry(
-                  entry.key,
-                  SandboxUserData.fromJson(entry.value),
-                ),
+  factory Sandbox.fromJson(Map<String, dynamic> json) => switch (json) {
+        {
+          kSandboxEmailToUserMapJsonKey: Map<String, Map<String, dynamic>>
+              emailToUserMap,
+          kSandboxIdToUserMapJsonKey: Map<String, Map<String, dynamic>>
+              idToUserMap,
+          kCurrentUserJsonKey: Map<String, dynamic> currentUserMap
+        } =>
+          Sandbox(
+            emailToUserMap: emailToUserMap.map(
+              (email, userJson) => MapEntry(
+                email,
+                SandboxUserData.fromJson(userJson),
               ),
-        ),
-        idToUserMap: Map.fromEntries(
-          json[kSandboxIdToUserMapJsonKey].entries.map(
-                (entry) => MapEntry(
-                  entry.key,
-                  SandboxUserData.fromJson(entry.value),
-                ),
+            ),
+            idToUserMap: idToUserMap.map(
+              (id, userJson) => MapEntry(
+                id,
+                SandboxUserData.fromJson(userJson),
               ),
-        ),
-        currentUser: json[kCurrentUserJsonKey] == null
-            ? null
-            : SandboxUserData.fromJson(json[kCurrentUserJsonKey]),
-      );
+            ),
+            currentUser: SandboxUserData.fromJson(currentUserMap),
+          ),
+        _ => throw FormatException("Invalid JSON for Sandbox: $json"),
+      };
 
   @override
   Future<bool> confirmEmail(
@@ -185,10 +156,11 @@ class Sandbox extends Auth with Serializable {
         email: user.email,
         password: user.password,
         confirmed: true,
+        userAttributes: user.userAttributes,
       );
       emailToUserMap[email] = updatedUser;
       idToUserMap[user.userId] = updatedUser;
-      await cache.cacheSecureObject(
+      await cacheSecureObject(
         kSandboxDataCacheKey,
         this,
       );
@@ -201,17 +173,15 @@ class Sandbox extends Auth with Serializable {
       emailToUserMap.containsKey(email);
 
   @override
-  Future<Union2<void, SubmitForgotPasswordFailure>> submitForgotPassword(
+  Future<SubmitForgotPasswordFailure?> submitForgotPassword(
     String email,
     String code,
     String newPassword,
   ) async {
     if (!emailToUserMap.containsKey(email)) {
-      return Union2Second(SubmitForgotPasswordFailure(
-          SubmitForgotPasswordFailureType.noSuchUser));
+      return SubmitForgotPasswordFailure.noSuchUser;
     } else if (!validSandboxConfirmationCode(code)) {
-      return Union2Second(SubmitForgotPasswordFailure(
-          SubmitForgotPasswordFailureType.invalidCode));
+      return SubmitForgotPasswordFailure.invalidCode;
     } else {
       final user = emailToUserMap[email]!;
       final updatedUser = SandboxUserData(
@@ -219,35 +189,33 @@ class Sandbox extends Auth with Serializable {
         email: user.email,
         password: newPassword,
         confirmed: user.confirmed,
+        userAttributes: user.userAttributes,
       );
       emailToUserMap[email] = updatedUser;
       idToUserMap[user.userId] = updatedUser;
-      await cache.cacheSecureObject(
+      await cacheSecureObject(
         kSandboxDataCacheKey,
         this,
       );
-      return Union2First(null);
+      return null;
     }
   }
 
   @override
-  Future<Union2<void, ForgotPasswordFailure>> forgotPassword(
-      String email) async {
+  Future<ForgotPasswordFailure?> forgotPassword(String email) async {
     if (!emailToUserMap.containsKey(email)) {
-      return Union2Second(
-          ForgotPasswordFailure(ForgotPasswordFailureType.noSuchUser));
+      return ForgotPasswordFailure.noSuchUser;
     } else {
-      return Union2First(null);
+      return null;
     }
   }
 
   @override
-  Future<Union2<void, RefreshSessionFailure>> refreshSession() async {
+  Future<RefreshSessionFailure?> refreshSession() async {
     if (currentUser == null) {
-      return Union2Second(
-          RefreshSessionFailure(RefreshSessionFailureType.noSuchUser));
+      return RefreshSessionFailure.noSuchUser;
     } else {
-      return Union2First(null);
+      return null;
     }
   }
 }

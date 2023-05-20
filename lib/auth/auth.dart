@@ -1,55 +1,80 @@
-import 'package:sealed_unions/sealed_unions.dart';
+import 'dart:math';
+import 'package:amazon_cognito_identity_dart_2/cognito.dart';
+import 'package:equatable/equatable.dart';
 
-import 'cognito/cognito.dart';
-import 'failures.dart';
-import 'sandbox/sandbox.dart';
+import 'responses/responses.dart';
+import '../../cache.dart';
+import '../../serializable.dart';
+import '../../validators/validators.dart';
 
+part 'cognito/cognito.dart';
+part 'sandbox/sandbox.dart';
+part 'sandbox/user_data.dart';
+
+const kAdminPoolIdJsonKey = "adminPoolId";
 const kUserPoolIdJsonKey = "userPoolId";
-const kAppClientIdJsonKey = "clientId";
+const kAdminClientIdJsonKey = "adminClientId";
+const kUserClientIdJsonKey = "userClientId";
 
-abstract class Auth {
+class CognitoPoolDetails extends Equatable {
+  final String userPoolId;
+  final String clientId;
+
+  const CognitoPoolDetails({
+    required this.userPoolId,
+    required this.clientId,
+  });
+
+  @override
+  List<Object?> get props => [userPoolId, clientId];
+}
+
+sealed class Auth extends JsonSerializable {
   const Auth() : super();
 
-  factory Auth.fromServerStatus(dynamic serverStatus) {
-    if (serverStatus is String && serverStatus == "sandbox") {
-      return Sandbox.getFromCache() ??
-          Sandbox(
-            emailToUserMap: {},
-            idToUserMap: {},
-            currentUser: null,
-          );
-    } else if (serverStatus is Map<String, dynamic> &&
-        serverStatus.containsKey(kUserPoolIdJsonKey) &&
-        serverStatus.containsKey(kAppClientIdJsonKey)) {
-      return Cognito(
-        userPoolId: serverStatus[kUserPoolIdJsonKey],
-        clientId: serverStatus[kAppClientIdJsonKey],
-      );
-    }
-    throw Exception("Invalid server status: $serverStatus");
-  }
+  factory Auth.fromJson(dynamic serverStatus, bool admin) =>
+      switch (serverStatus) {
+        "sandbox" => Sandbox.getFromCache() ??
+            Sandbox(
+              emailToUserMap: {},
+              idToUserMap: {},
+              currentUser: null,
+            ),
+        {
+          kAdminPoolIdJsonKey: String adminPoolId,
+          kAdminClientIdJsonKey: String adminClientId,
+          kUserPoolIdJsonKey: String userPoolId,
+          kUserClientIdJsonKey: String userClientId
+        } =>
+          Cognito(CognitoPoolDetails(
+            userPoolId: admin ? adminPoolId : userPoolId,
+            clientId: admin ? adminClientId : userClientId,
+          )),
+        _ => throw FormatException("Invalid server status: $serverStatus"),
+      };
 
-  Future<Union2<String, LoginFailure>> login(
+  Future<LoginResponse> login(
     String email,
     String password,
   );
 
-  Future<Union2<String, RegistrationFailure>> register(
+  Future<RegisterResponse> register(
     String email,
     String password,
+    List<AttributeArg> userAttributes,
   );
 
   Future<bool> confirmEmail(String email, String code);
 
   Future<bool> resendConfirmationEmail(String email);
 
-  Future<Union2<void, ForgotPasswordFailure>> forgotPassword(String email);
+  Future<ForgotPasswordFailure?> forgotPassword(String email);
 
-  Future<Union2<void, SubmitForgotPasswordFailure>> submitForgotPassword(
+  Future<SubmitForgotPasswordFailure?> submitForgotPassword(
     String email,
     String code,
     String newPassword,
   );
 
-  Future<Union2<void, RefreshSessionFailure>> refreshSession();
+  Future<RefreshSessionFailure?> refreshSession();
 }
