@@ -1,4 +1,4 @@
-import { UNABLE_TO_FIND_LOCATION_MSG, invoke } from "./post";
+import { UNABLE_TO_FIND_LOCATION, invoke } from "./post";
 import { mockPost } from "api/common/test-helpers";
 import * as uuid from "uuid";
 
@@ -11,72 +11,15 @@ const testAddress1 = {
 
 describe("POST /gym", () => {
   it("should fail for invalid input", async () => {
-    const emptyBodyResult = await invoke(mockPost(undefined));
-    expect(emptyBodyResult).toEqual({
+    expect(await invoke(mockPost(undefined))).toEqual({
       statusCode: 400,
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify([
-        {
-          code: "invalid_type",
-          expected: "string",
-          received: "undefined",
-          path: ["name"],
-          message: "Required",
-        },
-        {
-          code: "invalid_type",
-          expected: "string",
-          received: "undefined",
-          path: ["street"],
-          message: "Required",
-        },
-        {
-          code: "invalid_type",
-          expected: "string",
-          received: "undefined",
-          path: ["city"],
-          message: "Required",
-        },
-        {
-          code: "invalid_type",
-          expected: "string",
-          received: "undefined",
-          path: ["state"],
-          message: "Required",
-        },
-        {
-          code: "invalid_type",
-          expected: "string",
-          received: "undefined",
-          path: ["zipCode"],
-          message: "Required",
-        },
-      ]),
-    });
-    const result = await invoke(
-      mockPost({
-        name: "test",
-        street: "123 Fake St",
-        city: "Blacksburg",
-        state: "VA",
-      })
-    );
-    expect(result).toEqual({
-      statusCode: 400,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify([
-        {
-          code: "invalid_type",
-          expected: "string",
-          received: "undefined",
-          path: ["zipCode"],
-          message: "Required",
-        },
-      ]),
+      body: JSON.stringify({
+        message:
+          "name: Required, street: Required, city: Required, state: Required, zipCode: Required",
+      }),
     });
   });
 
@@ -93,9 +36,9 @@ describe("POST /gym", () => {
     expect(result).toEqual({
       statusCode: 500,
       headers: {
-        "Content-Type": "text/plain",
+        "Content-Type": "application/json",
       },
-      body: UNABLE_TO_FIND_LOCATION_MSG,
+      body: JSON.stringify(UNABLE_TO_FIND_LOCATION),
     });
   });
 
