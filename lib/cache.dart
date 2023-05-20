@@ -9,7 +9,7 @@ import 'logger.dart';
 bool _loaded = false;
 
 /// Getter for whether the cache is loaded
-bool get loaded => _loaded;
+bool get cacheLoaded => _loaded;
 
 // Declare late-initialized SharedPreferences instance
 late final SharedPreferences _sharedPreferences;
