@@ -41,7 +41,7 @@ export class CognitoStack {
     });
     const emailConfig = UserPoolEmail.withSES({
       fromEmail: "verify@phitnest.com",
-      fromName: "Phitnest Verification",
+      fromName: "PhitNest Verification",
       replyTo: "verify@phitnest.com",
       sesVerifiedDomain: "phitnest.com",
     });
