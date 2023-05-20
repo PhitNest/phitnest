@@ -1,6 +1,6 @@
 import {
   AccountRecovery,
-  BooleanAttribute,
+  StringAttribute,
   UserPool,
   UserPoolClient,
   UserPoolEmail,
@@ -8,43 +8,175 @@ import {
 import { RemovalPolicy } from "@aws-cdk/core";
 import { DEPLOYMENT_ENV, PhitnestApiStack } from "./phitnest-api-stack";
 import { HttpUserPoolAuthorizer } from "@aws-cdk/aws-apigatewayv2-authorizers";
+import { Code, Function, Runtime } from "@aws-cdk/aws-lambda";
+import { createDeploymentPackage } from "./lambda-deployment";
+import * as path from "path";
+
+type CognitoStackParams = {
+  cognitoHooksDir: string;
+  lambdaDeploymentDir: string;
+  nodeModulesDir: string;
+  commonDeploymentDir: string;
+};
 
 export class CognitoStack {
-  public readonly cognitoAuthorizer: HttpUserPoolAuthorizer;
+  public readonly userAuthorizer: HttpUserPoolAuthorizer;
+  public readonly adminAuthorizer: HttpUserPoolAuthorizer;
+  public readonly userPool: UserPool;
+  public readonly adminPool: UserPool;
+  public readonly userClient: UserPoolClient;
+  public readonly adminClient: UserPoolClient;
+  private readonly params: CognitoStackParams;
 
-  constructor(scope: PhitnestApiStack) {
-    const userPool = new UserPool(scope, `PhitnestUserPool-${DEPLOYMENT_ENV}`, {
-      userPoolName: `Phitnest-User-Pool-${DEPLOYMENT_ENV}`,
-      selfSignUpEnabled: true,
-      signInAliases: {
-        email: true,
-        username: false,
-      },
-      accountRecovery: AccountRecovery.EMAIL_ONLY,
-      email: UserPoolEmail.withSES({
-        fromEmail: "verify@phitnest.com",
-        fromName: "Phitnest Verification",
-        replyTo: "verify@phitnest.com",
-        sesVerifiedDomain: "phitnest.com",
-      }),
-      customAttributes: {
-        admin: new BooleanAttribute({ mutable: true }),
-      },
-    });
-    userPool.applyRemovalPolicy(RemovalPolicy.DESTROY);
-    const client = new UserPoolClient(
-      scope,
-      `PhitnestUserPoolClient-${DEPLOYMENT_ENV}`,
-      { userPool: userPool }
+  constructor(scope: PhitnestApiStack, params: CognitoStackParams) {
+    this.params = params;
+    const hookDeploymentDir = path.join(
+      params.lambdaDeploymentDir,
+      "cognito_hooks"
     );
-    client.applyRemovalPolicy(RemovalPolicy.DESTROY);
-    this.cognitoAuthorizer = new HttpUserPoolAuthorizer(
-      `PhitnestCognitoAuthorizer-${DEPLOYMENT_ENV}`,
-      userPool,
+    const userPresignupDeploymentDir = path.join(
+      hookDeploymentDir,
+      "user_presignup"
+    );
+    const userPoolPrefix = "PhitnestUser";
+    const userPresignupHook = this.createPresignupHook(
+      scope,
+      userPoolPrefix,
+      userPresignupDeploymentDir
+    );
+    this.userPool = new UserPool(
+      scope,
+      `${userPoolPrefix}Pool-${DEPLOYMENT_ENV}`,
       {
-        userPoolClients: [client],
-        identitySource: ["$request.header.Authorization"],
+        userPoolName: `Phitnest-User-Pool-${DEPLOYMENT_ENV}`,
+        selfSignUpEnabled: true,
+        signInAliases: {
+          email: true,
+          username: false,
+        },
+        accountRecovery: AccountRecovery.EMAIL_ONLY,
+        email: UserPoolEmail.withSES({
+          fromEmail: "verify@phitnest.com",
+          fromName: "Phitnest Verification",
+          replyTo: "verify@phitnest.com",
+          sesVerifiedDomain: "phitnest.com",
+        }),
+        standardAttributes: {
+          email: {
+            mutable: true,
+            required: true,
+          },
+        },
+        customAttributes: {
+          firstName: new StringAttribute({ mutable: true }),
+          lastName: new StringAttribute({ mutable: true }),
+          gymId: new StringAttribute({ mutable: true }),
+        },
+        lambdaTriggers: {
+          preSignUp: userPresignupHook,
+        },
       }
     );
+    this.userPool.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    [this.userClient, this.userAuthorizer] = this.createClient(
+      scope,
+      this.userPool,
+      userPoolPrefix
+    );
+    const adminPresignupDeploymentDir = path.join(
+      hookDeploymentDir,
+      "admin_presignup"
+    );
+    const adminPoolPrefix = "PhitnestAdmin";
+    const adminPresignupHook = this.createPresignupHook(
+      scope,
+      adminPoolPrefix,
+      adminPresignupDeploymentDir
+    );
+    this.adminPool = new UserPool(
+      scope,
+      `${adminPoolPrefix}Pool-${DEPLOYMENT_ENV}`,
+      {
+        userPoolName: `Phitnest-Admin-Pool-${DEPLOYMENT_ENV}`,
+        selfSignUpEnabled: false,
+        signInAliases: {
+          email: true,
+          username: false,
+        },
+        accountRecovery: AccountRecovery.EMAIL_ONLY,
+        email: UserPoolEmail.withSES({
+          fromEmail: "verify@phitnest.com",
+          fromName: "Phitnest Verification",
+          replyTo: "verify@phitnest.com",
+          sesVerifiedDomain: "phitnest.com",
+        }),
+        standardAttributes: {
+          email: {
+            mutable: true,
+            required: true,
+          },
+        },
+        customAttributes: {
+          firstName: new StringAttribute({ mutable: true }),
+          lastName: new StringAttribute({ mutable: true }),
+        },
+        lambdaTriggers: {
+          preSignUp: adminPresignupHook,
+        },
+      }
+    );
+    this.adminPool.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    [this.adminClient, this.adminAuthorizer] = this.createClient(
+      scope,
+      this.adminPool,
+      adminPoolPrefix
+    );
+  }
+
+  private createPresignupHook(
+    scope: PhitnestApiStack,
+    prefix: string,
+    deploymentDir: string
+  ) {
+    createDeploymentPackage(
+      this.params.cognitoHooksDir,
+      deploymentDir,
+      this.params.nodeModulesDir,
+      this.params.commonDeploymentDir
+    );
+    return new Function(scope, `${prefix}Presignup-${DEPLOYMENT_ENV}`, {
+      runtime: Runtime.NODEJS_16_X,
+      handler: `index.invoke`,
+      environment: {
+        DYNAMO_TABLE_NAME:
+          scope.dynamo.table.tableName || `PhitnestTable-${DEPLOYMENT_ENV}`,
+      },
+      code: Code.fromAsset(deploymentDir),
+      role: scope.lambdaRole,
+    });
+  }
+
+  private createClient(
+    scope: PhitnestApiStack,
+    pool: UserPool,
+    prefix: string
+  ): [UserPoolClient, HttpUserPoolAuthorizer] {
+    const client = new UserPoolClient(
+      scope,
+      `${prefix}Client-${DEPLOYMENT_ENV}`,
+      { userPool: pool }
+    );
+    client.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    return [
+      client,
+      new HttpUserPoolAuthorizer(
+        `${prefix}Authorizer-${DEPLOYMENT_ENV}`,
+        pool,
+        {
+          userPoolClients: [client],
+          identitySource: ["$request.header.Authorization"],
+        }
+      ),
+    ];
   }
 }

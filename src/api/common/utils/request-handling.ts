@@ -35,9 +35,9 @@ export async function handleRequest(
 }
 
 export async function validateRequest<
-  ValidatorType extends z.ZodObject<any>
+  ValidatorType extends z.ZodObject<z.ZodRawShape>
 >(props: {
-  data: any;
+  data: object;
   validator: ValidatorType;
   controller: (requestData: z.infer<ValidatorType>) => Promise<{
     statusCode: number;

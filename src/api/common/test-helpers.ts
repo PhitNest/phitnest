@@ -20,7 +20,7 @@ export function setupDynamoMock() {
   dynamoMock.on(PutItemCommand).resolves({});
 }
 
-export function mockDynamoQuery(input: QueryCommandInput, response: any) {
+export function mockDynamoQuery(input: QueryCommandInput, response: object) {
   dynamoMock.on(QueryCommand, input).resolves(response);
 }
 
@@ -39,7 +39,7 @@ export function setupMocks() {
 }
 
 function mockHttp(
-  body?: any,
+  body?: object | string,
   pathParams?: APIGatewayProxyEventPathParameters,
   queryParams?: APIGatewayProxyEventQueryStringParameters,
   headers?: APIGatewayProxyEventMultiValueHeaders
@@ -91,14 +91,14 @@ function mockHttp(
 }
 
 export function mockPost(
-  body: any,
+  body?: object | string,
   pathParams?: APIGatewayProxyEventPathParameters
 ) {
   return mockHttp(body, pathParams, {});
 }
 
 export function mockPut(
-  body: any,
+  body?: object | string,
   pathParams?: APIGatewayProxyEventPathParameters
 ) {
   return mockHttp(body, pathParams, {});

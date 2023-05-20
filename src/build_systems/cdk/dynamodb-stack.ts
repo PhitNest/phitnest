@@ -6,6 +6,9 @@ import {
 import { IResolvable, RemovalPolicy } from "@aws-cdk/core";
 import { DEPLOYMENT_ENV, PhitnestApiStack } from "./phitnest-api-stack";
 
+const PART_KEY = "part_id";
+const SORT_KEY = "sort_id";
+
 const DYNAMODB_REPLICAS:
   | Array<CfnGlobalTable.ReplicaSpecificationProperty | IResolvable>
   | IResolvable =
@@ -36,21 +39,21 @@ export class DynamoDBStack {
       billingMode: BillingMode.PAY_PER_REQUEST,
       keySchema: [
         {
-          attributeName: "part_id",
+          attributeName: PART_KEY,
           keyType: "HASH",
         },
         {
-          attributeName: "sort_id",
+          attributeName: SORT_KEY,
           keyType: "RANGE",
         },
       ],
       attributeDefinitions: [
         {
-          attributeName: "part_id",
+          attributeName: PART_KEY,
           attributeType: AttributeType.STRING,
         },
         {
-          attributeName: "sort_id",
+          attributeName: SORT_KEY,
           attributeType: AttributeType.STRING,
         },
       ],
