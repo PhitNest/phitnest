@@ -34,6 +34,17 @@ export class CognitoStack {
       params.lambdaDeploymentDir,
       "cognito_hooks"
     );
+    const nameAttribute = new StringAttribute({
+      mutable: true,
+      minLen: 1,
+      maxLen: 24,
+    });
+    const emailConfig = UserPoolEmail.withSES({
+      fromEmail: "verify@phitnest.com",
+      fromName: "Phitnest Verification",
+      replyTo: "verify@phitnest.com",
+      sesVerifiedDomain: "phitnest.com",
+    });
     const userPresignupDeploymentDir = path.join(
       hookDeploymentDir,
       "user_presignup"
@@ -61,12 +72,7 @@ export class CognitoStack {
           username: false,
         },
         accountRecovery: AccountRecovery.EMAIL_ONLY,
-        email: UserPoolEmail.withSES({
-          fromEmail: "verify@phitnest.com",
-          fromName: "Phitnest Verification",
-          replyTo: "verify@phitnest.com",
-          sesVerifiedDomain: "phitnest.com",
-        }),
+        email: emailConfig,
         standardAttributes: {
           email: {
             mutable: true,
@@ -74,8 +80,8 @@ export class CognitoStack {
           },
         },
         customAttributes: {
-          firstName: new StringAttribute({ mutable: true }),
-          lastName: new StringAttribute({ mutable: true }),
+          firstName: nameAttribute,
+          lastName: nameAttribute,
           gymId: new StringAttribute({ mutable: true }),
         },
         lambdaTriggers: {
@@ -116,12 +122,7 @@ export class CognitoStack {
           username: false,
         },
         accountRecovery: AccountRecovery.EMAIL_ONLY,
-        email: UserPoolEmail.withSES({
-          fromEmail: "verify@phitnest.com",
-          fromName: "Phitnest Verification",
-          replyTo: "verify@phitnest.com",
-          sesVerifiedDomain: "phitnest.com",
-        }),
+        email: emailConfig,
         standardAttributes: {
           email: {
             mutable: true,
@@ -129,8 +130,8 @@ export class CognitoStack {
           },
         },
         customAttributes: {
-          firstName: new StringAttribute({ mutable: true }),
-          lastName: new StringAttribute({ mutable: true }),
+          firstName: nameAttribute,
+          lastName: nameAttribute,
         },
         lambdaTriggers: {
           preSignUp: adminPresignupHook,
