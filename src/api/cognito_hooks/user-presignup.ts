@@ -54,6 +54,7 @@ export async function invoke(event: PreSignUpTriggerEvent) {
           ],
         })
       );
+      return event;
     } else {
       throw new Error("No such gym");
     }
