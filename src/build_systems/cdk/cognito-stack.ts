@@ -40,7 +40,7 @@ export class CognitoStack {
     );
     const userPoolPrefix = "PhitnestUser";
     createDeploymentPackage(
-      this.params.cognitoHooksDir,
+      path.join(this.params.cognitoHooksDir, "user-presignup.ts"),
       userPresignupDeploymentDir,
       this.params.nodeModulesDir,
       this.params.commonDeploymentDir
@@ -95,7 +95,7 @@ export class CognitoStack {
     );
     const adminPoolPrefix = "PhitnestAdmin";
     createDeploymentPackage(
-      this.params.cognitoHooksDir,
+      path.join(this.params.cognitoHooksDir, "admin-presignup.ts"),
       adminPresignupDeploymentDir,
       this.params.nodeModulesDir,
       this.params.commonDeploymentDir
