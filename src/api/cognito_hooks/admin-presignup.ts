@@ -20,4 +20,5 @@ export async function invoke(event: PreSignUpTriggerEvent) {
       ],
     })
   );
+  return event;
 }
