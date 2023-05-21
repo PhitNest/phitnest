@@ -1,27 +1,24 @@
 import 'dart:math';
+
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:async/async.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../failure.dart';
-import '../http/http.dart';
+import '../../core.dart';
 import 'responses/responses.dart';
-import '../../cache.dart';
-import '../../serializable.dart';
-import '../../validators/validators.dart';
 
-part 'cognito/cognito.dart';
-part 'sandbox/sandbox.dart';
-part 'sandbox/user_data.dart';
 part 'bloc/bloc.dart';
 part 'bloc/event.dart';
 part 'bloc/state.dart';
+part 'cognito/cognito.dart';
+part 'sandbox/sandbox.dart';
+part 'sandbox/user_data.dart';
 
-const kAdminPoolIdJsonKey = "adminPoolId";
-const kUserPoolIdJsonKey = "userPoolId";
-const kAdminClientIdJsonKey = "adminClientId";
-const kUserClientIdJsonKey = "userClientId";
+const kAdminPoolIdJsonKey = 'adminPoolId';
+const kUserPoolIdJsonKey = 'userPoolId';
+const kAdminClientIdJsonKey = 'adminClientId';
+const kUserClientIdJsonKey = 'userClientId';
 
 sealed class Auth extends JsonSerializable {
   const Auth() : super();
@@ -31,23 +28,23 @@ sealed class Auth extends JsonSerializable {
     bool admin,
   ) =>
       switch (serverStatus) {
-        "sandbox" => Sandbox.getFromCache() ??
+        'sandbox' => Sandbox.getFromCache() ??
             Sandbox(
               emailToUserMap: {},
               idToUserMap: {},
               currentUser: null,
             ),
         {
-          kAdminPoolIdJsonKey: String adminPoolId,
-          kAdminClientIdJsonKey: String adminClientId,
-          kUserPoolIdJsonKey: String userPoolId,
-          kUserClientIdJsonKey: String userClientId
+          kAdminPoolIdJsonKey: final String adminPoolId,
+          kAdminClientIdJsonKey: final String adminClientId,
+          kUserPoolIdJsonKey: final String userPoolId,
+          kUserClientIdJsonKey: final String userClientId
         } =>
           Cognito(
             poolId: admin ? adminPoolId : userPoolId,
             clientId: admin ? adminClientId : userClientId,
           ),
-        _ => throw FormatException("Invalid server status: $serverStatus"),
+        _ => throw FormatException('Invalid server status: $serverStatus'),
       };
 
   Future<LoginResponse> login(

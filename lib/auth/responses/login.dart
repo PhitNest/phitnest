@@ -21,11 +21,11 @@ enum LoginFailureType {
   unknown;
 
   String get message => switch (this) {
-        LoginFailureType.invalidEmailPassword => "Invalid email/password.",
-        LoginFailureType.confirmationRequired => "Confirmation required.",
-        LoginFailureType.noSuchUser => "No such user exists.",
-        LoginFailureType.invalidUserPool => "Invalid user pool.",
-        LoginFailureType.unknown => "An unknown error occurred.",
+        LoginFailureType.invalidEmailPassword => 'Invalid email/password.',
+        LoginFailureType.confirmationRequired => 'Confirmation required.',
+        LoginFailureType.noSuchUser => 'No such user exists.',
+        LoginFailureType.invalidUserPool => 'Invalid user pool.',
+        LoginFailureType.unknown => 'An unknown error occurred.',
       };
 }
 

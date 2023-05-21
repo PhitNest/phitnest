@@ -1,17 +1,17 @@
 part of '../auth.dart';
 
 const kMaxUserId = 100000000;
-const kSandboxEmailToUserMapJsonKey = "email_to_user_map";
-const kSandboxIdToUserMapJsonKey = "id_to_user_map";
-const kSandboxDataCacheKey = "sandbox_data";
-const kCurrentUserJsonKey = "current_user";
+const kSandboxEmailToUserMapJsonKey = 'email_to_user_map';
+const kSandboxIdToUserMapJsonKey = 'id_to_user_map';
+const kSandboxDataCacheKey = 'sandbox_data';
+const kCurrentUserJsonKey = 'current_user';
 
 bool validSandboxConfirmationCode(String code) =>
-    code.endsWith("1") ||
-    code.endsWith("3") ||
-    code.endsWith("5") ||
-    code.endsWith("7") ||
-    code.endsWith("9");
+    code.endsWith('1') ||
+    code.endsWith('3') ||
+    code.endsWith('5') ||
+    code.endsWith('7') ||
+    code.endsWith('9');
 
 class Sandbox extends Auth {
   final Map<String, SandboxUserData> emailToUserMap;
@@ -95,7 +95,7 @@ class Sandbox extends Auth {
       } else {
         return const ValidationFailure(
           ValidationFailureType.invalidEmail,
-          "Invalid email.",
+          'Invalid email.',
         );
       }
     } else {
@@ -114,11 +114,11 @@ class Sandbox extends Auth {
 
   factory Sandbox.fromJson(Map<String, dynamic> json) => switch (json) {
         {
-          kSandboxEmailToUserMapJsonKey: Map<String, Map<String, dynamic>>
+          kSandboxEmailToUserMapJsonKey: final Map<String, Map<String, dynamic>>
               emailToUserMap,
-          kSandboxIdToUserMapJsonKey: Map<String, Map<String, dynamic>>
+          kSandboxIdToUserMapJsonKey: final Map<String, Map<String, dynamic>>
               idToUserMap,
-          kCurrentUserJsonKey: Map<String, dynamic> currentUserMap
+          kCurrentUserJsonKey: final Map<String, dynamic> currentUserMap
         } =>
           Sandbox(
             emailToUserMap: emailToUserMap.map(
@@ -135,7 +135,7 @@ class Sandbox extends Auth {
             ),
             currentUser: SandboxUserData.fromJson(currentUserMap),
           ),
-        _ => throw FormatException("Invalid JSON for Sandbox: $json"),
+        _ => throw FormatException('Invalid JSON for Sandbox: $json'),
       };
 
   @override

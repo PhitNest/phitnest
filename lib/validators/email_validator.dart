@@ -3,7 +3,7 @@ import 'dart:core';
 /// The Type enum
 ///
 /// The domain type is either None, Alphabetic, Numeric or AlphaNumeric
-enum SubdomainType { None, Alphabetic, Numeric, AlphaNumeric }
+enum SubdomainType { none, alphabetic, numeric, alphaNumeric }
 
 ///The EmailValidator entry point
 ///
@@ -16,7 +16,7 @@ class EmailValidator {
   static const String _atomCharacters = "!#\$%&'*+-/=?^_`{|}~";
 
   // Sets default domainType to null on initialization
-  static SubdomainType _domainType = SubdomainType.None;
+  static SubdomainType _domainType = SubdomainType.none;
 
   // Returns true if the first letter in string c has a 16-bit UTF-16 code unit
   // greater than or equal to 48 and less than or equal to 57
@@ -27,52 +27,52 @@ class EmailValidator {
 
   // Returns true if the first letter in string c has a 16-bit UTF-16 code unit
   // greater than or equal to 65 and less than or equal to 90 (capital letters)
-  // or greater than or equal to 97 and less than or equal to 122 (lowercase letters)
-  // otherwise return false
+  // or greater than or equal to 97 and less than or equal to 122 (lowercase
+  // letters) otherwise return false
   static bool _isLetter(String c) {
     return (c.codeUnitAt(0) >= 65 && c.codeUnitAt(0) <= 90) ||
         (c.codeUnitAt(0) >= 97 && c.codeUnitAt(0) <= 122);
   }
 
-  // Returns true if calling isLetter or isDigit with the same string returns true
-  // Only returns false if both isLetter and isDigit return false
+  // Returns true if calling isLetter or isDigit with the same string returns
+  // true. Only returns false if both isLetter and isDigit return false.
   static bool _isLetterOrDigit(String c) {
     return _isLetter(c) || _isDigit(c);
   }
 
-  // Returns value of allowInternational if the first letter in the string c isnt a
-  // number or letter or special character otherwise
+  // Returns value of allowInternational if the first letter in the string c
+  // isnt a number or letter or special character otherwise
   // return the result of _isLetterOrDigit or _atomCharacters.contains(c)
-  // which only returns false if both _isLetterOrDigit and _atomCharacters.contains(c)
-  // returns false
+  // which only returns false if both _isLetterOrDigit and
+  // _atomCharacters.contains(c) returns false
   static bool _isAtom(String c, bool allowInternational) {
     return c.codeUnitAt(0) < 128
         ? _isLetterOrDigit(c) || _atomCharacters.contains(c)
         : allowInternational;
   }
 
-  // First checks whether the first letter in string c is a letter, number or special
-  // character
+  // First checks whether the first letter in string c is a letter, number or
+  // special character
   // If calling isLetter returns true or c is '-',
   // domainType is set to Alphabetic and the function returns true
   // If calling isDigit returns true
   // domainType is set to Numeric and the function returns true
   // Otherwise the function returns false
   //
-  // If the first if statement for string c being a letter, number or special character
-  // fails
+  // If the first if statement for string c being a letter, number or special
+  // character fails
   // The value of allowInternational is checked where, if true,
   // domainType is set to Alphabetic and the function returns true
   // Otherwise, the function returns false
   static bool _isDomain(String c, bool allowInternational) {
     if (c.codeUnitAt(0) < 128) {
       if (_isLetter(c) || c == '-') {
-        _domainType = SubdomainType.Alphabetic;
+        _domainType = SubdomainType.alphabetic;
         return true;
       }
 
       if (_isDigit(c)) {
-        _domainType = SubdomainType.Numeric;
+        _domainType = SubdomainType.numeric;
         return true;
       }
 
@@ -80,7 +80,7 @@ class EmailValidator {
     }
 
     if (allowInternational) {
-      _domainType = SubdomainType.Alphabetic;
+      _domainType = SubdomainType.alphabetic;
       return true;
     }
 
@@ -92,26 +92,26 @@ class EmailValidator {
   static bool _isDomainStart(String c, bool allowInternational) {
     if (c.codeUnitAt(0) < 128) {
       if (_isLetter(c)) {
-        _domainType = SubdomainType.Alphabetic;
+        _domainType = SubdomainType.alphabetic;
         return true;
       }
 
       if (_isDigit(c)) {
-        _domainType = SubdomainType.Numeric;
+        _domainType = SubdomainType.numeric;
         return true;
       }
 
-      _domainType = SubdomainType.None;
+      _domainType = SubdomainType.none;
 
       return false;
     }
 
     if (allowInternational) {
-      _domainType = SubdomainType.Alphabetic;
+      _domainType = SubdomainType.alphabetic;
       return true;
     }
 
-    _domainType = SubdomainType.None;
+    _domainType = SubdomainType.none;
 
     return false;
   }
@@ -171,7 +171,7 @@ class EmailValidator {
 
     // Note: by allowing AlphaNumeric,
     // we get away with not having to support punycode.
-    if (_domainType == SubdomainType.Numeric) {
+    if (_domainType == SubdomainType.numeric) {
       return false;
     }
 
@@ -339,11 +339,11 @@ class EmailValidator {
   /// If [allowInternational] is `true`, then the validator
   /// will use the newer International Email standards for validating
   /// the email address.
-  static bool validateEmail(String email,
+  static bool validateEmail(dynamic email,
       [bool allowTopLevelDomains = false, bool allowInternational = true]) {
     _index = 0;
 
-    if (email.isEmpty || email.length >= 255) {
+    if (email is! String || email.isEmpty || email.length >= 255) {
       return false;
     }
 

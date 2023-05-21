@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:phitnest_core/serializable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'logger.dart';
+import 'core.dart';
 
 // This will be set to true when the cache is initialized
 bool _loaded = false;
@@ -43,12 +41,12 @@ Future<void> cacheSecureObject(String key, Serializable? value) async {
   if (value != null) {
     _stringifiedSecureCache[key] = jsonEncode(value.toJson());
     _lazyLoadedSecureCache[key] = value;
-    prettyLogger.d(
-        "Caching Object:\n\tkey: $key${StringUtils.addCharAtPosition("\n\tvalue: $value", '\n\t', 100, repeat: true)}");
+    prettyLogger
+        .d("Caching Object:\n\tkey: $key${wrapText("\n\tvalue: $value")}");
     await _secureStorage.write(key: key, value: _stringifiedSecureCache[key]);
   } else {
-    prettyLogger.d(
-        "Removing Cached Object:\n\tkey: $key${StringUtils.addCharAtPosition("\n\tvalue: ${_lazyLoadedSecureCache.remove(key)}", '\n\t', 100, repeat: true)}");
+    prettyLogger.d('Removing Cached Object:\n\tkey: $key'
+        '${wrapText("\n\tvalue: ${_lazyLoadedSecureCache.remove(key)}")}');
     _stringifiedSecureCache.remove(key);
     await _secureStorage.delete(key: key);
   }
@@ -62,8 +60,8 @@ T? getSecureCachedObject<T extends Serializable>(
   if (_lazyLoadedSecureCache[key] != null) {
     return _lazyLoadedSecureCache[key] as T;
   } else if (_stringifiedSecureCache[key] != null) {
-    return _lazyLoadedSecureCache[key] =
-        parseJson(jsonDecode(_stringifiedSecureCache[key]!));
+    return _lazyLoadedSecureCache[key] = parseJson(
+        jsonDecode(_stringifiedSecureCache[key]!) as Map<String, dynamic>);
   } else {
     return null;
   }
@@ -79,7 +77,7 @@ List<T>? getSecureCachedList<T extends Serializable>(
   } else if (_stringifiedSecureCache[key] != null) {
     return _lazyLoadedSecureListCache[key] =
         (jsonDecode(_stringifiedSecureCache[key]!) as List)
-            .map((e) => parseJson(e))
+            .map((e) => parseJson(e as Map<String, dynamic>))
             .toList()
             .cast<T>();
   } else {
@@ -96,12 +94,12 @@ Future<void> cacheSecureList(
     _stringifiedSecureCache[key] =
         jsonEncode(value.map((e) => e.toJson()).toList());
     _lazyLoadedSecureListCache[key] = value;
-    prettyLogger.d(
-        "Caching List:\n\tkey: $key${StringUtils.addCharAtPosition("\n\tvalue: $value", '\n\t', 100, repeat: true)}");
+    prettyLogger
+        .d("Caching List:\n\tkey: $key${wrapText("\n\tvalue: $value")}");
     await _secureStorage.write(key: key, value: _stringifiedSecureCache[key]);
   } else {
-    prettyLogger.d(
-        "Removing Cached List:\n\tkey: $key${StringUtils.addCharAtPosition("\n\tvalue: ${_lazyLoadedSecureListCache.remove(key)}", '\n\t', 100, repeat: true)}");
+    prettyLogger.d('Removing Cached List:\n\tkey: $key'
+        '${wrapText("\n\tvalue: ${_lazyLoadedSecureListCache.remove(key)}")}');
     _stringifiedSecureCache.remove(key);
     await _secureStorage.delete(key: key);
   }
@@ -110,12 +108,12 @@ Future<void> cacheSecureList(
 /// Function to cache secure strings
 Future<void> cacheSecureString(String key, String? value) async {
   if (value != null) {
-    prettyLogger.d(
-        "Caching String:\n\tkey: $key${StringUtils.addCharAtPosition("\n\tvalue: $value", '\n\t', 100, repeat: true)}");
+    prettyLogger
+        .d("Caching String:\n\tkey: $key${wrapText("\n\tvalue: $value")}");
     _stringifiedSecureCache[key] = value;
   } else {
-    prettyLogger.d(
-        "Removing Cached String:\n\tkey: $key${StringUtils.addCharAtPosition("old value: ${_stringifiedSecureCache.remove(key)}", '\n\t', 100, repeat: true)}");
+    prettyLogger.d('Removing Cached String:\n\tkey: $key'
+        '${wrapText("old value: ${_stringifiedSecureCache.remove(key)}")}');
   }
   await _secureStorage.write(key: key, value: value);
 }
@@ -148,7 +146,9 @@ Future<void> cacheObject<T extends Serializable>(
 T? getCachedObject<T extends Serializable>(
     String key, T Function(Map<String, dynamic> json) parser) {
   final result = _sharedPreferences.getString(key);
-  return result != null ? parser(jsonDecode(result)) : null;
+  return result != null
+      ? parser(jsonDecode(result) as Map<String, dynamic>)
+      : null;
 }
 
 /// Generic function to cache primitive values

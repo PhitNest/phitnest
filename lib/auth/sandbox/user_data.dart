@@ -1,12 +1,12 @@
 part of '../auth.dart';
 
-const kSandboxEmailJsonKey = "email";
-const kSandboxPasswordJsonKey = "password";
-const kSandboxConfirmedJsonKey = "confirmed";
-const kSandboxUserIdJsonKey = "userId";
-const kUserAttributesJsonKey = "userAttributes";
-const kAttributeNameJsonKey = "name";
-const kAttributeValueJsonKey = "value";
+const kSandboxEmailJsonKey = 'email';
+const kSandboxPasswordJsonKey = 'password';
+const kSandboxConfirmedJsonKey = 'confirmed';
+const kSandboxUserIdJsonKey = 'userId';
+const kUserAttributesJsonKey = 'userAttributes';
+const kAttributeNameJsonKey = 'name';
+const kAttributeValueJsonKey = 'value';
 
 class SerializableAttribute extends JsonSerializable {
   final AttributeArg attributes;
@@ -15,8 +15,10 @@ class SerializableAttribute extends JsonSerializable {
 
   @override
   Map<String, Serializable> toJson() => {
-        kAttributeNameJsonKey: SerializableString(attributes.name ?? ""),
-        kAttributeValueJsonKey: SerializableString(attributes.value ?? ""),
+        kAttributeNameJsonKey:
+            SerializablePrimitive.string(attributes.name ?? ''),
+        kAttributeValueJsonKey:
+            SerializablePrimitive.string(attributes.value ?? ''),
       };
 }
 
@@ -46,11 +48,11 @@ class SandboxUserData extends JsonSerializable with EquatableMixin {
 
   factory SandboxUserData.fromJson(Map<String, dynamic> json) => switch (json) {
         {
-          kSandboxEmailJsonKey: String email,
-          kSandboxPasswordJsonKey: String password,
-          kSandboxConfirmedJsonKey: bool confirmed,
-          kSandboxUserIdJsonKey: String userId,
-          kUserAttributesJsonKey: List<Map<String, String>> attributes
+          kSandboxEmailJsonKey: final String email,
+          kSandboxPasswordJsonKey: final String password,
+          kSandboxConfirmedJsonKey: final bool confirmed,
+          kSandboxUserIdJsonKey: final String userId,
+          kUserAttributesJsonKey: final List<Map<String, String>> attributes
         } =>
           SandboxUserData(
             email: email,
@@ -60,22 +62,23 @@ class SandboxUserData extends JsonSerializable with EquatableMixin {
             userAttributes: attributes
                 .map((att) => switch (att) {
                       {
-                        kAttributeNameJsonKey: String name,
-                        kAttributeValueJsonKey: String value
+                        kAttributeNameJsonKey: final String name,
+                        kAttributeValueJsonKey: final String value
                       } =>
                         AttributeArg(name: name, value: value),
-                      _ => throw FormatException("Invalid attribute: $att"),
+                      _ => throw FormatException('Invalid attribute: $att'),
                     })
                 .toList(),
           ),
-        _ => throw FormatException("Invalid json: $json"),
+        _ => throw FormatException('Invalid json: $json'),
       };
 
+  @override
   Map<String, Serializable> toJson() => {
-        kSandboxEmailJsonKey: SerializableString(email),
-        kSandboxPasswordJsonKey: SerializableString(password),
-        kSandboxConfirmedJsonKey: SerializableBool(confirmed),
-        kSandboxUserIdJsonKey: SerializableString(userId),
+        kSandboxEmailJsonKey: SerializablePrimitive.string(email),
+        kSandboxPasswordJsonKey: SerializablePrimitive.string(password),
+        kSandboxConfirmedJsonKey: SerializablePrimitive.bool(confirmed),
+        kSandboxUserIdJsonKey: SerializablePrimitive.string(userId),
         kUserAttributesJsonKey: SerializableList(
             userAttributes.map((att) => SerializableAttribute(att)).toList()),
       };
