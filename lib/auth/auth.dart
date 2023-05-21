@@ -21,24 +21,10 @@ const kUserPoolIdJsonKey = "userPoolId";
 const kAdminClientIdJsonKey = "adminClientId";
 const kUserClientIdJsonKey = "userClientId";
 
-class CognitoPoolDetails extends Equatable {
-  final String userPoolId;
-  final String clientId;
-
-  const CognitoPoolDetails({
-    required this.userPoolId,
-    required this.clientId,
-  });
-
-  @override
-  List<Object?> get props => [userPoolId, clientId];
-}
-
 sealed class Auth extends JsonSerializable {
   const Auth() : super();
 
-  factory Auth.fromJson(dynamic serverStatus, bool admin) =>
-      switch (serverStatus) {
+  factory Auth.fromJson(dynamic serverStatus) => switch (serverStatus) {
         "sandbox" => Sandbox.getFromCache() ??
             Sandbox(
               emailToUserMap: {},
@@ -51,10 +37,12 @@ sealed class Auth extends JsonSerializable {
           kUserPoolIdJsonKey: String userPoolId,
           kUserClientIdJsonKey: String userClientId
         } =>
-          Cognito(CognitoPoolDetails(
-            userPoolId: admin ? adminPoolId : userPoolId,
-            clientId: admin ? adminClientId : userClientId,
-          )),
+          Cognito(
+            adminPoolId: adminPoolId,
+            userPoolId: userPoolId,
+            adminClientId: adminClientId,
+            userClientId: userClientId,
+          ),
         _ => throw FormatException("Invalid server status: $serverStatus"),
       };
 

@@ -2,12 +2,11 @@ part of 'auth.dart';
 
 Future<HttpResponse<Auth>> requestServerStatus({
   Http? http,
-  bool admin = false,
 }) =>
     (http != null ? http.request : request<Auth>)(
       route: '/status',
       method: HttpMethod.get,
-      parser: (status) => Auth.fromJson(status, admin),
+      parser: (status) => Auth.fromJson(status),
     );
 
 sealed class CognitoStatusState extends Equatable {
