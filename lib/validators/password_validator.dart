@@ -1,8 +1,8 @@
 const kMinPasswordLength = 8;
 const kMaxPasswordLength = 256;
 
-String? validatePassword(String? password) {
-  if (password == null || password.isEmpty) {
+String? validatePassword(dynamic password) {
+  if (password is! String || password.isEmpty) {
     return 'You must enter a password.';
   }
 
