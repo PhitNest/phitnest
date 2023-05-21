@@ -41,16 +41,15 @@ class Cognito extends Auth {
     } on CognitoUserConfirmationNecessaryException catch (_) {
       return const LoginFailure(LoginFailureType.confirmationRequired);
     } on CognitoClientException catch (error) {
-      switch (error.code) {
-        case "ResourceNotFoundException":
-          return const LoginFailure(LoginFailureType.invalidUserPool);
-        case "NotAuthorizedException":
-          return const LoginFailure(LoginFailureType.invalidEmailPassword);
-        case "UserNotFoundException":
-          return const LoginFailure(LoginFailureType.noSuchUser);
-        default:
-          return const LoginFailure(LoginFailureType.unknown);
-      }
+      return switch (error.code) {
+        "ResourceNotFoundException" =>
+          const LoginFailure(LoginFailureType.invalidUserPool),
+        "NotAuthorizedException" =>
+          const LoginFailure(LoginFailureType.invalidEmailPassword),
+        "UserNotFoundException" =>
+          const LoginFailure(LoginFailureType.noSuchUser),
+        _ => const LoginFailure(LoginFailureType.unknown),
+      };
     } on ArgumentError catch (_) {
       return const LoginFailure(LoginFailureType.invalidUserPool);
     } catch (_) {
@@ -79,20 +78,17 @@ class Cognito extends Auth {
         return const RegisterFailure(RegisterFailureType.unknown);
       }
     } on CognitoClientException catch (error) {
-      switch (error.code) {
-        case "ResourceNotFoundException":
-          return const RegisterFailure((RegisterFailureType.invalidUserPool));
-        case "UsernameExistsException":
-          return const RegisterFailure(RegisterFailureType.userExists);
-        case "InvalidPasswordException":
-          return ValidationFailure(
-              ValidationFailureType.invalidPassword, error.message);
-        case "InvalidParameterException":
-          return ValidationFailure(
-              ValidationFailureType.invalidEmail, error.message);
-        default:
-          return const RegisterFailure(RegisterFailureType.unknown);
-      }
+      return switch (error.code) {
+        "ResourceNotFoundException" =>
+          const RegisterFailure((RegisterFailureType.invalidUserPool)),
+        "UsernameExistsException" =>
+          const RegisterFailure(RegisterFailureType.userExists),
+        "InvalidPasswordException" => ValidationFailure(
+            ValidationFailureType.invalidPassword, error.message),
+        "InvalidParameterException" =>
+          ValidationFailure(ValidationFailureType.invalidEmail, error.message),
+        _ => const RegisterFailure(RegisterFailureType.unknown),
+      };
     } on ArgumentError catch (_) {
       return const RegisterFailure(RegisterFailureType.invalidUserPool);
     } catch (_) {
@@ -121,16 +117,12 @@ class Cognito extends Auth {
       await CognitoUser(email, _pool).forgotPassword();
       return null;
     } on CognitoClientException catch (error) {
-      switch (error.code) {
-        case "ResourceNotFoundException":
-          return ForgotPasswordFailure.invalidUserPool;
-        case "InvalidParameterException":
-          return ForgotPasswordFailure.invalidEmail;
-        case "UserNotFoundException":
-          return ForgotPasswordFailure.noSuchUser;
-        default:
-          return ForgotPasswordFailure.unknown;
-      }
+      return switch (error.code) {
+        "ResourceNotFoundException" => ForgotPasswordFailure.invalidUserPool,
+        "InvalidParameterException" => ForgotPasswordFailure.invalidEmail,
+        "UserNotFoundException" => ForgotPasswordFailure.noSuchUser,
+        _ => ForgotPasswordFailure.unknown,
+      };
     } on ArgumentError catch (_) {
       return ForgotPasswordFailure.invalidUserPool;
     } catch (_) {
@@ -148,20 +140,16 @@ class Cognito extends Auth {
       await CognitoUser(email, _pool).confirmPassword(code, newPassword);
       return null;
     } on CognitoClientException catch (error) {
-      switch (error.code) {
-        case "ResourceNotFoundException":
-          return SubmitForgotPasswordFailure.invalidUserPool;
-        case "InvalidParameterException":
-          return SubmitForgotPasswordFailure.invalidCodeOrPassword;
-        case "CodeMismatchException":
-          return SubmitForgotPasswordFailure.invalidCode;
-        case "ExpiredCodeException":
-          return SubmitForgotPasswordFailure.expiredCode;
-        case "UserNotFoundException":
-          return SubmitForgotPasswordFailure.noSuchUser;
-        default:
-          return SubmitForgotPasswordFailure.unknown;
-      }
+      return switch (error.code) {
+        "ResourceNotFoundException" =>
+          SubmitForgotPasswordFailure.invalidUserPool,
+        "InvalidParameterException" =>
+          SubmitForgotPasswordFailure.invalidCodeOrPassword,
+        "CodeMismatchException" => SubmitForgotPasswordFailure.invalidCode,
+        "ExpiredCodeException" => SubmitForgotPasswordFailure.expiredCode,
+        "UserNotFoundException" => SubmitForgotPasswordFailure.noSuchUser,
+        _ => SubmitForgotPasswordFailure.unknown,
+      };
     } catch (_) {
       return SubmitForgotPasswordFailure.unknown;
     }
@@ -182,16 +170,12 @@ class Cognito extends Auth {
         return RefreshSessionFailure.unknown;
       }
     } on CognitoClientException catch (error) {
-      switch (error.code) {
-        case "ResourceNotFoundException":
-          return RefreshSessionFailure.invalidUserPool;
-        case "NotAuthorizedException":
-          return RefreshSessionFailure.invalidToken;
-        case "UserNotFoundException":
-          return RefreshSessionFailure.noSuchUser;
-        default:
-          return RefreshSessionFailure.unknown;
-      }
+      return switch (error.code) {
+        "ResourceNotFoundException" => RefreshSessionFailure.invalidUserPool,
+        "NotAuthorizedException" => RefreshSessionFailure.invalidToken,
+        "UserNotFoundException" => RefreshSessionFailure.noSuchUser,
+        _ => RefreshSessionFailure.unknown,
+      };
     } on ArgumentError catch (_) {
       return RefreshSessionFailure.invalidUserPool;
     } catch (_) {

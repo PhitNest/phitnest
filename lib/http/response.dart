@@ -1,22 +1,22 @@
-import 'package:dio/dio.dart';
-import 'package:equatable/equatable.dart';
-
-import '../failure.dart';
+part of 'http.dart';
 
 sealed class HttpResponse<DataType> extends Equatable {
-  final DataType data;
   final Headers headers;
 
-  const HttpResponse(this.data, this.headers) : super();
+  const HttpResponse(this.headers) : super();
 
   @override
-  List<Object?> get props => [data, headers];
+  List<Object?> get props => [headers];
 }
 
 class HttpResponseOk<ResType> extends HttpResponse<ResType> {
-  const HttpResponseOk(super.data, super.headers) : super();
+  final ResType data;
+
+  const HttpResponseOk(this.data, super.headers) : super();
 }
 
-class HttpResponseFailure extends HttpResponse<Failure> {
-  const HttpResponseFailure(super.data, super.headers) : super();
+class HttpResponseFailure<ResType> extends HttpResponse<ResType> {
+  final Failure failure;
+
+  const HttpResponseFailure(this.failure, super.headers) : super();
 }

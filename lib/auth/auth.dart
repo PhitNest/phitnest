@@ -1,7 +1,11 @@
 import 'dart:math';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
+import 'package:async/async.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../failure.dart';
+import '../http/http.dart';
 import 'responses/responses.dart';
 import '../../cache.dart';
 import '../../serializable.dart';
@@ -10,6 +14,7 @@ import '../../validators/validators.dart';
 part 'cognito/cognito.dart';
 part 'sandbox/sandbox.dart';
 part 'sandbox/user_data.dart';
+part 'status.dart';
 
 const kAdminPoolIdJsonKey = "adminPoolId";
 const kUserPoolIdJsonKey = "userPoolId";

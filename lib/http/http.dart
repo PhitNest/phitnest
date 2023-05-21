@@ -5,7 +5,8 @@ import 'package:dio/dio.dart';
 
 import '../failure.dart';
 import '../logger.dart';
-import 'response.dart';
+
+part 'response.dart';
 
 /// Default HTTP timeout
 const kDefaultTimeout = Duration(seconds: 30);
@@ -45,7 +46,7 @@ class Http {
       '${overrideHost ?? _host}${(overridePort ?? _port).isEmpty ? "" : ":${overridePort ?? _port}"}$route';
 
   /// Asynchronous method to perform the HTTP request and handle the response
-  Future<HttpResponse> request<ResType>({
+  Future<HttpResponse<ResType>> request<ResType>({
     required String route,
     required HttpMethod method,
     required ResType Function(dynamic) parser,
