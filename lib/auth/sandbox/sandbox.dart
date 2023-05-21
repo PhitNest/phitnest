@@ -64,7 +64,8 @@ class Sandbox extends Auth {
   ) async {
     final user = emailToUserMap[email];
     if (user == null) {
-      if (EmailValidator.validateEmail(email)) {
+      final emailValidation = EmailValidator.validateEmail(email);
+      if (emailValidation == null) {
         final passwordProblems = validatePassword(password);
         if (passwordProblems != null) {
           return ValidationFailure(
@@ -93,9 +94,9 @@ class Sandbox extends Auth {
           return RegisterSuccess(userId);
         }
       } else {
-        return const ValidationFailure(
+        return ValidationFailure(
           ValidationFailureType.invalidEmail,
-          'Invalid email.',
+          emailValidation,
         );
       }
     } else {
