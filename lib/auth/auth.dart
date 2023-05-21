@@ -14,7 +14,9 @@ import '../../validators/validators.dart';
 part 'cognito/cognito.dart';
 part 'sandbox/sandbox.dart';
 part 'sandbox/user_data.dart';
-part 'status.dart';
+part 'bloc/bloc.dart';
+part 'bloc/event.dart';
+part 'bloc/state.dart';
 
 const kAdminPoolIdJsonKey = "adminPoolId";
 const kUserPoolIdJsonKey = "userPoolId";
@@ -24,7 +26,11 @@ const kUserClientIdJsonKey = "userClientId";
 sealed class Auth extends JsonSerializable {
   const Auth() : super();
 
-  factory Auth.fromJson(dynamic serverStatus) => switch (serverStatus) {
+  factory Auth.fromJson(
+    dynamic serverStatus,
+    bool admin,
+  ) =>
+      switch (serverStatus) {
         "sandbox" => Sandbox.getFromCache() ??
             Sandbox(
               emailToUserMap: {},
@@ -38,10 +44,8 @@ sealed class Auth extends JsonSerializable {
           kUserClientIdJsonKey: String userClientId
         } =>
           Cognito(
-            adminPoolId: adminPoolId,
-            userPoolId: userPoolId,
-            adminClientId: adminClientId,
-            userClientId: userClientId,
+            poolId: admin ? adminPoolId : userPoolId,
+            clientId: admin ? adminClientId : userClientId,
           ),
         _ => throw FormatException("Invalid server status: $serverStatus"),
       };
