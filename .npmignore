@@ -1,4 +1,3 @@
-*.ts
 build
 test_output
 test_data
