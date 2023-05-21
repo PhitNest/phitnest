@@ -6,13 +6,21 @@ class _CognitoState {
 }
 
 class Cognito extends Auth {
-  final CognitoUserPool _pool;
+  final CognitoUserPool _adminPool;
+  final CognitoUserPool _userPool;
   final _CognitoState _state;
 
-  Cognito(CognitoPoolDetails poolDetails)
-      : _pool = CognitoUserPool(poolDetails.userPoolId, poolDetails.clientId),
+  Cognito({
+    required String userPoolId,
+    required String userClientId,
+    required String adminPoolId,
+    required String adminClientId,
+  })  : _adminPool = CognitoUserPool(adminPoolId, adminClientId),
+        _userPool = CognitoUserPool(userPoolId, userClientId),
         _state = _CognitoState(),
         super();
+
+  _pool(bool admin) => admin ? _adminPool : _userPool;
 
   @override
   Map<String, Serializable> toJson() => throw UnimplementedError();
@@ -20,10 +28,11 @@ class Cognito extends Auth {
   @override
   Future<LoginResponse> login(
     String email,
-    String password,
-  ) async {
+    String password, {
+    bool admin = false,
+  }) async {
     try {
-      _state.user = CognitoUser(email, _pool);
+      _state.user = CognitoUser(email, _pool(admin));
       _state.session = await _state.user!.authenticateUser(
         AuthenticationDetails(
           username: email,
@@ -61,10 +70,11 @@ class Cognito extends Auth {
   Future<RegisterResponse> register(
     String email,
     String password,
-    List<AttributeArg> userAttributes,
-  ) async {
+    List<AttributeArg> userAttributes, {
+    bool admin = false,
+  }) async {
     try {
-      final signUpResult = await _pool.signUp(
+      final signUpResult = await _pool(admin).signUp(
         email,
         password,
         userAttributes: [
@@ -99,22 +109,29 @@ class Cognito extends Auth {
   @override
   Future<bool> confirmEmail(
     String email,
-    String code,
-  ) =>
-      CognitoUser(email, _pool)
+    String code, {
+    bool admin = false,
+  }) =>
+      CognitoUser(email, _pool(admin))
           .confirmRegistration(code)
           .catchError((_) => false);
 
   @override
-  Future<bool> resendConfirmationEmail(String email) =>
-      CognitoUser(email, _pool)
+  Future<bool> resendConfirmationEmail(
+    String email, {
+    bool admin = false,
+  }) =>
+      CognitoUser(email, _pool(admin))
           .resendConfirmationCode()
           .catchError((_) => false);
 
   @override
-  Future<ForgotPasswordFailure?> forgotPassword(String email) async {
+  Future<ForgotPasswordFailure?> forgotPassword(
+    String email, {
+    bool admin = false,
+  }) async {
     try {
-      await CognitoUser(email, _pool).forgotPassword();
+      await CognitoUser(email, _pool(admin)).forgotPassword();
       return null;
     } on CognitoClientException catch (error) {
       return switch (error.code) {
@@ -134,10 +151,11 @@ class Cognito extends Auth {
   Future<SubmitForgotPasswordFailure?> submitForgotPassword(
     String email,
     String code,
-    String newPassword,
-  ) async {
+    String newPassword, {
+    bool admin = false,
+  }) async {
     try {
-      await CognitoUser(email, _pool).confirmPassword(code, newPassword);
+      await CognitoUser(email, _pool(admin)).confirmPassword(code, newPassword);
       return null;
     } on CognitoClientException catch (error) {
       return switch (error.code) {
@@ -156,7 +174,9 @@ class Cognito extends Auth {
   }
 
   @override
-  Future<RefreshSessionFailure?> refreshSession() async {
+  Future<RefreshSessionFailure?> refreshSession({
+    bool admin = false,
+  }) async {
     if (_state.user == null) {
       return RefreshSessionFailure.noSuchUser;
     }
