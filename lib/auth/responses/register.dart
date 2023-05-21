@@ -20,9 +20,9 @@ enum RegisterFailureType {
 
   String get message => switch (this) {
         RegisterFailureType.userExists =>
-          "A user with that email already exists.",
-        RegisterFailureType.invalidUserPool => "Invalid user pool.",
-        RegisterFailureType.unknown => "An unknown error occurred.",
+          'A user with that email already exists.',
+        RegisterFailureType.invalidUserPool => 'Invalid user pool.',
+        RegisterFailureType.unknown => 'An unknown error occurred.',
       };
 }
 

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:basic_utils/basic_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
@@ -13,10 +12,10 @@ part 'response.dart';
 const kDefaultTimeout = Duration(seconds: 30);
 
 /// Default host
-const kDefaultBackendHost = "http://localhost";
+const kDefaultBackendHost = 'http://localhost';
 
 /// Default port
-const kDefaultBackendPort = "3000";
+const kDefaultBackendPort = '3000';
 
 /// Enum for supported HTTP methods
 enum HttpMethod {
@@ -32,7 +31,9 @@ String _createUrl(
   String? overrideHost,
   String? overridePort,
 ) =>
-    '${overrideHost ?? _host}${(overridePort ?? _port).isEmpty ? "" : ":${overridePort ?? _port}"}$route';
+    '${overrideHost ?? _host}'
+    '${(overridePort ?? _port).isEmpty ? "" : ":${overridePort ?? _port}"}'
+    '$route';
 
 String _host = kDefaultBackendHost;
 String _port = kDefaultBackendPort;
@@ -62,23 +63,21 @@ Future<HttpResponse<ResType>> request<ResType>({
   // Generate the URL for the request
   final String url = _createUrl(route, overrideHost, overridePort);
 
-  final String Function(String text) wrapText =
-      (text) => StringUtils.addCharAtPosition(text, '\n\t', 100, repeat: true);
-
   // Helper function for generating log descriptions
-  final String Function(dynamic data) descriptionLog = (data) =>
-      '\n\tmethod: $method${wrapText('\n\turl: $url')}${wrapText("\n\tdata: $data")}';
+  String descriptionLog(dynamic data) =>
+      '\n\tmethod: $method${wrapText('\n\turl: $url')}'
+      '${wrapText("\n\tdata: $data")}';
 
   // Log the request details
-  prettyLogger.d(
-      'Request${authorization != null ? " (Authorized)" : ""}:${descriptionLog(data)}');
+  prettyLogger.d('Request${authorization != null ? " (Authorized)" : ""}:'
+      '${descriptionLog(data)}');
 
   // Prepare the request headers
   final headerMap = {
     ...headers ?? Map<String, dynamic>.from({}),
-    "Accept": "*/*",
-    "Accept-Encoding": "gzip, deflate, br",
-    "Connection": "keep-alive",
+    'Accept': '*/*',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Connection': 'keep-alive',
     ...authorization != null
         ? {'Authorization': authorization}
         : Map<String, dynamic>.from({}),
@@ -93,17 +92,20 @@ Future<HttpResponse<ResType>> request<ResType>({
   }
   final dio = Dio(options);
 
-  final String Function(
-      String situation, dynamic data) responseLog = (situation,
-          data) =>
-      "Request $situation:${descriptionLog(data)}\n\telapsed: ${(DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch)} ms";
+  int elapsedMs() =>
+      DateTime.now().millisecondsSinceEpoch - startTime.millisecondsSinceEpoch;
+
+  String responseLog(String situation, dynamic data) =>
+      'Request $situation:${descriptionLog(data)}\n\telapsed: ${elapsedMs()} '
+      'ms';
+
   // Perform the request and handle the response
   try {
     return await switch (method) {
-      HttpMethod.get => dio.get(url),
-      HttpMethod.post => dio.post(url, data: data),
-      HttpMethod.put => dio.put(url, data: data),
-      HttpMethod.delete => dio.delete(url),
+      HttpMethod.get => dio.get<dynamic>(url),
+      HttpMethod.post => dio.post<dynamic>(url, data: data),
+      HttpMethod.put => dio.put<dynamic>(url, data: data),
+      HttpMethod.delete => dio.delete<dynamic>(url),
     }
         .timeout(_timeout)
         .then(
@@ -113,23 +115,23 @@ Future<HttpResponse<ResType>> request<ResType>({
           // Parse the response data
           final parsed = parser(response.data);
           // Log success
-          prettyLogger.d(responseLog("success", parsed));
+          prettyLogger.d(responseLog('success', parsed));
           return HttpResponseOk(parsed, response.headers);
         }
         // Handle unsuccessful responses
         final failure = Failure.fromJson(response.data);
-        prettyLogger.e(responseLog("failure", failure));
+        prettyLogger.e(responseLog('failure', failure));
         return HttpResponseFailure(failure, response.headers);
       },
     );
   } on TimeoutException {
     // Log and return a NetworkConnectionFailure on timeout
-    prettyLogger.e(responseLog("timeout", data));
-    return HttpResponseFailure(const Failure("Request timeout"), Headers());
+    prettyLogger.e(responseLog('timeout', data));
+    return HttpResponseFailure(const Failure('Request timeout'), Headers());
   } catch (e) {
     // Log and return failure by value
     final failure = invalidFailure(e);
-    prettyLogger.e(responseLog("failure", failure));
+    prettyLogger.e(responseLog('failure', failure));
     return HttpResponseFailure(failure, Headers());
   }
 }

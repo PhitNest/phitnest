@@ -44,11 +44,11 @@ class Cognito extends Auth {
       return const LoginFailure(LoginFailureType.confirmationRequired);
     } on CognitoClientException catch (error) {
       return switch (error.code) {
-        "ResourceNotFoundException" =>
+        'ResourceNotFoundException' =>
           const LoginFailure(LoginFailureType.invalidUserPool),
-        "NotAuthorizedException" =>
+        'NotAuthorizedException' =>
           const LoginFailure(LoginFailureType.invalidEmailPassword),
-        "UserNotFoundException" =>
+        'UserNotFoundException' =>
           const LoginFailure(LoginFailureType.noSuchUser),
         _ => const LoginFailure(LoginFailureType.unknown),
       };
@@ -70,7 +70,7 @@ class Cognito extends Auth {
         email,
         password,
         userAttributes: [
-          AttributeArg(name: "email", value: email),
+          AttributeArg(name: 'email', value: email),
           ...userAttributes,
         ],
       );
@@ -81,13 +81,13 @@ class Cognito extends Auth {
       }
     } on CognitoClientException catch (error) {
       return switch (error.code) {
-        "ResourceNotFoundException" =>
+        'ResourceNotFoundException' =>
           const RegisterFailure((RegisterFailureType.invalidUserPool)),
-        "UsernameExistsException" =>
+        'UsernameExistsException' =>
           const RegisterFailure(RegisterFailureType.userExists),
-        "InvalidPasswordException" => ValidationFailure(
+        'InvalidPasswordException' => ValidationFailure(
             ValidationFailureType.invalidPassword, error.message),
-        "InvalidParameterException" =>
+        'InvalidParameterException' =>
           ValidationFailure(ValidationFailureType.invalidEmail, error.message),
         _ => const RegisterFailure(RegisterFailureType.unknown),
       };
@@ -110,10 +110,14 @@ class Cognito extends Auth {
   @override
   Future<bool> resendConfirmationEmail(
     String email,
-  ) =>
-      CognitoUser(email, _pool)
-          .resendConfirmationCode()
-          .catchError((_) => false);
+  ) async {
+    final response = CognitoUser(email, _pool).resendConfirmationCode();
+    if (response is Future) {
+      return await response.then((_) => true).catchError((_) => false);
+    } else {
+      return false;
+    }
+  }
 
   @override
   Future<ForgotPasswordFailure?> forgotPassword(
@@ -124,9 +128,9 @@ class Cognito extends Auth {
       return null;
     } on CognitoClientException catch (error) {
       return switch (error.code) {
-        "ResourceNotFoundException" => ForgotPasswordFailure.invalidUserPool,
-        "InvalidParameterException" => ForgotPasswordFailure.invalidEmail,
-        "UserNotFoundException" => ForgotPasswordFailure.noSuchUser,
+        'ResourceNotFoundException' => ForgotPasswordFailure.invalidUserPool,
+        'InvalidParameterException' => ForgotPasswordFailure.invalidEmail,
+        'UserNotFoundException' => ForgotPasswordFailure.noSuchUser,
         _ => ForgotPasswordFailure.unknown,
       };
     } on ArgumentError catch (_) {
@@ -147,13 +151,13 @@ class Cognito extends Auth {
       return null;
     } on CognitoClientException catch (error) {
       return switch (error.code) {
-        "ResourceNotFoundException" =>
+        'ResourceNotFoundException' =>
           SubmitForgotPasswordFailure.invalidUserPool,
-        "InvalidParameterException" =>
+        'InvalidParameterException' =>
           SubmitForgotPasswordFailure.invalidCodeOrPassword,
-        "CodeMismatchException" => SubmitForgotPasswordFailure.invalidCode,
-        "ExpiredCodeException" => SubmitForgotPasswordFailure.expiredCode,
-        "UserNotFoundException" => SubmitForgotPasswordFailure.noSuchUser,
+        'CodeMismatchException' => SubmitForgotPasswordFailure.invalidCode,
+        'ExpiredCodeException' => SubmitForgotPasswordFailure.expiredCode,
+        'UserNotFoundException' => SubmitForgotPasswordFailure.noSuchUser,
         _ => SubmitForgotPasswordFailure.unknown,
       };
     } catch (_) {
@@ -179,9 +183,9 @@ class Cognito extends Auth {
       }
     } on CognitoClientException catch (error) {
       return switch (error.code) {
-        "ResourceNotFoundException" => RefreshSessionFailure.invalidUserPool,
-        "NotAuthorizedException" => RefreshSessionFailure.invalidToken,
-        "UserNotFoundException" => RefreshSessionFailure.noSuchUser,
+        'ResourceNotFoundException' => RefreshSessionFailure.invalidUserPool,
+        'NotAuthorizedException' => RefreshSessionFailure.invalidToken,
+        'UserNotFoundException' => RefreshSessionFailure.noSuchUser,
         _ => RefreshSessionFailure.unknown,
       };
     } on ArgumentError catch (_) {

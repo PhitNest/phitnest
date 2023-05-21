@@ -7,16 +7,38 @@ sealed class Serializable {
 
 /// Extend this to make a class serializable to JSON.
 abstract class JsonSerializable extends Serializable {
-  Map<String, Serializable> toJson();
-
   const JsonSerializable() : super();
+
+  @override
+  Map<String, Serializable> toJson();
 }
 
-class SerializableList<T extends Serializable> extends Serializable {
-  final List<T> list;
+class SerializablePrimitive extends Serializable {
+  final dynamic _primitive;
+
+  const SerializablePrimitive._(this._primitive) : super();
+
+  factory SerializablePrimitive.double(double double) =>
+      SerializablePrimitive._(double);
+
+  factory SerializablePrimitive.string(String string) =>
+      SerializablePrimitive._(string);
+
+  factory SerializablePrimitive.int(int int) => SerializablePrimitive._(int);
+
+  factory SerializablePrimitive.bool(bool bool) =>
+      SerializablePrimitive._(bool);
+
+  @override
+  dynamic toJson() => _primitive;
+}
+
+class SerializableList extends Serializable {
+  final List<Serializable> list;
 
   const SerializableList(this.list) : super();
 
+  @override
   List<dynamic> toJson() => list.map((e) => e.toJson()).toList();
 }
 
@@ -25,38 +47,7 @@ class SerializableMap extends Serializable {
 
   const SerializableMap(this.map) : super();
 
+  @override
   Map<String, dynamic> toJson() =>
       map.map((key, value) => MapEntry(key, value.toJson()));
-}
-
-class SerializableString extends Serializable {
-  final String value;
-
-  const SerializableString(this.value) : super();
-
-  String toJson() => value;
-}
-
-class SerializableDouble extends Serializable {
-  final double value;
-
-  const SerializableDouble(this.value) : super();
-
-  double toJson() => value;
-}
-
-class SerializableInt extends Serializable {
-  final int value;
-
-  const SerializableInt(this.value) : super();
-
-  int toJson() => value;
-}
-
-class SerializableBool extends Serializable {
-  final bool value;
-
-  const SerializableBool(this.value) : super();
-
-  bool toJson() => value;
 }

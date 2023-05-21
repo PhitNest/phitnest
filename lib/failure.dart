@@ -1,4 +1,4 @@
-invalidFailure(dynamic data) => Failure("Invalid Failure JSON: $data");
+Failure invalidFailure(dynamic data) => Failure('Invalid Failure JSON: $data');
 
 class Failure {
   final String message;
@@ -9,7 +9,7 @@ class Failure {
   String toString() => message;
 
   factory Failure.fromJson(dynamic json) => switch (json) {
-        {"message": String message} => Failure(message),
+        {'message': final String message} => Failure(message),
         _ => invalidFailure(json),
       };
 }
