@@ -1,9 +1,6 @@
 part of 'auth.dart';
 
-Future<HttpResponse<Auth>> requestServerStatus({
-  Http? http,
-}) =>
-    (http != null ? http.request : request<Auth>)(
+Future<HttpResponse<Auth>> requestServerStatus() => request(
       route: '/status',
       method: HttpMethod.get,
       parser: (status) => Auth.fromJson(status),
