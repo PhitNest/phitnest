@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'styled_underline_text_field.dart';
 
 class _State extends ChangeNotifier {
-  bool _obscureText = true;
+  var _obscureText = true;
   final FocusNode iconButtonNode = FocusNode()..skipTraversal = true;
 
   bool get obscureText => _obscureText;
@@ -26,7 +26,7 @@ class StyledPasswordField extends StatelessWidget {
   final ValueChanged<String>? onFieldSubmitted;
 
   const StyledPasswordField({
-    Key? key,
+    super.key,
     this.hint,
     this.controller,
     this.textInputAction,
@@ -35,7 +35,7 @@ class StyledPasswordField extends StatelessWidget {
     this.onChanged,
     this.onFieldSubmitted,
     this.validator,
-  }) : super(key: key);
+  }) : super();
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider<_State>(
@@ -56,7 +56,6 @@ class StyledPasswordField extends StatelessWidget {
             suffix: IconButton(
               focusNode: state.iconButtonNode,
               padding: EdgeInsets.zero,
-              constraints: BoxConstraints(),
               icon: Icon(
                 Icons.visibility,
                 color: state._obscureText ? Colors.grey : Colors.black,

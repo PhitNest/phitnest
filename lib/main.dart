@@ -1,34 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:routemaster/routemaster.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phitnest_core/core.dart';
 
-import 'router.dart';
-import 'theme.dart';
+import 'screens/login/ui.dart';
 
-void main() {
-  Routemaster.setPathUrlStrategy();
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(
-    const ProviderScope(
-      child: MyApp(),
-    ),
-  );
+  await initializeCache();
+  runApp(const App());
 }
 
-class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key}) : super();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final appRouter = ref.watch(appRouterProvider);
-    return MaterialApp.router(
-      title: 'PhitNest Admin',
-      theme: theme,
-      debugShowCheckedModeBanner: false,
-      routeInformationParser: const RoutemasterParser(),
-      routerDelegate: RoutemasterDelegate(
-        routesBuilder: (context) => appRouter.loggedOutRoute,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => AuthBloc(true),
+          )
+        ],
+        child: MaterialApp(
+          title: 'PhitNest Admin',
+          debugShowCheckedModeBanner: false,
+          routes: {
+            '/': (_) => const LoginScreen(),
+          },
+        ),
+      );
 }
