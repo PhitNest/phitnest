@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:dio/dio.dart';
+import 'package:equatable/equatable.dart';
 
 import '../failure.dart';
 import '../logger.dart';
@@ -111,7 +112,7 @@ class Http {
             final parsed = parser(response.data);
             // Log success
             prettyLogger.d(responseLog("success", parsed));
-            return HttpResponseOk<ResType>(parsed, response.headers);
+            return HttpResponseOk(parsed, response.headers);
           }
           // Handle unsuccessful responses
           final failure = Failure.fromJson(response.data);
