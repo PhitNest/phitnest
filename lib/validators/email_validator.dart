@@ -21,35 +21,30 @@ class EmailValidator {
   // Returns true if the first letter in string c has a 16-bit UTF-16 code unit
   // greater than or equal to 48 and less than or equal to 57
   // otherwise return false
-  static bool _isDigit(String c) {
-    return c.codeUnitAt(0) >= 48 && c.codeUnitAt(0) <= 57;
-  }
+  static bool _isDigit(String c) =>
+      c.codeUnitAt(0) >= 48 && c.codeUnitAt(0) <= 57;
 
   // Returns true if the first letter in string c has a 16-bit UTF-16 code unit
   // greater than or equal to 65 and less than or equal to 90 (capital letters)
   // or greater than or equal to 97 and less than or equal to 122 (lowercase
   // letters) otherwise return false
-  static bool _isLetter(String c) {
-    return (c.codeUnitAt(0) >= 65 && c.codeUnitAt(0) <= 90) ||
-        (c.codeUnitAt(0) >= 97 && c.codeUnitAt(0) <= 122);
-  }
+  static bool _isLetter(String c) =>
+      (c.codeUnitAt(0) >= 65 && c.codeUnitAt(0) <= 90) ||
+      (c.codeUnitAt(0) >= 97 && c.codeUnitAt(0) <= 122);
 
   // Returns true if calling isLetter or isDigit with the same string returns
   // true. Only returns false if both isLetter and isDigit return false.
-  static bool _isLetterOrDigit(String c) {
-    return _isLetter(c) || _isDigit(c);
-  }
+  static bool _isLetterOrDigit(String c) => _isLetter(c) || _isDigit(c);
 
-  // Returns value of allowInternational if the first letter in the string c
+  // Returns value of true if the first letter in the string c
   // isnt a number or letter or special character otherwise
   // return the result of _isLetterOrDigit or _atomCharacters.contains(c)
   // which only returns false if both _isLetterOrDigit and
   // _atomCharacters.contains(c) returns false
-  static bool _isAtom(String c, bool allowInternational) {
-    return c.codeUnitAt(0) < 128
-        ? _isLetterOrDigit(c) || _atomCharacters.contains(c)
-        : allowInternational;
-  }
+  static bool _isAtom(String c) =>
+      c.codeUnitAt(0) >= 128 ||
+      _isLetterOrDigit(c) ||
+      _atomCharacters.contains(c);
 
   // First checks whether the first letter in string c is a letter, number or
   // special character
@@ -60,11 +55,9 @@ class EmailValidator {
   // Otherwise the function returns false
   //
   // If the first if statement for string c being a letter, number or special
-  // character fails
-  // The value of allowInternational is checked where, if true,
-  // domainType is set to Alphabetic and the function returns true
-  // Otherwise, the function returns false
-  static bool _isDomain(String c, bool allowInternational) {
+  // character fails domainType is set to Alphabetic and the function returns
+  // true
+  static bool _isDomain(String c) {
     if (c.codeUnitAt(0) < 128) {
       if (_isLetter(c) || c == '-') {
         _domainType = SubdomainType.alphabetic;
@@ -79,17 +72,13 @@ class EmailValidator {
       return false;
     }
 
-    if (allowInternational) {
-      _domainType = SubdomainType.alphabetic;
-      return true;
-    }
-
-    return false;
+    _domainType = SubdomainType.alphabetic;
+    return true;
   }
 
   // Returns true if domainType is not None
   // Otherwise returns false
-  static bool _isDomainStart(String c, bool allowInternational) {
+  static bool _isDomainStart(String c) {
     if (c.codeUnitAt(0) < 128) {
       if (_isLetter(c)) {
         _domainType = SubdomainType.alphabetic;
@@ -106,20 +95,14 @@ class EmailValidator {
       return false;
     }
 
-    if (allowInternational) {
-      _domainType = SubdomainType.alphabetic;
-      return true;
-    }
-
-    _domainType = SubdomainType.none;
-
-    return false;
+    _domainType = SubdomainType.alphabetic;
+    return true;
   }
 
-  static bool _skipAtom(String text, bool allowInternational) {
+  static bool _skipAtom(String text) {
     final startIndex = _index;
 
-    while (_index < text.length && _isAtom(text[_index], allowInternational)) {
+    while (_index < text.length && _isAtom(text[_index])) {
       _index++;
     }
 
@@ -128,17 +111,16 @@ class EmailValidator {
 
   // Skips checking of subdomain and returns false if domainType is None
   // Otherwise returns true
-  static bool _skipSubDomain(String text, bool allowInternational) {
+  static bool _skipSubDomain(String text) {
     final startIndex = _index;
 
-    if (!_isDomainStart(text[_index], allowInternational)) {
+    if (!_isDomainStart(text[_index])) {
       return false;
     }
 
     _index++;
 
-    while (
-        _index < text.length && _isDomain(text[_index], allowInternational)) {
+    while (_index < text.length && _isDomain(text[_index])) {
       _index++;
     }
 
@@ -147,9 +129,8 @@ class EmailValidator {
 
   // Skips checking of domain if domainType is numeric and returns false
   // Otherwise, return true
-  static bool _skipDomain(
-      String text, bool allowTopLevelDomains, bool allowInternational) {
-    if (!_skipSubDomain(text, allowInternational)) {
+  static bool _skipDomain(String text) {
+    if (!_skipSubDomain(text)) {
       return false;
     }
 
@@ -161,11 +142,11 @@ class EmailValidator {
           return false;
         }
 
-        if (!_skipSubDomain(text, allowInternational)) {
+        if (!_skipSubDomain(text)) {
           return false;
         }
       } while (_index < text.length && text[_index] == '.');
-    } else if (!allowTopLevelDomains) {
+    } else {
       return false;
     }
 
@@ -181,17 +162,13 @@ class EmailValidator {
   // Function skips over quoted text where if quoted text is in the string
   // the function returns true
   // otherwise the function returns false
-  static bool _skipQuoted(String text, bool allowInternational) {
+  static bool _skipQuoted(String text) {
     var escaped = false;
 
     // skip over leading '"'
     _index++;
 
     while (_index < text.length) {
-      if (text[_index].codeUnitAt(0) >= 128 && !allowInternational) {
-        return false;
-      }
-
       if (text[_index] == '\\') {
         escaped = !escaped;
       } else if (!escaped) {
@@ -331,20 +308,19 @@ class EmailValidator {
     return compact ? colons < 7 : colons == 7;
   }
 
+  static const kInvalidEmailMessage = 'Invalid email address.';
+
   /// Validate the specified email address.
   ///
-  /// If [allowTopLevelDomains] is `true`, then the validator will
-  /// allow addresses with top-level domains like `email@example`.
-  ///
-  /// If [allowInternational] is `true`, then the validator
-  /// will use the newer International Email standards for validating
-  /// the email address.
-  static bool validateEmail(dynamic email,
-      [bool allowTopLevelDomains = false, bool allowInternational = true]) {
+  /// the validator will use the newer International Email standards for
+  /// validating the email address.
+  static String? validateEmail(
+    dynamic email,
+  ) {
     _index = 0;
 
     if (email is! String || email.isEmpty || email.length >= 255) {
-      return false;
+      return 'You must enter an email address.';
     }
 
     // Local-part = Dot-string / Quoted-string
@@ -354,42 +330,42 @@ class EmailValidator {
     //
     // Quoted-string = DQUOTE *qcontent DQUOTE
     if (email[_index] == '"') {
-      if (!_skipQuoted(email, allowInternational) || _index >= email.length) {
-        return false;
+      if (!_skipQuoted(email) || _index >= email.length) {
+        return 'Invalid email address.';
       }
     } else {
-      if (!_skipAtom(email, allowInternational) || _index >= email.length) {
-        return false;
+      if (!_skipAtom(email) || _index >= email.length) {
+        return kInvalidEmailMessage;
       }
 
       while (email[_index] == '.') {
         _index++;
 
         if (_index >= email.length) {
-          return false;
+          return kInvalidEmailMessage;
         }
 
-        if (!_skipAtom(email, allowInternational)) {
-          return false;
+        if (!_skipAtom(email)) {
+          return kInvalidEmailMessage;
         }
 
         if (_index >= email.length) {
-          return false;
+          return kInvalidEmailMessage;
         }
       }
     }
 
     if (_index + 1 >= email.length || _index > 64 || email[_index++] != '@') {
-      return false;
+      return kInvalidEmailMessage;
     }
 
     if (email[_index] != '[') {
       // domain
-      if (!_skipDomain(email, allowTopLevelDomains, allowInternational)) {
-        return false;
+      if (!_skipDomain(email)) {
+        return kInvalidEmailMessage;
       }
 
-      return _index == email.length;
+      return _index == email.length ? null : kInvalidEmailMessage;
     }
 
     // address literal
@@ -397,7 +373,7 @@ class EmailValidator {
 
     // we need at least 8 more characters
     if (_index + 8 >= email.length) {
-      return false;
+      return kInvalidEmailMessage;
     }
 
     final ipv6 = email.substring(_index - 1).toLowerCase();
@@ -405,18 +381,18 @@ class EmailValidator {
     if (ipv6.contains('ipv6:')) {
       _index += 'IPv6:'.length;
       if (!_skipIPv6Literal(email)) {
-        return false;
+        return kInvalidEmailMessage;
       }
     } else {
       if (!_skipIPv4Literal(email)) {
-        return false;
+        return kInvalidEmailMessage;
       }
     }
 
     if (_index >= email.length || email[_index++] != ']') {
-      return false;
+      return kInvalidEmailMessage;
     }
 
-    return _index == email.length;
+    return _index == email.length ? null : kInvalidEmailMessage;
   }
 }
