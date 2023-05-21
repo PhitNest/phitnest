@@ -62,9 +62,12 @@ Future<HttpResponse<ResType>> request<ResType>({
   // Generate the URL for the request
   final String url = _createUrl(route, overrideHost, overridePort);
 
+  final String Function(String text) wrapText =
+      (text) => StringUtils.addCharAtPosition(text, '\n\t', 100, repeat: true);
+
   // Helper function for generating log descriptions
   final String Function(dynamic data) descriptionLog = (data) =>
-      '\n\tmethod: $method\n\tpath: $route${StringUtils.addCharAtPosition("\n\tdata: $data", '\n\t', 100, repeat: true)}';
+      '\n\tmethod: $method${wrapText('\n\turl: $url')}${wrapText("\n\tdata: $data")}';
 
   // Log the request details
   prettyLogger.d(
