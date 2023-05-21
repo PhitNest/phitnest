@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../theme.dart';
-
 class StyledUnderlinedTextField extends StatelessWidget {
   final String? hint;
   final TextEditingController? controller;
@@ -18,7 +16,7 @@ class StyledUnderlinedTextField extends StatelessWidget {
   final Widget? suffix;
 
   const StyledUnderlinedTextField({
-    Key? key,
+    super.key,
     this.hint,
     this.controller,
     this.obscureText = false,
@@ -32,7 +30,7 @@ class StyledUnderlinedTextField extends StatelessWidget {
     this.textCapitalization = TextCapitalization.none,
     this.validator,
     this.suffix,
-  }) : super(key: key);
+  }) : super();
 
   @override
   Widget build(BuildContext context) => TextFormField(
@@ -44,7 +42,6 @@ class StyledUnderlinedTextField extends StatelessWidget {
         focusNode: focusNode,
         onEditingComplete: onEditingComplete,
         onChanged: onChanged,
-        style: theme.textTheme.labelMedium,
         validator: validator,
         textCapitalization: textCapitalization,
         decoration: InputDecoration(
@@ -58,9 +55,6 @@ class StyledUnderlinedTextField extends StatelessWidget {
           hintText: hint,
           isDense: true,
           errorMaxLines: errorMaxLines,
-          helperStyle: theme.textTheme.labelMedium,
-          errorStyle: theme.textTheme.labelMedium!.copyWith(color: Colors.red),
-          hintStyle: theme.textTheme.labelMedium!.copyWith(color: Colors.grey),
           enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.grey),
           ),
