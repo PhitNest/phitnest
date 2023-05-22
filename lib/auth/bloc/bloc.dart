@@ -31,7 +31,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               case AuthInitialEventQueuedState(queuedEvent: final queuedEvent):
                 emit(AuthLoadedInitialState(auth: auth));
                 add(queuedEvent);
-              case AuthLoadedState():
+              case AuthLoadedInitialState() ||
+                    AuthLoginFailureState() ||
+                    AuthLoggedInState() ||
+                    AuthLoginLoadingState():
                 throw StateException(state, event);
             }
           case HttpResponseFailure():
@@ -54,7 +57,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                   loadingOperation: loadingOperation(),
                   queuedEvent: queuedEvent,
                 );
-              case AuthLoadedState():
+              case AuthLoadedInitialState() ||
+                    AuthLoginFailureState() ||
+                    AuthLoggedInState() ||
+                    AuthLoginLoadingState():
                 throw StateException(state, event);
             }
         }
@@ -65,7 +71,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (event, emit) => switch (state) {
         AuthLoginLoadingState() => null, // Do nothing
         AuthLoggedInState() => throw StateException(state, event),
-        AuthLoadingState(loadingOperation: final loadingOperation) =>
+        AuthInitialState(loadingOperation: final loadingOperation) ||
+        AuthInitialEventQueuedState(loadingOperation: final loadingOperation) =>
           AuthInitialEventQueuedState(
             loadingOperation: loadingOperation,
             queuedEvent: event,
@@ -91,7 +98,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
     on<AuthLoginResponseEvent>(
       (event, emit) => switch (state) {
-        AuthLoadingState() ||
+        AuthInitialState() ||
+        AuthInitialEventQueuedState() ||
         AuthLoadedInitialState() ||
         AuthLoginFailureState() ||
         AuthLoggedInState() =>
