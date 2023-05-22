@@ -114,6 +114,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> close() async {
     switch (state) {
       case AuthLoadingState(loadingOperation: final loadingOperation):
+        print('test');
         await loadingOperation.cancel();
       case AuthLoginLoadingState(loadingOperation: final loadingOperation):
         await loadingOperation.cancel();
