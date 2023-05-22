@@ -18,22 +18,22 @@ sealed class AuthLoadingState extends AuthState {
   List<Object?> get props => [loadingOperation];
 }
 
+class AuthInitialEventQueuedState extends AuthLoadingState {
+  final AuthLoadedEvent queuedEvent;
+
+  const AuthInitialEventQueuedState({
+    required super.loadingOperation,
+    required this.queuedEvent,
+  }) : super();
+
+  @override
+  List<Object?> get props => [super.props, queuedEvent];
+}
+
 class AuthInitialState extends AuthLoadingState {
   const AuthInitialState({
     required super.loadingOperation,
   }) : super();
-}
-
-class AuthReloadingState extends AuthLoadingState {
-  final Failure failure;
-
-  const AuthReloadingState({
-    required super.loadingOperation,
-    required this.failure,
-  }) : super();
-
-  @override
-  List<Object?> get props => [super.props, failure];
 }
 
 sealed class AuthLoadedState extends AuthState {

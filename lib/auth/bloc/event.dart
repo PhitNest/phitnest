@@ -4,10 +4,10 @@ sealed class AuthEvent extends Equatable {
   const AuthEvent() : super();
 }
 
-class AuthLoadedEvent extends AuthEvent {
+class AuthResponseEvent extends AuthEvent {
   final HttpResponse<Auth> response;
 
-  const AuthLoadedEvent({
+  const AuthResponseEvent({
     required this.response,
   }) : super();
 
@@ -15,7 +15,11 @@ class AuthLoadedEvent extends AuthEvent {
   List<Object?> get props => [response];
 }
 
-class AuthLoginEvent extends AuthEvent {
+sealed class AuthLoadedEvent extends AuthEvent {
+  const AuthLoadedEvent() : super();
+}
+
+class AuthLoginEvent extends AuthLoadedEvent {
   final String email;
   final String password;
 
