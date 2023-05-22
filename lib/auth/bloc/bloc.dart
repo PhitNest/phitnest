@@ -53,9 +53,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                   ),
                 );
               case AuthInitialEventQueuedState(queuedEvent: final queuedEvent):
-                AuthInitialEventQueuedState(
-                  loadingOperation: loadingOperation(),
-                  queuedEvent: queuedEvent,
+                emit(
+                  AuthInitialEventQueuedState(
+                    loadingOperation: loadingOperation(),
+                    queuedEvent: queuedEvent,
+                  ),
                 );
               case AuthLoadedInitialState() ||
                     AuthLoginFailureState() ||
@@ -73,9 +75,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         AuthLoggedInState() => throw StateException(state, event),
         AuthInitialState(loadingOperation: final loadingOperation) ||
         AuthInitialEventQueuedState(loadingOperation: final loadingOperation) =>
-          AuthInitialEventQueuedState(
-            loadingOperation: loadingOperation,
-            queuedEvent: event,
+          emit(
+            AuthInitialEventQueuedState(
+              loadingOperation: loadingOperation,
+              queuedEvent: event,
+            ),
           ),
         AuthLoadedInitialState(auth: final auth) ||
         AuthLoginFailureState(auth: final auth) =>
@@ -104,16 +108,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         AuthLoginFailureState() ||
         AuthLoggedInState() =>
           throw StateException(state, event),
-        AuthLoginLoadingState(auth: final auth) => switch (event.response) {
-            LoginSuccess(userId: final userId) => AuthLoggedInState(
-                auth: auth,
-                userId: userId,
-              ),
-            LoginFailure(type: final type) => AuthLoginFailureState(
-                auth: auth,
-                message: type.message,
-              ),
-          },
+        AuthLoginLoadingState(auth: final auth) => emit(
+            switch (event.response) {
+              LoginSuccess(userId: final userId) => AuthLoggedInState(
+                  auth: auth,
+                  userId: userId,
+                ),
+              LoginFailure(type: final type) => AuthLoginFailureState(
+                  auth: auth,
+                  message: type.message,
+                ),
+            },
+          ),
       },
     );
   }
