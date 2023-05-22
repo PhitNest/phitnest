@@ -18,36 +18,53 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ) {
     (state as AuthInitialState).loadingOperation.then(
           (response) => add(
-            AuthLoadedEvent(response: response),
+            AuthResponseEvent(response: response),
           ),
         );
-    on<AuthLoadedEvent>(
-      (event, emit) => switch (state) {
-        AuthInitialState() || AuthReloadingState() => emit(
-            switch (event.response) {
-              HttpResponseOk(data: final auth) =>
-                AuthLoadedInitialState(auth: auth),
-              HttpResponseFailure(failure: final failure) => AuthReloadingState(
-                  loadingOperation:
-                      CancelableOperation.fromFuture(requestServerStatus(admin))
-                        ..then(
-                          (response) => add(
-                            AuthLoadedEvent(response: response),
-                          ),
-                        ),
-                  failure: failure,
+    on<AuthResponseEvent>(
+      (event, emit) => switch (event.response) {
+        HttpResponseOk(data: final auth) => switch (state) {
+            AuthInitialState() => emit(AuthLoadedInitialState(auth: auth)),
+            AuthInitialEventQueuedState(queuedEvent: final queuedEvent) => () {
+                emit(AuthLoadedInitialState(auth: auth));
+                add(queuedEvent);
+              }(),
+            AuthLoadedState() => throw StateException(state, event),
+          },
+        HttpResponseFailure() => () {
+            loadingOperation() =>
+                CancelableOperation.fromFuture(requestServerStatus(admin))
+                  ..then(
+                    (response) => add(
+                      AuthResponseEvent(response: response),
+                    ),
+                  );
+            return switch (state) {
+              AuthInitialState() => emit(
+                  AuthInitialState(
+                    loadingOperation: loadingOperation(),
+                  ),
                 ),
-            },
-          ),
-        AuthLoadedState() => throw StateException(state, event),
+              AuthInitialEventQueuedState(queuedEvent: final queuedEvent) =>
+                AuthInitialEventQueuedState(
+                  loadingOperation: loadingOperation(),
+                  queuedEvent: queuedEvent,
+                ),
+              AuthLoadedState() => throw StateException(state, event),
+            };
+          }(),
       },
     );
     on<AuthLoginEvent>(
       (event, emit) => switch (state) {
-        AuthLoadingState() ||
         AuthLoginLoadingState() ||
         AuthLoggedInState() =>
           throw StateException(state, event),
+        AuthLoadingState(loadingOperation: final loadingOperation) =>
+          AuthInitialEventQueuedState(
+            loadingOperation: loadingOperation,
+            queuedEvent: event,
+          ),
         AuthLoadedInitialState(auth: final auth) ||
         AuthLoginFailureState(auth: final auth) =>
           emit(
