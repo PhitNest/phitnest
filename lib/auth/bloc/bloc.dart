@@ -63,9 +63,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<AuthLoginEvent>(
       (event, emit) => switch (state) {
-        AuthLoginLoadingState() ||
-        AuthLoggedInState() =>
-          throw StateException(state, event),
+        AuthLoginLoadingState() => null, // Do nothing
+        AuthLoggedInState() => throw StateException(state, event),
         AuthLoadingState(loadingOperation: final loadingOperation) =>
           AuthInitialEventQueuedState(
             loadingOperation: loadingOperation,
