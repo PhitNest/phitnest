@@ -109,4 +109,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
     );
   }
+
+  @override
+  Future<void> close() async {
+    switch (state) {
+      case AuthLoadingState(loadingOperation: final loadingOperation):
+        await loadingOperation.cancel();
+      case AuthLoginLoadingState(loadingOperation: final loadingOperation):
+        await loadingOperation.cancel();
+      default:
+    }
+    super.close();
+  }
 }
