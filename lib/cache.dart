@@ -19,9 +19,9 @@ const _secureStorage = FlutterSecureStorage(
 );
 
 // Declare and initialize secure cache variables
-const Map<String, String> _stringifiedSecureCache = {};
-const Map<String, Serializable> _lazyLoadedSecureCache = {};
-const Map<String, List<Serializable>> _lazyLoadedSecureListCache = {};
+final Map<String, String> _stringifiedSecureCache = {};
+final Map<String, Serializable> _lazyLoadedSecureCache = {};
+final Map<String, List<Serializable>> _lazyLoadedSecureListCache = {};
 
 /// Function to initialize cache
 Future<void> initializeCache() async {
