@@ -22,16 +22,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ),
         );
     on<AuthResponseEvent>(
-      (event, emit) => switch (event.response) {
-        HttpResponseOk(data: final auth) => switch (state) {
-            AuthInitialState() => emit(AuthLoadedInitialState(auth: auth)),
-            AuthInitialEventQueuedState(queuedEvent: final queuedEvent) => () {
+      (event, emit) {
+        switch (event.response) {
+          case HttpResponseOk(data: final auth):
+            switch (state) {
+              case AuthInitialState():
+                emit(AuthLoadedInitialState(auth: auth));
+              case AuthInitialEventQueuedState(queuedEvent: final queuedEvent):
                 emit(AuthLoadedInitialState(auth: auth));
                 add(queuedEvent);
-              }(),
-            AuthLoadedState() => throw StateException(state, event),
-          },
-        HttpResponseFailure() => () {
+              case AuthLoadedState():
+                throw StateException(state, event);
+            }
+          case HttpResponseFailure():
             loadingOperation() =>
                 CancelableOperation.fromFuture(requestServerStatus(admin))
                   ..then(
@@ -39,22 +42,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                       AuthResponseEvent(response: response),
                     ),
                   );
-            return switch (state) {
-              AuthInitialState() => emit(
+            switch (state) {
+              case AuthInitialState():
+                emit(
                   AuthInitialState(
                     loadingOperation: loadingOperation(),
                   ),
-                ),
-              AuthInitialEventQueuedState(queuedEvent: final queuedEvent) =>
+                );
+              case AuthInitialEventQueuedState(queuedEvent: final queuedEvent):
                 AuthInitialEventQueuedState(
                   loadingOperation: loadingOperation(),
                   queuedEvent: queuedEvent,
-                ),
-              AuthLoadedState() => throw StateException(state, event),
-            };
-          }(),
+                );
+              case AuthLoadedState():
+                throw StateException(state, event);
+            }
+        }
       },
     );
+
     on<AuthLoginEvent>(
       (event, emit) => switch (state) {
         AuthLoginLoadingState() ||
