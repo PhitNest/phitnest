@@ -4,10 +4,10 @@ sealed class AuthState extends Equatable {
   const AuthState() : super();
 }
 
-class AuthInitialState extends AuthState {
+sealed class AuthLoadingState extends AuthState {
   final CancelableOperation<HttpResponse<Auth>> loadingOperation;
 
-  const AuthInitialState({
+  const AuthLoadingState({
     required this.loadingOperation,
   }) : super();
 
@@ -15,23 +15,28 @@ class AuthInitialState extends AuthState {
   List<Object?> get props => [loadingOperation];
 }
 
-class AuthInitialEventQueuedState extends AuthState {
-  final CancelableOperation<HttpResponse<Auth>> loadingOperation;
+class AuthInitialState extends AuthLoadingState {
+  const AuthInitialState({
+    required super.loadingOperation,
+  }) : super();
+}
+
+class AuthInitialEventQueuedState extends AuthLoadingState {
   final AuthLoadedEvent queuedEvent;
 
   const AuthInitialEventQueuedState({
-    required this.loadingOperation,
+    required super.loadingOperation,
     required this.queuedEvent,
   }) : super();
 
   @override
-  List<Object?> get props => [loadingOperation, queuedEvent];
+  List<Object?> get props => [super.props, queuedEvent];
 }
 
-class AuthLoadedInitialState extends AuthState {
+sealed class AuthLoadedState extends AuthState {
   final Auth auth;
 
-  const AuthLoadedInitialState({
+  const AuthLoadedState({
     required this.auth,
   }) : super();
 
@@ -39,41 +44,44 @@ class AuthLoadedInitialState extends AuthState {
   List<Object?> get props => [auth];
 }
 
-class AuthLoginLoadingState extends AuthState {
-  final Auth auth;
+class AuthLoadedInitialState extends AuthLoadedState {
+  const AuthLoadedInitialState({
+    required super.auth,
+  }) : super();
+}
+
+class AuthLoginLoadingState extends AuthLoadedState {
   final CancelableOperation<LoginResponse> loadingOperation;
 
   const AuthLoginLoadingState({
-    required this.auth,
+    required super.auth,
     required this.loadingOperation,
   }) : super();
 
   @override
-  List<Object?> get props => [auth, loadingOperation];
+  List<Object?> get props => [super.props, loadingOperation];
 }
 
-class AuthLoggedInState extends AuthState {
-  final Auth auth;
+class AuthLoggedInState extends AuthLoadedState {
   final String userId;
 
   const AuthLoggedInState({
-    required this.auth,
+    required super.auth,
     required this.userId,
   }) : super();
 
   @override
-  List<Object?> get props => [auth, userId];
+  List<Object?> get props => [super.props, userId];
 }
 
-class AuthLoginFailureState extends AuthState {
-  final Auth auth;
+class AuthLoginFailureState extends AuthLoadedState {
   final String message;
 
   const AuthLoginFailureState({
-    required this.auth,
+    required super.auth,
     required this.message,
   }) : super();
 
   @override
-  List<Object?> get props => [auth, message];
+  List<Object?> get props => [super.props, message];
 }

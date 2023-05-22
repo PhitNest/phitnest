@@ -15,7 +15,7 @@ class AuthResponseEvent extends AuthEvent {
   List<Object?> get props => [response];
 }
 
-abstract class AuthLoadedEvent extends AuthEvent {
+sealed class AuthLoadedEvent extends AuthEvent {
   const AuthLoadedEvent() : super();
 }
 
