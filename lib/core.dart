@@ -1,4 +1,5 @@
 export 'auth/auth.dart';
+export 'bloc.dart';
 export 'cache.dart';
 export 'errors.dart';
 export 'failure.dart';
