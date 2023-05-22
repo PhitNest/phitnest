@@ -25,6 +25,9 @@ final Map<String, List<Serializable>> _lazyLoadedSecureListCache = {};
 
 /// Function to initialize cache
 Future<void> initializeCache() async {
+  _stringifiedSecureCache.clear();
+  _lazyLoadedSecureCache.clear();
+  _lazyLoadedSecureListCache.clear();
   _sharedPreferences = await SharedPreferences.getInstance();
   // Clear secure storage on first run
   if (_sharedPreferences.getBool('first_run') ?? true) {
