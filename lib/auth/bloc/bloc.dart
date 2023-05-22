@@ -112,7 +112,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   @override
   Future<void> close() async {
-    print('test');
     switch (state) {
       case AuthLoadingState(loadingOperation: final loadingOperation):
         await loadingOperation.cancel();
@@ -120,6 +119,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await loadingOperation.cancel();
       default:
     }
-    super.close();
+    await super.close();
   }
 }
