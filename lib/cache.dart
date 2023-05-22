@@ -13,15 +13,15 @@ bool get cacheLoaded => _loaded;
 late final SharedPreferences _sharedPreferences;
 
 // Initialize FlutterSecureStorage instance with platform-specific options
-final _secureStorage = FlutterSecureStorage(
+const _secureStorage = FlutterSecureStorage(
   aOptions: AndroidOptions(encryptedSharedPreferences: true),
   iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
 );
 
 // Declare and initialize secure cache variables
-late Map<String, String> _stringifiedSecureCache;
-Map<String, Serializable> _lazyLoadedSecureCache = {};
-Map<String, List<Serializable>> _lazyLoadedSecureListCache = {};
+const Map<String, String> _stringifiedSecureCache = {};
+const Map<String, Serializable> _lazyLoadedSecureCache = {};
+const Map<String, List<Serializable>> _lazyLoadedSecureListCache = {};
 
 /// Function to initialize cache
 Future<void> initializeCache() async {
@@ -32,7 +32,7 @@ Future<void> initializeCache() async {
     _sharedPreferences.setBool('first_run', false);
   }
   // Read all secure storage values into cache
-  _stringifiedSecureCache = await _secureStorage.readAll();
+  _stringifiedSecureCache.addAll(await _secureStorage.readAll());
   _loaded = true;
 }
 
