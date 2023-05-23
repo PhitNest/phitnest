@@ -2,6 +2,9 @@ part of '../auth.dart';
 
 sealed class AuthEvent extends Equatable {
   const AuthEvent() : super();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class AuthResponseEvent extends AuthEvent {
@@ -41,4 +44,8 @@ class AuthLoginResponseEvent extends AuthEvent {
 
   @override
   List<Object?> get props => [response];
+}
+
+class AuthCancelRequestEvent extends AuthEvent {
+  const AuthCancelRequestEvent() : super();
 }
