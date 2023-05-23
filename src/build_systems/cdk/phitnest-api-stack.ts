@@ -73,7 +73,6 @@ export class PhitnestApiStack extends Stack {
           "X-Amz-Security-Token",
         ],
         allowOrigins: ["*"],
-        allowCredentials: true,
         allowMethods: [
           CorsHttpMethod.GET,
           CorsHttpMethod.POST,
