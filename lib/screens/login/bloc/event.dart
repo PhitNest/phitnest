@@ -7,6 +7,14 @@ sealed class LoginEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SubmitLoginFormEvent extends LoginEvent {
-  const SubmitLoginFormEvent() : super();
+class LoginFormAcceptedEvent extends LoginEvent {
+  const LoginFormAcceptedEvent() : super();
+}
+
+class LoginFormRejectedEvent extends LoginEvent {
+  const LoginFormRejectedEvent() : super();
+}
+
+class ResetLoginButtonEvent extends LoginEvent {
+  const ResetLoginButtonEvent() : super();
 }

@@ -22,7 +22,7 @@ class StyledPasswordField extends StatelessWidget {
   final FocusNode? focusNode;
   final VoidCallback? onEditingComplete;
   final ValueChanged<String>? onChanged;
-  final FormFieldValidator? validator;
+  final String? Function(dynamic)? validator;
   final ValueChanged<String>? onFieldSubmitted;
 
   const StyledPasswordField({

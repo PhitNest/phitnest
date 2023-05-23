@@ -10,7 +10,7 @@ class StyledUnderlinedTextField extends StatelessWidget {
   final VoidCallback? onEditingComplete;
   final ValueChanged<String>? onChanged;
   final TextCapitalization textCapitalization;
-  final FormFieldValidator? validator;
+  final String? Function(dynamic)? validator;
   final ValueChanged<String>? onFieldSubmitted;
   final int? errorMaxLines;
   final Widget? suffix;
