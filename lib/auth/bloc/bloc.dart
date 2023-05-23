@@ -108,6 +108,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         _ => throw StateException(state, event),
       },
     );
+    on<AuthCancelRequestEvent>(
+      (event, emit) => switch (state) {
+        AuthInitialEventQueuedState(loadingOperation: final loadingOperation) =>
+          AuthInitialState(loadingOperation: loadingOperation),
+        AuthLoadedInitialState() ||
+        AuthInitialState() ||
+        AuthLoggedInState() ||
+        AuthLoginFailureState() =>
+          null, // Do nothing
+        AuthLoginLoadingState(
+          auth: final auth,
+          loadingOperation: final loadingOperation
+        ) =>
+          loadingOperation
+              .cancel()
+              .then((_) => AuthLoadedInitialState(auth: auth)),
+      },
+    );
   }
 
   @override
