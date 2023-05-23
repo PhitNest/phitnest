@@ -1,5 +1,6 @@
 import {
   AddRoutesOptions,
+  CorsHttpMethod,
   HttpApi,
   HttpNoneAuthorizer,
 } from "@aws-cdk/aws-apigatewayv2";
@@ -63,6 +64,23 @@ export class PhitnestApiStack extends Stack {
     const httpApi = new HttpApi(this, `PhitnestApi-${DEPLOYMENT_ENV}`, {
       description: `Phitnest API ${DEPLOYMENT_ENV}`,
       apiName: `Phitnest-API-${DEPLOYMENT_ENV}`,
+      corsPreflight: {
+        allowHeaders: [
+          "Content-Type",
+          "X-Amz-Date",
+          "Authorization",
+          "X-Api-Key",
+          "X-Amz-Security-Token",
+        ],
+        allowOrigins: ["*"],
+        allowCredentials: true,
+        allowMethods: [
+          CorsHttpMethod.GET,
+          CorsHttpMethod.POST,
+          CorsHttpMethod.PUT,
+          CorsHttpMethod.DELETE,
+        ],
+      },
     });
     httpApi.applyRemovalPolicy(RemovalPolicy.DESTROY);
     this.dynamo = new DynamoDBStack(this);
