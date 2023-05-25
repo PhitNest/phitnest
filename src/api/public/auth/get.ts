@@ -1,4 +1,4 @@
-import { handleRequest } from "api/common/utils";
+import { handleRequest, environmentVars } from "api/common/utils";
 import { APIGatewayProxyResult } from "aws-lambda";
 
 export async function invoke(): Promise<APIGatewayProxyResult> {
@@ -8,13 +8,29 @@ export async function invoke(): Promise<APIGatewayProxyResult> {
       USER_POOL_CLIENT_ID,
       ADMIN_POOL_ID,
       ADMIN_POOL_CLIENT_ID,
-    } = process.env;
-    if (
-      USER_POOL_ID &&
-      USER_POOL_CLIENT_ID &&
-      ADMIN_POOL_ID &&
-      ADMIN_POOL_CLIENT_ID
-    ) {
+      SANDBOX_MODE,
+    } = environmentVars;
+    if (SANDBOX_MODE === "sandbox") {
+      return {
+        statusCode: 200,
+        body: "sandbox",
+        headers: {
+          "Content-Type": "text/plain",
+        },
+      };
+    } else {
+      if (!ADMIN_POOL_CLIENT_ID) {
+        throw new Error("Unable to find admin pool client id");
+      }
+      if (!ADMIN_POOL_ID) {
+        throw new Error("Unable to find admin pool id");
+      }
+      if (!USER_POOL_CLIENT_ID) {
+        throw new Error("Unable to find user pool client id");
+      }
+      if (!USER_POOL_ID) {
+        throw new Error("Unable to find user pool id");
+      }
       return {
         statusCode: 200,
         body: JSON.stringify({
@@ -23,14 +39,6 @@ export async function invoke(): Promise<APIGatewayProxyResult> {
           adminPoolId: ADMIN_POOL_ID,
           adminClientId: ADMIN_POOL_CLIENT_ID,
         }),
-      };
-    } else {
-      return {
-        statusCode: 200,
-        body: "sandbox",
-        headers: {
-          "Content-Type": "text/plain",
-        },
       };
     }
   });
