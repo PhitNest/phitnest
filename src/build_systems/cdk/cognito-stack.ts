@@ -82,7 +82,7 @@ export class CognitoStack {
         customAttributes: {
           firstName: nameAttribute,
           lastName: nameAttribute,
-          gymId: new StringAttribute({ mutable: true }),
+          inviterEmail: new StringAttribute({ mutable: false }),
         },
         lambdaTriggers: {
           preSignUp: userPresignupHook,
