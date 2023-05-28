@@ -1,3 +1,5 @@
+import 'constants.dart';
+
 enum RefreshSessionFailure {
   invalidUserPool,
   noSuchUser,
@@ -5,9 +7,9 @@ enum RefreshSessionFailure {
   unknown;
 
   String get message => switch (this) {
-        RefreshSessionFailure.invalidUserPool => 'Invalid user pool.',
-        RefreshSessionFailure.noSuchUser => 'No such user exists.',
+        RefreshSessionFailure.invalidUserPool => kInvalidPool,
+        RefreshSessionFailure.noSuchUser => kNoSuchUser,
         RefreshSessionFailure.invalidToken => 'Invalid token.',
-        RefreshSessionFailure.unknown => 'An unknown error occurred.',
+        RefreshSessionFailure.unknown => kUnknownError,
       };
 }

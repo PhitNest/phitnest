@@ -1,3 +1,4 @@
+export 'change_password.dart';
 export 'forgot_password.dart';
 export 'login.dart';
 export 'refresh_session.dart';

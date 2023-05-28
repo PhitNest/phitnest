@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'constants.dart';
+
 sealed class LoginResponse extends Equatable {
   const LoginResponse() : super();
 }
@@ -18,22 +20,38 @@ enum LoginFailureType {
   confirmationRequired,
   noSuchUser,
   invalidUserPool,
+  changePassword,
   unknown;
 
   String get message => switch (this) {
         LoginFailureType.invalidEmailPassword => 'Invalid email/password.',
         LoginFailureType.confirmationRequired => 'Confirmation required.',
-        LoginFailureType.noSuchUser => 'No such user exists.',
-        LoginFailureType.invalidUserPool => 'Invalid user pool.',
-        LoginFailureType.unknown => 'An unknown error occurred.',
+        LoginFailureType.noSuchUser => kNoSuchUser,
+        LoginFailureType.invalidUserPool => kInvalidPool,
+        LoginFailureType.changePassword => 'Password change required.',
+        LoginFailureType.unknown => kUnknownError,
       };
 }
 
 class LoginFailure extends LoginResponse {
   final LoginFailureType type;
+  String get message => type.message;
 
   const LoginFailure(this.type) : super();
 
   @override
   List<Object?> get props => [type];
+}
+
+class LoginCognitoFailure extends LoginResponse {
+  LoginFailureType get type => LoginFailureType.unknown;
+
+  final String message;
+
+  const LoginCognitoFailure({String? message})
+      : message = message ?? kUnknownError,
+        super();
+
+  @override
+  List<Object?> get props => [message];
 }

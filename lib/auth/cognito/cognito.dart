@@ -50,11 +50,13 @@ class Cognito extends Auth {
           const LoginFailure(LoginFailureType.invalidEmailPassword),
         'UserNotFoundException' =>
           const LoginFailure(LoginFailureType.noSuchUser),
-        _ => const LoginFailure(LoginFailureType.unknown),
+        _ => LoginCognitoFailure(message: error.message),
       };
     } on ArgumentError catch (_) {
       return const LoginFailure(LoginFailureType.invalidUserPool);
-    } catch (_) {
+    } on CognitoUserException {
+      return const LoginFailure(LoginFailureType.changePassword);
+    } catch (err) {
       return const LoginFailure(LoginFailureType.unknown);
     }
   }
@@ -192,6 +194,37 @@ class Cognito extends Auth {
       return RefreshSessionFailure.invalidUserPool;
     } catch (_) {
       return RefreshSessionFailure.unknown;
+    }
+  }
+
+  @override
+  Future<ChangePasswordFailure?> changePassword({
+    required String email,
+    required String newPassword,
+  }) async {
+    try {
+      await CognitoUser(email, _pool)
+          .sendNewPasswordRequiredAnswer(newPassword, {
+        'NEW_PASSWORD': newPassword,
+      });
+      return null;
+    } on CognitoClientException catch (error) {
+      return switch (error.code) {
+        'ResourceNotFoundException' => const ChangePasswordTypedFailure(
+            ChangePasswordFailureType.invalidUserPool),
+        'NotAuthorizedException' => const ChangePasswordTypedFailure(
+            ChangePasswordFailureType.invalidPassword),
+        'UserNotFoundException' => const ChangePasswordTypedFailure(
+            ChangePasswordFailureType.noSuchUser),
+        _ => ChangePasswordCognitoFailure(message: error.message),
+      };
+    } on ArgumentError catch (_) {
+      return const ChangePasswordTypedFailure(
+          ChangePasswordFailureType.invalidUserPool);
+    } catch (err) {
+      print(err);
+      return const ChangePasswordTypedFailure(
+          ChangePasswordFailureType.unknown);
     }
   }
 }
