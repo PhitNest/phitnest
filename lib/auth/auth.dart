@@ -71,4 +71,9 @@ sealed class Auth extends JsonSerializable {
   );
 
   Future<RefreshSessionFailure?> refreshSession();
+
+  Future<ChangePasswordFailure?> changePassword({
+    required String email,
+    required String newPassword,
+  });
 }

@@ -46,6 +46,30 @@ class AuthLoginResponseEvent extends AuthEvent {
   List<Object?> get props => [response];
 }
 
+class AuthChangePasswordEvent extends AuthLoadedEvent {
+  final String email;
+  final String newPassword;
+
+  const AuthChangePasswordEvent({
+    required this.email,
+    required this.newPassword,
+  }) : super();
+
+  @override
+  List<Object?> get props => [email, newPassword];
+}
+
+class AuthChangePasswordResponseEvent extends AuthEvent {
+  final ChangePasswordFailure? response;
+
+  const AuthChangePasswordResponseEvent({
+    required this.response,
+  }) : super();
+
+  @override
+  List<Object?> get props => [response];
+}
+
 class AuthCancelRequestEvent extends AuthEvent {
   const AuthCancelRequestEvent() : super();
 }

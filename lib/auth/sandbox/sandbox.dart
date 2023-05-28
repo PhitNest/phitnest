@@ -57,6 +57,32 @@ class Sandbox extends Auth {
   }
 
   @override
+  Future<ChangePasswordFailure?> changePassword({
+    required String email,
+    required String newPassword,
+  }) async {
+    final user = emailToUserMap[email];
+    if (user == null) {
+      return const ChangePasswordTypedFailure(
+        ChangePasswordFailureType.noSuchUser,
+      );
+    } else if (validatePassword(newPassword) != null) {
+      return const ChangePasswordTypedFailure(
+        ChangePasswordFailureType.invalidPassword,
+      );
+    } else {
+      emailToUserMap[email] = SandboxUserData(
+        email: email,
+        userId: user.userId,
+        password: newPassword,
+        confirmed: user.confirmed,
+        userAttributes: user.userAttributes,
+      );
+      return null;
+    }
+  }
+
+  @override
   Future<RegisterResponse> register(
     String email,
     String password,

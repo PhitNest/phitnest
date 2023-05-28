@@ -50,6 +50,38 @@ class AuthLoadedInitialState extends AuthLoadedState {
   }) : super();
 }
 
+class AuthChangePasswordLoadingState extends AuthLoadedState {
+  final CancelableOperation<ChangePasswordFailure?> loadingOperation;
+
+  const AuthChangePasswordLoadingState({
+    required super.auth,
+    required this.loadingOperation,
+  }) : super();
+
+  @override
+  List<Object?> get props => [super.props, loadingOperation];
+}
+
+class AuthChangedPasswordState extends AuthLoadedState {
+  const AuthChangedPasswordState({
+    required super.auth,
+  }) : super();
+}
+
+class AuthChangePasswordFailureState extends AuthLoadedState {
+  final ChangePasswordFailureType type;
+  final String message;
+
+  const AuthChangePasswordFailureState({
+    required super.auth,
+    required this.type,
+    required this.message,
+  }) : super();
+
+  @override
+  List<Object?> get props => [super.props, type, message];
+}
+
 class AuthLoginLoadingState extends AuthLoadedState {
   final CancelableOperation<LoginResponse> loadingOperation;
 
@@ -76,12 +108,14 @@ class AuthLoggedInState extends AuthLoadedState {
 
 class AuthLoginFailureState extends AuthLoadedState {
   final String message;
+  final LoginFailureType type;
 
   const AuthLoginFailureState({
     required super.auth,
     required this.message,
+    required this.type,
   }) : super();
 
   @override
-  List<Object?> get props => [super.props, message];
+  List<Object?> get props => [super.props, message, type];
 }

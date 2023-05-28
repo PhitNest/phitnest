@@ -1,3 +1,5 @@
+import 'constants.dart';
+
 enum SubmitForgotPasswordFailure {
   invalidUserPool,
   invalidEmail,
@@ -9,11 +11,11 @@ enum SubmitForgotPasswordFailure {
   unknown;
 
   String get message => switch (this) {
-        SubmitForgotPasswordFailure.invalidUserPool => 'Invalid user pool.',
-        SubmitForgotPasswordFailure.invalidEmail => 'Invalid email.',
-        SubmitForgotPasswordFailure.invalidPassword => 'Invalid password.',
-        SubmitForgotPasswordFailure.noSuchUser => 'No such user exists.',
-        SubmitForgotPasswordFailure.unknown => 'An unknown error occurred.',
+        SubmitForgotPasswordFailure.invalidUserPool => kInvalidPool,
+        SubmitForgotPasswordFailure.invalidEmail => kInvalidEmail,
+        SubmitForgotPasswordFailure.invalidPassword => kInvalidPassword,
+        SubmitForgotPasswordFailure.noSuchUser => kNoSuchUser,
+        SubmitForgotPasswordFailure.unknown => kUnknownError,
         SubmitForgotPasswordFailure.invalidCodeOrPassword =>
           'Invalid code or password.',
         SubmitForgotPasswordFailure.invalidCode => 'Invalid code.',

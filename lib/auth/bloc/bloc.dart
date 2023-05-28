@@ -65,29 +65,37 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<AuthLoginEvent>(
       (event, emit) => switch (state) {
-        AuthLoginLoadingState() => null, // Do nothing
-        AuthLoggedInState() => throw StateException(state, event),
         AuthLoadingState(loadingOperation: final loadingOperation) => emit(
             AuthInitialEventQueuedState(
               loadingOperation: loadingOperation,
               queuedEvent: event,
             ),
           ),
-        AuthLoadedState(auth: final auth) => emit(
-            AuthLoginLoadingState(
-              auth: auth,
-              loadingOperation: CancelableOperation.fromFuture(
-                auth.login(
-                  event.email,
-                  event.password,
+        AuthLoadedState(auth: final auth) => switch (state as AuthLoadedState) {
+            AuthLoginLoadingState() => null, // Do nothing
+            AuthLoggedInState() ||
+            AuthChangePasswordLoadingState() =>
+              throw StateException(state, event),
+            AuthLoadedInitialState() ||
+            AuthChangedPasswordState() ||
+            AuthChangePasswordFailureState() ||
+            AuthLoginFailureState() =>
+              emit(
+                AuthLoginLoadingState(
+                  auth: auth,
+                  loadingOperation: CancelableOperation.fromFuture(
+                    auth.login(
+                      event.email,
+                      event.password,
+                    ),
+                  )..then(
+                      (response) => add(
+                        AuthLoginResponseEvent(response: response),
+                      ),
+                    ),
                 ),
-              )..then(
-                  (response) => add(
-                    AuthLoginResponseEvent(response: response),
-                  ),
-                ),
-            ),
-          ),
+              ),
+          }
       },
     );
 
@@ -99,31 +107,101 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                   auth: auth,
                   userId: userId,
                 ),
-              LoginFailure(type: final type) => AuthLoginFailureState(
+              LoginCognitoFailure(type: final type, message: final message) ||
+              LoginFailure(type: final type, message: final message) =>
+                AuthLoginFailureState(
                   auth: auth,
-                  message: type.message,
+                  type: type,
+                  message: message,
                 ),
             },
           ),
         _ => throw StateException(state, event),
       },
     );
+
     on<AuthCancelRequestEvent>(
       (event, emit) => switch (state) {
         AuthInitialEventQueuedState(loadingOperation: final loadingOperation) =>
           AuthInitialState(loadingOperation: loadingOperation),
-        AuthLoadedInitialState() ||
-        AuthInitialState() ||
-        AuthLoggedInState() ||
-        AuthLoginFailureState() =>
-          null, // Do nothing
-        AuthLoginLoadingState(
-          auth: final auth,
-          loadingOperation: final loadingOperation
-        ) =>
-          loadingOperation
-              .cancel()
-              .then((_) => AuthLoadedInitialState(auth: auth)),
+        AuthInitialState() || AuthLoginFailureState() => null, // Do nothing
+        AuthLoadedState(auth: final auth) => switch (state as AuthLoadedState) {
+            AuthChangePasswordLoadingState(
+              loadingOperation: final CancelableOperation<dynamic>
+                  loadingOperation
+            ) ||
+            AuthLoginLoadingState(
+              loadingOperation: final CancelableOperation<dynamic>
+                  loadingOperation
+            ) =>
+              loadingOperation
+                  .cancel()
+                  .then((_) => emit(AuthLoadedInitialState(auth: auth))),
+            AuthChangePasswordFailureState() ||
+            AuthLoadedInitialState() ||
+            AuthLoggedInState() ||
+            AuthChangedPasswordState() ||
+            AuthLoginFailureState() =>
+              null,
+          }
+      },
+    );
+
+    on<AuthChangePasswordEvent>(
+      (event, emit) => switch (state) {
+        AuthInitialState(loadingOperation: final loadingOperation) ||
+        AuthInitialEventQueuedState(loadingOperation: final loadingOperation) =>
+          emit(
+            AuthInitialEventQueuedState(
+              loadingOperation: loadingOperation,
+              queuedEvent: event,
+            ),
+          ),
+        AuthLoadedState(auth: final auth) => switch (state as AuthLoadedState) {
+            AuthLoginLoadingState() => throw StateException(state, event),
+            AuthChangePasswordLoadingState() => null, // Do nothing
+            AuthLoadedInitialState() ||
+            AuthLoggedInState() ||
+            AuthChangePasswordFailureState() ||
+            AuthChangedPasswordState() ||
+            AuthLoginFailureState() =>
+              emit(
+                AuthChangePasswordLoadingState(
+                  auth: auth,
+                  loadingOperation: CancelableOperation.fromFuture(
+                    auth.changePassword(
+                      email: event.email,
+                      newPassword: event.newPassword,
+                    ),
+                  )..then(
+                      (response) => add(
+                        AuthChangePasswordResponseEvent(response: response),
+                      ),
+                    ),
+                ),
+              ),
+          }
+      },
+    );
+
+    on<AuthChangePasswordResponseEvent>(
+      (event, emit) => switch (state) {
+        AuthChangePasswordLoadingState(auth: final auth) => emit(
+            switch (event.response) {
+              null => AuthChangedPasswordState(auth: auth),
+              ChangePasswordCognitoFailure(
+                type: final type,
+                message: final message
+              ) ||
+              ChangePasswordFailure(type: final type, message: final message) =>
+                AuthChangePasswordFailureState(
+                  auth: auth,
+                  type: type,
+                  message: message,
+                ),
+            },
+          ),
+        _ => throw StateException(state, event),
       },
     );
   }
@@ -131,11 +209,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   @override
   Future<void> close() async {
     switch (state) {
-      case AuthLoadingState(loadingOperation: final loadingOperation):
+      case AuthLoadingState(
+          loadingOperation: final CancelableOperation<dynamic> loadingOperation
+        ):
         await loadingOperation.cancel();
-      case AuthLoginLoadingState(loadingOperation: final loadingOperation):
+      case AuthChangePasswordLoadingState(
+          loadingOperation: final CancelableOperation<dynamic> loadingOperation
+        ):
         await loadingOperation.cancel();
-      default:
+      case AuthLoginLoadingState(
+          loadingOperation: final CancelableOperation<dynamic> loadingOperation
+        ):
+        await loadingOperation.cancel();
+      case AuthInitialState() ||
+            AuthInitialEventQueuedState() ||
+            AuthLoadedState() ||
+            AuthLoadedInitialState() ||
+            AuthLoggedInState() ||
+            AuthChangedPasswordState() ||
+            AuthChangePasswordFailureState() ||
+            AuthLoginFailureState():
     }
     await super.close();
   }
