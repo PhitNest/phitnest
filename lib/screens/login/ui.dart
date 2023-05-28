@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:phitnest_core/auth/responses/responses.dart';
 import 'package:phitnest_core/core.dart';
 
 import '../../common/util.dart';
@@ -60,13 +62,28 @@ class LoginScreenStateInternal extends State<LoginScreen> {
             create: (_) => LoginBloc(),
             child: BlocConsumer<AuthBloc, AuthState>(
               listener: (context, authState) {
-                print(authState);
+                switch (authState) {
+                  case AuthLoginFailureState(type: final type):
+                    switch (type) {
+                      case LoginFailureType.changePassword:
+                        context.goNamed(
+                          'changePassword',
+                          queryParameters: {
+                            'email': context.loginBloc.emailController.text
+                          },
+                        );
+                      case LoginFailureType.invalidEmailPassword ||
+                            LoginFailureType.confirmationRequired ||
+                            LoginFailureType.unknown ||
+                            LoginFailureType.invalidUserPool ||
+                            LoginFailureType.noSuchUser:
+                    }
+                  case _:
+                }
               },
               builder: (context, authState) =>
                   BlocConsumer<LoginBloc, LoginState>(
-                listener: (context, screenState) {
-                  print(screenState);
-                },
+                listener: (context, screenState) {},
                 builder: (context, screenState) => Form(
                   key: context.loginBloc.formKey,
                   autovalidateMode: screenState.autovalidateMode,

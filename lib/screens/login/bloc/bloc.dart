@@ -25,8 +25,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       (event, emit) {
         emit(
           switch (state) {
-            LoginInitialState() => const LoginInitialState(
-                autovalidateMode: AutovalidateMode.disabled,
+            LoginInitialState(autovalidateMode: final autovalidateMode) =>
+              LoginInitialState(
+                autovalidateMode: autovalidateMode,
                 loginButtonState: LoginButtonState.loading,
               ),
           },

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:phitnest_core/core.dart';
 
-import 'screens/login/ui.dart';
+import 'router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  usePathUrlStrategy();
   await dotenv.load();
   initializeHttp(
       host: dotenv.get('BACKEND_HOST'),
@@ -26,12 +28,10 @@ class App extends StatelessWidget {
           create: (_) => AuthBloc(true),
         ),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'PhitNest Admin',
         debugShowCheckedModeBanner: false,
-        routes: {
-          '/': (_) => const LoginScreen(),
-        },
+        routerConfig: router,
       ),
     );
   }
