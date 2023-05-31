@@ -129,10 +129,6 @@ export class CognitoStack {
             required: true,
           },
         },
-        customAttributes: {
-          firstName: nameAttribute,
-          lastName: nameAttribute,
-        },
         lambdaTriggers: {
           preSignUp: adminPresignupHook,
         },
