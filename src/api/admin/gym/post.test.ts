@@ -1,4 +1,4 @@
-import { UNABLE_TO_FIND_LOCATION, invoke } from "./post";
+import { kUnableToFindLocation, invoke } from "./post";
 import { mockPost } from "api/common/test-helpers";
 import * as uuid from "uuid";
 
@@ -11,7 +11,7 @@ const testAddress1 = {
 
 describe("POST /gym", () => {
   it("should fail for invalid input", async () => {
-    expect(await invoke(mockPost(undefined))).toEqual({
+    expect(await invoke(mockPost({}))).toEqual({
       statusCode: 400,
       headers: {
         "Content-Type": "application/json",
@@ -26,11 +26,13 @@ describe("POST /gym", () => {
   it("should fail for invalid address", async () => {
     const result = await invoke(
       mockPost({
-        name: "test",
-        street: "123 Fake St",
-        city: "Blacksburg",
-        state: "ZA",
-        zipCode: "44160",
+        body: {
+          name: "test",
+          street: "123 Fake St",
+          city: "Blacksburg",
+          state: "ZA",
+          zipCode: "44160",
+        },
       })
     );
     expect(result).toEqual({
@@ -38,7 +40,7 @@ describe("POST /gym", () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(UNABLE_TO_FIND_LOCATION),
+      body: JSON.stringify(kUnableToFindLocation),
     });
   });
 
@@ -46,8 +48,14 @@ describe("POST /gym", () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
     const result = await invoke(
       mockPost({
-        name: "test",
-        ...testAddress1,
+        body: {
+          name: "test",
+          ...testAddress1,
+        },
+        authClaims: {
+          sub: "test",
+          email: "test@gmail.com",
+        },
       })
     );
     const body = JSON.parse(result.body);

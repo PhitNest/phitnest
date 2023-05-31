@@ -5,3 +5,15 @@ export function connectDynamo(): DynamoDBClient {
     region: process.env.AWS_REGION,
   });
 }
+
+export type AdminCognitoClaims = {
+  email: string;
+  sub: string;
+};
+
+export type UserCognitoClaims = {
+  email: string;
+  sub: string;
+  firstName: string;
+  lastName: string;
+};

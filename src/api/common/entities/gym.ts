@@ -4,27 +4,29 @@ import {
   kCreationDetailsDynamo,
 } from "./account";
 import { Address, addressToDynamo, kAddressDynamo } from "./address";
-import { Admin, adminToDynamo, kAdminDynamo } from "./admin";
 import { Dynamo, DynamoShape } from "./dynamo";
+import { Location, kLocationDynamo, locationToDynamo } from "./location";
 
 export type GymWithoutAdmin = CreationDetails & {
   name: string;
   address: Address;
+  location: Location;
 };
 
 export const kGymWithoutAdminDynamo: DynamoShape<GymWithoutAdmin> = {
   name: "S",
   address: kAddressDynamo,
+  location: kLocationDynamo,
   ...kCreationDetailsDynamo,
 };
 
 export type Gym = GymWithoutAdmin & {
-  admin: Admin;
+  adminEmail: string;
 };
 
 export const kGymDynamo: DynamoShape<Gym> = {
   ...kGymWithoutAdminDynamo,
-  admin: kAdminDynamo,
+  adminEmail: "S",
 };
 
 export function gymWithoutAdminToDynamo(
@@ -33,6 +35,7 @@ export function gymWithoutAdminToDynamo(
   return {
     name: { S: gym.name },
     address: { M: addressToDynamo(gym.address) },
+    location: { M: locationToDynamo(gym.location) },
     ...creationDetailsToDynamo(gym),
   };
 }
@@ -40,6 +43,6 @@ export function gymWithoutAdminToDynamo(
 export function gymToDynamo(gym: Gym): Dynamo<Gym> {
   return {
     ...gymWithoutAdminToDynamo(gym),
-    admin: { M: adminToDynamo(gym.admin) },
+    adminEmail: { S: gym.adminEmail },
   };
 }
