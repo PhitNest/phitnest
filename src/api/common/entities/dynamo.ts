@@ -27,8 +27,8 @@ type GetAttributeValue<T> = T extends string
   ? { BS: Uint8Array[] }
   : T extends boolean
   ? { BOOL: boolean }
-  : T extends []
-  ? { L: Dynamo<T>[] }
+  : T extends any[]
+  ? { L: Dynamo<T> }
   : { M: Dynamo<T> };
 
 export type Dynamo<T> = {
