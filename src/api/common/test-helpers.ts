@@ -12,6 +12,7 @@ import {
 } from "aws-lambda";
 import { MetadataBearer } from "@aws-sdk/types";
 import { AwsStub, mockClient } from "aws-sdk-client-mock";
+import { AdminCognitoClaims, UserCognitoClaims } from "./utils";
 
 let dynamoMock: AwsStub<object, MetadataBearer>;
 
@@ -38,25 +39,38 @@ export function setupMocks() {
   }));
 }
 
-function mockHttp(
-  body?: object | string,
-  pathParams?: APIGatewayProxyEventPathParameters,
-  queryParams?: APIGatewayProxyEventQueryStringParameters,
-  headers?: APIGatewayProxyEventMultiValueHeaders
-): APIGatewayEvent {
+type HttpParams = {
+  headers?: APIGatewayProxyEventMultiValueHeaders;
+};
+
+type PostPutParams = HttpParams & {
+  body?: object | string;
+  pathParams?: APIGatewayProxyEventPathParameters;
+  authClaims?: AdminCognitoClaims | UserCognitoClaims;
+};
+
+type GetDeleteParams = HttpParams & {
+  pathParams?: APIGatewayProxyEventPathParameters;
+  queryParams?: APIGatewayProxyEventQueryStringParameters;
+  authClaims?: AdminCognitoClaims | UserCognitoClaims;
+};
+
+function mockHttp(params: PostPutParams & GetDeleteParams): APIGatewayEvent {
   return {
     httpMethod: "",
-    body: body ? JSON.stringify(body) : null,
+    body: params.body ? JSON.stringify(params.body) : null,
     path: "",
-    headers: { "Content-Type": "application/json", ...headers },
-    pathParameters: pathParams ?? null,
-    queryStringParameters: queryParams ?? null,
+    headers: { "Content-Type": "application/json", ...params.headers },
+    pathParameters: params.pathParams ?? null,
+    queryStringParameters: params.queryParams ?? null,
     multiValueHeaders: {} as APIGatewayProxyEventMultiValueHeaders,
     multiValueQueryStringParameters: null,
     isBase64Encoded: false,
     stageVariables: null,
     requestContext: {
-      authorizer: null,
+      authorizer: {
+        claims: params.authClaims ?? null,
+      },
       identity: {
         cognitoIdentityPoolId: null,
         accountId: null,
@@ -90,30 +104,18 @@ function mockHttp(
   };
 }
 
-export function mockPost(
-  body?: object | string,
-  pathParams?: APIGatewayProxyEventPathParameters
-) {
-  return mockHttp(body, pathParams, {});
+export function mockPost(params: PostPutParams) {
+  return mockHttp(params);
 }
 
-export function mockPut(
-  body?: object | string,
-  pathParams?: APIGatewayProxyEventPathParameters
-) {
-  return mockHttp(body, pathParams, {});
+export function mockPut(params: PostPutParams) {
+  return mockHttp(params);
 }
 
-export function mockGet(
-  pathParams?: APIGatewayProxyEventPathParameters,
-  queryParams?: APIGatewayProxyEventQueryStringParameters
-) {
-  return mockHttp(undefined, pathParams, queryParams);
+export function mockGet(params: GetDeleteParams) {
+  return mockHttp(params);
 }
 
-export function mockDelete(
-  pathParams?: APIGatewayProxyEventPathParameters,
-  queryParams?: APIGatewayProxyEventQueryStringParameters
-) {
-  return mockHttp(undefined, pathParams, queryParams);
+export function mockDelete(params: GetDeleteParams) {
+  return mockHttp(params);
 }
