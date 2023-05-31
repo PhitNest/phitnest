@@ -1,13 +1,45 @@
-part of '../auth.dart';
+import 'package:amazon_cognito_identity_dart_2/cognito.dart';
+import 'package:async/async.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../errors.dart';
+import '../http/http.dart';
+import 'responses/responses.dart';
+
+export 'responses/responses.dart';
+
+part 'bloc/bloc.dart';
+part 'bloc/event.dart';
+part 'bloc/state.dart';
 
 class _CognitoState {
   CognitoUser? user;
   CognitoUserSession? session;
 }
 
-class Cognito extends Auth {
+const kAdminPoolIdJsonKey = 'adminPoolId';
+const kUserPoolIdJsonKey = 'userPoolId';
+const kAdminClientIdJsonKey = 'adminClientId';
+const kUserClientIdJsonKey = 'userClientId';
+
+class Cognito {
   final CognitoUserPool _pool;
   final _CognitoState _state;
+
+  factory Cognito.fromJson(dynamic json, bool admin) => switch (json) {
+        {
+          kAdminPoolIdJsonKey: final String adminPoolId,
+          kAdminClientIdJsonKey: final String adminClientId,
+          kUserPoolIdJsonKey: final String userPoolId,
+          kUserClientIdJsonKey: final String userClientId
+        } =>
+          Cognito(
+            poolId: admin ? adminPoolId : userPoolId,
+            clientId: admin ? adminClientId : userClientId,
+          ),
+        _ => throw FormatException('Invalid JSON for Cognito', json),
+      };
 
   Cognito({
     required String poolId,
@@ -16,10 +48,6 @@ class Cognito extends Auth {
         _state = _CognitoState(),
         super();
 
-  @override
-  Map<String, Serializable> toJson() => throw UnimplementedError();
-
-  @override
   Future<LoginResponse> login(
     String email,
     String password,
@@ -54,14 +82,13 @@ class Cognito extends Auth {
       };
     } on ArgumentError catch (_) {
       return const LoginFailure(LoginFailureType.invalidUserPool);
-    } on CognitoUserException {
-      return const LoginFailure(LoginFailureType.changePassword);
+    } on CognitoUserNewPasswordRequiredException {
+      return const LoginFailure(LoginFailureType.changePasswordRequired);
     } catch (err) {
       return const LoginFailure(LoginFailureType.unknown);
     }
   }
 
-  @override
   Future<RegisterResponse> register(
     String email,
     String password,
@@ -77,7 +104,8 @@ class Cognito extends Auth {
         ],
       );
       if (signUpResult.userSub != null) {
-        return RegisterSuccess(signUpResult.userSub!);
+        _state.user = signUpResult.user;
+        return const RegisterSuccess();
       } else {
         return const RegisterFailure(RegisterFailureType.unknown);
       }
@@ -100,33 +128,31 @@ class Cognito extends Auth {
     }
   }
 
-  @override
   Future<bool> confirmEmail(
     String email,
     String code,
   ) =>
-      CognitoUser(email, _pool)
-          .confirmRegistration(code)
-          .catchError((_) => false);
+      _state.user?.confirmRegistration(code).catchError((_) => false) ??
+      Future.value(false);
 
-  @override
   Future<bool> resendConfirmationEmail(
     String email,
   ) async {
-    final response = CognitoUser(email, _pool).resendConfirmationCode();
-    if (response is Future) {
-      return await response.then((_) => true).catchError((_) => false);
-    } else {
-      return false;
+    if (_state.user != null) {
+      try {
+        await _state.user!.resendConfirmationCode();
+        return true;
+      } catch (_) {}
     }
+    return false;
   }
 
-  @override
   Future<ForgotPasswordFailure?> forgotPassword(
     String email,
   ) async {
     try {
-      await CognitoUser(email, _pool).forgotPassword();
+      _state.user = CognitoUser(email, _pool);
+      await _state.user!.forgotPassword();
       return null;
     } on CognitoClientException catch (error) {
       return switch (error.code) {
@@ -142,15 +168,21 @@ class Cognito extends Auth {
     }
   }
 
-  @override
   Future<SubmitForgotPasswordFailure?> submitForgotPassword(
     String email,
     String code,
     String newPassword,
   ) async {
     try {
-      await CognitoUser(email, _pool).confirmPassword(code, newPassword);
-      return null;
+      if (_state.user != null) {
+        if (await _state.user!.confirmPassword(code, newPassword)) {
+          return null;
+        } else {
+          return SubmitForgotPasswordFailure.invalidCode;
+        }
+      } else {
+        return SubmitForgotPasswordFailure.noSuchUser;
+      }
     } on CognitoClientException catch (error) {
       return switch (error.code) {
         'ResourceNotFoundException' =>
@@ -167,7 +199,6 @@ class Cognito extends Auth {
     }
   }
 
-  @override
   Future<RefreshSessionFailure?> refreshSession({
     bool admin = false,
   }) async {
@@ -197,16 +228,18 @@ class Cognito extends Auth {
     }
   }
 
-  @override
   Future<ChangePasswordFailure?> changePassword({
-    required String email,
     required String newPassword,
   }) async {
     try {
-      await CognitoUser(email, _pool)
-          .sendNewPasswordRequiredAnswer(newPassword, {
-        'NEW_PASSWORD': newPassword,
-      });
+      if (_state.user != null) {
+        _state.session = await _state.user!.sendNewPasswordRequiredAnswer(
+          newPassword,
+        );
+      } else {
+        return const ChangePasswordTypedFailure(
+            ChangePasswordFailureType.noSuchUser);
+      }
       return null;
     } on CognitoClientException catch (error) {
       return switch (error.code) {
@@ -222,7 +255,6 @@ class Cognito extends Auth {
       return const ChangePasswordTypedFailure(
           ChangePasswordFailureType.invalidUserPool);
     } catch (err) {
-      print(err);
       return const ChangePasswordTypedFailure(
           ChangePasswordFailureType.unknown);
     }

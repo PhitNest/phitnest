@@ -20,7 +20,7 @@ enum LoginFailureType {
   confirmationRequired,
   noSuchUser,
   invalidUserPool,
-  changePassword,
+  changePasswordRequired,
   unknown;
 
   String get message => switch (this) {
@@ -28,7 +28,7 @@ enum LoginFailureType {
         LoginFailureType.confirmationRequired => 'Confirmation required.',
         LoginFailureType.noSuchUser => kNoSuchUser,
         LoginFailureType.invalidUserPool => kInvalidPool,
-        LoginFailureType.changePassword => 'Password change required.',
+        LoginFailureType.changePasswordRequired => 'Change password required.',
         LoginFailureType.unknown => kUnknownError,
       };
 }
