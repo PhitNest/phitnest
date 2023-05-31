@@ -1,9 +1,7 @@
 import axios from "axios";
-import { Address, ILocationEntity } from "../entities";
+import { Address, Location } from "../entities";
 
-export async function getLocation(
-  address: Address
-): Promise<ILocationEntity | null> {
+export async function getLocation(address: Address): Promise<Location | null> {
   const response = await axios.get(
     "https://nominatim.openstreetmap.org/search",
     {
