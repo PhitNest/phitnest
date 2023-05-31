@@ -4,15 +4,13 @@ import 'constants.dart';
 
 sealed class RegisterResponse extends Equatable {
   const RegisterResponse();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class RegisterSuccess extends RegisterResponse {
-  final String userId;
-
-  const RegisterSuccess(this.userId);
-
-  @override
-  List<Object?> get props => [userId];
+  const RegisterSuccess();
 }
 
 enum RegisterFailureType {

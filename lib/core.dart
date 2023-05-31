@@ -1,5 +1,5 @@
-export 'auth/auth.dart';
 export 'cache.dart';
+export 'cognito/cognito.dart';
 export 'errors.dart';
 export 'failure.dart';
 export 'http/http.dart';
