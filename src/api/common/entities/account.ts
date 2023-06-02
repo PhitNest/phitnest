@@ -7,12 +7,12 @@ export type CreationDetails = {
 
 export const kCreationDetailsDynamo: DynamoShape<CreationDetails> = {
   id: "S",
-  createdAt: "N",
+  createdAt: "D",
 };
 
-export type Account = {
+export type Account = CreationDetails & {
   email: string;
-} & CreationDetails;
+};
 
 export const kAccountDynamo: DynamoShape<Account> = {
   email: "S",

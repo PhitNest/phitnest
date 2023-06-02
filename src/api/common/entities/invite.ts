@@ -1,8 +1,4 @@
-import {
-  UserWithoutInvite,
-  kUserWithoutInviteDynamo,
-  userWithoutInviteToDynamo,
-} from "./user";
+import { Inviter, userWithoutInviteToDynamo } from "./user";
 import { Admin, adminToDynamo, kAdminDynamo } from "./admin";
 import {
   GymWithoutAdmin,
@@ -10,123 +6,88 @@ import {
   kGymWithoutAdminDynamo,
 } from "./gym";
 import { Dynamo, DynamoShape } from "./dynamo";
+import { kAccountDynamo } from "./account";
 
-export type InviteTypes = "admin" | "user";
+export type InviterTypes = Admin | Inviter | null;
 
-export type InviteWithoutUserOrGym<
-  InviteType extends InviteTypes = InviteTypes
-> = {
-  receiverEmail: string;
-  createdAt: Date;
-  type: InviteType;
+type InviteType<T extends InviterTypes> = T extends null
+  ? "admin" | "user"
+  : T extends Inviter
+  ? "user"
+  : "admin";
+
+export type InviteTypeOnly<InviterType extends InviterTypes = null> = {
+  type: InviteType<InviterType>;
 };
 
-export const kInviteWithoutUserOrGymDynamo: DynamoShape<InviteWithoutUserOrGym> =
-  {
-    receiverEmail: "S",
-    createdAt: "N",
-    type: "S",
-  };
+export const kInviteTypeOnlyDynamo: DynamoShape<InviteTypeOnly> = {
+  type: "S",
+};
 
-export type InviteWithoutUser<InviteType extends InviteTypes = InviteTypes> =
-  InviteWithoutUserOrGym<InviteType> & {
-    gym: GymWithoutAdmin;
-  };
+export type InviteWithoutUser = {
+  receiverEmail: string;
+  createdAt: Date;
+  gym: GymWithoutAdmin;
+};
 
 export const kInviteWithoutUserDynamo: DynamoShape<InviteWithoutUser> = {
-  ...kInviteWithoutUserOrGymDynamo,
+  ...kInviteTypeOnlyDynamo,
+  receiverEmail: "S",
+  createdAt: "D",
   gym: kGymWithoutAdminDynamo,
 };
 
-export type InviteWithoutGym<InviteType extends InviteTypes> =
-  InviteWithoutUserOrGym<InviteType> & {
-    inviter: InviteType extends "admin" ? Admin : UserWithoutInvite;
-  };
+export type Invite<InviterType extends InviterTypes> =
+  InviteTypeOnly<InviterType> &
+    InviteWithoutUser & {
+      inviter: InviterType;
+    };
 
-export const kAdminInviteWithoutGymDynamo: DynamoShape<
-  InviteWithoutGym<"admin">
-> = {
-  ...kInviteWithoutUserDynamo,
+export const kAdminInviteDynamo: DynamoShape<Invite<Admin>> = {
   inviter: kAdminDynamo,
-};
-
-export const kInviteWithoutGymDynamo: DynamoShape<InviteWithoutGym<"user">> = {
-  ...kInviteWithoutUserDynamo,
-  inviter: kUserWithoutInviteDynamo,
-};
-
-export type Invite<InviteType extends InviteTypes> =
-  InviteWithoutGym<InviteType> & InviteWithoutUser<InviteType>;
-
-export const kAdminInviteDynamo: DynamoShape<Invite<"admin">> = {
-  ...kAdminInviteWithoutGymDynamo,
+  ...kInviteTypeOnlyDynamo,
   ...kInviteWithoutUserDynamo,
 };
 
-export const kInviteDynamo: DynamoShape<Invite<"user">> = {
-  ...kInviteWithoutGymDynamo,
+export const kInviteDynamo: DynamoShape<Invite<Inviter>> = {
+  inviter: {
+    accountDetails: {
+      ...kAccountDynamo,
+    },
+    firstName: "S",
+    lastName: "S",
+    numInvites: "N",
+  },
+  ...kInviteTypeOnlyDynamo,
   ...kInviteWithoutUserDynamo,
 };
-
-export function removeGym<InviteType extends InviteTypes>(
-  invite: Invite<InviteType>
-): InviteWithoutGym<InviteType> {
-  const result: Omit<Invite<InviteType>, "gym"> & { gym?: GymWithoutAdmin } = {
-    ...invite,
-  };
-  delete result.gym;
-  return result;
-}
-
-function inviteWithoutUserOrGymToDynamo(
-  invite: InviteWithoutUserOrGym
-): Dynamo<InviteWithoutUserOrGym> {
-  return {
-    receiverEmail: { S: invite.receiverEmail },
-    createdAt: { N: invite.createdAt.getTime().toString() },
-    type: { S: invite.type },
-  };
-}
 
 export function inviteWithoutUserToDynamo(
   invite: InviteWithoutUser
 ): Dynamo<InviteWithoutUser> {
   return {
-    ...inviteWithoutUserOrGymToDynamo(invite),
+    receiverEmail: { S: invite.receiverEmail },
+    createdAt: { N: invite.createdAt.getTime().toString() },
     gym: { M: gymWithoutAdminToDynamo(invite.gym) },
   };
 }
 
-export function inviteWithoutGymToDynamo(
-  invite: InviteWithoutGym<"user">
-): Dynamo<InviteWithoutGym<"user">> {
+export function inviteToDynamo(
+  invite: Invite<Inviter>
+): Dynamo<Invite<Inviter>> {
   return {
-    ...inviteWithoutUserOrGymToDynamo(invite),
-    inviter: { M: userWithoutInviteToDynamo(invite.inviter) },
-  };
-}
-
-export function adminInviteWithoutGymToDynamo(
-  invite: InviteWithoutGym<"admin">
-): Dynamo<InviteWithoutGym<"admin">> {
-  return {
-    ...inviteWithoutUserOrGymToDynamo(invite),
-    inviter: { M: adminToDynamo(invite.inviter) },
-  };
-}
-
-export function inviteToDynamo(invite: Invite<"user">): Dynamo<Invite<"user">> {
-  return {
-    ...inviteWithoutGymToDynamo(invite),
     ...inviteWithoutUserToDynamo(invite),
+    inviter: { M: userWithoutInviteToDynamo(invite.inviter) },
+    type: { S: "user" },
   };
 }
 
 export function adminInviteToDynamo(
-  invite: Invite<"admin">
-): Dynamo<Invite<"admin">> {
+  invite: Invite<Admin>
+): Dynamo<Invite<Admin>> {
   return {
-    ...adminInviteWithoutGymToDynamo(invite),
     ...inviteWithoutUserToDynamo(invite),
+    inviter: { M: adminToDynamo(invite.inviter) },
+    type: { S: "admin" },
   };
 }

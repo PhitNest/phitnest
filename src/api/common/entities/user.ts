@@ -1,15 +1,10 @@
 import {
-  GymWithoutAdmin,
-  gymWithoutAdminToDynamo,
-  kGymWithoutAdminDynamo,
-} from "./gym";
-import {
-  InviteTypes,
-  InviteWithoutGym,
-  adminInviteWithoutGymToDynamo,
-  inviteWithoutGymToDynamo,
-  kAdminInviteWithoutGymDynamo,
-  kInviteWithoutGymDynamo,
+  Invite,
+  InviterTypes,
+  adminInviteToDynamo,
+  inviteToDynamo,
+  kAdminInviteDynamo,
+  kInviteDynamo,
 } from "./invite";
 import { Dynamo, DynamoShape } from "./dynamo";
 import {
@@ -20,6 +15,7 @@ import {
   kAccountDynamo,
   kCreationDetailsDynamo,
 } from "./account";
+import { Admin } from "./admin";
 
 type Name = {
   firstName: string;
@@ -40,32 +36,29 @@ export const kUserExploreDynamo: DynamoShape<UserExplore> = {
   accountDetails: kCreationDetailsDynamo,
 };
 
-export type UserWithoutInvite = UserExplore & {
+export type Inviter = UserExplore & {
   accountDetails: Account;
-  gym: GymWithoutAdmin;
   numInvites: number;
 };
 
-export const kUserWithoutInviteDynamo: DynamoShape<UserWithoutInvite> = {
+export const kInviterDynamo: DynamoShape<Inviter> = {
   ...kUserExploreDynamo,
   accountDetails: kAccountDynamo,
-  gym: kGymWithoutAdminDynamo,
   numInvites: "N",
 };
 
-export type User<InviteType extends InviteTypes = InviteTypes> =
-  UserWithoutInvite & {
-    invite: InviteWithoutGym<InviteType>;
-  };
-
-export const kUserInvitedByUserDynamo: DynamoShape<User<"user">> = {
-  ...kUserWithoutInviteDynamo,
-  invite: kInviteWithoutGymDynamo,
+export type User<InviteType extends InviterTypes = InviterTypes> = Inviter & {
+  invite: Invite<InviteType>;
 };
 
-export const kUserInvitedByAdminDynamo: DynamoShape<User<"admin">> = {
-  ...kUserWithoutInviteDynamo,
-  invite: kAdminInviteWithoutGymDynamo,
+export const kUserInvitedByUserDynamo: DynamoShape<User<Inviter>> = {
+  ...kInviterDynamo,
+  invite: kInviteDynamo,
+};
+
+export const kUserInvitedByAdminDynamo: DynamoShape<User<Admin>> = {
+  ...kInviterDynamo,
+  invite: kAdminInviteDynamo,
 };
 
 function nameToDynamo(name: Name): Dynamo<Name> {
@@ -76,29 +69,26 @@ function nameToDynamo(name: Name): Dynamo<Name> {
 }
 
 export function userInvitedByUserToDynamo(
-  user: User<"user">
-): Dynamo<User<"user">> {
+  user: User<Inviter>
+): Dynamo<User<Inviter>> {
   return {
-    invite: { M: inviteWithoutGymToDynamo(user.invite) },
+    invite: { M: inviteToDynamo(user.invite) },
     ...userWithoutInviteToDynamo(user),
   };
 }
 
 export function userInvitedByAdminToDynamo(
-  user: User<"admin">
-): Dynamo<User<"admin">> {
+  user: User<Admin>
+): Dynamo<User<Admin>> {
   return {
-    invite: { M: adminInviteWithoutGymToDynamo(user.invite) },
+    invite: { M: adminInviteToDynamo(user.invite) },
     ...userWithoutInviteToDynamo(user),
   };
 }
 
-export function userWithoutInviteToDynamo(
-  inviter: UserWithoutInvite
-): Dynamo<UserWithoutInvite> {
+export function userWithoutInviteToDynamo(inviter: Inviter): Dynamo<Inviter> {
   return {
     accountDetails: { M: accountToDynamo(inviter.accountDetails) },
-    gym: { M: gymWithoutAdminToDynamo(inviter.gym) },
     numInvites: { N: inviter.numInvites.toString() },
     ...nameToDynamo(inviter),
   };

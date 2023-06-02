@@ -1,57 +1,63 @@
 import { AttributeValue } from "@aws-sdk/client-dynamodb";
 
-type PrimitiveLabel = "S" | "N" | "B" | "SS" | "NS" | "BS" | "BOOL";
+type Label = "S" | "N" | "B" | "SS" | "NS" | "BS" | "BOOL" | "M" | "L" | "D";
 
-type PrimitiveType =
-  | string
-  | number
-  | Date
-  | Uint8Array
-  | Set<Uint8Array>
-  | Set<string>
-  | Set<number>
-  | Set<Date>
-  | boolean;
+type AttributeVisitor<T, S, N, D, B, SS, NS, DS, BS, Bool, L, M> =
+  T extends string
+    ? S
+    : T extends number
+    ? N
+    : T extends Date
+    ? D
+    : T extends Uint8Array
+    ? B
+    : T extends Set<string>
+    ? SS
+    : T extends Set<number>
+    ? NS
+    : T extends Set<Date>
+    ? DS
+    : T extends Set<Uint8Array>
+    ? BS
+    : T extends boolean
+    ? Bool
+    : T extends Array<unknown>
+    ? L
+    : M;
 
-type GetAttributeValue<T> = T extends string
-  ? { S: string }
-  : T extends number | Date
-  ? { N: string }
-  : T extends Uint8Array
-  ? { B: Uint8Array }
-  : T extends Set<string>
-  ? { SS: string[] }
-  : T extends Set<number | Date>
-  ? { NS: string[] }
-  : T extends Set<Uint8Array>
-  ? { BS: Uint8Array[] }
-  : T extends boolean
-  ? { BOOL: boolean }
-  : T extends any[]
-  ? { L: Dynamo<T> }
-  : { M: Dynamo<T> };
+type GetAttributeValue<T> = AttributeVisitor<
+  T,
+  { S: T },
+  { N: string },
+  { N: string },
+  { B: T },
+  { SS: string[] },
+  { NS: string[] },
+  { NS: string[] },
+  { BS: Uint8Array[] },
+  { BOOL: T },
+  T extends Array<infer U> ? { L: GetAttributeValue<U>[] } : never,
+  { M: Dynamo<T> }
+>;
 
 export type Dynamo<T> = {
   [Key in keyof T]: GetAttributeValue<T[Key]>;
 };
 
-type GetPrimitiveLabel<T> = T extends string
-  ? "S"
-  : T extends number | Date
-  ? "N"
-  : T extends Uint8Array
-  ? "B"
-  : T extends Set<string>
-  ? "SS"
-  : T extends Set<number | Date>
-  ? "NS"
-  : T extends Set<Uint8Array>
-  ? "BS"
-  : T extends boolean
-  ? "BOOL"
-  : T extends []
-  ? DynamoShape<T>[]
-  : DynamoShape<T>;
+type GetPrimitiveLabel<T> = AttributeVisitor<
+  T,
+  "S",
+  "N",
+  "D",
+  "B",
+  "SS",
+  "NS",
+  "DS",
+  "BS",
+  "BOOL",
+  T extends Array<infer U> ? [DynamoShape<U>] : never,
+  DynamoShape<T>
+>;
 
 export type DynamoShape<T> = {
   [Key in keyof T]: GetPrimitiveLabel<T[Key]>;
@@ -61,69 +67,104 @@ export function parseDynamo<T>(
   dynamo: Record<string, AttributeValue>,
   shape: DynamoShape<T>
 ): T {
-  return parseAttribute(dynamo, shape) as T;
+  return parseMap(dynamo, shape) as T;
 }
 
-function parseAttribute(
-  dynamo: Record<string, AttributeValue>,
-  shape: Record<string, PrimitiveLabel | object>
-): Record<string, PrimitiveType | object> {
-  const results: Record<string, PrimitiveType | object> = {};
-  for (const [key, type] of Object.entries(shape)) {
-    function checkType(check: PrimitiveLabel) {
-      if (type !== check) {
-        throw new Error(`Dynamo ${key} must be ${check}`);
-      }
-    }
+enum CheckTypeResult {
+  convertToDate,
+  success,
+}
 
+function checkType(type: unknown, check: Label, key: string): CheckTypeResult {
+  if ((check === "N" && type === "D") || (check === "NS" && type === "DS")) {
+    return CheckTypeResult.convertToDate;
+  }
+  if (
+    type !== check &&
+    ((check === "L" && !(type instanceof Array)) ||
+      (check === "M" && typeof type !== "object"))
+  ) {
+    throw new Error(
+      `Dynamo key: ${key} must be type ${check} but was type ${type}`
+    );
+  }
+  return CheckTypeResult.success;
+}
+
+function parseMap(
+  dynamo: Record<string, AttributeValue>,
+  shape: Record<string, unknown>
+): Record<string, unknown> {
+  const results: Record<string, unknown> = {};
+  for (const [key, type] of Object.entries(shape)) {
     const value = dynamo[key];
     if (!value) {
       throw new Error(`Dynamo ${key} not found`);
     }
-    AttributeValue.visit<void>(value, {
-      S: (value) => {
-        checkType("S");
-        results[key] = value;
-      },
-      N: (value) => {
-        checkType("N");
-        results[key] = parseFloat(value);
-      },
-      B: (value) => {
-        checkType("B");
-        results[key] = value;
-      },
-      SS: (value) => {
-        checkType("SS");
-        results[key] = new Set(value);
-      },
-      NS: (value) => {
-        checkType("NS");
-        results[key] = new Set(value.map(parseFloat));
-      },
-      BS: (value) => {
-        checkType("BS");
-        results[key] = new Set(value);
-      },
-      BOOL: (value) => {
-        checkType("BOOL");
-        results[key] = value;
-      },
-      L: (value) => {
-        results[key] = value.map(
-          (item) => parseAttribute({ x: item }, { x: type }).x
-        );
-      },
-      M: (value) => {
-        results[key] = parseAttribute(value, type as Record<string, object>);
-      },
-      NULL: () => {
-        throw new Error(`Dynamo ${key} must not be null`);
-      },
-      _: () => {
-        throw new Error(`Dynamo ${key} must be a primitive`);
-      },
-    });
+    results[key] = parseAttribute(value, type, key);
   }
   return results;
+}
+
+function parseAttribute(
+  dynamo: AttributeValue,
+  type: unknown,
+  key: string
+): unknown {
+  function check(check: Label) {
+    return checkType(type, check, key);
+  }
+  return AttributeValue.visit<unknown>(dynamo, {
+    S: (value) => {
+      check("S");
+      return value;
+    },
+    N: (value) => {
+      const checkResult = check("N");
+      const parsed = parseFloat(value);
+      return checkResult === CheckTypeResult.convertToDate
+        ? new Date(parsed)
+        : parsed;
+    },
+    B: (value) => {
+      check("B");
+      return value;
+    },
+    SS: (value) => {
+      check("SS");
+      return new Set(value);
+    },
+    NS: (value) => {
+      const checkResult = check("NS");
+      return new Set<unknown>(
+        checkResult === CheckTypeResult.convertToDate
+          ? value.map((x) => new Date(parseFloat(x)))
+          : value.map(parseFloat)
+      );
+    },
+    BS: (value) => {
+      check("BS");
+      return new Set(value);
+    },
+    BOOL: (value) => {
+      check("BOOL");
+      return value;
+    },
+    L: (value) => {
+      check("L");
+      return value.map((item) =>
+        parseAttribute(item, (type as Array<unknown>)[0], key)
+      );
+    },
+    M: (value) => {
+      check("M");
+      return parseMap(value, type as Record<string, unknown>);
+    },
+    NULL: () => {
+      throw new Error(`Dynamo ${key} must not be null`);
+    },
+    _: () => {
+      throw new Error(`Dynamo ${key} must be a primitive`);
+    },
+  });
 }
