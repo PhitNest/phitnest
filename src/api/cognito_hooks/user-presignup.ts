@@ -1,9 +1,4 @@
 import {
-  QueryCommand,
-  TransactWriteItem,
-  TransactWriteItemsCommand,
-} from "@aws-sdk/client-dynamodb";
-import {
   User,
   Inviter,
   parseDynamo,
@@ -17,13 +12,13 @@ import {
   kAdminInviteDynamo,
   kInviteTypeOnlyDynamo,
 } from "api/common/entities";
-import { connectDynamo } from "api/common/utils";
+import { TransactionParams, dynamo } from "api/common/utils";
 import { PreSignUpTriggerEvent } from "aws-lambda";
 
 const kInitialNumInvites = 5;
 
 export async function invoke(event: PreSignUpTriggerEvent) {
-  const client = connectDynamo();
+  const client = dynamo().connect();
 
   // Required attributes given on signup
   const { email, firstName, lastName, inviterEmail } =
@@ -33,40 +28,32 @@ export async function invoke(event: PreSignUpTriggerEvent) {
   }
 
   // Check whether an invite from [inviterEmail] to [email] exists
-  const inviteQuery = await client.send(
-    new QueryCommand({
-      TableName: process.env.DYNAMO_TABLE_NAME,
-      KeyConditions: {
-        part_id: {
-          ComparisonOperator: "EQ",
-          AttributeValueList: [{ S: `INVITE#${inviterEmail}` }],
-        },
-        sort_id: {
-          ComparisonOperator: "EQ",
-          AttributeValueList: [{ S: `RECEIVER#${email}` }],
-        },
-      },
-    })
-  );
-  if (!(inviteQuery.Items && inviteQuery.Items.length === 1)) {
+  const inviteQuery = await client.query({
+    pk: `INVITE#${inviterEmail}`,
+    sk: { q: `RECEIVER#${email}`, op: "EQ" },
+  });
+  if (inviteQuery.length !== 1) {
     throw new Error(`You have not received an invite from: ${inviterEmail}`);
   }
 
-  // Transaction for writing to database (we are writing multiple objects)
-  const transaction: TransactWriteItem[] = [];
-
   // Check whether the invite is from an admin or a user
   const invite = parseDynamo<InviteTypeOnly>(
-    inviteQuery.Items[0],
+    inviteQuery[0],
     kInviteTypeOnlyDynamo
   );
   const invitedByUser = invite.type === "user";
+
+  // Transaction for writing to database (we are writing multiple objects)
+  const transaction: TransactionParams<Inviter, ":newNumInvites"> = {
+    updates: [],
+    puts: [],
+  };
 
   // Parse as admin or user depending on the type
   let parsedInvite: Invite<Inviter | Admin>;
   if (invitedByUser) {
     const parsedInviteFromUser = parseDynamo<Invite<Inviter>>(
-      inviteQuery.Items[0],
+      inviteQuery[0],
       kInviteDynamo
     );
     parsedInvite = parsedInviteFromUser;
@@ -78,22 +65,20 @@ export async function invoke(event: PreSignUpTriggerEvent) {
     }
 
     // Decrement the inviters remaining invites
-    transaction.push({
-      Update: {
-        TableName: process.env.DYNAMO_TABLE_NAME,
-        Key: {
-          part_id: { S: "USERS" },
-          sort_id: {
-            S: `USER#${inviter.accountDetails.id}`,
-          },
+    transaction.updates.push({
+      pk: "USERS",
+      sk: `USER#${inviter.accountDetails.id}`,
+      expression: "SET numInvites = numInvites",
+      varMap: {
+        ":newNumInvites": {
+          N: `${inviter.numInvites - 1}`,
         },
-        UpdateExpression: "SET numInvites = numInvites - 1",
       },
     });
   } else {
     // If the inviter is an admin, no action needed after parsing
     parsedInvite = parseDynamo<Invite<Admin>>(
-      inviteQuery.Items[0],
+      inviteQuery[0],
       kAdminInviteDynamo
     );
   }
@@ -111,37 +96,23 @@ export async function invoke(event: PreSignUpTriggerEvent) {
     invite: parsedInvite,
   };
 
-  transaction.push(
+  transaction.puts.push(
     {
       // Add the users details to the DB
-      Put: {
-        TableName: process.env.DYNAMO_TABLE_NAME,
-        Item: {
-          part_id: { S: "USERS" },
-          sort_id: { S: `USER#${event.userName}` },
-          ...(invitedByUser
-            ? userInvitedByUserToDynamo(newUser as User<Inviter>)
-            : userInvitedByAdminToDynamo(newUser as User<Admin>)),
-        },
-      },
+      pk: "USERS",
+      sk: `USER#${event.userName}`,
+      data: invitedByUser
+        ? userInvitedByUserToDynamo(newUser as User<Inviter>)
+        : userInvitedByAdminToDynamo(newUser as User<Admin>),
     },
     {
       // Add the required user details to the gym PK so users can be explored/queried by gym
-      Put: {
-        TableName: process.env.DYNAMO_TABLE_NAME,
-        Item: {
-          part_id: { S: `GYM#${parsedInvite.gym.id}` },
-          sort_id: { S: `USER#${event.userName}` },
-          ...userExploreToDynamo(newUser),
-        },
-      },
+      pk: `GYM#${parsedInvite.gym.id}`,
+      sk: `USER#${event.userName}`,
+      data: userExploreToDynamo(newUser),
     }
   );
 
-  await client.send(
-    new TransactWriteItemsCommand({
-      TransactItems: transaction,
-    })
-  );
+  await client.writeTransaction(transaction);
   return event;
 }
