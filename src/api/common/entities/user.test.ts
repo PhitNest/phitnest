@@ -2,7 +2,7 @@ import { Admin } from "./admin";
 import { Dynamo, parseDynamo } from "./dynamo";
 import { InviteWithoutUser } from "./invite";
 import {
-  Inviter,
+  UserWithoutInvite,
   User,
   kUserInvitedByAdminDynamo,
   kUserInvitedByUserDynamo,
@@ -10,7 +10,7 @@ import {
   userInvitedByUserToDynamo,
 } from "./user";
 
-const testInviter: Inviter = {
+const testInviter: UserWithoutInvite = {
   accountDetails: {
     id: "test",
     email: "test",
@@ -21,7 +21,7 @@ const testInviter: Inviter = {
   numInvites: 1,
 };
 
-const serializedInviter: Dynamo<Inviter> = {
+const serializedInviter: Dynamo<UserWithoutInvite> = {
   accountDetails: {
     M: {
       id: { S: "test" },
@@ -80,7 +80,7 @@ const serializedInviteWithoutUser: Dynamo<InviteWithoutUser> = {
   },
 };
 
-const testUserInvitedByUser: User<Inviter> = {
+const testUserInvitedByUser: User<UserWithoutInvite> = {
   ...testInviter,
   invite: {
     ...testInviteWithoutUser,
@@ -89,7 +89,7 @@ const testUserInvitedByUser: User<Inviter> = {
   },
 };
 
-const serializedUserInvitedByUser: Dynamo<User<Inviter>> = {
+const serializedUserInvitedByUser: Dynamo<User<UserWithoutInvite>> = {
   ...serializedInviter,
   invite: {
     M: {

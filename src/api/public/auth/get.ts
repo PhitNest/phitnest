@@ -1,4 +1,4 @@
-import { handleRequest, environmentVars } from "api/common/utils";
+import { handleRequest, environmentVars, err } from "api/common/utils";
 import { APIGatewayProxyResult } from "aws-lambda";
 
 export async function invoke(): Promise<APIGatewayProxyResult> {
@@ -20,16 +20,16 @@ export async function invoke(): Promise<APIGatewayProxyResult> {
       };
     } else {
       if (!ADMIN_POOL_CLIENT_ID) {
-        throw new Error("Unable to find admin pool client id");
+        err("Unable to find admin pool client id");
       }
       if (!ADMIN_POOL_ID) {
-        throw new Error("Unable to find admin pool id");
+        err("Unable to find admin pool id");
       }
       if (!USER_POOL_CLIENT_ID) {
-        throw new Error("Unable to find user pool client id");
+        err("Unable to find user pool client id");
       }
       if (!USER_POOL_ID) {
-        throw new Error("Unable to find user pool id");
+        err("Unable to find user pool id");
       }
       return {
         statusCode: 200,

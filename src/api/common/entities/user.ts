@@ -36,28 +36,29 @@ export const kUserExploreDynamo: DynamoShape<UserExplore> = {
   accountDetails: kCreationDetailsDynamo,
 };
 
-export type Inviter = UserExplore & {
+export type UserWithoutInvite = UserExplore & {
   accountDetails: Account;
   numInvites: number;
 };
 
-export const kInviterDynamo: DynamoShape<Inviter> = {
+export const kUserWithoutInviteDynamo: DynamoShape<UserWithoutInvite> = {
   ...kUserExploreDynamo,
   accountDetails: kAccountDynamo,
   numInvites: "N",
 };
 
-export type User<InviteType extends InviterTypes = InviterTypes> = Inviter & {
-  invite: Invite<InviteType>;
-};
+export type User<InviteType extends InviterTypes = InviterTypes> =
+  UserWithoutInvite & {
+    invite: Invite<InviteType>;
+  };
 
-export const kUserInvitedByUserDynamo: DynamoShape<User<Inviter>> = {
-  ...kInviterDynamo,
+export const kUserInvitedByUserDynamo: DynamoShape<User<UserWithoutInvite>> = {
+  ...kUserWithoutInviteDynamo,
   invite: kInviteDynamo,
 };
 
 export const kUserInvitedByAdminDynamo: DynamoShape<User<Admin>> = {
-  ...kInviterDynamo,
+  ...kUserWithoutInviteDynamo,
   invite: kAdminInviteDynamo,
 };
 
@@ -69,8 +70,8 @@ function nameToDynamo(name: Name): Dynamo<Name> {
 }
 
 export function userInvitedByUserToDynamo(
-  user: User<Inviter>
-): Dynamo<User<Inviter>> {
+  user: User<UserWithoutInvite>
+): Dynamo<User<UserWithoutInvite>> {
   return {
     invite: { M: inviteToDynamo(user.invite) },
     ...userWithoutInviteToDynamo(user),
@@ -86,11 +87,13 @@ export function userInvitedByAdminToDynamo(
   };
 }
 
-export function userWithoutInviteToDynamo(inviter: Inviter): Dynamo<Inviter> {
+export function userWithoutInviteToDynamo(
+  user: UserWithoutInvite
+): Dynamo<UserWithoutInvite> {
   return {
-    accountDetails: { M: accountToDynamo(inviter.accountDetails) },
-    numInvites: { N: inviter.numInvites.toString() },
-    ...nameToDynamo(inviter),
+    accountDetails: { M: accountToDynamo(user.accountDetails) },
+    numInvites: { N: user.numInvites.toString() },
+    ...nameToDynamo(user),
   };
 }
 
