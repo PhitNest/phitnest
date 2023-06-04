@@ -1,8 +1,7 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
-import { PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { z } from "zod";
-import { validateRequest, connectDynamo, getLocation } from "api/common/utils";
-import { Gym, gymToDynamo } from "api/common/entities";
+import { validateRequest, getLocation, dynamo } from "api/common/utils";
+import { gymToDynamo } from "api/common/entities";
 import * as uuid from "uuid";
 
 export const kUnableToFindLocation = {
@@ -31,31 +30,25 @@ export async function invoke(
       if (event.requestContext.authorizer) {
         const location = await getLocation(data);
         if (location) {
-          const client = connectDynamo();
+          const client = dynamo().connect();
           const gymId = uuid.v4();
-          const gym: Gym = {
-            id: gymId,
-            createdAt: new Date(),
-            adminEmail: event.requestContext.authorizer.claims.email,
-            name: data.name,
-            address: {
-              street: data.street,
-              city: data.city,
-              state: data.state,
-              zipCode: data.zipCode,
-            },
-            location: location,
-          };
-          await client.send(
-            new PutItemCommand({
-              TableName: process.env.DYNAMO_TABLE_NAME,
-              Item: {
-                part_id: { S: "GYMS" },
-                sort_id: { S: `GYM#${gymId}` },
-                ...gymToDynamo(gym),
+          await client.put({
+            pk: "GYMS",
+            sk: `GYM#${gymId}`,
+            data: gymToDynamo({
+              id: gymId,
+              createdAt: new Date(),
+              adminEmail: event.requestContext.authorizer.claims.email,
+              name: data.name,
+              address: {
+                street: data.street,
+                city: data.city,
+                state: data.state,
+                zipCode: data.zipCode,
               },
-            })
-          );
+              location: location,
+            }),
+          });
           return {
             statusCode: 200,
             body: JSON.stringify({
