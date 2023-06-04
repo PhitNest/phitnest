@@ -9,7 +9,7 @@ export const kUnableToFindLocation = {
 };
 
 export const kNoAdminClaims = {
-  message: "No admin claims found",
+  message: "No admin email found",
 };
 
 const validator = z.object({
@@ -27,7 +27,8 @@ export async function invoke(
     data: JSON.parse(event.body ?? "{}"),
     validator: validator,
     controller: async (data) => {
-      if (event.requestContext.authorizer) {
+      const adminEmail = event.requestContext.authorizer?.claims.email;
+      if (adminEmail) {
         const location = await getLocation(data);
         if (location) {
           const client = dynamo().connect();
@@ -38,7 +39,7 @@ export async function invoke(
             data: gymToDynamo({
               id: gymId,
               createdAt: new Date(),
-              adminEmail: event.requestContext.authorizer.claims.email,
+              adminEmail: adminEmail,
               name: data.name,
               address: {
                 street: data.street,

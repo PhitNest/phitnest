@@ -1,6 +1,6 @@
 import {
   User,
-  Inviter,
+  UserWithoutInvite,
   parseDynamo,
   userExploreToDynamo,
   userInvitedByAdminToDynamo,
@@ -44,15 +44,15 @@ export async function invoke(event: PreSignUpTriggerEvent) {
   const invitedByUser = invite.type === "user";
 
   // Transaction for writing to database (we are writing multiple objects)
-  const transaction: TransactionParams<Inviter, ":newNumInvites"> = {
+  const transaction: TransactionParams<UserWithoutInvite, ":newNumInvites"> = {
     updates: [],
     puts: [],
   };
 
   // Parse as admin or user depending on the type
-  let parsedInvite: Invite<Inviter | Admin>;
+  let parsedInvite: Invite<UserWithoutInvite | Admin>;
   if (invitedByUser) {
-    const parsedInviteFromUser = parseDynamo<Invite<Inviter>>(
+    const parsedInviteFromUser = parseDynamo<Invite<UserWithoutInvite>>(
       inviteQuery[0],
       kInviteDynamo
     );
@@ -102,7 +102,7 @@ export async function invoke(event: PreSignUpTriggerEvent) {
       pk: "USERS",
       sk: `USER#${event.userName}`,
       data: invitedByUser
-        ? userInvitedByUserToDynamo(newUser as User<Inviter>)
+        ? userInvitedByUserToDynamo(newUser as User<UserWithoutInvite>)
         : userInvitedByAdminToDynamo(newUser as User<Admin>),
     },
     {

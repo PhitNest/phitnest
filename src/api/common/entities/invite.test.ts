@@ -1,5 +1,5 @@
 import { Dynamo, parseDynamo } from "./dynamo";
-import { Inviter } from "./user";
+import { UserWithoutInvite } from "./user";
 import {
   Invite,
   InviteWithoutUser,
@@ -56,7 +56,7 @@ const serializedInviteWithoutUser: Dynamo<InviteWithoutUser> = {
   },
 };
 
-const testInvite: Invite<Inviter> = {
+const testInvite: Invite<UserWithoutInvite> = {
   ...testInviteWithoutUser,
   type: "user",
   inviter: {
@@ -71,7 +71,7 @@ const testInvite: Invite<Inviter> = {
   },
 };
 
-const serializedInvite: Dynamo<Invite<Inviter>> = {
+const serializedInvite: Dynamo<Invite<UserWithoutInvite>> = {
   ...serializedInviteWithoutUser,
   type: { S: "user" },
   inviter: {

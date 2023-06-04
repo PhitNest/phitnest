@@ -17,6 +17,12 @@ type ErrorResponse = {
   body: { message: string };
 };
 
+export function err(message: string) {
+  throw {
+    message: message,
+  };
+}
+
 export async function handleRequest(
   controller: () => Promise<SuccessResponse | ErrorResponse>
 ): Promise<APIGatewayProxyResult> {

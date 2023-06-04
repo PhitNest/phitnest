@@ -1,4 +1,4 @@
-import { Inviter, userWithoutInviteToDynamo } from "./user";
+import { UserWithoutInvite, userWithoutInviteToDynamo } from "./user";
 import { Admin, adminToDynamo, kAdminDynamo } from "./admin";
 import {
   GymWithoutAdmin,
@@ -8,11 +8,11 @@ import {
 import { Dynamo, DynamoShape } from "./dynamo";
 import { kAccountDynamo } from "./account";
 
-export type InviterTypes = Admin | Inviter | null;
+export type InviterTypes = Admin | UserWithoutInvite | null;
 
 type InviteType<T extends InviterTypes> = T extends null
   ? "admin" | "user"
-  : T extends Inviter
+  : T extends UserWithoutInvite
   ? "user"
   : "admin";
 
@@ -49,7 +49,7 @@ export const kAdminInviteDynamo: DynamoShape<Invite<Admin>> = {
   ...kInviteWithoutUserDynamo,
 };
 
-export const kInviteDynamo: DynamoShape<Invite<Inviter>> = {
+export const kInviteDynamo: DynamoShape<Invite<UserWithoutInvite>> = {
   inviter: {
     accountDetails: {
       ...kAccountDynamo,
@@ -73,8 +73,8 @@ export function inviteWithoutUserToDynamo(
 }
 
 export function inviteToDynamo(
-  invite: Invite<Inviter>
-): Dynamo<Invite<Inviter>> {
+  invite: Invite<UserWithoutInvite>
+): Dynamo<Invite<UserWithoutInvite>> {
   return {
     ...inviteWithoutUserToDynamo(invite),
     inviter: { M: userWithoutInviteToDynamo(invite.inviter) },
