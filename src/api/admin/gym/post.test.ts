@@ -1,5 +1,6 @@
-import { kUnableToFindLocation, invoke } from "./post";
+import { invoke } from "./post";
 import { mockPost } from "api/common/test-helpers";
+import { kInvalidParameter, kZodError } from "api/common/utils";
 import * as uuid from "uuid";
 
 const testAddress1 = {
@@ -12,13 +13,14 @@ const testAddress1 = {
 describe("POST /gym", () => {
   it("should fail for invalid input", async () => {
     expect(await invoke(mockPost({}))).toEqual({
-      statusCode: 400,
+      statusCode: 500,
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        type: kZodError,
         message:
-          "name: Required, street: Required, city: Required, state: Required, zipCode: Required",
+          "name: Required, adminEmail: Required, street: Required, city: Required, state: Required, zipCode: Required",
       }),
     });
   });
@@ -33,15 +35,13 @@ describe("POST /gym", () => {
           state: "ZA",
           zipCode: "44160",
         },
+        authClaims: {
+          email: "something",
+          sub: "something",
+        },
       })
     );
-    expect(result).toEqual({
-      statusCode: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(kUnableToFindLocation),
-    });
+    expect(JSON.parse(result.body).type).toEqual(kInvalidParameter);
   });
 
   it("should create a gym when used with valid input", async () => {

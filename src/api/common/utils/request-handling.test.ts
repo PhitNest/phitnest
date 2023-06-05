@@ -1,29 +1,27 @@
 import { z } from "zod";
-import { validateRequest } from "./request-handling";
+import { RequestError, Success, validateRequest } from "./request-handling";
 
 const basicValidator = z.object({
   name: z.string(),
   number: z.number(),
 });
 
-async function basicController(data: object) {
-  return {
-    statusCode: 200 as const,
-    body: JSON.stringify(data),
-  };
+async function basicController(data: Record<string, unknown>) {
+  return new Success(data);
 }
 
-const ERROR_RESPONSE = { message: "Test Error" };
+const kErrorResponse = new RequestError(
+  "TestError",
+  "This is an error used for a test case"
+);
 
 async function errorController() {
-  throw ERROR_RESPONSE;
-  return {
-    statusCode: 200 as const,
-  };
+  return kErrorResponse;
+  return new Success();
 }
 
 describe("validateRequest", () => {
-  it("should return a 400 if the request body is invalid", async () => {
+  it("should return a 500 if the request body is invalid", async () => {
     const body = {
       name: "testName",
       number: "badNumber",
@@ -33,12 +31,11 @@ describe("validateRequest", () => {
       validator: basicValidator,
       controller: basicController,
     });
-    expect(response.statusCode).toBe(400);
-    expect(response.body).toBe(
-      JSON.stringify({
-        message: "number: Expected number, received string",
-      })
-    );
+    expect(response.statusCode).toEqual(500);
+    expect(JSON.parse(response.body)).toEqual({
+      type: "ZodError",
+      message: "number: Expected number, received string",
+    });
   });
 
   it("should call the controller if the request body is valid", async () => {
@@ -51,68 +48,58 @@ describe("validateRequest", () => {
       validator: basicValidator,
       controller: basicController,
     });
-    expect(response.statusCode).toBe(200);
-    expect(response.body).toBe(JSON.stringify(body));
+    expect(response.statusCode).toEqual(200);
+    expect(JSON.parse(response.body)).toEqual(body);
   });
 
   it("should pass through errors with status code 500 and Content-Type=application/json", async () => {
-    expect(
-      await validateRequest({
-        data: {
-          name: "testName",
-          number: 1,
-        },
-        validator: basicValidator,
-        controller: errorController,
-      })
-    ).toEqual({
-      body: JSON.stringify(ERROR_RESPONSE),
-      statusCode: 500,
-      headers: {
-        "Content-Type": "application/json",
+    const res = await validateRequest({
+      data: {
+        name: "testName",
+        number: 1,
       },
+      validator: basicValidator,
+      controller: errorController,
+    });
+    expect(res.statusCode).toEqual(500);
+    expect(JSON.parse(res.body)).toEqual({
+      message: kErrorResponse.message,
+      type: kErrorResponse.type,
+    });
+    expect(res.headers).toEqual({
+      "Content-Type": "application/json",
     });
   });
 
   it("should pass through empty bodies with no Content-Type header", async () => {
-    expect(
-      await validateRequest({
-        data: {
-          name: "testName",
-          number: 1,
-        },
-        validator: basicValidator,
-        controller: async () => ({
-          statusCode: 200,
-        }),
-      })
-    ).toEqual({
-      statusCode: 200,
-      body: "",
+    const res = await validateRequest({
+      data: {
+        name: "testName",
+        number: 1,
+      },
+      validator: basicValidator,
+      controller: async () => new Success(),
     });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toEqual("");
+    expect(res.headers).toBeUndefined();
   });
 
   it("should pass through headers", async () => {
     const expectedHeaders = {
-      "Content-Type": "text/plain" as const,
+      "Content-Type": "text/plain",
       somethingElse: "somethingElse",
     };
-    expect(
-      await validateRequest({
-        data: {
-          name: "testName",
-          number: 1,
-        },
-        validator: basicValidator,
-        controller: async () => ({
-          statusCode: 200,
-          headers: expectedHeaders,
-        }),
-      })
-    ).toEqual({
-      statusCode: 200,
-      body: "",
-      headers: expectedHeaders,
+    const res = await validateRequest({
+      data: {
+        name: "testName",
+        number: 1,
+      },
+      validator: basicValidator,
+      controller: async () => new Success(undefined, expectedHeaders),
     });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toEqual("");
+    expect(res.headers).toEqual(expectedHeaders);
   });
 });

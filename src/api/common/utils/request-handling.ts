@@ -1,49 +1,64 @@
 import { APIGatewayProxyResult } from "aws-lambda";
 import { ZodError, z } from "zod";
+import { kZodError } from "./errors";
 
-type SuccessResponse = {
-  statusCode: 200;
-  headers?: { [header: string]: string } & {
-    "Content-Type"?: "text/plain" | "application/json";
-  };
-  body?: string;
-};
+export class Success {
+  body?: Record<string, unknown> | Record<string, unknown>[];
+  headers?: { [header: string]: string };
 
-type ErrorResponse = {
-  statusCode: 400 | 500;
-  headers?: { [header: string]: string } & {
-    "Content-Type": "application/json";
-  };
-  body: { message: string };
-};
+  constructor(
+    body?: Record<string, unknown> | Record<string, unknown>[],
+    headers?: { [header: string]: string }
+  ) {
+    this.body = body;
+    this.headers = headers;
+  }
+}
 
-export function err(message: string) {
-  throw {
-    message: message,
-  };
+export class RequestError {
+  type: string;
+  message: string;
+
+  constructor(type: string, message: string) {
+    this.type = type;
+    this.message = message;
+  }
 }
 
 export async function handleRequest(
-  controller: () => Promise<SuccessResponse | ErrorResponse>
+  controller: () => Promise<Success | RequestError>
 ): Promise<APIGatewayProxyResult> {
   try {
     const controllerOutput = await controller();
-    if (controllerOutput.statusCode === 200) {
+    if (controllerOutput instanceof RequestError) {
       return {
-        statusCode: controllerOutput.statusCode,
-        body: controllerOutput.body ?? "",
-        ...(controllerOutput.headers || controllerOutput.body
+        statusCode: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: controllerOutput.type,
+          message: controllerOutput.message,
+        }),
+      };
+    } else {
+      return {
+        statusCode: 200,
+        body: controllerOutput.body
+          ? JSON.stringify(controllerOutput.body)
+          : "",
+        ...(controllerOutput.body
           ? {
-              headers: controllerOutput.headers ?? {
+              headers: {
                 "Content-Type": "application/json",
               },
             }
           : {}),
-      };
-    } else {
-      return {
-        ...controllerOutput,
-        body: JSON.stringify(controllerOutput.body),
+        ...(controllerOutput.headers
+          ? {
+              headers: controllerOutput.headers,
+            }
+          : {}),
       };
     }
   } catch (err) {
@@ -64,24 +79,19 @@ export async function validateRequest<
   validator: ValidatorType;
   controller: (
     requestData: z.infer<ValidatorType>
-  ) => Promise<SuccessResponse | ErrorResponse>;
+  ) => Promise<Success | RequestError>;
 }): Promise<APIGatewayProxyResult> {
   return await handleRequest(async () => {
     try {
       return await props.controller(props.validator.parse(props.data));
     } catch (err) {
       if (err instanceof ZodError) {
-        return {
-          statusCode: 400,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: {
-            message: err.issues
-              .map((issue) => issue.path.join(".") + ": " + issue.message)
-              .join(", "),
-          },
-        };
+        return new RequestError(
+          kZodError,
+          err.issues
+            .map((issue) => issue.path.join(".") + ": " + issue.message)
+            .join(", ")
+        );
       }
       throw err;
     }

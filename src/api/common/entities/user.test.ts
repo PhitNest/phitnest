@@ -1,6 +1,5 @@
-import { Admin } from "./admin";
 import { Dynamo, parseDynamo } from "./dynamo";
-import { InviteWithoutUser } from "./invite";
+import { AdminEmail, InviteWithoutUser, kInviteDynamo } from "./invite";
 import {
   UserWithoutInvite,
   User,
@@ -10,7 +9,7 @@ import {
   userInvitedByUserToDynamo,
 } from "./user";
 
-const testInviter: UserWithoutInvite = {
+const testUserWithoutInvite: UserWithoutInvite = {
   accountDetails: {
     id: "test",
     email: "test",
@@ -21,7 +20,7 @@ const testInviter: UserWithoutInvite = {
   numInvites: 1,
 };
 
-const serializedInviter: Dynamo<UserWithoutInvite> = {
+const serializedUserWithoutInvite: Dynamo<UserWithoutInvite> = {
   accountDetails: {
     M: {
       id: { S: "test" },
@@ -81,60 +80,52 @@ const serializedInviteWithoutUser: Dynamo<InviteWithoutUser> = {
 };
 
 const testUserInvitedByUser: User<UserWithoutInvite> = {
-  ...testInviter,
+  ...testUserWithoutInvite,
   invite: {
     ...testInviteWithoutUser,
     type: "user",
-    inviter: testInviter,
+    inviter: testUserWithoutInvite,
   },
 };
 
 const serializedUserInvitedByUser: Dynamo<User<UserWithoutInvite>> = {
-  ...serializedInviter,
+  ...serializedUserWithoutInvite,
   invite: {
     M: {
       ...serializedInviteWithoutUser,
       type: { S: "user" },
-      inviter: { M: serializedInviter },
+      inviter: { M: serializedUserWithoutInvite },
     },
   },
 };
 
-const testUserInvitedByAdmin: User<Admin> = {
-  ...testInviter,
+const testUserInvitedByAdmin: User<AdminEmail> = {
+  ...testUserWithoutInvite,
   invite: {
     ...testInviteWithoutUser,
     type: "admin",
     inviter: {
-      accountDetails: {
-        id: "test",
-        email: "test",
-        createdAt: new Date(Date.UTC(2020, 1, 1)),
-      },
+      adminEmail: "test",
     },
   },
 };
 
-const serializedUserInvitedByAdmin: Dynamo<User<Admin>> = {
-  ...serializedInviter,
+const serializedUserInvitedByAdmin: Dynamo<User<AdminEmail>> = {
+  ...serializedUserWithoutInvite,
   invite: {
     M: {
       ...serializedInviteWithoutUser,
       type: { S: "admin" },
       inviter: {
         M: {
-          accountDetails: {
-            M: {
-              id: { S: "test" },
-              email: { S: "test" },
-              createdAt: { N: Date.UTC(2020, 1, 1).toString() },
-            },
-          },
+          adminEmail: { S: "test" },
         },
       },
     },
   },
 };
+console.log(kInviteDynamo);
+console.log(kUserInvitedByUserDynamo);
 
 describe("User invited by user", () => {
   it("serializes to dynamo", () => {

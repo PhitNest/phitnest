@@ -1,33 +1,10 @@
 import {
-  DynamoDBClient,
-  PutItemCommand,
-  QueryCommand,
-  QueryCommandInput,
-} from "@aws-sdk/client-dynamodb";
-import {
   APIGatewayEvent,
   APIGatewayProxyEventPathParameters,
   APIGatewayProxyEventQueryStringParameters,
   APIGatewayProxyEventMultiValueHeaders,
 } from "aws-lambda";
-import { MetadataBearer } from "@aws-sdk/types";
-import { AwsStub, mockClient } from "aws-sdk-client-mock";
 import { AdminCognitoClaims, UserCognitoClaims } from "./utils";
-
-let dynamoMock: AwsStub<object, MetadataBearer>;
-
-export function setupDynamoMock() {
-  dynamoMock = mockClient(DynamoDBClient);
-  dynamoMock.on(PutItemCommand).resolves({});
-}
-
-export function mockDynamoQuery(input: QueryCommandInput, response: object) {
-  dynamoMock.on(QueryCommand, input).resolves(response);
-}
-
-export function clearDynamoMock() {
-  dynamoMock.reset();
-}
 
 /**
  * This is required for spying on functions that are imported from other files
