@@ -1,6 +1,7 @@
 import { Dynamo, parseDynamo } from "./dynamo";
 import { UserWithoutInvite } from "./user";
 import {
+  AdminEmail,
   Invite,
   InviteWithoutUser,
   adminInviteToDynamo,
@@ -8,7 +9,6 @@ import {
   kAdminInviteDynamo,
   kInviteDynamo,
 } from "./invite";
-import { Admin } from "./admin";
 
 const testInviteWithoutUser: InviteWithoutUser = {
   createdAt: new Date(Date.UTC(2020, 1, 1)),
@@ -90,30 +90,20 @@ const serializedInvite: Dynamo<Invite<UserWithoutInvite>> = {
   },
 };
 
-const testAdminInvite: Invite<Admin> = {
+const testAdminInvite: Invite<AdminEmail> = {
   ...testInviteWithoutUser,
   type: "admin",
   inviter: {
-    accountDetails: {
-      createdAt: new Date(Date.UTC(2020, 1, 1)),
-      id: "1",
-      email: "something",
-    },
+    adminEmail: "something",
   },
 };
 
-const serializedAdminInvite: Dynamo<Invite<Admin>> = {
+const serializedAdminInvite: Dynamo<Invite<AdminEmail>> = {
   ...serializedInviteWithoutUser,
   type: { S: "admin" },
   inviter: {
     M: {
-      accountDetails: {
-        M: {
-          createdAt: { N: Date.UTC(2020, 1, 1).toString() },
-          id: { S: "1" },
-          email: { S: "something" },
-        },
-      },
+      adminEmail: { S: "something" },
     },
   },
 };

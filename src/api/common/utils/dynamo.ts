@@ -11,50 +11,38 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { DynamoShape, parseDynamo } from "../entities/dynamo";
 
-type SkOperator =
-  | "EQ"
-  | "BEGINS_WITH"
-  | "BETWEEN"
-  | "CONTAINS"
-  | "GE"
-  | "GT"
-  | "IN"
-  | "LE"
-  | "LT"
-  | "NE"
-  | "NOT_CONTAINS"
-  | "NOT_NULL"
-  | "NULL";
+export type SkOperator = "EQ" | "BEGINS_WITH";
 
-type PartitionKey = {
+export type PartitionKey = {
   pk: string;
 };
 
-type RowKey = PartitionKey & {
+export type RowKey = PartitionKey & {
   sk?: string;
 };
 
-type MultiRowKey = PartitionKey & {
-  sk?: { q: string; op: SkOperator };
+export type MultiRowKey<Op extends SkOperator = SkOperator> = PartitionKey & {
+  sk?: { q: string; op: Op };
 };
 
-type ParseParams<T> = {
+export type ParseParams<T> = {
   parseShape: DynamoShape<T>;
 };
 
-type PutParams = RowKey & { data: Record<string, AttributeValue> };
+export type PutParams = RowKey & { data: Record<string, AttributeValue> };
 
-type UpdateParams<
+export type UpdateParams<
   T extends Record<string, unknown>,
   VarNames extends `:${string}` | undefined
 > = string extends keyof T
   ? never
   : RowKey & {
       expression: `SET ${Extract<keyof T, string>} = ${
-        | `${Extract<keyof T, string>}${
+        | `${Extract<keyof T, string> | number}${
             | ` ${"+" | "-" | "*" | "/"} ${Extract<VarNames, string> | number}`
             | ""}`
-        | Extract<VarNames, string>}`;
+        | Extract<VarNames, string>
+        | number}`;
     } & (VarNames extends undefined
         ? { varMap?: undefined }
         : {
@@ -69,12 +57,22 @@ export type TransactionParams<
   puts: PutParams[];
 };
 
-export abstract class DynamoClient {
-  abstract query(
-    params: MultiRowKey
-  ): Promise<Record<string, AttributeValue>[]>;
+export type SingleOrPlural<T, Op extends SkOperator> = Op extends Exclude<
+  SkOperator,
+  "EQ"
+>
+  ? T[]
+  : T;
 
-  abstract parsedQuery<T>(params: ParseParams<T> & MultiRowKey): Promise<T[]>;
+export abstract class DynamoClient {
+  abstract query<Op extends SkOperator>(
+    params: MultiRowKey<Op>,
+    projection?: string
+  ): Promise<SingleOrPlural<Record<string, AttributeValue>, Op>>;
+
+  abstract parsedQuery<T, Op extends SkOperator>(
+    params: ParseParams<T> & MultiRowKey<Op>
+  ): Promise<SingleOrPlural<T, Op>>;
 
   abstract update<
     UpdateTypes extends Record<string, unknown>,
@@ -103,7 +101,10 @@ function rowKey(key: RowKey): {
   };
 }
 
-function queryCommand(key: MultiRowKey): QueryCommandInput {
+function queryCommand(
+  key: MultiRowKey,
+  projection?: string
+): QueryCommandInput {
   return {
     TableName: process.env.DYNAMO_TABLE_NAME,
     KeyConditions: {
@@ -120,6 +121,7 @@ function queryCommand(key: MultiRowKey): QueryCommandInput {
           }
         : {}),
     },
+    ProjectionExpression: projection,
   };
 }
 
@@ -166,9 +168,30 @@ class DynamoClientImpl extends DynamoClient {
     await this.client.send(new PutItemCommand(putCommand(params)));
   }
 
-  async query(key: MultiRowKey): Promise<Record<string, AttributeValue>[]> {
-    const res = await this.client.send(new QueryCommand(queryCommand(key)));
-    return res.Items ?? [];
+  async query<Op extends SkOperator>(
+    key: MultiRowKey<Op>,
+    projection?: string
+  ): Promise<SingleOrPlural<Record<string, AttributeValue>, Op>> {
+    const res = await this.client.send(
+      new QueryCommand(queryCommand(key, projection))
+    );
+    if (key.sk && key.sk.op === "EQ") {
+      if (res.Items) {
+        return res.Items[0] as SingleOrPlural<
+          Record<string, AttributeValue>,
+          Op
+        >;
+      } else {
+        throw {
+          type: "DynamoItemNotFound",
+          message: `Could not find item for query: ${JSON.stringify(key)}`,
+        };
+      }
+    }
+    return (res.Items ?? []) as SingleOrPlural<
+      Record<string, AttributeValue>,
+      Op
+    >;
   }
 
   async writeTransaction<
@@ -189,9 +212,23 @@ class DynamoClientImpl extends DynamoClient {
     );
   }
 
-  async parsedQuery<T>(params: ParseParams<T> & MultiRowKey): Promise<T[]> {
-    const queryRes = await this.query(params);
-    return queryRes.map((item) => parseDynamo(item, params.parseShape));
+  async parsedQuery<T, Op extends SkOperator>(
+    params: ParseParams<T> & MultiRowKey<Op>
+  ): Promise<SingleOrPlural<T, Op>> {
+    const queryRes = await this.query(
+      params,
+      Object.keys(params.parseShape).join(",")
+    );
+    return (
+      params.sk && params.sk.op === "EQ"
+        ? parseDynamo(
+            queryRes as Record<string, AttributeValue>,
+            params.parseShape
+          )
+        : (queryRes as Record<string, AttributeValue>[]).map((item) =>
+            parseDynamo(item, params.parseShape)
+          )
+    ) as SingleOrPlural<T, Op>;
   }
 }
 

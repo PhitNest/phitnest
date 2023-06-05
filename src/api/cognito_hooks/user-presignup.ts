@@ -1,3 +1,4 @@
+import { AttributeValue } from "@aws-sdk/client-dynamodb";
 import {
   User,
   UserWithoutInvite,
@@ -6,11 +7,11 @@ import {
   userInvitedByAdminToDynamo,
   userInvitedByUserToDynamo,
   InviteTypeOnly,
-  Admin,
   Invite,
   kInviteDynamo,
   kAdminInviteDynamo,
   kInviteTypeOnlyDynamo,
+  AdminEmail,
 } from "api/common/entities";
 import { TransactionParams, dynamo } from "api/common/utils";
 import { PreSignUpTriggerEvent } from "aws-lambda";
@@ -28,17 +29,19 @@ export async function invoke(event: PreSignUpTriggerEvent) {
   }
 
   // Check whether an invite from [inviterEmail] to [email] exists
-  const inviteQuery = await client.query({
-    pk: `INVITE#${inviterEmail}`,
-    sk: { q: `RECEIVER#${email}`, op: "EQ" },
-  });
-  if (inviteQuery.length !== 1) {
+  let inviteQuery: Record<string, AttributeValue>;
+  try {
+    inviteQuery = await client.query({
+      pk: `INVITE#${inviterEmail}`,
+      sk: { q: `RECEIVER#${email}`, op: "EQ" },
+    });
+  } catch {
     throw new Error(`You have not received an invite from: ${inviterEmail}`);
   }
 
   // Check whether the invite is from an admin or a user
   const invite = parseDynamo<InviteTypeOnly>(
-    inviteQuery[0],
+    inviteQuery,
     kInviteTypeOnlyDynamo
   );
   const invitedByUser = invite.type === "user";
@@ -50,10 +53,10 @@ export async function invoke(event: PreSignUpTriggerEvent) {
   };
 
   // Parse as admin or user depending on the type
-  let parsedInvite: Invite<UserWithoutInvite | Admin>;
+  let parsedInvite: Invite<UserWithoutInvite | AdminEmail>;
   if (invitedByUser) {
     const parsedInviteFromUser = parseDynamo<Invite<UserWithoutInvite>>(
-      inviteQuery[0],
+      inviteQuery,
       kInviteDynamo
     );
     parsedInvite = parsedInviteFromUser;
@@ -77,8 +80,8 @@ export async function invoke(event: PreSignUpTriggerEvent) {
     });
   } else {
     // If the inviter is an admin, no action needed after parsing
-    parsedInvite = parseDynamo<Invite<Admin>>(
-      inviteQuery[0],
+    parsedInvite = parseDynamo<Invite<AdminEmail>>(
+      inviteQuery,
       kAdminInviteDynamo
     );
   }
@@ -103,7 +106,7 @@ export async function invoke(event: PreSignUpTriggerEvent) {
       sk: `USER#${event.userName}`,
       data: invitedByUser
         ? userInvitedByUserToDynamo(newUser as User<UserWithoutInvite>)
-        : userInvitedByAdminToDynamo(newUser as User<Admin>),
+        : userInvitedByAdminToDynamo(newUser as User<AdminEmail>),
     },
     {
       // Add the required user details to the gym PK so users can be explored/queried by gym
