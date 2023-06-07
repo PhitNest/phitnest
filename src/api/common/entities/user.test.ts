@@ -1,5 +1,5 @@
 import { Dynamo, parseDynamo } from "./dynamo";
-import { AdminEmail, InviteWithoutUser, kInviteDynamo } from "./invite";
+import { AdminEmail, InviteWithoutUser } from "./invite";
 import {
   UserWithoutInvite,
   User,
@@ -124,8 +124,6 @@ const serializedUserInvitedByAdmin: Dynamo<User<AdminEmail>> = {
     },
   },
 };
-console.log(kInviteDynamo);
-console.log(kUserInvitedByUserDynamo);
 
 describe("User invited by user", () => {
   it("serializes to dynamo", () => {

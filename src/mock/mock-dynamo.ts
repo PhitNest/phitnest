@@ -31,10 +31,7 @@ export class DynamoClientMock extends DynamoClient {
     const partition = this.table[params.pk];
     if (!partition) {
       if (params.sk) {
-        throw new RequestError(
-          "ResourceNotFoundException",
-          `No such pk: ${params.pk}`
-        );
+        throw new RequestError("ResourceNotFound", `No such pk: ${params.pk}`);
       }
     }
     if (params.sk) {
@@ -61,10 +58,7 @@ export class DynamoClientMock extends DynamoClient {
         )
       ) as SingleOrPlural<Record<string, AttributeValue>, Op>;
     } else {
-      throw new RequestError(
-        "ResourceNotFoundException",
-        `No such sk: ${params.sk}`
-      );
+      throw new RequestError("ResourceNotFound", `No such sk: ${params.sk}`);
     }
   }
 
