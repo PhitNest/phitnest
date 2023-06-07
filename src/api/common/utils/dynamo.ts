@@ -183,7 +183,7 @@ class DynamoClientImpl extends DynamoClient {
         >;
       } else {
         throw {
-          type: "DynamoItemNotFound",
+          type: "ResourceNotFound",
           message: `Could not find item for query: ${JSON.stringify(key)}`,
         };
       }

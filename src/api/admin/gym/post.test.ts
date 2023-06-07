@@ -1,6 +1,7 @@
+import { kGymDynamo } from "api/common/entities";
 import { invoke } from "./post";
 import { mockPost } from "api/common/test-helpers";
-import { kInvalidParameter, kZodError } from "api/common/utils";
+import { dynamo, kInvalidParameter, kZodError } from "api/common/utils";
 import * as uuid from "uuid";
 
 const testAddress1 = {
@@ -46,6 +47,7 @@ describe("POST /gym", () => {
 
   it("should create a gym when used with valid input", async () => {
     const uuidSpy = jest.spyOn(uuid, "v4");
+    const adminEmail = "test@gmail.com";
     const result = await invoke(
       mockPost({
         body: {
@@ -54,7 +56,7 @@ describe("POST /gym", () => {
         },
         authClaims: {
           sub: "test",
-          email: "test@gmail.com",
+          email: adminEmail,
         },
       })
     );
@@ -68,5 +70,20 @@ describe("POST /gym", () => {
     const gymId = uuidResult.value;
     expect(body.gymId).toBe(gymId);
     expect(result.statusCode).toBe(200);
+    const queryTestGym = await dynamo()
+      .connect()
+      .parsedQuery({
+        pk: "GYMS",
+        sk: { q: `GYMS#`, op: "BEGINS_WITH" },
+        parseShape: kGymDynamo,
+      });
+    expect(queryTestGym).toHaveLength(1);
+    const gymRes = queryTestGym[0];
+    expect(gymRes.id).toBe(gymId);
+    expect(gymRes.name).toBe("test");
+    expect(gymRes.address).toEqual(testAddress1);
+    expect(gymRes.adminEmail).toBe(adminEmail);
+    expect(gymRes.location).toEqual(body.location);
+    expect(gymRes.createdAt).toBeDefined();
   });
 });
