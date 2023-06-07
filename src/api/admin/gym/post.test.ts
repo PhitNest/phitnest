@@ -1,4 +1,4 @@
-import { kGymDynamo } from "api/common/entities";
+import { Address, kGymDynamo } from "api/common/entities";
 import { invoke } from "./post";
 import { mockPost } from "api/common/test-helpers";
 import { dynamo, kInvalidParameter, kZodError } from "api/common/utils";
@@ -10,6 +10,32 @@ const testAddress1 = {
   state: "VA",
   zipCode: "23451",
 };
+
+const fakeAddress = {
+  name: "test",
+  street: "123 Fake St",
+  city: "Blacksburg",
+  state: "ZA",
+  zipCode: "44160",
+};
+
+// Mock getLocation
+jest.mock("api/common/utils", () => {
+  const originalModule = jest.requireActual("api/common/utils");
+  return {
+    __esModule: true,
+    ...originalModule,
+    getLocation: jest.fn(async (address: Address) => {
+      if (address.state === "ZA") {
+        return null;
+      }
+      return {
+        longitude: -75.996,
+        latitude: 36.85,
+      };
+    }),
+  };
+});
 
 describe("POST /gym", () => {
   it("should fail for invalid input", async () => {
@@ -29,13 +55,7 @@ describe("POST /gym", () => {
   it("should fail for invalid address", async () => {
     const result = await invoke(
       mockPost({
-        body: {
-          name: "test",
-          street: "123 Fake St",
-          city: "Blacksburg",
-          state: "ZA",
-          zipCode: "44160",
-        },
+        body: fakeAddress,
         authClaims: {
           email: "something",
           sub: "something",
@@ -62,8 +82,8 @@ describe("POST /gym", () => {
     );
     const body = JSON.parse(result.body);
     expect(body.location).toBeDefined();
-    expect(body.location.longitude).toBeCloseTo(-75.996, 2);
-    expect(body.location.latitude).toBeCloseTo(36.85, 2);
+    expect(body.location.longitude).toEqual(-75.996);
+    expect(body.location.latitude).toEqual(36.85);
     expect(uuidSpy).toBeCalledTimes(1);
     const uuidResult = uuidSpy.mock.results[0];
     expect(uuidResult.type).toBe("return");
