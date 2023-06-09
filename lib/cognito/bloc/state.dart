@@ -4,10 +4,10 @@ sealed class CognitoState extends Equatable {
   const CognitoState() : super();
 }
 
-sealed class CognitoLoadingState extends CognitoState {
-  final CancelableOperation<HttpResponse<Cognito>> loadingOperation;
+class CognitoLoadingPreviousSessionState extends CognitoState {
+  final CancelableOperation<Cognito?> loadingOperation;
 
-  const CognitoLoadingState({
+  const CognitoLoadingPreviousSessionState({
     required this.loadingOperation,
   }) : super();
 
@@ -15,13 +15,24 @@ sealed class CognitoLoadingState extends CognitoState {
   List<Object?> get props => [loadingOperation];
 }
 
-class CognitoInitialState extends CognitoLoadingState {
-  const CognitoInitialState({
+sealed class CognitoLoadingModeState extends CognitoState {
+  final CancelableOperation<HttpResponse<Cognito>> loadingOperation;
+
+  const CognitoLoadingModeState({
+    required this.loadingOperation,
+  }) : super();
+
+  @override
+  List<Object?> get props => [loadingOperation];
+}
+
+class CognitoLoadingModeInitialState extends CognitoLoadingModeState {
+  const CognitoLoadingModeInitialState({
     required super.loadingOperation,
   }) : super();
 }
 
-class CognitoInitialEventQueuedState extends CognitoLoadingState {
+class CognitoInitialEventQueuedState extends CognitoLoadingModeState {
   final CognitoLoadedEvent queuedEvent;
 
   const CognitoInitialEventQueuedState({

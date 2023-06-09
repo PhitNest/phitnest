@@ -3,9 +3,7 @@ import 'package:async/async.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../errors.dart';
-import '../http/http.dart';
-import 'responses/responses.dart';
+import '../core.dart';
 
 export 'responses/responses.dart';
 
@@ -16,6 +14,48 @@ part 'bloc/state.dart';
 class _CognitoState {
   CognitoUser? user;
   CognitoUserSession? session;
+
+  _CognitoState(this.user, this.session);
+}
+
+const kPoolIdJsonKey = 'poolId';
+const kClientIdJsonKey = 'clientId';
+const kUsernameJsonKey = 'username';
+
+class _CachedSessionDetails extends JsonSerializable {
+  final String poolId;
+  final String clientId;
+  final String username;
+
+  _CachedSessionDetails({
+    required this.poolId,
+    required this.clientId,
+    required this.username,
+  });
+
+  @override
+  Map<String, Serializable> toJson() => {
+        kPoolIdJsonKey: Serializable.string(poolId),
+        kClientIdJsonKey: Serializable.string(clientId),
+        kUsernameJsonKey: Serializable.string(username),
+      };
+
+  factory _CachedSessionDetails.fromJson(dynamic json) => switch (json) {
+        {
+          kPoolIdJsonKey: final String poolId,
+          kClientIdJsonKey: final String clientId,
+          kUsernameJsonKey: final String username,
+        } =>
+          _CachedSessionDetails(
+            poolId: poolId,
+            clientId: clientId,
+            username: username,
+          ),
+        _ => throw FormatException(
+            'Invalid JSON for _CachedSessionDetails',
+            json,
+          ),
+      };
 }
 
 const kAdminPoolIdJsonKey = 'adminPoolId';
@@ -27,16 +67,26 @@ class Cognito {
   final CognitoUserPool _pool;
   final _CognitoState _state;
 
-  factory Cognito.fromJson(dynamic json, bool admin) => switch (json) {
+  factory Cognito.fromAdminJson(dynamic json) => switch (json) {
         {
           kAdminPoolIdJsonKey: final String adminPoolId,
           kAdminClientIdJsonKey: final String adminClientId,
+        } =>
+          Cognito(
+            poolId: adminPoolId,
+            clientId: adminClientId,
+          ),
+        _ => throw FormatException('Invalid JSON for Cognito', json),
+      };
+
+  factory Cognito.fromJson(dynamic json) => switch (json) {
+        {
           kUserPoolIdJsonKey: final String userPoolId,
           kUserClientIdJsonKey: final String userClientId
         } =>
           Cognito(
-            poolId: admin ? adminPoolId : userPoolId,
-            clientId: admin ? adminClientId : userClientId,
+            poolId: userPoolId,
+            clientId: userClientId,
           ),
         _ => throw FormatException('Invalid JSON for Cognito', json),
       };
@@ -45,7 +95,14 @@ class Cognito {
     required String poolId,
     required String clientId,
   })  : _pool = CognitoUserPool(poolId, clientId),
-        _state = _CognitoState(),
+        _state = _CognitoState(null, null),
+        super();
+
+  Cognito._fromSession({
+    required _CognitoState state,
+    required CognitoUserPool pool,
+  })  : _pool = pool,
+        _state = state,
         super();
 
   Future<LoginResponse> login(
@@ -54,7 +111,8 @@ class Cognito {
   ) async {
     try {
       _state.user = CognitoUser(email, _pool);
-      _state.session = await _state.user!.authenticateUser(
+      _state.session = await _state.user!.getSession();
+      _state.session ??= await _state.user!.authenticateUser(
         AuthenticationDetails(
           username: email,
           password: password,
