@@ -2,6 +2,19 @@
 sealed class Serializable {
   dynamic toJson();
 
+  factory Serializable.double(double double) => SerializablePrimitive._(double);
+
+  factory Serializable.string(String string) => SerializablePrimitive._(string);
+
+  factory Serializable.int(int int) => SerializablePrimitive._(int);
+
+  factory Serializable.bool(bool bool) => SerializablePrimitive._(bool);
+
+  factory Serializable.list(List<Serializable> list) => SerializableList(list);
+
+  factory Serializable.map(Map<String, Serializable> map) =>
+      SerializableMap(map);
+
   const Serializable() : super();
 }
 
@@ -17,17 +30,6 @@ class SerializablePrimitive extends Serializable {
   final dynamic _primitive;
 
   const SerializablePrimitive._(this._primitive) : super();
-
-  factory SerializablePrimitive.double(double double) =>
-      SerializablePrimitive._(double);
-
-  factory SerializablePrimitive.string(String string) =>
-      SerializablePrimitive._(string);
-
-  factory SerializablePrimitive.int(int int) => SerializablePrimitive._(int);
-
-  factory SerializablePrimitive.bool(bool bool) =>
-      SerializablePrimitive._(bool);
 
   @override
   dynamic toJson() => _primitive;

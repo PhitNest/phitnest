@@ -1,53 +1,94 @@
 part of '../cognito.dart';
 
-Future<HttpResponse<Cognito>> requestServerStatus(bool admin) => request(
+Future<HttpResponse<Cognito>> requestServerAuthMode(bool admin) => request(
       route: '/auth',
       method: HttpMethod.get,
-      parser: (status) => Cognito.fromJson(status, admin),
+      parser: (status) =>
+          admin ? Cognito.fromAdminJson(status) : Cognito.fromJson(status),
     );
+
+const kCachedSessionDetailsCacheKey = 'cachedSessionDetails';
+
+Future<Cognito?> restorePreviousSession() async {
+  try {
+    final cachedSession = getCachedObject(
+        kCachedSessionDetailsCacheKey, _CachedSessionDetails.fromJson);
+    if (cachedSession != null) {
+      final pool =
+          CognitoUserPool(cachedSession.poolId, cachedSession.clientId);
+      final user = CognitoUser(cachedSession.username, pool);
+      final session = await user.getSession();
+      if (session != null) {
+        final state = _CognitoState(user, session);
+        return Cognito._fromSession(state: state, pool: pool);
+      }
+    }
+  } catch (_) {
+    // Do nothing
+  }
+  return null;
+}
 
 class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
   final bool admin;
 
   CognitoBloc(this.admin)
       : super(
-          CognitoInitialState(
-            loadingOperation:
-                CancelableOperation.fromFuture(requestServerStatus(admin)),
-          ),
+          CognitoLoadingPreviousSessionState(
+              loadingOperation:
+                  CancelableOperation.fromFuture(restorePreviousSession())),
         ) {
-    (state as CognitoInitialState).loadingOperation.then(
-          (response) => add(
-            CognitoResponseEvent(response: response),
-          ),
+    (state as CognitoLoadingPreviousSessionState).loadingOperation.then(
+          (response) =>
+              add(CognitoPreviousSessionEvent(cachedSession: response)),
         );
+
+    on<CognitoPreviousSessionEvent>(
+      (event, emit) {
+        switch (state) {
+          case CognitoLoadingPreviousSessionState():
+            emit(
+              event.cachedSession == null
+                  ? CognitoLoadingModeInitialState(
+                      loadingOperation: CancelableOperation.fromFuture(
+                        requestServerAuthMode(admin),
+                      ),
+                    )
+                  : CognitoLoadedInitialState(cognito: event.cachedSession!),
+            );
+          default:
+            throw StateException(state, event);
+        }
+      },
+    );
+
     on<CognitoResponseEvent>(
       (event, emit) {
         switch (event.response) {
           case HttpResponseOk(data: final cognito):
             switch (state) {
-              case CognitoInitialState():
+              case CognitoLoadingModeInitialState():
                 emit(CognitoLoadedInitialState(cognito: cognito));
               case CognitoInitialEventQueuedState(
                   queuedEvent: final queuedEvent
                 ):
                 emit(CognitoLoadedInitialState(cognito: cognito));
                 add(queuedEvent);
-              case CognitoLoadedState():
+              case CognitoLoadedState() || CognitoLoadingPreviousSessionState():
                 throw StateException(state, event);
             }
           case HttpResponseFailure():
             loadingOperation() =>
-                CancelableOperation.fromFuture(requestServerStatus(admin))
+                CancelableOperation.fromFuture(requestServerAuthMode(admin))
                   ..then(
                     (response) => add(
                       CognitoResponseEvent(response: response),
                     ),
                   );
             switch (state) {
-              case CognitoInitialState():
+              case CognitoLoadingModeInitialState():
                 emit(
-                  CognitoInitialState(
+                  CognitoLoadingModeInitialState(
                     loadingOperation: loadingOperation(),
                   ),
                 );
@@ -60,7 +101,7 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
                     queuedEvent: queuedEvent,
                   ),
                 );
-              case CognitoLoadedState():
+              case CognitoLoadedState() || CognitoLoadingPreviousSessionState():
                 throw StateException(state, event);
             }
         }
@@ -69,7 +110,10 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
 
     on<CognitoLoginEvent>(
       (event, emit) => switch (state) {
-        CognitoLoadingState(loadingOperation: final loadingOperation) => emit(
+        CognitoLoadingPreviousSessionState() =>
+          throw StateException(state, event),
+        CognitoLoadingModeState(loadingOperation: final loadingOperation) =>
+          emit(
             CognitoInitialEventQueuedState(
               loadingOperation: loadingOperation,
               queuedEvent: event,
@@ -127,11 +171,13 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
 
     on<CognitoCancelRequestEvent>(
       (event, emit) => switch (state) {
+        CognitoLoadingPreviousSessionState() =>
+          throw StateException(state, event),
         CognitoInitialEventQueuedState(
           loadingOperation: final loadingOperation
         ) =>
-          CognitoInitialState(loadingOperation: loadingOperation),
-        CognitoInitialState() ||
+          CognitoLoadingModeInitialState(loadingOperation: loadingOperation),
+        CognitoLoadingModeInitialState() ||
         CognitoLoginFailureState() =>
           null, // Do nothing
         CognitoLoadedState(cognito: final cognito) => switch (
@@ -158,7 +204,11 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
 
     on<CognitoChangePasswordEvent>(
       (event, emit) => switch (state) {
-        CognitoInitialState(loadingOperation: final loadingOperation) ||
+        CognitoLoadingPreviousSessionState() =>
+          throw StateException(state, event),
+        CognitoLoadingModeInitialState(
+          loadingOperation: final loadingOperation
+        ) ||
         CognitoInitialEventQueuedState(
           loadingOperation: final loadingOperation
         ) =>
@@ -220,19 +270,26 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
   @override
   Future<void> close() async {
     switch (state) {
-      case CognitoLoadingState(
-          loadingOperation: final CancelableOperation<dynamic> loadingOperation
+      case CognitoLoadingPreviousSessionState(
+          loadingOperation: final CancelableOperation<Cognito?> loadingOperation
+        ):
+        await loadingOperation.cancel();
+      case CognitoLoadingModeState(
+          loadingOperation: final CancelableOperation<HttpResponse<Cognito>>
+              loadingOperation
         ):
         await loadingOperation.cancel();
       case CognitoChangePasswordLoadingState(
-          loadingOperation: final CancelableOperation<dynamic> loadingOperation
+          loadingOperation: final CancelableOperation<ChangePasswordFailure?>
+              loadingOperation
         ):
         await loadingOperation.cancel();
       case CognitoLoginLoadingState(
-          loadingOperation: final CancelableOperation<dynamic> loadingOperation
+          loadingOperation: final CancelableOperation<LoginResponse>
+              loadingOperation
         ):
         await loadingOperation.cancel();
-      case CognitoInitialState() ||
+      case CognitoLoadingModeInitialState() ||
             CognitoInitialEventQueuedState() ||
             CognitoLoadedState() ||
             CognitoLoadedInitialState() ||

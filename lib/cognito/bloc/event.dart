@@ -7,6 +7,17 @@ sealed class CognitoEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class CognitoPreviousSessionEvent extends CognitoEvent {
+  final Cognito? cachedSession;
+
+  const CognitoPreviousSessionEvent({
+    required this.cachedSession,
+  }) : super();
+
+  @override
+  List<Object?> get props => [cachedSession];
+}
+
 class CognitoResponseEvent extends CognitoEvent {
   final HttpResponse<Cognito> response;
 
