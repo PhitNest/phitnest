@@ -111,7 +111,11 @@ class Cognito {
   ) async {
     try {
       _state.user = CognitoUser(email, _pool);
-      _state.session = await _state.user!.getSession();
+      try {
+        _state.session = await _state.user!.getSession();
+      } catch (_) {
+        // ignore
+      }
       _state.session ??= await _state.user!.authenticateUser(
         AuthenticationDetails(
           username: email,
