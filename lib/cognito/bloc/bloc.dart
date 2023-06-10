@@ -52,7 +52,8 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
                   ? CognitoLoadingModeInitialState(
                       loadingOperation: CancelableOperation.fromFuture(
                         requestServerAuthMode(admin),
-                      ),
+                      )..then((cognito) =>
+                          add(CognitoResponseEvent(response: cognito))),
                     )
                   : CognitoLoadedInitialState(cognito: event.cachedSession!),
             );
