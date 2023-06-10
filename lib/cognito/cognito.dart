@@ -22,7 +22,7 @@ const kPoolIdJsonKey = 'poolId';
 const kClientIdJsonKey = 'clientId';
 const kEmailJsonKey = 'email';
 
-class _CachedSessionDetails extends JsonSerializable {
+class _CachedSessionDetails extends JsonSerializable with EquatableMixin {
   final String poolId;
   final String clientId;
   final String email;
@@ -56,6 +56,9 @@ class _CachedSessionDetails extends JsonSerializable {
             json,
           ),
       };
+
+  @override
+  List<Object?> get props => [poolId, clientId, email];
 }
 
 const kAdminPoolIdJsonKey = 'adminPoolId';
@@ -94,7 +97,8 @@ class Cognito {
   Cognito({
     required String poolId,
     required String clientId,
-  })  : _pool = CognitoUserPool(poolId, clientId),
+  })  : _pool =
+            CognitoUserPool(poolId, clientId, storage: CognitoMemoryStorage()),
         _state = _CognitoState(null, null),
         super();
 
@@ -303,25 +307,31 @@ class Cognito {
         );
       } else {
         return const ChangePasswordTypedFailure(
-            ChangePasswordFailureType.noSuchUser);
+          ChangePasswordFailureType.noSuchUser,
+        );
       }
       return null;
     } on CognitoClientException catch (error) {
       return switch (error.code) {
         'ResourceNotFoundException' => const ChangePasswordTypedFailure(
-            ChangePasswordFailureType.invalidUserPool),
+            ChangePasswordFailureType.invalidUserPool,
+          ),
         'NotAuthorizedException' => const ChangePasswordTypedFailure(
-            ChangePasswordFailureType.invalidPassword),
+            ChangePasswordFailureType.invalidPassword,
+          ),
         'UserNotFoundException' => const ChangePasswordTypedFailure(
-            ChangePasswordFailureType.noSuchUser),
+            ChangePasswordFailureType.noSuchUser,
+          ),
         _ => ChangePasswordCognitoFailure(message: error.message),
       };
     } on ArgumentError catch (_) {
       return const ChangePasswordTypedFailure(
-          ChangePasswordFailureType.invalidUserPool);
+        ChangePasswordFailureType.invalidUserPool,
+      );
     } catch (err) {
       return const ChangePasswordTypedFailure(
-          ChangePasswordFailureType.unknown);
+        ChangePasswordFailureType.unknown,
+      );
     }
   }
 }
