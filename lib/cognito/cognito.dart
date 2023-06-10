@@ -20,36 +20,36 @@ class _CognitoState {
 
 const kPoolIdJsonKey = 'poolId';
 const kClientIdJsonKey = 'clientId';
-const kUsernameJsonKey = 'username';
+const kEmailJsonKey = 'email';
 
 class _CachedSessionDetails extends JsonSerializable {
   final String poolId;
   final String clientId;
-  final String username;
+  final String email;
 
   _CachedSessionDetails({
     required this.poolId,
     required this.clientId,
-    required this.username,
+    required this.email,
   });
 
   @override
   Map<String, Serializable> toJson() => {
         kPoolIdJsonKey: Serializable.string(poolId),
         kClientIdJsonKey: Serializable.string(clientId),
-        kUsernameJsonKey: Serializable.string(username),
+        kEmailJsonKey: Serializable.string(email),
       };
 
   factory _CachedSessionDetails.fromJson(dynamic json) => switch (json) {
         {
           kPoolIdJsonKey: final String poolId,
           kClientIdJsonKey: final String clientId,
-          kUsernameJsonKey: final String username,
+          kEmailJsonKey: final String username,
         } =>
           _CachedSessionDetails(
             poolId: poolId,
             clientId: clientId,
-            username: username,
+            email: username,
           ),
         _ => throw FormatException(
             'Invalid JSON for _CachedSessionDetails',
@@ -121,6 +121,14 @@ class Cognito {
         final userId = _state.session!.accessToken.getSub();
         if (userId != null) {
           await _state.user!.cacheTokens();
+          await cacheObject(
+            kCachedSessionDetailsCacheKey,
+            _CachedSessionDetails(
+              poolId: _pool.getUserPoolId(),
+              clientId: _pool.getClientId()!,
+              email: email,
+            ),
+          );
           return LoginSuccess(userId);
         }
       }

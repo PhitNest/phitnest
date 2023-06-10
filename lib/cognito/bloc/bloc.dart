@@ -16,7 +16,7 @@ Future<Cognito?> restorePreviousSession() async {
     if (cachedSession != null) {
       final pool =
           CognitoUserPool(cachedSession.poolId, cachedSession.clientId);
-      final user = CognitoUser(cachedSession.username, pool);
+      final user = CognitoUser(cachedSession.email, pool);
       final session = await user.getSession();
       if (session != null) {
         final state = _CognitoState(user, session);
