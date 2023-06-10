@@ -12,10 +12,12 @@ const kCachedSessionDetailsCacheKey = 'cachedSessionDetails';
 Future<Cognito?> restorePreviousSession() async {
   try {
     final cachedSession = getCachedObject(
-        kCachedSessionDetailsCacheKey, _CachedSessionDetails.fromJson);
+      kCachedSessionDetailsCacheKey,
+      _CachedSessionDetails.fromJson,
+    );
     if (cachedSession != null) {
-      final pool =
-          CognitoUserPool(cachedSession.poolId, cachedSession.clientId);
+      final pool = CognitoUserPool(cachedSession.poolId, cachedSession.clientId,
+          storage: CognitoMemoryStorage());
       final user = CognitoUser(cachedSession.email, pool);
       final session = await user.getSession();
       if (session != null) {
@@ -23,7 +25,7 @@ Future<Cognito?> restorePreviousSession() async {
         return Cognito._fromSession(state: state, pool: pool);
       }
     }
-  } catch (_) {
+  } catch (err) {
     // Do nothing
   }
   return null;
@@ -52,8 +54,11 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
                   ? CognitoLoadingModeInitialState(
                       loadingOperation: CancelableOperation.fromFuture(
                         requestServerAuthMode(admin),
-                      )..then((cognito) =>
-                          add(CognitoResponseEvent(response: cognito))),
+                      )..then(
+                          (cognito) => add(
+                            CognitoResponseEvent(response: cognito),
+                          ),
+                        ),
                     )
                   : CognitoLoadedInitialState(cognito: event.cachedSession!),
             );
