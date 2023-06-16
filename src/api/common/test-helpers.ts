@@ -46,7 +46,9 @@ function mockHttp(params: PostPutParams & GetDeleteParams): APIGatewayEvent {
     stageVariables: null,
     requestContext: {
       authorizer: {
-        claims: params.authClaims ?? null,
+        jwt: {
+          claims: params.authClaims ?? null,
+        },
       },
       identity: {
         cognitoIdentityPoolId: null,

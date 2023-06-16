@@ -42,7 +42,7 @@ export async function invoke(
             id: gymId,
             createdAt: new Date(),
             adminEmail: data.adminEmail,
-            name: data.name,
+            gymName: data.name,
             address: {
               street: data.street,
               city: data.city,

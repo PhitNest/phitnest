@@ -8,13 +8,13 @@ import { Dynamo, DynamoShape } from "./dynamo";
 import { Location, kLocationDynamo, locationToDynamo } from "./location";
 
 export type GymWithoutAdmin = CreationDetails & {
-  name: string;
+  gymName: string;
   address: Address;
   location: Location;
 };
 
 export const kGymWithoutAdminDynamo: DynamoShape<GymWithoutAdmin> = {
-  name: "S",
+  gymName: "S",
   address: kAddressDynamo,
   location: kLocationDynamo,
   ...kCreationDetailsDynamo,
@@ -33,7 +33,7 @@ export function gymWithoutAdminToDynamo(
   gym: GymWithoutAdmin
 ): Dynamo<GymWithoutAdmin> {
   return {
-    name: { S: gym.name },
+    gymName: { S: gym.gymName },
     address: { M: addressToDynamo(gym.address) },
     location: { M: locationToDynamo(gym.location) },
     ...creationDetailsToDynamo(gym),
