@@ -17,9 +17,11 @@ export function getAdminClaims(
 ): AdminCognitoClaims | null {
   if (
     event.requestContext.authorizer &&
-    event.requestContext.authorizer.claims
+    event.requestContext.authorizer.jwt &&
+    event.requestContext.authorizer.jwt.claims
   ) {
-    const claims: AdminCognitoClaims = event.requestContext.authorizer.claims;
+    const claims: AdminCognitoClaims =
+      event.requestContext.authorizer.jwt.claims;
     if (claims.email && claims.sub) {
       return claims;
     }
@@ -32,9 +34,11 @@ export function getUserClaims(
 ): UserCognitoClaims | null {
   if (
     event.requestContext.authorizer &&
-    event.requestContext.authorizer.claims
+    event.requestContext.authorizer.jwt &&
+    event.requestContext.authorizer.jwt.claims
   ) {
-    const claims: UserCognitoClaims = event.requestContext.authorizer.claims;
+    const claims: UserCognitoClaims =
+      event.requestContext.authorizer.jwt.claims;
     if (claims.email && claims.sub && claims.firstName && claims.lastName) {
       return claims;
     }
