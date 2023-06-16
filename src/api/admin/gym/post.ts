@@ -49,7 +49,7 @@ export async function invoke(
               state: data.state,
               zipCode: data.zipCode,
             },
-            location: location,
+            gymLocation: location,
           }),
         });
         return new Success({

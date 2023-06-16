@@ -11,7 +11,7 @@ const testGym: Gym = {
     state: "state",
     zipCode: "zip",
   },
-  location: {
+  gymLocation: {
     latitude: 1,
     longitude: 1,
   },
@@ -30,7 +30,7 @@ const serializedGym: Dynamo<Gym> = {
       zipCode: { S: "zip" },
     },
   },
-  location: {
+  gymLocation: {
     M: {
       latitude: { N: "1" },
       longitude: { N: "1" },

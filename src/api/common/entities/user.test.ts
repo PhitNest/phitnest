@@ -46,7 +46,7 @@ const testInviteWithoutUser: InviteWithoutUser = {
       state: "state",
       zipCode: "zipCode",
     },
-    location: {
+    gymLocation: {
       longitude: 1,
       latitude: 2,
     },
@@ -69,7 +69,7 @@ const serializedInviteWithoutUser: Dynamo<InviteWithoutUser> = {
           zipCode: { S: "zipCode" },
         },
       },
-      location: {
+      gymLocation: {
         M: {
           longitude: { N: "1" },
           latitude: { N: "2" },
