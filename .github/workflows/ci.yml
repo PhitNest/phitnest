@@ -16,16 +16,16 @@ jobs:
       - uses: actions/setup-node@v3
 
       - name: Install dependencies
-        run: npm i
+        run: yarn
 
       - name: Install API dependencies
-        run: cd src/api && npm i
+        run: cd src/api && yarn i
 
       - name: Run audit
-        run: npm audit --level=moderate
+        run: yarn audit --level=moderate
       
       - name: Run prettier-eslint
-        run: npm run lint
+        run: yarn run lint
 
       - name: Run tests
-        run: npm run test
+        run: yarn run test
