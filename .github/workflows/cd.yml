@@ -20,10 +20,10 @@ jobs:
       - uses: actions/setup-node@v3
 
       - name: Install dependencies
-        run: npm i && npm i -g aws-cdk
+        run: yarn i && yarn i -g aws-cdk
 
       - name: Install API dependencies
-        run: cd src/api && npm i
+        run: cd src/api && yarn i
 
       - name: Setup AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
