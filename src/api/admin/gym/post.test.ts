@@ -100,7 +100,7 @@ describe("POST /gym", () => {
     expect(queryTestGym).toHaveLength(1);
     const gymRes = queryTestGym[0];
     expect(gymRes.id).toBe(gymId);
-    expect(gymRes.name).toBe("test");
+    expect(gymRes.gymName).toBe("test");
     expect(gymRes.address).toEqual(testAddress1);
     expect(gymRes.adminEmail).toBe(adminEmail);
     expect(gymRes.location).toEqual(body.location);

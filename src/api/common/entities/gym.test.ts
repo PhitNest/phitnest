@@ -3,7 +3,7 @@ import { Gym, gymToDynamo, kGymDynamo } from "./gym";
 
 const testGym: Gym = {
   id: "1",
-  name: "test",
+  gymName: "test",
   createdAt: new Date(Date.UTC(2020, 1, 1)),
   address: {
     street: "street",
@@ -20,7 +20,7 @@ const testGym: Gym = {
 
 const serializedGym: Dynamo<Gym> = {
   id: { S: "1" },
-  name: { S: "test" },
+  gymName: { S: "test" },
   createdAt: { N: Date.UTC(2020, 1, 1).toString() },
   address: {
     M: {

@@ -39,7 +39,7 @@ const testInviteWithoutUser: InviteWithoutUser = {
   gym: {
     createdAt: new Date(Date.UTC(2020, 1, 1)),
     id: "1",
-    name: "something",
+    gymName: "something",
     address: {
       street: "street",
       city: "city",
@@ -60,7 +60,7 @@ const serializedInviteWithoutUser: Dynamo<InviteWithoutUser> = {
     M: {
       createdAt: { N: Date.UTC(2020, 1, 1).toString() },
       id: { S: "1" },
-      name: { S: "something" },
+      gymName: { S: "something" },
       address: {
         M: {
           street: { S: "street" },
