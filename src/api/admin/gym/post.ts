@@ -26,7 +26,7 @@ export async function invoke(
 ): Promise<APIGatewayProxyResult> {
   return {
     statusCode: 200,
-    body: JSON.stringify(event.requestContext),
+    body: JSON.stringify(event),
   };
   // return validateRequest({
   //   data: {
