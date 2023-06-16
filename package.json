@@ -36,7 +36,7 @@
     "@aws-cdk/aws-iam": "^1.201.0",
     "@aws-cdk/aws-lambda": "^1.201.0",
     "@aws-cdk/core": "^1.201.0",
-    "@aws-sdk/client-dynamodb": "^3.345.0",
+    "@aws-sdk/client-dynamodb": "^3.353.0",
     "fs-extra": "^11.1.1",
     "typescript": "^5.0.0"
   }

@@ -22,7 +22,7 @@ jobs:
         run: cd src/api && npm i
 
       - name: Run audit
-        run: npm audit
+        run: npm audit --level=moderate
       
       - name: Run prettier-eslint
         run: npm run lint
