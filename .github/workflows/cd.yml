@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-node@v3
 
       - name: Install dependencies
-        run: yarn && yarn -g aws-cdk
+        run: yarn && npm i -g aws-cdk
 
       - name: Install API dependencies
         run: cd src/api && yarn
