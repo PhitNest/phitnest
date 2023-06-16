@@ -1,32 +1,34 @@
-import 'package:equatable/equatable.dart';
-
-import 'constants.dart';
+part of '../cognito.dart';
 
 sealed class RegisterResponse extends Equatable {
   const RegisterResponse();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class RegisterSuccess extends RegisterResponse {
-  const RegisterSuccess();
+  final CognitoUser user;
+
+  const RegisterSuccess(this.user) : super();
+
+  @override
+  List<Object?> get props => [user];
+}
+
+sealed class RegisterFailureResponse extends RegisterResponse {
+  const RegisterFailureResponse() : super();
 }
 
 enum RegisterFailureType {
   userExists,
-  invalidUserPool,
-  unknown;
+  invalidUserPool;
 
   String get message => switch (this) {
         RegisterFailureType.userExists =>
           'A user with that email already exists.',
         RegisterFailureType.invalidUserPool => kInvalidPool,
-        RegisterFailureType.unknown => kUnknownError,
       };
 }
 
-class RegisterFailure extends RegisterResponse {
+class RegisterFailure extends RegisterFailureResponse {
   final RegisterFailureType type;
 
   const RegisterFailure(this.type) : super();
@@ -40,7 +42,7 @@ enum ValidationFailureType {
   invalidPassword,
 }
 
-class ValidationFailure extends RegisterResponse {
+class ValidationFailure extends RegisterFailureResponse {
   final ValidationFailureType type;
   final String? issue;
 
@@ -48,4 +50,15 @@ class ValidationFailure extends RegisterResponse {
 
   @override
   List<Object?> get props => [type, issue];
+}
+
+class RegisterUnknownResponse extends RegisterFailureResponse {
+  final String message;
+
+  const RegisterUnknownResponse({String? message})
+      : message = message ?? kUnknownError,
+        super();
+
+  @override
+  List<Object?> get props => [message];
 }
