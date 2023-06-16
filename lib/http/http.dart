@@ -75,9 +75,6 @@ Future<HttpResponse<ResType>> request<ResType>({
   // Prepare the request headers
   final headerMap = {
     ...headers ?? Map<String, dynamic>.from({}),
-    'Accept': '*/*',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Connection': 'keep-alive',
     ...authorization != null
         ? {'Authorization': authorization}
         : Map<String, dynamic>.from({}),
@@ -127,7 +124,8 @@ Future<HttpResponse<ResType>> request<ResType>({
   } on TimeoutException {
     // Log and return a NetworkConnectionFailure on timeout
     prettyLogger.e(responseLog('timeout', data));
-    return HttpResponseFailure(const Failure('Request timeout'), Headers());
+    return HttpResponseFailure(
+        const Failure('Timeout', 'Request timeout'), Headers());
   } catch (e) {
     // Log and return failure by value
     final failure = invalidFailure(e);

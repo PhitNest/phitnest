@@ -1,4 +1,4 @@
-import 'constants.dart';
+part of '../cognito.dart';
 
 enum SubmitForgotPasswordFailure {
   invalidUserPool,

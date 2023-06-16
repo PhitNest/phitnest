@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:synchronized/synchronized.dart';
 import 'core.dart';
 
 // This will be set to true when the cache is initialized
@@ -13,10 +14,10 @@ bool get cacheLoaded => _loaded;
 late final SharedPreferences _sharedPreferences;
 
 // Initialize FlutterSecureStorage instance with platform-specific options
-const _secureStorage = FlutterSecureStorage(
-  aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
-);
+late final FlutterSecureStorage _secureStorage;
+
+// Mutex for secure cache
+final _lock = Lock();
 
 // Declare and initialize secure cache variables
 final Map<String, String> _stringifiedSecureCache = {};
@@ -29,10 +30,14 @@ Future<void> initializeCache() async {
   _lazyLoadedSecureCache.clear();
   _lazyLoadedSecureListCache.clear();
   _sharedPreferences = await SharedPreferences.getInstance();
+  _secureStorage = FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
+  );
   // Clear secure storage on first run
   if (_sharedPreferences.getBool('first_run') ?? true) {
     await _secureStorage.deleteAll();
-    _sharedPreferences.setBool('first_run', false);
+    await _sharedPreferences.setBool('first_run', false);
   }
   // Read all secure storage values into cache
   _stringifiedSecureCache.addAll(await _secureStorage.readAll());
@@ -42,16 +47,20 @@ Future<void> initializeCache() async {
 /// Function to cache secure objects
 Future<void> cacheSecureObject(String key, Serializable? value) async {
   if (value != null) {
-    _stringifiedSecureCache[key] = jsonEncode(value.toJson());
-    _lazyLoadedSecureCache[key] = value;
     prettyLogger
         .d("Caching Object:\n\tkey: $key${wrapText("\n\tvalue: $value")}");
-    await _secureStorage.write(key: key, value: _stringifiedSecureCache[key]);
+    await _lock.synchronized(() async {
+      _stringifiedSecureCache[key] = jsonEncode(value.toJson());
+      _lazyLoadedSecureCache[key] = value;
+      await _secureStorage.write(key: key, value: _stringifiedSecureCache[key]);
+    });
   } else {
-    prettyLogger.d('Removing Cached Object:\n\tkey: $key'
-        '${wrapText("\n\tvalue: ${_lazyLoadedSecureCache.remove(key)}")}');
-    _stringifiedSecureCache.remove(key);
-    await _secureStorage.delete(key: key);
+    await _lock.synchronized(() async {
+      prettyLogger.d('Removing Cached Object:\n\tkey: $key'
+          '${wrapText("\n\tvalue: ${_lazyLoadedSecureCache.remove(key)}")}');
+      _stringifiedSecureCache.remove(key);
+      await _secureStorage.delete(key: key);
+    });
   }
 }
 
@@ -94,31 +103,39 @@ Future<void> cacheSecureList(
   List<Serializable>? value,
 ) async {
   if (value != null) {
-    _stringifiedSecureCache[key] =
-        jsonEncode(value.map((e) => e.toJson()).toList());
-    _lazyLoadedSecureListCache[key] = value;
     prettyLogger
         .d("Caching List:\n\tkey: $key${wrapText("\n\tvalue: $value")}");
-    await _secureStorage.write(key: key, value: _stringifiedSecureCache[key]);
+    await _lock.synchronized(() async {
+      _stringifiedSecureCache[key] =
+          jsonEncode(value.map((e) => e.toJson()).toList());
+      _lazyLoadedSecureListCache[key] = value;
+      await _secureStorage.write(key: key, value: _stringifiedSecureCache[key]);
+    });
   } else {
-    prettyLogger.d('Removing Cached List:\n\tkey: $key'
-        '${wrapText("\n\tvalue: ${_lazyLoadedSecureListCache.remove(key)}")}');
-    _stringifiedSecureCache.remove(key);
-    await _secureStorage.delete(key: key);
+    await _lock.synchronized(() async {
+      _stringifiedSecureCache.remove(key);
+      prettyLogger.d(
+        'Removing Cached List:\n\tkey: $key'
+        '${wrapText("\n\tvalue: ${_lazyLoadedSecureListCache.remove(key)}")}',
+      );
+      await _secureStorage.delete(key: key);
+    });
   }
 }
 
 /// Function to cache secure strings
 Future<void> cacheSecureString(String key, String? value) async {
-  if (value != null) {
-    prettyLogger
-        .d("Caching String:\n\tkey: $key${wrapText("\n\tvalue: $value")}");
-    _stringifiedSecureCache[key] = value;
-  } else {
-    prettyLogger.d('Removing Cached String:\n\tkey: $key'
-        '${wrapText("old value: ${_stringifiedSecureCache.remove(key)}")}');
-  }
-  await _secureStorage.write(key: key, value: value);
+  await _lock.synchronized(() async {
+    if (value != null) {
+      prettyLogger
+          .d("Caching String:\n\tkey: $key${wrapText("\n\tvalue: $value")}");
+      _stringifiedSecureCache[key] = value;
+    } else {
+      prettyLogger.d('Removing Cached String:\n\tkey: $key'
+          '${wrapText("old value: ${_stringifiedSecureCache.remove(key)}")}');
+    }
+    await _secureStorage.write(key: key, value: value);
+  });
 }
 
 /// Function to get cached secure strings

@@ -1,15 +1,18 @@
-Failure invalidFailure(dynamic data) => Failure('Invalid Failure JSON: $data');
+Failure invalidFailure(dynamic data) =>
+    Failure('InvalidFailure', 'Invalid Failure JSON: $data');
 
 class Failure {
+  final String type;
   final String message;
 
-  const Failure(this.message);
+  const Failure(this.type, this.message);
 
   @override
   String toString() => message;
 
   factory Failure.fromJson(dynamic json) => switch (json) {
-        {'message': final String message} => Failure(message),
+        {'type': final String type, 'message': final String message} =>
+          Failure(type, message),
         _ => invalidFailure(json),
       };
 }

@@ -1,49 +1,56 @@
-import 'package:equatable/equatable.dart';
+part of '../cognito.dart';
 
-import 'constants.dart';
+sealed class ChangePasswordResponse extends Equatable {
+  const ChangePasswordResponse() : super();
+}
+
+class ChangePasswordSuccess extends ChangePasswordResponse {
+  final Session session;
+
+  const ChangePasswordSuccess(this.session) : super();
+
+  @override
+  List<Object?> get props => [session];
+}
 
 enum ChangePasswordFailureType {
   invalidUserPool,
   invalidPassword,
-  noSuchUser,
-  unknown;
+  noSuchUser;
 
   String get message => switch (this) {
         ChangePasswordFailureType.invalidUserPool => kInvalidPool,
         ChangePasswordFailureType.invalidPassword => kInvalidPassword,
         ChangePasswordFailureType.noSuchUser => kNoSuchUser,
-        ChangePasswordFailureType.unknown => kUnknownError,
       };
 }
 
-sealed class ChangePasswordFailure extends Equatable {
+sealed class ChangePasswordFailureResponse extends ChangePasswordResponse {
   String get message;
-  ChangePasswordFailureType get type;
 
-  const ChangePasswordFailure();
-
-  @override
-  List<Object?> get props => [message, type];
+  const ChangePasswordFailureResponse() : super();
 }
 
-class ChangePasswordTypedFailure extends ChangePasswordFailure {
+class ChangePasswordFailure extends ChangePasswordFailureResponse {
+  final ChangePasswordFailureType type;
+
   @override
   String get message => type.message;
 
-  @override
-  final ChangePasswordFailureType type;
+  const ChangePasswordFailure(this.type) : super();
 
-  const ChangePasswordTypedFailure(this.type);
+  @override
+  List<Object?> get props => [type];
 }
 
-class ChangePasswordCognitoFailure extends ChangePasswordFailure {
+class ChangePasswordUnknownResponse extends ChangePasswordFailureResponse {
   @override
   final String message;
 
-  @override
-  ChangePasswordFailureType get type => ChangePasswordFailureType.unknown;
-
-  const ChangePasswordCognitoFailure({String? message})
+  const ChangePasswordUnknownResponse({String? message})
       : message = message ?? kUnknownError,
         super();
+
+  @override
+  List<Object?> get props => [message];
 }

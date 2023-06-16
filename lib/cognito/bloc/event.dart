@@ -2,26 +2,23 @@ part of '../cognito.dart';
 
 sealed class CognitoEvent extends Equatable {
   const CognitoEvent() : super();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class CognitoPreviousSessionEvent extends CognitoEvent {
-  final Cognito? cachedSession;
+  final Session? session;
 
   const CognitoPreviousSessionEvent({
-    required this.cachedSession,
+    required this.session,
   }) : super();
 
   @override
-  List<Object?> get props => [cachedSession];
+  List<Object?> get props => [session];
 }
 
-class CognitoResponseEvent extends CognitoEvent {
-  final HttpResponse<Cognito> response;
+class CognitoPoolsResponseEvent extends CognitoEvent {
+  final HttpResponse<Pools> response;
 
-  const CognitoResponseEvent({
+  const CognitoPoolsResponseEvent({
     required this.response,
   }) : super();
 
@@ -29,11 +26,11 @@ class CognitoResponseEvent extends CognitoEvent {
   List<Object?> get props => [response];
 }
 
-sealed class CognitoLoadedEvent extends CognitoEvent {
-  const CognitoLoadedEvent() : super();
+sealed class CognitoQueableEvent extends CognitoEvent {
+  const CognitoQueableEvent() : super();
 }
 
-class CognitoLoginEvent extends CognitoLoadedEvent {
+class CognitoLoginEvent extends CognitoQueableEvent {
   final String email;
   final String password;
 
@@ -57,19 +54,21 @@ class CognitoLoginResponseEvent extends CognitoEvent {
   List<Object?> get props => [response];
 }
 
-class CognitoChangePasswordEvent extends CognitoLoadedEvent {
+class CognitoChangePasswordEvent extends CognitoQueableEvent {
   final String newPassword;
+  final String email;
 
   const CognitoChangePasswordEvent({
     required this.newPassword,
+    required this.email,
   }) : super();
 
   @override
-  List<Object?> get props => [newPassword];
+  List<Object?> get props => [newPassword, email];
 }
 
 class CognitoChangePasswordResponseEvent extends CognitoEvent {
-  final ChangePasswordFailure? response;
+  final ChangePasswordResponse response;
 
   const CognitoChangePasswordResponseEvent({
     required this.response,
@@ -81,4 +80,7 @@ class CognitoChangePasswordResponseEvent extends CognitoEvent {
 
 class CognitoCancelRequestEvent extends CognitoEvent {
   const CognitoCancelRequestEvent() : super();
+
+  @override
+  List<Object?> get props => [];
 }

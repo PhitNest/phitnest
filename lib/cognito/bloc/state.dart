@@ -5,7 +5,7 @@ sealed class CognitoState extends Equatable {
 }
 
 class CognitoLoadingPreviousSessionState extends CognitoState {
-  final CancelableOperation<Cognito?> loadingOperation;
+  final CancelableOperation<Session?> loadingOperation;
 
   const CognitoLoadingPreviousSessionState({
     required this.loadingOperation,
@@ -15,10 +15,10 @@ class CognitoLoadingPreviousSessionState extends CognitoState {
   List<Object?> get props => [loadingOperation];
 }
 
-sealed class CognitoLoadingModeState extends CognitoState {
-  final CancelableOperation<HttpResponse<Cognito>> loadingOperation;
+sealed class CognitoLoadingPoolsState extends CognitoState {
+  final CancelableOperation<HttpResponse<Pools>> loadingOperation;
 
-  const CognitoLoadingModeState({
+  const CognitoLoadingPoolsState({
     required this.loadingOperation,
   }) : super();
 
@@ -26,14 +26,14 @@ sealed class CognitoLoadingModeState extends CognitoState {
   List<Object?> get props => [loadingOperation];
 }
 
-class CognitoLoadingModeInitialState extends CognitoLoadingModeState {
-  const CognitoLoadingModeInitialState({
+class CognitoLoadingPoolsInitialState extends CognitoLoadingPoolsState {
+  const CognitoLoadingPoolsInitialState({
     required super.loadingOperation,
   }) : super();
 }
 
-class CognitoInitialEventQueuedState extends CognitoLoadingModeState {
-  final CognitoLoadedEvent queuedEvent;
+class CognitoInitialEventQueuedState extends CognitoLoadingPoolsState {
+  final CognitoQueableEvent queuedEvent;
 
   const CognitoInitialEventQueuedState({
     required super.loadingOperation,
@@ -44,60 +44,28 @@ class CognitoInitialEventQueuedState extends CognitoLoadingModeState {
   List<Object?> get props => [super.props, queuedEvent];
 }
 
-sealed class CognitoLoadedState extends CognitoState {
-  final Cognito cognito;
+sealed class CognitoLoadedPoolState extends CognitoState {
+  final CognitoUserPool pool;
 
-  const CognitoLoadedState({
-    required this.cognito,
+  const CognitoLoadedPoolState({
+    required this.pool,
   }) : super();
 
   @override
-  List<Object?> get props => [Cognito];
+  List<Object?> get props => [pool];
 }
 
-class CognitoLoadedInitialState extends CognitoLoadedState {
-  const CognitoLoadedInitialState({
-    required super.cognito,
+class CognitoLoadedPoolInitialState extends CognitoLoadedPoolState {
+  const CognitoLoadedPoolInitialState({
+    required super.pool,
   }) : super();
 }
 
-class CognitoChangePasswordLoadingState extends CognitoLoadedState {
-  final CancelableOperation<ChangePasswordFailure?> loadingOperation;
-
-  const CognitoChangePasswordLoadingState({
-    required super.cognito,
-    required this.loadingOperation,
-  }) : super();
-
-  @override
-  List<Object?> get props => [super.props, loadingOperation];
-}
-
-class CognitoChangedPasswordState extends CognitoLoadedState {
-  const CognitoChangedPasswordState({
-    required super.cognito,
-  }) : super();
-}
-
-class CognitoChangePasswordFailureState extends CognitoLoadedState {
-  final ChangePasswordFailureType type;
-  final String message;
-
-  const CognitoChangePasswordFailureState({
-    required super.cognito,
-    required this.type,
-    required this.message,
-  }) : super();
-
-  @override
-  List<Object?> get props => [super.props, type, message];
-}
-
-class CognitoLoginLoadingState extends CognitoLoadedState {
+class CognitoLoginLoadingState extends CognitoLoadedPoolState {
   final CancelableOperation<LoginResponse> loadingOperation;
 
   const CognitoLoginLoadingState({
-    required super.cognito,
+    required super.pool,
     required this.loadingOperation,
   }) : super();
 
@@ -105,28 +73,63 @@ class CognitoLoginLoadingState extends CognitoLoadedState {
   List<Object?> get props => [super.props, loadingOperation];
 }
 
-class CognitoLoggedInState extends CognitoLoadedState {
-  final String userId;
+sealed class CognitoLoadedUserState extends CognitoLoadedPoolState {
+  final CognitoUser user;
 
-  const CognitoLoggedInState({
-    required super.cognito,
-    required this.userId,
+  const CognitoLoadedUserState({
+    required super.pool,
+    required this.user,
   }) : super();
 
   @override
-  List<Object?> get props => [super.props, userId];
+  List<Object?> get props => [super.props, user];
 }
 
-class CognitoLoginFailureState extends CognitoLoadedState {
-  final String message;
-  final LoginFailureType type;
+class CognitoChangePasswordLoadingState extends CognitoLoadedUserState {
+  final CancelableOperation<ChangePasswordResponse> loadingOperation;
 
-  const CognitoLoginFailureState({
-    required super.cognito,
-    required this.message,
-    required this.type,
+  const CognitoChangePasswordLoadingState({
+    required super.pool,
+    required super.user,
+    required this.loadingOperation,
   }) : super();
 
   @override
-  List<Object?> get props => [super.props, message, type];
+  List<Object?> get props => [super.props, loadingOperation];
+}
+
+class CognitoChangePasswordFailureState extends CognitoLoadedUserState {
+  final ChangePasswordFailureResponse failure;
+
+  const CognitoChangePasswordFailureState({
+    required super.pool,
+    required super.user,
+    required this.failure,
+  }) : super();
+
+  @override
+  List<Object?> get props => [super.props, failure];
+}
+
+class CognitoLoginFailureState extends CognitoLoadedPoolState {
+  final LoginFailureResponse failure;
+
+  const CognitoLoginFailureState({
+    required super.pool,
+    required this.failure,
+  }) : super();
+
+  @override
+  List<Object?> get props => [super.props, failure];
+}
+
+class CognitoLoggedInState extends CognitoState {
+  final Session session;
+
+  const CognitoLoggedInState({
+    required this.session,
+  }) : super();
+
+  @override
+  List<Object?> get props => [session];
 }
