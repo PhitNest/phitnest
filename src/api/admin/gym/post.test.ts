@@ -103,7 +103,7 @@ describe("POST /gym", () => {
     expect(gymRes.gymName).toBe("test");
     expect(gymRes.address).toEqual(testAddress1);
     expect(gymRes.adminEmail).toBe(adminEmail);
-    expect(gymRes.location).toEqual(body.location);
+    expect(gymRes.gymLocation).toEqual(body.location);
     expect(gymRes.createdAt).toBeDefined();
   });
 });
