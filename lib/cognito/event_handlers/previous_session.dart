@@ -1,6 +1,6 @@
 part of '../cognito.dart';
 
-void handlePreviousSessionLoaded(
+void _handlePreviousSessionLoaded(
   CognitoState state,
   void Function(CognitoEvent) add,
   CognitoPreviousSessionEvent event,
@@ -19,7 +19,7 @@ void handlePreviousSessionLoaded(
                     ),
                   ),
               )
-            : CognitoLoggedInState(session: event.session!),
+            : CognitoLoggedInInitialState(session: event.session!),
       );
     default:
       throw StateException(state, event);

@@ -59,7 +59,7 @@ class Pools extends JsonSerializable with EquatableMixin {
 const kPoolsJsonKey = 'cognitoDetails';
 
 Future<void> _cachePools(
-  Pools details,
+  Pools? details,
 ) =>
     cacheObject(
       kPoolsJsonKey,

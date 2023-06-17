@@ -1,6 +1,6 @@
 part of '../cognito.dart';
 
-void handlePoolsResponse(
+void _handlePoolsResponse(
   CognitoState state,
   void Function(CognitoEvent) add,
   bool admin,
@@ -23,9 +23,7 @@ void handlePoolsResponse(
             ),
           );
           add(queuedEvent);
-        case CognitoLoadedPoolState() ||
-              CognitoLoadingPreviousSessionState() ||
-              CognitoLoggedInState():
+        default:
           throw StateException(state, event);
       }
     case HttpResponseFailure():
@@ -49,9 +47,7 @@ void handlePoolsResponse(
               queuedEvent: queuedEvent,
             ),
           );
-        case CognitoLoadedPoolState() ||
-              CognitoLoadingPreviousSessionState() ||
-              CognitoLoggedInState():
+        default:
           throw StateException(state, event);
       }
   }

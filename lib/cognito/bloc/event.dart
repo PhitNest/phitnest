@@ -43,6 +43,37 @@ class CognitoLoginEvent extends CognitoQueableEvent {
   List<Object?> get props => [email, password];
 }
 
+class CognitoRegisterEvent extends CognitoQueableEvent {
+  final String email;
+  final String password;
+  final String firstName;
+  final String lastName;
+  final String inviterEmail;
+
+  const CognitoRegisterEvent({
+    required this.email,
+    required this.password,
+    required this.firstName,
+    required this.lastName,
+    required this.inviterEmail,
+  }) : super();
+
+  @override
+  List<Object?> get props =>
+      [email, password, firstName, lastName, inviterEmail];
+}
+
+class CognitoRegisterResponseEvent extends CognitoQueableEvent {
+  final RegisterResponse response;
+
+  const CognitoRegisterResponseEvent({
+    required this.response,
+  }) : super();
+
+  @override
+  List<Object?> get props => [response];
+}
+
 class CognitoLoginResponseEvent extends CognitoEvent {
   final LoginResponse response;
 
@@ -80,6 +111,20 @@ class CognitoChangePasswordResponseEvent extends CognitoEvent {
 
 class CognitoCancelRequestEvent extends CognitoEvent {
   const CognitoCancelRequestEvent() : super();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class CognitoLogoutEvent extends CognitoEvent {
+  const CognitoLogoutEvent() : super();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class CognitoLogoutResponseEvent extends CognitoEvent {
+  const CognitoLogoutResponseEvent() : super();
 
   @override
   List<Object?> get props => [];
