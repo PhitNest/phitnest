@@ -9,52 +9,23 @@ extension LoginBlocGetter on BuildContext {
   LoginBloc get loginBloc => BlocProvider.of(this);
 }
 
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
+class LoginBloc extends Bloc<LoginRejectedEvent, LoginState> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   LoginBloc()
       : super(
-          const LoginInitialState(
+          const LoginState(
             autovalidateMode: AutovalidateMode.disabled,
-            loginButtonState: LoginButtonState.enabled,
           ),
         ) {
-    on<LoginFormAcceptedEvent>(
+    on<LoginRejectedEvent>(
       (event, emit) {
         emit(
           switch (state) {
-            LoginInitialState(autovalidateMode: final autovalidateMode) =>
-              LoginInitialState(
-                autovalidateMode: autovalidateMode,
-                loginButtonState: LoginButtonState.loading,
-              ),
-          },
-        );
-      },
-    );
-    on<LoginFormRejectedEvent>(
-      (event, emit) {
-        emit(
-          switch (state) {
-            LoginInitialState() => const LoginInitialState(
+            LoginState() => const LoginState(
                 autovalidateMode: AutovalidateMode.always,
-                loginButtonState: LoginButtonState.enabled,
-              ),
-          },
-        );
-      },
-    );
-
-    on<ResetLoginButtonEvent>(
-      (event, emit) {
-        emit(
-          switch (state) {
-            LoginInitialState(autovalidateMode: final autovalidateMode) =>
-              LoginInitialState(
-                autovalidateMode: autovalidateMode,
-                loginButtonState: LoginButtonState.enabled,
               ),
           },
         );
@@ -66,9 +37,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future<void> close() async {
     emailController.dispose();
     passwordController.dispose();
-    switch (state) {
-      case LoginInitialState():
-    }
     await super.close();
   }
 }

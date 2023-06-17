@@ -10,40 +10,23 @@ extension ChangePasswordBlocGetter on BuildContext {
 }
 
 class ChangePasswordBloc
-    extends Bloc<ChangePasswordEvent, ChangePasswordState> {
+    extends Bloc<PasswordFormRejectedEvent, ChangePasswordState> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   ChangePasswordBloc()
       : super(
-          const ChangePasswordInitialState(
+          const ChangePasswordState(
             autovalidateMode: AutovalidateMode.disabled,
-            changePasswordButtonState: ChangePasswordButtonState.enabled,
           ),
         ) {
-    on<PasswordFormAcceptedEvent>(
-      (event, emit) {
-        emit(
-          switch (state) {
-            ChangePasswordInitialState(
-              autovalidateMode: final autovalidateMode
-            ) =>
-              ChangePasswordInitialState(
-                autovalidateMode: autovalidateMode,
-                changePasswordButtonState: ChangePasswordButtonState.loading,
-              ),
-          },
-        );
-      },
-    );
     on<PasswordFormRejectedEvent>(
       (event, emit) {
         emit(
           switch (state) {
-            ChangePasswordInitialState() => const ChangePasswordInitialState(
+            ChangePasswordState() => const ChangePasswordState(
                 autovalidateMode: AutovalidateMode.always,
-                changePasswordButtonState: ChangePasswordButtonState.enabled,
               ),
           },
         );
@@ -55,9 +38,6 @@ class ChangePasswordBloc
   Future<void> close() async {
     passwordController.dispose();
     confirmPasswordController.dispose();
-    switch (state) {
-      case ChangePasswordInitialState():
-    }
     await super.close();
   }
 }
