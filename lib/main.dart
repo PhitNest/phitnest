@@ -1,15 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phitnest_core/core.dart';
 
-import 'src/app.dart';
-import 'src/repositories/repositories.dart';
-import 'src/use-cases/use_cases.dart';
+import 'src/screens/on_boarding/intro.dart';
+import 'src/theme.dart';
 
-main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await setup();
-  injectRepositories();
-  injectUseCases();
-  runApp(
-    App(),
-  );
+  await dotenv.load();
+  initializeHttp(
+      host: dotenv.get('BACKEND_HOST'),
+      port: dotenv.get('BACKEND_PORT', fallback: ''));
+  await initializeCache();
+  runApp(const App());
+}
+
+class App extends StatelessWidget {
+  const App({super.key}) : super();
+
+  @override
+  Widget build(BuildContext context) => ScreenUtilInit(
+        minTextAdapt: true,
+        designSize: const Size(375, 667),
+        builder: (context, child) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => CognitoBloc(true),
+            ),
+          ],
+          child: MaterialApp(
+            title: 'PhitNest',
+            theme: theme,
+            debugShowCheckedModeBanner: false,
+            home: const OnBoardingIntroScreen(),
+          ),
+        ),
+      );
 }
