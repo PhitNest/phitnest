@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:phitnest_core/auth/responses/responses.dart';
 import 'package:phitnest_core/core.dart';
 
 import '../../common/util.dart';
@@ -10,21 +9,15 @@ import 'bloc/bloc.dart';
 
 void onSubmit(BuildContext context) {
   if (context.loginBloc.formKey.currentState!.validate()) {
-    context.loginBloc.add(const LoginFormAcceptedEvent());
-    context.authBloc.add(
-      AuthLoginEvent(
+    context.cognitoBloc.add(
+      CognitoLoginEvent(
         email: context.loginBloc.emailController.text,
         password: context.loginBloc.passwordController.text,
       ),
     );
   } else {
-    context.loginBloc.add(const LoginFormRejectedEvent());
+    context.loginBloc.add(const LoginRejectedEvent());
   }
-}
-
-void cancelLogin(BuildContext context) {
-  context.authBloc.add(const AuthCancelRequestEvent());
-  context.loginBloc.add(const ResetLoginButtonEvent());
 }
 
 class LoginButton extends StatelessWidget {
@@ -43,16 +36,11 @@ class LoginButton extends StatelessWidget {
       );
 }
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({
     super.key,
   }) : super();
 
-  @override
-  LoginScreenStateInternal createState() => LoginScreenStateInternal();
-}
-
-class LoginScreenStateInternal extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Container(
@@ -60,28 +48,26 @@ class LoginScreenStateInternal extends State<LoginScreen> {
               horizontal: MediaQuery.of(context).size.width * 0.25),
           child: BlocProvider(
             create: (_) => LoginBloc(),
-            child: BlocConsumer<AuthBloc, AuthState>(
-              listener: (context, authState) {
-                switch (authState) {
-                  case AuthLoginFailureState(type: final type):
-                    switch (type) {
-                      case LoginFailureType.changePassword:
-                        context.goNamed(
-                          'changePassword',
-                          queryParameters: {
-                            'email': context.loginBloc.emailController.text
-                          },
+            child: BlocConsumer<CognitoBloc, CognitoState>(
+              listener: (context, cognitoState) {
+                switch (cognitoState) {
+                  case CognitoLoginFailureState(failure: final failure):
+                    context.loginBloc.add(const LoginRejectedEvent());
+                    switch (failure) {
+                      case LoginChangePasswordRequired():
+                        context.goNamed('changePassword');
+                      case LoginFailureResponse():
+                        StyledBanner.show(
+                          message: failure.message,
+                          error: true,
                         );
-                      case LoginFailureType.invalidEmailPassword ||
-                            LoginFailureType.confirmationRequired ||
-                            LoginFailureType.unknown ||
-                            LoginFailureType.invalidUserPool ||
-                            LoginFailureType.noSuchUser:
                     }
-                  case _:
+                  case CognitoLoggedInState():
+                    context.goNamed('home');
+                  default:
                 }
               },
-              builder: (context, authState) =>
+              builder: (context, cognitoState) =>
                   BlocConsumer<LoginBloc, LoginState>(
                 listener: (context, screenState) {},
                 builder: (context, screenState) => Form(
@@ -112,19 +98,13 @@ class LoginScreenStateInternal extends State<LoginScreen> {
                         validator: validatePassword,
                         onFieldSubmitted: (_) => onSubmit(context),
                       ),
-                      switch (screenState.loginButtonState) {
-                        LoginButtonState.enabled => const LoginButton(),
-                        LoginButtonState.loading =>
+                      switch (cognitoState) {
+                        CognitoLoginLoadingState() =>
                           const CircularProgressIndicator(),
+                        _ => const LoginButton(),
                       },
                       const SizedBox(
                         height: 10,
-                      ),
-                      MaterialButton(
-                        onPressed: () => cancelLogin(context),
-                        child: const Text(
-                          'Forgot Password',
-                        ),
                       ),
                     ],
                   ),
@@ -134,10 +114,4 @@ class LoginScreenStateInternal extends State<LoginScreen> {
           ),
         ),
       );
-
-  @override
-  void dispose() {
-    context.authBloc.add(const AuthCancelRequestEvent());
-    super.dispose();
-  }
 }

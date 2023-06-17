@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:phitnest_core/core.dart';
 
 import '../../common/util.dart';
@@ -25,7 +26,7 @@ class SubmitButton extends StatelessWidget {
       );
 }
 
-class ChangePasswordScreen extends StatefulWidget {
+class ChangePasswordScreen extends StatelessWidget {
   final String email;
 
   const ChangePasswordScreen({
@@ -33,26 +34,13 @@ class ChangePasswordScreen extends StatefulWidget {
     required this.email,
   }) : super();
 
-  static Future<void> navigate(
-    BuildContext context,
-    ({String email}) params,
-  ) =>
-      Navigator.of(context).pushNamed('/changePassword', arguments: params);
-
-  @override
-  ChangePasswordScreenStateInternal createState() =>
-      ChangePasswordScreenStateInternal();
-}
-
-class ChangePasswordScreenStateInternal extends State<ChangePasswordScreen> {
   void onSubmit(BuildContext context) {
     if (context.changePasswordBloc.formKey.currentState!.validate()) {
-      context.changePasswordBloc.add(const PasswordFormAcceptedEvent());
-      context.authBloc.add(
-        AuthChangePasswordEvent(
-          email: widget.email,
+      context.cognitoBloc.add(
+        CognitoChangePasswordEvent(
           newPassword:
               context.changePasswordBloc.confirmPasswordController.text,
+          email: email,
         ),
       );
     } else {
@@ -67,11 +55,24 @@ class ChangePasswordScreenStateInternal extends State<ChangePasswordScreen> {
               horizontal: MediaQuery.of(context).size.width * 0.25),
           child: BlocProvider(
             create: (_) => ChangePasswordBloc(),
-            child: BlocConsumer<AuthBloc, AuthState>(
-              listener: (context, authState) {
-                print(authState);
+            child: BlocConsumer<CognitoBloc, CognitoState>(
+              listener: (context, cognitoState) {
+                switch (cognitoState) {
+                  case CognitoChangePasswordFailureState(
+                      failure: final failure
+                    ):
+                    context.changePasswordBloc
+                        .add(const PasswordFormRejectedEvent());
+                    StyledBanner.show(
+                      message: failure.message,
+                      error: true,
+                    );
+                  case CognitoLoggedInState():
+                    context.goNamed('home');
+                  default:
+                }
               },
-              builder: (context, authState) =>
+              builder: (context, cognitoState) =>
                   BlocConsumer<ChangePasswordBloc, ChangePasswordState>(
                 listener: (context, screenState) {},
                 builder: (context, screenState) => Form(
@@ -95,19 +96,36 @@ class ChangePasswordScreenStateInternal extends State<ChangePasswordScreen> {
                         textInputAction: TextInputAction.next,
                         validator: validatePassword,
                       ),
-                      switch (screenState.changePasswordButtonState) {
-                        ChangePasswordButtonState.enabled => SubmitButton(
+                      StyledPasswordField(
+                        hint: 'Confirm Password',
+                        controller: context
+                            .changePasswordBloc.confirmPasswordController,
+                        textInputAction: TextInputAction.done,
+                        validator: (val) =>
+                            validatePassword(val) ??
+                            (context.changePasswordBloc.passwordController
+                                        .text ==
+                                    val
+                                ? null
+                                : 'Passwords do not match'),
+                        onFieldSubmitted: (_) => onSubmit(context),
+                      ),
+                      switch (cognitoState) {
+                        CognitoChangePasswordLoadingState() =>
+                          const CircularProgressIndicator(),
+                        _ => SubmitButton(
                             onSubmit: () => onSubmit(context),
                           ),
-                        ChangePasswordButtonState.loading =>
-                          const CircularProgressIndicator(),
                       },
                       const SizedBox(
                         height: 10,
                       ),
                       MaterialButton(
-                        onPressed: () => context.authBloc
-                            .add(const AuthCancelRequestEvent()),
+                        onPressed: () {
+                          context.cognitoBloc
+                              .add(const CognitoCancelRequestEvent());
+                          Navigator.pop(context);
+                        },
                         child: const Text(
                           'Back',
                         ),
@@ -120,10 +138,4 @@ class ChangePasswordScreenStateInternal extends State<ChangePasswordScreen> {
           ),
         ),
       );
-
-  @override
-  void dispose() {
-    context.authBloc.add(const AuthCancelRequestEvent());
-    super.dispose();
-  }
 }

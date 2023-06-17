@@ -5,6 +5,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:phitnest_core/core.dart';
 
 import 'router.dart';
+import 'widgets/widgets.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,10 +26,11 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => AuthBloc(true),
+          create: (_) => CognitoBloc(true),
         ),
       ],
       child: MaterialApp.router(
+        scaffoldMessengerKey: StyledBanner.scaffoldMessengerKey,
         title: 'PhitNest Admin',
         debugShowCheckedModeBanner: false,
         routerConfig: router,
