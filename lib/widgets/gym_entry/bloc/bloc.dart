@@ -9,7 +9,7 @@ import '../response.dart';
 part 'event.dart';
 part 'state.dart';
 
-extension GymEntryFormBlocGetter on BuildContext {
+extension GymGymEntryFormBloc on BuildContext {
   GymEntryFormBloc get gymEntryFormBloc => BlocProvider.of(this);
 }
 

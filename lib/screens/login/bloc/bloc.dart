@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'event.dart';
 part 'state.dart';
 
-extension LoginBlocGetter on BuildContext {
+extension GetLoginBloc on BuildContext {
   LoginBloc get loginBloc => BlocProvider.of(this);
 }
 
