@@ -44,14 +44,16 @@ Future<LoginResponse> _login({
   }
 }
 
-void handleLogin(
+void _handleLogin(
   CognitoState state,
   void Function(CognitoEvent) add,
   CognitoLoginEvent event,
   Emitter<CognitoState> emit,
 ) {
   switch (state) {
-    case CognitoLoadingPreviousSessionState() || CognitoLoggedInState():
+    case CognitoLoadingPreviousSessionState() ||
+          CognitoLoggedInInitialState() ||
+          CognitoLoggingOutState():
       throw StateException(state, event);
     case CognitoLoadingPoolsState(loadingOperation: final loadingOperation):
       emit(
@@ -63,11 +65,13 @@ void handleLogin(
     case CognitoLoadedPoolState(pool: final pool):
       switch (state) {
         case CognitoLoginLoadingState() ||
-              CognitoLoggedInState() ||
+              CognitoLoggedInInitialState() ||
+              CognitoRegisterLoadingState() ||
               CognitoChangePasswordLoadingState():
           throw StateException(state, event);
         case CognitoLoadedPoolInitialState() ||
               CognitoChangePasswordFailureState() ||
+              CognitoRegisterFailureState() ||
               CognitoLoginFailureState():
           emit(
             CognitoLoginLoadingState(

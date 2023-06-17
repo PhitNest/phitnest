@@ -1,6 +1,6 @@
 part of '../cognito.dart';
 
-void handleLoginResponse(
+void _handleLoginResponse(
   CognitoState state,
   void Function(CognitoEvent) add,
   CognitoLoginResponseEvent event,
@@ -11,7 +11,7 @@ void handleLoginResponse(
       emit(
         switch (event.response) {
           LoginSuccess(session: final session) =>
-            CognitoLoggedInState(session: session),
+            CognitoLoggedInInitialState(session: session),
           LoginFailureResponse() => CognitoLoginFailureState(
               pool: pool,
               failure: event.response as LoginFailureResponse,

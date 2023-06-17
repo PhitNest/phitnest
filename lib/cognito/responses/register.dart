@@ -6,11 +6,15 @@ sealed class RegisterResponse extends Equatable {
 
 class RegisterSuccess extends RegisterResponse {
   final CognitoUser user;
+  final String password;
 
-  const RegisterSuccess(this.user) : super();
+  const RegisterSuccess(
+    this.user,
+    this.password,
+  ) : super();
 
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [user, password];
 }
 
 sealed class RegisterFailureResponse extends RegisterResponse {

@@ -15,55 +15,67 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
         );
 
     on<CognitoPreviousSessionEvent>(
-        (event, emit) => handlePreviousSessionLoaded(state, add, event, emit));
+        (event, emit) => _handlePreviousSessionLoaded(state, add, event, emit));
 
     on<CognitoPoolsResponseEvent>(
-        (event, emit) => handlePoolsResponse(state, add, admin, event, emit));
+        (event, emit) => _handlePoolsResponse(state, add, admin, event, emit));
 
     on<CognitoLoginEvent>(
-        (event, emit) => handleLogin(state, add, event, emit));
+        (event, emit) => _handleLogin(state, add, event, emit));
 
     on<CognitoLoginResponseEvent>(
-        (event, emit) => handleLoginResponse(state, add, event, emit));
+        (event, emit) => _handleLoginResponse(state, add, event, emit));
 
     on<CognitoCancelRequestEvent>(
-        (event, emit) => handleCancelRequest(state, add, event, emit));
+        (event, emit) => _handleCancelRequest(state, add, event, emit));
 
     on<CognitoChangePasswordEvent>(
-        (event, emit) => handleChangePassword(state, add, event, emit));
+        (event, emit) => _handleChangePassword(state, add, event, emit));
 
-    on<CognitoChangePasswordResponseEvent>(
-        (event, emit) => handleChangePasswordResponse(state, add, event, emit));
+    on<CognitoChangePasswordResponseEvent>((event, emit) =>
+        _handleChangePasswordResponse(state, add, event, emit));
+
+    on<CognitoRegisterEvent>(
+        (event, emit) => _handleRegister(state, add, event, emit));
+
+    on<CognitoRegisterResponseEvent>(
+        (event, emit) => _handleRegisterResponse(state, add, event, emit));
+
+    on<CognitoLogoutEvent>(
+        (event, emit) => _handleLogout(state, add, event, emit));
+
+    on<CognitoLogoutResponseEvent>(
+        (event, emit) => _handleLogoutResponse(state, add, event, emit));
   }
 
   @override
   Future<void> close() async {
     switch (state) {
+      case CognitoLoggingOutState(loadingOperation: final loadingOperation):
+        await loadingOperation.cancel();
       case CognitoLoadingPreviousSessionState(
-          loadingOperation: final CancelableOperation<Session?> loadingOperation
+          loadingOperation: final loadingOperation
         ):
         await loadingOperation.cancel();
-      case CognitoLoadingPoolsState(
-          loadingOperation: final CancelableOperation<HttpResponse<Pools>>
-              loadingOperation
+      case CognitoRegisterLoadingState(
+          loadingOperation: final loadingOperation
         ):
+        await loadingOperation.cancel();
+      case CognitoLoadingPoolsState(loadingOperation: final loadingOperation):
         await loadingOperation.cancel();
       case CognitoChangePasswordLoadingState(
-          loadingOperation: final CancelableOperation<ChangePasswordFailure?>
-              loadingOperation
+          loadingOperation: final loadingOperation
         ):
         await loadingOperation.cancel();
-      case CognitoLoginLoadingState(
-          loadingOperation: final CancelableOperation<LoginResponse>
-              loadingOperation
-        ):
+      case CognitoLoginLoadingState(loadingOperation: final loadingOperation):
         await loadingOperation.cancel();
       case CognitoLoadingPoolsState() ||
             CognitoLoadedPoolInitialState() ||
             CognitoChangePasswordLoadingState() ||
             CognitoInitialEventQueuedState() ||
-            CognitoLoggedInState() ||
+            CognitoLoggedInInitialState() ||
             CognitoChangePasswordFailureState() ||
+            CognitoRegisterFailureState() ||
             CognitoLoginFailureState():
     }
     await super.close();

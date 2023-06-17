@@ -16,6 +16,10 @@ part 'event_handlers/login_response.dart';
 part 'event_handlers/cancel_request.dart';
 part 'event_handlers/change_password.dart';
 part 'event_handlers/change_password_response.dart';
+part 'event_handlers/register.dart';
+part 'event_handlers/logout.dart';
+part 'event_handlers/register_response.dart';
+part 'event_handlers/logout_response.dart';
 
 part 'responses/change_password.dart';
 part 'responses/constants.dart';
@@ -29,46 +33,7 @@ part 'secure_storage.dart';
 part 'session.dart';
 part 'pools.dart';
 
-// Future<RegisterResponse> _register({
-//   required String email,
-//   required String password,
-//   required List<AttributeArg> userAttributes,
-//   required CognitoUserPool pool,
-// }) async {
-//   try {
-//     final signUpResult = await pool.signUp(
-//       email,
-//       password,
-//       userAttributes: [
-//         AttributeArg(name: 'email', value: email),
-//         ...userAttributes,
-//       ],
-//     );
-//     if (signUpResult.userSub != null) {
-//       return RegisterSuccess(signUpResult.user);
-//     } else {
-//       return const RegisterUnknownResponse();
-//     }
-//   } on CognitoClientException catch (error) {
-//     return switch (error.code) {
-//       'ResourceNotFoundException' =>
-//         const RegisterFailure((RegisterFailureType.invalidUserPool)),
-//       'UsernameExistsException' =>
-//         const RegisterFailure(RegisterFailureType.userExists),
-//       'InvalidPasswordException' =>
-//         ValidationFailure(ValidationFailureType.invalidPassword, 
-//          error.message,
-//         ),
-//       'InvalidParameterException' =>
-//         ValidationFailure(ValidationFailureType.invalidEmail, error.message),
-//       _ => RegisterUnknownResponse(message: error.message),
-//     };
-//   } on ArgumentError catch (_) {
-//     return const RegisterFailure(RegisterFailureType.invalidUserPool);
-//   } catch (err) {
-//     return RegisterUnknownResponse(message: err.toString());
-//   }
-// }
+
 
 // Future<bool> confirmEmail(
 //   String email,

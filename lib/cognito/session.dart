@@ -13,7 +13,7 @@ class Session extends Equatable {
 const kEmailJsonKey = 'email';
 
 Future<void> _cacheEmail(
-  String email,
+  String? email,
 ) =>
     cacheSecureString(
       kEmailJsonKey,

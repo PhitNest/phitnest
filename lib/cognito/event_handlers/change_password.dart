@@ -9,6 +9,7 @@ Future<ChangePasswordResponse> _changePassword({
       newPassword,
     );
     if (session != null) {
+      await _cacheEmail(user.username!);
       return ChangePasswordSuccess(Session(user, session));
     } else {
       return const ChangePasswordUnknownResponse();
@@ -35,7 +36,7 @@ Future<ChangePasswordResponse> _changePassword({
   }
 }
 
-void handleChangePassword(
+void _handleChangePassword(
   CognitoState state,
   void Function(CognitoEvent) add,
   CognitoChangePasswordEvent event,
@@ -46,7 +47,10 @@ void handleChangePassword(
           CognitoLoginLoadingState() ||
           CognitoLoadedPoolInitialState() ||
           CognitoChangePasswordLoadingState() ||
-          CognitoLoggedInState():
+          CognitoRegisterFailureState() ||
+          CognitoRegisterLoadingState() ||
+          CognitoLoggingOutState() ||
+          CognitoLoggedInInitialState():
       throw StateException(state, event);
     case CognitoLoadingPoolsState(loadingOperation: final loadingOperation) ||
           CognitoInitialEventQueuedState(

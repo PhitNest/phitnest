@@ -1,6 +1,6 @@
 part of '../cognito.dart';
 
-void handleChangePasswordResponse(
+void _handleChangePasswordResponse(
   CognitoState state,
   void Function(CognitoEvent) add,
   CognitoChangePasswordResponseEvent event,
@@ -10,7 +10,7 @@ void handleChangePasswordResponse(
     case CognitoChangePasswordLoadingState(pool: final pool, user: final user):
       emit(switch (event.response) {
         ChangePasswordSuccess(session: final session) =>
-          CognitoLoggedInState(session: session),
+          CognitoLoggedInInitialState(session: session),
         ChangePasswordFailureResponse() => CognitoChangePasswordFailureState(
             pool: pool,
             user: user,
