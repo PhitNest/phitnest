@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'event.dart';
 part 'state.dart';
 
-extension ChangePasswordBlocGetter on BuildContext {
+extension GetChangePasswordBloc on BuildContext {
   ChangePasswordBloc get changePasswordBloc => BlocProvider.of(this);
 }
 

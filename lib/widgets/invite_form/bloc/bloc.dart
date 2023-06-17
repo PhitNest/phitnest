@@ -7,7 +7,7 @@ import 'package:phitnest_core/core.dart';
 part 'event.dart';
 part 'state.dart';
 
-extension InviteFormBlocGetter on BuildContext {
+extension GetInviteFormBloc on BuildContext {
   InviteFormBloc get inviteFormBloc => BlocProvider.of(this);
 }
 
