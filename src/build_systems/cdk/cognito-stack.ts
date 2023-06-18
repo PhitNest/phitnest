@@ -1,6 +1,5 @@
 import {
   AccountRecovery,
-  StringAttribute,
   UserPool,
   UserPoolClient,
   UserPoolEmail,
@@ -34,11 +33,6 @@ export class CognitoStack {
       params.lambdaDeploymentDir,
       "cognito_hooks"
     );
-    const nameAttribute = new StringAttribute({
-      mutable: true,
-      minLen: 1,
-      maxLen: 24,
-    });
     const emailConfig = UserPoolEmail.withSES({
       fromEmail: "verify@phitnest.com",
       fromName: "PhitNest Verification",
@@ -78,11 +72,6 @@ export class CognitoStack {
             mutable: true,
             required: true,
           },
-        },
-        customAttributes: {
-          firstName: nameAttribute,
-          lastName: nameAttribute,
-          inviterEmail: new StringAttribute({ mutable: false }),
         },
         lambdaTriggers: {
           preSignUp: userPresignupHook,
