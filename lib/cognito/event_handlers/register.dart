@@ -36,11 +36,10 @@ Future<RegisterResponse> _register({
       'UsernameExistsException' =>
         const RegisterFailure(RegisterFailureType.userExists),
       'InvalidPasswordException' => ValidationFailure(
-          ValidationFailureType.invalidPassword,
-          error.message,
+          error.message ?? 'Invalid password',
         ),
       'InvalidParameterException' =>
-        ValidationFailure(ValidationFailureType.invalidEmail, error.message),
+        ValidationFailure(error.message ?? 'Invalid email'),
       _ => RegisterUnknownResponse(message: error.message),
     };
   } on ArgumentError catch (_) {

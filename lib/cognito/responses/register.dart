@@ -41,19 +41,13 @@ class RegisterFailure extends RegisterFailureResponse {
   List<Object?> get props => [type];
 }
 
-enum ValidationFailureType {
-  invalidEmail,
-  invalidPassword,
-}
-
 class ValidationFailure extends RegisterFailureResponse {
-  final ValidationFailureType type;
-  final String? issue;
+  final String message;
 
-  const ValidationFailure(this.type, this.issue) : super();
+  const ValidationFailure(this.message) : super();
 
   @override
-  List<Object?> get props => [type, issue];
+  List<Object?> get props => [message];
 }
 
 class RegisterUnknownResponse extends RegisterFailureResponse {
