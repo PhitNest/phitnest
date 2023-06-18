@@ -129,3 +129,39 @@ class CognitoLogoutResponseEvent extends CognitoEvent {
   @override
   List<Object?> get props => [];
 }
+
+class CognitoConfirmEmailEvent extends CognitoEvent {
+  final String confirmationCode;
+
+  const CognitoConfirmEmailEvent({
+    required this.confirmationCode,
+  }) : super();
+
+  @override
+  List<Object?> get props => [confirmationCode];
+}
+
+class CognitoConfirmEmailFailedEvent extends CognitoEvent {
+  const CognitoConfirmEmailFailedEvent() : super();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class CognitoResendConfirmEmailEvent extends CognitoEvent {
+  const CognitoResendConfirmEmailEvent() : super();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class CognitoResendConfirmEmailResponseEvent extends CognitoEvent {
+  final bool resent;
+
+  const CognitoResendConfirmEmailResponseEvent({
+    required this.resent,
+  }) : super();
+
+  @override
+  List<Object?> get props => [resent];
+}

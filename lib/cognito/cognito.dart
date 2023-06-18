@@ -20,6 +20,10 @@ part 'event_handlers/register.dart';
 part 'event_handlers/logout.dart';
 part 'event_handlers/register_response.dart';
 part 'event_handlers/logout_response.dart';
+part 'event_handlers/resend_confirm_email.dart';
+part 'event_handlers/confirm_email.dart';
+part 'event_handlers/confirm_email_failed.dart';
+part 'event_handlers/resend_confirm_email_response.dart';
 
 part 'responses/change_password.dart';
 part 'responses/constants.dart';
@@ -35,24 +39,9 @@ part 'pools.dart';
 
 
 
-// Future<bool> confirmEmail(
-//   String email,
-//   String code,
-// ) =>
-//     _state.user?.confirmRegistration(code).catchError((_) => false) ??
-//     Future.value(false);
 
-// Future<bool> resendConfirmationEmail(
-//   String email,
-// ) async {
-//   if (_state.user != null) {
-//     try {
-//       await _state.user!.resendConfirmationCode();
-//       return true;
-//     } catch (_) {}
-//   }
-//   return false;
-// }
+
+
 
 // Future<ForgotPasswordFailure?> forgotPassword(
 //   String email,

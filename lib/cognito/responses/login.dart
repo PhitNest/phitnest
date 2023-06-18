@@ -50,13 +50,15 @@ class LoginConfirmationRequired extends LoginFailureResponse {
   String get message => 'Confirmation required.';
 
   final CognitoUser user;
+  final String password;
 
   const LoginConfirmationRequired({
     required this.user,
+    required this.password,
   }) : super();
 
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [user, password];
 }
 
 class LoginUnknownResponse extends LoginFailureResponse {

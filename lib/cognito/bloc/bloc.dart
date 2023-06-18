@@ -52,6 +52,18 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
 
     on<CognitoLogoutResponseEvent>(
         (event, emit) => _handleLogoutResponse(state, add, event, emit));
+
+    on<CognitoConfirmEmailEvent>(
+        (event, emit) => _handleConfirmEmail(state, add, event, emit));
+
+    on<CognitoResendConfirmEmailEvent>(
+        (event, emit) => _handleResendConfirmEmail(state, add, event, emit));
+
+    on<CognitoConfirmEmailFailedEvent>(
+        (event, emit) => _handleConfirmEmailFailed(state, add, event, emit));
+
+    on<CognitoResendConfirmEmailResponseEvent>((event, emit) =>
+        _handleResendConfirmEmailResponse(state, add, event, emit));
   }
 
   @override
@@ -75,6 +87,14 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
         await loadingOperation.cancel();
       case CognitoLoginLoadingState(loadingOperation: final loadingOperation):
         await loadingOperation.cancel();
+      case CognitoConfirmEmailLoadingState(
+          loadingOperation: final loadingOperation
+        ):
+        await loadingOperation.cancel();
+      case CognitoResendConfirmEmailLoadingState(
+          loadingOperation: final loadingOperation
+        ):
+        await loadingOperation.cancel();
       case CognitoLoadingPoolsState() ||
             CognitoLoadedPoolInitialState() ||
             CognitoChangePasswordLoadingState() ||
@@ -82,6 +102,8 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
             CognitoLoggedInInitialState() ||
             CognitoChangePasswordFailureState() ||
             CognitoRegisterFailureState() ||
+            CognitoConfirmEmailFailedState() ||
+            CognitoResendConfirmEmailResponseState() ||
             CognitoLoginFailureState():
     }
     await super.close();
