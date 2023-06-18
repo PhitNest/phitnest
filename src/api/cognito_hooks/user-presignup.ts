@@ -22,9 +22,9 @@ export async function invoke(event: PreSignUpTriggerEvent) {
   const client = dynamo().connect();
 
   // Required attributes given on signup
-  const { email, firstName, lastName, inviterEmail } =
-    event.request.userAttributes;
-  if (!(email && firstName && lastName && inviterEmail)) {
+  const { firstName, lastName, inviterEmail } =
+    event.request.validationData ?? {};
+  if (!(firstName && lastName && inviterEmail)) {
     throw new Error("Missing required attributes");
   }
 
@@ -33,7 +33,7 @@ export async function invoke(event: PreSignUpTriggerEvent) {
   try {
     inviteQuery = await client.query({
       pk: `INVITE#${inviterEmail}`,
-      sk: { q: `RECEIVER#${email}`, op: "EQ" },
+      sk: { q: `RECEIVER#${event.request.userAttributes.email}`, op: "EQ" },
     });
   } catch {
     throw new Error(`You have not received an invite from: ${inviterEmail}`);
@@ -90,7 +90,7 @@ export async function invoke(event: PreSignUpTriggerEvent) {
   const newUser: User = {
     accountDetails: {
       id: event.userName,
-      email: email,
+      email: event.request.userAttributes.email,
       createdAt: new Date(),
     },
     firstName: firstName,
