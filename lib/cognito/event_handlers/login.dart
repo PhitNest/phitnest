@@ -24,7 +24,7 @@ Future<LoginResponse> _login({
     }
     return const LoginUnknownResponse();
   } on CognitoUserConfirmationNecessaryException catch (_) {
-    return const LoginFailure(LoginFailureType.confirmationRequired);
+    return LoginConfirmationRequired(user: user);
   } on CognitoClientException catch (error) {
     return switch (error.code) {
       'ResourceNotFoundException' =>
