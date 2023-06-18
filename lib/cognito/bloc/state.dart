@@ -175,3 +175,61 @@ class CognitoLoggingOutState extends CognitoLoggedInState {
   @override
   List<Object?> get props => [super.props, loadingOperation];
 }
+
+class CognitoConfirmEmailLoadingState extends CognitoLoadedUserState {
+  final CancelableOperation<bool> loadingOperation;
+  final String password;
+
+  const CognitoConfirmEmailLoadingState({
+    required super.pool,
+    required super.user,
+    required this.loadingOperation,
+    required this.password,
+  }) : super();
+
+  @override
+  List<Object?> get props => [super.props, loadingOperation, password];
+}
+
+class CognitoConfirmEmailFailedState extends CognitoLoadedUserState {
+  final String password;
+
+  const CognitoConfirmEmailFailedState({
+    required super.pool,
+    required super.user,
+    required this.password,
+  }) : super();
+
+  @override
+  List<Object?> get props => [super.props, password];
+}
+
+class CognitoResendConfirmEmailLoadingState extends CognitoLoadedUserState {
+  final CancelableOperation<bool> loadingOperation;
+  final String password;
+
+  const CognitoResendConfirmEmailLoadingState({
+    required super.pool,
+    required super.user,
+    required this.loadingOperation,
+    required this.password,
+  }) : super();
+
+  @override
+  List<Object?> get props => [super.props, loadingOperation, password];
+}
+
+class CognitoResendConfirmEmailResponseState extends CognitoLoadedUserState {
+  final bool resent;
+  final String password;
+
+  const CognitoResendConfirmEmailResponseState({
+    required super.pool,
+    required super.user,
+    required this.resent,
+    required this.password,
+  }) : super();
+
+  @override
+  List<Object?> get props => [super.props, resent, password];
+}

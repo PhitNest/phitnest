@@ -50,6 +50,10 @@ void _handleChangePassword(
           CognitoRegisterFailureState() ||
           CognitoRegisterLoadingState() ||
           CognitoLoggingOutState() ||
+          CognitoConfirmEmailLoadingState() ||
+          CognitoConfirmEmailFailedState() ||
+          CognitoResendConfirmEmailLoadingState() ||
+          CognitoResendConfirmEmailResponseState() ||
           CognitoLoggedInInitialState():
       throw StateException(state, event);
     case CognitoLoadingPoolsState(loadingOperation: final loadingOperation) ||

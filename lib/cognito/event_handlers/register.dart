@@ -72,11 +72,15 @@ void _handleRegister(
         case CognitoRegisterLoadingState() ||
               CognitoLoginLoadingState() ||
               CognitoLoggedInInitialState() ||
+              CognitoConfirmEmailLoadingState() ||
+              CognitoResendConfirmEmailLoadingState() ||
               CognitoChangePasswordLoadingState():
           throw StateException(state, event);
         case CognitoLoadedPoolInitialState() ||
               CognitoChangePasswordFailureState() ||
               CognitoRegisterFailureState() ||
+              CognitoConfirmEmailFailedState() ||
+              CognitoResendConfirmEmailResponseState() ||
               CognitoLoginFailureState():
           emit(
             CognitoRegisterLoadingState(

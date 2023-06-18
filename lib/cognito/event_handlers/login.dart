@@ -24,7 +24,7 @@ Future<LoginResponse> _login({
     }
     return const LoginUnknownResponse();
   } on CognitoUserConfirmationNecessaryException catch (_) {
-    return LoginConfirmationRequired(user: user);
+    return LoginConfirmationRequired(user: user, password: password);
   } on CognitoClientException catch (error) {
     return switch (error.code) {
       'ResourceNotFoundException' =>
@@ -67,12 +67,16 @@ void _handleLogin(
         case CognitoLoginLoadingState() ||
               CognitoLoggedInInitialState() ||
               CognitoRegisterLoadingState() ||
+              CognitoResendConfirmEmailLoadingState() ||
               CognitoChangePasswordLoadingState():
           throw StateException(state, event);
         case CognitoLoadedPoolInitialState() ||
               CognitoChangePasswordFailureState() ||
               CognitoRegisterFailureState() ||
-              CognitoLoginFailureState():
+              CognitoLoginFailureState() ||
+              CognitoResendConfirmEmailResponseState() ||
+              CognitoConfirmEmailLoadingState() ||
+              CognitoConfirmEmailFailedState():
           emit(
             CognitoLoginLoadingState(
               pool: pool,

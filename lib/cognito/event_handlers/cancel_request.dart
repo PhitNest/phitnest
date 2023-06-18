@@ -22,6 +22,28 @@ void _handleCancelRequest(
           emit(CognitoLoadedPoolInitialState(pool: pool));
         },
       );
+    case CognitoConfirmEmailLoadingState(
+        loadingOperation: final loadingOperation,
+        pool: final pool
+      ):
+      loadingOperation.cancel().then(
+        (_) async {
+          await _cacheEmail(null);
+          await pool.storage.clear();
+          emit(CognitoLoadedPoolInitialState(pool: pool));
+        },
+      );
+    case CognitoResendConfirmEmailLoadingState(
+        loadingOperation: final loadingOperation,
+        pool: final pool
+      ):
+      loadingOperation.cancel().then(
+        (_) async {
+          await _cacheEmail(null);
+          await pool.storage.clear();
+          emit(CognitoLoadedPoolInitialState(pool: pool));
+        },
+      );
     case CognitoLoginLoadingState(
         loadingOperation: final loadingOperation,
         pool: final pool
@@ -56,6 +78,8 @@ void _handleCancelRequest(
           CognitoLoadedPoolInitialState() ||
           CognitoRegisterFailureState() ||
           CognitoLoggingOutState() ||
+          CognitoConfirmEmailFailedState() ||
+          CognitoResendConfirmEmailResponseState() ||
           CognitoLoadingPreviousSessionState():
   }
 }
