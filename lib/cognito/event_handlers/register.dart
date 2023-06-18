@@ -14,9 +14,11 @@ Future<RegisterResponse> _register({
       password,
       userAttributes: [
         AttributeArg(name: 'email', value: email),
-        AttributeArg(name: 'custom:firstName', value: firstName),
-        AttributeArg(name: 'custom:lastName', value: lastName),
-        AttributeArg(name: 'custom:inviterEmail', value: inviterEmail),
+      ],
+      validationData: [
+        AttributeArg(name: 'firstName', value: firstName),
+        AttributeArg(name: 'lastName', value: lastName),
+        AttributeArg(name: 'inviterEmail', value: inviterEmail),
       ],
     );
     if (signUpResult.userSub != null) {
