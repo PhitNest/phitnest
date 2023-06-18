@@ -17,13 +17,11 @@ class LoginSuccess extends LoginResponse {
 
 enum LoginFailureType {
   invalidEmailPassword,
-  confirmationRequired,
   noSuchUser,
   invalidUserPool;
 
   String get message => switch (this) {
         LoginFailureType.invalidEmailPassword => 'Invalid email/password.',
-        LoginFailureType.confirmationRequired => 'Confirmation required.',
         LoginFailureType.noSuchUser => kNoSuchUser,
         LoginFailureType.invalidUserPool => kInvalidPool,
       };
@@ -45,6 +43,20 @@ class LoginFailure extends LoginFailureResponse {
 
   @override
   List<Object?> get props => [type];
+}
+
+class LoginConfirmationRequired extends LoginFailureResponse {
+  @override
+  String get message => 'Confirmation required.';
+
+  final CognitoUser user;
+
+  const LoginConfirmationRequired({
+    required this.user,
+  }) : super();
+
+  @override
+  List<Object?> get props => [user];
 }
 
 class LoginUnknownResponse extends LoginFailureResponse {
