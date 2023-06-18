@@ -36,7 +36,13 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
         _handleChangePasswordResponse(state, add, event, emit));
 
     on<CognitoRegisterEvent>(
-        (event, emit) => _handleRegister(state, add, event, emit));
+      (event, emit) {
+        if (admin) {
+          throw StateError('Cannot register a user in the admin pool');
+        }
+        _handleRegister(state, add, event, emit);
+      },
+    );
 
     on<CognitoRegisterResponseEvent>(
         (event, emit) => _handleRegisterResponse(state, add, event, emit));
