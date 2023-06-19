@@ -1,14 +1,17 @@
 import {
   AccountRecovery,
+  CfnIdentityPool,
   UserPool,
   UserPoolClient,
   UserPoolEmail,
 } from "@aws-cdk/aws-cognito";
 import { RemovalPolicy } from "@aws-cdk/core";
-import { DEPLOYMENT_ENV, PhitnestApiStack } from "./phitnest-api-stack";
 import { HttpUserPoolAuthorizer } from "@aws-cdk/aws-apigatewayv2-authorizers";
 import { Code, Function, Runtime } from "@aws-cdk/aws-lambda";
+import { Role } from "@aws-cdk/aws-iam";
+import { DEPLOYMENT_ENV, PhitnestApiStack } from "./phitnest-api-stack";
 import { createDeploymentPackage } from "./lambda-deployment";
+import { DynamoDBStack } from "./dynamodb-stack";
 import * as path from "path";
 
 type CognitoStackParams = {
@@ -16,6 +19,8 @@ type CognitoStackParams = {
   lambdaDeploymentDir: string;
   nodeModulesDir: string;
   commonDeploymentDir: string;
+  dynamoDbStack: DynamoDBStack;
+  lambdaRole: Role;
 };
 
 export class CognitoStack {
@@ -25,6 +30,7 @@ export class CognitoStack {
   public readonly adminPool: UserPool;
   public readonly userClient: UserPoolClient;
   public readonly adminClient: UserPoolClient;
+  public readonly userIdentityPool: CfnIdentityPool;
   private readonly params: CognitoStackParams;
 
   constructor(scope: PhitnestApiStack, params: CognitoStackParams) {
@@ -52,6 +58,8 @@ export class CognitoStack {
     );
     const userPresignupHook = this.createPresignupHook(
       scope,
+      params.dynamoDbStack,
+      params.lambdaRole,
       userPoolPrefix,
       userPresignupDeploymentDir
     );
@@ -84,6 +92,21 @@ export class CognitoStack {
       this.userPool,
       userPoolPrefix
     );
+    this.userIdentityPool = new CfnIdentityPool(
+      scope,
+      `PhitnestUserIdentityPool-${DEPLOYMENT_ENV}`,
+      {
+        identityPoolName: `Phitnest-User-Identity-Pool-${DEPLOYMENT_ENV}`,
+        allowUnauthenticatedIdentities: false,
+        cognitoIdentityProviders: [
+          {
+            providerName: this.userPool.userPoolProviderName,
+            clientId: this.userClient.userPoolClientId,
+          },
+        ],
+      }
+    );
+    this.userIdentityPool.applyRemovalPolicy(RemovalPolicy.DESTROY);
     const adminPresignupDeploymentDir = path.join(
       hookDeploymentDir,
       "admin_presignup"
@@ -97,6 +120,8 @@ export class CognitoStack {
     );
     const adminPresignupHook = this.createPresignupHook(
       scope,
+      params.dynamoDbStack,
+      params.lambdaRole,
       adminPoolPrefix,
       adminPresignupDeploymentDir
     );
@@ -133,6 +158,8 @@ export class CognitoStack {
 
   private createPresignupHook(
     scope: PhitnestApiStack,
+    dynamo: DynamoDBStack,
+    lambdaRole: Role,
     prefix: string,
     deploymentDir: string
   ) {
@@ -141,10 +168,10 @@ export class CognitoStack {
       handler: `index.invoke`,
       environment: {
         DYNAMO_TABLE_NAME:
-          scope.dynamo.table.tableName || `PhitnestTable-${DEPLOYMENT_ENV}`,
+          dynamo.table.tableName || `PhitnestTable-${DEPLOYMENT_ENV}`,
       },
       code: Code.fromAsset(deploymentDir),
-      role: scope.lambdaRole,
+      role: lambdaRole,
     });
   }
 
