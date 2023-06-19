@@ -38,15 +38,6 @@ export class S3Stack {
         },
       ],
     });
-    this.userBucket.addToResourcePolicy(
-      new PolicyStatement({
-        actions: ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
-        effect: Effect.ALLOW,
-        resources: [
-          `${this.userBucket.bucketArn}/\${cognito-identity.amazonaws.com:sub}/*`,
-        ],
-      })
-    );
 
     const authenticatedRole = new Role(
       scope,
