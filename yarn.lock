@@ -27,7 +27,7 @@
     "@aws-cdk/core" "1.203.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-apigatewayv2-authorizers@^1.201.0":
+"@aws-cdk/aws-apigatewayv2-authorizers@^1.203.0":
   version "1.203.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-apigatewayv2-authorizers/-/aws-apigatewayv2-authorizers-1.203.0.tgz#297313b89480dde59a07272ea3249c4aa609879b"
   integrity sha512-YM8+60v4WQH1b8SEx19uwEUUcQlI49GLB0/43wUORM7L7u5cM++4NsUMzsiF610ZkWgGIMXPBI1FlmrUzoTMRA==
@@ -39,7 +39,7 @@
     "@aws-cdk/core" "1.203.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-apigatewayv2-integrations@^1.201.0":
+"@aws-cdk/aws-apigatewayv2-integrations@^1.203.0":
   version "1.203.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-apigatewayv2-integrations/-/aws-apigatewayv2-integrations-1.203.0.tgz#e374e7881949c3f8ab72cb55fc17c6aae7ca48b3"
   integrity sha512-a7SwMoeB+Tj7wRBktVArIu9dlageHfj8Sq0vVDMejlI3e1weDCi65jpFucBXwnlwiMVdBlUAsjjoJjVmyxHb4Q==
@@ -53,7 +53,7 @@
     "@aws-cdk/core" "1.203.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-apigatewayv2@1.203.0", "@aws-cdk/aws-apigatewayv2@^1.201.0":
+"@aws-cdk/aws-apigatewayv2@1.203.0", "@aws-cdk/aws-apigatewayv2@^1.203.0":
   version "1.203.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-apigatewayv2/-/aws-apigatewayv2-1.203.0.tgz#b63d6320522322222040470eb4ca29c874f6617d"
   integrity sha512-kQGx4o4y4s/2NAaLu8MuB455RQFuhlwUGtHzs93uAhK+JWhUK7DBLhfkfCxCjjbolDlu3p4+EqR5AlZr8MygFg==
@@ -138,7 +138,7 @@
     "@aws-cdk/core" "1.203.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-cognito@1.203.0", "@aws-cdk/aws-cognito@^1.201.0":
+"@aws-cdk/aws-cognito@1.203.0", "@aws-cdk/aws-cognito@^1.203.0":
   version "1.203.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-cognito/-/aws-cognito-1.203.0.tgz#9c09290cf9ea524b4bf08cb79d43947361598096"
   integrity sha512-8+Fih6EQkVFN6HFW2jW61sOLsrk1WCKgmtJcJphP5BONWprhzSX2iCexCxlwMV4OpUkiADBmr8DIYyFy08X5jQ==
@@ -152,7 +152,7 @@
     constructs "^3.3.69"
     punycode "^2.3.0"
 
-"@aws-cdk/aws-dynamodb@^1.201.0":
+"@aws-cdk/aws-dynamodb@^1.203.0":
   version "1.203.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-dynamodb/-/aws-dynamodb-1.203.0.tgz#f7fb37655cac6eab755ef5d2b3ad4f2b4e5eda04"
   integrity sha512-MOSFsy91Dz+ML2P5PzCzmmYLgdS5NBTRy3cmcTt9h9hBbm9V9Z01mubVKKRjOYJI4yGf8SG+GSxEpSi/25Wc6Q==
@@ -249,7 +249,7 @@
     "@aws-cdk/core" "1.203.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-iam@1.203.0", "@aws-cdk/aws-iam@^1.201.0":
+"@aws-cdk/aws-iam@1.203.0", "@aws-cdk/aws-iam@^1.203.0":
   version "1.203.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-iam/-/aws-iam-1.203.0.tgz#839426b6be390db2bd47a05001dbde7831b467d2"
   integrity sha512-8qXLtOzkaLlk7WlssocExMYruOb59irhspTvHvf/kpcMBmWQoyNRC80Ab3QtXkZNBppfrMkROGZvqzW2GlxAwQ==
@@ -282,7 +282,7 @@
     "@aws-cdk/cx-api" "1.203.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-lambda@1.203.0", "@aws-cdk/aws-lambda@^1.201.0":
+"@aws-cdk/aws-lambda@1.203.0", "@aws-cdk/aws-lambda@^1.203.0":
   version "1.203.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-lambda/-/aws-lambda-1.203.0.tgz#111c7f25e399daa0e3a02c381dc390a4188a66a3"
   integrity sha512-O88yvNpxi4tcizHhwRkGfEBg+WDoagxgwr2TUNFWkKQVEaL/by9BeZk84LNXLC6OO5WrnC+0qgSz1KHyDXMrqw==
@@ -347,7 +347,7 @@
     "@aws-cdk/cx-api" "1.203.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-s3@1.203.0":
+"@aws-cdk/aws-s3@1.203.0", "@aws-cdk/aws-s3@^1.203.0":
   version "1.203.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-s3/-/aws-s3-1.203.0.tgz#c0d5154c5595ffa67c5226dab5e243d494dd5c66"
   integrity sha512-xPxCv7l6zh7nGoFwLNzHmP07ULtWx/ubDE6l2ZqkRF4ZHVWoyTk7zVs4Q+BmRM1mUn0yDHyMTKKf887lQu9eVg==
@@ -422,7 +422,7 @@
     jsonschema "^1.4.1"
     semver "^7.3.8"
 
-"@aws-cdk/core@1.203.0", "@aws-cdk/core@^1.201.0":
+"@aws-cdk/core@1.203.0", "@aws-cdk/core@^1.203.0":
   version "1.203.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/core/-/core-1.203.0.tgz#5c4746ef903bc8b826a8760de8a78900ed58fd65"
   integrity sha512-3/quPwnGWKHm/Bzna/du5WP5a/Wp/NYqDyL1rJ1A3EPpsRQYywJPj77+M8nG5sD5qNIoFbhN7Q5aee+bcS7GGA==

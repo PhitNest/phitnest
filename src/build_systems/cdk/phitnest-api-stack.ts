@@ -19,6 +19,7 @@ import { createDeploymentPackage, transpileFiles } from "./lambda-deployment";
 import { CognitoStack } from "./cognito-stack";
 import { DynamoDBStack } from "./dynamodb-stack";
 import * as path from "path";
+import { S3Stack } from "./s3-stack";
 
 export const DEPLOYMENT_ENV = process.env.DEPLOYMENT_ENV || "dev";
 
@@ -43,10 +44,6 @@ type PhitnestApiStackParams = {
 };
 
 export class PhitnestApiStack extends Stack {
-  public readonly dynamo: DynamoDBStack;
-  public readonly lambdaRole: Role;
-  private readonly cognito: CognitoStack;
-
   constructor(
     scope: Construct,
     params: PhitnestApiStackParams = {
@@ -82,8 +79,8 @@ export class PhitnestApiStack extends Stack {
       },
     });
     httpApi.applyRemovalPolicy(RemovalPolicy.DESTROY);
-    this.dynamo = new DynamoDBStack(this);
-    this.lambdaRole = new Role(this, `PhitnestLambdaRole-${DEPLOYMENT_ENV}`, {
+    const dynamo = new DynamoDBStack(this);
+    const lambdaRole = new Role(this, `PhitnestLambdaRole-${DEPLOYMENT_ENV}`, {
       assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
       inlinePolicies: {
         dynamoAccess: new PolicyDocument({
@@ -92,7 +89,7 @@ export class PhitnestApiStack extends Stack {
               sid: "AllowDynamoAccessForApi",
               effect: Effect.ALLOW,
               actions: ["dynamodb:*"],
-              resources: [this.dynamo.table.attrArn],
+              resources: [dynamo.table.attrArn],
             }),
           ],
         }),
@@ -100,10 +97,15 @@ export class PhitnestApiStack extends Stack {
     });
     transpileFiles(params.commonSrcDir, params.commonDeploymentDir);
     const apiNodeModulesDir = path.join(params.apiRoutesDir, "node_modules");
-    this.cognito = new CognitoStack(this, {
+    const cognito = new CognitoStack(this, {
       cognitoHooksDir: path.join(params.apiRoutesDir, "cognito_hooks"),
       nodeModulesDir: apiNodeModulesDir,
+      lambdaRole: lambdaRole,
+      dynamoDbStack: dynamo,
       ...params,
+    });
+    new S3Stack(this, {
+      identityPool: cognito.userIdentityPool,
     });
     const routes: Route[] = [];
     for (const authLevel of Object.entries(AuthLevel)) {
@@ -130,17 +132,21 @@ export class PhitnestApiStack extends Stack {
           params.commonDeploymentDir
         );
         const lambdaFunction = this.createLambdaFunction(
+          dynamo,
+          cognito,
+          lambdaRole,
           params.lambdaDeploymentDir,
           route
         );
         httpApi.addRoutes(
-          this.createHttpApiRoute(route, lambdaFunction, authLevel[1])
+          this.createHttpApiRoute(cognito, route, lambdaFunction, authLevel[1])
         );
       }
     }
   }
 
   private createHttpApiRoute(
+    cognito: CognitoStack,
     route: Route,
     func: LambdaFunction,
     authLevel: AuthLevel
@@ -156,14 +162,17 @@ export class PhitnestApiStack extends Stack {
       ),
       authorizer:
         authLevel === AuthLevel.PRIVATE
-          ? this.cognito.userAuthorizer
+          ? cognito.userAuthorizer
           : authLevel === AuthLevel.ADMIN
-          ? this.cognito.adminAuthorizer
+          ? cognito.adminAuthorizer
           : new HttpNoneAuthorizer(),
     };
   }
 
   private createLambdaFunction(
+    dynamo: DynamoDBStack,
+    cognito: CognitoStack,
+    lambdaRole: Role,
     lambdaDeploymentPath: string,
     route: Route
   ): LambdaFunction {
@@ -177,11 +186,11 @@ export class PhitnestApiStack extends Stack {
         handler: `index.invoke`,
         environment: {
           DYNAMO_TABLE_NAME:
-            this.dynamo.table.tableName || `PhitnestTable-${DEPLOYMENT_ENV}`,
-          USER_POOL_ID: this.cognito.userPool.userPoolId,
-          ADMIN_POOL_ID: this.cognito.adminPool.userPoolId,
-          USER_POOL_CLIENT_ID: this.cognito.userClient.userPoolClientId,
-          ADMIN_POOL_CLIENT_ID: this.cognito.adminClient.userPoolClientId,
+            dynamo.table.tableName || `PhitnestTable-${DEPLOYMENT_ENV}`,
+          USER_POOL_ID: cognito.userPool.userPoolId,
+          ADMIN_POOL_ID: cognito.adminPool.userPoolId,
+          USER_POOL_CLIENT_ID: cognito.userClient.userPoolClientId,
+          ADMIN_POOL_CLIENT_ID: cognito.adminClient.userPoolClientId,
         },
         code: Code.fromAsset(
           path.join(
@@ -190,7 +199,7 @@ export class PhitnestApiStack extends Stack {
             route.method.toLowerCase()
           )
         ),
-        role: this.lambdaRole,
+        role: lambdaRole,
       }
     );
     func.applyRemovalPolicy(RemovalPolicy.DESTROY);
