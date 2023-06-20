@@ -15,6 +15,7 @@ export async function invoke(): Promise<APIGatewayProxyResult> {
       ADMIN_POOL_ID,
       ADMIN_POOL_CLIENT_ID,
       SANDBOX_MODE,
+      USER_IDENTITY_POOL_ID,
     } = environmentVars;
     if (SANDBOX_MODE === "sandbox") {
       return new Success({
@@ -45,12 +46,19 @@ export async function invoke(): Promise<APIGatewayProxyResult> {
           "Unable to find user pool id"
         );
       }
+      if (!USER_IDENTITY_POOL_ID) {
+        return new RequestError(
+          kInvalidBackendConfig,
+          "Unable to find user identity pool id"
+        );
+      }
       return new Success({
         mode: "cognito",
         userPoolId: USER_POOL_ID,
         userClientId: USER_POOL_CLIENT_ID,
         adminPoolId: ADMIN_POOL_ID,
         adminClientId: ADMIN_POOL_CLIENT_ID,
+        userIdentityPoolId: USER_IDENTITY_POOL_ID,
       });
     }
   });
