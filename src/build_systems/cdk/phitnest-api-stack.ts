@@ -191,6 +191,7 @@ export class PhitnestApiStack extends Stack {
           ADMIN_POOL_ID: cognito.adminPool.userPoolId,
           USER_POOL_CLIENT_ID: cognito.userClient.userPoolClientId,
           ADMIN_POOL_CLIENT_ID: cognito.adminClient.userPoolClientId,
+          USER_IDENTITY_POOL_ID: cognito.userIdentityPool.ref,
         },
         code: Code.fromAsset(
           path.join(
