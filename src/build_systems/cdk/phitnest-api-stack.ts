@@ -104,7 +104,7 @@ export class PhitnestApiStack extends Stack {
       dynamoDbStack: dynamo,
       ...params,
     });
-    new S3Stack(this, {
+    const s3 = new S3Stack(this, {
       identityPool: cognito.userIdentityPool,
     });
     const routes: Route[] = [];
@@ -134,6 +134,7 @@ export class PhitnestApiStack extends Stack {
         const lambdaFunction = this.createLambdaFunction(
           dynamo,
           cognito,
+          s3,
           lambdaRole,
           params.lambdaDeploymentDir,
           route
@@ -172,6 +173,7 @@ export class PhitnestApiStack extends Stack {
   private createLambdaFunction(
     dynamo: DynamoDBStack,
     cognito: CognitoStack,
+    s3: S3Stack,
     lambdaRole: Role,
     lambdaDeploymentPath: string,
     route: Route
@@ -192,6 +194,7 @@ export class PhitnestApiStack extends Stack {
           USER_POOL_CLIENT_ID: cognito.userClient.userPoolClientId,
           ADMIN_POOL_CLIENT_ID: cognito.adminClient.userPoolClientId,
           USER_IDENTITY_POOL_ID: cognito.userIdentityPool.ref,
+          USER_S3_BUCKET: s3.userBucket.bucketName,
         },
         code: Code.fromAsset(
           path.join(
