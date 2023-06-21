@@ -61,10 +61,17 @@ export class S3Stack {
     authenticatedRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
-        actions: ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+        actions: ["s3:PutObject", "s3:DeleteObject"],
         resources: [
-          `${this.userBucket.bucketArn}/private/\${cognito-identity.amazonaws.com:sub}/*`,
+          `${this.userBucket.bucketArn}/profilePictures/\${cognito-identity.amazonaws.com:sub}`,
         ],
+      })
+    );
+    authenticatedRole.addToPolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["s3:GetObject"],
+        resources: [`${this.userBucket.bucketArn}/profilePictures/*`],
       })
     );
 

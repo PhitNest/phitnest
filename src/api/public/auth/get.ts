@@ -16,6 +16,7 @@ export async function invoke(): Promise<APIGatewayProxyResult> {
       ADMIN_POOL_CLIENT_ID,
       SANDBOX_MODE,
       USER_IDENTITY_POOL_ID,
+      USER_S3_BUCKET,
     } = environmentVars;
     if (SANDBOX_MODE === "sandbox") {
       return new Success({
@@ -52,6 +53,12 @@ export async function invoke(): Promise<APIGatewayProxyResult> {
           "Unable to find user identity pool id"
         );
       }
+      if (!USER_S3_BUCKET) {
+        return new RequestError(
+          kInvalidBackendConfig,
+          "Unable to find user s3 bucket"
+        );
+      }
       return new Success({
         mode: "cognito",
         userPoolId: USER_POOL_ID,
@@ -59,6 +66,7 @@ export async function invoke(): Promise<APIGatewayProxyResult> {
         adminPoolId: ADMIN_POOL_ID,
         adminClientId: ADMIN_POOL_CLIENT_ID,
         userIdentityPoolId: USER_IDENTITY_POOL_ID,
+        userS3Bucket: USER_S3_BUCKET,
       });
     }
   });
