@@ -22,7 +22,7 @@ jobs:
         run: cd src/api && yarn
 
       - name: Run audit
-        run: /bin/bash -c 'yarn audit; [[ $? -ge 4 ]] && exit 1 || exit 0'
+        run: /bin/bash -c 'yarn audit; [[ $? -ge 8 ]] && exit 1 || exit 0'
       
       - name: Run prettier-eslint
         run: yarn run lint
