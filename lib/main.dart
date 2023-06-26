@@ -26,7 +26,7 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => CognitoBloc(true),
+          create: (_) => CognitoBloc(false),
         ),
       ],
       child: MaterialApp.router(

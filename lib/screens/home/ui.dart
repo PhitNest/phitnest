@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:phitnest_core/core.dart';
 
 import '../../common/util.dart';
@@ -31,20 +30,16 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
             BlocConsumer<CognitoBloc, CognitoState>(
-              listener: (context, cognitoState) {
-                switch (cognitoState) {
-                  case CognitoLoadedPoolInitialState():
-                    context.goNamed('login');
-                  default:
-                }
-              },
-              builder: (context, cognitoState) => switch (cognitoState) {
-                CognitoLoggingOutState() => const CircularProgressIndicator(),
-                _ => TextButton(
-                    onPressed: () =>
-                        context.cognitoBloc.add(const CognitoLogoutEvent()),
-                    child: const Text('Logout'),
-                  ),
+              listener: (context, cognitoState) {},
+              builder: (context, cognitoState) {
+                return switch (cognitoState) {
+                  CognitoLoggingOutState() => const CircularProgressIndicator(),
+                  _ => TextButton(
+                      onPressed: () =>
+                          context.cognitoBloc.add(const CognitoLogoutEvent()),
+                      child: const Text('Logout'),
+                    ),
+                };
               },
             ),
           ],
