@@ -6,6 +6,7 @@ Future<LoginResponse> _login({
   required CognitoUserPool pool,
   required String identityPoolId,
   required String userBucketName,
+  required bool admin,
 }) async {
   final user = CognitoUser(email, pool);
   try {
@@ -19,7 +20,10 @@ Future<LoginResponse> _login({
       final userId = session.accessToken.getSub();
       if (userId != null) {
         final credentials = CognitoCredentials(identityPoolId, pool);
-        await credentials.getAwsCredentials(session.getIdToken().getJwtToken());
+        if (admin) {
+          await credentials
+              .getAwsCredentials(session.getIdToken().getJwtToken());
+        }
         await _cacheEmail(email);
         await cacheString(kUserBucketJsonKey, userBucketName);
         return LoginSuccess(
@@ -58,6 +62,7 @@ Future<LoginResponse> _login({
 
 void _handleLogin(
   CognitoState state,
+  bool admin,
   void Function(CognitoEvent) add,
   CognitoLoginEvent event,
   Emitter<CognitoState> emit,
@@ -100,6 +105,7 @@ void _handleLogin(
               userBucketName: userBucketName,
               loadingOperation: CancelableOperation.fromFuture(
                 _login(
+                  admin: admin,
                   email: event.email,
                   password: event.password,
                   pool: pool,
