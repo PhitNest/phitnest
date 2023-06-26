@@ -62,13 +62,26 @@ export async function handleRequest(
       };
     }
   } catch (err) {
-    return {
-      statusCode: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(err),
-    };
+    if (err instanceof RequestError) {
+      return {
+        statusCode: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: err.type,
+          message: err.message,
+        }),
+      };
+    } else {
+      return {
+        statusCode: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(err),
+      };
+    }
   }
 }
 
