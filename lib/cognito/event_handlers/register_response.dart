@@ -2,6 +2,7 @@ part of '../cognito.dart';
 
 void _handleRegisterResponse(
   CognitoState state,
+  bool admin,
   void Function(CognitoEvent) add,
   CognitoRegisterResponseEvent event,
   Emitter<CognitoState> emit,
@@ -21,6 +22,7 @@ void _handleRegisterResponse(
               userBucketName: userBucketName,
               loadingOperation: CancelableOperation.fromFuture(
                 _login(
+                  admin: admin,
                   email: user.username!,
                   password: password,
                   userBucketName: userBucketName,

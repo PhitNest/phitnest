@@ -5,6 +5,7 @@ Future<ChangePasswordResponse> _changePassword({
   required CognitoUser user,
   required String identityPoolId,
   required String userBucketName,
+  required bool admin,
 }) async {
   try {
     final session = await user.sendNewPasswordRequiredAnswer(
@@ -16,9 +17,11 @@ Future<ChangePasswordResponse> _changePassword({
         identityPoolId,
         user.pool,
       );
-      await credentials.getAwsCredentials(
-        session.getIdToken().getJwtToken(),
-      );
+      if (!admin) {
+        await credentials.getAwsCredentials(
+          session.getIdToken().getJwtToken(),
+        );
+      }
       await cacheString(kUserBucketJsonKey, userBucketName);
       return ChangePasswordSuccess(
         Session(
@@ -57,6 +60,7 @@ Future<ChangePasswordResponse> _changePassword({
 
 void _handleChangePassword(
   CognitoState state,
+  bool admin,
   void Function(CognitoEvent) add,
   CognitoChangePasswordEvent event,
   Emitter<CognitoState> emit,
@@ -108,6 +112,7 @@ void _handleChangePassword(
                   user: user,
                   userBucketName: userBucketName,
                   identityPoolId: identityPoolId,
+                  admin: admin,
                 ),
               )..then(
                   (response) => add(
@@ -132,6 +137,7 @@ void _handleChangePassword(
         identityPoolId: identityPoolId,
         loadingOperation: CancelableOperation.fromFuture(
           _changePassword(
+            admin: admin,
             newPassword: event.newPassword,
             user: user,
             userBucketName: userBucketName,

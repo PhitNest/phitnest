@@ -26,7 +26,7 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
         (event, emit) => _handlePoolsResponse(state, add, admin, event, emit));
 
     on<CognitoLoginEvent>(
-        (event, emit) => _handleLogin(state, add, event, emit));
+        (event, emit) => _handleLogin(state, admin, add, event, emit));
 
     on<CognitoLoginResponseEvent>(
         (event, emit) => _handleLoginResponse(state, add, event, emit));
@@ -35,7 +35,7 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
         (event, emit) => _handleCancelRequest(state, add, event, emit));
 
     on<CognitoChangePasswordEvent>(
-        (event, emit) => _handleChangePassword(state, add, event, emit));
+        (event, emit) => _handleChangePassword(state, admin, add, event, emit));
 
     on<CognitoChangePasswordResponseEvent>((event, emit) =>
         _handleChangePasswordResponse(state, add, event, emit));
@@ -49,8 +49,8 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
       },
     );
 
-    on<CognitoRegisterResponseEvent>(
-        (event, emit) => _handleRegisterResponse(state, add, event, emit));
+    on<CognitoRegisterResponseEvent>((event, emit) =>
+        _handleRegisterResponse(state, admin, add, event, emit));
 
     on<CognitoLogoutEvent>(
         (event, emit) => _handleLogout(state, add, event, emit));
