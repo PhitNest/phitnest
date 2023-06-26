@@ -1,30 +1,35 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
+import 'package:amazon_cognito_identity_dart_2/sig_v4.dart';
 import 'package:async/async.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 
 import '../core.dart';
 
 part 'bloc/bloc.dart';
 part 'bloc/event.dart';
 part 'bloc/state.dart';
-
-part 'event_handlers/previous_session.dart';
-part 'event_handlers/pools.dart';
-part 'event_handlers/login.dart';
-part 'event_handlers/login_response.dart';
 part 'event_handlers/cancel_request.dart';
 part 'event_handlers/change_password.dart';
 part 'event_handlers/change_password_response.dart';
-part 'event_handlers/register.dart';
-part 'event_handlers/logout.dart';
-part 'event_handlers/register_response.dart';
-part 'event_handlers/logout_response.dart';
-part 'event_handlers/resend_confirm_email.dart';
 part 'event_handlers/confirm_email.dart';
 part 'event_handlers/confirm_email_failed.dart';
+part 'event_handlers/login.dart';
+part 'event_handlers/login_response.dart';
+part 'event_handlers/logout.dart';
+part 'event_handlers/logout_response.dart';
+part 'event_handlers/pools.dart';
+part 'event_handlers/previous_session.dart';
+part 'event_handlers/register.dart';
+part 'event_handlers/register_response.dart';
+part 'event_handlers/resend_confirm_email.dart';
 part 'event_handlers/resend_confirm_email_response.dart';
-
+part 'pools.dart';
 part 'responses/change_password.dart';
 part 'responses/constants.dart';
 part 'responses/forgot_password.dart';
@@ -32,12 +37,9 @@ part 'responses/login.dart';
 part 'responses/refresh_session.dart';
 part 'responses/register.dart';
 part 'responses/submit_forgot_password.dart';
-
+part 's3.dart';
 part 'secure_storage.dart';
 part 'session.dart';
-part 'pools.dart';
-
-
 
 
 

@@ -4,14 +4,19 @@ const kAdminPoolIdJsonKey = 'adminPoolId';
 const kUserPoolIdJsonKey = 'userPoolId';
 const kAdminClientIdJsonKey = 'adminClientId';
 const kUserClientIdJsonKey = 'userClientId';
+const kUserIdentityPoolJsonKey = 'userIdentityPoolId';
 
 class Pools extends JsonSerializable with EquatableMixin {
   final CognitoUserPool adminPool;
   final CognitoUserPool userPool;
+  final String identityPoolId;
+  final String userBucketName;
 
   const Pools({
     required this.adminPool,
     required this.userPool,
+    required this.identityPoolId,
+    required this.userBucketName,
   }) : super();
 
   @override
@@ -20,6 +25,8 @@ class Pools extends JsonSerializable with EquatableMixin {
         kUserPoolIdJsonKey: Serializable.string(userPool.getUserPoolId()),
         kAdminClientIdJsonKey: Serializable.string(adminPool.getClientId()!),
         kUserClientIdJsonKey: Serializable.string(userPool.getClientId()!),
+        kUserIdentityPoolJsonKey: Serializable.string(identityPoolId),
+        kUserBucketJsonKey: Serializable.string(userBucketName),
       };
 
   factory Pools.fromJson(dynamic json) => switch (json) {
@@ -28,6 +35,8 @@ class Pools extends JsonSerializable with EquatableMixin {
           kUserClientIdJsonKey: final String userClientId,
           kAdminClientIdJsonKey: final String adminClientId,
           kAdminPoolIdJsonKey: final String adminPoolId,
+          kUserIdentityPoolJsonKey: final String identityPoolId,
+          kUserBucketJsonKey: final String userBucketName,
         } =>
           Pools(
             adminPool: CognitoUserPool(
@@ -40,6 +49,8 @@ class Pools extends JsonSerializable with EquatableMixin {
               userClientId,
               storage: _SecureCognitoStorage(),
             ),
+            identityPoolId: identityPoolId,
+            userBucketName: userBucketName,
           ),
         _ => throw FormatException(
             'Invalid JSON for _CognitoDetails',
@@ -53,6 +64,8 @@ class Pools extends JsonSerializable with EquatableMixin {
         adminPool.getClientId(),
         userPool.getUserPoolId(),
         userPool.getClientId(),
+        userBucketName,
+        identityPoolId,
       ];
 }
 
@@ -72,7 +85,7 @@ Pools? _getCachedPools() => getCachedObject(
     );
 
 Future<HttpResponse<Pools>> _requestPools() => request(
-      route: '/auth',
+      route: '/info',
       method: HttpMethod.get,
       parser: Pools.fromJson,
     ).then(

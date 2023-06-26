@@ -19,7 +19,10 @@ void _handlePreviousSessionLoaded(
                     ),
                   ),
               )
-            : CognitoLoggedInInitialState(session: event.session!),
+            : CognitoLoggedInInitialState(
+                session: event.session!,
+                identityPoolId: event.identityPoolId!,
+              ),
       );
     default:
       throw StateException(state, event);

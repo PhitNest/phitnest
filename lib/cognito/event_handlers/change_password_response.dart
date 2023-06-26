@@ -7,14 +7,24 @@ void _handleChangePasswordResponse(
   Emitter<CognitoState> emit,
 ) {
   switch (state) {
-    case CognitoChangePasswordLoadingState(pool: final pool, user: final user):
+    case CognitoChangePasswordLoadingState(
+        pool: final pool,
+        user: final user,
+        userBucketName: final userBucketName,
+        identityPoolId: final identityPoolId,
+      ):
       emit(switch (event.response) {
         ChangePasswordSuccess(session: final session) =>
-          CognitoLoggedInInitialState(session: session),
+          CognitoLoggedInInitialState(
+            session: session,
+            identityPoolId: identityPoolId,
+          ),
         ChangePasswordFailureResponse() => CognitoChangePasswordFailureState(
             pool: pool,
             user: user,
             failure: event.response as ChangePasswordFailureResponse,
+            identityPoolId: identityPoolId,
+            userBucketName: userBucketName,
           ),
       });
     default:

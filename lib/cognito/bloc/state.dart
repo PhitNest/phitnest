@@ -46,18 +46,24 @@ class CognitoInitialEventQueuedState extends CognitoLoadingPoolsState {
 
 sealed class CognitoLoadedPoolState extends CognitoState {
   final CognitoUserPool pool;
+  final String userBucketName;
+  final String identityPoolId;
 
   const CognitoLoadedPoolState({
     required this.pool,
+    required this.identityPoolId,
+    required this.userBucketName,
   }) : super();
 
   @override
-  List<Object?> get props => [pool];
+  List<Object?> get props => [pool, identityPoolId, userBucketName];
 }
 
 class CognitoLoadedPoolInitialState extends CognitoLoadedPoolState {
   const CognitoLoadedPoolInitialState({
     required super.pool,
+    required super.userBucketName,
+    required super.identityPoolId,
   }) : super();
 }
 
@@ -66,6 +72,8 @@ class CognitoLoginLoadingState extends CognitoLoadedPoolState {
 
   const CognitoLoginLoadingState({
     required super.pool,
+    required super.identityPoolId,
+    required super.userBucketName,
     required this.loadingOperation,
   }) : super();
 
@@ -78,6 +86,8 @@ class CognitoRegisterLoadingState extends CognitoLoadedPoolState {
 
   const CognitoRegisterLoadingState({
     required super.pool,
+    required super.userBucketName,
+    required super.identityPoolId,
     required this.loadingOperation,
   }) : super();
 
@@ -90,6 +100,8 @@ sealed class CognitoLoadedUserState extends CognitoLoadedPoolState {
 
   const CognitoLoadedUserState({
     required super.pool,
+    required super.userBucketName,
+    required super.identityPoolId,
     required this.user,
   }) : super();
 
@@ -103,6 +115,8 @@ class CognitoChangePasswordLoadingState extends CognitoLoadedUserState {
   const CognitoChangePasswordLoadingState({
     required super.pool,
     required super.user,
+    required super.userBucketName,
+    required super.identityPoolId,
     required this.loadingOperation,
   }) : super();
 
@@ -116,6 +130,8 @@ class CognitoChangePasswordFailureState extends CognitoLoadedUserState {
   const CognitoChangePasswordFailureState({
     required super.pool,
     required super.user,
+    required super.userBucketName,
+    required super.identityPoolId,
     required this.failure,
   }) : super();
 
@@ -127,7 +143,9 @@ class CognitoLoginFailureState extends CognitoLoadedPoolState {
   final LoginFailureResponse failure;
 
   const CognitoLoginFailureState({
+    required super.userBucketName,
     required super.pool,
+    required super.identityPoolId,
     required this.failure,
   }) : super();
 
@@ -139,7 +157,9 @@ class CognitoRegisterFailureState extends CognitoLoadedPoolState {
   final RegisterFailureResponse failure;
 
   const CognitoRegisterFailureState({
+    required super.userBucketName,
     required super.pool,
+    required super.identityPoolId,
     required this.failure,
   }) : super();
 
@@ -149,18 +169,21 @@ class CognitoRegisterFailureState extends CognitoLoadedPoolState {
 
 sealed class CognitoLoggedInState extends CognitoState {
   final Session session;
+  final String identityPoolId;
 
   const CognitoLoggedInState({
     required this.session,
+    required this.identityPoolId,
   }) : super();
 
   @override
-  List<Object?> get props => [session];
+  List<Object?> get props => [session, identityPoolId];
 }
 
 class CognitoLoggedInInitialState extends CognitoLoggedInState {
   const CognitoLoggedInInitialState({
     required super.session,
+    required super.identityPoolId,
   }) : super();
 }
 
@@ -169,6 +192,7 @@ class CognitoLoggingOutState extends CognitoLoggedInState {
 
   const CognitoLoggingOutState({
     required super.session,
+    required super.identityPoolId,
     required this.loadingOperation,
   }) : super();
 
@@ -183,6 +207,8 @@ class CognitoConfirmEmailLoadingState extends CognitoLoadedUserState {
   const CognitoConfirmEmailLoadingState({
     required super.pool,
     required super.user,
+    required super.userBucketName,
+    required super.identityPoolId,
     required this.loadingOperation,
     required this.password,
   }) : super();
@@ -196,7 +222,9 @@ class CognitoConfirmEmailFailedState extends CognitoLoadedUserState {
 
   const CognitoConfirmEmailFailedState({
     required super.pool,
+    required super.userBucketName,
     required super.user,
+    required super.identityPoolId,
     required this.password,
   }) : super();
 
@@ -211,6 +239,8 @@ class CognitoResendConfirmEmailLoadingState extends CognitoLoadedUserState {
   const CognitoResendConfirmEmailLoadingState({
     required super.pool,
     required super.user,
+    required super.userBucketName,
+    required super.identityPoolId,
     required this.loadingOperation,
     required this.password,
   }) : super();
@@ -224,8 +254,10 @@ class CognitoResendConfirmEmailResponseState extends CognitoLoadedUserState {
   final String password;
 
   const CognitoResendConfirmEmailResponseState({
+    required super.userBucketName,
     required super.pool,
     required super.user,
+    required super.identityPoolId,
     required this.resent,
     required this.password,
   }) : super();

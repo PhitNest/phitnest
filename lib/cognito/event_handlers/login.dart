@@ -4,6 +4,8 @@ Future<LoginResponse> _login({
   required String email,
   required String password,
   required CognitoUserPool pool,
+  required String identityPoolId,
+  required String userBucketName,
 }) async {
   final user = CognitoUser(email, pool);
   try {
@@ -16,9 +18,19 @@ Future<LoginResponse> _login({
     if (session != null) {
       final userId = session.accessToken.getSub();
       if (userId != null) {
+        final credentials = CognitoCredentials(identityPoolId, pool);
+        await credentials.getAwsCredentials(session.getIdToken().getJwtToken());
         await _cacheEmail(email);
+        await cacheString(kUserBucketJsonKey, userBucketName);
         return LoginSuccess(
-          session: Session(user, session),
+          session: Session(
+            user: user,
+            session: session,
+            credentials: credentials,
+            identityPoolId: identityPoolId,
+            userId: userId,
+            userBucketName: userBucketName,
+          ),
         );
       }
     }
@@ -62,7 +74,11 @@ void _handleLogin(
           queuedEvent: event,
         ),
       );
-    case CognitoLoadedPoolState(pool: final pool):
+    case CognitoLoadedPoolState(
+        pool: final pool,
+        identityPoolId: final identityPoolId,
+        userBucketName: final userBucketName,
+      ):
       switch (state) {
         case CognitoLoginLoadingState() ||
               CognitoLoggedInInitialState() ||
@@ -80,11 +96,15 @@ void _handleLogin(
           emit(
             CognitoLoginLoadingState(
               pool: pool,
+              identityPoolId: identityPoolId,
+              userBucketName: userBucketName,
               loadingOperation: CancelableOperation.fromFuture(
                 _login(
                   email: event.email,
                   password: event.password,
                   pool: pool,
+                  userBucketName: userBucketName,
+                  identityPoolId: identityPoolId,
                 ),
               )..then(
                   (response) => add(

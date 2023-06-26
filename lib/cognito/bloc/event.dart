@@ -6,13 +6,15 @@ sealed class CognitoEvent extends Equatable {
 
 class CognitoPreviousSessionEvent extends CognitoEvent {
   final Session? session;
+  final String? identityPoolId;
 
   const CognitoPreviousSessionEvent({
     required this.session,
+    required this.identityPoolId,
   }) : super();
 
   @override
-  List<Object?> get props => [session];
+  List<Object?> get props => [session, identityPoolId];
 }
 
 class CognitoPoolsResponseEvent extends CognitoEvent {
