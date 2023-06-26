@@ -20,7 +20,7 @@ Future<LoginResponse> _login({
       final userId = session.accessToken.getSub();
       if (userId != null) {
         final credentials = CognitoCredentials(identityPoolId, pool);
-        if (admin) {
+        if (!admin) {
           await credentials
               .getAwsCredentials(session.getIdToken().getJwtToken());
         }
