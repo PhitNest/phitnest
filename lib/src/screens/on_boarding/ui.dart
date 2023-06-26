@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'name/name.dart';
+import '../login/ui.dart';
+import '../register/ui.dart';
 
-class OnBoardingIntroScreen extends StatelessWidget {
-  const OnBoardingIntroScreen({super.key}) : super();
+class OnBoardingScreen extends StatelessWidget {
+  const OnBoardingScreen({super.key}) : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -14,13 +15,17 @@ class OnBoardingIntroScreen extends StatelessWidget {
             TextButton(
               onPressed: () => Navigator.of(context).push(
                 CupertinoPageRoute<void>(
-                  builder: (context) => const OnBoardingNameScreen(),
+                  builder: (context) => const RegisterScreen(),
                 ),
               ),
               child: const Text("LET'S GET STARTED"),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () => Navigator.of(context).push(
+                CupertinoPageRoute<void>(
+                  builder: (context) => const LoginScreen(),
+                ),
+              ),
               child: const Text('I already have an account'),
             ),
           ],

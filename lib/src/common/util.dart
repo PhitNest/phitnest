@@ -5,3 +5,5 @@ import 'package:phitnest_core/core.dart';
 extension CognitoBlocGetter on BuildContext {
   CognitoBloc get cognitoBloc => BlocProvider.of(this);
 }
+
+const kProfilePictureAspectRatio = Size(375.0, 330.0);
