@@ -7,10 +7,15 @@ void _handleLogoutResponse(
   Emitter<CognitoState> emit,
 ) {
   switch (state) {
-    case CognitoLoggingOutState(session: final session):
+    case CognitoLoggingOutState(
+        session: final session,
+        identityPoolId: final identityPoolId,
+      ):
       emit(
         CognitoLoadedPoolInitialState(
           pool: session.user.pool,
+          identityPoolId: identityPoolId,
+          userBucketName: session.userBucketName,
         ),
       );
     default:

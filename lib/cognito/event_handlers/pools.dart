@@ -14,12 +14,16 @@ void _handlePoolsResponse(
           emit(
             CognitoLoadedPoolInitialState(
               pool: admin ? cognito.adminPool : cognito.userPool,
+              identityPoolId: cognito.identityPoolId,
+              userBucketName: cognito.userBucketName,
             ),
           );
         case CognitoInitialEventQueuedState(queuedEvent: final queuedEvent):
           emit(
             CognitoLoadedPoolInitialState(
               pool: admin ? cognito.adminPool : cognito.userPool,
+              identityPoolId: cognito.identityPoolId,
+              userBucketName: cognito.userBucketName,
             ),
           );
           add(queuedEvent);

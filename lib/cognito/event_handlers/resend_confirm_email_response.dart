@@ -10,14 +10,18 @@ void _handleResendConfirmEmailResponse(
     case CognitoResendConfirmEmailLoadingState(
         pool: final pool,
         user: final user,
+        userBucketName: final userBucketName,
         password: final password,
+        identityPoolId: final identityPoolId,
       ):
       emit(
         CognitoResendConfirmEmailResponseState(
           password: password,
           pool: pool,
           user: user,
+          userBucketName: userBucketName,
           resent: event.resent,
+          identityPoolId: identityPoolId,
         ),
       );
     default:

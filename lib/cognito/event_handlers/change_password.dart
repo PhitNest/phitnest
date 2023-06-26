@@ -3,6 +3,8 @@ part of '../cognito.dart';
 Future<ChangePasswordResponse> _changePassword({
   required String newPassword,
   required CognitoUser user,
+  required String identityPoolId,
+  required String userBucketName,
 }) async {
   try {
     final session = await user.sendNewPasswordRequiredAnswer(
@@ -10,7 +12,24 @@ Future<ChangePasswordResponse> _changePassword({
     );
     if (session != null) {
       await _cacheEmail(user.username!);
-      return ChangePasswordSuccess(Session(user, session));
+      final credentials = CognitoCredentials(
+        identityPoolId,
+        user.pool,
+      );
+      await credentials.getAwsCredentials(
+        session.getIdToken().getJwtToken(),
+      );
+      await cacheString(kUserBucketJsonKey, userBucketName);
+      return ChangePasswordSuccess(
+        Session(
+          user: user,
+          session: session,
+          credentials: credentials,
+          identityPoolId: identityPoolId,
+          userBucketName: userBucketName,
+          userId: session.getAccessToken().getSub()!,
+        ),
+      );
     } else {
       return const ChangePasswordUnknownResponse();
     }
@@ -66,18 +85,29 @@ void _handleChangePassword(
           queuedEvent: event,
         ),
       );
-    case CognitoLoginFailureState(pool: final pool, failure: final failure):
+    case CognitoLoginFailureState(
+        pool: final pool,
+        failure: final failure,
+        userBucketName: final userBucketName,
+        identityPoolId: final identityPoolId,
+      ):
       switch (failure) {
-        case LoginChangePasswordRequired(user: final user) ||
+        case LoginChangePasswordRequired(
+                user: final user,
+              ) ||
               CognitoChangePasswordFailureState(user: final user):
           emit(
             CognitoChangePasswordLoadingState(
               pool: pool,
               user: user,
+              userBucketName: userBucketName,
+              identityPoolId: identityPoolId,
               loadingOperation: CancelableOperation.fromFuture(
                 _changePassword(
                   newPassword: event.newPassword,
                   user: user,
+                  userBucketName: userBucketName,
+                  identityPoolId: identityPoolId,
                 ),
               )..then(
                   (response) => add(
@@ -89,14 +119,23 @@ void _handleChangePassword(
         default:
           throw StateException(state, event);
       }
-    case CognitoChangePasswordFailureState(user: final user, pool: final pool):
+    case CognitoChangePasswordFailureState(
+        user: final user,
+        userBucketName: final userBucketName,
+        pool: final pool,
+        identityPoolId: final identityPoolId,
+      ):
       CognitoChangePasswordLoadingState(
         pool: pool,
+        userBucketName: userBucketName,
         user: user,
+        identityPoolId: identityPoolId,
         loadingOperation: CancelableOperation.fromFuture(
           _changePassword(
             newPassword: event.newPassword,
             user: user,
+            userBucketName: userBucketName,
+            identityPoolId: identityPoolId,
           ),
         )..then(
             (response) => add(

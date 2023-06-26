@@ -67,7 +67,11 @@ void _handleRegister(
           queuedEvent: event,
         ),
       );
-    case CognitoLoadedPoolState(pool: final pool):
+    case CognitoLoadedPoolState(
+        pool: final pool,
+        userBucketName: final userBucketName,
+        identityPoolId: final identityPoolId,
+      ):
       switch (state) {
         case CognitoRegisterLoadingState() ||
               CognitoLoginLoadingState() ||
@@ -85,6 +89,8 @@ void _handleRegister(
           emit(
             CognitoRegisterLoadingState(
               pool: pool,
+              identityPoolId: identityPoolId,
+              userBucketName: userBucketName,
               loadingOperation: CancelableOperation.fromFuture(
                 _register(
                   email: event.email,

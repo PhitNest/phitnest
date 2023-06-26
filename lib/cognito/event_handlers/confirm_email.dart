@@ -18,11 +18,19 @@ void _handleConfirmEmail(
   CognitoConfirmEmailEvent event,
   Emitter<CognitoState> emit,
 ) {
-  sendConfirmation(CognitoUser user, String password) => emit(
+  sendConfirmation({
+    required CognitoUser user,
+    required String password,
+    required String identityPoolId,
+    required String userBucketName,
+  }) =>
+      emit(
         CognitoConfirmEmailLoadingState(
           pool: user.pool,
           user: user,
+          userBucketName: userBucketName,
           password: password,
+          identityPoolId: identityPoolId,
           loadingOperation: CancelableOperation.fromFuture(
             _confirmEmail(
               user: user,
@@ -44,20 +52,38 @@ void _handleConfirmEmail(
   switch (state) {
     case CognitoResendConfirmEmailResponseState(
             user: final user,
-            password: final password
+            password: final password,
+            identityPoolId: final identityPoolId,
+            userBucketName: final userBucketName,
           ) ||
           CognitoConfirmEmailFailedState(
             user: final user,
-            password: final password
+            password: final password,
+            identityPoolId: final identityPoolId,
+            userBucketName: final userBucketName,
           ):
-      sendConfirmation(user, password);
-    case CognitoLoginFailureState(failure: final failure):
+      sendConfirmation(
+        user: user,
+        password: password,
+        identityPoolId: identityPoolId,
+        userBucketName: userBucketName,
+      );
+    case CognitoLoginFailureState(
+        failure: final failure,
+        identityPoolId: final identityPoolId,
+        userBucketName: final userBucketName,
+      ):
       switch (failure) {
         case LoginConfirmationRequired(
             user: final user,
             password: final password
           ):
-          sendConfirmation(user, password);
+          sendConfirmation(
+            user: user,
+            userBucketName: userBucketName,
+            password: password,
+            identityPoolId: identityPoolId,
+          );
         default:
           throw StateException(state, event);
       }

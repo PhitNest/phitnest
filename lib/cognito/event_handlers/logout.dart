@@ -15,10 +15,14 @@ void _handleLogout(
   Emitter<CognitoState> emit,
 ) {
   switch (state) {
-    case CognitoLoggedInInitialState(session: final session):
+    case CognitoLoggedInInitialState(
+        session: final session,
+        identityPoolId: final identityPoolId
+      ):
       emit(
         CognitoLoggingOutState(
           session: session,
+          identityPoolId: identityPoolId,
           loadingOperation: CancelableOperation.fromFuture(
             _logout(session: session),
           )..then(

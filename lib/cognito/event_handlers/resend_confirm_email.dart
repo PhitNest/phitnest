@@ -17,11 +17,19 @@ void _handleResendConfirmEmail(
   CognitoResendConfirmEmailEvent event,
   Emitter<CognitoState> emit,
 ) {
-  resendConfirmation(CognitoUser user, String password) => emit(
+  resendConfirmation({
+    required CognitoUser user,
+    required String password,
+    required String identityPoolId,
+    required String userBucketName,
+  }) =>
+      emit(
         CognitoResendConfirmEmailLoadingState(
           pool: user.pool,
           user: user,
+          userBucketName: userBucketName,
           password: password,
+          identityPoolId: identityPoolId,
           loadingOperation: CancelableOperation.fromFuture(
             _resendConfirmationEmail(
               user: user,
@@ -38,19 +46,37 @@ void _handleResendConfirmEmail(
     case CognitoResendConfirmEmailResponseState(
             user: final user,
             password: final password,
+            userBucketName: final userBucketName,
+            identityPoolId: final identityPoolId,
           ) ||
           CognitoConfirmEmailFailedState(
             user: final user,
             password: final password,
+            identityPoolId: final identityPoolId,
+            userBucketName: final userBucketName,
           ):
-      resendConfirmation(user, password);
-    case CognitoLoginFailureState(failure: final failure):
+      resendConfirmation(
+        user: user,
+        password: password,
+        identityPoolId: identityPoolId,
+        userBucketName: userBucketName,
+      );
+    case CognitoLoginFailureState(
+        failure: final failure,
+        userBucketName: final userBucketName,
+        identityPoolId: final identityPoolId,
+      ):
       switch (failure) {
         case LoginConfirmationRequired(
             user: final user,
             password: final password,
           ):
-          resendConfirmation(user, password);
+          resendConfirmation(
+            user: user,
+            password: password,
+            identityPoolId: identityPoolId,
+            userBucketName: userBucketName,
+          );
         default:
           throw StateException(state, event);
       }

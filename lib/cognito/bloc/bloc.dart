@@ -11,7 +11,12 @@ class CognitoBloc extends Bloc<CognitoEvent, CognitoState> {
           ),
         ) {
     (state as CognitoLoadingPreviousSessionState).loadingOperation.then(
-          (response) => add(CognitoPreviousSessionEvent(session: response)),
+          (response) => add(
+            CognitoPreviousSessionEvent(
+              session: response,
+              identityPoolId: response?.identityPoolId,
+            ),
+          ),
         );
 
     on<CognitoPreviousSessionEvent>(
