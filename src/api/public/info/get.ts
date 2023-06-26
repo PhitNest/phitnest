@@ -59,7 +59,7 @@ export async function invoke(): Promise<APIGatewayProxyResult> {
       adminPoolId: ADMIN_POOL_ID,
       adminClientId: ADMIN_POOL_CLIENT_ID,
       userIdentityPoolId: USER_IDENTITY_POOL_ID,
-      userS3Bucket: USER_S3_BUCKET,
+      userBucketName: USER_S3_BUCKET,
     });
   });
 }
