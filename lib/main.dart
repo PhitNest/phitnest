@@ -34,7 +34,7 @@ class App extends StatelessWidget {
           ],
           child: MaterialApp(
             title: 'PhitNest',
-            theme: theme,
+            theme: AppTheme.instance.theme,
             debugShowCheckedModeBanner: false,
             home: BlocConsumer<CognitoBloc, CognitoState>(
               listener: (context, cognitoState) {},
