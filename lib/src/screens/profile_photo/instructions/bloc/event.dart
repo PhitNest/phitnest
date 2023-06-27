@@ -19,7 +19,7 @@ class PhotoInstructionsTakePhotoEvent extends PhotoInstructionsEvent {
 }
 
 class PhotoInstructionsPickedEvent extends PhotoInstructionsEvent {
-  final XFile? photo;
+  final CroppedFile? photo;
 
   const PhotoInstructionsPickedEvent({
     required this.photo,
