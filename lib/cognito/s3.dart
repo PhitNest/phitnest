@@ -6,7 +6,7 @@ part of 'cognito.dart';
     const region = 'us-east-1';
     const service = 's3';
     final key =
-        '${session.userBucketName}/${session.session.accessToken.getSub()}/pfp';
+        '${session.userBucketName}/profilePictures/${session.session.accessToken.getSub()}';
     final payload = SigV4.hashCanonicalRequest('');
     final datetime = SigV4.generateDatetime();
     final canonicalRequest = '''GET
@@ -86,7 +86,14 @@ class Policy {
     final cred =
         '$accessKeyId/${SigV4.buildCredentialScope(datetime, 'us-east-1', 's3')}';
     final p = Policy(
-        key, bucket, datetime, expiration, cred, maxFileSize, sessionToken);
+      key,
+      bucket,
+      datetime,
+      expiration,
+      cred,
+      maxFileSize,
+      sessionToken,
+    );
     return p;
   }
 
@@ -103,7 +110,6 @@ class Policy {
       "conditions": [
         {"bucket": "$bucket"},
         ["starts-with", "\$key", "$key"],
-        {"acl": "public-read"},
         ["content-length-range", 1, $maxFileSize],
         {"x-amz-credential": "$credential"},
         {"x-amz-algorithm": "AWS4-HMAC-SHA256"},
@@ -116,32 +122,29 @@ class Policy {
 }
 
 Future<Failure?> uploadProfilePicture({
-  required File photo,
+  required http.ByteStream photo,
+  required int length,
+  required String fileType,
   required Session session,
 }) async {
   final region = session.user.pool.getRegion();
   final s3Endpoint =
-      'https://${session.userBucketName}.s3-$region.amazonaws.com';
-
-  final stream = http.ByteStream(photo.openRead());
-  final length = await photo.length();
+      'https://${session.userBucketName}.s3.$region.amazonaws.com';
 
   final uri = Uri.parse(s3Endpoint);
   final req = http.MultipartRequest('POST', uri);
-  final String fileName = 'pfp';
   final multipartFile = http.MultipartFile(
     'file',
-    stream,
+    photo,
     length,
-    filename: 'pfp',
   );
 
-  final String usrIdentityId = session.credentials.userIdentityId!;
-  final String bucketKey = 'test/$usrIdentityId/$fileName';
+  final String bucketKey =
+      'profilePictures/${session.session.getAccessToken().getSub()}.$fileType';
 
   final policy = Policy.fromS3PresignedPost(
     bucketKey,
-    'my-s3-bucket',
+    session.userBucketName,
     15,
     session.credentials.accessKeyId!,
     length,
@@ -157,8 +160,6 @@ Future<Failure?> uploadProfilePicture({
 
   req.files.add(multipartFile);
   req.fields['key'] = policy.key;
-  req.fields['acl'] =
-      'public-read'; // Safe to remove this if your bucket has no ACL
   req.fields['X-Amz-Credential'] = policy.credential;
   req.fields['X-Amz-Algorithm'] = 'AWS4-HMAC-SHA256';
   req.fields['X-Amz-Date'] = policy.datetime;
