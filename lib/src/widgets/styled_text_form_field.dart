@@ -12,11 +12,19 @@ class StyledTextFormField extends TextFormField {
     required this.textController,
     required this.labelText,
   }) : super(
+          cursorColor: const Color(0xFFB0AEB2),
           decoration: InputDecoration(
             labelText: labelText,
             labelStyle: AppTheme.instance.theme.textTheme.bodySmall!.copyWith(
               color: const Color(0xFFF4F9FF),
               fontSize: 14.sp,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.r),
+              borderSide: const BorderSide(
+                color: Color(0xFFB0AEB2),
+                width: 1.7,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
@@ -27,6 +35,10 @@ class StyledTextFormField extends TextFormField {
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
+              borderSide: const BorderSide(
+                color: Color(0xFFB0AEB2),
+                width: 1.7,
+              ),
             ),
           ),
           controller: textController,
