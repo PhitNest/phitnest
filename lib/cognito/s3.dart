@@ -6,7 +6,7 @@ part of 'cognito.dart';
     const region = 'us-east-1';
     const service = 's3';
     final key =
-        '${session.userBucketName}/profilePictures/${session.session.accessToken.getSub()}';
+        '${session.userBucketName}/profilePictures/${session.session.accessToken.getSub()}.txt';
     final payload = SigV4.hashCanonicalRequest('');
     final datetime = SigV4.generateDatetime();
     final canonicalRequest = '''GET
@@ -104,13 +104,13 @@ class Policy {
 
   @override
   String toString() {
-    // Safe to remove the "acl" line if your bucket has no ACL permissions
     return '''
     { "expiration": "$expiration",
       "conditions": [
         {"bucket": "$bucket"},
         ["starts-with", "\$key", "$key"],
         ["content-length-range", 1, $maxFileSize],
+        {"content-type": "multipart/form-data"}
         {"x-amz-credential": "$credential"},
         {"x-amz-algorithm": "AWS4-HMAC-SHA256"},
         {"x-amz-date": "$datetime" },
@@ -131,6 +131,9 @@ Future<Failure?> uploadProfilePicture({
   final s3Endpoint =
       'https://${session.userBucketName}.s3.$region.amazonaws.com';
 
+  final String bucketKey =
+      'profilePictures/${session.session.getAccessToken().getSub()}.txt';
+
   final uri = Uri.parse(s3Endpoint);
   final req = http.MultipartRequest('POST', uri);
   final multipartFile = http.MultipartFile(
@@ -138,9 +141,6 @@ Future<Failure?> uploadProfilePicture({
     photo,
     length,
   );
-
-  final String bucketKey =
-      'profilePictures/${session.session.getAccessToken().getSub()}.$fileType';
 
   final policy = Policy.fromS3PresignedPost(
     bucketKey,
@@ -169,9 +169,7 @@ Future<Failure?> uploadProfilePicture({
 
   try {
     final res = await req.send();
-    await for (var value in res.stream.transform(utf8.decoder)) {
-      print(value);
-    }
+    await res.stream.last;
     return null;
   } catch (e) {
     print(e.toString());
