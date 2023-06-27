@@ -33,7 +33,7 @@ class StyledVerificationField extends StatelessWidget {
           keyboardType: TextInputType.number,
           pinTheme: PinTheme(
             activeColor: Colors.grey.shade600,
-            selectedColor: Colors.black,
+            selectedColor: Colors.grey.shade600,
             inactiveColor: Colors.grey.shade400,
             fieldWidth: 40.w,
           ),

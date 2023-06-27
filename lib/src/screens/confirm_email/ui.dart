@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_core/core.dart';
 
 import '../../common/util.dart';
+import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../home/ui.dart';
 import 'bloc/bloc.dart';
@@ -48,9 +50,17 @@ class ConfirmEmailScreen extends StatelessWidget {
             builder: (context, cognitoState) =>
                 BlocConsumer<ConfirmEmailBloc, ConfirmEmailState>(
               listener: (context, screenState) {},
-              builder: (context, screenState) => Center(
+              builder: (context, screenState) => Padding(
+                padding: EdgeInsets.symmetric(horizontal: 32.w),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    120.verticalSpace,
+                    Text(
+                      'Verify your email',
+                      style: AppTheme.instance.theme.textTheme.bodyLarge,
+                    ),
+                    52.verticalSpace,
                     StyledVerificationField(
                       controller: context.confirmEmailBloc.codeController,
                       focusNode: context.confirmEmailBloc.focusNode,
@@ -61,17 +71,24 @@ class ConfirmEmailScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    switch (cognitoState) {
-                      CognitoResendConfirmEmailLoadingState() ||
-                      CognitoConfirmEmailLoadingState() =>
-                        const CircularProgressIndicator(),
-                      _ => TextButton(
-                          onPressed: () => context.cognitoBloc.add(
-                            const CognitoResendConfirmEmailEvent(),
+                    16.verticalSpace,
+                    Center(
+                      child: switch (cognitoState) {
+                        CognitoResendConfirmEmailLoadingState() ||
+                        CognitoConfirmEmailLoadingState() =>
+                          const CircularProgressIndicator(),
+                        _ => ElevatedButton(
+                            onPressed: () => context.cognitoBloc.add(
+                              const CognitoResendConfirmEmailEvent(),
+                            ),
+                            child: Text(
+                              'RESEND CODE',
+                              style:
+                                  AppTheme.instance.theme.textTheme.bodySmall,
+                            ),
                           ),
-                          child: const Text('Resend code'),
-                        ),
-                    },
+                      },
+                    ),
                   ],
                 ),
               ),
