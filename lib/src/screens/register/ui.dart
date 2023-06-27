@@ -1,17 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_core/core.dart';
 
 import '../../common/util.dart';
-import '../../widgets/styled_banner.dart';
+import '../../theme.dart';
+import '../../widgets/widgets.dart';
 import '../confirm_email/ui.dart';
 import 'bloc/bloc.dart';
 
-part 'pages/name.dart';
-part 'pages/loading.dart';
-part 'pages/inviter_email.dart';
 part 'pages/account_info.dart';
+part 'pages/inviter_email.dart';
+part 'pages/loading.dart';
+part 'pages/name.dart';
 
 void _nextPage(BuildContext context) =>
     context.registerBloc.pageController.nextPage(
@@ -68,19 +70,22 @@ class RegisterScreen extends StatelessWidget {
               builder: (context, cognitoState) => Form(
                 key: context.registerBloc.formKey,
                 autovalidateMode: screenState.autovalidateMode,
-                child: switch (cognitoState) {
-                  CognitoRegisterLoadingState() ||
-                  CognitoLoginLoadingState() =>
-                    const RegisterLoadingPage(),
-                  _ => PageView(
-                      controller: context.registerBloc.pageController,
-                      children: const [
-                        RegisterNamePage(),
-                        RegisterAccountInfoPage(),
-                        RegisterInviterEmailPage(),
-                      ],
-                    ),
-                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 40.w),
+                  child: switch (cognitoState) {
+                    CognitoRegisterLoadingState() ||
+                    CognitoLoginLoadingState() =>
+                      const RegisterLoadingPage(),
+                    _ => PageView(
+                        controller: context.registerBloc.pageController,
+                        children: const [
+                          RegisterNamePage(),
+                          RegisterAccountInfoPage(),
+                          RegisterInviterEmailPage(),
+                        ],
+                      ),
+                  },
+                ),
               ),
             ),
           ),

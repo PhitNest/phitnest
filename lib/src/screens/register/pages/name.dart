@@ -12,17 +12,27 @@ class RegisterNamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          TextFormField(
-            controller: context.registerBloc.firstNameController,
+          120.verticalSpace,
+          Text(
+            'Let\'s get started! \nWhat\'s is your name?',
+            style: AppTheme.instance.theme.textTheme.bodyLarge,
+          ),
+          42.verticalSpace,
+          StyledTextFormField(
+            labelText: 'First name',
+            textController: context.registerBloc.firstNameController,
             validator: validateName,
           ),
-          TextFormField(
-            controller: context.registerBloc.lastNameController,
+          24.verticalSpace,
+          StyledTextFormField(
+            labelText: 'Last name',
+            textController: context.registerBloc.lastNameController,
             validator: validateName,
           ),
-          TextButton(
+          147.verticalSpace,
+          ElevatedButton(
             onPressed: () {
               if (context.registerBloc.formKey.currentState!.validate()) {
                 _nextPage(context);
@@ -30,7 +40,10 @@ class RegisterNamePage extends StatelessWidget {
                 context.registerBloc.add(const RegisterFormRejectedEvent());
               }
             },
-            child: const Text('Next'),
+            child: Text(
+              'NEXT',
+              style: AppTheme.instance.theme.textTheme.bodySmall,
+            ),
           )
         ],
       );
