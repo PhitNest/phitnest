@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:phitnest_core/core.dart';
 
+import '../../../theme.dart';
+import '../../../widgets/widgets.dart';
 import 'bloc/bloc.dart';
 
 class ConfirmPhotoScreen extends StatelessWidget {
@@ -24,8 +27,12 @@ class ConfirmPhotoScreen extends StatelessWidget {
               body: Center(
                 child: Column(
                   children: [
-                    TextButton(
-                      child: const Text('CONFIRM'),
+                    120.verticalSpace,
+                    ElevatedButton(
+                      child: Text(
+                        'CONFIRM',
+                        style: AppTheme.instance.theme.textTheme.bodySmall,
+                      ),
                       onPressed: () => context.confirmPhotoBloc.add(
                         ConfirmPhotoConfirmEvent(
                           session:
@@ -33,9 +40,10 @@ class ConfirmPhotoScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    TextButton(
-                      child: const Text('BACK'),
-                      onPressed: () {
+                    12.verticalSpace,
+                    StyledOutlineButton(
+                      text: 'BACK',
+                      onPress: () {
                         Navigator.of(context).pop();
                       },
                     ),
