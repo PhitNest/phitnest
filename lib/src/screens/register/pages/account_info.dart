@@ -5,23 +5,35 @@ class RegisterAccountInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          TextFormField(
-            controller: context.registerBloc.emailController,
+          120.verticalSpace,
+          Text(
+            'Let\'s create your account!',
+            style: AppTheme.instance.theme.textTheme.bodyLarge,
+          ),
+          42.verticalSpace,
+          StyledTextFormField(
+            labelText: 'Your email address',
+            textController: context.registerBloc.emailController,
             validator: EmailValidator.validateEmail,
           ),
-          TextFormField(
-            controller: context.registerBloc.passwordController,
+          24.verticalSpace,
+          StyledTextFormField(
+            labelText: 'Password',
+            textController: context.registerBloc.passwordController,
             validator: validatePassword,
           ),
-          TextFormField(
+          24.verticalSpace,
+          StyledTextFormField(
+            labelText: 'Confirm password',
             validator: (value) =>
                 value == context.registerBloc.passwordController.text
                     ? null
                     : 'Passwords do not match',
           ),
-          TextButton(
+          32.verticalSpace,
+          ElevatedButton(
             onPressed: () {
               if (context.registerBloc.formKey.currentState!.validate()) {
                 _nextPage(context);
@@ -29,7 +41,10 @@ class RegisterAccountInfoPage extends StatelessWidget {
                 context.registerBloc.add(const RegisterFormRejectedEvent());
               }
             },
-            child: const Text('Next'),
+            child: Text(
+              'NEXT',
+              style: AppTheme.instance.theme.textTheme.bodySmall,
+            ),
           )
         ],
       );
