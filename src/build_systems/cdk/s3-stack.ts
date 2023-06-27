@@ -64,6 +64,7 @@ export class S3Stack {
         actions: ["s3:PutObject", "s3:DeleteObject"],
         resources: [
           `${this.userBucket.bucketArn}/profilePictures/\${cognito-identity.amazonaws.com:sub}.jpg`,
+          `${this.userBucket.bucketArn}/profilePictures/\${cognito-identity.amazonaws.com:sub}.png`,
         ],
       })
     );
