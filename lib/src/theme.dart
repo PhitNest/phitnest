@@ -8,6 +8,7 @@ class AppTheme {
   static final instance = AppTheme._();
 
   final ThemeData theme = ThemeData(
+    scaffoldBackgroundColor: const Color(0xFF000000),
     colorScheme: const ColorScheme(
       brightness: Brightness.dark,
       primary: Color(0xFF5E5CE6),
@@ -30,7 +31,7 @@ class AppTheme {
       ),
       bodyMedium: GoogleFonts.inter(
         fontSize: 18.sp,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w500,
         height: 1.25,
         color: const Color(0xFFF8FEFF),
       ),
@@ -44,7 +45,7 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         padding: MaterialStateProperty.all(
-          EdgeInsets.symmetric(horizontal: 8.w, vertical: 24.h),
+          EdgeInsets.symmetric(horizontal: 24.w, vertical: 18.h),
         ),
         backgroundColor: MaterialStateProperty.all(
           const Color(0xFF5E5CE6),
@@ -66,6 +67,9 @@ class AppTheme {
             fontStyle: FontStyle.italic,
             height: 1.25,
             color: const Color(0xFFF4F9FF),
+            decoration: TextDecoration.underline,
+            decorationColor: Colors.white,
+            decorationThickness: 1.5,
           ),
         ),
       ),
