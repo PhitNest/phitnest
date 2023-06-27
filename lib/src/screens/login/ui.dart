@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_core/core.dart';
 
 import '../../common/util.dart';
-import '../../widgets/styled_banner.dart';
+import '../../theme.dart';
+import '../../widgets/widgets.dart';
 import '../confirm_email/ui.dart';
 import '../home/ui.dart';
 import 'bloc/bloc.dart';
@@ -49,33 +51,53 @@ class LoginScreen extends StatelessWidget {
                   default:
                 }
               },
-              builder: (context, cognitoState) => Form(
-                key: context.loginBloc.formKey,
-                autovalidateMode: screenState.autovalidateMode,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextFormField(
-                      controller: context.loginBloc.emailController,
-                    ),
-                    TextFormField(
-                      controller: context.loginBloc.passwordController,
-                    ),
-                    switch (cognitoState) {
-                      CognitoLoginLoadingState() =>
-                        const CircularProgressIndicator(),
-                      _ => TextButton(
-                          child: const Text('LOGIN'),
-                          onPressed: () => context.cognitoBloc.add(
-                            CognitoLoginEvent(
-                              email: context.loginBloc.emailController.text,
-                              password:
-                                  context.loginBloc.passwordController.text,
+              builder: (context, cognitoState) => Padding(
+                padding: EdgeInsets.symmetric(horizontal: 40.w),
+                child: Form(
+                  key: context.loginBloc.formKey,
+                  autovalidateMode: screenState.autovalidateMode,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      120.verticalSpace,
+                      Text(
+                        'Login',
+                        style: AppTheme.instance.theme.textTheme.bodyLarge,
+                      ),
+                      70.verticalSpace,
+                      StyledTextFormField(
+                        labelText: 'Email',
+                        textController: context.loginBloc.emailController,
+                      ),
+                      24.verticalSpace,
+                      StyledTextFormField(
+                        labelText: 'Password',
+                        textController: context.loginBloc.passwordController,
+                      ),
+                      36.verticalSpace,
+                      Center(
+                        child: switch (cognitoState) {
+                          CognitoLoginLoadingState() =>
+                            const CircularProgressIndicator(),
+                          _ => ElevatedButton(
+                              child: Text(
+                                'LOGIN',
+                                style:
+                                    AppTheme.instance.theme.textTheme.bodySmall,
+                              ),
+                              onPressed: () => context.cognitoBloc.add(
+                                CognitoLoginEvent(
+                                  email: context.loginBloc.emailController.text,
+                                  password:
+                                      context.loginBloc.passwordController.text,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                    },
-                  ],
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
