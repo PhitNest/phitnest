@@ -12,7 +12,7 @@ class PhotoInstructionsInitialState extends PhotoInstructionsState {
 }
 
 class PhotoInstructionsPickingState extends PhotoInstructionsState {
-  final CancelableOperation<XFile?> pickingOperation;
+  final CancelableOperation<CroppedFile?> pickingOperation;
 
   const PhotoInstructionsPickingState({
     required this.pickingOperation,
@@ -30,7 +30,7 @@ class PhotoInstructionsNoPictureState extends PhotoInstructionsState {
 }
 
 class PhotoInstructionsPickedState extends PhotoInstructionsState {
-  final XFile photo;
+  final CroppedFile photo;
 
   const PhotoInstructionsPickedState({
     required this.photo,

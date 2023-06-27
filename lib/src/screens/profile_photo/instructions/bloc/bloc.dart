@@ -21,7 +21,7 @@ class PhotoInstructionsBloc
       (event, emit) {
         emit(
           PhotoInstructionsPickingState(
-            pickingOperation: CancelableOperation.fromFuture(() async {
+            pickingOperation: CancelableOperation.fromFuture(
               ImagePicker()
                   .pickImage(
                 source: ImageSource.camera,
@@ -30,26 +30,18 @@ class PhotoInstructionsBloc
                   .then(
                 (image) async {
                   if (image != null) {
-                    return await ImageCropper()
-                        .cropImage(
-                          sourcePath: image.path,
-                          aspectRatio: CropAspectRatio(
-                            ratioX: kProfilePictureAspectRatio.width,
-                            ratioY: kProfilePictureAspectRatio.height,
-                          ),
-                        )
-                        .then(
-                          (img) => img!.readAsBytes(),
-                        )
-                        .then(
-                          (bytes) => XFile.fromData(bytes),
-                        );
+                    return await ImageCropper().cropImage(
+                      sourcePath: image.path,
+                      aspectRatio: CropAspectRatio(
+                        ratioX: kProfilePictureAspectRatio.width,
+                        ratioY: kProfilePictureAspectRatio.height,
+                      ),
+                    );
                   }
                   return null;
                 },
-              );
-            }())
-              ..then(
+              ),
+            )..then(
                 (file) => add(PhotoInstructionsPickedEvent(photo: file)),
               ),
           ),
@@ -65,20 +57,13 @@ class PhotoInstructionsBloc
               ImagePicker().pickImage(source: ImageSource.gallery).then(
                 (image) async {
                   if (image != null) {
-                    return await ImageCropper()
-                        .cropImage(
-                          sourcePath: image.path,
-                          aspectRatio: CropAspectRatio(
-                            ratioX: kProfilePictureAspectRatio.width,
-                            ratioY: kProfilePictureAspectRatio.height,
-                          ),
-                        )
-                        .then(
-                          (img) => img!.readAsBytes(),
-                        )
-                        .then(
-                          (bytes) => XFile.fromData(bytes),
-                        );
+                    return await ImageCropper().cropImage(
+                      sourcePath: image.path,
+                      aspectRatio: CropAspectRatio(
+                        ratioX: kProfilePictureAspectRatio.width,
+                        ratioY: kProfilePictureAspectRatio.height,
+                      ),
+                    );
                   }
                   return null;
                 },
