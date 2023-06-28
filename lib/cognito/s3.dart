@@ -110,7 +110,6 @@ class Policy {
         {"bucket": "$bucket"},
         ["starts-with", "\$key", "$key"],
         ["content-length-range", 1, $maxFileSize],
-        {"content-type": "multipart/form-data"}
         {"x-amz-credential": "$credential"},
         {"x-amz-algorithm": "AWS4-HMAC-SHA256"},
         {"x-amz-date": "$datetime" },
@@ -124,7 +123,6 @@ class Policy {
 Future<Failure?> uploadProfilePicture({
   required http.ByteStream photo,
   required int length,
-  required String fileType,
   required Session session,
 }) async {
   final region = session.user.pool.getRegion();
@@ -133,7 +131,6 @@ Future<Failure?> uploadProfilePicture({
 
   final String bucketKey =
       'profilePictures/${session.session.getAccessToken().getSub()}.txt';
-
   final uri = Uri.parse(s3Endpoint);
   final req = http.MultipartRequest('POST', uri);
   final multipartFile = http.MultipartFile(
@@ -169,10 +166,12 @@ Future<Failure?> uploadProfilePicture({
 
   try {
     final res = await req.send();
-    await res.stream.last;
+    await for (var value in res.stream.transform(utf8.decoder)) {
+      prettyLogger.d(value);
+    }
     return null;
   } catch (e) {
-    print(e.toString());
+    prettyLogger.e(e.toString());
     return Failure('FailedToUpload', e.toString());
   }
 }
