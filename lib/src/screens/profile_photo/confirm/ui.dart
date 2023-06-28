@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,7 +47,12 @@ class ConfirmPhotoScreen extends StatelessWidget {
               body: Center(
                 child: Column(
                   children: [
-                    120.verticalSpace,
+                    Image.file(
+                      File(photo.path),
+                      height: 444.h,
+                      width: double.infinity,
+                    ),
+                    56.verticalSpace,
                     ElevatedButton(
                       child: Text(
                         'CONFIRM',
