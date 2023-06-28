@@ -30,7 +30,7 @@ class AppTheme {
         color: const Color(0xFFF8FEFF),
       ),
       bodyMedium: GoogleFonts.inter(
-        fontSize: 18.sp,
+        fontSize: 20.sp,
         fontWeight: FontWeight.w500,
         height: 1.25,
         color: const Color(0xFFF8FEFF),
