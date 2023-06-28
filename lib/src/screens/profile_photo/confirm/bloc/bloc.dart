@@ -24,7 +24,6 @@ class ConfirmPhotoBloc extends Bloc<ConfirmPhotoEvent, ConfirmPhotoState> {
               final read = await photo.readAsBytes();
               return await uploadProfilePicture(
                 session: event.session,
-                fileType: photo.path.split('.').last,
                 length: read.length,
                 photo: ByteStream.fromBytes(read),
               );

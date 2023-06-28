@@ -19,13 +19,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             loadingOperation: CancelableOperation.fromFuture(() async {
               final request = getProfilePicture(session);
               if (request != null) {
-                if ((await http.get(request.uri, headers: request.headers))
-                        .statusCode ==
-                    200) {
-                  return Image.network(
-                    request.uri.toString(),
-                    headers: request.headers,
-                  );
+                final res =
+                    await http.get(request.uri, headers: request.headers);
+                if (res.statusCode == 200) {
+                  return Image.memory(res.bodyBytes);
                 }
               }
               return null;
@@ -44,9 +41,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     on<HomeLoadedProfilePictureEvent>(
       (event, emit) => emit(
-        HomeLoadedProfilePictureState(
-          profilePicture: event.profilePicture,
-        ),
+        event.profilePicture != null
+            ? HomeLoadedProfilePictureState(
+                profilePicture: event.profilePicture!,
+              )
+            : const HomeProfilePictureFailureState(),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:phitnest_core/core.dart';
 
 import '../profile_photo/instructions/ui.dart';
 import 'bloc/bloc.dart';
+import 'options/ui.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key}) : super();
@@ -19,24 +20,25 @@ class HomeScreen extends StatelessWidget {
           child: BlocConsumer<HomeBloc, HomeState>(
             listener: (context, screenState) {
               switch (screenState) {
-                case HomeLoadedProfilePictureState(
-                    profilePicture: final profilePicture
-                  ):
-                  if (profilePicture == null) {
-                    Navigator.pushReplacement(
-                      context,
-                      CupertinoPageRoute<void>(
-                        builder: (_) => const PhotoInstructionsScreen(),
-                      ),
-                    );
-                  }
+                case HomeProfilePictureFailureState():
+                  Navigator.pushReplacement(
+                    context,
+                    CupertinoPageRoute<void>(
+                      builder: (_) => const PhotoInstructionsScreen(),
+                    ),
+                  );
                 default:
               }
             },
             builder: (context, screenState) => Scaffold(
               body: Center(
-                child: Container(),
-              ),
+                  child: switch (screenState) {
+                HomeLoadedProfilePictureState(profilePicture: final pfp) =>
+                  OptionsScreen(
+                    pfp: pfp,
+                  ),
+                _ => Container(),
+              }),
             ),
           ),
         ),

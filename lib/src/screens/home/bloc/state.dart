@@ -15,8 +15,15 @@ class HomeLoadingProfilePictureState extends HomeState {
   List<Object?> get props => [loadingOperation];
 }
 
+class HomeProfilePictureFailureState extends HomeState {
+  const HomeProfilePictureFailureState() : super();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class HomeLoadedProfilePictureState extends HomeState {
-  final Image? profilePicture;
+  final Image profilePicture;
 
   const HomeLoadedProfilePictureState({
     required this.profilePicture,
