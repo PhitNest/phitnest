@@ -17,7 +17,7 @@ Future<HttpResponse<void>> invite(
   String authorization,
 ) =>
     request(
-      route: '/invite',
+      route: '/adminInvite',
       method: HttpMethod.post,
       parser: (_) {},
       data: {
