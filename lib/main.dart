@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_core/core.dart';
 
-import 'src/screens/home/chat/ui.dart';
+import 'src/screens/home/ui.dart';
 import 'src/screens/on_boarding/ui.dart';
 import 'src/theme.dart';
 
@@ -40,7 +40,7 @@ class App extends StatelessWidget {
             home: BlocConsumer<CognitoBloc, CognitoState>(
               listener: (context, cognitoState) {},
               builder: (context, cognitoState) => switch (cognitoState) {
-                CognitoLoggedInState() => const ChatScreen(),
+                CognitoLoggedInState() => const HomeScreen(),
                 _ => const OnBoardingScreen(),
               },
             ),
