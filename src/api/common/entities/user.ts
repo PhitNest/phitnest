@@ -1,9 +1,11 @@
 import {
   AdminEmail,
   Invite,
+  InviteWithoutUser,
   InviterTypes,
   adminInviteToDynamo,
   inviteToDynamo,
+  inviteWithoutUserToDynamo,
 } from "./invite";
 import { Dynamo, DynamoShape } from "./dynamo";
 import {
@@ -46,6 +48,19 @@ export const kUserWithoutInviteDynamo: DynamoShape<UserWithoutInvite> = {
   numInvites: "N",
 };
 
+export type UserWithPartialInvite = UserWithoutInvite & {
+  invite: InviteWithoutUser;
+};
+
+export const kUserWithPartialInviteDynamo: DynamoShape<UserWithPartialInvite> =
+  {
+    ...kUserWithoutInviteDynamo,
+    invite: {
+      receiverEmail: "S",
+      createdAt: "D",
+      gym: kGymWithoutAdminDynamo,
+    },
+  };
 export type User<InviteType extends InviterTypes = InviterTypes> =
   UserWithoutInvite & {
     invite: Invite<InviteType>;
@@ -86,6 +101,15 @@ function nameToDynamo(name: Name): Dynamo<Name> {
   return {
     firstName: { S: name.firstName },
     lastName: { S: name.lastName },
+  };
+}
+
+export function userWithPartialInviteToDynamo(
+  user: UserWithPartialInvite
+): Dynamo<UserWithPartialInvite> {
+  return {
+    invite: { M: inviteWithoutUserToDynamo(user.invite) },
+    ...userWithoutInviteToDynamo(user),
   };
 }
 

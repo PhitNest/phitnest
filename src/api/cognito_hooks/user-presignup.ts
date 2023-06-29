@@ -12,9 +12,12 @@ import {
   kAdminInviteDynamo,
   kInviteTypeOnlyDynamo,
   AdminEmail,
+  friendshipWithoutMessageToDynamo,
+  FriendshipWithoutMessage,
 } from "api/common/entities";
 import { TransactionParams, dynamo } from "api/common/utils";
 import { PreSignUpTriggerEvent } from "aws-lambda";
+import * as uuid from "uuid";
 
 const kInitialNumInvites = 5;
 
@@ -50,6 +53,17 @@ export async function invoke(event: PreSignUpTriggerEvent) {
   const transaction: TransactionParams<UserWithoutInvite, ":newNumInvites"> = {
     updates: [],
     puts: [],
+    deletes: [],
+  };
+
+  const newUserExploreDetails = {
+    accountDetails: {
+      id: event.userName,
+      email: event.request.userAttributes.email,
+      createdAt: new Date(),
+    },
+    firstName: firstName,
+    lastName: lastName,
   };
 
   // Parse as admin or user depending on the type
@@ -78,6 +92,23 @@ export async function invoke(event: PreSignUpTriggerEvent) {
         },
       },
     });
+
+    const friendship: FriendshipWithoutMessage = {
+      id: uuid.v4(),
+      createdAt: new Date(),
+      users: [newUserExploreDetails, inviter],
+    };
+
+    transaction.puts.push({
+      pk: `USER#${event.userName}`,
+      sk: `FRIENDSHIP${inviter.accountDetails.id}`,
+      data: friendshipWithoutMessageToDynamo(friendship),
+    });
+    transaction.puts.push({
+      pk: `USER#${inviter.accountDetails.id}`,
+      sk: `FRIENDSHIP${event.userName}`,
+      data: friendshipWithoutMessageToDynamo(friendship),
+    });
   } else {
     // If the inviter is an admin, no action needed after parsing
     parsedInvite = parseDynamo<Invite<AdminEmail>>(
@@ -88,13 +119,7 @@ export async function invoke(event: PreSignUpTriggerEvent) {
 
   // Create our newly registered user
   const newUser: User = {
-    accountDetails: {
-      id: event.userName,
-      email: event.request.userAttributes.email,
-      createdAt: new Date(),
-    },
-    firstName: firstName,
-    lastName: lastName,
+    ...newUserExploreDetails,
     numInvites: kInitialNumInvites,
     invite: parsedInvite,
   };

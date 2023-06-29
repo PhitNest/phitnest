@@ -7,6 +7,7 @@ import {
   ParseParams,
   PutParams,
   RequestError,
+  RowKey,
   SingleOrPlural,
   SkOperator,
   TransactionParams,
@@ -35,19 +36,29 @@ export class DynamoClientMock extends DynamoClient {
       }
     }
     if (params.sk) {
+      let entries:
+        | {
+            sk: string | undefined;
+            data: Record<string, AttributeValue>;
+          }[]
+        | undefined = undefined;
       if (params.sk.op === "BEGINS_WITH") {
-        const entries = partition?.filter((entry) =>
+        entries = partition?.filter((entry) =>
           entry.sk?.substring(0, params.sk?.q.length)
         );
-        if (entries) {
-          return entries.map((entry) =>
-            Object.fromEntries(
-              Object.entries(entry.data).filter(([key]) =>
-                projection?.split(",").includes(key)
-              )
+      } else if (params.sk.op === "CONTAINS") {
+        entries = partition?.filter((entry) =>
+          entry.sk?.includes(params.sk?.q ?? "")
+        );
+      }
+      if (entries) {
+        return entries.map((entry) =>
+          Object.fromEntries(
+            Object.entries(entry.data).filter(([key]) =>
+              projection?.split(",").includes(key)
             )
-          ) as SingleOrPlural<Record<string, AttributeValue>, Op>;
-        }
+          )
+        ) as SingleOrPlural<Record<string, AttributeValue>, Op>;
       }
     }
     const entry = partition?.find((entry) => entry.sk === params.sk);
@@ -59,6 +70,16 @@ export class DynamoClientMock extends DynamoClient {
       ) as SingleOrPlural<Record<string, AttributeValue>, Op>;
     } else {
       throw new RequestError("ResourceNotFound", `No such sk: ${params.sk}`);
+    }
+  }
+
+  async delete(key: RowKey): Promise<void> {
+    const partition = this.table[key.pk];
+    if (partition) {
+      const entry = partition.find((entry) => entry.sk === key.sk);
+      if (entry) {
+        partition.splice(partition.indexOf(entry), 1);
+      }
     }
   }
 
@@ -191,6 +212,9 @@ export class DynamoClientMock extends DynamoClient {
     }
     for (const put of params.puts) {
       await this.put(put);
+    }
+    for (const deleter of params.deletes) {
+      await this.delete(deleter);
     }
   }
 
