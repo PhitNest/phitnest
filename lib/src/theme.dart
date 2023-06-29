@@ -42,6 +42,17 @@ class AppTheme {
         color: const Color(0xFFF8FEFF),
       ),
     ),
+    appBarTheme: AppBarTheme(
+      iconTheme: const IconThemeData(
+        color: Color(0xFFF8FEFF),
+      ),
+      titleTextStyle: GoogleFonts.inter(
+        fontSize: 20.sp,
+        fontWeight: FontWeight.w500,
+        height: 1.25,
+        color: const Color(0xFFF8FEFF),
+      ),
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         padding: MaterialStateProperty.all(
