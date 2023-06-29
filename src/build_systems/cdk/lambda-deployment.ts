@@ -43,6 +43,10 @@ export function createDeploymentPackage(
     outputPath,
     transpileModule(source.toString(), tsconfig).outputText
   );
-  fse.copySync(nodeModulesDir, path.join(outputDir, "node_modules"));
-  fse.copySync(commonDir, path.join(outputDir, "api", "common"));
+  fse.copySync(nodeModulesDir, path.join(outputDir, "node_modules"), {
+    dereference: true,
+  });
+  fse.copySync(commonDir, path.join(outputDir, "api", "common"), {
+    dereference: true,
+  });
 }
