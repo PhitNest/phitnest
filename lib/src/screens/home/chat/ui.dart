@@ -6,6 +6,7 @@ import '../../../theme.dart';
 import '../../../widgets/styled_outline_button.dart';
 import 'widgets/chat_conversation.dart';
 import 'widgets/chat_tile.dart';
+import 'widgets/friend_request.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
@@ -27,7 +28,11 @@ class ChatScreen extends StatelessWidget {
                     style: AppTheme.instance.theme.textTheme.bodyLarge,
                   ),
                   StyledOutlineButton(
-                    onPress: () {},
+                    onPress: () => Navigator.of(context).push(
+                      CupertinoPageRoute<void>(
+                        builder: (context) => const FriendRequestScreen(),
+                      ),
+                    ),
                     text: 'FRIENDS',
                   ),
                 ],
