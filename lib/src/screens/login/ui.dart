@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +9,9 @@ import '../../common/util.dart';
 import '../../theme.dart';
 import '../../widgets/widgets.dart';
 import '../confirm_email/ui.dart';
+import '../forgot_password/ui.dart';
 import '../home/ui.dart';
+import '../register/ui.dart';
 import 'bloc/bloc.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -75,7 +78,25 @@ class LoginScreen extends StatelessWidget {
                         labelText: 'Password',
                         textController: context.loginBloc.passwordController,
                       ),
-                      36.verticalSpace,
+                      Row(
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).push(
+                              CupertinoPageRoute<void>(
+                                builder: (context) =>
+                                    const ForgotPasswordScreen(),
+                              ),
+                            ),
+                            child: Text(
+                              'Forgot Password?',
+                              style: AppTheme
+                                  .instance.theme.textTheme.bodySmall!
+                                  .copyWith(fontStyle: FontStyle.normal),
+                            ),
+                          ),
+                        ],
+                      ),
+                      8.verticalSpace,
                       Center(
                         child: switch (cognitoState) {
                           CognitoLoginLoadingState() =>
@@ -95,6 +116,33 @@ class LoginScreen extends StatelessWidget {
                               ),
                             ),
                         },
+                      ),
+                      32.verticalSpace,
+                      Center(
+                        child: RichText(
+                            text: TextSpan(
+                                text: 'Don\'t have an account? ',
+                                style:
+                                    AppTheme.instance.theme.textTheme.bodySmall,
+                                children: [
+                              TextSpan(
+                                text: ' Register',
+                                style: AppTheme
+                                    .instance.theme.textTheme.bodySmall!
+                                    .copyWith(
+                                  color: AppTheme
+                                      .instance.theme.colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () => Navigator.of(context).push(
+                                        CupertinoPageRoute<void>(
+                                          builder: (context) =>
+                                              const RegisterScreen(),
+                                        ),
+                                      ),
+                              ),
+                            ])),
                       ),
                     ],
                   ),
