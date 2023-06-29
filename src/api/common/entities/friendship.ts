@@ -7,18 +7,28 @@ import { Dynamo, DynamoShape } from "./dynamo";
 import { Message, kMessageDynamo, messageToDynamo } from "./message";
 import { UserExplore, kUserExploreDynamo, userExploreToDynamo } from "./user";
 
-export type Friendship = CreationDetails & {
+export type FriendshipWithoutMessage = CreationDetails & {
   users: [UserExplore, UserExplore];
+};
+
+export const kFriendshipWithoutMessageDynamo: DynamoShape<FriendshipWithoutMessage> =
+  {
+    users: [kUserExploreDynamo],
+    ...kCreationDetailsDynamo,
+  };
+
+export type Friendship = FriendshipWithoutMessage & {
   recentMessage: Message;
 };
 
 export const kFriendshipDynamo: DynamoShape<Friendship> = {
-  users: [kUserExploreDynamo],
   recentMessage: kMessageDynamo,
-  ...kCreationDetailsDynamo,
+  ...kFriendshipWithoutMessageDynamo,
 };
 
-export function friendshipToDynamo(friendship: Friendship): Dynamo<Friendship> {
+export function friendshipWithoutMessageToDynamo(
+  friendship: FriendshipWithoutMessage
+): Dynamo<FriendshipWithoutMessage> {
   return {
     users: {
       L: friendship.users.map((user) => {
@@ -27,7 +37,13 @@ export function friendshipToDynamo(friendship: Friendship): Dynamo<Friendship> {
         };
       }),
     },
-    recentMessage: { M: messageToDynamo(friendship.recentMessage) },
     ...creationDetailsToDynamo(friendship),
+  };
+}
+
+export function friendshipToDynamo(friendship: Friendship): Dynamo<Friendship> {
+  return {
+    recentMessage: { M: messageToDynamo(friendship.recentMessage) },
+    ...friendshipWithoutMessageToDynamo(friendship),
   };
 }

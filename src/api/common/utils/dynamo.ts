@@ -8,10 +8,12 @@ import {
   TransactWriteItemsCommand,
   UpdateItemCommand,
   UpdateItemCommandInput,
+  DeleteItemCommand,
+  DeleteItemCommandInput,
 } from "@aws-sdk/client-dynamodb";
 import { DynamoShape, parseDynamo } from "../entities/dynamo";
 
-export type SkOperator = "EQ" | "BEGINS_WITH";
+export type SkOperator = "EQ" | "BEGINS_WITH" | "CONTAINS";
 
 export type PartitionKey = {
   pk: string;
@@ -55,6 +57,7 @@ export type TransactionParams<
 > = {
   updates: UpdateParams<UpdateTypes, UpdateVarNames>[];
   puts: PutParams[];
+  deletes: RowKey[];
 };
 
 export type SingleOrPlural<T, Op extends SkOperator> = Op extends Exclude<
@@ -85,6 +88,8 @@ export abstract class DynamoClient {
   >(params: TransactionParams<UpdateTypes, UpdateVarNames>): Promise<void>;
 
   abstract put(params: PutParams): Promise<void>;
+
+  abstract delete(params: RowKey): Promise<void>;
 }
 
 export abstract class Dynamo {
@@ -149,6 +154,16 @@ function putCommand(params: PutParams): PutItemCommandInput {
   };
 }
 
+function deleteCommand(params: RowKey): DeleteItemCommandInput {
+  return {
+    TableName: process.env.DYNAMO_TABLE_NAME,
+    Key: {
+      part_id: { S: params.pk },
+      ...(params.sk ? { sort_id: { S: params.sk } } : {}),
+    },
+  };
+}
+
 class DynamoClientImpl extends DynamoClient {
   private client: DynamoDBClient;
 
@@ -207,6 +222,9 @@ class DynamoClientImpl extends DynamoClient {
           ...Object.entries(params.puts ?? {}).map(([, put]) => ({
             Put: putCommand(put),
           })),
+          ...Object.entries(params.deletes ?? {}).map(([, deleter]) => ({
+            Delete: deleteCommand(deleter),
+          })),
         ],
       })
     );
@@ -229,6 +247,10 @@ class DynamoClientImpl extends DynamoClient {
             parseDynamo(item, params.parseShape)
           )
     ) as SingleOrPlural<T, Op>;
+  }
+
+  async delete(params: RowKey): Promise<void> {
+    await this.client.send(new DeleteItemCommand(deleteCommand(params)));
   }
 }
 

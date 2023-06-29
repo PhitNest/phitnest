@@ -6,4 +6,5 @@ export * from "./user";
 export * from "./admin";
 export * from "./friendship";
 export * from "./message";
+export * from "./friend-request";
 export { parseDynamo } from "./dynamo";

@@ -4,7 +4,7 @@ import {
   Success,
   getUserClaims,
 } from "api/common/utils";
-import { kUserWithPartialInviteDynamo } from "api/common/entities";
+import { kFriendRequestDynamo } from "api/common/entities";
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { z } from "zod";
 
@@ -20,12 +20,12 @@ export async function invoke(
     validator: validator,
     controller: async (data) => {
       const client = dynamo().connect();
-      const user = await client.parsedQuery({
-        pk: "USERS",
-        sk: { q: `USER#${data.userId}`, op: "EQ" },
-        parseShape: kUserWithPartialInviteDynamo,
+      const friendRequests = await client.parsedQuery({
+        pk: `INCOMING_REQUEST#${data.userId}`,
+        sk: { q: "SENDER#", op: "BEGINS_WITH" },
+        parseShape: kFriendRequestDynamo,
       });
-      return new Success(user);
+      return new Success(friendRequests);
     },
   });
 }
