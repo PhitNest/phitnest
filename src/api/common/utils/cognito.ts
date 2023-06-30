@@ -8,8 +8,6 @@ export type AdminCognitoClaims = {
 export type UserCognitoClaims = {
   email: string;
   sub: string;
-  firstName: string;
-  lastName: string;
 };
 
 export function getAdminClaims(
@@ -39,7 +37,7 @@ export function getUserClaims(
   ) {
     const claims: UserCognitoClaims =
       event.requestContext.authorizer.jwt.claims;
-    if (claims.email && claims.sub && claims.firstName && claims.lastName) {
+    if (claims.email && claims.sub) {
       return claims;
     }
   }
