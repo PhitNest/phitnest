@@ -675,11 +675,9 @@ packages:
   phitnest_core:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "13c7ad76cbea6a7b915401b06308cc615ead8c7d"
-      url: "https://github.com/PhitNest/phitnest-core.git"
-    source: git
+      path: "../phitnest-core"
+      relative: true
+    source: path
     version: "1.0.0+1"
   pin_code_fields:
     dependency: "direct main"
