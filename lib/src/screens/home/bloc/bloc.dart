@@ -8,6 +8,21 @@ import 'package:phitnest_core/core.dart';
 part 'event.dart';
 part 'state.dart';
 
+class Friend extends Equatable {
+  final String id;
+  final String firstName;
+  final String lastName;
+
+  const Friend({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+  }) : super();
+
+  @override
+  List<Object?> get props => [id, firstName, lastName];
+}
+
 class UserExplore extends Equatable {
   final String id;
   final String firstName;
@@ -27,23 +42,23 @@ class UserExplore extends Equatable {
 
 class Message extends Equatable {
   final String id;
-  final UserExplore sender;
+  final String senderId;
   final String text;
   final DateTime createdAt;
 
   const Message({
     required this.id,
-    required this.sender,
+    required this.senderId,
     required this.text,
     required this.createdAt,
   }) : super();
 
   @override
-  List<Object?> get props => [id, sender, text, createdAt];
+  List<Object?> get props => [id, senderId, text, createdAt];
 }
 
 class Friendship extends Equatable {
-  final UserExplore other;
+  final Friend other;
   final DateTime createdAt;
   final String id;
   final Message? recentMessage;
@@ -59,8 +74,73 @@ class Friendship extends Equatable {
   List<Object?> get props => [other, createdAt, id, recentMessage];
 }
 
-// Future<List<Friendship>?> _friends(Session session) async =>
-//     request(route: '/friendship');
+Future<List<Friendship>?> _friends(Session session) async =>
+    switch (await request(
+      route: '/friendship',
+      method: HttpMethod.get,
+      authorization: session.session.idToken.getJwtToken(),
+      parser: (json) => switch (json) {
+        List() => (json)
+            .map(
+              (entry) => switch (entry) {
+                ({
+                  'id': final String id,
+                  'userTuple': final dynamic userTuple,
+                  'createdAt': final int createdAt,
+                  'recentMessage': final dynamic recentMessage
+                }) =>
+                  switch (userTuple) {
+                    List() => Friendship(
+                        createdAt:
+                            DateTime.fromMillisecondsSinceEpoch(createdAt),
+                        id: id,
+                        recentMessage: switch (recentMessage) {
+                          ({s})
+                          _ => null,
+                        },
+                        other: (userTuple)
+                            .map(
+                              (user) => switch (user) {
+                                ({
+                                  'accountDetails': final dynamic
+                                      accountDetails,
+                                  'firstName': final String firstName,
+                                  'lastName': final String lastName
+                                }) =>
+                                  Friend(
+                                    id: switch (accountDetails) {
+                                      ({'id': final String id}) => id,
+                                      _ => throw const Failure(
+                                          'InvalidResponse',
+                                          'Invalid response from server.'),
+                                    },
+                                    firstName: firstName,
+                                    lastName: lastName,
+                                  ),
+                                _ => throw const Failure('InvalidResponse',
+                                    'Invalid response from server.'),
+                              },
+                            )
+                            .where((element) =>
+                                element.id !=
+                                session.session.accessToken.getSub()!)
+                            .first,
+                      ),
+                    _ => throw const Failure(
+                        'InvalidResponse', 'Invalid response from server.'),
+                  },
+                _ => throw const Failure(
+                    'InvalidResponse', 'Invalid response from server.'),
+              },
+            )
+            .toList(),
+        _ => throw const Failure(
+            'InvalidResponse', 'Invalid response from server.'),
+      },
+    )) {
+      HttpResponseOk(data: final data) => data,
+      HttpResponseFailure() => null,
+    };
 
 Future<List<UserExplore>?> _explore(Session session) async => request(
       route: '/explore',
