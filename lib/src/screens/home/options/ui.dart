@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phitnest_core/core.dart';
 
+import '../../../common/util.dart';
 import '../../../theme.dart';
 import '../../../widgets/styled_outline_button.dart';
 import '../../about_us/ui.dart';
+import '../bloc/bloc.dart';
 
 class OptionsScreen extends StatelessWidget {
   final Image pfp;
@@ -74,7 +77,16 @@ class OptionsScreen extends StatelessWidget {
                 ),
               ),
               StyledOutlineButton(
-                onPress: () {},
+                onPress: () => context.homeBloc.add(
+                  const HomeDeleteAccountEvent(),
+                ),
+                text: 'Delete Account',
+                hPadding: 16.w,
+                vPadding: 8.h,
+              ),
+              StyledOutlineButton(
+                onPress: () =>
+                    context.cognitoBloc.add(const CognitoLogoutEvent()),
                 text: 'Sign Out',
                 hPadding: 16.w,
                 vPadding: 8.h,

@@ -227,23 +227,31 @@ extension GetHomeBloc on BuildContext {
 }
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
+  final pageController = PageController();
+
   HomeBloc(Session session)
       : super(
           HomeLoadingState(
               loadingOperation: CancelableOperation.fromFuture(() async {
-            final explore = await _explore(session);
-            final friends = await _friends(session);
             final pfpReq = getProfilePicture(
                 session, session.session.accessToken.getSub()!);
-            if (pfpReq != null && friends != null && explore != null) {
+            if (pfpReq != null) {
               final profilePhoto = await http
                   .get(pfpReq.uri, headers: pfpReq.headers)
-                  .then((res) => Image.memory(res.bodyBytes));
-              return HomeResponse(
-                explore: explore,
-                profilePhoto: profilePhoto,
-                friends: friends,
-              );
+                  .then((res) => res.statusCode == 200
+                      ? Image.memory(res.bodyBytes)
+                      : null);
+              if (profilePhoto != null) {
+                final explore = await _explore(session);
+                final friends = await _friends(session);
+                if (friends != null && explore != null) {
+                  return HomeResponse(
+                    explore: explore,
+                    profilePhoto: profilePhoto,
+                    friends: friends,
+                  );
+                }
+              }
             }
             throw const Failure('InvalidResponse',
                 'Invalid response from server. Please try again later.');
@@ -279,6 +287,102 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             ),
           _ => throw StateException(state, event),
         });
+
+    on<HomeDeleteAccountEvent>(
+      (event, emit) => switch (state) {
+        HomeLoadedState(response: final response) => emit(
+            HomeDeletingAccountState(
+                response: response,
+                deletingOperation: CancelableOperation.fromFuture(request(
+                        method: HttpMethod.delete,
+                        route: '/user',
+                        parser: (_) {},
+                        authorization: session.session.idToken.getJwtToken())
+                    .then((res) => switch (res) {
+                          HttpResponseOk() => true,
+                          HttpResponseFailure() => false,
+                        }))
+                  ..then((deleted) =>
+                      add(HomeDeleteAccountResponseEvent(deleted: deleted)))),
+          ),
+        _ => throw StateException(state, event),
+      },
+    );
+
+    on<HomeDeleteAccountResponseEvent>(
+      (event, emit) {
+        if (event.deleted) {
+          emit(
+            const HomeDeletedAccountState(),
+          );
+        } else {
+          emit(
+            HomeLoadedState(
+              response: (state as HomeDeletingAccountState).response,
+              currPage: 2,
+            ),
+          );
+        }
+      },
+    );
+
+    on<HomeSendFriendRequestEvent>((event, emit) {
+      if (state is HomeLoadedState) {
+        final response = (state as HomeLoadedState).response;
+        emit(
+          HomeSendingFriendRequestState(
+            response: response,
+            currPage: 1,
+            sendingOperation: CancelableOperation.fromFuture(
+              request(
+                method: HttpMethod.post,
+                route: '/friendship',
+                parser: (_) {},
+                authorization: session.session.idToken.getJwtToken(),
+                data: {
+                  'receiverId':
+                      response.explore[event.index % response.explore.length],
+                },
+              ).then(
+                (res) => switch (res) {
+                  HttpResponseOk() => true,
+                  HttpResponseFailure() => false,
+                },
+              ),
+            )..then((res) => add(HomeSendFriendRequestResponseEvent(
+                index: res ? event.index : -1))),
+          ),
+        );
+      }
+    });
+
+    on<HomeSendFriendRequestResponseEvent>(
+      (event, emit) {
+        if (event.index == -1) {
+          emit(
+            HomeLoadedState(
+              response: (state as HomeSendingFriendRequestState).response,
+              currPage: (state as HomeSendingFriendRequestState).currPage,
+            ),
+          );
+        } else {
+          final response = (state as HomeSendingFriendRequestState).response;
+          var newExplore = response.explore;
+          newExplore.removeAt(event.index);
+          final newResponse = HomeResponse(
+            explore: newExplore,
+            friends: response.friends,
+            profilePhoto: response.profilePhoto,
+          );
+          emit(
+            HomeSentFriendRequestState(
+              response: newResponse,
+              currPage: (state as HomeSendingFriendRequestState).currPage,
+            ),
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -286,8 +390,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     switch (state) {
       case HomeLoadingState(loadingOperation: final loadingOperation):
         await loadingOperation.cancel();
+      case HomeSendingFriendRequestState(
+          sendingOperation: final sendingOperation
+        ):
+        await sendingOperation.cancel();
+      case HomeDeletingAccountState(deletingOperation: final deletingOperation):
+        await deletingOperation.cancel();
       default:
     }
+    pageController.dispose();
     return super.close();
   }
 }

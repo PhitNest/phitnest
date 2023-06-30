@@ -23,6 +23,9 @@ class HomeScreen extends StatelessWidget {
           child: BlocConsumer<HomeBloc, HomeState>(
             listener: (context, screenState) {
               switch (screenState) {
+                case HomeSentFriendRequestState():
+                  StyledBanner.show(
+                      message: 'Sent friend request', error: false);
                 case HomeFailureState():
                   Navigator.pushReplacement(
                     context,
@@ -35,12 +38,25 @@ class HomeScreen extends StatelessWidget {
             },
             builder: (context, screenState) => Scaffold(
               body: switch (screenState) {
-                HomeLoadedState(response: final response) => Column(
+                HomeSentFriendRequestState(
+                  response: final response,
+                  currPage: final currPage
+                ) ||
+                HomeLoadedState(
+                  response: final response,
+                  currPage: final currPage
+                ) ||
+                HomeSendingFriendRequestState(
+                  response: final response,
+                  currPage: final currPage
+                ) =>
+                  Column(
                     children: [
                       Expanded(
-                        child: switch (screenState.currPage) {
+                        child: switch (currPage) {
                           0 => ExploreScreen(
                               users: response.explore,
+                              pageController: context.homeBloc.pageController,
                             ),
                           1 => ChatScreen(
                               friends: response.friends,
@@ -51,10 +67,21 @@ class HomeScreen extends StatelessWidget {
                         },
                       ),
                       StyledNavBar(
-                        page: screenState.currPage,
+                        page: currPage,
                         logoState: LogoState.animated,
                         onReleaseLogo: () {},
-                        onPressDownLogo: () {},
+                        onPressDownLogo: () {
+                          if (currPage == 0) {
+                            context.homeBloc.add(
+                              HomeSendFriendRequestEvent(
+                                index: context.homeBloc.pageController.page!
+                                    .round(),
+                              ),
+                            );
+                          } else {
+                            context.homeBloc.add(HomeTabChangedEvent(index: 0));
+                          }
+                        },
                         onPressedNews: () {},
                         onPressedExplore: () =>
                             context.homeBloc.add(HomeTabChangedEvent(index: 0)),
@@ -66,7 +93,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                _ => Container(),
+                _ => CircularProgressIndicator(),
               },
             ),
           ),

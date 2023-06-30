@@ -26,6 +26,7 @@ class LoginScreen extends StatelessWidget {
             builder: (context, screenState) =>
                 BlocConsumer<CognitoBloc, CognitoState>(
               listener: (context, cognitoState) {
+                print(cognitoState);
                 switch (cognitoState) {
                   case CognitoLoggedInState():
                     Navigator.of(context).pushAndRemoveUntil(
