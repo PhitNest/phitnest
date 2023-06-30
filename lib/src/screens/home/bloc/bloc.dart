@@ -253,8 +253,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 }
               }
             }
-            throw const Failure('InvalidResponse',
-                'Invalid response from server. Please try again later.');
+            return null;
           }())),
         ) {
     if (state is HomeLoadingState) {
