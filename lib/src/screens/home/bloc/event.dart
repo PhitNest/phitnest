@@ -4,13 +4,24 @@ sealed class HomeEvent extends Equatable {
   const HomeEvent() : super();
 }
 
-class HomeLoadedProfilePictureEvent extends HomeEvent {
-  final Image? profilePicture;
+class HomeLoadedEvent extends HomeEvent {
+  final HomeResponse? response;
 
-  const HomeLoadedProfilePictureEvent({
-    required this.profilePicture,
+  const HomeLoadedEvent({
+    required this.response,
   }) : super();
 
   @override
-  List<Object?> get props => [profilePicture];
+  List<Object?> get props => [response];
+}
+
+class HomeTabChangedEvent extends HomeEvent {
+  final int index;
+
+  const HomeTabChangedEvent({
+    required this.index,
+  }) : super();
+
+  @override
+  List<Object?> get props => [index];
 }
