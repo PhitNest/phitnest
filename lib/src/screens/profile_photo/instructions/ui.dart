@@ -70,7 +70,7 @@ class PhotoInstructionsScreen extends StatelessWidget {
                     Center(
                       child: StyledOutlineButton(
                         onPress: () => context.photoInstructionsBloc.add(
-                          const PhotoInstructionsTakePhotoEvent(),
+                          const PhotoInstructionsPickEvent(),
                         ),
                         text: 'UPLOAD PHOTO',
                       ),
