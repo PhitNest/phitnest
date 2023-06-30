@@ -16,10 +16,10 @@ dependencies:
   flutter_dotenv: ^5.0.2
   flutter_screenutil: ^5.8.4
   flutter_launcher_icons: ^0.13.1
-  # phitnest_core:
-  #   git: https://github.com/PhitNest/phitnest-core.git
   phitnest_core:
-    path: ../phitnest-core
+    git: https://github.com/PhitNest/phitnest-core.git
+  # phitnest_core:
+  #   path: ../phitnest-core
   flutter_bloc: ^8.1.3
   async: ^2.11.0
   pin_code_fields: ^8.0.1
