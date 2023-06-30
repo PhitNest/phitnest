@@ -93,7 +93,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                _ => CircularProgressIndicator(),
+                _ => Center(child: CircularProgressIndicator()),
               },
             ),
           ),
