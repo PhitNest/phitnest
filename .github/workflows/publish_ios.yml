@@ -12,10 +12,15 @@ jobs:
 
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/ios/Gemfile
+      GH_ACCESS_PAT: ${{ secrets.GH_ACCESS_PAT }}
 
     steps:
       - name: Check out from git
         uses: actions/checkout@v2
+      - name: Login
+
+      - name: Use GH PAT
+      - run: git config --global url.https://$GH_ACCESS_PAT@github.com/.insteadOf https://github.com/
 
       - name: Setup ruby & Bundler
         uses: ruby/setup-ruby@v1
