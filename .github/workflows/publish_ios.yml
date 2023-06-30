@@ -20,7 +20,7 @@ jobs:
       - name: Login
 
       - name: Use GH PAT
-      - run: git config --global url.https://$GH_ACCESS_PAT@github.com/.insteadOf https://github.com/
+        run: git config --global url.https://$GH_ACCESS_PAT@github.com/.insteadOf https://github.com/
 
       - name: Setup ruby & Bundler
         uses: ruby/setup-ruby@v1
