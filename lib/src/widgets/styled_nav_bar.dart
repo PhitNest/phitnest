@@ -5,8 +5,6 @@ import '../common/constants/constants.dart';
 import '../theme.dart';
 import 'widgets.dart';
 
-enum NavbarPage { news, explore, chat, options }
-
 enum LogoState { animated, holding, disabled, reversed, loading }
 
 extension _LogoStateToAsset on LogoState {
@@ -129,7 +127,7 @@ class _StyledNavBarPageButton extends StatelessWidget {
 class StyledNavBar extends StatelessWidget {
   static double get kHeight => 66.h;
 
-  final NavbarPage page;
+  final int page;
   final LogoState logoState;
   final VoidCallback onPressDownLogo;
   final VoidCallback onReleaseLogo;
@@ -190,13 +188,13 @@ class StyledNavBar extends StatelessWidget {
                     children: [
                       _StyledNavBarPageButton(
                         text: 'NEWS',
-                        selected: page == NavbarPage.news,
+                        selected: page == -1,
                         reversed: reversed,
                         onPressed: onPressedNews,
                       ),
                       _StyledNavBarPageButton(
                         text: 'EXPLORE',
-                        selected: page == NavbarPage.explore,
+                        selected: page == 0,
                         reversed: reversed,
                         onPressed: onPressedExplore,
                       ),
@@ -206,14 +204,14 @@ class StyledNavBar extends StatelessWidget {
                         count: friendRequestCount,
                         child: _StyledNavBarPageButton(
                           text: 'CHAT',
-                          selected: page == NavbarPage.chat,
+                          selected: page == 1,
                           reversed: reversed,
                           onPressed: onPressedChat,
                         ),
                       ),
                       _StyledNavBarPageButton(
                         text: 'OPTIONS',
-                        selected: page == NavbarPage.options,
+                        selected: page == 2,
                         reversed: reversed,
                         onPressed: onPressedOptions,
                       ),

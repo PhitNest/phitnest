@@ -4,10 +4,23 @@ sealed class HomeState extends Equatable {
   const HomeState() : super();
 }
 
-class HomeLoadingProfilePictureState extends HomeState {
-  final CancelableOperation<Image?> loadingOperation;
+class HomeResponse extends Equatable {
+  final List<UserExplore> explore;
+  final Image profilePhoto;
 
-  const HomeLoadingProfilePictureState({
+  const HomeResponse({
+    required this.explore,
+    required this.profilePhoto,
+  }) : super();
+
+  @override
+  List<Object?> get props => [explore, profilePhoto];
+}
+
+class HomeLoadingState extends HomeState {
+  final CancelableOperation<HomeResponse?> loadingOperation;
+
+  const HomeLoadingState({
     required this.loadingOperation,
   }) : super();
 
@@ -15,20 +28,22 @@ class HomeLoadingProfilePictureState extends HomeState {
   List<Object?> get props => [loadingOperation];
 }
 
-class HomeProfilePictureFailureState extends HomeState {
-  const HomeProfilePictureFailureState() : super();
+class HomeFailureState extends HomeState {
+  const HomeFailureState() : super();
 
   @override
   List<Object?> get props => [];
 }
 
-class HomeLoadedProfilePictureState extends HomeState {
-  final Image profilePicture;
+class HomeLoadedState extends HomeState {
+  final HomeResponse response;
+  final int currPage;
 
-  const HomeLoadedProfilePictureState({
-    required this.profilePicture,
+  const HomeLoadedState({
+    required this.response,
+    required this.currPage,
   }) : super();
 
   @override
-  List<Object?> get props => [profilePicture];
+  List<Object?> get props => [response, currPage];
 }

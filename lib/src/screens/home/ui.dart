@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phitnest_core/core.dart';
 
+import '../../widgets/widgets.dart';
 import '../profile_photo/instructions/ui.dart';
 import 'bloc/bloc.dart';
+import 'chat/ui.dart';
+import 'explore/ui.dart';
 import 'options/ui.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -20,7 +23,7 @@ class HomeScreen extends StatelessWidget {
           child: BlocConsumer<HomeBloc, HomeState>(
             listener: (context, screenState) {
               switch (screenState) {
-                case HomeProfilePictureFailureState():
+                case HomeFailureState():
                   Navigator.pushReplacement(
                     context,
                     CupertinoPageRoute<void>(
@@ -31,14 +34,38 @@ class HomeScreen extends StatelessWidget {
               }
             },
             builder: (context, screenState) => Scaffold(
-              body: Center(
-                  child: switch (screenState) {
-                HomeLoadedProfilePictureState(profilePicture: final pfp) =>
-                  OptionsScreen(
-                    pfp: pfp,
+              body: switch (screenState) {
+                HomeLoadedState(response: final response) => Column(
+                    children: [
+                      Expanded(
+                        child: switch (screenState.currPage) {
+                          0 => ExploreScreen(
+                              users: response.explore,
+                            ),
+                          1 => ChatScreen(),
+                          _ => OptionsScreen(
+                              pfp: response.profilePhoto,
+                            )
+                        },
+                      ),
+                      StyledNavBar(
+                        page: screenState.currPage,
+                        logoState: LogoState.animated,
+                        onReleaseLogo: () {},
+                        onPressDownLogo: () {},
+                        onPressedNews: () {},
+                        onPressedExplore: () =>
+                            context.homeBloc.add(HomeTabChangedEvent(index: 0)),
+                        onPressedChat: () =>
+                            context.homeBloc.add(HomeTabChangedEvent(index: 1)),
+                        onPressedOptions: () =>
+                            context.homeBloc.add(HomeTabChangedEvent(index: 2)),
+                        friendRequestCount: 0,
+                      ),
+                    ],
                   ),
                 _ => Container(),
-              }),
+              },
             ),
           ),
         ),
