@@ -1,12 +1,14 @@
 part of 'cognito.dart';
 
-({Uri uri, Map<String, String> headers})? getProfilePicture(Session session) {
+({Uri uri, Map<String, String> headers})? getProfilePicture(
+  Session session,
+  String userId,
+) {
   try {
     const host = 's3.us-east-1.amazonaws.com';
     const region = 'us-east-1';
     const service = 's3';
-    final key =
-        '${session.userBucketName}/profilePictures/${session.session.accessToken.getSub()}.txt';
+    final key = '${session.userBucketName}/profilePictures/$userId.txt';
     final payload = SigV4.hashCanonicalRequest('');
     final datetime = SigV4.generateDatetime();
     final canonicalRequest = '''GET
