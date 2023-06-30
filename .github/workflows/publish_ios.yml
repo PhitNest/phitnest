@@ -26,6 +26,9 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Install fastlane
+        run: bundle install --gemfile=$BUNDLE_GEMFILE
+
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
