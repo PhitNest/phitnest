@@ -7,14 +7,16 @@ sealed class HomeState extends Equatable {
 class HomeResponse extends Equatable {
   final List<UserExplore> explore;
   final Image profilePhoto;
+  final List<Friendship> friends;
 
   const HomeResponse({
     required this.explore,
     required this.profilePhoto,
+    required this.friends,
   }) : super();
 
   @override
-  List<Object?> get props => [explore, profilePhoto];
+  List<Object?> get props => [explore, profilePhoto, friends];
 }
 
 class HomeLoadingState extends HomeState {

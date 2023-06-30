@@ -4,12 +4,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../theme.dart';
 import '../../../widgets/styled_outline_button.dart';
+import '../bloc/bloc.dart';
 import 'widgets/chat_conversation.dart';
 import 'widgets/chat_tile.dart';
 import 'widgets/friend_request.dart';
 
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
+  final List<Friendship> friends;
+
+  const ChatScreen({super.key, required this.friends});
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -38,20 +41,19 @@ class ChatScreen extends StatelessWidget {
                 ],
               ),
               18.verticalSpace,
-              ChatTile(
-                name: 'Peter H.',
-                message: 'Hey how are you?',
-                onTap: () => Navigator.of(context).push(
-                  CupertinoPageRoute<void>(
-                    builder: (context) =>
-                        const ChatConversation(name: 'Peter H.'),
+              ...friends.map(
+                (friend) => ChatTile(
+                  name: '${friend.other.firstName} ${friend.other.lastName}',
+                  message: friend.recentMessage?.text ?? 'Tap to chat',
+                  onTap: () => Navigator.of(context).push(
+                    CupertinoPageRoute<void>(
+                      builder: (context) => ChatConversation(
+                        name:
+                            '${friend.other.firstName} ${friend.other.lastName}',
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              ChatTile(
-                name: 'Erin-Michelle J.',
-                message: 'Yeah, how about you ?',
-                onTap: () {},
               ),
             ],
           ),
