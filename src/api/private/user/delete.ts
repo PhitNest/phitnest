@@ -62,14 +62,14 @@ export async function invoke(
           ...incomingFriendRequests.map((request) => ({
             pk: `INCOMING_REQUEST#${data.userId}`,
             sk: `SENDER#${
-              request.users.filter(
+              request.userTuple.filter(
                 (sender) => sender.accountDetails.id != data.userId
               )[0].accountDetails.id
             }`,
           })),
           ...incomingFriendRequests.map((request) => ({
             pk: `USER#${
-              request.users.filter(
+              request.userTuple.filter(
                 (sender) => sender.accountDetails.id != data.userId
               )[0].accountDetails.id
             }`,
@@ -77,7 +77,7 @@ export async function invoke(
           })),
           ...friendRequests.map((request) => ({
             pk: `INCOMING_REQUEST#${
-              request.users.filter(
+              request.userTuple.filter(
                 (sender) => sender.accountDetails.id != data.userId
               )[0].accountDetails.id
             }`,
@@ -86,14 +86,14 @@ export async function invoke(
           ...friendRequests.map((request) => ({
             pk: `USER#${data.userId}`,
             sk: `FRIEND_REQUEST#${
-              request.users.filter(
+              request.userTuple.filter(
                 (sender) => sender.accountDetails.id != data.userId
               )[0].accountDetails.id
             }`,
           })),
           ...friends.map((friendship) => ({
             pk: `USER#${
-              friendship.users.filter(
+              friendship.userTuple.filter(
                 (friend) => friend.accountDetails.id != data.userId
               )[0].accountDetails.id
             }`,
@@ -102,7 +102,7 @@ export async function invoke(
           ...friends.map((friendship) => ({
             pk: `USER#${data.userId}`,
             sk: `FRIENDSHIP#${
-              friendship.users.filter(
+              friendship.userTuple.filter(
                 (friend) => friend.accountDetails.id != data.userId
               )[0].accountDetails.id
             }`,

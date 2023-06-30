@@ -51,12 +51,12 @@ export async function invoke(
         othersAtGym.filter((other) => {
           return (
             !friends.some((friendship) =>
-              friendship.users.some(
+              friendship.userTuple.some(
                 (friend) => friend.accountDetails.id === other.accountDetails.id
               )
             ) &&
             !friendRequests.some((friendRequest) =>
-              friendRequest.users.some(
+              friendRequest.userTuple.some(
                 (request) =>
                   request.accountDetails.id === other.accountDetails.id
               )
