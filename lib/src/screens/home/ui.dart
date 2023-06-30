@@ -42,7 +42,9 @@ class HomeScreen extends StatelessWidget {
                           0 => ExploreScreen(
                               users: response.explore,
                             ),
-                          1 => ChatScreen(),
+                          1 => ChatScreen(
+                              friends: response.friends,
+                            ),
                           _ => OptionsScreen(
                               pfp: response.profilePhoto,
                             )

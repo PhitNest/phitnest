@@ -95,7 +95,19 @@ Future<List<Friendship>?> _friends(Session session) async =>
                             DateTime.fromMillisecondsSinceEpoch(createdAt),
                         id: id,
                         recentMessage: switch (recentMessage) {
-                          ({s})
+                          ({
+                            'id': final String id,
+                            'text': final String text,
+                            'senderId': final String senderId,
+                            'createdAt': final int createdAt
+                          }) =>
+                            Message(
+                              id: id,
+                              senderId: senderId,
+                              text: text,
+                              createdAt: DateTime.fromMillisecondsSinceEpoch(
+                                  createdAt),
+                            ),
                           _ => null,
                         },
                         other: (userTuple)
@@ -220,16 +232,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           HomeLoadingState(
               loadingOperation: CancelableOperation.fromFuture(() async {
             final explore = await _explore(session);
+            final friends = await _friends(session);
             final pfpReq = getProfilePicture(
                 session, session.session.accessToken.getSub()!);
-            if (pfpReq != null) {
+            if (pfpReq != null && friends != null && explore != null) {
               final profilePhoto = await http
                   .get(pfpReq.uri, headers: pfpReq.headers)
                   .then((res) => Image.memory(res.bodyBytes));
-              if (explore != null) {
-                return HomeResponse(
-                    explore: explore, profilePhoto: profilePhoto);
-              }
+              return HomeResponse(
+                explore: explore,
+                profilePhoto: profilePhoto,
+                friends: friends,
+              );
             }
             throw const Failure('InvalidResponse',
                 'Invalid response from server. Please try again later.');
