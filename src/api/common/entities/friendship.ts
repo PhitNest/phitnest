@@ -8,12 +8,12 @@ import { Message, kMessageDynamo, messageToDynamo } from "./message";
 import { UserExplore, kUserExploreDynamo, userExploreToDynamo } from "./user";
 
 export type FriendshipWithoutMessage = CreationDetails & {
-  users: [UserExplore, UserExplore];
+  userTuple: [UserExplore, UserExplore];
 };
 
 export const kFriendshipWithoutMessageDynamo: DynamoShape<FriendshipWithoutMessage> =
   {
-    users: [kUserExploreDynamo],
+    userTuple: [kUserExploreDynamo],
     ...kCreationDetailsDynamo,
   };
 
@@ -30,8 +30,8 @@ export function friendshipWithoutMessageToDynamo(
   friendship: FriendshipWithoutMessage
 ): Dynamo<FriendshipWithoutMessage> {
   return {
-    users: {
-      L: friendship.users.map((user) => {
+    userTuple: {
+      L: friendship.userTuple.map((user) => {
         return {
           M: userExploreToDynamo(user),
         };

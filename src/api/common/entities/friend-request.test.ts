@@ -8,7 +8,7 @@ import {
 const testFriendRequest: FriendRequest = {
   createdAt: new Date(Date.UTC(2020, 1, 1)),
   id: "1",
-  users: [
+  userTuple: [
     {
       accountDetails: {
         id: "1",
@@ -31,7 +31,7 @@ const testFriendRequest: FriendRequest = {
 const serializedFriendRequest: Dynamo<FriendRequest> = {
   createdAt: { N: Date.UTC(2020, 1, 1).toString() },
   id: { S: "1" },
-  users: {
+  userTuple: {
     L: [
       {
         M: {

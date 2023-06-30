@@ -7,11 +7,11 @@ import { Dynamo, DynamoShape } from "./dynamo";
 import { UserExplore, kUserExploreDynamo, userExploreToDynamo } from "./user";
 
 export type FriendRequest = CreationDetails & {
-  users: [UserExplore, UserExplore];
+  userTuple: [UserExplore, UserExplore];
 };
 
 export const kFriendRequestDynamo: DynamoShape<FriendRequest> = {
-  users: [kUserExploreDynamo],
+  userTuple: [kUserExploreDynamo],
   ...kCreationDetailsDynamo,
 };
 
@@ -19,8 +19,8 @@ export function friendRequestToDynamo(
   friendRequest: FriendRequest
 ): Dynamo<FriendRequest> {
   return {
-    users: {
-      L: friendRequest.users.map((user) => {
+    userTuple: {
+      L: friendRequest.userTuple.map((user) => {
         return {
           M: userExploreToDynamo(user),
         };

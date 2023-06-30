@@ -68,7 +68,7 @@ export async function invoke(
       }
       if (friendRequest) {
         const newFriendship: FriendshipWithoutMessage = {
-          users: [sender, receiver],
+          userTuple: [sender, receiver],
           createdAt: new Date(),
           id: uuid.v4(),
         };
@@ -100,7 +100,7 @@ export async function invoke(
         return new Success(newFriendship);
       } else {
         const newRequest: FriendRequest = {
-          users: [sender, receiver],
+          userTuple: [sender, receiver],
           createdAt: new Date(),
           id: uuid.v4(),
         };

@@ -96,7 +96,7 @@ export async function invoke(event: PreSignUpTriggerEvent) {
     const friendship: FriendshipWithoutMessage = {
       id: uuid.v4(),
       createdAt: new Date(),
-      users: [newUserExploreDetails, inviter],
+      userTuple: [newUserExploreDetails, inviter],
     };
 
     transaction.puts.push({
