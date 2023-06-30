@@ -49,3 +49,51 @@ class HomeLoadedState extends HomeState {
   @override
   List<Object?> get props => [response, currPage];
 }
+
+class HomeSendingFriendRequestState extends HomeState {
+  final CancelableOperation<bool> sendingOperation;
+  final HomeResponse response;
+  final int currPage;
+
+  const HomeSendingFriendRequestState({
+    required this.sendingOperation,
+    required this.response,
+    required this.currPage,
+  }) : super();
+
+  @override
+  List<Object?> get props => [sendingOperation, response, currPage];
+}
+
+class HomeSentFriendRequestState extends HomeState {
+  final HomeResponse response;
+  final int currPage;
+
+  const HomeSentFriendRequestState({
+    required this.response,
+    required this.currPage,
+  }) : super();
+
+  @override
+  List<Object?> get props => [response, currPage];
+}
+
+class HomeDeletingAccountState extends HomeState {
+  final CancelableOperation<bool> deletingOperation;
+  final HomeResponse response;
+
+  const HomeDeletingAccountState({
+    required this.deletingOperation,
+    required this.response,
+  }) : super();
+
+  @override
+  List<Object?> get props => [deletingOperation, response];
+}
+
+class HomeDeletedAccountState extends HomeState {
+  const HomeDeletedAccountState() : super();
+
+  @override
+  List<Object?> get props => [];
+}
