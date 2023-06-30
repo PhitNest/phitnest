@@ -21,19 +21,22 @@ jobs:
       - name: Use PAT for git
         run: git config --global url.https://$GH_ACCESS_PAT@github.com/.insteadOf https://github.com/
 
-      - name: Setup ruby & Bundler
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
-      - name: Install fastlane
-        run: bundle install --gemfile=$BUNDLE_GEMFILE
-
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
       - run: flutter --version
+
+      - name: Setup ruby & Bundler
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Create .env
+        run: mv .env.example.prod .env
+
+      - name: Download dependencies
+        run: flutter pub get
 
       - name: Setup SSH key
         env:
@@ -45,11 +48,8 @@ jobs:
           echo 'echo $MATCH_PASSWORD' > ~/.ssh_askpass && chmod +x ~/.ssh_askpass
           echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None SSH_ASKPASS=~/.ssh_askpass ssh-add - >/dev/null
 
-      - name: Create .env
-        run: mv .env.example.prod .env
-
-      - name: Download dependencies
-        run: flutter pub get
+      - name: Install fastlane
+        run: bundle install --gemfile=$BUNDLE_GEMFILE
 
       - name: Build & Publish to TestFlight with Fastlane
         env:
