@@ -25,6 +25,43 @@ class UserExplore extends Equatable {
   List<Object?> get props => [id, firstName, lastName, profilePicture];
 }
 
+class Message extends Equatable {
+  final String id;
+  final UserExplore sender;
+  final String text;
+  final DateTime createdAt;
+
+  const Message({
+    required this.id,
+    required this.sender,
+    required this.text,
+    required this.createdAt,
+  }) : super();
+
+  @override
+  List<Object?> get props => [id, sender, text, createdAt];
+}
+
+class Friendship extends Equatable {
+  final UserExplore other;
+  final DateTime createdAt;
+  final String id;
+  final Message? recentMessage;
+
+  const Friendship({
+    required this.other,
+    required this.createdAt,
+    required this.id,
+    required this.recentMessage,
+  }) : super();
+
+  @override
+  List<Object?> get props => [other, createdAt, id, recentMessage];
+}
+
+// Future<List<Friendship>?> _friends(Session session) async =>
+//     request(route: '/friendship');
+
 Future<List<UserExplore>?> _explore(Session session) async => request(
       route: '/explore',
       method: HttpMethod.get,
