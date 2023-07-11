@@ -18,9 +18,6 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Install API dependencies
-        run: cd src/api && yarn
-
       - name: Run audit
         run: /bin/bash -c 'yarn audit; [[ $? -ge 8 ]] && exit 1 || exit 0'
       

@@ -1,8 +1,8 @@
 import { AttributeValue } from "@aws-sdk/client-dynamodb";
-import { parseDynamo } from "api/common/entities";
+import { parseDynamo } from "common/entities";
 import {
-  Dynamo,
   DynamoClient,
+  DynamoConnection,
   MultiRowKey,
   ParseParams,
   PutParams,
@@ -12,7 +12,7 @@ import {
   SkOperator,
   TransactionParams,
   UpdateParams,
-} from "api/common/utils";
+} from "common/utils";
 
 export class DynamoClientMock extends DynamoClient {
   private table: Record<
@@ -43,19 +43,19 @@ export class DynamoClientMock extends DynamoClient {
           }[]
         | undefined = undefined;
       if (params.sk.op === "BEGINS_WITH") {
-        entries = partition?.filter((entry) =>
-          entry.sk?.substring(0, params.sk?.q.length)
+        entries = partition?.filter(
+          (entry) => entry.sk?.substring(0, params.sk?.q.length)
         );
       } else if (params.sk.op === "CONTAINS") {
-        entries = partition?.filter((entry) =>
-          entry.sk?.includes(params.sk?.q ?? "")
+        entries = partition?.filter(
+          (entry) => entry.sk?.includes(params.sk?.q ?? "")
         );
       }
       if (entries) {
         return entries.map((entry) =>
           Object.fromEntries(
-            Object.entries(entry.data).filter(([key]) =>
-              projection?.split(",").includes(key)
+            Object.entries(entry.data).filter(
+              ([key]) => projection?.split(",").includes(key)
             )
           )
         ) as SingleOrPlural<Record<string, AttributeValue>, Op>;
@@ -64,8 +64,8 @@ export class DynamoClientMock extends DynamoClient {
     const entry = partition?.find((entry) => entry.sk === params.sk);
     if (entry) {
       return Object.fromEntries(
-        Object.entries(entry.data).filter(([key]) =>
-          projection?.split(",").includes(key)
+        Object.entries(entry.data).filter(
+          ([key]) => projection?.split(",").includes(key)
         )
       ) as SingleOrPlural<Record<string, AttributeValue>, Op>;
     } else {
@@ -104,7 +104,7 @@ export class DynamoClientMock extends DynamoClient {
 
   async update<
     UpdateTypes extends Record<string, unknown>,
-    UpdateVarNames extends `:${string}` | undefined = undefined
+    UpdateVarNames extends `:${string}` | undefined = undefined,
   >(params: UpdateParams<UpdateTypes, UpdateVarNames>): Promise<void> {
     const partition = this.table[params.pk];
     if (partition) {
@@ -205,7 +205,7 @@ export class DynamoClientMock extends DynamoClient {
 
   async writeTransaction<
     UpdateTypes extends Record<string, unknown> = Record<string, unknown>,
-    UpdateVarNames extends `:${string}` | undefined = undefined
+    UpdateVarNames extends `:${string}` | undefined = undefined,
   >(params: TransactionParams<UpdateTypes, UpdateVarNames>): Promise<void> {
     for (const update of params.updates) {
       await this.update(update);
@@ -233,7 +233,7 @@ export class DynamoClientMock extends DynamoClient {
   }
 }
 
-export class DynamoMock extends Dynamo {
+export class DynamoMock extends DynamoConnection {
   client: DynamoClientMock;
 
   constructor() {
