@@ -7,6 +7,8 @@ on:
         required: true
       AWS_ACCESS_KEY_SECRET:
         required: true
+      API_DEPLOY_KEY:
+        required: true
     inputs:
       deployment_env:
         required: true

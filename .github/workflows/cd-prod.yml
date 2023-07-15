@@ -18,3 +18,4 @@ jobs:
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_ACCESS_KEY_SECRET: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+      API_DEPLOY_KEY: ${{ secrets.API_DEPLOY_KEY }}
