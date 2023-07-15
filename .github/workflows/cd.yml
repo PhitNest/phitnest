@@ -9,8 +9,6 @@ on:
         required: true
       API_DEPLOY_KEY:
         required: true
-      API_DEPLOY_PASS:
-        required: true
     inputs:
       deployment_env:
         required: true
@@ -23,14 +21,15 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
 
+      - name: Checkout phitnest-api
+        uses: actions/checkout@v3
+        with:
+          repository: PhitNest/phitnest-api
+          path: phitnest-api
+          ssh-key: ${{ secrets.API_DEPLOY_KEY }}
+
       - name: Install dependencies
         run: npm i && npm i -g aws-cdk
-
-      - name: Setup Github SSH access for API
-        run: echo "echo ${{ secrets.API_DEPLOY_PASS }}" >> ./ssh-ask-pass && chmod 777 ./ssh-ask-pass && eval `ssh-agent -s` && DISPLAY=1 SSH_ASKPASS=./ssh-ask-pass ssh-add - <<< '${{ secrets.API_DEPLOY_KEY }}'
-
-      - name: Clone API
-        run: git clone git@github.com:PhitNest/phitnest-api.git
 
       - name: Install API dependencies
         run: cd phitnest-api && npm i
