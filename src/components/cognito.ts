@@ -38,6 +38,7 @@ export class CognitoStack extends Construct {
       fromName: "PhitNest Verification",
       replyTo: "verify@phitnest.com",
       sesVerifiedDomain: "phitnest.com",
+      sesRegion: "us-east-1",
     });
     const userPresignupDeploymentDir = path.join(
       props.cognitoHookDeploymentDir,
