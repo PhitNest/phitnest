@@ -173,7 +173,8 @@ export class ApiStack extends Construct {
       }`,
       {
         runtime: Runtime.NODEJS_16_X,
-        handler: "index.invoke",
+        entry: path.join(deploymentDir, "index.js"),
+        handler: "invoke",
         environment: {
           DYNAMO_TABLE_NAME: this.props.dynamoTableName,
           USER_POOL_ID: this.props.userPool.userPoolId,
@@ -183,8 +184,6 @@ export class ApiStack extends Construct {
           USER_IDENTITY_POOL_ID: this.props.userIdentityPoolId,
           USER_S3_BUCKET: this.props.userBucketName,
         },
-        depsLockFilePath: deploymentDir,
-        projectRoot: deploymentDir,
         role: this.props.dynamoTableRole,
       }
     );
