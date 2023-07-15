@@ -27,7 +27,7 @@ jobs:
         run: npm i && npm i -g aws-cdk
 
       - name: Setup Github SSH access for API
-        run: echo "echo ${{ secrets.API_DEPLOY_PASS }}" >> ./ssh-ask-pass && eval `ssh-agent -s` && DISPLAY=1 SSH_ASKPASS=./ssh-ask-pass ssh-add - <<< '${{ secrets.API_DEPLOY_KEY }}'
+        run: echo "echo ${{ secrets.API_DEPLOY_PASS }}" >> ./ssh-ask-pass && chmod 777 ./ssh-ask-pass && eval `ssh-agent -s` && DISPLAY=1 SSH_ASKPASS=./ssh-ask-pass ssh-add - <<< '${{ secrets.API_DEPLOY_KEY }}'
 
       - name: Clone API
         run: git clone https://github.com/PhitNest/phitnest-api.git
