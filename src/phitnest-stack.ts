@@ -15,11 +15,11 @@ export class PhitnestStack extends Stack {
     const nodeModulesDir = path.join(apiSrcDir, "node_modules");
     const commonDir = path.join(lambdaSrcDir, "common");
 
-    const dynamo = new DynamoStack(scope, {
+    const dynamo = new DynamoStack(this, {
       deploymentEnv: DEPLOYMENT_ENV,
     });
 
-    const cognito = new CognitoStack(scope, {
+    const cognito = new CognitoStack(this, {
       deploymentEnv: DEPLOYMENT_ENV,
       cognitoHookSrcDir: path.join(lambdaSrcDir, "cognito_hooks"),
       nodeModulesDir: nodeModulesDir,
@@ -29,12 +29,12 @@ export class PhitnestStack extends Stack {
       dynamoTableRole: dynamo.tableRole,
     });
 
-    const s3 = new S3Stack(scope, {
+    const s3 = new S3Stack(this, {
       deploymentEnv: DEPLOYMENT_ENV,
       identityPoolId: cognito.userIdentityPoolId,
     });
 
-    new ApiStack(scope, {
+    new ApiStack(this, {
       deploymentEnv: DEPLOYMENT_ENV,
       apiSrcDir: apiSrcDir,
       nodeModulesDir: nodeModulesDir,
