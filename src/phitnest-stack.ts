@@ -3,11 +3,13 @@ import { ApiStack, CognitoStack, DynamoStack, S3Stack } from "./components";
 import { Construct } from "constructs";
 import * as path from "path";
 
-const DEPLOYMENT_ENV = process.env.DEPLOYMENT_ENV || "dev";
+const kDeploymentEnv = process.env.DEPLOYMENT_ENV || "dev";
+const kApiRoute53Arn =
+  "arn:aws:acm:us-east-1:235601651768:certificate/030219b7-d13c-4f07-90a2-baf20ba90837";
 
 export class PhitnestStack extends Stack {
   constructor(scope: Construct) {
-    super(scope, `phitnest-stack-${DEPLOYMENT_ENV}`);
+    super(scope, `phitnest-stack-${kDeploymentEnv}`);
 
     const apiSrcDir = path.join(process.cwd(), "phitnest-api");
     const lambdaSrcDir = path.join(apiSrcDir, "src");
@@ -16,11 +18,11 @@ export class PhitnestStack extends Stack {
     const commonDir = path.join(lambdaSrcDir, "common");
 
     const dynamo = new DynamoStack(this, {
-      deploymentEnv: DEPLOYMENT_ENV,
+      deploymentEnv: kDeploymentEnv,
     });
 
     const cognito = new CognitoStack(this, {
-      deploymentEnv: DEPLOYMENT_ENV,
+      deploymentEnv: kDeploymentEnv,
       cognitoHookSrcDir: path.join(lambdaSrcDir, "cognito_hooks"),
       nodeModulesDir: nodeModulesDir,
       commonDir: commonDir,
@@ -30,12 +32,12 @@ export class PhitnestStack extends Stack {
     });
 
     const s3 = new S3Stack(this, {
-      deploymentEnv: DEPLOYMENT_ENV,
+      deploymentEnv: kDeploymentEnv,
       identityPoolId: cognito.userIdentityPoolId,
     });
 
     new ApiStack(this, {
-      deploymentEnv: DEPLOYMENT_ENV,
+      deploymentEnv: kDeploymentEnv,
       apiSrcDir: apiSrcDir,
       nodeModulesDir: nodeModulesDir,
       commonDir: commonDir,
@@ -48,6 +50,8 @@ export class PhitnestStack extends Stack {
       dynamoTableName: dynamo.tableName,
       dynamoTableRole: dynamo.tableRole,
       userBucketName: s3.userBucketName,
+      apiRoute53CertificateArn:
+        kDeploymentEnv === "prod" ? kApiRoute53Arn : undefined,
     });
   }
 }

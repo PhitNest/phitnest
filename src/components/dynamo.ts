@@ -17,8 +17,8 @@ export interface DynamoStackProps {
   deploymentEnv: string;
 }
 
-const PART_KEY = "part_id";
-const SORT_KEY = "sort_id";
+const kPartKey = "part_id";
+const kSortKey = "sort_id";
 
 export class DynamoStack extends Construct {
   public readonly tableName: string;
@@ -56,21 +56,21 @@ export class DynamoStack extends Construct {
         billingMode: BillingMode.PAY_PER_REQUEST,
         keySchema: [
           {
-            attributeName: PART_KEY,
+            attributeName: kPartKey,
             keyType: "HASH",
           },
           {
-            attributeName: SORT_KEY,
+            attributeName: kSortKey,
             keyType: "RANGE",
           },
         ],
         attributeDefinitions: [
           {
-            attributeName: PART_KEY,
+            attributeName: kPartKey,
             attributeType: AttributeType.STRING,
           },
           {
-            attributeName: SORT_KEY,
+            attributeName: kSortKey,
             attributeType: AttributeType.STRING,
           },
         ],

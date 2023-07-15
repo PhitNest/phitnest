@@ -9,6 +9,7 @@ import { UserPool } from "aws-cdk-lib/aws-cognito";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Role } from "aws-cdk-lib/aws-iam";
 import { CfnIntegration } from "aws-cdk-lib/aws-apigatewayv2";
+import { Certificate, ICertificate } from "aws-cdk-lib/aws-certificatemanager";
 import { Construct } from "constructs";
 import {
   Route,
@@ -37,6 +38,7 @@ export interface ApiStackProps {
   adminClientId: string;
   userIdentityPoolId: string;
   userBucketName: string;
+  apiRoute53CertificateArn: string | undefined;
 }
 
 export class ApiStack extends Construct {
@@ -57,16 +59,30 @@ export class ApiStack extends Construct {
 
     const adminAuthorizer = new CognitoUserPoolsAuthorizer(
       scope,
-      `PhitNestUserAuthorizer-${this.props.deploymentEnv}`,
+      `PhitNestAdminAuthorizer-${this.props.deploymentEnv}`,
       {
         cognitoUserPools: [props.adminPool],
       }
     );
     adminAuthorizer.applyRemovalPolicy(RemovalPolicy.DESTROY);
-
+    let route53Certificate: ICertificate | undefined;
+    if (props.apiRoute53CertificateArn) {
+      route53Certificate = Certificate.fromCertificateArn(
+        scope,
+        `phitnest-route53-certificate-${props.deploymentEnv}`,
+        props.apiRoute53CertificateArn
+      );
+      route53Certificate.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    }
     const api = new RestApi(scope, `phitnest-rest-api-${props.deploymentEnv}`, {
       restApiName: `Phitnest-API-${props.deploymentEnv}`,
       description: "This service serves the Phitnest API.",
+      domainName: route53Certificate
+        ? {
+            domainName: "api.phitnest.com",
+            certificate: route53Certificate,
+          }
+        : undefined,
       defaultCorsPreflightOptions: {
         allowHeaders: [
           "Content-Type",
