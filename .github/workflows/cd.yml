@@ -22,7 +22,10 @@ jobs:
       - name: Install dependencies
         run: npm i && npm i -g aws-cdk
 
-      - name: Pull API
+      - name: Setup Github SSH access for API
+        run: eval `ssh-agent -s` && ssh-add - <<< '${{ secrets.API_DEPLOY_KEY }}'
+
+      - name: Clone API
         run: git clone https://github.com/PhitNest/phitnest-api.git
 
       - name: Install API dependencies
