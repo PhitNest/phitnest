@@ -1,11 +1,19 @@
-name: Bootstrap CDK
+name: CD
 
 on:
-  workflow_dispatch:
   workflow_call:
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_ACCESS_KEY_SECRET:
+        required: true
+    inputs:
+      deployment_env:
+        required: true
+        type: string
 
 jobs:
-  bootstrap:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,5 +29,5 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
           aws-region: us-east-1
 
-      - name: Bootstrap cdk
-        run: cdk bootstrap
+      - name: Deploy
+        run: DEPLOYMENT_ENV=${{ inputs.deployment_env }} cdk deploy --require-approval never

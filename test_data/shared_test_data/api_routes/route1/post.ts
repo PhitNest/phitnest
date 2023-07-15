@@ -1,9 +1,9 @@
-import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
+import { APIGatewayProxyResult } from "aws-lambda";
 import isOdd from "is-odd";
 import isEven from "is-even";
 
 export async function invoke(
-  event: APIGatewayEvent
+  event: APIGatewayProxyResult
 ): Promise<APIGatewayProxyResult> {
   return {
     statusCode: isOdd(JSON.parse(event.body || "").age || 3)
