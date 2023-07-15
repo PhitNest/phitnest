@@ -8,8 +8,8 @@ import {
 } from "aws-cdk-lib/aws-cognito";
 import { Role } from "aws-cdk-lib/aws-iam";
 import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
-import { createDeploymentPackage } from "utils";
 import { Construct } from "constructs";
+import { createDeploymentPackage } from "../utils";
 import * as path from "path";
 
 export interface CognitoStackProps {

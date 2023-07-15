@@ -8,10 +8,14 @@ import { HttpMethod, Runtime } from "aws-cdk-lib/aws-lambda";
 import { UserPool } from "aws-cdk-lib/aws-cognito";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Role } from "aws-cdk-lib/aws-iam";
-import { Route, getRoutesFromFilesystem, createDeploymentPackage } from "utils";
-import { Construct } from "constructs";
-import * as path from "path";
 import { CfnIntegration } from "aws-cdk-lib/aws-apigatewayv2";
+import { Construct } from "constructs";
+import {
+  Route,
+  getRoutesFromFilesystem,
+  createDeploymentPackage,
+} from "../utils";
+import * as path from "path";
 
 enum AuthLevel {
   PUBLIC = "public",

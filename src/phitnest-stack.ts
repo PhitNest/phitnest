@@ -1,5 +1,5 @@
 import { Stack } from "aws-cdk-lib";
-import { ApiStack, CognitoStack, DynamoStack, S3Stack } from "components";
+import { ApiStack, CognitoStack, DynamoStack, S3Stack } from "./components";
 import { Construct } from "constructs";
 import * as path from "path";
 
