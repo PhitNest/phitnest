@@ -1,8 +1,17 @@
 import 'package:async/async.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../errors.dart';
+
+extension GetLoader on BuildContext {
+  LoaderBloc<ReqType, ResType> loader<ReqType, ResType>() =>
+      BlocProvider.of(this);
+}
+
+typedef LoaderConsumer<ReqType, ResType>
+    = BlocConsumer<LoaderBloc<ReqType, ResType>, LoaderState<ResType>>;
 
 sealed class LoaderState<ResType> extends Equatable {
   const LoaderState();
