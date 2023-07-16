@@ -69,8 +69,8 @@ final class LoginProvider extends StatelessWidget {
   final ApiInfo apiInfo;
 
   final Widget Function(
-    BuildContext,
-    LoginState,
+    BuildContext context,
+    LoginState screenState,
     GlobalKey<FormState> formKey,
     TextEditingController emailController,
     TextEditingController passwordController,
