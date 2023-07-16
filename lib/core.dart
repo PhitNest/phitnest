@@ -1,3 +1,4 @@
+export 'api/api.dart';
 export 'bloc/loader.dart';
 export 'cache.dart';
 export 'cognito/cognito.dart';
@@ -7,4 +8,3 @@ export 'http/http.dart';
 export 'logger.dart';
 export 'serializable.dart';
 export 'validators/validators.dart';
-export 'api/api.dart';

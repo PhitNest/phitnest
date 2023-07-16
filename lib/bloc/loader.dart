@@ -69,13 +69,25 @@ final class LoaderLoadedEvent<ResType> extends LoaderEvent<ResType> {
 
 final class LoaderBloc<ResType>
     extends Bloc<LoaderEvent<ResType>, LoaderState<ResType>> {
-  final Future<ResType> Function() load;
-  final Future<void> Function(ResType) onLoaded;
-
   LoaderBloc({
-    required this.load,
-    required this.onLoaded,
-  }) : super(LoaderInitialState()) {
+    required Future<void> Function(ResType) onLoaded,
+    required Future<ResType> Function() load,
+    ResType? initialData,
+    bool loadOnStart = false,
+  }) : super(initialData != null
+            ? loadOnStart
+                ? LoaderRefreshingState(
+                    initialData, CancelableOperation.fromFuture(load()))
+                : LoaderLoadedInitialState(initialData)
+            : loadOnStart
+                ? LoaderLoadingState(CancelableOperation.fromFuture(load()))
+                : LoaderInitialState()) {
+    switch (state) {
+      case LoaderLoadingState(operation: final operation) ||
+            LoaderRefreshingState(operation: final operation):
+        operation.then((response) => add(LoaderLoadedEvent(response)));
+      case LoaderLoadedState() || LoaderInitialState():
+    }
     on<LoaderLoadEvent<ResType>>(
       (event, emit) {
         CancelableOperation<ResType> operation() =>
