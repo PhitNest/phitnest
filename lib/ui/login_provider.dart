@@ -76,9 +76,8 @@ final class LoginProvider extends StatelessWidget {
     TextEditingController passwordController,
     Widget Function({
       required Widget Function(BuildContext, LoaderState<LoginResponse>)
-          consumerBuilder,
-      required void Function(BuildContext, LoaderState<LoginResponse>)
-          consumerListener,
+          builder,
+      required void Function(BuildContext, LoaderState<LoginResponse>) listener,
     }) consumer,
     void Function() submit,
   ) formBuilder;
@@ -130,10 +129,10 @@ final class LoginProvider extends StatelessWidget {
               loginBloc.formKey,
               loginBloc.emailController,
               loginBloc.passwordController,
-              ({required consumerBuilder, required consumerListener}) =>
+              ({required builder, required listener}) =>
                   LoaderConsumer<LoginParams, LoginResponse>(
-                builder: consumerBuilder,
-                listener: consumerListener,
+                builder: builder,
+                listener: listener,
               ),
               () => submit(context),
             );
