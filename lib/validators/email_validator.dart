@@ -8,7 +8,7 @@ enum SubdomainType { none, alphabetic, numeric, alphaNumeric }
 ///The EmailValidator entry point
 ///
 /// To use the EmailValidator class, call EmailValidator.methodName
-class EmailValidator {
+final class EmailValidator {
   // An atomic index which is reused during iterations in different methods
   static int _index = 0;
 

@@ -1,23 +1,28 @@
-part of 'cognito.dart';
+part of 'api.dart';
 
 const kAdminPoolIdJsonKey = 'adminPoolId';
 const kUserPoolIdJsonKey = 'userPoolId';
 const kAdminClientIdJsonKey = 'adminClientId';
 const kUserClientIdJsonKey = 'userClientId';
 const kUserIdentityPoolJsonKey = 'userIdentityPoolId';
+const kUserBucketJsonKey = 'userBucketName';
 
-class Pools extends JsonSerializable with EquatableMixin {
-  final CognitoUserPool adminPool;
+final class ApiInfo extends JsonSerializable {
   final CognitoUserPool userPool;
+  final CognitoUserPool adminPool;
   final String identityPoolId;
   final String userBucketName;
+  final bool useAdmin;
 
-  const Pools({
-    required this.adminPool,
+  const ApiInfo({
     required this.userPool,
+    required this.adminPool,
     required this.identityPoolId,
     required this.userBucketName,
+    required this.useAdmin,
   }) : super();
+
+  CognitoUserPool get pool => useAdmin ? adminPool : userPool;
 
   @override
   Map<String, Serializable> toJson() => {
@@ -29,7 +34,7 @@ class Pools extends JsonSerializable with EquatableMixin {
         kUserBucketJsonKey: Serializable.string(userBucketName),
       };
 
-  factory Pools.fromJson(dynamic json) => switch (json) {
+  factory ApiInfo.fromJson(dynamic json, bool useAdmin) => switch (json) {
         {
           kUserPoolIdJsonKey: final String userPoolId,
           kUserClientIdJsonKey: final String userClientId,
@@ -38,22 +43,23 @@ class Pools extends JsonSerializable with EquatableMixin {
           kUserIdentityPoolJsonKey: final String identityPoolId,
           kUserBucketJsonKey: final String userBucketName,
         } =>
-          Pools(
+          ApiInfo(
             adminPool: CognitoUserPool(
               adminPoolId,
               adminClientId,
-              storage: _SecureCognitoStorage(),
+              storage: SecureCognitoStorage(),
             ),
             userPool: CognitoUserPool(
               userPoolId,
               userClientId,
-              storage: _SecureCognitoStorage(),
+              storage: SecureCognitoStorage(),
             ),
             identityPoolId: identityPoolId,
             userBucketName: userBucketName,
+            useAdmin: useAdmin,
           ),
         _ => throw FormatException(
-            'Invalid JSON for _CognitoDetails',
+            'Invalid JSON for ApiInfo',
             json,
           ),
       };
@@ -66,33 +72,34 @@ class Pools extends JsonSerializable with EquatableMixin {
         userPool.getClientId(),
         userBucketName,
         identityPoolId,
+        useAdmin,
       ];
 }
 
-const kPoolsJsonKey = 'cognitoDetails';
+const kApiInfoCacheKey = 'apiInfo';
 
-Future<void> _cachePools(
-  Pools? details,
+Future<void> _cacheApiInfo(
+  ApiInfo? details,
 ) =>
     cacheObject(
-      kPoolsJsonKey,
+      kApiInfoCacheKey,
       details,
     );
 
-Pools? _getCachedPools() => getCachedObject(
-      kPoolsJsonKey,
-      Pools.fromJson,
+ApiInfo? _getCachedApiInfo(bool admin) => getCachedObject(
+      kApiInfoCacheKey,
+      (json) => ApiInfo.fromJson(json, admin),
     );
 
-Future<HttpResponse<Pools>> _requestPools() => request(
+Future<HttpResponse<ApiInfo>> requestApiInfo({
+  required bool writeToCache,
+  required bool readFromCache,
+  required bool useAdmin,
+}) =>
+    request(
       route: '/info',
       method: HttpMethod.get,
-      parser: Pools.fromJson,
-    ).then(
-      (res) async {
-        if (res is HttpResponseOk<Pools>) {
-          await _cachePools(res.data);
-        }
-        return res;
-      },
+      parser: (json) => ApiInfo.fromJson(json, useAdmin),
+      writeToCache: writeToCache ? _cacheApiInfo : null,
+      readFromCache: readFromCache ? () => _getCachedApiInfo(useAdmin) : null,
     );
