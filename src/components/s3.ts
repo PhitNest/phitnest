@@ -26,7 +26,12 @@ export class S3Stack extends Construct {
       cors: [
         {
           allowedHeaders: ["*"],
-          allowedMethods: [HttpMethods.POST, HttpMethods.PUT, HttpMethods.GET],
+          allowedMethods: [
+            HttpMethods.POST,
+            HttpMethods.PUT,
+            HttpMethods.GET,
+            HttpMethods.DELETE,
+          ],
           allowedOrigins: ["*"],
           exposedHeaders: [
             "x-amz-server-side-encryption",
