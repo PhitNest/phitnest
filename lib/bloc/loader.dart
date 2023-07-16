@@ -47,18 +47,22 @@ final class LoaderLoadedState<ResType> extends LoaderState<ResType> {
   List<Object?> get props => [data];
 }
 
-sealed class LoaderEvent<ResType> extends Equatable {
+sealed class LoaderEvent<ReqType, ResType> extends Equatable {
   const LoaderEvent();
 }
 
-final class LoaderLoadEvent<ResType> extends LoaderEvent<ResType> {
-  const LoaderLoadEvent() : super();
+final class LoaderLoadEvent<ReqType, ResType>
+    extends LoaderEvent<ReqType, ResType> {
+  final ReqType requestData;
+
+  const LoaderLoadEvent(this.requestData) : super();
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [requestData];
 }
 
-final class LoaderLoadedEvent<ResType> extends LoaderEvent<ResType> {
+final class LoaderLoadedEvent<ReqType, ResType>
+    extends LoaderEvent<ReqType, ResType> {
   final ResType data;
 
   const LoaderLoadedEvent(this.data) : super();
@@ -67,20 +71,20 @@ final class LoaderLoadedEvent<ResType> extends LoaderEvent<ResType> {
   List<Object?> get props => [data];
 }
 
-final class LoaderBloc<ResType>
-    extends Bloc<LoaderEvent<ResType>, LoaderState<ResType>> {
+final class LoaderBloc<ReqType, ResType>
+    extends Bloc<LoaderEvent<ReqType, ResType>, LoaderState<ResType>> {
   LoaderBloc({
-    required Future<ResType> Function() load,
+    required Future<ResType> Function(ReqType) load,
     ResType? initialData,
-    bool loadOnStart = false,
+    ReqType? loadOnStart,
   }) : super(initialData != null
-            ? loadOnStart
-                ? LoaderRefreshingState(
-                    initialData, CancelableOperation.fromFuture(load()))
+            ? loadOnStart != null
+                ? LoaderRefreshingState(initialData,
+                    CancelableOperation.fromFuture(load(loadOnStart)))
                 : LoaderLoadedState(initialData)
-            : loadOnStart
+            : loadOnStart != null
                 ? LoaderInitialLoadingState(
-                    CancelableOperation.fromFuture(load()))
+                    CancelableOperation.fromFuture(load(loadOnStart)))
                 : LoaderInitialState()) {
     switch (state) {
       case LoaderLoadingState(operation: final operation) ||
@@ -88,10 +92,10 @@ final class LoaderBloc<ResType>
         operation.then((response) => add(LoaderLoadedEvent(response)));
       case LoaderLoadedState() || LoaderInitialState():
     }
-    on<LoaderLoadEvent<ResType>>(
+    on<LoaderLoadEvent<ReqType, ResType>>(
       (event, emit) {
         CancelableOperation<ResType> operation() =>
-            CancelableOperation.fromFuture(load())
+            CancelableOperation.fromFuture(load(event.requestData))
               ..then((response) => add(LoaderLoadedEvent(response)));
         switch (state) {
           case LoaderLoadingState():
@@ -104,7 +108,7 @@ final class LoaderBloc<ResType>
       },
     );
 
-    on<LoaderLoadedEvent<ResType>>(
+    on<LoaderLoadedEvent<ReqType, ResType>>(
       (event, emit) async {
         switch (state) {
           case LoaderLoadingState():
