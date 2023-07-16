@@ -1,9 +1,9 @@
-import { getSharedTestDataPath } from "test-helpers";
+import { HttpMethod } from "aws-cdk-lib/aws-lambda";
+import { getSharedTestDataPath } from "../test-helpers";
 import {
   getFilesRecursive,
   getRoutesFromFilesystem,
 } from "./file-based-routing";
-import { HttpMethod } from "aws-cdk-lib/aws-lambda";
 import * as path from "path";
 import * as fs from "fs";
 

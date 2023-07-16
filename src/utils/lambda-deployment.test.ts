@@ -3,7 +3,7 @@ import {
   getSharedTestDataPath,
   getTestDataPath,
   getTestOutputPath,
-} from "test-helpers";
+} from "../test-helpers";
 import { tsconfig, createDeploymentPackage } from "./lambda-deployment";
 import { getFilesRecursive } from "./file-based-routing";
 import * as path from "path";
