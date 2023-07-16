@@ -128,7 +128,15 @@ export class ApiStack extends Construct {
         const resource = api.root.resourceForPath(route.path);
         const method = resource.addMethod(
           route.method,
-          new LambdaIntegration(lambdaFunction)
+          new LambdaIntegration(lambdaFunction),
+          {
+            authorizer:
+              authLevel[1] === AuthLevel.PRIVATE
+                ? userAuthorizer
+                : authLevel[1] === AuthLevel.ADMIN
+                ? adminAuthorizer
+                : undefined,
+          }
         );
         if (
           authLevel[1] == AuthLevel.PRIVATE ||
