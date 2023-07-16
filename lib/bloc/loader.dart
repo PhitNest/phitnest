@@ -70,8 +70,8 @@ final class LoaderLoadedEvent<ResType> extends LoaderEvent<ResType> {
 final class LoaderBloc<ResType>
     extends Bloc<LoaderEvent<ResType>, LoaderState<ResType>> {
   LoaderBloc({
-    required Future<void> Function(ResType)? onLoaded,
     required Future<ResType> Function() load,
+    Future<void> Function(ResType)? onLoaded,
     ResType? initialData,
     bool loadOnStart = false,
   }) : super(initialData != null
