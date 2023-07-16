@@ -175,6 +175,7 @@ export class ApiStack extends Construct {
         runtime: Runtime.NODEJS_16_X,
         entry: path.join(deploymentDir, "index.js"),
         handler: "invoke",
+        depsLockFilePath: path.join(deploymentDir, "package-lock.json"),
         environment: {
           DYNAMO_TABLE_NAME: this.props.dynamoTableName,
           USER_POOL_ID: this.props.userPool.userPoolId,
