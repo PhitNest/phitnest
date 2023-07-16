@@ -9,14 +9,21 @@ sealed class HttpResponse<DataType> extends Equatable {
   List<Object?> get props => [headers];
 }
 
-final class HttpResponseOk<ResType> extends HttpResponse<ResType> {
+sealed class HttpResponseSuccess<ResType> extends HttpResponse<ResType> {
   final ResType data;
-  final bool usedCache;
 
-  const HttpResponseOk(this.data, super.headers, this.usedCache) : super();
+  const HttpResponseSuccess(this.data, super.headers) : super();
 
   @override
-  List<Object?> get props => [data, headers, usedCache];
+  List<Object?> get props => [data, headers];
+}
+
+final class HttpResponseOk<ResType> extends HttpResponseSuccess<ResType> {
+  const HttpResponseOk(super.data, super.headers) : super();
+}
+
+final class HttpResponseCache<ResType> extends HttpResponseSuccess<ResType> {
+  const HttpResponseCache(ResType data) : super(data, null);
 }
 
 final class HttpResponseFailure<ResType> extends HttpResponse<ResType> {

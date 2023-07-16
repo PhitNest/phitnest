@@ -88,7 +88,7 @@ Future<HttpResponse<ResType>> request<ResType>({
       final cached = readFromCache();
       if (cached != null) {
         prettyLogger.d(responseLog('cached', cached));
-        return HttpResponseOk(cached, Headers(), true);
+        return HttpResponseCache(cached);
       }
     }
 
@@ -126,7 +126,7 @@ Future<HttpResponse<ResType>> request<ResType>({
             final parsed = parser(response.data);
             // Log success
             prettyLogger.d(responseLog('success', parsed));
-            return HttpResponseOk(parsed, response.headers, false);
+            return HttpResponseOk(parsed, response.headers);
           }
           // Handle unsuccessful responses
           final failure = Failure.fromJson(response.data);
