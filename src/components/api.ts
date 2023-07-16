@@ -127,7 +127,10 @@ export class ApiStack extends Construct {
         );
 
         const lambdaFunction = this.createLambdaFunction(scope, route);
-        const resource = api.root.addResource(route.path);
+        const resources = route.path
+          .split("/")
+          .map((part) => api.root.addResource(part));
+        const resource = resources[resources.length - 1];
         const method = resource.addMethod(
           route.method,
           new LambdaIntegration(lambdaFunction)
