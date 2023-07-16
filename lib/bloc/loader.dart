@@ -70,7 +70,7 @@ final class LoaderLoadedEvent<ResType> extends LoaderEvent<ResType> {
 final class LoaderBloc<ResType>
     extends Bloc<LoaderEvent<ResType>, LoaderState<ResType>> {
   LoaderBloc({
-    required Future<void> Function(ResType) onLoaded,
+    required Future<void> Function(ResType)? onLoaded,
     required Future<ResType> Function() load,
     ResType? initialData,
     bool loadOnStart = false,
@@ -108,7 +108,9 @@ final class LoaderBloc<ResType>
       (event, emit) async {
         switch (state) {
           case LoaderLoadingState() || LoaderRefreshingState():
-            await onLoaded(event.data);
+            if (onLoaded != null) {
+              await onLoaded(event.data);
+            }
             emit(LoaderLoadedInitialState(event.data));
           case LoaderLoadedState() || LoaderInitialState():
             badState(state, event);
