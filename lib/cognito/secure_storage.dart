@@ -1,6 +1,6 @@
 part of 'cognito.dart';
 
-class _SecureCognitoStorage extends CognitoStorage {
+final class SecureCognitoStorage extends CognitoStorage {
   final Set<String> keyList = {};
 
   @override

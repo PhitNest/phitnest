@@ -1,4 +1,4 @@
-Failure invalidFailure(dynamic data) =>
+Failure invalidJson(dynamic data) =>
     Failure('InvalidFailure', 'Invalid Failure JSON: $data');
 
 class Failure {
@@ -13,6 +13,6 @@ class Failure {
   factory Failure.fromJson(dynamic json) => switch (json) {
         {'type': final String type, 'message': final String message} =>
           Failure(type, message),
-        _ => invalidFailure(json),
+        _ => invalidJson(json),
       };
 }

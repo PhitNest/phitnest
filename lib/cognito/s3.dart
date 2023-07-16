@@ -1,14 +1,17 @@
 part of 'cognito.dart';
 
-({Uri uri, Map<String, String> headers})? getProfilePicture(
+({Uri uri, Map<String, String> headers})? getProfilePictureUri(
   Session session,
-  String userId,
 ) {
   try {
+    final userId = session.cognitoSession.getAccessToken().getJwtToken();
+    if (userId == null) {
+      return null;
+    }
     const host = 's3.us-east-1.amazonaws.com';
     const region = 'us-east-1';
     const service = 's3';
-    final key = '${session.userBucketName}/profilePictures/$userId.txt';
+    final key = '${session.apiInfo.userBucketName}/profilePictures/$userId.txt';
     final payload = SigV4.hashCanonicalRequest('');
     final datetime = SigV4.generateDatetime();
     final canonicalRequest = '''GET
@@ -51,7 +54,7 @@ $payload''';
   }
 }
 
-class Policy {
+final class Policy {
   String expiration;
   String bucket;
   String key;
@@ -127,46 +130,46 @@ Future<Failure?> uploadProfilePicture({
   required int length,
   required Session session,
 }) async {
-  final region = session.user.pool.getRegion();
-  final s3Endpoint =
-      'https://${session.userBucketName}.s3.$region.amazonaws.com';
-
-  final String bucketKey =
-      'profilePictures/${session.session.getAccessToken().getSub()}.txt';
-  final uri = Uri.parse(s3Endpoint);
-  final req = http.MultipartRequest('POST', uri);
-  final multipartFile = http.MultipartFile(
-    'file',
-    photo,
-    length,
-  );
-
-  final policy = Policy.fromS3PresignedPost(
-    bucketKey,
-    session.userBucketName,
-    15,
-    session.credentials.accessKeyId!,
-    length,
-    session.credentials.sessionToken!,
-  );
-  final key = SigV4.calculateSigningKey(
-    session.credentials.secretAccessKey!,
-    policy.datetime,
-    session.user.pool.getRegion()!,
-    's3',
-  );
-  final signature = SigV4.calculateSignature(key, policy.encode());
-
-  req.files.add(multipartFile);
-  req.fields['key'] = policy.key;
-  req.fields['X-Amz-Credential'] = policy.credential;
-  req.fields['X-Amz-Algorithm'] = 'AWS4-HMAC-SHA256';
-  req.fields['X-Amz-Date'] = policy.datetime;
-  req.fields['Policy'] = policy.encode();
-  req.fields['X-Amz-Signature'] = signature;
-  req.fields['x-amz-security-token'] = session.credentials.sessionToken!;
-
   try {
+    final region = session.user.pool.getRegion();
+    final s3Endpoint =
+        'https://${session.apiInfo.userBucketName}.s3.$region.amazonaws.com';
+
+    final String bucketKey =
+        'profilePictures/${session.cognitoSession.getAccessToken().getSub()}.txt';
+    final uri = Uri.parse(s3Endpoint);
+    final req = http.MultipartRequest('POST', uri);
+    final multipartFile = http.MultipartFile(
+      'file',
+      photo,
+      length,
+    );
+
+    final policy = Policy.fromS3PresignedPost(
+      bucketKey,
+      session.apiInfo.userBucketName,
+      15,
+      session.credentials.accessKeyId!,
+      length,
+      session.credentials.sessionToken!,
+    );
+    final key = SigV4.calculateSigningKey(
+      session.credentials.secretAccessKey!,
+      policy.datetime,
+      session.user.pool.getRegion()!,
+      's3',
+    );
+    final signature = SigV4.calculateSignature(key, policy.encode());
+
+    req.files.add(multipartFile);
+    req.fields['key'] = policy.key;
+    req.fields['X-Amz-Credential'] = policy.credential;
+    req.fields['X-Amz-Algorithm'] = 'AWS4-HMAC-SHA256';
+    req.fields['X-Amz-Date'] = policy.datetime;
+    req.fields['Policy'] = policy.encode();
+    req.fields['X-Amz-Signature'] = signature;
+    req.fields['x-amz-security-token'] = session.credentials.sessionToken!;
+
     final res = await req.send();
     await for (var value in res.stream.transform(utf8.decoder)) {
       prettyLogger.d(value);

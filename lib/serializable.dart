@@ -1,55 +1,58 @@
+import 'package:equatable/equatable.dart';
+
 /// A class that can be serialized into a JSON encodable object.
 sealed class Serializable {
   dynamic toJson();
 
-  factory Serializable.double(double double) => SerializablePrimitive._(double);
+  factory Serializable.double(double double) => SerializablePrimitive(double);
 
-  factory Serializable.string(String string) => SerializablePrimitive._(string);
+  factory Serializable.string(String string) => SerializablePrimitive(string);
 
-  factory Serializable.int(int int) => SerializablePrimitive._(int);
+  factory Serializable.int(int int) => SerializablePrimitive(int);
 
-  factory Serializable.bool(bool bool) => SerializablePrimitive._(bool);
+  factory Serializable.bool(bool bool) => SerializablePrimitive(bool);
 
   factory Serializable.list(List<Serializable> list) => SerializableList(list);
 
   factory Serializable.map(Map<String, Serializable> map) =>
       SerializableMap(map);
-
-  const Serializable() : super();
 }
 
 /// Extend this to make a class serializable to JSON.
-abstract class JsonSerializable extends Serializable {
+abstract class JsonSerializable with EquatableMixin implements Serializable {
+  @override
+  Map<String, Serializable> toJson();
+
   const JsonSerializable() : super();
 
   @override
-  Map<String, Serializable> toJson();
+  bool get stringify => true;
 }
 
-class SerializablePrimitive extends Serializable {
+final class SerializablePrimitive implements Serializable {
   final dynamic _primitive;
 
-  const SerializablePrimitive._(this._primitive) : super();
+  const SerializablePrimitive(this._primitive) : super();
 
   @override
   dynamic toJson() => _primitive;
 }
 
-class SerializableList extends Serializable {
-  final List<Serializable> list;
+final class SerializableList implements Serializable {
+  final List<Serializable> _list;
 
-  const SerializableList(this.list) : super();
+  const SerializableList(this._list) : super();
 
   @override
-  List<dynamic> toJson() => list.map((e) => e.toJson()).toList();
+  List<dynamic> toJson() => _list.map((e) => e.toJson()).toList();
 }
 
-class SerializableMap extends Serializable {
-  final Map<String, Serializable> map;
+final class SerializableMap implements Serializable {
+  final Map<String, Serializable> _map;
 
-  const SerializableMap(this.map) : super();
+  const SerializableMap(this._map) : super();
 
   @override
   Map<String, dynamic> toJson() =>
-      map.map((key, value) => MapEntry(key, value.toJson()));
+      _map.map((key, value) => MapEntry(key, value.toJson()));
 }
