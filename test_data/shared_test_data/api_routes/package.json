@@ -1,0 +1,12 @@
+{
+  "name": "api_routes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "aws-lambda": "^1.0.7",
+    "is-even": "^1.0.0",
+    "is-odd": "^3.0.1"
+  },
+  "devDependencies": {}
+}

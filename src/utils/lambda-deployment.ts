@@ -34,6 +34,7 @@ export function transpileFiles(
 
 export function createDeploymentPackage(
   sourcePath: string,
+  lockPath: string,
   nodeModulesDir: string,
   commonDir: string,
   outputDir: string
@@ -47,5 +48,6 @@ export function createDeploymentPackage(
   fse.copySync(nodeModulesDir, path.join(outputDir, "node_modules"), {
     dereference: true,
   });
+  fse.copySync(lockPath, path.join(outputDir, "package-lock.json"));
   transpileFiles(commonDir, path.join(outputDir, "common"));
 }

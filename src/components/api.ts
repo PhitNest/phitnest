@@ -29,6 +29,7 @@ export interface ApiStackProps {
   apiSrcDir: string;
   nodeModulesDir: string;
   commonDir: string;
+  apiLockFilePath: string;
   apiDeploymentDir: string;
   dynamoTableRole: Role;
   dynamoTableName: string;
@@ -119,6 +120,7 @@ export class ApiStack extends Construct {
             route.filesystemAbsolutePath,
             `${route.method.toLowerCase()}.ts`
           ),
+          props.apiLockFilePath,
           props.nodeModulesDir,
           props.commonDir,
           this.deploymentDir(route)
@@ -130,27 +132,28 @@ export class ApiStack extends Construct {
           route.method,
           new LambdaIntegration(lambdaFunction)
         );
-        const methodResource = method.node.findChild(
-          "Resource"
-        ) as CfnIntegration;
-        if (authLevel[1] === AuthLevel.PRIVATE) {
-          methodResource.addPropertyOverride(
-            "AuthorizerId",
-            userAuthorizer.authorizerId
-          );
-          methodResource.addPropertyOverride(
-            "AuthorizationType",
-            "COGNITO_USER_POOLS"
-          );
-        } else if (authLevel[1] === AuthLevel.ADMIN) {
-          methodResource.addPropertyOverride(
-            "AuthorizerId",
-            adminAuthorizer.authorizerId
-          );
+        if (
+          authLevel[1] == AuthLevel.PRIVATE ||
+          authLevel[1] == AuthLevel.ADMIN
+        ) {
+          const methodResource = method.node.findChild(
+            "Resource"
+          ) as CfnIntegration;
           methodResource.addPropertyOverride(
             "AuthorizationType",
             "COGNITO_USER_POOLS"
           );
+          if (authLevel[1] === AuthLevel.PRIVATE) {
+            methodResource.addPropertyOverride(
+              "AuthorizerId",
+              userAuthorizer.authorizerId
+            );
+          } else if (authLevel[1] === AuthLevel.ADMIN) {
+            methodResource.addPropertyOverride(
+              "AuthorizerId",
+              adminAuthorizer.authorizerId
+            );
+          }
         }
       }
     }

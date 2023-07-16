@@ -11,11 +11,14 @@ import * as fs from "fs";
 
 describe("createDeploymentPackage", () => {
   it("should create a deployment package for a route", async () => {
-    const sourcePath = getSharedTestDataPath("api_routes", "route1", "post.ts");
-    const nodeModulesDir = getSharedTestDataPath("api_routes", "node_modules");
+    const apiRoutesData = getSharedTestDataPath("api_routes");
+    const sourcePath = path.join(apiRoutesData, "route1", "post.ts");
+    const nodeModulesDir = path.join(apiRoutesData, "node_modules");
+    const lockFilePath = path.join(apiRoutesData, "package-lock.json");
     const outputPath = getTestOutputPath("deployment_package");
     createDeploymentPackage(
       sourcePath,
+      lockFilePath,
       nodeModulesDir,
       getTestDataPath("common"),
       outputPath
@@ -32,6 +35,15 @@ describe("createDeploymentPackage", () => {
       tsconfig
     ).outputText;
     expect(fileData).toEqual(expectedFileData);
+    const outputLockFilePath = path.join(outputPath, "package-lock.json");
+    expect(fs.existsSync(outputLockFilePath));
+    const expectedLockData = fs.readFileSync(lockFilePath, {
+      encoding: "utf-8",
+    });
+    const lockData = fs.readFileSync(outputLockFilePath, {
+      encoding: "utf-8",
+    });
+    expect(lockData).toEqual(expectedLockData);
     const nodeModulesOutput = path.join(outputPath, "node_modules");
     const copiedNodeModules = new Set(
       getFilesRecursive(nodeModulesOutput).map((file) => [

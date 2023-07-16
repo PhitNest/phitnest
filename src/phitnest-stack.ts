@@ -15,6 +15,7 @@ export class PhitnestStack extends Stack {
     const apiSrcDir = path.join(srcDir, "src");
     const apiDeploymentDir = path.join(process.cwd(), "dist");
     const nodeModulesDir = path.join(srcDir, "node_modules");
+    const lockFilePath = path.join(srcDir, "package-lock.json");
     const commonDir = path.join(apiSrcDir, "common");
 
     const dynamo = new DynamoStack(this, {
@@ -29,6 +30,7 @@ export class PhitnestStack extends Stack {
       cognitoHookDeploymentDir: path.join(apiDeploymentDir, "cognito_hooks"),
       dynamoTableName: dynamo.tableName,
       dynamoTableRole: dynamo.tableRole,
+      apiLockFilePath: lockFilePath,
     });
 
     const s3 = new S3Stack(this, {
@@ -50,6 +52,7 @@ export class PhitnestStack extends Stack {
       dynamoTableName: dynamo.tableName,
       dynamoTableRole: dynamo.tableRole,
       userBucketName: s3.userBucketName,
+      apiLockFilePath: lockFilePath,
       apiRoute53CertificateArn:
         kDeploymentEnv === "prod" ? kApiRoute53Arn : undefined,
     });

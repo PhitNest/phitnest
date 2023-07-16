@@ -18,6 +18,7 @@ export interface CognitoStackProps {
   cognitoHookSrcDir: string;
   nodeModulesDir: string;
   commonDir: string;
+  apiLockFilePath: string;
   dynamoTableName: string;
   dynamoTableRole: Role;
 }
@@ -46,6 +47,7 @@ export class CognitoStack extends Construct {
     );
     createDeploymentPackage(
       path.join(props.cognitoHookSrcDir, "user-presignup.ts"),
+      props.apiLockFilePath,
       props.nodeModulesDir,
       props.commonDir,
       userPresignupDeploymentDir
@@ -107,6 +109,7 @@ export class CognitoStack extends Construct {
     );
     createDeploymentPackage(
       path.join(props.cognitoHookSrcDir, "admin-presignup.ts"),
+      props.apiLockFilePath,
       props.nodeModulesDir,
       props.commonDir,
       adminPresignupDeploymentDir
