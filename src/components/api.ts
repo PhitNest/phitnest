@@ -1,5 +1,6 @@
 import { RemovalPolicy } from "aws-cdk-lib";
 import {
+  AuthorizationType,
   CognitoUserPoolsAuthorizer,
   LambdaIntegration,
   RestApi,
@@ -8,7 +9,6 @@ import { Code, Function, HttpMethod, Runtime } from "aws-cdk-lib/aws-lambda";
 import { UserPool } from "aws-cdk-lib/aws-cognito";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Role } from "aws-cdk-lib/aws-iam";
-import { CfnIntegration } from "aws-cdk-lib/aws-apigatewayv2";
 import { Certificate, ICertificate } from "aws-cdk-lib/aws-certificatemanager";
 import { Construct } from "constructs";
 import {
@@ -126,10 +126,14 @@ export class ApiStack extends Construct {
 
         const lambdaFunction = this.createLambdaFunction(scope, route);
         const resource = api.root.resourceForPath(route.path);
-        const method = resource.addMethod(
+        resource.addMethod(
           route.method,
           new LambdaIntegration(lambdaFunction),
           {
+            authorizationType:
+              authLevel[1] === AuthLevel.PUBLIC
+                ? undefined
+                : AuthorizationType.COGNITO,
             authorizer:
               authLevel[1] === AuthLevel.PRIVATE
                 ? userAuthorizer
@@ -138,29 +142,6 @@ export class ApiStack extends Construct {
                 : undefined,
           }
         );
-        if (
-          authLevel[1] == AuthLevel.PRIVATE ||
-          authLevel[1] == AuthLevel.ADMIN
-        ) {
-          const methodResource = method.node.findChild(
-            "Resource"
-          ) as CfnIntegration;
-          methodResource.addPropertyOverride(
-            "AuthorizationType",
-            "COGNITO_USER_POOLS"
-          );
-          if (authLevel[1] === AuthLevel.PRIVATE) {
-            methodResource.addPropertyOverride(
-              "AuthorizerId",
-              userAuthorizer.authorizerId
-            );
-          } else if (authLevel[1] === AuthLevel.ADMIN) {
-            methodResource.addPropertyOverride(
-              "AuthorizerId",
-              adminAuthorizer.authorizerId
-            );
-          }
-        }
       }
     }
   }
