@@ -7,3 +7,4 @@ export 'http/http.dart';
 export 'logger.dart';
 export 'serializable.dart';
 export 'validators/validators.dart';
+export 'api/api.dart';
