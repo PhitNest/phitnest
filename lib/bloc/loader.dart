@@ -2,6 +2,8 @@ import 'package:async/async.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../errors.dart';
+
 sealed class LoaderState<ResType> extends Equatable {
   const LoaderState();
 }
@@ -22,13 +24,27 @@ final class LoaderLoadingState<ResType> extends LoaderState<ResType> {
   List<Object?> get props => [operation];
 }
 
-final class LoaderLoadedState<ResType> extends LoaderState<ResType> {
+sealed class LoaderLoadedState<ResType> extends LoaderState<ResType> {
   final ResType data;
 
   const LoaderLoadedState(this.data) : super();
 
   @override
   List<Object?> get props => [data];
+}
+
+final class LoaderRefreshingState<ResType> extends LoaderLoadedState<ResType> {
+  final CancelableOperation<ResType> operation;
+
+  const LoaderRefreshingState(super.data, this.operation) : super();
+
+  @override
+  List<Object?> get props => [super.props, operation];
+}
+
+final class LoaderLoadedInitialState<ResType>
+    extends LoaderLoadedState<ResType> {
+  const LoaderLoadedInitialState(super.data) : super();
 }
 
 sealed class LoaderEvent<ResType> extends Equatable {
@@ -62,25 +78,40 @@ final class LoaderBloc<ResType>
   }) : super(LoaderInitialState()) {
     on<LoaderLoadEvent<ResType>>(
       (event, emit) {
-        final operation = CancelableOperation.fromFuture(load())
-          ..then((response) => add(LoaderLoadedEvent(response)));
-        emit(LoaderLoadingState(operation));
+        CancelableOperation<ResType> operation() =>
+            CancelableOperation.fromFuture(load())
+              ..then((response) => add(LoaderLoadedEvent(response)));
+        switch (state) {
+          case LoaderLoadingState() || LoaderRefreshingState():
+            badState(state, event);
+          case LoaderInitialState():
+            emit(LoaderLoadingState(operation()));
+          case LoaderLoadedState(data: final data):
+            emit(LoaderRefreshingState(data, operation()));
+        }
       },
     );
 
     on<LoaderLoadedEvent<ResType>>(
       (event, emit) async {
-        await onLoaded(event.data);
-        emit(LoaderLoadedState(event.data));
+        switch (state) {
+          case LoaderLoadingState() || LoaderRefreshingState():
+            await onLoaded(event.data);
+            emit(LoaderLoadedInitialState(event.data));
+          case LoaderLoadedState() || LoaderInitialState():
+            badState(state, event);
+        }
       },
     );
   }
 
   @override
   Future<void> close() async {
-    final state = this.state;
-    if (state is LoaderLoadingState<ResType>) {
-      await state.operation.cancel();
+    switch (state) {
+      case LoaderLoadingState(operation: final operation) ||
+            LoaderRefreshingState(operation: final operation):
+        await operation.cancel();
+      case LoaderLoadedState() || LoaderInitialState():
     }
     return super.close();
   }
