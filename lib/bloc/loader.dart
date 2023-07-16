@@ -76,15 +76,15 @@ final class LoaderBloc<ReqType, ResType>
   LoaderBloc({
     required Future<ResType> Function(ReqType) load,
     ResType? initialData,
-    ReqType? loadOnStart,
+    ({ReqType req})? loadOnStart,
   }) : super(initialData != null
             ? loadOnStart != null
                 ? LoaderRefreshingState(initialData,
-                    CancelableOperation.fromFuture(load(loadOnStart)))
+                    CancelableOperation.fromFuture(load(loadOnStart.req)))
                 : LoaderLoadedState(initialData)
             : loadOnStart != null
                 ? LoaderInitialLoadingState(
-                    CancelableOperation.fromFuture(load(loadOnStart)))
+                    CancelableOperation.fromFuture(load(loadOnStart.req)))
                 : LoaderInitialState()) {
     switch (state) {
       case LoaderLoadingState(operation: final operation) ||
