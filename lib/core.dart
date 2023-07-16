@@ -7,4 +7,6 @@ export 'failure.dart';
 export 'http/http.dart';
 export 'logger.dart';
 export 'serializable.dart';
+export 'ui/theme.dart';
+export 'ui/widgets.dart';
 export 'validators/validators.dart';
