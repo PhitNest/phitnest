@@ -22,6 +22,7 @@ dependencies:
   http: ^1.0.0
   flutter_screenutil: ^5.8.4
   google_fonts: ^5.1.0
+  provider: ^6.0.5
   
 dev_dependencies:
   lints: ^2.1.0
