@@ -1,5 +1,5 @@
 import { AttributeValue } from "@aws-sdk/client-dynamodb";
-import { DynamoParseError } from "common/utils";
+import { DynamoParseError } from "../utils";
 
 /**
  * Each of these labels represents a type of data that can be stored in DynamoDB.
