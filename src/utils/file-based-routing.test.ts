@@ -49,7 +49,7 @@ function getTestPaths(apiRoutesDir: string): TestPaths {
 describe("getFilesRecursive", () => {
   it("should return all files in a directory recursively", () => {
     // Define the directory to test, it is part of the shared test data
-    const apiRoutesDir = getSharedTestDataPath("api_routes");
+    const apiRoutesDir = getSharedTestDataPath("api_routes", "src");
 
     const {
       route1Post,
@@ -75,7 +75,7 @@ describe("getFilesRecursive", () => {
 describe("getRoutesFromFilesystem", () => {
   it("should return all routes in a directory", () => {
     // Define the directory to test, it is part of the shared test data
-    const apiRoutesDir = getSharedTestDataPath("api_routes");
+    const apiRoutesDir = getSharedTestDataPath("api_routes", "src");
 
     const { route1Post, route1Get, route2Get, route2Post } =
       getTestPaths(apiRoutesDir);

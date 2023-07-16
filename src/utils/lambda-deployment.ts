@@ -10,22 +10,26 @@ export const tsconfig: TranspileOptions = JSON.parse(
   })
 );
 
+function resolveRelativePaths(src: string): string {
+  return src.replace('from "common', 'from "./common');
+}
+
 export function transpileFiles(
   srcDir: string,
   outputDir: string,
   ignoreTests = true
 ) {
-  for (const commonFile of getFilesRecursive(srcDir)) {
-    if (
-      commonFile.endsWith(".ts") &&
-      !(ignoreTests && commonFile.endsWith(".test.ts"))
-    ) {
-      const relativePath = path.relative(srcDir, commonFile);
+  for (const file of getFilesRecursive(srcDir)) {
+    if (file.endsWith(".ts") && !(ignoreTests && file.endsWith(".test.ts"))) {
+      const relativePath = path.relative(srcDir, file);
       const outputPath = path
         .join(outputDir, relativePath)
         .replace(/\.ts$/, ".js");
-      const src = fs.readFileSync(commonFile, { encoding: "utf-8" });
-      const transpiledSrc = transpileModule(src, tsconfig).outputText;
+      const src = fs.readFileSync(file, { encoding: "utf-8" });
+      const transpiledSrc = transpileModule(
+        resolveRelativePaths(src),
+        tsconfig
+      ).outputText;
       fs.mkdirSync(path.parse(outputPath).dir, { recursive: true });
       fs.writeFileSync(outputPath, transpiledSrc);
     }
@@ -43,7 +47,7 @@ export function createDeploymentPackage(
   const source = fs.readFileSync(sourcePath, { encoding: "utf-8" });
   fs.writeFileSync(
     path.join(outputDir, "index.js"),
-    transpileModule(source, tsconfig).outputText
+    transpileModule(resolveRelativePaths(source), tsconfig).outputText
   );
   fse.copySync(nodeModulesDir, path.join(outputDir, "node_modules"), {
     dereference: true,

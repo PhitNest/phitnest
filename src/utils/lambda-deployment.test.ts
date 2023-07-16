@@ -1,10 +1,9 @@
-import { transpileModule } from "typescript";
 import {
   getSharedTestDataPath,
   getTestDataPath,
   getTestOutputPath,
 } from "../test-helpers";
-import { tsconfig, createDeploymentPackage } from "./lambda-deployment";
+import { createDeploymentPackage } from "./lambda-deployment";
 import { getFilesRecursive } from "./file-based-routing";
 import * as path from "path";
 import * as fs from "fs";
@@ -12,7 +11,8 @@ import * as fs from "fs";
 describe("createDeploymentPackage", () => {
   it("should create a deployment package for a route", async () => {
     const apiRoutesData = getSharedTestDataPath("api_routes");
-    const sourcePath = path.join(apiRoutesData, "route1", "post.ts");
+    const apiSrcDir = path.join(apiRoutesData, "src");
+    const sourcePath = path.join(apiSrcDir, "route1", "post.ts");
     const nodeModulesDir = path.join(apiRoutesData, "node_modules");
     const lockFilePath = path.join(apiRoutesData, "package-lock.json");
     const outputPath = getTestOutputPath("deployment_package");
@@ -20,7 +20,7 @@ describe("createDeploymentPackage", () => {
       sourcePath,
       lockFilePath,
       nodeModulesDir,
-      getTestDataPath("common"),
+      path.join(apiSrcDir, "common"),
       outputPath
     );
     const outputFilePath = path.join(outputPath, "index.js");
@@ -28,12 +28,12 @@ describe("createDeploymentPackage", () => {
     const fileData = fs.readFileSync(outputFilePath, {
       encoding: "utf-8",
     });
-    const expectedFileData = transpileModule(
-      fs.readFileSync(sourcePath, {
+    const expectedFileData = fs.readFileSync(
+      getTestDataPath("expected_route1_post_out", "index.js"),
+      {
         encoding: "utf-8",
-      }),
-      tsconfig
-    ).outputText;
+      }
+    );
     expect(fileData).toEqual(expectedFileData);
     const outputLockFilePath = path.join(outputPath, "package-lock.json");
     expect(fs.existsSync(outputLockFilePath));

@@ -8,5 +8,9 @@
     "is-even": "^1.0.0",
     "is-odd": "^3.0.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.119",
+    "@types/is-even": "^1.0.0",
+    "@types/is-odd": "^3.0.1"
+  }
 }
