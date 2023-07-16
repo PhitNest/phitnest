@@ -78,7 +78,7 @@ final class ApiInfo extends JsonSerializable {
 
 const kApiInfoCacheKey = 'apiInfo';
 
-Future<void> _cacheApiInfo(
+Future<void> cacheApiInfo(
   ApiInfo? details,
 ) =>
     cacheObject(
@@ -86,7 +86,7 @@ Future<void> _cacheApiInfo(
       details,
     );
 
-ApiInfo? _getCachedApiInfo(bool admin) => getCachedObject(
+ApiInfo? getCachedApiInfo(bool admin) => getCachedObject(
       kApiInfoCacheKey,
       (json) => ApiInfo.fromJson(json, admin),
     );
@@ -100,6 +100,6 @@ Future<HttpResponse<ApiInfo>> requestApiInfo({
       route: '/info',
       method: HttpMethod.get,
       parser: (json) => ApiInfo.fromJson(json, useAdmin),
-      writeToCache: writeToCache ? _cacheApiInfo : null,
-      readFromCache: readFromCache ? () => _getCachedApiInfo(useAdmin) : null,
+      writeToCache: writeToCache ? cacheApiInfo : null,
+      readFromCache: readFromCache ? () => getCachedApiInfo(useAdmin) : null,
     );
