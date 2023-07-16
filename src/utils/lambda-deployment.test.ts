@@ -14,11 +14,9 @@ describe("createDeploymentPackage", () => {
     const apiSrcDir = path.join(apiRoutesData, "src");
     const sourcePath = path.join(apiSrcDir, "route1", "post.ts");
     const nodeModulesDir = path.join(apiRoutesData, "node_modules");
-    const lockFilePath = path.join(apiRoutesData, "package-lock.json");
     const outputPath = getTestOutputPath("deployment_package");
     createDeploymentPackage(
       sourcePath,
-      lockFilePath,
       nodeModulesDir,
       path.join(apiSrcDir, "common"),
       outputPath
@@ -35,15 +33,6 @@ describe("createDeploymentPackage", () => {
       }
     );
     expect(fileData).toEqual(expectedFileData);
-    const outputLockFilePath = path.join(outputPath, "package-lock.json");
-    expect(fs.existsSync(outputLockFilePath));
-    const expectedLockData = fs.readFileSync(lockFilePath, {
-      encoding: "utf-8",
-    });
-    const lockData = fs.readFileSync(outputLockFilePath, {
-      encoding: "utf-8",
-    });
-    expect(lockData).toEqual(expectedLockData);
     const nodeModulesOutput = path.join(outputPath, "node_modules");
     const copiedNodeModules = new Set(
       getFilesRecursive(nodeModulesOutput).map((file) => [

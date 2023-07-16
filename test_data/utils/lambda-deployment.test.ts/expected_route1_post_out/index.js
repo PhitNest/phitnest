@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.invoke = void 0;
 // @ts-ignore
-const transpileThis_1 = require("./common/nested/transpileThis");
+const transpileThis_1 = require("common/nested/transpileThis");
 const is_odd_1 = require("is-odd");
 const is_even_1 = require("is-even");
 async function invoke(event) {

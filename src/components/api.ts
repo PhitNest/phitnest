@@ -4,7 +4,7 @@ import {
   LambdaIntegration,
   RestApi,
 } from "aws-cdk-lib/aws-apigateway";
-import { HttpMethod, Runtime } from "aws-cdk-lib/aws-lambda";
+import { Code, Function, HttpMethod, Runtime } from "aws-cdk-lib/aws-lambda";
 import { UserPool } from "aws-cdk-lib/aws-cognito";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Role } from "aws-cdk-lib/aws-iam";
@@ -29,7 +29,6 @@ export interface ApiStackProps {
   apiSrcDir: string;
   nodeModulesDir: string;
   commonDir: string;
-  apiLockFilePath: string;
   apiDeploymentDir: string;
   dynamoTableRole: Role;
   dynamoTableName: string;
@@ -120,7 +119,6 @@ export class ApiStack extends Construct {
             route.filesystemAbsolutePath,
             `${route.method.toLowerCase()}.ts`
           ),
-          props.apiLockFilePath,
           props.nodeModulesDir,
           props.commonDir,
           this.deploymentDir(route)
@@ -169,16 +167,15 @@ export class ApiStack extends Construct {
 
   private createLambdaFunction(scope: Construct, route: Route): NodejsFunction {
     const deploymentDir = this.deploymentDir(route);
-    const func = new NodejsFunction(
+    const func = new Function(
       scope,
       `lambda-${route.path.replace("/", "-")}-${route.method}-${
         this.props.deploymentEnv
       }`,
       {
         runtime: Runtime.NODEJS_16_X,
-        entry: path.join(deploymentDir, "index.js"),
-        handler: "invoke",
-        depsLockFilePath: path.join(deploymentDir, "package-lock.json"),
+        handler: "index.invoke",
+        code: Code.fromAsset(deploymentDir),
         environment: {
           DYNAMO_TABLE_NAME: this.props.dynamoTableName,
           USER_POOL_ID: this.props.userPool.userPoolId,

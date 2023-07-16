@@ -10,10 +10,6 @@ export const tsconfig: TranspileOptions = JSON.parse(
   })
 );
 
-function resolveRelativePaths(src: string): string {
-  return src.replace('from "common', 'from "./common');
-}
-
 export function transpileFiles(
   srcDir: string,
   outputDir: string,
@@ -26,10 +22,7 @@ export function transpileFiles(
         .join(outputDir, relativePath)
         .replace(/\.ts$/, ".js");
       const src = fs.readFileSync(file, { encoding: "utf-8" });
-      const transpiledSrc = transpileModule(
-        resolveRelativePaths(src),
-        tsconfig
-      ).outputText;
+      const transpiledSrc = transpileModule(src, tsconfig).outputText;
       fs.mkdirSync(path.parse(outputPath).dir, { recursive: true });
       fs.writeFileSync(outputPath, transpiledSrc);
     }
@@ -38,7 +31,6 @@ export function transpileFiles(
 
 export function createDeploymentPackage(
   sourcePath: string,
-  lockPath: string,
   nodeModulesDir: string,
   commonDir: string,
   outputDir: string
@@ -47,11 +39,10 @@ export function createDeploymentPackage(
   const source = fs.readFileSync(sourcePath, { encoding: "utf-8" });
   fs.writeFileSync(
     path.join(outputDir, "index.js"),
-    transpileModule(resolveRelativePaths(source), tsconfig).outputText
+    transpileModule(source, tsconfig).outputText
   );
   fse.copySync(nodeModulesDir, path.join(outputDir, "node_modules"), {
     dereference: true,
   });
-  fse.copySync(lockPath, path.join(outputDir, "package-lock.json"));
   transpileFiles(commonDir, path.join(outputDir, "common"));
 }
