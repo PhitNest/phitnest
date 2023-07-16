@@ -24,10 +24,6 @@ final class LoginState extends Equatable {
   List<Object?> get props => [autovalidateMode];
 }
 
-extension GetLoginBloc on BuildContext {
-  LoginBloc get loginBloc => BlocProvider.of(this);
-}
-
 final class LoginBloc extends Bloc<LoginFormRejectedEvent, LoginState> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -82,7 +78,24 @@ final class LoginProvider extends StatelessWidget {
       Widget Function(BuildContext, LoaderState<LoginResponse>) consumerBuilder,
       void Function(BuildContext, LoaderState<LoginResponse>) consumerListener,
     ) consumer,
+    void Function() submit,
   ) formBuilder;
+
+  void submit(BuildContext context) {
+    final loginBloc = BlocProvider.of<LoginBloc>(context);
+    if (loginBloc.formKey.currentState!.validate()) {
+      context.loader<LoginParams, LoginResponse>().add(
+            LoaderLoadEvent(
+              LoginParams(
+                email: loginBloc.emailController.text,
+                password: loginBloc.passwordController.text,
+              ),
+            ),
+          );
+    } else {
+      loginBloc.add(const LoginFormRejectedEvent());
+    }
+  }
 
   const LoginProvider({
     required this.apiInfo,
@@ -108,7 +121,7 @@ final class LoginProvider extends StatelessWidget {
         child: BlocConsumer<LoginBloc, LoginState>(
           listener: (context, state) {},
           builder: (context, state) {
-            final loginBloc = context.loginBloc;
+            final loginBloc = BlocProvider.of<LoginBloc>(context);
             return formBuilder(
               context,
               state,
@@ -120,6 +133,7 @@ final class LoginProvider extends StatelessWidget {
                 builder: consumerBuilder,
                 listener: consumerListener,
               ),
+              () => submit(context),
             );
           },
         ),
