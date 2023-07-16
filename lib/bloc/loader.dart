@@ -15,7 +15,7 @@ final class LoaderInitialState<ResType> extends LoaderState<ResType> {
   List<Object?> get props => [];
 }
 
-final class LoaderLoadingState<ResType> extends LoaderState<ResType> {
+sealed class LoaderLoadingState<ResType> extends LoaderState<ResType> {
   final CancelableOperation<ResType> operation;
 
   const LoaderLoadingState(this.operation) : super();
@@ -24,27 +24,27 @@ final class LoaderLoadingState<ResType> extends LoaderState<ResType> {
   List<Object?> get props => [operation];
 }
 
-sealed class LoaderLoadedState<ResType> extends LoaderState<ResType> {
+final class LoaderInitialLoadingState<ResType>
+    extends LoaderLoadingState<ResType> {
+  const LoaderInitialLoadingState(super.operation) : super();
+}
+
+final class LoaderRefreshingState<ResType> extends LoaderLoadingState<ResType> {
+  final ResType data;
+
+  const LoaderRefreshingState(this.data, super.operation) : super();
+
+  @override
+  List<Object?> get props => [super.props, data];
+}
+
+final class LoaderLoadedState<ResType> extends LoaderState<ResType> {
   final ResType data;
 
   const LoaderLoadedState(this.data) : super();
 
   @override
   List<Object?> get props => [data];
-}
-
-final class LoaderRefreshingState<ResType> extends LoaderLoadedState<ResType> {
-  final CancelableOperation<ResType> operation;
-
-  const LoaderRefreshingState(super.data, this.operation) : super();
-
-  @override
-  List<Object?> get props => [super.props, operation];
-}
-
-final class LoaderLoadedInitialState<ResType>
-    extends LoaderLoadedState<ResType> {
-  const LoaderLoadedInitialState(super.data) : super();
 }
 
 sealed class LoaderEvent<ResType> extends Equatable {
@@ -71,16 +71,16 @@ final class LoaderBloc<ResType>
     extends Bloc<LoaderEvent<ResType>, LoaderState<ResType>> {
   LoaderBloc({
     required Future<ResType> Function() load,
-    Future<void> Function(ResType)? onLoaded,
     ResType? initialData,
     bool loadOnStart = false,
   }) : super(initialData != null
             ? loadOnStart
                 ? LoaderRefreshingState(
                     initialData, CancelableOperation.fromFuture(load()))
-                : LoaderLoadedInitialState(initialData)
+                : LoaderLoadedState(initialData)
             : loadOnStart
-                ? LoaderLoadingState(CancelableOperation.fromFuture(load()))
+                ? LoaderInitialLoadingState(
+                    CancelableOperation.fromFuture(load()))
                 : LoaderInitialState()) {
     switch (state) {
       case LoaderLoadingState(operation: final operation) ||
@@ -94,10 +94,10 @@ final class LoaderBloc<ResType>
             CancelableOperation.fromFuture(load())
               ..then((response) => add(LoaderLoadedEvent(response)));
         switch (state) {
-          case LoaderLoadingState() || LoaderRefreshingState():
+          case LoaderLoadingState():
             badState(state, event);
           case LoaderInitialState():
-            emit(LoaderLoadingState(operation()));
+            emit(LoaderInitialLoadingState(operation()));
           case LoaderLoadedState(data: final data):
             emit(LoaderRefreshingState(data, operation()));
         }
@@ -107,11 +107,8 @@ final class LoaderBloc<ResType>
     on<LoaderLoadedEvent<ResType>>(
       (event, emit) async {
         switch (state) {
-          case LoaderLoadingState() || LoaderRefreshingState():
-            if (onLoaded != null) {
-              await onLoaded(event.data);
-            }
-            emit(LoaderLoadedInitialState(event.data));
+          case LoaderLoadingState():
+            emit(LoaderLoadedState(event.data));
           case LoaderLoadedState() || LoaderInitialState():
             badState(state, event);
         }
@@ -122,8 +119,7 @@ final class LoaderBloc<ResType>
   @override
   Future<void> close() async {
     switch (state) {
-      case LoaderLoadingState(operation: final operation) ||
-            LoaderRefreshingState(operation: final operation):
+      case LoaderLoadingState(operation: final operation):
         await operation.cancel();
       case LoaderLoadedState() || LoaderInitialState():
     }
