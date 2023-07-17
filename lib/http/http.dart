@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
+import '../cognito/cognito.dart';
 import '../failure.dart';
 import '../logger.dart';
 
@@ -53,7 +54,7 @@ Future<HttpResponse<ResType>> request<ResType>({
   required ResType Function(dynamic) parser,
   Map<String, dynamic>? data,
   Map<String, dynamic>? headers,
-  String? authorization,
+  Session? authorization,
   String? overrideHost,
   String? overridePort,
   ResType? Function()? readFromCache,
@@ -92,11 +93,28 @@ Future<HttpResponse<ResType>> request<ResType>({
       }
     }
 
+    if (authorization != null && !authorization.cognitoSession.isValid()) {
+      prettyLogger.d('Session is invalid, refreshing...');
+      final refreshSessionFailure = await authorization.refreshSession();
+      if (refreshSessionFailure != null) {
+        prettyLogger.e('Failed to refresh session: $refreshSessionFailure');
+        return HttpResponseFailure(
+          Failure('RefreshSessionFailure', refreshSessionFailure.message),
+          Headers(),
+        );
+      } else {
+        prettyLogger.d('Session refreshed successfully');
+      }
+    }
+
     // Prepare the request headers
     final headerMap = {
       ...headers ?? Map<String, dynamic>.from({}),
       ...authorization != null
-          ? {'Authorization': authorization}
+          ? {
+              'Authorization':
+                  authorization.cognitoSession.idToken.getJwtToken()
+            }
           : Map<String, dynamic>.from({}),
     };
 

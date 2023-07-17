@@ -81,11 +81,11 @@ Future<RefreshSessionResponse> _handleRefreshFailures(
   }
 }
 
-final class Session extends Equatable {
+final class Session {
   final CognitoUser user;
   final CognitoCredentials credentials;
   final ApiInfo apiInfo;
-  final CognitoUserSession cognitoSession;
+  CognitoUserSession cognitoSession;
 
   Session({
     required this.user,
@@ -94,7 +94,7 @@ final class Session extends Equatable {
     required this.apiInfo,
   }) : super();
 
-  Future<RefreshSessionResponse> refreshSession() async {
+  Future<RefreshSessionFailureResponse?> refreshSession() async {
     return await _handleRefreshFailures(
       () async {
         final newUserSession =
@@ -104,6 +104,7 @@ final class Session extends Equatable {
             await credentials
                 .getAwsCredentials(cognitoSession.getIdToken().getJwtToken());
           }
+          cognitoSession = newUserSession;
           return RefreshSessionSuccess(
             Session(
               user: user,
@@ -115,16 +116,9 @@ final class Session extends Equatable {
         }
         return RefreshSessionUnknownResponse(message: null);
       },
-    );
+    ).then((response) =>
+        response is RefreshSessionFailureResponse ? response : null);
   }
-
-  @override
-  List<Object?> get props => [
-        user,
-        cognitoSession,
-        credentials,
-        apiInfo,
-      ];
 }
 
 Future<RefreshSessionResponse> getPreviousSession(
