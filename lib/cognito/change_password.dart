@@ -57,19 +57,30 @@ final class ChangePasswordUnknownResponse
   List<Object?> get props => [message];
 }
 
+final class ChangePasswordUser extends Equatable {
+  final CognitoUser user;
+
+  const ChangePasswordUser({
+    required this.user,
+  }) : super();
+
+  @override
+  List<Object?> get props => [user];
+}
+
 Future<ChangePasswordResponse> changePassword({
+  required ChangePasswordUser user,
   required String newPassword,
-  required CognitoUser user,
   required ApiInfo apiInfo,
 }) async {
   try {
-    final session = await user.sendNewPasswordRequiredAnswer(
+    final session = await user.user.sendNewPasswordRequiredAnswer(
       newPassword,
     );
     if (session != null) {
       final credentials = CognitoCredentials(
         apiInfo.identityPoolId,
-        user.pool,
+        user.user.pool,
       );
       if (!apiInfo.useAdmin) {
         await credentials.getAwsCredentials(
@@ -78,7 +89,7 @@ Future<ChangePasswordResponse> changePassword({
       }
       return ChangePasswordSuccess(
         Session(
-          user: user,
+          user: user.user,
           cognitoSession: session,
           credentials: credentials,
           apiInfo: apiInfo,
