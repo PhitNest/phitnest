@@ -86,17 +86,29 @@ final class LoginChangePasswordRequired extends LoginFailureResponse {
   List<Object?> get props => [user];
 }
 
+final class LoginParams extends Equatable {
+  final String email;
+  final String password;
+
+  const LoginParams({
+    required this.email,
+    required this.password,
+  }) : super();
+
+  @override
+  List<Object> get props => [email, password];
+}
+
 Future<LoginResponse> login({
-  required String email,
-  required String password,
+  required LoginParams params,
   required ApiInfo apiInfo,
 }) async {
-  final user = CognitoUser(email, apiInfo.pool);
+  final user = CognitoUser(params.email, apiInfo.pool);
   try {
     final session = await user.authenticateUser(
       AuthenticationDetails(
-        username: email,
-        password: password,
+        username: params.email,
+        password: params.password,
       ),
     );
     if (session != null) {
@@ -120,7 +132,7 @@ Future<LoginResponse> login({
     }
     return const LoginUnknownResponse(message: null);
   } on CognitoUserConfirmationNecessaryException catch (_) {
-    return LoginConfirmationRequired(user: user, password: password);
+    return LoginConfirmationRequired(user: user, password: params.password);
   } on CognitoClientException catch (error) {
     return switch (error.code) {
       'ResourceNotFoundException' =>
