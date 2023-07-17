@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:phitnest_core/core.dart';
 
-import 'router.dart';
-import 'widgets/widgets.dart';
+import 'screens/home_screen.dart';
+import 'screens/login_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  usePathUrlStrategy();
   await dotenv.load();
   initializeHttp(
       host: dotenv.get('BACKEND_HOST'),
@@ -18,23 +15,50 @@ Future<void> main() async {
   runApp(const App());
 }
 
-class App extends StatelessWidget {
-  const App({super.key}) : super();
+final class Loader extends StatelessWidget {
+  const Loader({
+    super.key,
+  }) : super();
 
   @override
-  Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (_) => CognitoBloc(true),
+  Widget build(BuildContext context) => const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
         ),
-      ],
-      child: MaterialApp.router(
-        scaffoldMessengerKey: StyledBanner.scaffoldMessengerKey,
+      );
+}
+
+final class App extends StatelessWidget {
+  const App({
+    super.key,
+  }) : super();
+
+  @override
+  Widget build(BuildContext context) => MaterialApp(
         title: 'PhitNest Admin',
+        theme: AppTheme.instance.theme,
         debugShowCheckedModeBanner: false,
-        routerConfig: router,
-      ),
-    );
-  }
+        scaffoldMessengerKey: StyledBanner.scaffoldMessengerKey,
+        home: RestoreSessionProvider(
+          useAdminAuth: true,
+          loader: const Loader(),
+          onSessionRestoreFailed: (context, apiInfo) =>
+              Navigator.pushReplacement(
+            context,
+            MaterialPageRoute<void>(
+              builder: (context) => LoginScreen(
+                apiInfo: apiInfo,
+              ),
+            ),
+          ),
+          onSessionRestored: (context, session) => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute<void>(
+              builder: (context) => HomeScreen(
+                session: session,
+              ),
+            ),
+          ),
+        ),
+      );
 }
