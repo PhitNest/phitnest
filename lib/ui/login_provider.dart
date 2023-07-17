@@ -52,19 +52,6 @@ final class LoginBloc extends Bloc<LoginFormRejectedEvent, LoginState> {
   }
 }
 
-final class LoginParams extends Equatable {
-  final String email;
-  final String password;
-
-  const LoginParams({
-    required this.email,
-    required this.password,
-  }) : super();
-
-  @override
-  List<Object> get props => [email, password];
-}
-
 final class LoginProvider extends StatelessWidget {
   final ApiInfo apiInfo;
 
@@ -110,8 +97,7 @@ final class LoginProvider extends StatelessWidget {
             create: (_) => LoaderBloc<LoginParams, LoginResponse>(
               load: (params) => login(
                 apiInfo: apiInfo,
-                password: params.password,
-                email: params.email,
+                params: params,
               ),
             ),
           ),
