@@ -5,6 +5,7 @@ import {
   OpenStreetMapError,
   RequestError,
   dynamo,
+  kDefaultHeaders,
   kOpenStreetMapErrorType,
   kZodErrorType,
 } from "common/utils";
@@ -47,9 +48,7 @@ describe("POST /gym", () => {
   it("should fail for invalid input", async () => {
     expect(await invoke(mockPost({}))).toEqual({
       statusCode: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: kDefaultHeaders,
       body: JSON.stringify({
         type: kZodErrorType,
         message:
