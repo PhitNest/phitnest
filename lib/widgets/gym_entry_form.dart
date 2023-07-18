@@ -174,21 +174,8 @@ final class GymEntryForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (_) =>
-                  LoaderBloc<GymEntryParams, HttpResponse<GymEntryFormSuccess>>(
-                load: (params) => submitGym(
-                  params: params,
-                  session: session,
-                ),
-              ),
-            ),
-            BlocProvider(
-              create: (_) => GymEntryFormBloc(),
-            ),
-          ],
+        child: BlocProvider(
+          create: (_) => GymEntryFormBloc(),
           child: BlocConsumer<GymEntryFormBloc, GymEntryFormState>(
             listener: (context, formState) {},
             builder: (context, formState) => Form(
@@ -218,39 +205,51 @@ final class GymEntryForm extends StatelessWidget {
                     hint: 'ZipCode',
                     controller: context.gymEntryFormBloc.zipCodeController,
                   ),
-                  LoaderConsumer<GymEntryParams,
-                      HttpResponse<GymEntryFormSuccess>>(
-                    listener: (context, gymSubmitState) {
-                      switch (gymSubmitState) {
-                        case LoaderLoadedState(data: final response):
-                          switch (response) {
-                            case HttpResponseSuccess(data: final data):
-                              StyledBanner.show(
-                                message: 'New gym: ${data.gymId}',
-                                error: false,
-                              );
-                            case HttpResponseFailure(failure: final failure):
-                              StyledBanner.show(
-                                message: failure.message,
-                                error: true,
-                              );
-                          }
-                          context.gymEntryFormBloc.nameController.clear();
-                          context.gymEntryFormBloc.streetController.clear();
-                          context.gymEntryFormBloc.cityController.clear();
-                          context.gymEntryFormBloc.stateController.clear();
-                          context.gymEntryFormBloc.zipCodeController.clear();
-                        default:
-                      }
-                    },
-                    builder: (context, gymSubmitState) =>
+                  BlocProvider(
+                    create: (_) => LoaderBloc<GymEntryParams,
+                        HttpResponse<GymEntryFormSuccess>>(
+                      load: (params) => submitGym(
+                        params: params,
+                        session: session,
+                      ),
+                    ),
+                    child: LoaderConsumer<GymEntryParams,
+                        HttpResponse<GymEntryFormSuccess>>(
+                      listener: (context, gymSubmitState) {
                         switch (gymSubmitState) {
-                      LoaderLoadedState() || LoaderInitialState() => TextButton(
-                          onPressed: () => submit(context),
-                          child: const Text('Submit'),
-                        ),
-                      LoaderLoadingState() => const CircularProgressIndicator(),
-                    },
+                          case LoaderLoadedState(data: final response):
+                            switch (response) {
+                              case HttpResponseSuccess(data: final data):
+                                StyledBanner.show(
+                                  message: 'New gym: ${data.gymId}',
+                                  error: false,
+                                );
+                              case HttpResponseFailure(failure: final failure):
+                                StyledBanner.show(
+                                  message: failure.message,
+                                  error: true,
+                                );
+                            }
+                            context.gymEntryFormBloc.nameController.clear();
+                            context.gymEntryFormBloc.streetController.clear();
+                            context.gymEntryFormBloc.cityController.clear();
+                            context.gymEntryFormBloc.stateController.clear();
+                            context.gymEntryFormBloc.zipCodeController.clear();
+                          default:
+                        }
+                      },
+                      builder: (context, gymSubmitState) =>
+                          switch (gymSubmitState) {
+                        LoaderLoadedState() ||
+                        LoaderInitialState() =>
+                          TextButton(
+                            onPressed: () => submit(context),
+                            child: const Text('Submit'),
+                          ),
+                        LoaderLoadingState() =>
+                          const CircularProgressIndicator(),
+                      },
+                    ),
                   ),
                 ],
               ),
