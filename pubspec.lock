@@ -26,7 +26,7 @@ packages:
     source: hosted
     version: "2.4.2"
   async:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: async
       sha256: "947bfcf187f74dbc5e146c9eb9c0f10c9f8b30743e341481c1e2ed3ecc18c20c"
@@ -361,7 +361,7 @@ packages:
     source: sdk
     version: "0.0.0"
   google_fonts:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: google_fonts
       sha256: e20ff62b158b96f392bfc8afe29dee1503c94fbea2cbe8186fd59b756b8ae982
@@ -659,11 +659,9 @@ packages:
   phitnest_core:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "9346de2b82a30b48c4096caef2c46bf135131090"
-      url: "https://github.com/PhitNest/phitnest-core.git"
-    source: git
+      path: "../phitnest-core"
+      relative: true
+    source: path
     version: "1.0.0+1"
   pin_code_fields:
     dependency: "direct main"

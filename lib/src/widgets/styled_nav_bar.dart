@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phitnest_core/core.dart';
 
 import '../common/constants/constants.dart';
-import '../theme.dart';
-import 'widgets.dart';
+import 'styled_indicator.dart';
 
 enum LogoState { animated, holding, disabled, reversed, loading }
 
@@ -17,13 +17,13 @@ extension _LogoStateToAsset on LogoState {
         return Assets.logo.path;
       case LogoState.reversed:
         return Assets.darkLogo.path;
-      default:
+      case LogoState.loading:
         return null;
     }
   }
 }
 
-class _StyledNavBarLogo extends StatefulWidget {
+final class _StyledNavBarLogo extends StatefulWidget {
   final LogoState state;
   final VoidCallback onReleased;
   final VoidCallback onPressed;
@@ -39,9 +39,9 @@ class _StyledNavBarLogo extends StatefulWidget {
   _StyledNavBarLogoState createState() => _StyledNavBarLogoState();
 }
 
-class _StyledNavBarLogoState extends State<_StyledNavBarLogo>
+final class _StyledNavBarLogoState extends State<_StyledNavBarLogo>
     with SingleTickerProviderStateMixin {
-  late final AnimationController? controller;
+  late AnimationController? controller;
 
   @override
   void initState() {
@@ -52,7 +52,7 @@ class _StyledNavBarLogoState extends State<_StyledNavBarLogo>
           min: 0,
           max: 1,
           reverse: true,
-          period: Duration(milliseconds: 1200),
+          period: const Duration(milliseconds: 1200),
         );
     }
   }
@@ -77,7 +77,7 @@ class _StyledNavBarLogoState extends State<_StyledNavBarLogo>
             ),
           ),
         )
-      : CircularProgressIndicator();
+      : const CircularProgressIndicator();
 
   @override
   void dispose() {
@@ -86,7 +86,7 @@ class _StyledNavBarLogoState extends State<_StyledNavBarLogo>
   }
 }
 
-class _StyledNavBarPageButton extends StatelessWidget {
+final class _StyledNavBarPageButton extends StatelessWidget {
   final String text;
   final bool selected;
   final bool reversed;

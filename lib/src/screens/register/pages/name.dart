@@ -1,13 +1,13 @@
 part of '../ui.dart';
 
-String? validateName(String? value) {
-  if (value == null || value.isEmpty) {
+String? validateName(dynamic value) {
+  if (value == null || (value is String && value.isEmpty)) {
     return 'Required';
   }
   return null;
 }
 
-class RegisterNamePage extends StatelessWidget {
+final class RegisterNamePage extends StatelessWidget {
   const RegisterNamePage({super.key}) : super();
 
   @override
@@ -20,15 +20,15 @@ class RegisterNamePage extends StatelessWidget {
             style: AppTheme.instance.theme.textTheme.bodyLarge,
           ),
           42.verticalSpace,
-          StyledTextFormField(
-            labelText: 'First name',
-            textController: context.registerBloc.firstNameController,
+          StyledUnderlinedTextField(
+            hint: 'First name',
+            controller: context.registerBloc.firstNameController,
             validator: validateName,
           ),
           24.verticalSpace,
-          StyledTextFormField(
-            labelText: 'Last name',
-            textController: context.registerBloc.lastNameController,
+          StyledUnderlinedTextField(
+            hint: 'Last name',
+            controller: context.registerBloc.lastNameController,
             validator: validateName,
           ),
           147.verticalSpace,

@@ -1,19 +1,18 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_core/core.dart';
 
-import '../../common/util.dart';
-import '../../theme.dart';
-import '../../widgets/widgets.dart';
-import '../confirm_email/ui.dart';
-import 'bloc/bloc.dart';
-
 part 'pages/account_info.dart';
 part 'pages/inviter_email.dart';
 part 'pages/loading.dart';
 part 'pages/name.dart';
+
+extension GetRegisterBloc on BuildContext {
+  RegisterBloc get registerBloc => BlocProvider.of(this);
+}
 
 void _nextPage(BuildContext context) =>
     context.registerBloc.pageController.nextPage(
@@ -23,13 +22,75 @@ void _nextPage(BuildContext context) =>
       curve: Curves.easeInOut,
     );
 
-class RegisterScreen extends StatelessWidget {
+final class RegisterState extends Equatable {
+  final AutovalidateMode autovalidateMode;
+
+  const RegisterState({
+    required this.autovalidateMode,
+  }) : super();
+
+  @override
+  List<Object?> get props => [autovalidateMode];
+}
+
+final class RegisterFormRejectedEvent extends Equatable {
+  const RegisterFormRejectedEvent() : super();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class RegisterBloc
+    extends Bloc<RegisterFormRejectedEvent, RegisterState> {
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final inviterEmailController = TextEditingController();
+  final pageController = PageController();
+  final formKey = GlobalKey<FormState>();
+
+  RegisterBloc()
+      : super(
+          const RegisterState(
+            autovalidateMode: AutovalidateMode.disabled,
+          ),
+        ) {
+    on<RegisterFormRejectedEvent>(
+      (event, emit) => emit(
+        const RegisterState(
+          autovalidateMode: AutovalidateMode.always,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<void> close() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    inviterEmailController.dispose();
+    pageController.dispose();
+    return super.close();
+  }
+}
+
+final class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key}) : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: BlocProvider(
-          create: (_) => RegisterBloc(),
+        body: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => RegisterBloc(),
+            ),
+            BlocProvider(
+              create: (_) => LoaderBloc(load: ),
+            ),
+          ],
           child: BlocConsumer<RegisterBloc, RegisterState>(
             listener: (context, screenState) {},
             builder: (context, screenState) =>
