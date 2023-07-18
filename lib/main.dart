@@ -4,8 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_core/core.dart';
 
-import 'src/screens/home/ui.dart';
-import 'src/screens/on_boarding/ui.dart';
+import 'src/screens/home/explore/ui.dart';
 import 'src/theme.dart';
 
 Future<void> main() async {
@@ -33,17 +32,22 @@ class App extends StatelessWidget {
             ),
           ],
           child: MaterialApp(
-            title: 'PhitNest',
-            theme: AppTheme.instance.theme,
-            debugShowCheckedModeBanner: false,
-            home: BlocConsumer<CognitoBloc, CognitoState>(
-              listener: (context, cognitoState) {},
-              builder: (context, cognitoState) => switch (cognitoState) {
-                CognitoLoggedInState() => const HomeScreen(),
-                _ => const OnBoardingScreen(),
-              },
-            ),
-          ),
+              title: 'PhitNest',
+              theme: AppTheme.instance.theme,
+              debugShowCheckedModeBanner: false,
+              home: ExploreScreen(
+                users: [],
+                pageController: PageController(),
+              )
+
+              // BlocConsumer<CognitoBloc, CognitoState>(
+              //   listener: (context, cognitoState) {},
+              //   builder: (context, cognitoState) => switch (cognitoState) {
+              //     CognitoLoggedInState() => const HomeScreen(),
+              //     _ => const OnBoardingScreen(),
+              //   },
+              // ),
+              ),
         ),
       );
 }
