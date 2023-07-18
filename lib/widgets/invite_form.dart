@@ -102,20 +102,8 @@ final class InviteForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider<InviteFormBloc>(
-              create: (_) => InviteFormBloc(),
-            ),
-            BlocProvider(
-              create: (_) => LoaderBloc<InviteParams, HttpResponse<void>>(
-                load: (params) => invite(
-                  params: params,
-                  session: session,
-                ),
-              ),
-            ),
-          ],
+        child: BlocProvider<InviteFormBloc>(
+          create: (_) => InviteFormBloc(),
           child: BlocConsumer<InviteFormBloc, InviteFormState>(
             listener: (context, formState) {},
             builder: (context, formState) => Form(
@@ -134,34 +122,45 @@ final class InviteForm extends StatelessWidget {
                     hint: 'Gym ID',
                     controller: context.inviteFormBloc.gymIdController,
                   ),
-                  LoaderConsumer<InviteParams, HttpResponse<void>>(
-                    listener: (context, submitState) {
-                      switch (submitState) {
-                        case LoaderLoadedState(data: final response):
-                          switch (response) {
-                            case HttpResponseSuccess():
-                              StyledBanner.show(
-                                message: 'Invite sent',
-                                error: false,
-                              );
-                            case HttpResponseFailure(failure: final failure):
-                              StyledBanner.show(
-                                message: failure.message,
-                                error: true,
-                              );
-                          }
-                          context.inviteFormBloc.emailController.clear();
-                          context.inviteFormBloc.gymIdController.clear();
-                        default:
-                      }
-                    },
-                    builder: (context, submitState) => switch (submitState) {
-                      LoaderLoadedState() || LoaderInitialState() => TextButton(
-                          onPressed: () => submit(context),
-                          child: const Text('Invite'),
-                        ),
-                      LoaderLoadingState() => const CircularProgressIndicator(),
-                    },
+                  BlocProvider(
+                    create: (_) => LoaderBloc<InviteParams, HttpResponse<void>>(
+                      load: (params) => invite(
+                        params: params,
+                        session: session,
+                      ),
+                    ),
+                    child: LoaderConsumer<InviteParams, HttpResponse<void>>(
+                      listener: (context, submitState) {
+                        switch (submitState) {
+                          case LoaderLoadedState(data: final response):
+                            switch (response) {
+                              case HttpResponseSuccess():
+                                StyledBanner.show(
+                                  message: 'Invite sent',
+                                  error: false,
+                                );
+                              case HttpResponseFailure(failure: final failure):
+                                StyledBanner.show(
+                                  message: failure.message,
+                                  error: true,
+                                );
+                            }
+                            context.inviteFormBloc.emailController.clear();
+                            context.inviteFormBloc.gymIdController.clear();
+                          default:
+                        }
+                      },
+                      builder: (context, submitState) => switch (submitState) {
+                        LoaderLoadedState() ||
+                        LoaderInitialState() =>
+                          TextButton(
+                            onPressed: () => submit(context),
+                            child: const Text('Invite'),
+                          ),
+                        LoaderLoadingState() =>
+                          const CircularProgressIndicator(),
+                      },
+                    ),
                   ),
                 ],
               ),
