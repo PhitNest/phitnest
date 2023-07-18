@@ -12,6 +12,7 @@ Future<void> main() async {
       host: dotenv.get('BACKEND_HOST'),
       port: dotenv.get('BACKEND_PORT', fallback: ''));
   await initializeCache();
+  AppTheme.useScreenUtils = false;
   runApp(const App());
 }
 
