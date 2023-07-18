@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../bloc/bloc.dart';
+import 'widgets/user_page.dart';
 
 class ExploreScreen extends StatelessWidget {
   final List<UserExplore> users;
@@ -15,6 +16,8 @@ class ExploreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PageView(
         controller: pageController,
-        children: users.map((e) => e.profilePicture).toList(),
+        children: [
+          UserPage(),
+        ],
       );
 }
