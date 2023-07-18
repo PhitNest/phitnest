@@ -23,7 +23,7 @@ final class RestoreSessionProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (_) => LoaderBloc(
+        create: (_) => LoaderBloc<void, HttpResponse<ApiInfo>>(
           load: (_) => requestApiInfo(
             readFromCache: true,
             writeToCache: true,
@@ -66,11 +66,11 @@ final class RestoreSessionProvider extends StatelessWidget {
                 // This indicates that we successfully loaded API info from the
                 // cache, so a session might be restorable.
                 HttpResponseCache(data: final cachedApiInfo) => BlocProvider(
-                    create: (_) => LoaderBloc(
+                    create: (_) => LoaderBloc<void, RefreshSessionResponse>(
                       load: (_) => getPreviousSession(cachedApiInfo),
                       loadOnStart: (req: null),
                     ),
-                    child: LoaderConsumer<ApiInfo, RefreshSessionResponse>(
+                    child: LoaderConsumer<void, RefreshSessionResponse>(
                       listener: (context, restoreSessionState) {
                         switch (restoreSessionState) {
                           case LoaderLoadedState(
