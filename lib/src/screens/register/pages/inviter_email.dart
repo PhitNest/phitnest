@@ -1,6 +1,6 @@
 part of '../ui.dart';
 
-class RegisterInviterEmailPage extends StatelessWidget {
+final class RegisterInviterEmailPage extends StatelessWidget {
   const RegisterInviterEmailPage({super.key}) : super();
 
   @override

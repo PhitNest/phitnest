@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phitnest_core/core.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../theme.dart';
-
-class StyledVerificationField extends StatelessWidget {
+final class StyledVerificationField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final ValueChanged<String> onChanged;

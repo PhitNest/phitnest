@@ -1,6 +1,6 @@
 part of '../ui.dart';
 
-class RegisterAccountInfoPage extends StatelessWidget {
+final class RegisterAccountInfoPage extends StatelessWidget {
   const RegisterAccountInfoPage({super.key}) : super();
 
   @override
@@ -13,20 +13,20 @@ class RegisterAccountInfoPage extends StatelessWidget {
             style: AppTheme.instance.theme.textTheme.bodyLarge,
           ),
           42.verticalSpace,
-          StyledTextFormField(
-            labelText: 'Your email address',
-            textController: context.registerBloc.emailController,
+          StyledUnderlinedTextField(
+            hint: 'Your email address',
+            controller: context.registerBloc.emailController,
             validator: EmailValidator.validateEmail,
           ),
           24.verticalSpace,
-          StyledTextFormField(
-            labelText: 'Password',
-            textController: context.registerBloc.passwordController,
+          StyledUnderlinedTextField(
+            hint: 'Password',
+            controller: context.registerBloc.passwordController,
             validator: validatePassword,
           ),
           24.verticalSpace,
-          StyledTextFormField(
-            labelText: 'Confirm password',
+          StyledUnderlinedTextField(
+            hint: 'Confirm password',
             validator: (value) =>
                 value == context.registerBloc.passwordController.text
                     ? null

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phitnest_core/core.dart';
 
-import '../theme.dart';
-
-class StyledIndicator extends StatelessWidget {
+final class StyledIndicator extends StatelessWidget {
   final int count;
   final Widget child;
   final Size offset;

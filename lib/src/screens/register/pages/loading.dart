@@ -1,6 +1,6 @@
 part of '../ui.dart';
 
-class RegisterLoadingPage extends StatelessWidget {
+final class RegisterLoadingPage extends StatelessWidget {
   const RegisterLoadingPage({super.key}) : super();
 
   @override
