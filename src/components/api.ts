@@ -2,10 +2,11 @@ import { RemovalPolicy } from "aws-cdk-lib";
 import {
   AuthorizationType,
   CognitoUserPoolsAuthorizer,
+  Cors,
   LambdaIntegration,
   RestApi,
 } from "aws-cdk-lib/aws-apigateway";
-import { Code, Function, HttpMethod, Runtime } from "aws-cdk-lib/aws-lambda";
+import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 import { UserPool } from "aws-cdk-lib/aws-cognito";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Role } from "aws-cdk-lib/aws-iam";
@@ -84,14 +85,9 @@ export class ApiStack extends Construct {
           }
         : undefined,
       defaultCorsPreflightOptions: {
-        allowHeaders: ["*"],
-        allowOrigins: ["*"],
-        allowMethods: [
-          HttpMethod.GET,
-          HttpMethod.POST,
-          HttpMethod.PUT,
-          HttpMethod.DELETE,
-        ],
+        allowHeaders: Cors.DEFAULT_HEADERS,
+        allowOrigins: Cors.ALL_ORIGINS,
+        allowMethods: Cors.ALL_METHODS,
       },
     });
     api.applyRemovalPolicy(RemovalPolicy.DESTROY);
