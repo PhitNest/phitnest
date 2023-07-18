@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
   RequestError,
   Success,
+  kDefaultHeaders,
   kZodErrorType,
   validateRequest,
 } from "./request-handling";
@@ -71,9 +72,7 @@ describe("validateRequest", () => {
       message: kErrorResponse.message,
       type: kErrorResponse.type,
     });
-    expect(res.headers).toEqual({
-      "Content-Type": "application/json",
-    });
+    expect(res.headers).toEqual(kDefaultHeaders);
   });
 
   it("should pass through empty bodies with no Content-Type header", async () => {
@@ -92,6 +91,7 @@ describe("validateRequest", () => {
 
   it("should pass through headers", async () => {
     const expectedHeaders = {
+      ...kDefaultHeaders,
       "Content-Type": "text/plain",
       somethingElse: "somethingElse",
     };

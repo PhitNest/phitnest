@@ -30,6 +30,13 @@ export class RequestError {
   }
 }
 
+export const kDefaultHeaders = {
+  "Content-Type": "application/json",
+  "Access-Control-Allow-Headers": "*",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT,DELETE",
+};
+
 /**
  * Use this to simplify the logic for request handling.
  *
@@ -39,18 +46,12 @@ export class RequestError {
 export async function handleRequest(
   controller: () => Promise<Success | RequestError>
 ): Promise<APIGatewayProxyResult> {
-  const defaultHeaders = {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Headers": "*",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT,DELETE",
-  };
   try {
     const controllerOutput = await controller();
     if (controllerOutput instanceof RequestError) {
       return {
         statusCode: 500,
-        headers: defaultHeaders,
+        headers: kDefaultHeaders,
         body: JSON.stringify({
           type: controllerOutput.type,
           message: controllerOutput.message,
@@ -64,7 +65,7 @@ export async function handleRequest(
           : "",
         ...(controllerOutput.body
           ? {
-              headers: defaultHeaders,
+              headers: kDefaultHeaders,
             }
           : {}),
         ...(controllerOutput.headers
@@ -76,7 +77,7 @@ export async function handleRequest(
     } else {
       return {
         statusCode: 500,
-        headers: defaultHeaders,
+        headers: kDefaultHeaders,
         body: JSON.stringify({
           type: "INTERNAL_SERVER_ERROR",
           message:
@@ -88,7 +89,7 @@ export async function handleRequest(
     if (err instanceof RequestError) {
       return {
         statusCode: 500,
-        headers: defaultHeaders,
+        headers: kDefaultHeaders,
         body: JSON.stringify({
           type: err.type,
           message: err.message,
@@ -97,7 +98,7 @@ export async function handleRequest(
     } else {
       return {
         statusCode: 500,
-        headers: defaultHeaders,
+        headers: kDefaultHeaders,
         body: JSON.stringify(err),
       };
     }
