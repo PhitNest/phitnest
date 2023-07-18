@@ -84,13 +84,7 @@ export class ApiStack extends Construct {
           }
         : undefined,
       defaultCorsPreflightOptions: {
-        allowHeaders: [
-          "Content-Type",
-          "X-Amz-Date",
-          "Authorization",
-          "X-Api-Key",
-          "X-Amz-Security-Token",
-        ],
+        allowHeaders: ["*"],
         allowOrigins: ["*"],
         allowMethods: [
           HttpMethod.GET,
