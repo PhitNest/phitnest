@@ -172,7 +172,7 @@ export class ApiStack extends Construct {
           USER_POOL_CLIENT_ID: this.props.userClientId,
           ADMIN_POOL_CLIENT_ID: this.props.adminClientId,
           USER_IDENTITY_POOL_ID: this.props.userIdentityPoolId,
-          USER_S3_BUCKET: this.props.userBucketName,
+          USER_S3_BUCKET_NAME: this.props.userBucketName,
         },
         role: this.props.dynamoTableRole,
       }
