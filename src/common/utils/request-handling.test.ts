@@ -85,7 +85,7 @@ describe("validateRequest", () => {
       controller: async () => new Success(),
     });
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toEqual("");
+    expect(res.body).toEqual("{}");
     expect(res.headers).toBeUndefined();
   });
 
@@ -104,7 +104,7 @@ describe("validateRequest", () => {
       controller: async () => new Success(undefined, expectedHeaders),
     });
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toEqual("");
+    expect(res.body).toEqual("{}");
     expect(res.headers).toEqual(expectedHeaders);
   });
 });
