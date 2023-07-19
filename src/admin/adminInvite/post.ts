@@ -6,6 +6,7 @@ import {
   Success,
   dynamo,
   getAdminClaims,
+  kDefaultHeaders,
   validateRequest,
 } from "common/utils";
 import { adminInviteToDynamo, kGymWithoutAdminParser } from "common/entities";
@@ -18,6 +19,11 @@ const validator = z.object({
 export async function invoke(
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> {
+  return {
+    statusCode: 200,
+    headers: kDefaultHeaders,
+    body: JSON.parse(event.body ?? "{}"),
+  };
   return validateRequest({
     data: JSON.parse(event.body ?? "{}"),
     validator: validator,
