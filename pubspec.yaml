@@ -12,7 +12,6 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  cupertino_icons: ^1.0.5
   # phitnest_core:
   #   git: https://github.com/PhitNest/phitnest-core.git
   phitnest_core:
