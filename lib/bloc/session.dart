@@ -1,15 +1,16 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cognito/cognito.dart';
 import 'loader.dart';
 
+typedef SessionBloc = LoaderBloc<Session, RefreshSessionResponse>;
+
 extension GetSessionLoader on BuildContext {
-  LoaderBloc<Session, RefreshSessionResponse> get sessionLoader =>
-      BlocProvider.of(this);
+  SessionBloc get sessionLoader => BlocProvider.of(this);
 }
 
-extension SessionBloc on LoaderBloc<Session, RefreshSessionResponse> {
+extension GetSession on SessionBloc {
   Future<Session?> get session async {
     Future<Session?> handleResponse(RefreshSessionResponse response) async {
       switch (response) {

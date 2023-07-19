@@ -1,55 +1,30 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../api/api.dart';
+import '../bloc/form.dart';
 import '../bloc/loader.dart';
 import '../cognito/cognito.dart';
 
-final class LoginFormRejectedEvent extends Equatable {
-  const LoginFormRejectedEvent() : super();
-
-  @override
-  List<Object?> get props => [];
-}
-
-final class LoginState extends Equatable {
-  final AutovalidateMode autovalidateMode;
-
-  const LoginState({
-    required this.autovalidateMode,
-  }) : super();
-
-  @override
-  List<Object?> get props => [autovalidateMode];
-}
-
-final class LoginBloc extends Bloc<LoginFormRejectedEvent, LoginState> {
+final class LoginControllers extends FormControllers {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-
-  LoginBloc()
-      : super(
-          const LoginState(
-            autovalidateMode: AutovalidateMode.disabled,
-          ),
-        ) {
-    on<LoginFormRejectedEvent>(
-      (event, emit) => emit(
-        const LoginState(
-          autovalidateMode: AutovalidateMode.always,
-        ),
-      ),
-    );
-  }
 
   @override
-  Future<void> close() {
+  void dispose() {
     emailController.dispose();
     passwordController.dispose();
-    return super.close();
   }
+}
+
+typedef LoginFormBloc = FormBloc<LoginControllers>;
+typedef LoginFormConsumer = FormConsumer<LoginControllers>;
+typedef LoginLoaderBloc = LoaderBloc<LoginParams, LoginResponse>;
+typedef LoginLoaderConsumer = LoaderConsumer<LoginParams, LoginResponse>;
+
+extension GetLoginBlocs on BuildContext {
+  LoginFormBloc get loginFormBloc => BlocProvider.of(this);
+  LoginLoaderBloc get loginLoaderBloc => loader();
 }
 
 final class LoginProvider extends StatelessWidget {
@@ -57,7 +32,7 @@ final class LoginProvider extends StatelessWidget {
 
   final Widget Function(
     BuildContext context,
-    LoginState screenState,
+    AutovalidateMode validationMode,
     GlobalKey<FormState> formKey,
     TextEditingController emailController,
     TextEditingController passwordController,
@@ -70,19 +45,19 @@ final class LoginProvider extends StatelessWidget {
   ) formBuilder;
 
   void submit(BuildContext context) {
-    final loginBloc = BlocProvider.of<LoginBloc>(context);
-    if (loginBloc.formKey.currentState!.validate()) {
-      context.loader<LoginParams, LoginResponse>().add(
-            LoaderLoadEvent(
-              LoginParams(
-                email: loginBloc.emailController.text,
-                password: loginBloc.passwordController.text,
-              ),
+    final formBloc = context.loginFormBloc;
+    formBloc.submit(
+      onAccept: () {
+        context.loginLoaderBloc.add(
+          LoaderLoadEvent(
+            LoginParams(
+              email: formBloc.controllers.emailController.text,
+              password: formBloc.controllers.passwordController.text,
             ),
-          );
-    } else {
-      loginBloc.add(const LoginFormRejectedEvent());
-    }
+          ),
+        );
+      },
+    );
   }
 
   const LoginProvider({
@@ -94,29 +69,28 @@ final class LoginProvider extends StatelessWidget {
   Widget build(BuildContext context) => MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => LoaderBloc<LoginParams, LoginResponse>(
+            create: (_) => LoginFormBloc(LoginControllers()),
+          ),
+          BlocProvider(
+            create: (_) => LoginLoaderBloc(
               load: (params) => login(
-                apiInfo: apiInfo,
                 params: params,
+                apiInfo: apiInfo,
               ),
             ),
           ),
-          BlocProvider(
-            create: (_) => LoginBloc(),
-          ),
         ],
-        child: BlocConsumer<LoginBloc, LoginState>(
+        child: LoginFormConsumer(
           listener: (context, state) {},
           builder: (context, state) {
-            final loginBloc = BlocProvider.of<LoginBloc>(context);
+            final formBloc = context.loginFormBloc;
             return formBuilder(
               context,
-              state,
-              loginBloc.formKey,
-              loginBloc.emailController,
-              loginBloc.passwordController,
-              ({required builder, required listener}) =>
-                  LoaderConsumer<LoginParams, LoginResponse>(
+              state.autovalidateMode,
+              formBloc.formKey,
+              formBloc.controllers.emailController,
+              formBloc.controllers.passwordController,
+              ({required builder, required listener}) => LoginLoaderConsumer(
                 builder: builder,
                 listener: listener,
               ),
