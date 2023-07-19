@@ -22,11 +22,9 @@ export function getAdminClaims(
 ): AdminCognitoClaims | CognitoClaimsError {
   if (
     event.requestContext.authorizer &&
-    event.requestContext.authorizer.jwt &&
-    event.requestContext.authorizer.jwt.claims
+    event.requestContext.authorizer.claims
   ) {
-    const claims: AdminCognitoClaims =
-      event.requestContext.authorizer.jwt.claims;
+    const claims: AdminCognitoClaims = event.requestContext.authorizer.claims;
     if (!claims.email) {
       return new CognitoClaimsError("No email claim");
     }
@@ -35,9 +33,7 @@ export function getAdminClaims(
     }
     return claims;
   }
-  return new CognitoClaimsError(
-    `No authorizer: ${JSON.stringify(event.requestContext)}`
-  );
+  return new CognitoClaimsError("No authorizer");
 }
 
 export function getUserClaims(
@@ -45,11 +41,9 @@ export function getUserClaims(
 ): UserCognitoClaims | CognitoClaimsError {
   if (
     event.requestContext.authorizer &&
-    event.requestContext.authorizer.jwt &&
-    event.requestContext.authorizer.jwt.claims
+    event.requestContext.authorizer.claims
   ) {
-    const claims: UserCognitoClaims =
-      event.requestContext.authorizer.jwt.claims;
+    const claims: UserCognitoClaims = event.requestContext.authorizer.claims;
     if (!claims.email) {
       return new CognitoClaimsError("No email claim");
     }
@@ -58,7 +52,5 @@ export function getUserClaims(
     }
     return claims;
   }
-  return new CognitoClaimsError(
-    `No authorizer: ${JSON.stringify(event.requestContext)}`
-  );
+  return new CognitoClaimsError("No authorizer");
 }
