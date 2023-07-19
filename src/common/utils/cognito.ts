@@ -35,7 +35,9 @@ export function getAdminClaims(
     }
     return claims;
   }
-  return new CognitoClaimsError(`No authorizer: ${event.requestContext}`);
+  return new CognitoClaimsError(
+    `No authorizer: ${JSON.stringify(event.requestContext)}`
+  );
 }
 
 export function getUserClaims(
@@ -56,5 +58,7 @@ export function getUserClaims(
     }
     return claims;
   }
-  return new CognitoClaimsError(`No authorizer: ${event.requestContext}`);
+  return new CognitoClaimsError(
+    `No authorizer: ${JSON.stringify(event.requestContext)}`
+  );
 }
