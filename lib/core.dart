@@ -1,5 +1,6 @@
 export 'api/api.dart';
 export 'bloc/loader.dart';
+export 'bloc/session.dart';
 export 'cache.dart';
 export 'cognito/cognito.dart';
 export 'errors.dart';
