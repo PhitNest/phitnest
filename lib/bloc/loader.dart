@@ -90,6 +90,14 @@ final class LoaderSetEvent<ReqType, ResType>
   List<Object?> get props => [data];
 }
 
+final class LoaderCancelEvent<ReqType, ResType>
+    extends LoaderEvent<ReqType, ResType> {
+  const LoaderCancelEvent() : super();
+
+  @override
+  List<Object?> get props => [];
+}
+
 final class LoaderBloc<ReqType, ResType>
     extends Bloc<LoaderEvent<ReqType, ResType>, LoaderState<ResType>> {
   LoaderBloc({
@@ -138,15 +146,34 @@ final class LoaderBloc<ReqType, ResType>
       },
     );
 
-    on<LoaderSetEvent<ReqType, ResType>>((event, emit) async {
-      switch (state) {
-        case LoaderLoadingState(operation: final operation) ||
-              LoaderRefreshingState(operation: final operation):
-          await operation.cancel();
-        case LoaderLoadedState() || LoaderInitialState():
-      }
-      emit(LoaderLoadedState(event.data));
-    });
+    on<LoaderSetEvent<ReqType, ResType>>(
+      (event, emit) async {
+        switch (state) {
+          case LoaderLoadingState(operation: final operation) ||
+                LoaderRefreshingState(operation: final operation):
+            await operation.cancel();
+          case LoaderLoadedState() || LoaderInitialState():
+        }
+        emit(LoaderLoadedState(event.data));
+      },
+    );
+
+    on<LoaderCancelEvent<ReqType, ResType>>(
+      (event, emit) async {
+        switch (state) {
+          case LoaderRefreshingState(
+              operation: final operation,
+              data: final data
+            ):
+            await operation.cancel();
+            emit(LoaderLoadedState(data));
+          case LoaderLoadingState(operation: final operation):
+            await operation.cancel();
+            emit(LoaderInitialState());
+          case LoaderLoadedState() || LoaderInitialState():
+        }
+      },
+    );
   }
 
   @override
