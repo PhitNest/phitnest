@@ -17,32 +17,29 @@ final class RegisterNamePage extends StatelessWidget {
           120.verticalSpace,
           Text(
             'Let\'s get started! \nWhat\'s is your name?',
-            style: AppTheme.instance.theme.textTheme.bodyLarge,
+            style: theme.textTheme.bodyLarge,
           ),
           42.verticalSpace,
           StyledUnderlinedTextField(
             hint: 'First name',
-            controller: context.registerBloc.firstNameController,
+            controller:
+                context.registerFormBloc.controllers.firstNameController,
             validator: validateName,
           ),
           24.verticalSpace,
           StyledUnderlinedTextField(
             hint: 'Last name',
-            controller: context.registerBloc.lastNameController,
+            controller: context.registerFormBloc.controllers.lastNameController,
             validator: validateName,
           ),
           147.verticalSpace,
           ElevatedButton(
-            onPressed: () {
-              if (context.registerBloc.formKey.currentState!.validate()) {
-                _nextPage(context);
-              } else {
-                context.registerBloc.add(const RegisterFormRejectedEvent());
-              }
-            },
+            onPressed: () => context.registerFormBloc.submit(
+              onAccept: () => _nextPage(context),
+            ),
             child: Text(
               'NEXT',
-              style: AppTheme.instance.theme.textTheme.bodySmall,
+              style: theme.textTheme.bodySmall,
             ),
           )
         ],

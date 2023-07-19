@@ -37,7 +37,7 @@ final class StyledIndicator extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 count.toString(),
-                style: AppTheme.instance.theme.textTheme.bodySmall!.copyWith(
+                style: theme.textTheme.bodySmall!.copyWith(
                   color: Colors.white,
                 ),
               ),

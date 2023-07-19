@@ -10,40 +10,36 @@ final class RegisterAccountInfoPage extends StatelessWidget {
           120.verticalSpace,
           Text(
             'Let\'s create your account!',
-            style: AppTheme.instance.theme.textTheme.bodyLarge,
+            style: theme.textTheme.bodyLarge,
           ),
           42.verticalSpace,
           StyledUnderlinedTextField(
             hint: 'Your email address',
-            controller: context.registerBloc.emailController,
+            controller: context.registerFormBloc.controllers.emailController,
             validator: EmailValidator.validateEmail,
           ),
           24.verticalSpace,
           StyledUnderlinedTextField(
             hint: 'Password',
-            controller: context.registerBloc.passwordController,
+            controller: context.registerFormBloc.controllers.passwordController,
             validator: validatePassword,
           ),
           24.verticalSpace,
           StyledUnderlinedTextField(
             hint: 'Confirm password',
-            validator: (value) =>
-                value == context.registerBloc.passwordController.text
-                    ? null
-                    : 'Passwords do not match',
+            validator: (value) => value ==
+                    context.registerFormBloc.controllers.passwordController.text
+                ? null
+                : 'Passwords do not match',
           ),
           32.verticalSpace,
           ElevatedButton(
-            onPressed: () {
-              if (context.registerBloc.formKey.currentState!.validate()) {
-                _nextPage(context);
-              } else {
-                context.registerBloc.add(const RegisterFormRejectedEvent());
-              }
-            },
+            onPressed: () => context.registerFormBloc.submit(
+              onAccept: () => _nextPage(context),
+            ),
             child: Text(
               'NEXT',
-              style: AppTheme.instance.theme.textTheme.bodySmall,
+              style: theme.textTheme.bodySmall,
             ),
           )
         ],
