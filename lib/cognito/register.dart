@@ -69,31 +69,52 @@ final class RegisterUnknownResponse extends RegisterFailureResponse {
   List<Object?> get props => [message];
 }
 
+final class RegisterParams extends Equatable {
+  final String email;
+  final String password;
+  final String firstName;
+  final String lastName;
+  final String inviterEmail;
+
+  const RegisterParams({
+    required this.email,
+    required this.password,
+    required this.firstName,
+    required this.lastName,
+    required this.inviterEmail,
+  });
+
+  @override
+  List<Object?> get props => [
+        email,
+        password,
+        firstName,
+        lastName,
+        inviterEmail,
+      ];
+}
+
 Future<RegisterResponse> register({
-  required String email,
-  required String password,
-  required String firstName,
-  required String lastName,
-  required String inviterEmail,
+  required RegisterParams params,
   required CognitoUserPool pool,
 }) async {
   try {
     final signUpResult = await pool.signUp(
-      email,
-      password,
+      params.email,
+      params.password,
       userAttributes: [
-        AttributeArg(name: 'email', value: email),
+        AttributeArg(name: 'email', value: params.email),
       ],
       validationData: [
-        AttributeArg(name: 'firstName', value: firstName),
-        AttributeArg(name: 'lastName', value: lastName),
-        AttributeArg(name: 'inviterEmail', value: inviterEmail),
+        AttributeArg(name: 'firstName', value: params.firstName),
+        AttributeArg(name: 'lastName', value: params.lastName),
+        AttributeArg(name: 'inviterEmail', value: params.inviterEmail),
       ],
     );
     if (signUpResult.userSub != null) {
       return RegisterSuccess(
         signUpResult.user,
-        password,
+        params.password,
       );
     } else {
       return const RegisterUnknownResponse(message: null);
