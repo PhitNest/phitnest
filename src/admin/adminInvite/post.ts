@@ -22,7 +22,7 @@ export async function invoke(
   return {
     statusCode: 200,
     headers: kDefaultHeaders,
-    body: JSON.parse(event.body ?? "{}"),
+    body: JSON.stringify(event.body ?? "{}"),
   };
   return validateRequest({
     data: JSON.parse(event.body ?? "{}"),
