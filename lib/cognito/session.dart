@@ -7,7 +7,7 @@ sealed class RefreshSessionResponse extends Equatable {
 final class RefreshSessionSuccess extends RefreshSessionResponse {
   final Session newSession;
 
-  const RefreshSessionSuccess(this.newSession) : super();
+  RefreshSessionSuccess(this.newSession) : super();
 
   @override
   List<Object?> get props => [newSession];

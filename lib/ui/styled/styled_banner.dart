@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../theme.dart';
+
 final class StyledBanner extends MaterialBanner {
   final String message;
   final bool error;
@@ -26,7 +28,12 @@ final class StyledBanner extends MaterialBanner {
     required this.message,
     required this.error,
   }) : super(
-          content: Text(message),
+          content: Text(
+            message,
+            style: theme.textTheme.bodySmall!.copyWith(
+              color: Colors.black,
+            ),
+          ),
           padding: const EdgeInsets.all(10),
           elevation: 8,
           onVisible: () =>

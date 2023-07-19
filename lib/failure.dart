@@ -1,7 +1,7 @@
 Failure invalidJson(dynamic data) =>
     Failure('InvalidFailure', 'Invalid Failure JSON: $data');
 
-class Failure {
+final class Failure {
   final String type;
   final String message;
 

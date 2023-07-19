@@ -19,7 +19,7 @@ final class StyledOutlineButton extends ElevatedButton {
           onPressed: onPress,
           child: Text(
             text ?? '',
-            style: AppTheme.instance.theme.textTheme.bodySmall,
+            style: theme.textTheme.bodySmall,
           ),
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(Colors.transparent),
@@ -31,7 +31,7 @@ final class StyledOutlineButton extends ElevatedButton {
             ),
             side: MaterialStateProperty.all(
               BorderSide(
-                color: AppTheme.instance.theme.colorScheme.primary,
+                color: theme.colorScheme.primary,
                 width: 2,
               ),
             ),

@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AppTheme {
-  static var instance = AppTheme._(false);
-  static set useScreenUtils(bool useScreenUtils) =>
-      instance = AppTheme._(useScreenUtils);
+var theme = _instance.theme;
+var _instance = AppTheme._(true);
+void initializeTheme(bool useScreenUtils) =>
+    _instance = AppTheme._(useScreenUtils);
 
+class AppTheme {
   final bool screenUtils;
   late final ThemeData theme;
+
   AppTheme._(this.screenUtils) {
     theme = ThemeData(
       scaffoldBackgroundColor: const Color(0xFF000000),
