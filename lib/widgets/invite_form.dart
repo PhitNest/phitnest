@@ -16,7 +16,7 @@ final class InviteParams extends Equatable {
   List<Object?> get props => [email, gymId];
 
   Map<String, dynamic> toJson() => {
-        'email': email,
+        'receiverEmail': email,
         'gymId': gymId,
       };
 }
