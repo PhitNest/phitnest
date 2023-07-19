@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_core/core.dart';
 
+import '../confirm_email.dart';
+
 part 'pages/account_info.dart';
 part 'pages/inviter_email.dart';
 part 'pages/loading.dart';
@@ -87,7 +89,27 @@ final class RegisterScreen extends StatelessWidget {
                             Navigator.pushReplacement(
                               context,
                               CupertinoPageRoute<void>(
-                                builder: (context) => ConfirmEmailScreen(),
+                                builder: (context) => ConfirmEmailScreen(
+                                  loginParams: LoginParams(
+                                    password: context.registerFormBloc
+                                        .controllers.passwordController.text,
+                                    email: context.registerFormBloc.controllers
+                                        .emailController.text,
+                                  ),
+                                  resendConfirmationEmail: (session) =>
+                                      resendConfirmationEmail(
+                                    user: session.user,
+                                  ),
+                                  confirmEmail: (session, code) => confirmEmail(
+                                    user: session.user,
+                                    code: code,
+                                  ),
+                                  unauthenticatedSession:
+                                      UnauthenticatedSession(
+                                    user: user,
+                                    apiInfo: apiInfo,
+                                  ),
+                                ),
                               ),
                             );
                           case RegisterFailureResponse(message: final message):
