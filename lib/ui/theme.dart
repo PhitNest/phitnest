@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static var instance = AppTheme._(false);
-  static set useScreenUtils(bool useScreenUtils) =>
+  set useScreenUtils(bool useScreenUtils) =>
       instance = AppTheme._(useScreenUtils);
 
   final bool screenUtils;
