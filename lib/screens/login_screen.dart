@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_core/core.dart';
 
 import 'forgot_password/ui.dart';
+import 'register/ui.dart';
 
 class LoginScreen extends StatelessWidget {
   final ApiInfo apiInfo;
@@ -20,7 +21,7 @@ class LoginScreen extends StatelessWidget {
           apiInfo: apiInfo,
           formBuilder: (
             context,
-            screenState,
+            autovalidateMode,
             formKey,
             emailController,
             passwordController,
@@ -31,13 +32,13 @@ class LoginScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 40.w),
             child: Form(
               key: formKey,
-              autovalidateMode: screenState.autovalidateMode,
+              autovalidateMode: autovalidateMode,
               child: Column(
                 children: [
                   120.verticalSpace,
                   Text(
                     'Login',
-                    style: AppTheme.instance.theme.textTheme.bodyLarge,
+                    style: theme.textTheme.bodyLarge,
                   ),
                   70.verticalSpace,
                   StyledUnderlinedTextField(
@@ -58,15 +59,20 @@ class LoginScreen extends StatelessWidget {
                   Row(
                     children: [
                       TextButton(
-                        onPressed: () => Navigator.push(
-                          context,
-                          CupertinoPageRoute<void>(
-                            builder: (context) => const ForgotPasswordScreen(),
-                          ),
-                        ),
+                        onPressed: () {
+                          context.loginLoaderBloc
+                              .add(const LoaderCancelEvent());
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute<void>(
+                              builder: (context) =>
+                                  const ForgotPasswordScreen(),
+                            ),
+                          );
+                        },
                         child: Text(
                           'Forgot Password?',
-                          style: AppTheme.instance.theme.textTheme.bodySmall!
+                          style: theme.textTheme.bodySmall!
                               .copyWith(fontStyle: FontStyle.normal),
                         ),
                       ),
@@ -82,14 +88,18 @@ class LoginScreen extends StatelessWidget {
                               Navigator.pushReplacement(
                                 context,
                                 CupertinoPageRoute<void>(
-                                  builder: (context) => const Scaffold(),
+                                  builder: (context) => HomeScreen(
+                                    apiInfo: apiInfo,
+                                  ),
                                 ),
                               );
                             case LoginConfirmationRequired():
                               Navigator.pushReplacement(
                                 context,
                                 CupertinoPageRoute<void>(
-                                  builder: (context) => const Scaffold(),
+                                  builder: (context) => ConfirmEmailScreen(
+                                    apiInfo: apiInfo,
+                                  ),
                                 ),
                               );
                             case LoginFailure(message: final message) ||
@@ -115,7 +125,7 @@ class LoginScreen extends StatelessWidget {
                           onPressed: submit,
                           child: Text(
                             'LOGIN',
-                            style: AppTheme.instance.theme.textTheme.bodySmall,
+                            style: theme.textTheme.bodySmall,
                           ),
                         ),
                     },
@@ -124,23 +134,26 @@ class LoginScreen extends StatelessWidget {
                   RichText(
                     text: TextSpan(
                       text: "Don't have an account?",
-                      style: AppTheme.instance.theme.textTheme.bodySmall,
+                      style: theme.textTheme.bodySmall,
                       children: [
                         TextSpan(
                           text: 'Register',
-                          style: AppTheme.instance.theme.textTheme.bodySmall!
-                              .copyWith(
-                            color: AppTheme.instance.theme.colorScheme.primary,
+                          style: theme.textTheme.bodySmall!.copyWith(
+                            color: theme.colorScheme.primary,
                             fontWeight: FontWeight.bold,
                           ),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () => Navigator.of(context).push(
-                                  CupertinoPageRoute<void>(
-                                    builder: (context) =>
-                                        // const RegisterScreen(),
-                                        const Scaffold(),
+                            ..onTap = () {
+                              context.loginLoaderBloc
+                                  .add(const LoaderCancelEvent());
+                              Navigator.of(context).push(
+                                CupertinoPageRoute<void>(
+                                  builder: (context) => RegisterScreen(
+                                    apiInfo: apiInfo,
                                   ),
                                 ),
+                              );
+                            },
                         ),
                       ],
                     ),

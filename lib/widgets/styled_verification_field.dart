@@ -25,7 +25,7 @@ final class StyledVerificationField extends StatelessWidget {
           length: 6,
           onChanged: onChanged,
           onCompleted: onCompleted,
-          textStyle: AppTheme.instance.theme.textTheme.bodyLarge,
+          textStyle: theme.textTheme.bodyLarge,
           controller: controller,
           focusNode: focusNode,
           autoDisposeControllers: false,

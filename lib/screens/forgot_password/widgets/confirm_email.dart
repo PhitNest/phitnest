@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../theme.dart';
-import '../../../widgets/widgets.dart';
+import '../../../../widgets/widgets.dart';
 import 'reset_password.dart';
 
 class ConfirmEmailScreen extends StatelessWidget {

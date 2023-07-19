@@ -110,7 +110,7 @@ final class _StyledNavBarPageButton extends StatelessWidget {
         onPressed: !selected ? onPressed : null,
         child: Text(
           text,
-          style: AppTheme.instance.theme.textTheme.bodySmall!.copyWith(
+          style: theme.textTheme.bodySmall!.copyWith(
             fontWeight: FontWeight.bold,
             color: reversed
                 ? selected
