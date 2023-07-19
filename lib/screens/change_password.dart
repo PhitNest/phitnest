@@ -5,10 +5,6 @@ import 'package:phitnest_core/core.dart';
 
 import 'home_screen.dart';
 
-extension GetChangePasswordBloc on BuildContext {
-  ChangePasswordBloc get changePasswordBloc => BlocProvider.of(this);
-}
-
 final class PasswordFormRejectedEvent extends Equatable {
   const PasswordFormRejectedEvent() : super();
 
@@ -79,6 +75,15 @@ final class SubmitButton extends StatelessWidget {
       );
 }
 
+typedef ChangePasswordLoaderBloc = LoaderBloc<String, ChangePasswordResponse>;
+typedef ChangePasswordLoaderConsumer
+    = LoaderConsumer<String, ChangePasswordResponse>;
+
+extension GetChangePasswordBlocs on BuildContext {
+  ChangePasswordBloc get changePasswordBloc => BlocProvider.of(this);
+  ChangePasswordLoaderBloc get changePasswordLoaderBloc => loader();
+}
+
 final class ChangePasswordScreen extends StatelessWidget {
   final ChangePasswordUser user;
   final ApiInfo apiInfo;
@@ -91,11 +96,11 @@ final class ChangePasswordScreen extends StatelessWidget {
 
   void submit(BuildContext context) {
     if (context.changePasswordBloc.formKey.currentState!.validate()) {
-      context.loader<String, ChangePasswordResponse>().add(
-            LoaderLoadEvent(
-              context.changePasswordBloc.confirmPasswordController.text,
-            ),
-          );
+      context.changePasswordLoaderBloc.add(
+        LoaderLoadEvent(
+          context.changePasswordBloc.confirmPasswordController.text,
+        ),
+      );
     } else {
       context.changePasswordBloc.add(const PasswordFormRejectedEvent());
     }
@@ -156,7 +161,7 @@ final class ChangePasswordScreen extends StatelessWidget {
                               : 'Passwords do not match'),
                       onFieldSubmitted: (_) => submit(context),
                     ),
-                    LoaderConsumer<String, ChangePasswordResponse>(
+                    ChangePasswordLoaderConsumer(
                       listener: (context, submitState) {
                         switch (submitState) {
                           case LoaderLoadedState(data: final response):
@@ -164,11 +169,13 @@ final class ChangePasswordScreen extends StatelessWidget {
                               case ChangePasswordSuccess(
                                   session: final session
                                 ):
+                                context.sessionLoader.add(LoaderSetEvent(
+                                    RefreshSessionSuccess(session)));
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute<void>(
                                     builder: (context) => HomeScreen(
-                                      session: session,
+                                      apiInfo: apiInfo,
                                     ),
                                   ),
                                   (_) => false,

@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phitnest_core/core.dart';
 
-extension GetInviteFormBloc on BuildContext {
-  InviteFormBloc get inviteFormBloc => BlocProvider.of(this);
-}
-
 final class InviteParams extends Equatable {
   final String email;
   final String gymId;
@@ -34,77 +30,45 @@ Future<HttpResponse<void>> invite({
       method: HttpMethod.post,
       parser: (_) {},
       data: params.toJson(),
-      authorization: session,
+      idToken: session.cognitoSession.idToken.jwtToken,
     );
 
-final class InviteFormState extends Equatable {
-  final AutovalidateMode autovalidateMode;
-
-  const InviteFormState(this.autovalidateMode);
-
-  @override
-  List<Object?> get props => [autovalidateMode];
-}
-
-final class InviteFormRejectedEvent extends Equatable {
-  const InviteFormRejectedEvent();
-
-  @override
-  List<Object?> get props => [];
-}
-
-final class InviteFormBloc
-    extends Bloc<InviteFormRejectedEvent, InviteFormState> {
+final class InviteFormControllers extends FormControllers {
   final emailController = TextEditingController();
   final gymIdController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-
-  InviteFormBloc() : super(const InviteFormState(AutovalidateMode.disabled)) {
-    on<InviteFormRejectedEvent>(
-      (event, emit) => emit(
-        const InviteFormState(AutovalidateMode.always),
-      ),
-    );
-  }
 
   @override
-  Future<void> close() {
+  void dispose() {
     emailController.dispose();
     gymIdController.dispose();
-    return super.close();
   }
+}
+
+typedef InviteFormBloc = FormBloc<InviteFormControllers>;
+typedef InviteFormConsumer = FormConsumer<InviteFormControllers>;
+typedef InviteFormLoaderBloc = LoaderBloc<InviteParams, HttpResponse<void>?>;
+typedef InviteFormLoaderConsumer
+    = LoaderConsumer<InviteParams, HttpResponse<void>?>;
+
+extension GetInviteFormBlocs on BuildContext {
+  InviteFormBloc get inviteFormBloc => BlocProvider.of(this);
+  InviteFormLoaderBloc get inviteFormLoaderBloc => loader();
 }
 
 final class InviteForm extends StatelessWidget {
-  final Session session;
-
-  void submit(BuildContext context) {
-    final inviteFormBloc = context.inviteFormBloc;
-    if (inviteFormBloc.formKey.currentState!.validate()) {
-      context.loader<InviteParams, HttpResponse<void>>().add(
-            LoaderLoadEvent(
-              InviteParams(
-                email: context.inviteFormBloc.emailController.text,
-                gymId: context.inviteFormBloc.gymIdController.text,
-              ),
-            ),
-          );
-    } else {
-      inviteFormBloc.add(const InviteFormRejectedEvent());
-    }
-  }
+  final void Function(BuildContext) onSessionLost;
 
   const InviteForm({
     super.key,
-    required this.session,
+    required this.onSessionLost,
   }) : super();
 
   @override
   Widget build(BuildContext context) => SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
         child: BlocProvider<InviteFormBloc>(
-          create: (_) => InviteFormBloc(),
-          child: BlocConsumer<InviteFormBloc, InviteFormState>(
+          create: (_) => InviteFormBloc(InviteFormControllers()),
+          child: InviteFormConsumer(
             listener: (context, formState) {},
             builder: (context, formState) => Form(
               key: context.inviteFormBloc.formKey,
@@ -116,37 +80,56 @@ final class InviteForm extends StatelessWidget {
                   StyledUnderlinedTextField(
                     hint: 'Email',
                     validator: EmailValidator.validateEmail,
-                    controller: context.inviteFormBloc.emailController,
+                    controller:
+                        context.inviteFormBloc.controllers.emailController,
                   ),
                   StyledUnderlinedTextField(
                     hint: 'Gym ID',
-                    controller: context.inviteFormBloc.gymIdController,
+                    controller:
+                        context.inviteFormBloc.controllers.gymIdController,
                   ),
                   BlocProvider(
-                    create: (_) => LoaderBloc<InviteParams, HttpResponse<void>>(
-                      load: (params) => invite(
-                        params: params,
-                        session: session,
+                    create: (context) => InviteFormLoaderBloc(
+                      load: (params) => context.sessionLoader.session.then(
+                        (session) {
+                          if (session != null) {
+                            return invite(
+                              params: params,
+                              session: session,
+                            );
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
                     ),
-                    child: LoaderConsumer<InviteParams, HttpResponse<void>>(
+                    child: InviteFormLoaderConsumer(
                       listener: (context, submitState) {
                         switch (submitState) {
                           case LoaderLoadedState(data: final response):
-                            switch (response) {
-                              case HttpResponseSuccess():
-                                StyledBanner.show(
-                                  message: 'Invite sent',
-                                  error: false,
-                                );
-                              case HttpResponseFailure(failure: final failure):
-                                StyledBanner.show(
-                                  message: failure.message,
-                                  error: true,
-                                );
+                            if (response != null) {
+                              switch (response) {
+                                case HttpResponseSuccess():
+                                  StyledBanner.show(
+                                    message: 'Invite sent',
+                                    error: false,
+                                  );
+                                case HttpResponseFailure(
+                                    failure: final failure
+                                  ):
+                                  StyledBanner.show(
+                                    message: failure.message,
+                                    error: true,
+                                  );
+                              }
+                              final inviteFormBloc = context.inviteFormBloc;
+                              inviteFormBloc.controllers.emailController
+                                  .clear();
+                              inviteFormBloc.controllers.gymIdController
+                                  .clear();
+                            } else {
+                              onSessionLost(context);
                             }
-                            context.inviteFormBloc.emailController.clear();
-                            context.inviteFormBloc.gymIdController.clear();
                           default:
                         }
                       },
@@ -154,7 +137,22 @@ final class InviteForm extends StatelessWidget {
                         LoaderLoadedState() ||
                         LoaderInitialState() =>
                           TextButton(
-                            onPressed: () => submit(context),
+                            onPressed: () {
+                              final inviteFormBloc = context.inviteFormBloc;
+                              inviteFormBloc.submit(
+                                onAccept: () =>
+                                    context.inviteFormLoaderBloc.add(
+                                  LoaderLoadEvent(
+                                    InviteParams(
+                                      email: inviteFormBloc
+                                          .controllers.emailController.text,
+                                      gymId: inviteFormBloc
+                                          .controllers.gymIdController.text,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                             child: const Text('Invite'),
                           ),
                         LoaderLoadingState() =>
