@@ -89,94 +89,53 @@ Future<HttpResponse<GymEntryFormSuccess>> submitGym({
       route: '/gym',
       method: HttpMethod.post,
       parser: GymEntryFormSuccess.fromJson,
-      authorization: session,
+      idToken: session.cognitoSession.idToken.jwtToken,
       data: params.toJson(),
     );
 
-extension GetGymEntryFormBloc on BuildContext {
-  GymEntryFormBloc get gymEntryFormBloc => BlocProvider.of(this);
-}
-
-final class GymEntryFormState extends Equatable {
-  final AutovalidateMode autovalidateMode;
-
-  const GymEntryFormState(this.autovalidateMode);
-
-  @override
-  List<Object?> get props => [autovalidateMode];
-}
-
-final class GymEntryFormRejectedEvent extends Equatable {
-  const GymEntryFormRejectedEvent();
-
-  @override
-  List<Object?> get props => [];
-}
-
-final class GymEntryFormBloc
-    extends Bloc<GymEntryFormRejectedEvent, GymEntryFormState> {
+final class GymEntryFormControllers extends FormControllers {
   final nameController = TextEditingController();
   final streetController = TextEditingController();
   final cityController = TextEditingController();
   final stateController = TextEditingController();
   final zipCodeController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-
-  GymEntryFormBloc()
-      : super(
-          const GymEntryFormState(AutovalidateMode.disabled),
-        ) {
-    on<GymEntryFormRejectedEvent>(
-      (event, emit) => emit(
-        const GymEntryFormState(AutovalidateMode.always),
-      ),
-    );
-  }
 
   @override
-  Future<void> close() {
+  void dispose() {
     nameController.dispose();
     streetController.dispose();
     cityController.dispose();
     stateController.dispose();
     zipCodeController.dispose();
-    return super.close();
   }
 }
 
+typedef GymEntryFormBloc = FormBloc<GymEntryFormControllers>;
+typedef GymEntryFormConsumer = FormConsumer<GymEntryFormControllers>;
+typedef GymEntryFormLoaderBloc
+    = LoaderBloc<GymEntryParams, HttpResponse<GymEntryFormSuccess>?>;
+typedef GymEntryFormLoaderConsumer
+    = LoaderConsumer<GymEntryParams, HttpResponse<GymEntryFormSuccess>?>;
+
+extension GetGymEntryFormBlocs on BuildContext {
+  GymEntryFormBloc get gymEntryFormBloc => BlocProvider.of(this);
+  GymEntryFormLoaderBloc get gymEntryFormLoaderBloc => loader();
+}
+
 final class GymEntryForm extends StatelessWidget {
-  final Session session;
+  final void Function(BuildContext) onSessionLost;
 
   const GymEntryForm({
     super.key,
-    required this.session,
+    required this.onSessionLost,
   }) : super();
-
-  void submit(BuildContext context) {
-    final gymEntryFormBloc = context.gymEntryFormBloc;
-    if (gymEntryFormBloc.formKey.currentState!.validate()) {
-      context.loader<GymEntryParams, HttpResponse<GymEntryFormSuccess>>().add(
-            LoaderLoadEvent(
-              GymEntryParams(
-                name: context.gymEntryFormBloc.nameController.text,
-                street: context.gymEntryFormBloc.streetController.text,
-                city: context.gymEntryFormBloc.cityController.text,
-                state: context.gymEntryFormBloc.stateController.text,
-                zipCode: context.gymEntryFormBloc.zipCodeController.text,
-              ),
-            ),
-          );
-    } else {
-      gymEntryFormBloc.add(const GymEntryFormRejectedEvent());
-    }
-  }
 
   @override
   Widget build(BuildContext context) => SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
         child: BlocProvider(
-          create: (_) => GymEntryFormBloc(),
-          child: BlocConsumer<GymEntryFormBloc, GymEntryFormState>(
+          create: (_) => GymEntryFormBloc(GymEntryFormControllers()),
+          child: GymEntryFormConsumer(
             listener: (context, formState) {},
             builder: (context, formState) => Form(
               key: context.gymEntryFormBloc.formKey,
@@ -187,54 +146,76 @@ final class GymEntryForm extends StatelessWidget {
                   const Text('Gym Entry'),
                   StyledUnderlinedTextField(
                     hint: 'Name',
-                    controller: context.gymEntryFormBloc.nameController,
+                    controller:
+                        context.gymEntryFormBloc.controllers.nameController,
                   ),
                   StyledUnderlinedTextField(
                     hint: 'Street',
-                    controller: context.gymEntryFormBloc.streetController,
+                    controller:
+                        context.gymEntryFormBloc.controllers.streetController,
                   ),
                   StyledUnderlinedTextField(
                     hint: 'City',
-                    controller: context.gymEntryFormBloc.cityController,
+                    controller:
+                        context.gymEntryFormBloc.controllers.cityController,
                   ),
                   StyledUnderlinedTextField(
                     hint: 'State',
-                    controller: context.gymEntryFormBloc.stateController,
+                    controller:
+                        context.gymEntryFormBloc.controllers.stateController,
                   ),
                   StyledUnderlinedTextField(
                     hint: 'ZipCode',
-                    controller: context.gymEntryFormBloc.zipCodeController,
+                    controller:
+                        context.gymEntryFormBloc.controllers.zipCodeController,
                   ),
                   BlocProvider(
-                    create: (_) => LoaderBloc<GymEntryParams,
-                        HttpResponse<GymEntryFormSuccess>>(
-                      load: (params) => submitGym(
-                        params: params,
-                        session: session,
+                    create: (context) => GymEntryFormLoaderBloc(
+                      load: (params) => context.sessionLoader.session.then(
+                        (session) {
+                          if (session != null) {
+                            return submitGym(
+                              params: params,
+                              session: session,
+                            );
+                          }
+                          return null;
+                        },
                       ),
                     ),
-                    child: LoaderConsumer<GymEntryParams,
-                        HttpResponse<GymEntryFormSuccess>>(
+                    child: GymEntryFormLoaderConsumer(
                       listener: (context, gymSubmitState) {
                         switch (gymSubmitState) {
                           case LoaderLoadedState(data: final response):
-                            switch (response) {
-                              case HttpResponseSuccess(data: final data):
-                                StyledBanner.show(
-                                  message: 'New gym: ${data.gymId}',
-                                  error: false,
-                                );
-                              case HttpResponseFailure(failure: final failure):
-                                StyledBanner.show(
-                                  message: failure.message,
-                                  error: true,
-                                );
+                            if (response != null) {
+                              switch (response) {
+                                case HttpResponseSuccess(data: final data):
+                                  StyledBanner.show(
+                                    message: 'New gym: ${data.gymId}',
+                                    error: false,
+                                  );
+                                case HttpResponseFailure(
+                                    failure: final failure
+                                  ):
+                                  StyledBanner.show(
+                                    message: failure.message,
+                                    error: true,
+                                  );
+                              }
+                              final gymEntryFormBloc = context.gymEntryFormBloc;
+                              gymEntryFormBloc.controllers.nameController
+                                  .clear();
+                              gymEntryFormBloc.controllers.streetController
+                                  .clear();
+                              gymEntryFormBloc.controllers.cityController
+                                  .clear();
+                              gymEntryFormBloc.controllers.stateController
+                                  .clear();
+                              gymEntryFormBloc.controllers.zipCodeController
+                                  .clear();
+                            } else {
+                              onSessionLost(context);
                             }
-                            context.gymEntryFormBloc.nameController.clear();
-                            context.gymEntryFormBloc.streetController.clear();
-                            context.gymEntryFormBloc.cityController.clear();
-                            context.gymEntryFormBloc.stateController.clear();
-                            context.gymEntryFormBloc.zipCodeController.clear();
                           default:
                         }
                       },
@@ -243,7 +224,28 @@ final class GymEntryForm extends StatelessWidget {
                         LoaderLoadedState() ||
                         LoaderInitialState() =>
                           TextButton(
-                            onPressed: () => submit(context),
+                            onPressed: () {
+                              final gymEntryFormBloc = context.gymEntryFormBloc;
+                              gymEntryFormBloc.submit(
+                                onAccept: () =>
+                                    context.gymEntryFormLoaderBloc.add(
+                                  LoaderLoadEvent(
+                                    GymEntryParams(
+                                      name: gymEntryFormBloc
+                                          .controllers.nameController.text,
+                                      street: gymEntryFormBloc
+                                          .controllers.streetController.text,
+                                      city: gymEntryFormBloc
+                                          .controllers.cityController.text,
+                                      state: gymEntryFormBloc
+                                          .controllers.stateController.text,
+                                      zipCode: gymEntryFormBloc
+                                          .controllers.zipCodeController.text,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                             child: const Text('Submit'),
                           ),
                         LoaderLoadingState() =>

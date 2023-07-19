@@ -40,7 +40,7 @@ final class LoginScreen extends StatelessWidget {
             apiInfo: apiInfo,
             formBuilder: (
               context,
-              screenState,
+              autovalidateMode,
               formKey,
               emailController,
               passwordController,
@@ -49,7 +49,7 @@ final class LoginScreen extends StatelessWidget {
             ) =>
                 Form(
               key: formKey,
-              autovalidateMode: screenState.autovalidateMode,
+              autovalidateMode: autovalidateMode,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -81,10 +81,12 @@ final class LoginScreen extends StatelessWidget {
                         case LoaderLoadedState(data: final response):
                           switch (response) {
                             case LoginSuccess(session: final session):
+                              context.sessionLoader.add(LoaderSetEvent(
+                                  RefreshSessionSuccess(session)));
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute<void>(
                                   builder: (context) => HomeScreen(
-                                    session: session,
+                                    apiInfo: apiInfo,
                                   ),
                                 ),
                               );
