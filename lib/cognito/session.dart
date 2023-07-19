@@ -85,7 +85,7 @@ final class Session {
   final CognitoUser user;
   final CognitoCredentials credentials;
   final ApiInfo apiInfo;
-  CognitoUserSession cognitoSession;
+  final CognitoUserSession cognitoSession;
 
   Session({
     required this.user,
@@ -104,7 +104,6 @@ final class Session {
             await credentials
                 .getAwsCredentials(cognitoSession.getIdToken().getJwtToken());
           }
-          cognitoSession = newUserSession;
           return RefreshSessionSuccess(
             Session(
               user: user,
