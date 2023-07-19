@@ -1,38 +1,277 @@
+import 'package:async/async.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_core/core.dart';
 
 import '../common/constants/constants.dart';
 import 'styled_indicator.dart';
+import 'widgets.dart';
 
-enum LogoState { animated, holding, disabled, reversed, loading }
+enum NavBarPage { news, explore, chat, options }
 
-extension _LogoStateToAsset on LogoState {
-  String? get assetPath {
-    switch (this) {
-      case LogoState.animated:
-      case LogoState.holding:
-        return Assets.coloredLogo.path;
-      case LogoState.disabled:
-        return Assets.logo.path;
-      case LogoState.reversed:
-        return Assets.darkLogo.path;
-      case LogoState.loading:
-        return null;
+sealed class NavBarState extends Equatable {
+  NavBarPage get page;
+  String? get assetPath;
+
+  const NavBarState() : super();
+}
+
+final class NavBarNormalState extends NavBarState {
+  @override
+  String? get assetPath => Assets.logo.path;
+
+  @override
+  final NavBarPage page;
+
+  const NavBarNormalState(this.page)
+      : assert(page != NavBarPage.explore),
+        super();
+
+  @override
+  List<Object?> get props => [page];
+}
+
+sealed class NavBarExploreState extends NavBarState {
+  @override
+  NavBarPage get page => NavBarPage.explore;
+
+  const NavBarExploreState() : super();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class NavBarLoadingState extends NavBarExploreState {
+  @override
+  String? get assetPath => null;
+
+  const NavBarLoadingState() : super();
+}
+
+final class NavBarActiveState extends NavBarExploreState {
+  @override
+  String? get assetPath => Assets.coloredLogo.path;
+
+  const NavBarActiveState() : super();
+}
+
+final class NavBarInactiveState extends NavBarExploreState {
+  @override
+  String? get assetPath => Assets.logo.path;
+
+  const NavBarInactiveState() : super();
+}
+
+final class NavBarHoldingState extends NavBarExploreState {
+  final int countdown;
+  final CancelableOperation<void> nextCount;
+
+  @override
+  String? get assetPath => Assets.coloredLogo.path;
+
+  const NavBarHoldingState(this.countdown, this.nextCount) : super();
+
+  @override
+  List<Object?> get props => [countdown, nextCount];
+}
+
+final class NavBarReversedState extends NavBarExploreState {
+  @override
+  String? get assetPath => Assets.darkLogo.path;
+
+  const NavBarReversedState() : super();
+}
+
+final class NavBarCountdownEndedState extends NavBarExploreState {
+  @override
+  String? get assetPath => Assets.coloredLogo.path;
+
+  const NavBarCountdownEndedState() : super();
+}
+
+sealed class NavBarEvent extends Equatable {
+  const NavBarEvent() : super();
+}
+
+final class NavBarPressEvent extends NavBarEvent {
+  final NavBarPage page;
+
+  const NavBarPressEvent(this.page) : super();
+
+  @override
+  List<Object?> get props => [page];
+}
+
+final class NavBarPressLogoEvent extends NavBarEvent {
+  const NavBarPressLogoEvent() : super();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class NavBarReleaseLogoEvent extends NavBarEvent {
+  const NavBarReleaseLogoEvent() : super();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class NavBarReverseEvent extends NavBarEvent {
+  const NavBarReverseEvent() : super();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class NavBarSetLoadingEvent extends NavBarEvent {
+  final bool loading;
+
+  const NavBarSetLoadingEvent(this.loading) : super();
+
+  @override
+  List<Object?> get props => [loading];
+}
+
+final class NavBarCountDownEvent extends NavBarEvent {
+  const NavBarCountDownEvent() : super();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
+  NavBarBloc(NavBarPage initialPage)
+      : super(
+          switch (initialPage) {
+            NavBarPage.explore => const NavBarActiveState(),
+            NavBarPage.news => const NavBarNormalState(NavBarPage.news),
+            NavBarPage.chat => const NavBarNormalState(NavBarPage.chat),
+            NavBarPage.options => const NavBarNormalState(NavBarPage.options),
+          },
+        ) {
+    on<NavBarPressEvent>(
+      (event, emit) {
+        switch (state) {
+          case NavBarNormalState() ||
+                NavBarCountdownEndedState() ||
+                NavBarReversedState():
+            switch (event.page) {
+              case NavBarPage.explore:
+                emit(const NavBarActiveState());
+              case NavBarPage.chat || NavBarPage.options || NavBarPage.news:
+                emit(NavBarNormalState(event.page));
+            }
+          case NavBarInactiveState() ||
+                NavBarActiveState() ||
+                NavBarLoadingState():
+            switch (event.page) {
+              case NavBarPage.chat || NavBarPage.options || NavBarPage.news:
+                emit(NavBarNormalState(event.page));
+              case NavBarPage.explore:
+            }
+          case NavBarHoldingState():
+        }
+      },
+    );
+
+    on<NavBarPressLogoEvent>(
+      (event, emit) {
+        switch (state) {
+          case NavBarNormalState() || NavBarReversedState():
+            emit(const NavBarActiveState());
+          case NavBarActiveState() || NavBarCountdownEndedState():
+            emit(
+              NavBarHoldingState(
+                3,
+                CancelableOperation.fromFuture(
+                  Future.delayed(const Duration(seconds: 1)),
+                )..then((_) => add(const NavBarCountDownEvent())),
+              ),
+            );
+          case NavBarInactiveState() ||
+                NavBarHoldingState() ||
+                NavBarLoadingState():
+        }
+      },
+    );
+
+    on<NavBarReleaseLogoEvent>(
+      (event, emit) async {
+        switch (state) {
+          case NavBarHoldingState(nextCount: final nextCount):
+            await nextCount.cancel();
+            emit(const NavBarActiveState());
+          case NavBarActiveState() ||
+                NavBarNormalState() ||
+                NavBarReversedState() ||
+                NavBarInactiveState() ||
+                NavBarLoadingState() ||
+                NavBarCountdownEndedState():
+        }
+      },
+    );
+
+    on<NavBarReverseEvent>(
+      (event, emit) => emit(const NavBarReversedState()),
+    );
+
+    on<NavBarSetLoadingEvent>(
+      (event, emit) => emit(
+        switch (event.loading) {
+          true => const NavBarLoadingState(),
+          false => const NavBarActiveState(),
+        },
+      ),
+    );
+
+    on<NavBarCountDownEvent>(
+      (event, emit) {
+        switch (state) {
+          case NavBarHoldingState(countdown: final countdown):
+            if (countdown > 1) {
+              emit(NavBarHoldingState(
+                countdown - 1,
+                CancelableOperation.fromFuture(
+                  Future.delayed(const Duration(seconds: 1)),
+                )..then((_) => add(const NavBarCountDownEvent())),
+              ));
+            } else {
+              emit(const NavBarCountdownEndedState());
+            }
+          case NavBarActiveState() ||
+                NavBarNormalState() ||
+                NavBarReversedState() ||
+                NavBarCountdownEndedState() ||
+                NavBarInactiveState() ||
+                NavBarLoadingState():
+        }
+      },
+    );
+  }
+
+  @override
+  Future<void> close() async {
+    switch (state) {
+      case NavBarHoldingState(nextCount: final nextCount):
+        await nextCount.cancel();
+      default:
     }
+    return super.close();
   }
 }
 
+extension on BuildContext {
+  NavBarBloc get navBarBloc => BlocProvider.of(this);
+}
+
 final class _StyledNavBarLogo extends StatefulWidget {
-  final LogoState state;
-  final VoidCallback onReleased;
-  final VoidCallback onPressed;
+  final NavBarState state;
 
   const _StyledNavBarLogo({
     Key? key,
     required this.state,
-    required this.onReleased,
-    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -41,47 +280,50 @@ final class _StyledNavBarLogo extends StatefulWidget {
 
 final class _StyledNavBarLogoState extends State<_StyledNavBarLogo>
     with SingleTickerProviderStateMixin {
-  late AnimationController? controller;
+  late final AnimationController controller = AnimationController(vsync: this)
+    ..repeat(
+      min: 0,
+      max: 1,
+      reverse: true,
+      period: const Duration(milliseconds: 1200),
+    );
+
+  _StyledNavBarLogoState() : super();
 
   @override
-  void initState() {
-    super.initState();
-    if (widget.state.assetPath != null) {
-      controller = AnimationController(vsync: this)
-        ..repeat(
-          min: 0,
-          max: 1,
-          reverse: true,
-          period: const Duration(milliseconds: 1200),
-        );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) => widget.state.assetPath != null
-      ? GestureDetector(
-          onTapCancel: widget.onReleased,
-          onTapDown: (_) => widget.onPressed(),
-          onTapUp: (_) => widget.onReleased(),
-          child: AnimatedBuilder(
-            animation: controller!,
-            builder: (context, child) => Image.asset(
-              widget.state.assetPath!,
-              width: 38.62.w +
-                  (widget.state == LogoState.animated
-                          ? controller!.value
-                          : widget.state == LogoState.holding
-                              ? 1
-                              : 0) *
-                      5.w,
+  Widget build(BuildContext context) => switch (widget.state) {
+        NavBarLoadingState() => const CircularProgressIndicator(),
+        _ => GestureDetector(
+            onTapCancel: () =>
+                context.navBarBloc.add(const NavBarReleaseLogoEvent()),
+            onTapDown: (_) =>
+                context.navBarBloc.add(const NavBarPressLogoEvent()),
+            onTapUp: (_) =>
+                context.navBarBloc.add(const NavBarReleaseLogoEvent()),
+            child: AnimatedBuilder(
+              animation: controller,
+              builder: (context, child) => Image.asset(widget.state.assetPath!,
+                  width: 38.62.w +
+                      switch (widget.state) {
+                            NavBarActiveState() ||
+                            NavBarCountdownEndedState() =>
+                              controller.value,
+                            NavBarHoldingState() => 1,
+                            NavBarNormalState() ||
+                            NavBarInactiveState() ||
+                            NavBarReversedState() =>
+                              0,
+                            NavBarLoadingState() =>
+                              throw Exception('This should never happen'),
+                          } *
+                          5.w),
             ),
-          ),
-        )
-      : const CircularProgressIndicator();
+          )
+      };
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller.dispose();
     super.dispose();
   }
 }
@@ -127,97 +369,104 @@ final class _StyledNavBarPageButton extends StatelessWidget {
 class StyledNavBar extends StatelessWidget {
   static double get kHeight => 66.h;
 
-  final int page;
-  final LogoState logoState;
-  final VoidCallback onPressDownLogo;
-  final VoidCallback onReleaseLogo;
-  final VoidCallback onPressedNews;
-  final VoidCallback onPressedExplore;
-  final VoidCallback onPressedChat;
-  final VoidCallback onPressedOptions;
-  final int friendRequestCount;
+  final Widget Function(BuildContext context, NavBarState navBarState) builder;
+  final Future<void> Function(BuildContext context, NavBarState navBarState)
+      listener;
 
   const StyledNavBar({
     super.key,
-    required this.page,
-    required this.logoState,
-    required this.onReleaseLogo,
-    required this.onPressDownLogo,
-    required this.onPressedNews,
-    required this.onPressedExplore,
-    required this.onPressedChat,
-    required this.onPressedOptions,
-    required this.friendRequestCount,
+    required this.builder,
+    required this.listener,
   });
 
   @override
-  Widget build(BuildContext context) => Container(
-        height: StyledNavBar.kHeight,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: logoState == LogoState.reversed ? Colors.black : Colors.white,
-          boxShadow: const [
-            BoxShadow(
-              blurRadius: 8.5,
-              spreadRadius: 0.0,
-              color: Colors.black,
-              offset: Offset(0, 7),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: EdgeInsets.only(bottom: 18.h),
-          child: Stack(
+  Widget build(BuildContext context) => BlocProvider(
+        create: (_) => NavBarBloc(NavBarPage.options),
+        child: BlocConsumer<NavBarBloc, NavBarState>(
+          listener: listener,
+          builder: (context, navBarState) => Column(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 12.w),
-                  child: _StyledNavBarLogo(
-                    state: logoState,
-                    onReleased: onReleaseLogo,
-                    onPressed: onPressDownLogo,
-                  ),
+              builder(context, navBarState),
+              Container(
+                height: StyledNavBar.kHeight,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: switch (navBarState) {
+                    NavBarReversedState() => Colors.black,
+                    _ => Colors.white,
+                  },
+                  boxShadow: const [
+                    BoxShadow(
+                      blurRadius: 8.5,
+                      spreadRadius: 0.0,
+                      color: Colors.black,
+                      offset: Offset(0, 7),
+                    ),
+                  ],
                 ),
-              ),
-              Builder(
-                builder: (context) {
-                  final bool reversed = logoState == LogoState.reversed;
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 18.h),
+                  child: Stack(
                     children: [
-                      _StyledNavBarPageButton(
-                        text: 'NEWS',
-                        selected: page == -1,
-                        reversed: reversed,
-                        onPressed: onPressedNews,
-                      ),
-                      _StyledNavBarPageButton(
-                        text: 'EXPLORE',
-                        selected: page == 0,
-                        reversed: reversed,
-                        onPressed: onPressedExplore,
-                      ),
-                      60.horizontalSpace,
-                      StyledIndicator(
-                        offset: const Size(8, 8),
-                        count: friendRequestCount,
-                        child: _StyledNavBarPageButton(
-                          text: 'CHAT',
-                          selected: page == 1,
-                          reversed: reversed,
-                          onPressed: onPressedChat,
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 12.w),
+                          child: _StyledNavBarLogo(
+                            state: navBarState,
+                          ),
                         ),
                       ),
-                      _StyledNavBarPageButton(
-                        text: 'OPTIONS',
-                        selected: page == 2,
-                        reversed: reversed,
-                        onPressed: onPressedOptions,
+                      Builder(
+                        builder: (context) {
+                          final bool reversed =
+                              navBarState is NavBarReversedState;
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _StyledNavBarPageButton(
+                                text: 'NEWS',
+                                selected: navBarState.page == NavBarPage.news,
+                                reversed: reversed,
+                                onPressed: () => context.navBarBloc.add(
+                                    const NavBarPressEvent(NavBarPage.news)),
+                              ),
+                              _StyledNavBarPageButton(
+                                text: 'EXPLORE',
+                                selected:
+                                    navBarState.page == NavBarPage.explore,
+                                reversed: reversed,
+                                onPressed: () => context.navBarBloc.add(
+                                    const NavBarPressEvent(NavBarPage.explore)),
+                              ),
+                              60.horizontalSpace,
+                              StyledIndicator(
+                                offset: const Size(8, 8),
+                                count: 0,
+                                child: _StyledNavBarPageButton(
+                                  text: 'CHAT',
+                                  selected: navBarState.page == NavBarPage.chat,
+                                  reversed: reversed,
+                                  onPressed: () => context.navBarBloc.add(
+                                      const NavBarPressEvent(NavBarPage.chat)),
+                                ),
+                              ),
+                              _StyledNavBarPageButton(
+                                text: 'OPTIONS',
+                                selected:
+                                    navBarState.page == NavBarPage.options,
+                                reversed: reversed,
+                                onPressed: () => context.navBarBloc.add(
+                                    const NavBarPressEvent(NavBarPage.options)),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ],
-                  );
-                },
+                  ),
+                ),
               ),
             ],
           ),

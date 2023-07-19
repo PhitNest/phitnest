@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:phitnest_core/core.dart';
 
+import 'screens/home/ui.dart';
 import 'screens/login_screen.dart';
 
 final class Loader extends StatelessWidget {

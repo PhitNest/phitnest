@@ -1,23 +1,23 @@
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
-import '../bloc/bloc.dart';
-import 'widgets/user_page.dart';
+// import '../bloc/bloc.dart';
+// import 'widgets/user_page.dart';
 
-class ExploreScreen extends StatelessWidget {
-  final List<UserExplore> users;
-  final PageController pageController;
+// class ExploreScreen extends StatelessWidget {
+//   final List<UserExplore> users;
+//   final PageController pageController;
 
-  const ExploreScreen({
-    super.key,
-    required this.users,
-    required this.pageController,
-  }) : super();
+//   const ExploreScreen({
+//     super.key,
+//     required this.users,
+//     required this.pageController,
+//   }) : super();
 
-  @override
-  Widget build(BuildContext context) => PageView(
-        controller: pageController,
-        children: [
-          UserPage(),
-        ],
-      );
-}
+//   @override
+//   Widget build(BuildContext context) => PageView(
+//         controller: pageController,
+//         children: [
+//           UserPage(),
+//         ],
+//       );
+// }

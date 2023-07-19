@@ -26,6 +26,7 @@ dependencies:
   image_picker: ^0.8.9
   http: ^1.0.0
   simple_gradient_text: ^1.2.4
+  async: ^2.11.0
   
 dev_dependencies:
   flutter_test:
