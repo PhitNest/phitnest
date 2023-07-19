@@ -63,17 +63,11 @@ export async function handleRequest(
         statusCode: 200,
         body: controllerOutput.body
           ? JSON.stringify(controllerOutput.body)
-          : "",
-        ...(controllerOutput.body
-          ? {
-              headers: kDefaultHeaders,
-            }
-          : {}),
-        ...(controllerOutput.headers
-          ? {
-              headers: controllerOutput.headers,
-            }
-          : {}),
+          : "{}",
+        headers: {
+          ...kDefaultHeaders,
+          ...(controllerOutput.headers ? controllerOutput.headers : {}),
+        },
       };
     } else {
       return {
