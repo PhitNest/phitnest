@@ -94,7 +94,7 @@ final class Session {
     required this.apiInfo,
   }) : super();
 
-  Future<RefreshSessionFailureResponse?> refreshSession() async {
+  Future<RefreshSessionResponse> refreshSession() async {
     return await _handleRefreshFailures(
       () async {
         final newUserSession =
@@ -115,8 +115,7 @@ final class Session {
         }
         return RefreshSessionUnknownResponse(message: null);
       },
-    ).then((response) =>
-        response is RefreshSessionFailureResponse ? response : null);
+    );
   }
 }
 
