@@ -25,7 +25,6 @@ Future<void> runPhitNest({
       host: dotenv.get('BACKEND_HOST'),
       port: dotenv.get('BACKEND_PORT', fallback: ''));
   await initializeCache();
-  initializeTheme(useScreenUtils);
   runApp(
     PhitNestApp(
       useAdminAuth: useAdminAuth,
