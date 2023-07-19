@@ -117,7 +117,7 @@ typedef GymEntryFormLoaderBloc
 typedef GymEntryFormLoaderConsumer
     = LoaderConsumer<GymEntryParams, HttpResponse<GymEntryFormSuccess>?>;
 
-extension GetGymEntryFormBlocs on BuildContext {
+extension on BuildContext {
   GymEntryFormBloc get gymEntryFormBloc => BlocProvider.of(this);
   GymEntryFormLoaderBloc get gymEntryFormLoaderBloc => loader();
 }

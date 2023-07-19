@@ -45,82 +45,84 @@ final class LoginScreen extends StatelessWidget {
               emailController,
               passwordController,
               consumer,
-              submit,
             ) =>
                 Form(
               key: formKey,
               autovalidateMode: autovalidateMode,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'PhitNest Admin Login',
-                    style: Theme.of(context).textTheme.headlineLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  StyledUnderlinedTextField(
-                    hint: 'Email',
-                    controller: emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    validator: EmailValidator.validateEmail,
-                  ),
-                  StyledPasswordField(
-                    hint: 'Password',
-                    controller: passwordController,
-                    textInputAction: TextInputAction.done,
-                    validator: validatePassword,
-                    onFieldSubmitted: (_) => submit(),
-                  ),
-                  consumer(
-                    listener: (context, loginState) {
-                      switch (loginState) {
-                        case LoaderLoadedState(data: final response):
-                          switch (response) {
-                            case LoginSuccess(session: final session):
-                              context.sessionLoader.add(LoaderSetEvent(
-                                  RefreshSessionSuccess(session)));
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute<void>(
-                                  builder: (context) => HomeScreen(
-                                    apiInfo: apiInfo,
-                                  ),
+              child: consumer(
+                listener: (context, loginState, _) {
+                  switch (loginState) {
+                    case LoaderLoadedState(data: final response):
+                      switch (response) {
+                        case LoginSuccess(session: final session):
+                          context.sessionLoader.add(
+                              LoaderSetEvent(RefreshSessionSuccess(session)));
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute<void>(
+                              builder: (context) => HomeScreen(
+                                apiInfo: apiInfo,
+                              ),
+                            ),
+                          );
+                        case LoginChangePasswordRequired(user: final user):
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (context) => ChangePasswordScreen(
+                                unauthenticatedSession: UnauthenticatedSession(
+                                  apiInfo: apiInfo,
+                                  user: user,
                                 ),
-                              );
-                            case LoginChangePasswordRequired(user: final user):
-                              Navigator.of(context).push(
-                                MaterialPageRoute<void>(
-                                  builder: (context) => ChangePasswordScreen(
-                                    apiInfo: apiInfo,
-                                    user: ChangePasswordUser(
-                                      user: user,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            case LoginFailureResponse(message: final message):
-                              StyledBanner.show(
-                                message: message,
-                                error: true,
-                              );
-                          }
-                        default:
+                              ),
+                            ),
+                          );
+                        case LoginFailureResponse(message: final message):
+                          StyledBanner.show(
+                            message: message,
+                            error: true,
+                          );
                       }
-                    },
-                    builder: (context, loginState) => switch (loginState) {
+                    default:
+                  }
+                },
+                builder: (context, loginState, submit) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'PhitNest Admin Login',
+                      style: Theme.of(context).textTheme.headlineLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    StyledUnderlinedTextField(
+                      hint: 'Email',
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      validator: EmailValidator.validateEmail,
+                    ),
+                    StyledPasswordField(
+                      hint: 'Password',
+                      controller: passwordController,
+                      textInputAction: TextInputAction.done,
+                      validator: validatePassword,
+                      onFieldSubmitted: (_) => switch (loginState) {
+                        LoaderLoadingState() => {},
+                        _ => submit(),
+                      },
+                    ),
+                    switch (loginState) {
                       LoaderLoadingState() => const CircularProgressIndicator(),
                       _ => LoginButton(
                           onSubmit: submit,
                         ),
                     },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

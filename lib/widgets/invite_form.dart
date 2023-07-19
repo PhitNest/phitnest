@@ -50,7 +50,7 @@ typedef InviteFormLoaderBloc = LoaderBloc<InviteParams, HttpResponse<void>?>;
 typedef InviteFormLoaderConsumer
     = LoaderConsumer<InviteParams, HttpResponse<void>?>;
 
-extension GetInviteFormBlocs on BuildContext {
+extension on BuildContext {
   InviteFormBloc get inviteFormBloc => BlocProvider.of(this);
   InviteFormLoaderBloc get inviteFormLoaderBloc => loader();
 }
