@@ -22,7 +22,7 @@ typedef LoginFormConsumer = FormConsumer<LoginControllers>;
 typedef LoginLoaderBloc = LoaderBloc<LoginParams, LoginResponse>;
 typedef LoginLoaderConsumer = LoaderConsumer<LoginParams, LoginResponse>;
 
-extension GetLoginBlocs on BuildContext {
+extension on BuildContext {
   LoginFormBloc get loginFormBloc => BlocProvider.of(this);
   LoginLoaderBloc get loginLoaderBloc => loader();
 }
@@ -37,11 +37,13 @@ final class LoginProvider extends StatelessWidget {
     TextEditingController emailController,
     TextEditingController passwordController,
     Widget Function({
-      required Widget Function(BuildContext, LoaderState<LoginResponse>)
+      required Widget Function(
+              BuildContext, LoaderState<LoginResponse>, void Function() submit)
           builder,
-      required void Function(BuildContext, LoaderState<LoginResponse>) listener,
+      required void Function(
+              BuildContext, LoaderState<LoginResponse>, void Function() submit)
+          listener,
     }) consumer,
-    void Function() submit,
   ) formBuilder;
 
   void submit(BuildContext context) {
@@ -91,10 +93,11 @@ final class LoginProvider extends StatelessWidget {
               formBloc.controllers.emailController,
               formBloc.controllers.passwordController,
               ({required builder, required listener}) => LoginLoaderConsumer(
-                builder: builder,
-                listener: listener,
+                builder: (context, state) =>
+                    builder(context, state, () => submit(context)),
+                listener: (context, state) =>
+                    listener(context, state, () => submit(context)),
               ),
-              () => submit(context),
             );
           },
         ),

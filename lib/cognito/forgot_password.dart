@@ -109,14 +109,27 @@ enum SubmitForgotPasswordFailure {
       };
 }
 
+final class SubmitForgotPasswordParams extends Equatable {
+  final String email;
+  final String code;
+  final String newPassword;
+
+  const SubmitForgotPasswordParams({
+    required this.email,
+    required this.code,
+    required this.newPassword,
+  });
+
+  @override
+  List<Object?> get props => [email, code, newPassword];
+}
+
 Future<SubmitForgotPasswordFailure?> submitForgotPassword({
-  required String email,
-  required String code,
-  required String newPassword,
-  required CognitoUser user,
+  required SubmitForgotPasswordParams params,
+  required UnauthenticatedSession session,
 }) async {
   try {
-    if (await user.confirmPassword(code, newPassword)) {
+    if (await session.user.confirmPassword(params.code, params.newPassword)) {
       return null;
     } else {
       return SubmitForgotPasswordFailure.invalidCode;
