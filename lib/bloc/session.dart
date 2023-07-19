@@ -5,7 +5,8 @@ import '../cognito/cognito.dart';
 import 'loader.dart';
 
 extension GetSessionLoader on BuildContext {
-  LoaderBloc<void, Session> get sessionLoader => BlocProvider.of(this);
+  LoaderBloc<Session, RefreshSessionResponse> get sessionLoader =>
+      BlocProvider.of(this);
 }
 
 extension SessionBloc on LoaderBloc<Session, RefreshSessionResponse> {
