@@ -86,16 +86,17 @@ final class RegisterScreen extends StatelessWidget {
                       case LoaderLoadedState(data: final response):
                         switch (response) {
                           case RegisterSuccess(user: final user):
+                            final LoginParams loginParams = LoginParams(
+                              email: context.registerFormBloc.controllers
+                                  .emailController.text,
+                              password: context.registerFormBloc.controllers
+                                  .passwordController.text,
+                            );
                             Navigator.pushReplacement(
                               context,
                               CupertinoPageRoute<void>(
                                 builder: (context) => ConfirmEmailScreen(
-                                  loginParams: LoginParams(
-                                    password: context.registerFormBloc
-                                        .controllers.passwordController.text,
-                                    email: context.registerFormBloc.controllers
-                                        .emailController.text,
-                                  ),
+                                  loginParams: loginParams,
                                   resendConfirmationEmail: (session) =>
                                       resendConfirmationEmail(
                                     user: session.user,
