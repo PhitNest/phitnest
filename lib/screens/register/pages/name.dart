@@ -8,7 +8,14 @@ String? validateName(dynamic value) {
 }
 
 final class RegisterNamePage extends StatelessWidget {
-  const RegisterNamePage({super.key}) : super();
+  final RegisterControllers controllers;
+  final void Function() onSubmit;
+
+  const RegisterNamePage({
+    super.key,
+    required this.controllers,
+    required this.onSubmit,
+  }) : super();
 
   @override
   Widget build(BuildContext context) => Column(
@@ -22,21 +29,18 @@ final class RegisterNamePage extends StatelessWidget {
           42.verticalSpace,
           StyledUnderlinedTextField(
             hint: 'First name',
-            controller:
-                context.registerFormBloc.controllers.firstNameController,
+            controller: controllers.firstNameController,
             validator: validateName,
           ),
           24.verticalSpace,
           StyledUnderlinedTextField(
             hint: 'Last name',
-            controller: context.registerFormBloc.controllers.lastNameController,
+            controller: controllers.lastNameController,
             validator: validateName,
           ),
           147.verticalSpace,
           ElevatedButton(
-            onPressed: () => context.registerFormBloc.submit(
-              onAccept: () => _nextPage(context),
-            ),
+            onPressed: onSubmit,
             child: Text(
               'NEXT',
               style: theme.textTheme.bodySmall,

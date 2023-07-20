@@ -1,7 +1,14 @@
 part of '../ui.dart';
 
 final class RegisterInviterEmailPage extends StatelessWidget {
-  const RegisterInviterEmailPage({super.key}) : super();
+  final RegisterControllers controllers;
+  final void Function() onSubmit;
+
+  const RegisterInviterEmailPage({
+    super.key,
+    required this.controllers,
+    required this.onSubmit,
+  }) : super();
 
   @override
   Widget build(BuildContext context) => Column(
@@ -16,31 +23,13 @@ final class RegisterInviterEmailPage extends StatelessWidget {
           42.verticalSpace,
           StyledUnderlinedTextField(
             hint: 'Inviter Email',
-            controller:
-                context.registerFormBloc.controllers.inviterEmailController,
+            controller: controllers.inviterEmailController,
             validator: EmailValidator.validateEmail,
           ),
           28.verticalSpace,
           Center(
             child: ElevatedButton(
-              onPressed: () => context.registerFormBloc.submit(
-                onAccept: () => context.registerLoaderBloc.add(
-                  LoaderLoadEvent(
-                    RegisterParams(
-                      email: context
-                          .registerFormBloc.controllers.emailController.text,
-                      password: context
-                          .registerFormBloc.controllers.passwordController.text,
-                      firstName: context.registerFormBloc.controllers
-                          .firstNameController.text,
-                      lastName: context
-                          .registerFormBloc.controllers.lastNameController.text,
-                      inviterEmail: context.registerFormBloc.controllers
-                          .inviterEmailController.text,
-                    ),
-                  ),
-                ),
-              ),
+              onPressed: onSubmit,
               child: Text(
                 'SUBMIT',
                 style: theme.textTheme.bodySmall,

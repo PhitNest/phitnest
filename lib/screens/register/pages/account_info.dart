@@ -1,7 +1,14 @@
 part of '../ui.dart';
 
 final class RegisterAccountInfoPage extends StatelessWidget {
-  const RegisterAccountInfoPage({super.key}) : super();
+  final RegisterControllers controllers;
+  final void Function() onSubmit;
+
+  const RegisterAccountInfoPage({
+    super.key,
+    required this.controllers,
+    required this.onSubmit,
+  }) : super();
 
   @override
   Widget build(BuildContext context) => Column(
@@ -15,28 +22,25 @@ final class RegisterAccountInfoPage extends StatelessWidget {
           42.verticalSpace,
           StyledUnderlinedTextField(
             hint: 'Your email address',
-            controller: context.registerFormBloc.controllers.emailController,
+            controller: controllers.emailController,
             validator: EmailValidator.validateEmail,
           ),
           24.verticalSpace,
           StyledUnderlinedTextField(
             hint: 'Password',
-            controller: context.registerFormBloc.controllers.passwordController,
+            controller: controllers.passwordController,
             validator: validatePassword,
           ),
           24.verticalSpace,
           StyledUnderlinedTextField(
             hint: 'Confirm password',
-            validator: (value) => value ==
-                    context.registerFormBloc.controllers.passwordController.text
+            validator: (value) => value == controllers.passwordController.text
                 ? null
                 : 'Passwords do not match',
           ),
           32.verticalSpace,
           ElevatedButton(
-            onPressed: () => context.registerFormBloc.submit(
-              onAccept: () => _nextPage(context),
-            ),
+            onPressed: onSubmit,
             child: Text(
               'NEXT',
               style: theme.textTheme.bodySmall,

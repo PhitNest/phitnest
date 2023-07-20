@@ -41,72 +41,74 @@ class HomeScreen extends StatelessWidget {
                   default:
                 }
               },
-              builder: (context, loaderState) => switch (navBarState.page) {
-                NavBarPage.news => Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('News screen'),
-                      switch (loaderState) {
-                        LoaderLoadingState() =>
-                          const CircularProgressIndicator(),
-                        _ => StyledOutlineButton(
-                            onPress: () => context
-                                .loader<void, void>()
-                                .add(const LoaderLoadEvent(null)),
-                            text: 'Logout',
-                          ),
-                      },
-                    ],
-                  ),
-                NavBarPage.explore => Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Explore screen'),
-                      switch (loaderState) {
-                        LoaderLoadingState() =>
-                          const CircularProgressIndicator(),
-                        _ => StyledOutlineButton(
-                            onPress: () => context
-                                .loader<void, void>()
-                                .add(const LoaderLoadEvent(null)),
-                            text: 'Logout',
-                          ),
-                      },
-                    ],
-                  ),
-                NavBarPage.chat => Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Chat screen'),
-                      switch (loaderState) {
-                        LoaderLoadingState() =>
-                          const CircularProgressIndicator(),
-                        _ => StyledOutlineButton(
-                            onPress: () => context
-                                .loader<void, void>()
-                                .add(const LoaderLoadEvent(null)),
-                            text: 'Logout',
-                          ),
-                      },
-                    ],
-                  ),
-                NavBarPage.options => Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Options screen'),
-                      switch (loaderState) {
-                        LoaderLoadingState() =>
-                          const CircularProgressIndicator(),
-                        _ => StyledOutlineButton(
-                            onPress: () => context
-                                .loader<void, void>()
-                                .add(const LoaderLoadEvent(null)),
-                            text: 'Logout',
-                          ),
-                      },
-                    ],
-                  ),
-              },
+              builder: (context, loaderState) => Expanded(
+                child: switch (navBarState.page) {
+                  NavBarPage.news => Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('News screen'),
+                        switch (loaderState) {
+                          LoaderLoadingState() =>
+                            const CircularProgressIndicator(),
+                          _ => StyledOutlineButton(
+                              onPress: () => context
+                                  .loader<void, void>()
+                                  .add(const LoaderLoadEvent(null)),
+                              text: 'Logout',
+                            ),
+                        },
+                      ],
+                    ),
+                  NavBarPage.explore => Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Explore screen'),
+                        switch (loaderState) {
+                          LoaderLoadingState() =>
+                            const CircularProgressIndicator(),
+                          _ => StyledOutlineButton(
+                              onPress: () => context
+                                  .loader<void, void>()
+                                  .add(const LoaderLoadEvent(null)),
+                              text: 'Logout',
+                            ),
+                        },
+                      ],
+                    ),
+                  NavBarPage.chat => Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Chat screen'),
+                        switch (loaderState) {
+                          LoaderLoadingState() =>
+                            const CircularProgressIndicator(),
+                          _ => StyledOutlineButton(
+                              onPress: () => context
+                                  .loader<void, void>()
+                                  .add(const LoaderLoadEvent(null)),
+                              text: 'Logout',
+                            ),
+                        },
+                      ],
+                    ),
+                  NavBarPage.options => Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Options screen'),
+                        switch (loaderState) {
+                          LoaderLoadingState() =>
+                            const CircularProgressIndicator(),
+                          _ => StyledOutlineButton(
+                              onPress: () => context
+                                  .loader<void, void>()
+                                  .add(const LoaderLoadEvent(null)),
+                              text: 'Logout',
+                            ),
+                        },
+                      ],
+                    ),
+                },
+              ),
             ),
           ),
         ),
