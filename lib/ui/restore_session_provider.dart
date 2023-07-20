@@ -3,15 +3,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../api/api.dart';
 import '../bloc/loader.dart';
+import '../bloc/session.dart';
 import '../cognito/cognito.dart';
 import '../http/http.dart';
 import 'styled/styled_banner.dart';
 
+typedef ApiInfoBloc = LoaderBloc<void, HttpResponse<ApiInfo>>;
+typedef ApiInfoConsumer = LoaderConsumer<void, HttpResponse<ApiInfo>>;
+typedef RestoreSessionBloc = LoaderBloc<void, RefreshSessionResponse>;
+typedef RestoreSessionConsumer = LoaderConsumer<void, RefreshSessionResponse>;
+
+extension on BuildContext {
+  ApiInfoBloc get apiInfoBloc => loader();
+}
+
 final class RestoreSessionProvider extends StatelessWidget {
   final Widget loader;
   final bool useAdminAuth;
-  final void Function(BuildContext, Session) onSessionRestored;
-  final void Function(BuildContext, ApiInfo) onSessionRestoreFailed;
+  final PageRoute<void> Function(ApiInfo) onSessionRestored;
+  final PageRoute<void> Function(ApiInfo) onSessionRestoreFailed;
 
   const RestoreSessionProvider({
     super.key,
@@ -23,7 +33,7 @@ final class RestoreSessionProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-        create: (_) => LoaderBloc<void, HttpResponse<ApiInfo>>(
+        create: (_) => ApiInfoBloc(
           load: (_) => requestApiInfo(
             readFromCache: true,
             writeToCache: true,
@@ -31,7 +41,7 @@ final class RestoreSessionProvider extends StatelessWidget {
           ),
           loadOnStart: (req: null),
         ),
-        child: LoaderConsumer<void, HttpResponse<ApiInfo>>(
+        child: ApiInfoConsumer(
           listener: (context, apiInfoState) {
             switch (apiInfoState) {
               case LoaderLoadedState(data: final apiInfoResponse):
@@ -46,14 +56,13 @@ final class RestoreSessionProvider extends StatelessWidget {
                       error: true,
                     );
                     // Retry loading API info from server
-                    context
-                        .loader<void, HttpResponse<ApiInfo>>()
-                        .add(const LoaderLoadEvent(null));
+                    context.apiInfoBloc.add(const LoaderLoadEvent(null));
                   // This indicates that we successfully loaded API info from
                   // server, but our cache was empty so a session will not be
                   // restored.
                   case HttpResponseOk(data: final apiInfo):
-                    onSessionRestoreFailed(context, apiInfo);
+                    Navigator.pushReplacement(
+                        context, onSessionRestoreFailed(apiInfo));
                   case HttpResponseCache():
                 }
               default:
@@ -66,11 +75,11 @@ final class RestoreSessionProvider extends StatelessWidget {
                 // This indicates that we successfully loaded API info from the
                 // cache, so a session might be restorable.
                 HttpResponseCache(data: final cachedApiInfo) => BlocProvider(
-                    create: (_) => LoaderBloc<void, RefreshSessionResponse>(
+                    create: (_) => RestoreSessionBloc(
                       load: (_) => getPreviousSession(cachedApiInfo),
                       loadOnStart: (req: null),
                     ),
-                    child: LoaderConsumer<void, RefreshSessionResponse>(
+                    child: RestoreSessionConsumer(
                       listener: (context, restoreSessionState) {
                         switch (restoreSessionState) {
                           case LoaderLoadedState(
@@ -78,14 +87,21 @@ final class RestoreSessionProvider extends StatelessWidget {
                             ):
                             switch (restoreSessionResponse) {
                               case RefreshSessionFailureResponse():
-                                onSessionRestoreFailed(
+                                Navigator.pushReplacement(
                                   context,
-                                  cachedApiInfo,
+                                  onSessionRestoreFailed(
+                                    cachedApiInfo,
+                                  ),
                                 );
                               case RefreshSessionSuccess(
                                   newSession: final newSession
                                 ):
-                                onSessionRestored(context, newSession);
+                                context.sessionLoader.add(LoaderSetEvent(
+                                    RefreshSessionSuccess(newSession)));
+                                Navigator.pushReplacement(
+                                  context,
+                                  onSessionRestored(newSession.apiInfo),
+                                );
                             }
                           default:
                         }

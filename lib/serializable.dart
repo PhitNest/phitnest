@@ -4,13 +4,13 @@ import 'package:equatable/equatable.dart';
 sealed class Serializable {
   dynamic toJson();
 
-  factory Serializable.double(double double) => SerializablePrimitive(double);
+  factory Serializable.double(double double) => _SerializablePrimitive(double);
 
-  factory Serializable.string(String string) => SerializablePrimitive(string);
+  factory Serializable.string(String string) => _SerializablePrimitive(string);
 
-  factory Serializable.int(int int) => SerializablePrimitive(int);
+  factory Serializable.int(int int) => _SerializablePrimitive(int);
 
-  factory Serializable.bool(bool bool) => SerializablePrimitive(bool);
+  factory Serializable.bool(bool bool) => _SerializablePrimitive(bool);
 
   factory Serializable.list(List<Serializable> list) => SerializableList(list);
 
@@ -29,10 +29,10 @@ abstract class JsonSerializable with EquatableMixin implements Serializable {
   bool get stringify => true;
 }
 
-final class SerializablePrimitive implements Serializable {
+final class _SerializablePrimitive implements Serializable {
   final dynamic _primitive;
 
-  const SerializablePrimitive(this._primitive) : super();
+  const _SerializablePrimitive(this._primitive) : super();
 
   @override
   dynamic toJson() => _primitive;
