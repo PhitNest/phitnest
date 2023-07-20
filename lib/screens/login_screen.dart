@@ -9,11 +9,22 @@ import 'forgot_password.dart';
 import 'home/ui.dart';
 import 'register/ui.dart';
 
-extension on BuildContext {
-  LoginLoaderBloc get loginLoaderBloc => loader();
+final class LoginControllers extends FormControllers {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+  }
 }
 
-class LoginScreen extends StatelessWidget {
+extension on BuildContext {
+  LoaderBloc<LoginParams, LoginResponse> get loginLoaderBloc => loader();
+}
+
+final class LoginScreen extends StatelessWidget {
   final ApiInfo apiInfo;
 
   const LoginScreen({
@@ -23,34 +34,37 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: LoginProvider(
-          apiInfo: apiInfo,
-          formBuilder: (
-            context,
-            autovalidateMode,
-            formKey,
-            emailController,
-            passwordController,
-            consumer,
-          ) =>
-              Padding(
-            padding: EdgeInsets.symmetric(horizontal: 40.w),
-            child: Form(
-              key: formKey,
-              autovalidateMode: autovalidateMode,
-              child: consumer(
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 40.w),
+          child: FormProvider<LoginControllers, LoginParams, LoginResponse>(
+            load: (params) => login(
+              params: params,
+              apiInfo: apiInfo,
+            ),
+            createControllers: (_) => LoginControllers(),
+            formBuilder: (
+              context,
+              controllers,
+              consumer,
+            ) {
+              params() => LoginParams(
+                    email: controllers.emailController.text,
+                    password: controllers.passwordController.text,
+                  );
+              return consumer(
                 listener: (context, loginState, _) {
                   switch (loginState) {
                     case LoaderLoadedState(data: final response):
                       switch (response) {
                         case LoginSuccess():
-                          Navigator.pushReplacement(
+                          Navigator.pushAndRemoveUntil(
                             context,
                             CupertinoPageRoute<void>(
                               builder: (context) => HomeScreen(
                                 apiInfo: apiInfo,
                               ),
                             ),
+                            (_) => false,
                           );
                         case LoginConfirmationRequired(user: final user):
                           Navigator.pushReplacement(
@@ -69,10 +83,7 @@ class LoginScreen extends StatelessWidget {
                                   user: session.user,
                                   code: code,
                                 ),
-                                loginParams: LoginParams(
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                ),
+                                loginParams: params(),
                               ),
                             ),
                           );
@@ -99,7 +110,7 @@ class LoginScreen extends StatelessWidget {
                     70.verticalSpace,
                     StyledUnderlinedTextField(
                       hint: 'Email',
-                      controller: emailController,
+                      controller: controllers.emailController,
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       validator: EmailValidator.validateEmail,
@@ -107,13 +118,10 @@ class LoginScreen extends StatelessWidget {
                     24.verticalSpace,
                     StyledPasswordField(
                       hint: 'Password',
-                      controller: passwordController,
+                      controller: controllers.passwordController,
                       textInputAction: TextInputAction.done,
                       validator: validatePassword,
-                      onFieldSubmitted: (_) => switch (loginState) {
-                        LoaderLoadingState() => {},
-                        _ => submit(),
-                      },
+                      onFieldSubmitted: (_) => submit(params()),
                     ),
                     Row(
                       children: [
@@ -144,7 +152,7 @@ class LoginScreen extends StatelessWidget {
                       LoaderInitialState() ||
                       LoaderLoadedState() =>
                         ElevatedButton(
-                          onPressed: submit,
+                          onPressed: () => submit(params()),
                           child: Text(
                             'LOGIN',
                             style: theme.textTheme.bodySmall,
@@ -181,8 +189,8 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-            ),
+              );
+            },
           ),
         ),
       );

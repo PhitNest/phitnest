@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_core/core.dart';
 
@@ -30,25 +29,6 @@ final class RegisterControllers extends FormControllers {
   }
 }
 
-typedef RegisterFormBloc = FormBloc<RegisterControllers>;
-typedef RegisterFormConsumer = FormConsumer<RegisterControllers>;
-typedef RegisterLoaderBloc = LoaderBloc<RegisterParams, RegisterResponse>;
-typedef RegisterLoaderConsumer
-    = LoaderConsumer<RegisterParams, RegisterResponse>;
-
-extension GetRegisterBlocs on BuildContext {
-  RegisterFormBloc get registerFormBloc => BlocProvider.of(this);
-  RegisterLoaderBloc get registerLoaderBloc => loader();
-}
-
-void _nextPage(BuildContext context) =>
-    context.registerFormBloc.controllers.pageController.nextPage(
-      duration: const Duration(
-        milliseconds: 400,
-      ),
-      curve: Curves.easeInOut,
-    );
-
 final class RegisterScreen extends StatelessWidget {
   final ApiInfo apiInfo;
 
@@ -59,80 +39,86 @@ final class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (_) => RegisterFormBloc(RegisterControllers()),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 40.w),
+          child: FormProvider<RegisterControllers, RegisterParams,
+              RegisterResponse>(
+            createControllers: (_) => RegisterControllers(),
+            load: (params) => register(
+              params: params,
+              pool: apiInfo.pool,
             ),
-            BlocProvider(
-              create: (_) => RegisterLoaderBloc(
-                load: (params) => register(
-                  params: params,
-                  pool: apiInfo.pool,
-                ),
-              ),
-            ),
-          ],
-          child: RegisterFormConsumer(
-            listener: (context, screenState) {},
-            builder: (context, screenState) => Form(
-              key: context.registerFormBloc.formKey,
-              autovalidateMode: screenState.autovalidateMode,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 40.w),
-                child: RegisterLoaderConsumer(
-                  listener: (context, loaderState) {
-                    switch (loaderState) {
-                      case LoaderLoadedState(data: final response):
-                        switch (response) {
-                          case RegisterSuccess(user: final user):
-                            final LoginParams loginParams = LoginParams(
-                              email: context.registerFormBloc.controllers
-                                  .emailController.text,
-                              password: context.registerFormBloc.controllers
-                                  .passwordController.text,
-                            );
-                            Navigator.pushReplacement(
-                              context,
-                              CupertinoPageRoute<void>(
-                                builder: (context) => ConfirmEmailScreen(
-                                  loginParams: loginParams,
-                                  resendConfirmationEmail: (session) =>
-                                      resendConfirmationEmail(
-                                    user: session.user,
-                                  ),
-                                  confirmEmail: (session, code) => confirmEmail(
-                                    user: session.user,
-                                    code: code,
-                                  ),
-                                  unauthenticatedSession:
-                                      UnauthenticatedSession(
-                                    user: user,
-                                    apiInfo: apiInfo,
-                                  ),
-                                ),
+            formBuilder: (context, controllers, consumer) => consumer(
+              listener: (context, loaderState, _) {
+                switch (loaderState) {
+                  case LoaderLoadedState(data: final response):
+                    switch (response) {
+                      case RegisterSuccess(user: final user):
+                        final LoginParams loginParams = LoginParams(
+                          email: controllers.emailController.text,
+                          password: controllers.passwordController.text,
+                        );
+                        Navigator.pushReplacement(
+                          context,
+                          CupertinoPageRoute<void>(
+                            builder: (context) => ConfirmEmailScreen(
+                              loginParams: loginParams,
+                              resendConfirmationEmail: (session) =>
+                                  resendConfirmationEmail(
+                                user: session.user,
                               ),
-                            );
-                          case RegisterFailureResponse(message: final message):
-                            StyledBanner.show(message: message, error: true);
-                        }
-                      default:
+                              confirmEmail: (session, code) => confirmEmail(
+                                user: session.user,
+                                code: code,
+                              ),
+                              unauthenticatedSession: UnauthenticatedSession(
+                                user: user,
+                                apiInfo: apiInfo,
+                              ),
+                            ),
+                          ),
+                        );
+                      case RegisterFailureResponse(message: final message):
+                        StyledBanner.show(message: message, error: true);
                     }
-                  },
-                  builder: (context, loaderState) => switch (loaderState) {
-                    LoaderLoadingState() => const RegisterLoadingPage(),
-                    _ => PageView(
-                        controller:
-                            context.registerFormBloc.controllers.pageController,
-                        children: const [
-                          RegisterNamePage(),
-                          RegisterAccountInfoPage(),
-                          RegisterInviterEmailPage(),
-                        ],
-                      ),
-                  },
-                ),
-              ),
+                  default:
+                }
+              },
+              builder: (context, loaderState, submit) {
+                nextPage() => controllers.pageController.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                return switch (loaderState) {
+                  LoaderLoadingState() => const RegisterLoadingPage(),
+                  _ => PageView(
+                      controller: controllers.pageController,
+                      children: [
+                        RegisterNamePage(
+                          controllers: controllers,
+                          onSubmit: nextPage,
+                        ),
+                        RegisterAccountInfoPage(
+                          controllers: controllers,
+                          onSubmit: nextPage,
+                        ),
+                        RegisterInviterEmailPage(
+                          controllers: controllers,
+                          onSubmit: () => submit(
+                            RegisterParams(
+                              email: controllers.emailController.text,
+                              password: controllers.passwordController.text,
+                              firstName: controllers.firstNameController.text,
+                              lastName: controllers.lastNameController.text,
+                              inviterEmail:
+                                  controllers.inviterEmailController.text,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                };
+              },
             ),
           ),
         ),
