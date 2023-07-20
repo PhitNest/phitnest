@@ -20,7 +20,7 @@ final class FormProvider<Controllers extends FormControllers, ReqType, ResType>
   ) formBuilder;
 
   final Controllers Function(BuildContext context) createControllers;
-  final Future<ReqType> Function(ResType req) load;
+  final Future<ResType> Function(ReqType req) load;
   final ResType? initialData;
 
   void submit(BuildContext context, ReqType request) =>
