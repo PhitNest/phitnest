@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
+import '../cognito/cognito.dart';
 import '../failure.dart';
 import '../logger.dart';
 
@@ -53,7 +54,7 @@ Future<HttpResponse<ResType>> request<ResType>({
   required ResType Function(dynamic) parser,
   Map<String, dynamic>? data,
   Map<String, dynamic>? headers,
-  String? idToken,
+  Session? session,
   String? overrideHost,
   String? overridePort,
   ResType? Function()? readFromCache,
@@ -72,7 +73,7 @@ Future<HttpResponse<ResType>> request<ResType>({
         '${wrapText("\n\tdata: $data")}';
 
     // Log the request details
-    prettyLogger.d('Request${idToken != null ? " (Authorized)" : ""}:'
+    prettyLogger.d('Request${session != null ? " (Authorized)" : ""}:'
         '${descriptionLog(data)}');
 
     int elapsedMs() =>
@@ -95,9 +96,9 @@ Future<HttpResponse<ResType>> request<ResType>({
     // Prepare the request headers
     final headerMap = {
       ...headers ?? Map<String, dynamic>.from({}),
-      ...idToken != null
+      ...session != null
           ? {
-              'Authorization': idToken,
+              'Authorization': session.cognitoSession.idToken.jwtToken,
             }
           : Map<String, dynamic>.from({}),
     };
