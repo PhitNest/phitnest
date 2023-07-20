@@ -4,6 +4,17 @@ import 'package:phitnest_core/core.dart';
 import 'change_password.dart';
 import 'home_screen.dart';
 
+final class LoginControllers extends FormControllers {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+  }
+}
+
 final class LoginButton extends StatelessWidget {
   final void Function() onSubmit;
 
@@ -36,55 +47,61 @@ final class LoginScreen extends StatelessWidget {
         body: Container(
           margin: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.25),
-          child: LoginProvider(
-            apiInfo: apiInfo,
+          child: FormProvider<LoginControllers, LoginParams, LoginResponse>(
+            createControllers: (_) => LoginControllers(),
+            load: (params) => login(
+              params: params,
+              apiInfo: apiInfo,
+            ),
             formBuilder: (
               context,
-              autovalidateMode,
-              formKey,
-              emailController,
-              passwordController,
+              controllers,
               consumer,
             ) =>
-                Form(
-              key: formKey,
-              autovalidateMode: autovalidateMode,
-              child: consumer(
-                listener: (context, loginState, _) {
-                  switch (loginState) {
-                    case LoaderLoadedState(data: final response):
-                      switch (response) {
-                        case LoginSuccess(session: final session):
-                          context.sessionLoader.add(
-                              LoaderSetEvent(RefreshSessionSuccess(session)));
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute<void>(
-                              builder: (context) => HomeScreen(
+                consumer(
+              listener: (context, loginState, _) {
+                switch (loginState) {
+                  case LoaderLoadedState(data: final response):
+                    switch (response) {
+                      case LoginSuccess(session: final session):
+                        context.sessionLoader.add(
+                            LoaderSetEvent(RefreshSessionSuccess(session)));
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute<void>(
+                            builder: (context) => HomeScreen(
+                              apiInfo: apiInfo,
+                            ),
+                          ),
+                          (_) => false,
+                        );
+                      case LoginChangePasswordRequired(user: final user):
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (context) => ChangePasswordScreen(
+                              unauthenticatedSession: UnauthenticatedSession(
                                 apiInfo: apiInfo,
+                                user: user,
                               ),
                             ),
-                          );
-                        case LoginChangePasswordRequired(user: final user):
-                          Navigator.of(context).push(
-                            MaterialPageRoute<void>(
-                              builder: (context) => ChangePasswordScreen(
-                                unauthenticatedSession: UnauthenticatedSession(
-                                  apiInfo: apiInfo,
-                                  user: user,
-                                ),
-                              ),
-                            ),
-                          );
-                        case LoginFailureResponse(message: final message):
-                          StyledBanner.show(
-                            message: message,
-                            error: true,
-                          );
-                      }
-                    default:
-                  }
-                },
-                builder: (context, loginState, submit) => Column(
+                          ),
+                        );
+                      case LoginFailureResponse(message: final message):
+                        StyledBanner.show(
+                          message: message,
+                          error: true,
+                        );
+                    }
+                  default:
+                }
+              },
+              builder: (context, loginState, submit) {
+                submitForm() => submit(
+                      LoginParams(
+                        email: controllers.emailController.text,
+                        password: controllers.passwordController.text,
+                      ),
+                    );
+                return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
@@ -97,33 +114,28 @@ final class LoginScreen extends StatelessWidget {
                     ),
                     StyledUnderlinedTextField(
                       hint: 'Email',
-                      controller: emailController,
+                      controller: controllers.emailController,
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       validator: EmailValidator.validateEmail,
                     ),
                     StyledPasswordField(
                       hint: 'Password',
-                      controller: passwordController,
+                      controller: controllers.passwordController,
                       textInputAction: TextInputAction.done,
                       validator: validatePassword,
-                      onFieldSubmitted: (_) => switch (loginState) {
-                        LoaderLoadingState() => {},
-                        _ => submit(),
-                      },
+                      onFieldSubmitted: (_) => submitForm(),
                     ),
                     switch (loginState) {
                       LoaderLoadingState() => const CircularProgressIndicator(),
-                      _ => LoginButton(
-                          onSubmit: submit,
-                        ),
+                      _ => LoginButton(onSubmit: submitForm),
                     },
                     const SizedBox(
                       height: 10,
                     ),
                   ],
-                ),
-              ),
+                );
+              },
             ),
           ),
         ),

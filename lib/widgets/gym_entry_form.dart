@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phitnest_core/core.dart';
 
 final class Location extends Equatable {
@@ -89,7 +88,7 @@ Future<HttpResponse<GymEntryFormSuccess>> submitGym({
       route: '/gym',
       method: HttpMethod.post,
       parser: GymEntryFormSuccess.fromJson,
-      idToken: session.cognitoSession.idToken.jwtToken,
+      session: session,
       data: params.toJson(),
     );
 
@@ -110,18 +109,6 @@ final class GymEntryFormControllers extends FormControllers {
   }
 }
 
-typedef GymEntryFormBloc = FormBloc<GymEntryFormControllers>;
-typedef GymEntryFormConsumer = FormConsumer<GymEntryFormControllers>;
-typedef GymEntryFormLoaderBloc
-    = LoaderBloc<GymEntryParams, HttpResponse<GymEntryFormSuccess>?>;
-typedef GymEntryFormLoaderConsumer
-    = LoaderConsumer<GymEntryParams, HttpResponse<GymEntryFormSuccess>?>;
-
-extension on BuildContext {
-  GymEntryFormBloc get gymEntryFormBloc => BlocProvider.of(this);
-  GymEntryFormLoaderBloc get gymEntryFormLoaderBloc => loader();
-}
-
 final class GymEntryForm extends StatelessWidget {
   final void Function(BuildContext) onSessionLost;
 
@@ -133,129 +120,89 @@ final class GymEntryForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
-        child: BlocProvider(
-          create: (_) => GymEntryFormBloc(GymEntryFormControllers()),
-          child: GymEntryFormConsumer(
-            listener: (context, formState) {},
-            builder: (context, formState) => Form(
-              key: context.gymEntryFormBloc.formKey,
-              autovalidateMode: formState.autovalidateMode,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Gym Entry'),
-                  StyledUnderlinedTextField(
-                    hint: 'Name',
-                    controller:
-                        context.gymEntryFormBloc.controllers.nameController,
-                  ),
-                  StyledUnderlinedTextField(
-                    hint: 'Street',
-                    controller:
-                        context.gymEntryFormBloc.controllers.streetController,
-                  ),
-                  StyledUnderlinedTextField(
-                    hint: 'City',
-                    controller:
-                        context.gymEntryFormBloc.controllers.cityController,
-                  ),
-                  StyledUnderlinedTextField(
-                    hint: 'State',
-                    controller:
-                        context.gymEntryFormBloc.controllers.stateController,
-                  ),
-                  StyledUnderlinedTextField(
-                    hint: 'ZipCode',
-                    controller:
-                        context.gymEntryFormBloc.controllers.zipCodeController,
-                  ),
-                  BlocProvider(
-                    create: (context) => GymEntryFormLoaderBloc(
-                      load: (params) => context.sessionLoader.session.then(
-                        (session) {
-                          if (session != null) {
-                            return submitGym(
-                              params: params,
-                              session: session,
-                            );
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    child: GymEntryFormLoaderConsumer(
-                      listener: (context, gymSubmitState) {
-                        switch (gymSubmitState) {
-                          case LoaderLoadedState(data: final response):
-                            if (response != null) {
-                              switch (response) {
-                                case HttpResponseSuccess(data: final data):
-                                  StyledBanner.show(
-                                    message: 'New gym: ${data.gymId}',
-                                    error: false,
-                                  );
-                                case HttpResponseFailure(
-                                    failure: final failure
-                                  ):
-                                  StyledBanner.show(
-                                    message: failure.message,
-                                    error: true,
-                                  );
-                              }
-                              final gymEntryFormBloc = context.gymEntryFormBloc;
-                              gymEntryFormBloc.controllers.nameController
-                                  .clear();
-                              gymEntryFormBloc.controllers.streetController
-                                  .clear();
-                              gymEntryFormBloc.controllers.cityController
-                                  .clear();
-                              gymEntryFormBloc.controllers.stateController
-                                  .clear();
-                              gymEntryFormBloc.controllers.zipCodeController
-                                  .clear();
-                            } else {
-                              onSessionLost(context);
-                            }
-                          default:
-                        }
-                      },
-                      builder: (context, gymSubmitState) =>
-                          switch (gymSubmitState) {
-                        LoaderLoadedState() ||
-                        LoaderInitialState() =>
-                          TextButton(
-                            onPressed: () {
-                              final gymEntryFormBloc = context.gymEntryFormBloc;
-                              gymEntryFormBloc.submit(
-                                onAccept: () =>
-                                    context.gymEntryFormLoaderBloc.add(
-                                  LoaderLoadEvent(
-                                    GymEntryParams(
-                                      name: gymEntryFormBloc
-                                          .controllers.nameController.text,
-                                      street: gymEntryFormBloc
-                                          .controllers.streetController.text,
-                                      city: gymEntryFormBloc
-                                          .controllers.cityController.text,
-                                      state: gymEntryFormBloc
-                                          .controllers.stateController.text,
-                                      zipCode: gymEntryFormBloc
-                                          .controllers.zipCodeController.text,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                            child: const Text('Submit'),
-                          ),
-                        LoaderLoadingState() =>
-                          const CircularProgressIndicator(),
-                      },
-                    ),
-                  ),
-                ],
+        child: FormProvider<GymEntryFormControllers, GymEntryParams,
+            HttpResponse<GymEntryFormSuccess>?>(
+          createControllers: (_) => GymEntryFormControllers(),
+          load: (params) => context.sessionLoader.session.then(
+            (session) {
+              if (session != null) {
+                return submitGym(
+                  params: params,
+                  session: session,
+                );
+              }
+              return null;
+            },
+          ),
+          formBuilder: (context, controllers, consumer) => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Gym Entry'),
+              StyledUnderlinedTextField(
+                hint: 'Name',
+                controller: controllers.nameController,
               ),
-            ),
+              StyledUnderlinedTextField(
+                hint: 'Street',
+                controller: controllers.streetController,
+              ),
+              StyledUnderlinedTextField(
+                hint: 'City',
+                controller: controllers.cityController,
+              ),
+              StyledUnderlinedTextField(
+                hint: 'State',
+                controller: controllers.stateController,
+              ),
+              StyledUnderlinedTextField(
+                hint: 'ZipCode',
+                controller: controllers.zipCodeController,
+              ),
+              consumer(
+                listener: (context, state, _) {
+                  switch (state) {
+                    case LoaderLoadedState(data: final response):
+                      if (response != null) {
+                        switch (response) {
+                          case HttpResponseSuccess(data: final data):
+                            StyledBanner.show(
+                              message: 'New gym: ${data.gymId}',
+                              error: false,
+                            );
+                            controllers.nameController.clear();
+                            controllers.streetController.clear();
+                            controllers.cityController.clear();
+                            controllers.stateController.clear();
+                            controllers.zipCodeController.clear();
+                          case HttpResponseFailure(failure: final failure):
+                            StyledBanner.show(
+                              message: failure.message,
+                              error: true,
+                            );
+                        }
+                      } else {
+                        onSessionLost(context);
+                      }
+                    default:
+                  }
+                },
+                builder: (context, state, submit) => switch (state) {
+                  LoaderLoadedState() || LoaderInitialState() => TextButton(
+                      onPressed: () => submit(
+                        GymEntryParams(
+                          name: controllers.nameController.text,
+                          street: controllers.streetController.text,
+                          city: controllers.cityController.text,
+                          state: controllers.stateController.text,
+                          zipCode: controllers.zipCodeController.text,
+                        ),
+                      ),
+                      child: const Text('Submit'),
+                    ),
+                  LoaderLoadingState() => const CircularProgressIndicator(),
+                },
+              ),
+            ],
           ),
         ),
       );

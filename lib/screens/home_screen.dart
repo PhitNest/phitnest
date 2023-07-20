@@ -5,6 +5,13 @@ import 'package:phitnest_core/core.dart';
 import '../widgets/widgets.dart';
 import 'login_screen.dart';
 
+typedef LogoutBloc = LoaderBloc<void, void>;
+typedef LogoutConsumer = LoaderConsumer<void, void>;
+
+extension on BuildContext {
+  LogoutBloc get logoutBloc => loader();
+}
+
 final class HomeScreen extends StatelessWidget {
   final ApiInfo apiInfo;
 
@@ -36,7 +43,7 @@ final class HomeScreen extends StatelessWidget {
             ],
           ),
           BlocProvider(
-            create: (context) => LoaderBloc<void, void>(
+            create: (context) => LogoutBloc(
               load: (_) async {
                 final session = await context.sessionLoader.session;
                 if (session != null) {
@@ -44,7 +51,7 @@ final class HomeScreen extends StatelessWidget {
                 }
               },
             ),
-            child: LoaderConsumer<void, void>(
+            child: LogoutConsumer(
               listener: (context, logoutState) {
                 switch (logoutState) {
                   case LoaderLoadedState():
@@ -61,11 +68,12 @@ final class HomeScreen extends StatelessWidget {
                 }
               },
               builder: (context, logoutState) => switch (logoutState) {
-                LoaderLoadingState() => const CircularProgressIndicator(),
+                LoaderLoadingState() ||
+                LoaderLoadedState() =>
+                  const CircularProgressIndicator(),
                 _ => TextButton(
-                    onPressed: () => context
-                        .loader<void, void>()
-                        .add(const LoaderLoadEvent(null)),
+                    onPressed: () =>
+                        context.logoutBloc.add(const LoaderLoadEvent(null)),
                     child: const Text('Logout'),
                   ),
               },
