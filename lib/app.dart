@@ -4,10 +4,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'api/api.dart';
-import 'bloc/loader.dart';
 import 'bloc/session.dart';
 import 'cache.dart';
-import 'cognito/cognito.dart';
 import 'http/http.dart';
 import 'ui/ui.dart';
 
@@ -25,6 +23,7 @@ Future<void> runPhitNest({
       host: dotenv.get('BACKEND_HOST'),
       port: dotenv.get('BACKEND_PORT', fallback: ''));
   await initializeCache();
+  initializeTheme(useScreenUtils);
   runApp(
     PhitNestApp(
       useAdminAuth: useAdminAuth,
@@ -73,19 +72,8 @@ final class PhitNestApp extends StatelessWidget {
             home: RestoreSessionProvider(
               useAdminAuth: useAdminAuth,
               loader: loader,
-              onSessionRestoreFailed: (context, apiInfo) =>
-                  Navigator.pushReplacement(
-                context,
-                sessionRestoreFailedBuilder(apiInfo),
-              ),
-              onSessionRestored: (context, session) {
-                context.sessionLoader
-                    .add(LoaderSetEvent(RefreshSessionSuccess(session)));
-                Navigator.pushReplacement(
-                  context,
-                  sessionRestoredBuilder(session.apiInfo),
-                );
-              },
+              onSessionRestoreFailed: sessionRestoreFailedBuilder,
+              onSessionRestored: sessionRestoredBuilder,
             ),
           ),
         );
