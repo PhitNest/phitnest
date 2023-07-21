@@ -47,7 +47,7 @@ final class FormProvider<Controllers extends FormControllers, ReqType, ResType>
             create: (_) => LoaderBloc(load: load),
           ),
         ],
-        child: FormConsumer(
+        child: FormConsumer<Controllers>(
           listener: (context, formState) {},
           builder: (context, formState) {
             final formBloc = BlocProvider.of<FormBloc<Controllers>>(context);
