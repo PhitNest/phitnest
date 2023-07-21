@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_core/core.dart';
+
+import 'confirm_email.dart';
 
 final class ForgotPasswordControllers extends FormControllers {
   final emailController = TextEditingController();
@@ -82,7 +85,57 @@ final class ForgotPasswordScreen extends StatelessWidget {
                   ],
                 ),
                 consumer(
-                  listener: (context, state, _) {},
+                  listener: (context, state, _) {
+                    switch (state) {
+                      case LoaderLoadedState(data: final response):
+                        switch (response) {
+                          case SendForgotPasswordSuccess(user: final user):
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute<void>(
+                                builder: (context) => ConfirmEmailScreen(
+                                  loginParams: LoginParams(
+                                    email: controllers.emailController.text,
+                                    password:
+                                        controllers.newPasswordController.text,
+                                  ),
+                                  unauthenticatedSession:
+                                      UnauthenticatedSession(
+                                    user: user,
+                                    apiInfo: apiInfo,
+                                  ),
+                                  resendConfirmationEmail: (session) =>
+                                      sendForgotPasswordRequest(
+                                    apiInfo: apiInfo,
+                                    email: controllers.emailController.text,
+                                  ).then(
+                                    (state) =>
+                                        state is SendForgotPasswordSuccess,
+                                  ),
+                                  confirmEmail: (session, code) =>
+                                      submitForgotPassword(
+                                    params: SubmitForgotPasswordParams(
+                                      email: controllers.emailController.text,
+                                      code: code,
+                                      newPassword: controllers
+                                          .newPasswordController.text,
+                                    ),
+                                    session: session,
+                                  ).then((state) => state == null),
+                                ),
+                              ),
+                            );
+                          case SendForgotPasswordFailureResponse(
+                              message: final message
+                            ):
+                            StyledBanner.show(
+                              message: message,
+                              error: true,
+                            );
+                        }
+                      default:
+                    }
+                  },
                   builder: (context, state, submit) => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

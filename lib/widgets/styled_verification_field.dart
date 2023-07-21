@@ -23,7 +23,7 @@ final class StyledVerificationField extends StatelessWidget {
         child: PinCodeTextField(
           appContext: context,
           length: 6,
-          validator: (code) => code!.length == 6 ? null : 'Invalid code',
+          validator: (code) => code!.length == 6 ? null : '',
           onChanged: onChanged,
           onCompleted: onCompleted,
           textStyle: theme.textTheme.bodyLarge,

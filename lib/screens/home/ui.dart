@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_core/core.dart';
 
 import '../../widgets/widgets.dart';
@@ -47,6 +48,8 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text('News screen'),
+                        const Text('Coming soon'),
+                        20.verticalSpace,
                         switch (loaderState) {
                           LoaderLoadingState() =>
                             const CircularProgressIndicator(),
@@ -63,6 +66,8 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text('Explore screen'),
+                        const Text('Coming soon'),
+                        20.verticalSpace,
                         switch (loaderState) {
                           LoaderLoadingState() =>
                             const CircularProgressIndicator(),
@@ -79,6 +84,8 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text('Chat screen'),
+                        const Text('Coming soon'),
+                        20.verticalSpace,
                         switch (loaderState) {
                           LoaderLoadingState() =>
                             const CircularProgressIndicator(),
@@ -95,6 +102,8 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text('Options screen'),
+                        const Text('Coming soon'),
+                        20.verticalSpace,
                         switch (loaderState) {
                           LoaderLoadingState() =>
                             const CircularProgressIndicator(),
