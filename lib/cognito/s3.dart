@@ -55,6 +55,24 @@ $payload''';
   }
 }
 
+Future<Image?> getProfilePicture(Session session) async {
+  try {
+    final params = getProfilePictureUri(session);
+    if (params == null) {
+      return null;
+    } else {
+      final res = await http.get(params.uri, headers: params.headers);
+      if (res.statusCode == 200) {
+        return Image.memory(res.bodyBytes);
+      } else {
+        return null;
+      }
+    }
+  } catch (e) {
+    return null;
+  }
+}
+
 final class Policy {
   String expiration;
   String bucket;
