@@ -86,7 +86,7 @@ describe("validateRequest", () => {
     });
     expect(res.statusCode).toEqual(200);
     expect(res.body).toEqual("{}");
-    expect(res.headers).toBeUndefined();
+    expect(res.headers).toEqual(kDefaultHeaders);
   });
 
   it("should pass through headers", async () => {
