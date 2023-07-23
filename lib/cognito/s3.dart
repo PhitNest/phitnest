@@ -6,7 +6,7 @@ const kS3Service = 's3';
   Session session,
 ) {
   try {
-    final userId = session.cognitoSession.getAccessToken().getSub();
+    final userId = session.credentials.userIdentityId;
     if (userId == null) {
       return null;
     }
@@ -153,9 +153,11 @@ Future<Failure?> uploadProfilePicture({
     final region = session.user.pool.getRegion()!;
     final s3Endpoint =
         'https://${session.apiInfo.userBucketName}.$kS3Service.$region.amazonaws.com';
-
-    final String bucketKey =
-        'profilePictures/${session.cognitoSession.getAccessToken().getSub()}.txt';
+    final String? userId = session.credentials.userIdentityId;
+    if (userId == null) {
+      return Failure('FailedToUpload', 'User is not logged in');
+    }
+    final String bucketKey = 'profilePictures/$userId.txt';
     final uri = Uri.parse(s3Endpoint);
     final req = http.MultipartRequest('POST', uri);
     final multipartFile = http.MultipartFile(
