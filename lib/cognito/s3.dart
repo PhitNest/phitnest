@@ -4,13 +4,11 @@ const kS3Service = 's3';
 
 ({Uri uri, Map<String, String> headers})? getProfilePictureUri(
   Session session,
+  String identityId,
 ) {
   try {
-    final userId = session.credentials.userIdentityId;
-    if (userId == null) {
-      return null;
-    }
-    final key = '${session.apiInfo.userBucketName}/profilePictures/$userId.txt';
+    final key =
+        '${session.apiInfo.userBucketName}/profilePictures/$identityId.txt';
     final payload = SigV4.hashCanonicalRequest('');
     final datetime = SigV4.generateDatetime();
     final region = session.user.pool.getRegion()!;
@@ -55,9 +53,9 @@ $payload''';
   }
 }
 
-Future<Image?> getProfilePicture(Session session) async {
+Future<Image?> getProfilePicture(Session session, String identityId) async {
   try {
-    final params = getProfilePictureUri(session);
+    final params = getProfilePictureUri(session, identityId);
     if (params == null) {
       return null;
     } else {
