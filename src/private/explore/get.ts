@@ -58,6 +58,7 @@ export async function invoke(
           return new Success(
             othersAtGym.filter((other) => {
               return (
+                other.id !== user.id &&
                 !friends.some(
                   (friendship) => friendship.otherUser.id === other.id
                 ) &&
