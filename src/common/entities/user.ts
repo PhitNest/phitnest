@@ -20,12 +20,14 @@ import { kAdminParser } from "./admin";
 export type UserExplore = CreationDetails & {
   firstName: string;
   lastName: string;
+  identityId: string;
 };
 
 export const kUserExploreParser: DynamoParser<UserExplore> = {
   ...kCreationDetailsParser,
   firstName: "S",
   lastName: "S",
+  identityId: "S",
 };
 
 export type UserWithoutInvite = UserExplore &
@@ -87,6 +89,7 @@ export function userExploreToDynamo(
   return {
     firstName: { S: userExplore.firstName },
     lastName: { S: userExplore.lastName },
+    identityId: { S: userExplore.identityId },
     ...creationDetailsToDynamo(userExplore),
   };
 }
