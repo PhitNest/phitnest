@@ -67,7 +67,6 @@ const testUserInvite: UserInvite = {
     firstName: "something",
     lastName: "something",
     numInvites: 5,
-    identityId: "test",
   },
 };
 
@@ -82,7 +81,6 @@ const serializedUserInvite: SerializedDynamo<UserInvite> = {
       firstName: { S: "something" },
       lastName: { S: "something" },
       numInvites: { N: "5" },
-      identityId: { S: "test" },
     },
   },
 };
