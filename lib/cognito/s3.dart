@@ -1,7 +1,5 @@
 part of 'cognito.dart';
 
-const kS3Host = 's3.us-east-1.amazonaws.com';
-const kS3Region = 'us-east-1';
 const kS3Service = 's3';
 
 ({Uri uri, Map<String, String> headers})? getProfilePictureUri(
@@ -15,10 +13,12 @@ const kS3Service = 's3';
     final key = '${session.apiInfo.userBucketName}/profilePictures/$userId.txt';
     final payload = SigV4.hashCanonicalRequest('');
     final datetime = SigV4.generateDatetime();
+    final region = session.user.pool.getRegion()!;
+    final host = '$kS3Service.$region.amazonaws.com';
     final canonicalRequest = '''GET
 ${'/$key'.split('/').map((s) => Uri.encodeComponent(s)).join('/')}
 
-host:$kS3Host
+host:$host
 x-amz-content-sha256:$payload
 x-amz-date:$datetime
 x-amz-security-token:${session.credentials.sessionToken}
@@ -26,11 +26,11 @@ x-amz-security-token:${session.credentials.sessionToken}
 host;x-amz-content-sha256;x-amz-date;x-amz-security-token
 $payload''';
     final credentialScope =
-        SigV4.buildCredentialScope(datetime, kS3Region, kS3Service);
+        SigV4.buildCredentialScope(datetime, region, kS3Service);
     final stringToSign = SigV4.buildStringToSign(datetime, credentialScope,
         SigV4.hashCanonicalRequest(canonicalRequest));
     final signingKey = SigV4.calculateSigningKey(
-        session.credentials.secretAccessKey!, datetime, kS3Region, kS3Service);
+        session.credentials.secretAccessKey!, datetime, region, kS3Service);
     final signature = SigV4.calculateSignature(signingKey, stringToSign);
 
     final authorization = [
@@ -39,7 +39,7 @@ $payload''';
       'Signature=$signature',
     ].join(',');
 
-    final uri = Uri.https(kS3Host, key);
+    final uri = Uri.https(host, key);
 
     return (
       uri: uri,
@@ -150,9 +150,9 @@ Future<Failure?> uploadProfilePicture({
   required Session session,
 }) async {
   try {
-    final region = session.user.pool.getRegion();
+    final region = session.user.pool.getRegion()!;
     final s3Endpoint =
-        'https://${session.apiInfo.userBucketName}.s3.$region.amazonaws.com';
+        'https://${session.apiInfo.userBucketName}.$kS3Service.$region.amazonaws.com';
 
     final String bucketKey =
         'profilePictures/${session.cognitoSession.getAccessToken().getSub()}.txt';
