@@ -74,7 +74,6 @@ export async function invoke(event: PreSignUpTriggerEvent) {
       createdAt: new Date(),
       firstName: firstName,
       lastName: lastName,
-      identityId: "",
     };
 
     let newUser: UserInvitedByUser | UserInvitedByAdmin;

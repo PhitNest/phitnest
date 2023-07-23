@@ -17,7 +17,6 @@ const testUserWithoutInvite: UserWithoutInvite = {
   firstName: "test",
   lastName: "test",
   numInvites: 1,
-  identityId: "test",
 };
 
 const serializedUserWithoutInvite: SerializedDynamo<UserWithoutInvite> = {
@@ -27,7 +26,6 @@ const serializedUserWithoutInvite: SerializedDynamo<UserWithoutInvite> = {
   firstName: { S: "test" },
   lastName: { S: "test" },
   numInvites: { N: "1" },
-  identityId: { S: "test" },
 };
 
 const testInviteWithoutSender: InviteWithoutSender = {
