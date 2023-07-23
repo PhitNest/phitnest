@@ -1,23 +1,24 @@
 part of 'cognito.dart';
 
+const kS3Host = 's3.us-east-1.amazonaws.com';
+const kS3Region = 'us-east-1';
+const kS3Service = 's3';
+
 ({Uri uri, Map<String, String> headers})? getProfilePictureUri(
   Session session,
 ) {
   try {
-    final userId = session.cognitoSession.getAccessToken().getJwtToken();
+    final userId = session.cognitoSession.getAccessToken().getSub();
     if (userId == null) {
       return null;
     }
-    const host = 's3.us-east-1.amazonaws.com';
-    const region = 'us-east-1';
-    const service = 's3';
     final key = '${session.apiInfo.userBucketName}/profilePictures/$userId.txt';
     final payload = SigV4.hashCanonicalRequest('');
     final datetime = SigV4.generateDatetime();
     final canonicalRequest = '''GET
 ${'/$key'.split('/').map((s) => Uri.encodeComponent(s)).join('/')}
 
-host:$host
+host:$kS3Host
 x-amz-content-sha256:$payload
 x-amz-date:$datetime
 x-amz-security-token:${session.credentials.sessionToken}
@@ -25,11 +26,11 @@ x-amz-security-token:${session.credentials.sessionToken}
 host;x-amz-content-sha256;x-amz-date;x-amz-security-token
 $payload''';
     final credentialScope =
-        SigV4.buildCredentialScope(datetime, region, service);
+        SigV4.buildCredentialScope(datetime, kS3Region, kS3Service);
     final stringToSign = SigV4.buildStringToSign(datetime, credentialScope,
         SigV4.hashCanonicalRequest(canonicalRequest));
     final signingKey = SigV4.calculateSigningKey(
-        session.credentials.secretAccessKey!, datetime, region, service);
+        session.credentials.secretAccessKey!, datetime, kS3Region, kS3Service);
     final signature = SigV4.calculateSignature(signingKey, stringToSign);
 
     final authorization = [
@@ -38,7 +39,7 @@ $payload''';
       'Signature=$signature',
     ].join(',');
 
-    final uri = Uri.https(host, key);
+    final uri = Uri.https(kS3Host, key);
 
     return (
       uri: uri,
