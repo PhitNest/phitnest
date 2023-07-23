@@ -75,7 +75,7 @@ class PhotoInstructionsScreen extends StatelessWidget {
                           }
                           return null;
                         },
-                      ),
+                      ).catchError((_) => null),
                     ),
                   ),
                 ),
@@ -100,7 +100,7 @@ class PhotoInstructionsScreen extends StatelessWidget {
                           }
                           return null;
                         },
-                      ),
+                      ).catchError((_) => null),
                     ),
                   ),
                 )
