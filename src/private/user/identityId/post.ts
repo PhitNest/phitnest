@@ -38,13 +38,19 @@ export async function invoke(
         );
       }
 
-      const credentials = await fromCognitoIdentityPool({
-        client: new CognitoIdentityClient({}),
-        identityPoolId: environmentVars.USER_IDENTITY_POOL_ID,
-        logins: {
-          [environmentVars.USER_POOL_ID]: event.headers.Authorization,
-        },
-      })();
+      const identityClient = new CognitoIdentityClient({
+        region: "us-east-1",
+        credentials: fromCognitoIdentityPool({
+          client: new CognitoIdentityClient({ region: "us-east-1" }),
+          identityPoolId: environmentVars.USER_IDENTITY_POOL_ID,
+          logins: {
+            [environmentVars.USER_POOL_ID]: event.headers.Authorization,
+          },
+        }),
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const res = (await identityClient.config.credentials()) as any;
 
       const client = dynamo().connect();
 
@@ -52,7 +58,7 @@ export async function invoke(
         pk: "IDENTITY_ID",
         sk: `ID#${userClaims.sub}`,
         data: {
-          identityId: { S: credentials.identityId },
+          identityId: { S: res.identityId },
         },
       });
 
