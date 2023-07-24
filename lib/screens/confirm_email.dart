@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +17,28 @@ class ConfirmEmailControllers extends FormControllers {
     codeController.dispose();
     focusNode.dispose();
   }
+}
+
+sealed class SetIdentityIdResponse extends Equatable {
+  const SetIdentityIdResponse() : super();
+}
+
+class SetIdentityIdSuccess extends SetIdentityIdResponse {
+  final Session session;
+
+  const SetIdentityIdSuccess(this.session) : super();
+
+  @override
+  List<Object?> get props => [session];
+}
+
+class SetIdentityIdFailure extends SetIdentityIdResponse {
+  final String message;
+
+  const SetIdentityIdFailure(this.message) : super();
+
+  @override
+  List<Object?> get props => [message];
 }
 
 typedef ResendEmailLoaderBloc = LoaderBloc<void, bool>;
@@ -62,13 +85,38 @@ final class ConfirmEmailScreen extends StatelessWidget {
                 52.verticalSpace,
                 Center(
                   child: FormProvider<ConfirmEmailControllers, String,
-                      LoginResponse?>(
+                      SetIdentityIdResponse?>(
                     load: (code) =>
                         confirmEmail(unauthenticatedSession, code).then(
                       (confirmed) => confirmed
                           ? login(
                               apiInfo: unauthenticatedSession.apiInfo,
                               params: loginParams,
+                            ).then(
+                              (loginResponse) async {
+                                switch (loginResponse) {
+                                  case LoginSuccess(session: final session):
+                                    // final res = await request(
+                                    //   route: '/user/identityId',
+                                    //   method: HttpMethod.post,
+                                    //   session: session,
+                                    //   parser: (_) {},
+                                    // );
+                                    // switch (res) {
+                                    // case HttpResponseSuccess():
+                                    return SetIdentityIdSuccess(session);
+                                  //   case HttpResponseFailure(
+                                  //       failure: final failure
+                                  //     ):
+                                  //     return SetIdentityIdFailure(
+                                  //         failure.message);
+                                  // }
+                                  case LoginFailureResponse(
+                                      message: final message
+                                    ):
+                                    return SetIdentityIdFailure(message);
+                                }
+                              },
                             )
                           : null,
                     ),
@@ -98,7 +146,7 @@ final class ConfirmEmailScreen extends StatelessWidget {
                             case LoaderLoadedState(data: final response):
                               if (response != null) {
                                 switch (response) {
-                                  case LoginSuccess():
+                                  case SetIdentityIdSuccess():
                                     Navigator.pushAndRemoveUntil(
                                       context,
                                       CupertinoPageRoute<void>(
@@ -109,7 +157,7 @@ final class ConfirmEmailScreen extends StatelessWidget {
                                       ),
                                       (_) => false,
                                     );
-                                  case LoginFailureResponse(
+                                  case SetIdentityIdFailure(
                                       message: final message
                                     ):
                                     StyledBanner.show(

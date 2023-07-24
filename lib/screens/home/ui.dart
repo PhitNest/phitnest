@@ -72,93 +72,98 @@ class HomeScreen extends StatelessWidget {
                   default:
                 }
               },
-              builder: (context, pfpState) => LogoutConsumer(
-                listener: (context, logoutState) {
-                  switch (logoutState) {
-                    case LoaderLoadedState():
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        CupertinoPageRoute<void>(
-                          builder: (context) => LoginScreen(apiInfo: apiInfo),
-                        ),
-                        (_) => false,
-                      );
-                    default:
-                  }
-                },
-                builder: (context, logoutState) => Expanded(
-                  child: switch (navBarState.page) {
-                    NavBarPage.news => Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('News screen'),
-                          const Text('Coming soon'),
-                          20.verticalSpace,
-                          switch (logoutState) {
-                            LoaderLoadingState() =>
-                              const CircularProgressIndicator(),
-                            _ => StyledOutlineButton(
-                                onPress: () => context.logoutBloc
-                                    .add(const LoaderLoadEvent(null)),
-                                text: 'Logout',
-                              ),
-                          },
-                        ],
-                      ),
-                    NavBarPage.explore => Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Explore screen'),
-                          const Text('Coming soon'),
-                          20.verticalSpace,
-                          switch (logoutState) {
-                            LoaderLoadingState() =>
-                              const CircularProgressIndicator(),
-                            _ => StyledOutlineButton(
-                                onPress: () => context.logoutBloc
-                                    .add(const LoaderLoadEvent(null)),
-                                text: 'Logout',
-                              ),
-                          },
-                        ],
-                      ),
-                    NavBarPage.chat => Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Chat screen'),
-                          const Text('Coming soon'),
-                          20.verticalSpace,
-                          switch (logoutState) {
-                            LoaderLoadingState() =>
-                              const CircularProgressIndicator(),
-                            _ => StyledOutlineButton(
-                                onPress: () => context.logoutBloc
-                                    .add(const LoaderLoadEvent(null)),
-                                text: 'Logout',
-                              ),
-                          },
-                        ],
-                      ),
-                    NavBarPage.options => Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Options screen'),
-                          const Text('Coming soon'),
-                          20.verticalSpace,
-                          switch (logoutState) {
-                            LoaderLoadingState() =>
-                              const CircularProgressIndicator(),
-                            _ => StyledOutlineButton(
-                                onPress: () => context.logoutBloc
-                                    .add(const LoaderLoadEvent(null)),
-                                text: 'Logout',
-                              ),
-                          },
-                        ],
-                      ),
-                  },
-                ),
-              ),
+              builder: (context, pfpState) => switch (pfpState) {
+                LoaderLoadedState(data: final image) => LogoutConsumer(
+                    listener: (context, logoutState) {
+                      switch (logoutState) {
+                        case LoaderLoadedState():
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            CupertinoPageRoute<void>(
+                              builder: (context) =>
+                                  LoginScreen(apiInfo: apiInfo),
+                            ),
+                            (_) => false,
+                          );
+                        default:
+                      }
+                    },
+                    builder: (context, logoutState) => Expanded(
+                      child: switch (navBarState.page) {
+                        NavBarPage.news => Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('News screen'),
+                              const Text('Coming soon'),
+                              20.verticalSpace,
+                              switch (logoutState) {
+                                LoaderLoadingState() =>
+                                  const CircularProgressIndicator(),
+                                _ => StyledOutlineButton(
+                                    onPress: () => context.logoutBloc
+                                        .add(const LoaderLoadEvent(null)),
+                                    text: 'Logout',
+                                  ),
+                              },
+                            ],
+                          ),
+                        NavBarPage.explore => Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('Explore screen'),
+                              const Text('Coming soon'),
+                              20.verticalSpace,
+                              switch (logoutState) {
+                                LoaderLoadingState() =>
+                                  const CircularProgressIndicator(),
+                                _ => StyledOutlineButton(
+                                    onPress: () => context.logoutBloc
+                                        .add(const LoaderLoadEvent(null)),
+                                    text: 'Logout',
+                                  ),
+                              },
+                            ],
+                          ),
+                        NavBarPage.chat => Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('Chat screen'),
+                              const Text('Coming soon'),
+                              20.verticalSpace,
+                              switch (logoutState) {
+                                LoaderLoadingState() =>
+                                  const CircularProgressIndicator(),
+                                _ => StyledOutlineButton(
+                                    onPress: () => context.logoutBloc
+                                        .add(const LoaderLoadEvent(null)),
+                                    text: 'Logout',
+                                  ),
+                              },
+                            ],
+                          ),
+                        NavBarPage.options => Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('Options screen'),
+                              const Text('Coming soon'),
+                              20.verticalSpace,
+                              image ?? const CircularProgressIndicator(),
+                              switch (logoutState) {
+                                LoaderLoadingState() =>
+                                  const CircularProgressIndicator(),
+                                _ => StyledOutlineButton(
+                                    onPress: () => context.logoutBloc
+                                        .add(const LoaderLoadEvent(null)),
+                                    text: 'Logout',
+                                  ),
+                              },
+                            ],
+                          ),
+                      },
+                    ),
+                  ),
+                _ => const CircularProgressIndicator(),
+              },
             ),
           ),
         ),
