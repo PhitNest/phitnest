@@ -46,7 +46,7 @@ class HomeScreen extends StatelessWidget {
                   final session = await context.sessionLoader.session;
                   if (session != null) {
                     return await getProfilePicture(
-                        session, session.credentials.userIdentityId);
+                        session, session.credentials.userIdentityId!);
                   }
                   return null;
                 },
