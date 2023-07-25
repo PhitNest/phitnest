@@ -23,22 +23,7 @@
 //   List<Object?> get props => [id, firstName, lastName];
 // }
 
-// class UserExplore extends Equatable {
-//   final String id;
-//   final String firstName;
-//   final String lastName;
-//   final Image profilePicture;
 
-//   const UserExplore({
-//     required this.id,
-//     required this.firstName,
-//     required this.lastName,
-//     required this.profilePicture,
-//   }) : super();
-
-//   @override
-//   List<Object?> get props => [id, firstName, lastName, profilePicture];
-// }
 
 // class Message extends Equatable {
 //   final String id;
@@ -154,73 +139,7 @@
 //       HttpResponseFailure() => null,
 //     };
 
-// Future<List<UserExplore>?> _explore(Session session) async => request(
-//       route: '/explore',
-//       method: HttpMethod.get,
-//       authorization: session.session.idToken.getJwtToken(),
-//       parser: (json) => switch (json) {
-//         List() => (json)
-//             .map(
-//               (entry) => switch (entry) {
-//                 ({
-//                   'accountDetails': final dynamic accountDetails,
-//                   'firstName': final String firstName,
-//                   'lastName': final String lastName
-//                 }) =>
-//                   (
-//                     id: switch (accountDetails) {
-//                       ({'id': final String id}) => id,
-//                       _ => throw const Failure(
-//                           'InvalidResponse', 'Invalid response from server.'),
-//                     },
-//                     firstName: firstName,
-//                     lastName: lastName,
-//                   ),
-//                 _ => throw const Failure(
-//                     'InvalidResponse', 'Invalid response from server.'),
-//               },
-//             )
-//             .toList(),
-//         _ => throw const Failure(
-//             'InvalidResponse', 'Invalid response from server.'),
-//       },
-//     ).then(
-//       (res) async => switch (res) {
-//         HttpResponseOk(data: final data) => Future.wait(
-//             data.map(
-//               (entry) async {
-//                 final pfpReq = getProfilePicture(
-//                   session,
-//                   entry.id,
-//                 );
-//                 if (pfpReq != null) {
-//                   return UserExplore(
-//                     id: entry.id,
-//                     firstName: entry.firstName,
-//                     lastName: entry.lastName,
-//                     profilePicture: Image.memory(
-//                       (await http.get(
-//                         pfpReq.uri,
-//                         headers: pfpReq.headers,
-//                       ))
-//                           .bodyBytes,
-//                     ),
-//                   );
-//                 }
-//                 return null;
-//               },
-//             ),
-//           ).then(
-//             (users) => users
-//                 .where((element) =>
-//                     element != null &&
-//                     element.id != session.session.accessToken.getSub())
-//                 .cast<UserExplore>()
-//                 .toList(),
-//           ),
-//         HttpResponseFailure() => null,
-//       },
-//     );
+
 
 // extension GetHomeBloc on BuildContext {
 //   HomeBloc get homeBloc => BlocProvider.of(this);

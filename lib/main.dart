@@ -4,25 +4,15 @@ import 'package:phitnest_core/core.dart';
 
 import 'screens/home/ui.dart';
 import 'screens/login_screen.dart';
-
-final class Loader extends StatelessWidget {
-  const Loader({
-    super.key,
-  }) : super();
-
-  @override
-  Widget build(BuildContext context) => const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-}
+import 'widgets/widgets.dart';
 
 Future<void> main() => runPhitNest(
       useAdminAuth: false,
       useScreenUtils: true,
       title: 'PhitNest',
-      loader: const Loader(),
+      loader: const Scaffold(
+        body: Loader(),
+      ),
       sessionRestoredBuilder: (apiInfo) => CupertinoPageRoute(
         builder: (context) => HomeScreen(apiInfo: apiInfo),
       ),

@@ -96,21 +96,21 @@ final class ConfirmEmailScreen extends StatelessWidget {
                               (loginResponse) async {
                                 switch (loginResponse) {
                                   case LoginSuccess(session: final session):
-                                    // final res = await request(
-                                    //   route: '/user/identityId',
-                                    //   method: HttpMethod.post,
-                                    //   session: session,
-                                    //   parser: (_) {},
-                                    // );
-                                    // switch (res) {
-                                    // case HttpResponseSuccess():
-                                    return SetIdentityIdSuccess(session);
-                                  //   case HttpResponseFailure(
-                                  //       failure: final failure
-                                  //     ):
-                                  //     return SetIdentityIdFailure(
-                                  //         failure.message);
-                                  // }
+                                    final res = await request(
+                                      route: '/user/identityId',
+                                      method: HttpMethod.post,
+                                      session: session,
+                                      parser: (_) {},
+                                    );
+                                    switch (res) {
+                                      case HttpResponseSuccess():
+                                        return SetIdentityIdSuccess(session);
+                                      case HttpResponseFailure(
+                                          failure: final failure
+                                        ):
+                                        return SetIdentityIdFailure(
+                                            failure.message);
+                                    }
                                   case LoginFailureResponse(
                                       message: final message
                                     ):
