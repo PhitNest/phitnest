@@ -61,7 +61,7 @@ export async function invoke(
 
       const client = dynamo().connect();
 
-      client.put({
+      await client.put({
         pk: "IDENTITY_ID",
         sk: `ID#${userClaims.sub}`,
         data: {
