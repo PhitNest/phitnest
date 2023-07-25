@@ -352,6 +352,13 @@ class HomeScreen extends StatelessWidget {
                                               users: users,
                                               pageController: context
                                                   .homeBloc.pageController,
+                                              countdown: switch (navBarState) {
+                                                NavBarHoldingState(
+                                                  countdown: final countdown
+                                                ) =>
+                                                  countdown,
+                                                _ => null,
+                                              },
                                             ),
                                           _ => const Loader()
                                         },

@@ -6,10 +6,12 @@ import '../../ui.dart';
 
 final class UserPage extends StatelessWidget {
   final UserExplore user;
+  final int? countdown;
 
   const UserPage({
     super.key,
     required this.user,
+    required this.countdown,
   }) : super();
 
   @override
@@ -78,7 +80,9 @@ final class UserPage extends StatelessWidget {
                 style: theme.textTheme.bodyLarge,
               ),
               Text(
-                'Press & hold the logo to send a friend request',
+                countdown != null
+                    ? '$countdown...'
+                    : 'Press & hold the logo to send a friend request',
                 style: theme.textTheme.bodySmall,
               ),
             ],
