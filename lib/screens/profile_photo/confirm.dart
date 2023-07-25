@@ -9,6 +9,7 @@ import 'package:http/http.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:phitnest_core/core.dart';
 
+import '../../widgets/widgets.dart';
 import '../home/ui.dart';
 import '../login_screen.dart';
 
@@ -117,7 +118,7 @@ final class ConfirmPhotoScreen extends StatelessWidget {
                   ),
                   56.verticalSpace,
                   ...switch (screenState) {
-                    LoaderLoadingState() => const [CircularProgressIndicator()],
+                    LoaderLoadingState() => const [Loader()],
                     _ => [
                         ElevatedButton(
                           child: Text(

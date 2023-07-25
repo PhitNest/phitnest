@@ -140,10 +140,9 @@ class PhotoInstructionsScreen extends StatelessWidget {
                     }
                   },
                   builder: (context, pickPhotoState) => Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      96.verticalSpace,
                       Text(
                         'First, let\'s put a face to your name.',
                         style: theme.textTheme.bodyLarge,
