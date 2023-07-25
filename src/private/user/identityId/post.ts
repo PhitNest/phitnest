@@ -31,6 +31,12 @@ export async function invoke(
           "Unable to find user identity pool id"
         );
       }
+      if (!environmentVars.REGION) {
+        return new RequestError(
+          "INVALID_BACKEND_CONFIG",
+          "Unable to find region"
+        );
+      }
       if (!event.headers.Authorization) {
         return new RequestError(
           "MISSING_AUTHORIZATION_HEADER",
@@ -39,12 +45,12 @@ export async function invoke(
       }
 
       const identityClient = new CognitoIdentityClient({
-        region: "us-east-1",
+        region: environmentVars.REGION,
         credentials: fromCognitoIdentityPool({
-          client: new CognitoIdentityClient({ region: "us-east-1" }),
+          client: new CognitoIdentityClient({ region: environmentVars.REGION }),
           identityPoolId: environmentVars.USER_IDENTITY_POOL_ID,
           logins: {
-            [`cognito-idp.us-east-1.amazonaws.com/${environmentVars.USER_POOL_ID}`]:
+            [`cognito-idp.${environmentVars.REGION}.amazonaws.com/${environmentVars.USER_POOL_ID}`]:
               event.headers.Authorization,
           },
         }),
