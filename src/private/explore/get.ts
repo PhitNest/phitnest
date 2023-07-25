@@ -55,7 +55,7 @@ export async function invoke(
         } else if (friendRequests instanceof RequestError) {
           return friendRequests;
         } else {
-          return new Success(
+          const exploreUsers = await Promise.all(
             othersAtGym.filter((other) => {
               return (
                 other.id !== user.id &&
@@ -68,6 +68,36 @@ export async function invoke(
               );
             })
           );
+          const usersWithIdentity = await Promise.all(
+            exploreUsers.map((user) =>
+              client
+                .parsedQuery({
+                  pk: `IDENTITY_ID`,
+                  sk: { q: `ID#${user.id}`, op: "EQ" },
+                  parseShape: {
+                    id: "S",
+                  },
+                })
+                .then((identity) => ({
+                  ...user,
+                  identity: identity,
+                }))
+            )
+          ).then((users) =>
+            users.flatMap((user) => {
+              if (user.identity instanceof RequestError) {
+                return [];
+              } else {
+                return [
+                  {
+                    ...user,
+                    identityId: user.identity.id,
+                  },
+                ];
+              }
+            })
+          );
+          return new Success(usersWithIdentity);
         }
       }
     }
