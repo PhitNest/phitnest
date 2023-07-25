@@ -4,8 +4,9 @@ import { Construct } from "constructs";
 import * as path from "path";
 
 const kDeploymentEnv = process.env.DEPLOYMENT_ENV || "dev";
-const kApiRoute53Arn =
-  "arn:aws:acm:us-east-1:235601651768:certificate/030219b7-d13c-4f07-90a2-baf20ba90837";
+const kRegion = "us-east-1";
+const kBackupRegion = "us-west-1";
+const kApiRoute53Arn = `arn:aws:acm:${kRegion}:235601651768:certificate/030219b7-d13c-4f07-90a2-baf20ba90837`;
 
 export class PhitnestStack extends Stack {
   constructor(scope: Construct) {
@@ -19,6 +20,8 @@ export class PhitnestStack extends Stack {
 
     const dynamo = new DynamoStack(this, {
       deploymentEnv: kDeploymentEnv,
+      region: kRegion,
+      backupRegion: kBackupRegion,
     });
 
     const cognito = new CognitoStack(this, {
@@ -29,6 +32,7 @@ export class PhitnestStack extends Stack {
       cognitoHookDeploymentDir: path.join(apiDeploymentDir, "cognito_hooks"),
       dynamoTableName: dynamo.tableName,
       dynamoTableRole: dynamo.tableRole,
+      region: kRegion,
     });
 
     const s3 = new S3Stack(this, {
@@ -50,6 +54,7 @@ export class PhitnestStack extends Stack {
       dynamoTableName: dynamo.tableName,
       dynamoTableRole: dynamo.tableRole,
       userBucketName: s3.userBucketName,
+      region: kRegion,
       apiRoute53CertificateArn:
         kDeploymentEnv === "prod" ? kApiRoute53Arn : undefined,
     });

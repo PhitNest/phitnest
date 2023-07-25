@@ -15,6 +15,8 @@ import { Construct } from "constructs";
 
 export interface DynamoStackProps {
   deploymentEnv: string;
+  region: string;
+  backupRegion: string;
 }
 
 const kPartKey = "part_id";
@@ -33,19 +35,19 @@ export class DynamoStack extends Construct {
       props.deploymentEnv == "prod"
         ? [
             {
-              region: "us-east-1",
+              region: props.region,
               pointInTimeRecoverySpecification: {
                 pointInTimeRecoveryEnabled: true,
               },
             },
             {
-              region: "us-west-1",
+              region: props.backupRegion,
               pointInTimeRecoverySpecification: {
                 pointInTimeRecoveryEnabled: true,
               },
             },
           ]
-        : [{ region: "us-east-1" }];
+        : [{ region: props.region }];
 
     const table = new CfnGlobalTable(
       scope,

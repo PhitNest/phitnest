@@ -20,6 +20,7 @@ export interface CognitoStackProps {
   commonDir: string;
   dynamoTableName: string;
   dynamoTableRole: Role;
+  region: string;
 }
 
 export class CognitoStack extends Construct {
@@ -38,7 +39,7 @@ export class CognitoStack extends Construct {
       fromName: "PhitNest Verification",
       replyTo: "verify@phitnest.com",
       sesVerifiedDomain: "phitnest.com",
-      sesRegion: "us-east-1",
+      sesRegion: props.region,
     });
     const userPresignupDeploymentDir = path.join(
       props.cognitoHookDeploymentDir,

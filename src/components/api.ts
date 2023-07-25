@@ -39,6 +39,7 @@ export interface ApiStackProps {
   adminClientId: string;
   userIdentityPoolId: string;
   userBucketName: string;
+  region: string;
   apiRoute53CertificateArn: string | undefined;
 }
 
@@ -164,6 +165,7 @@ export class ApiStack extends Construct {
           ADMIN_POOL_CLIENT_ID: this.props.adminClientId,
           USER_IDENTITY_POOL_ID: this.props.userIdentityPoolId,
           USER_S3_BUCKET_NAME: this.props.userBucketName,
+          REGION: this.props.region,
         },
         role: this.props.dynamoTableRole,
       }
