@@ -44,7 +44,8 @@ export async function invoke(
           client: new CognitoIdentityClient({ region: "us-east-1" }),
           identityPoolId: environmentVars.USER_IDENTITY_POOL_ID,
           logins: {
-            [environmentVars.USER_POOL_ID]: event.headers.Authorization,
+            [`cognito-idp.us-east-1.amazonaws.com/${environmentVars.USER_POOL_ID}`]:
+              event.headers.Authorization,
           },
         }),
       });
