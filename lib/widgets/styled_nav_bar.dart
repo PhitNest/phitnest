@@ -142,15 +142,7 @@ final class NavBarCountDownEvent extends NavBarEvent {
 }
 
 final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
-  NavBarBloc(NavBarPage initialPage)
-      : super(
-          switch (initialPage) {
-            NavBarPage.explore => const NavBarActiveState(),
-            NavBarPage.news => const NavBarNormalState(NavBarPage.news),
-            NavBarPage.chat => const NavBarNormalState(NavBarPage.chat),
-            NavBarPage.options => const NavBarNormalState(NavBarPage.options),
-          },
-        ) {
+  NavBarBloc() : super(const NavBarLoadingState()) {
     on<NavBarPressEvent>(
       (event, emit) {
         switch (state) {
@@ -218,12 +210,21 @@ final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
     );
 
     on<NavBarSetLoadingEvent>(
-      (event, emit) => emit(
-        switch (event.loading) {
-          true => const NavBarLoadingState(),
-          false => const NavBarActiveState(),
-        },
-      ),
+      (event, emit) {
+        if (event.loading) {
+          switch (state) {
+            case NavBarActiveState() || NavBarHoldingState():
+              emit(const NavBarLoadingState());
+            default:
+          }
+        } else {
+          switch (state) {
+            case NavBarLoadingState():
+              emit(const NavBarActiveState());
+            default:
+          }
+        }
+      },
     );
 
     on<NavBarCountDownEvent>(
@@ -380,96 +381,91 @@ class StyledNavBar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-        create: (_) => NavBarBloc(NavBarPage.options),
-        child: BlocConsumer<NavBarBloc, NavBarState>(
-          listener: listener,
-          builder: (context, navBarState) => Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              builder(context, navBarState),
-              Container(
-                height: StyledNavBar.kHeight,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: switch (navBarState) {
-                    NavBarReversedState() => Colors.black,
-                    _ => Colors.white,
-                  },
-                  boxShadow: const [
-                    BoxShadow(
-                      blurRadius: 8.5,
-                      spreadRadius: 0.0,
-                      color: Colors.black,
-                      offset: Offset(0, 7),
+  Widget build(BuildContext context) => BlocConsumer<NavBarBloc, NavBarState>(
+        listener: listener,
+        builder: (context, navBarState) => Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            builder(context, navBarState),
+            Container(
+              height: StyledNavBar.kHeight,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: switch (navBarState) {
+                  NavBarReversedState() => Colors.black,
+                  _ => Colors.white,
+                },
+                boxShadow: const [
+                  BoxShadow(
+                    blurRadius: 8.5,
+                    spreadRadius: 0.0,
+                    color: Colors.black,
+                    offset: Offset(0, 7),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 18.h),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 12.w),
+                        child: _StyledNavBarLogo(
+                          state: navBarState,
+                        ),
+                      ),
+                    ),
+                    Builder(
+                      builder: (context) {
+                        final bool reversed =
+                            navBarState is NavBarReversedState;
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _StyledNavBarPageButton(
+                              text: 'NEWS',
+                              selected: navBarState.page == NavBarPage.news,
+                              reversed: reversed,
+                              onPressed: () => context.navBarBloc
+                                  .add(const NavBarPressEvent(NavBarPage.news)),
+                            ),
+                            _StyledNavBarPageButton(
+                              text: 'EXPLORE',
+                              selected: navBarState.page == NavBarPage.explore,
+                              reversed: reversed,
+                              onPressed: () => context.navBarBloc.add(
+                                  const NavBarPressEvent(NavBarPage.explore)),
+                            ),
+                            60.horizontalSpace,
+                            StyledIndicator(
+                              offset: const Size(8, 8),
+                              count: 0,
+                              child: _StyledNavBarPageButton(
+                                text: 'CHAT',
+                                selected: navBarState.page == NavBarPage.chat,
+                                reversed: reversed,
+                                onPressed: () => context.navBarBloc.add(
+                                    const NavBarPressEvent(NavBarPage.chat)),
+                              ),
+                            ),
+                            _StyledNavBarPageButton(
+                              text: 'OPTIONS',
+                              selected: navBarState.page == NavBarPage.options,
+                              reversed: reversed,
+                              onPressed: () => context.navBarBloc.add(
+                                  const NavBarPressEvent(NavBarPage.options)),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ),
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 18.h),
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 12.w),
-                          child: _StyledNavBarLogo(
-                            state: navBarState,
-                          ),
-                        ),
-                      ),
-                      Builder(
-                        builder: (context) {
-                          final bool reversed =
-                              navBarState is NavBarReversedState;
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _StyledNavBarPageButton(
-                                text: 'NEWS',
-                                selected: navBarState.page == NavBarPage.news,
-                                reversed: reversed,
-                                onPressed: () => context.navBarBloc.add(
-                                    const NavBarPressEvent(NavBarPage.news)),
-                              ),
-                              _StyledNavBarPageButton(
-                                text: 'EXPLORE',
-                                selected:
-                                    navBarState.page == NavBarPage.explore,
-                                reversed: reversed,
-                                onPressed: () => context.navBarBloc.add(
-                                    const NavBarPressEvent(NavBarPage.explore)),
-                              ),
-                              60.horizontalSpace,
-                              StyledIndicator(
-                                offset: const Size(8, 8),
-                                count: 0,
-                                child: _StyledNavBarPageButton(
-                                  text: 'CHAT',
-                                  selected: navBarState.page == NavBarPage.chat,
-                                  reversed: reversed,
-                                  onPressed: () => context.navBarBloc.add(
-                                      const NavBarPressEvent(NavBarPage.chat)),
-                                ),
-                              ),
-                              _StyledNavBarPageButton(
-                                text: 'OPTIONS',
-                                selected:
-                                    navBarState.page == NavBarPage.options,
-                                reversed: reversed,
-                                onPressed: () => context.navBarBloc.add(
-                                    const NavBarPressEvent(NavBarPage.options)),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
 }
