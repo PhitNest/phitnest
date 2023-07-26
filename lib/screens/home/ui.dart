@@ -168,18 +168,6 @@ final class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
   }
 }
 
-void goToLogin(
-  BuildContext context,
-  ApiInfo apiInfo,
-) =>
-    Navigator.pushAndRemoveUntil(
-      context,
-      CupertinoPageRoute<void>(
-        builder: (context) => LoginScreen(apiInfo: apiInfo),
-      ),
-      (_) => false,
-    );
-
 typedef PfpBloc = LoaderBloc<void, Image?>;
 typedef PfpConsumer = LoaderConsumer<void, Image?>;
 typedef LogoutBloc = LoaderBloc<void, void>;
@@ -189,7 +177,7 @@ typedef ExploreRequestConsumer
     = LoaderConsumer<void, HttpResponse<List<UserExplore>>?>;
 
 extension on BuildContext {
-  ExploreRequestBloc get exploreBloc => loader();
+  ExploreRequestBloc get exploreRequestBloc => loader();
   LogoutBloc get logoutBloc => loader();
   ExploreBloc get homeBloc => BlocProvider.of(this);
   NavBarBloc get navbarBloc => BlocProvider.of(this);
@@ -197,6 +185,17 @@ extension on BuildContext {
 
 class HomeScreen extends StatelessWidget {
   final ApiInfo apiInfo;
+
+  void goToLogin(
+    BuildContext context,
+  ) =>
+      Navigator.pushAndRemoveUntil(
+        context,
+        CupertinoPageRoute<void>(
+          builder: (context) => LoginScreen(apiInfo: apiInfo),
+        ),
+        (_) => false,
+      );
 
   const HomeScreen({
     super.key,
@@ -245,6 +244,9 @@ class HomeScreen extends StatelessWidget {
                 loadOnStart: (req: null),
               ),
             ),
+            BlocProvider(
+              create: (_) => NavBarBloc(),
+            ),
           ],
           child: PfpConsumer(
             listener: (context, pfpState) {
@@ -269,7 +271,7 @@ class HomeScreen extends StatelessWidget {
                       listener: (context, logoutState) {
                         switch (logoutState) {
                           case LoaderLoadedState():
-                            goToLogin(context, apiInfo);
+                            goToLogin(context);
                           default:
                         }
                       },
@@ -278,6 +280,9 @@ class HomeScreen extends StatelessWidget {
                         _ => ExploreRequestConsumer(
                             listener: (context, exploreRequestState) {
                               switch (exploreRequestState) {
+                                case LoaderLoadingState():
+                                  context.navbarBloc
+                                      .add(const NavBarSetLoadingEvent(true));
                                 case LoaderLoadedState(data: final response):
                                   if (response != null) {
                                     switch (response) {
@@ -286,12 +291,19 @@ class HomeScreen extends StatelessWidget {
                                         ):
                                         context.homeBloc
                                             .add(ExploreLoadedEvent(users));
+                                        switch (context.navbarBloc.state) {
+                                          case NavBarLoadingState():
+                                            context.navbarBloc.add(
+                                                const NavBarSetLoadingEvent(
+                                                    false));
+                                          default:
+                                        }
                                       case HttpResponseFailure():
-                                        context.exploreBloc
+                                        context.exploreRequestBloc
                                             .add(const LoaderLoadEvent(null));
                                     }
                                   } else {
-                                    goToLogin(context, apiInfo);
+                                    goToLogin(context);
                                   }
                                 default:
                               }
@@ -301,7 +313,7 @@ class HomeScreen extends StatelessWidget {
                               listener: (context, navBarState) async {
                                 switch (navBarState) {
                                   case NavBarActiveState():
-                                    switch (exploreRequestState) {
+                                    switch (context.exploreRequestBloc.state) {
                                       case LoaderLoadingState():
                                         context.navbarBloc.add(
                                             const NavBarSetLoadingEvent(true));
