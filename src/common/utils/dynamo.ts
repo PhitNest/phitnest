@@ -76,7 +76,7 @@ export type UpdateExpression<
  */
 export type UpdateParams<
   T extends Record<string, unknown>,
-  VarNames extends `:${string}` | undefined,
+  VarNames extends `:${string}` | undefined = undefined,
 > = string extends keyof T
   ? never
   : RowKey & {
@@ -94,9 +94,9 @@ export type TransactionParams<
   UpdateTypes extends Record<string, unknown> = Record<string, unknown>,
   UpdateVarNames extends `:${string}` | undefined = undefined,
 > = {
-  updates: UpdateParams<UpdateTypes, UpdateVarNames>[];
-  puts: PutParams[];
-  deletes: RowKey[];
+  updates?: UpdateParams<UpdateTypes, UpdateVarNames>[];
+  puts?: PutParams[];
+  deletes?: RowKey[];
 };
 
 /**
