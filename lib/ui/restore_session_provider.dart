@@ -46,8 +46,6 @@ final class RestoreSessionProvider extends StatelessWidget {
             switch (apiInfoState) {
               case LoaderLoadedState(data: final apiInfoResponse):
                 switch (apiInfoResponse) {
-                  // This indicates that we failed to load API info from the
-                  // server
                   case HttpResponseFailure(failure: final failure):
                     // Show error message if we failed to load API info from
                     // server
