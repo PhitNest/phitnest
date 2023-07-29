@@ -4,6 +4,8 @@ import {
   handleRequest,
   getUserClaims,
   RequestError,
+  ResourceNotFoundError,
+  kUserNotFound,
 } from "common/utils";
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import {
@@ -13,6 +15,26 @@ import {
   kOutgoingFriendRequestParser,
   kUserWithPartialInviteParser,
 } from "common/entities";
+
+const kFriendshipsNotFound = new RequestError(
+  "FriendshipsNotFound",
+  "Friendships not found."
+);
+
+const kIncomingFriendRequestsNotFound = new RequestError(
+  "IncomingFriendRequestsNotFound",
+  "Incoming friend requests not found."
+);
+
+const kOutgoingFriendRequestsNotFound = new RequestError(
+  "OutgoingFriendRequestsNotFound",
+  "Outgoing friend requests not found."
+);
+
+const kInvitesNotFound = new RequestError(
+  "InvitesNotFound",
+  "Invites not found."
+);
 
 export async function invoke(
   event: APIGatewayEvent
@@ -28,13 +50,13 @@ export async function invoke(
           parseShape: kUserWithPartialInviteParser,
         }),
         client.parsedQuery({
-          pk: `INCOMING_REQUEST#${userClaims.sub}`,
-          sk: { q: "SENDER#", op: "BEGINS_WITH" },
+          pk: `USER#${userClaims.sub}`,
+          sk: { q: "INCOMING_REQUEST#", op: "BEGINS_WITH" },
           parseShape: kIncomingFriendRequestParser,
         }),
         client.parsedQuery({
           pk: `USER#${userClaims.sub}`,
-          sk: { q: "FRIEND_REQUEST#", op: "BEGINS_WITH" },
+          sk: { q: "OUTGOING_REQUEST#", op: "BEGINS_WITH" },
           parseShape: kOutgoingFriendRequestParser,
         }),
         client.parsedQuery({
@@ -48,16 +70,16 @@ export async function invoke(
           parseShape: kInviteWithoutSenderParser,
         }),
       ]);
-    if (user instanceof RequestError) {
-      return user;
-    } else if (incomingFriendRequests instanceof RequestError) {
-      return incomingFriendRequests;
-    } else if (friendRequests instanceof RequestError) {
-      return friendRequests;
-    } else if (friends instanceof RequestError) {
-      return friends;
-    } else if (invites instanceof RequestError) {
-      return invites;
+    if (user instanceof ResourceNotFoundError) {
+      return kUserNotFound;
+    } else if (incomingFriendRequests instanceof ResourceNotFoundError) {
+      return kIncomingFriendRequestsNotFound;
+    } else if (friendRequests instanceof ResourceNotFoundError) {
+      return kOutgoingFriendRequestsNotFound;
+    } else if (friends instanceof ResourceNotFoundError) {
+      return kFriendshipsNotFound;
+    } else if (invites instanceof ResourceNotFoundError) {
+      return kInvitesNotFound;
     } else {
       await Promise.all(
         [

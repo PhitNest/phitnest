@@ -212,13 +212,13 @@ export class DynamoClientMock extends DynamoClient {
     UpdateTypes extends Record<string, unknown> = Record<string, unknown>,
     UpdateVarNames extends `:${string}` | undefined = undefined,
   >(params: TransactionParams<UpdateTypes, UpdateVarNames>): Promise<void> {
-    for (const update of params.updates) {
+    for (const update of params.updates ?? []) {
       await this.update(update);
     }
-    for (const put of params.puts) {
+    for (const put of params.puts ?? []) {
       await this.put(put);
     }
-    for (const deleter of params.deletes) {
+    for (const deleter of params.deletes ?? []) {
       await this.delete(deleter);
     }
   }

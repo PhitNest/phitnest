@@ -14,7 +14,12 @@ import {
   userInvitedByAdminWithoutIdentityToDynamo,
   userInvitedByUserWithoutIdentityToDynamo,
 } from "common/entities";
-import { ResourceNotFoundError, TransactionParams, dynamo } from "common/utils";
+import {
+  PutParams,
+  ResourceNotFoundError,
+  UpdateParams,
+  dynamo,
+} from "common/utils";
 import { PreSignUpTriggerEvent } from "aws-lambda";
 
 const kInitialNumInvites = 5;
@@ -53,10 +58,9 @@ export async function invoke(event: PreSignUpTriggerEvent) {
   const invitedByUser = invite.type === "user";
 
   // Transaction for writing to database (we are writing multiple objects)
-  const transaction: TransactionParams<UserWithoutInvite> = {
-    updates: [],
-    puts: [],
-    deletes: [],
+  const transaction = {
+    updates: [] as UpdateParams<UserWithoutInvite>[],
+    puts: [] as PutParams[],
   };
 
   const newUserWithoutInvite: Omit<UserWithoutInvite, "identityId"> = {
@@ -120,6 +124,6 @@ export async function invoke(event: PreSignUpTriggerEvent) {
         ),
   });
 
-  await client.writeTransaction(transaction);
+  await client.writeTransaction<UserWithoutInvite>(transaction);
   return event;
 }

@@ -7,18 +7,22 @@ import {
   EnvironmentVars,
   RequestError,
   kUserNotFound,
+  UpdateParams,
 } from "common/utils";
 import {
   UserInvitedByAdminWithoutIdentity,
   UserInvitedByUserWithoutIdentity,
+  friendshipWithoutMessageToDynamo,
   kUserInvitedByAdminParser,
   kUserInvitedByUserParser,
   kUserWithPartialInviteParser,
   parseDynamo,
+  userExploreToDynamo,
 } from "common/entities";
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
+import * as uuid from "uuid";
 
 const kUnauthorized = new RequestError(
   "Unauthorized",
@@ -92,17 +96,58 @@ export async function invoke(
           ":identity": { S: identity.identityId },
         };
 
-        await client.update<
+        const userWithIdentity = { ...user, identityId: identity.identityId };
+
+        const updateIdentity: UpdateParams<
           typeof user & { identityId: string },
           keyof typeof kUpdateExpressionVarMap
-        >({
+        > = {
           pk: "USERS",
           sk: `USER#${user.id}`,
           expression: "SET identityId = :identity",
           varMap: kUpdateExpressionVarMap,
-        });
-
-        return new Success({ ...user, identityId: identity.identityId });
+        };
+        if (user.invite.type === "user") {
+          const friendshipId = uuid.v4();
+          const friendshipCreatedAt = new Date();
+          await client.writeTransaction<
+            typeof user & { identityId: string },
+            keyof typeof kUpdateExpressionVarMap
+          >({
+            updates: [updateIdentity],
+            puts: [
+              {
+                pk: `USER#${user.invite.inviter.id}`,
+                sk: `FRIENDSHIP#${user.id}`,
+                data: friendshipWithoutMessageToDynamo({
+                  id: friendshipId,
+                  createdAt: friendshipCreatedAt,
+                  otherUser: userWithIdentity,
+                }),
+              },
+              {
+                pk: `USER#${user.id}`,
+                sk: `FRIENDSHIP#${user.invite.inviter.id}`,
+                data: friendshipWithoutMessageToDynamo({
+                  id: friendshipId,
+                  createdAt: friendshipCreatedAt,
+                  otherUser: user.invite.inviter,
+                }),
+              },
+              {
+                pk: `GYM#${user.invite.gym.id}`,
+                sk: `USER#${user.id}`,
+                data: userExploreToDynamo(userWithIdentity),
+              },
+            ],
+          });
+        } else {
+          await client.update<
+            typeof user & { identityId: string },
+            keyof typeof kUpdateExpressionVarMap
+          >(updateIdentity);
+        }
+        return new Success(userWithIdentity);
       } else if (!userRaw.identityId.S) {
         return kFailedToWriteIdentity;
       } else {
