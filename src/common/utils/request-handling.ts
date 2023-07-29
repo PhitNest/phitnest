@@ -20,13 +20,12 @@ export class Success {
 /**
  * Return this to reply with a status code 500.
  */
-export class RequestError {
+export class RequestError extends Error {
   type: string;
-  message: string;
 
   constructor(type: string, message: string) {
+    super(message);
     this.type = type;
-    this.message = message;
   }
 }
 
@@ -74,7 +73,7 @@ export async function handleRequest(
         statusCode: 500,
         headers: kDefaultHeaders,
         body: JSON.stringify({
-          type: "INTERNAL_SERVER_ERROR",
+          type: "InternalServerError",
           message:
             "The API did not return a Success or RequestError. Please look into the controller function you passed to handleRequest().",
         }),
@@ -124,7 +123,7 @@ interface ValidateRequestProps<
   ) => Promise<Success | RequestError>;
 }
 
-export const kZodErrorType = "VALIDATION_ERROR";
+export const kZodErrorType = "ValidationError";
 
 /**
  * Use this to validate the request body with Zod and also handle the request.

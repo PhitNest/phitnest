@@ -1,10 +1,4 @@
-import {
-  dynamo,
-  validateRequest,
-  Success,
-  getUserClaims,
-  CognitoClaimsError,
-} from "common/utils";
+import { dynamo, validateRequest, Success, getUserClaims } from "common/utils";
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { z } from "zod";
 
@@ -20,26 +14,22 @@ export async function invoke(
     validator: validator,
     controller: async (data) => {
       const userClaims = getUserClaims(event);
-      if (userClaims instanceof CognitoClaimsError) {
-        return userClaims;
-      } else {
-        const client = dynamo().connect();
-        await client.writeTransaction({
-          deletes: [
-            {
-              pk: `USER#${data.friendId}`,
-              sk: `FRIEND_REQUEST#${userClaims.sub}`,
-            },
-            {
-              pk: `INCOMING_REQUEST#${userClaims.sub}`,
-              sk: `SENDER#${data.friendId}`,
-            },
-          ],
-          puts: [],
-          updates: [],
-        });
-        return new Success();
-      }
+      const client = dynamo().connect();
+      await client.writeTransaction({
+        deletes: [
+          {
+            pk: `USER#${data.friendId}`,
+            sk: `OUTGOING_REQUEST#${userClaims.sub}`,
+          },
+          {
+            pk: `USER#${userClaims.sub}`,
+            sk: `INCOMING_REQUEST#${data.friendId}`,
+          },
+        ],
+        puts: [],
+        updates: [],
+      });
+      return new Success();
     },
   });
 }

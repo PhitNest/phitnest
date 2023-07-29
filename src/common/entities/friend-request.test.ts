@@ -16,6 +16,7 @@ const testIncomingFriendRequest: IncomingFriendRequest = {
     createdAt: new Date(Date.UTC(2020, 1, 1)),
     firstName: "John",
     lastName: "Doe",
+    identityId: "1",
   },
 };
 
@@ -27,6 +28,7 @@ const testOutgoingFriendRequest: OutgoingFriendRequest = {
     createdAt: new Date(Date.UTC(2020, 1, 1)),
     firstName: "Jane",
     lastName: "Doe",
+    identityId: "2",
   },
 };
 
@@ -40,6 +42,7 @@ const serializedIncomingFriendRequest: SerializedDynamo<IncomingFriendRequest> =
         createdAt: { N: Date.UTC(2020, 1, 1).toString() },
         firstName: { S: "John" },
         lastName: { S: "Doe" },
+        identityId: { S: "1" },
       },
     },
   };
@@ -54,6 +57,7 @@ const serializedOutgoingFriendRequest: SerializedDynamo<OutgoingFriendRequest> =
         createdAt: { N: Date.UTC(2020, 1, 1).toString() },
         firstName: { S: "Jane" },
         lastName: { S: "Doe" },
+        identityId: { S: "2" },
       },
     },
   };

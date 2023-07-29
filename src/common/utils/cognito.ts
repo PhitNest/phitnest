@@ -13,44 +13,48 @@ export type UserCognitoClaims = AdminCognitoClaims & {
 
 export class CognitoClaimsError extends RequestError {
   constructor(message: string) {
-    super("COGNITO_CLAIMS_ERROR", message);
+    super("CognitoClaimsError", message);
   }
 }
 
-export function getAdminClaims(
-  event: APIGatewayEvent
-): AdminCognitoClaims | CognitoClaimsError {
+export const kNoEmailClaim = new CognitoClaimsError("No email claim");
+export const kNoSubClaim = new CognitoClaimsError("No sub claim");
+export const kNoAuthorizer = new CognitoClaimsError("No authorizer");
+
+function checkClaims<Claims extends object>(
+  event: APIGatewayEvent,
+  extractClaims: (claims: Claims) => Claims
+): Claims {
   if (
     event.requestContext.authorizer &&
     event.requestContext.authorizer.claims
   ) {
-    const claims: AdminCognitoClaims = event.requestContext.authorizer.claims;
-    if (!claims.email) {
-      return new CognitoClaimsError("No email claim");
-    }
-    if (!claims.sub) {
-      return new CognitoClaimsError("No sub claim");
-    }
-    return claims;
+    return extractClaims(event.requestContext.authorizer.claims);
+  } else {
+    throw kNoAuthorizer;
   }
-  return new CognitoClaimsError("No authorizer");
 }
 
-export function getUserClaims(
-  event: APIGatewayEvent
-): UserCognitoClaims | CognitoClaimsError {
-  if (
-    event.requestContext.authorizer &&
-    event.requestContext.authorizer.claims
-  ) {
-    const claims: UserCognitoClaims = event.requestContext.authorizer.claims;
+export function getAdminClaims(event: APIGatewayEvent): AdminCognitoClaims {
+  return checkClaims(event, (claims) => {
     if (!claims.email) {
-      return new CognitoClaimsError("No email claim");
+      throw kNoEmailClaim;
     }
     if (!claims.sub) {
-      return new CognitoClaimsError("No sub claim");
+      throw kNoSubClaim;
     }
     return claims;
-  }
-  return new CognitoClaimsError("No authorizer");
+  });
+}
+
+export function getUserClaims(event: APIGatewayEvent): UserCognitoClaims {
+  return checkClaims(event, (claims) => {
+    if (!claims.email) {
+      throw kNoEmailClaim;
+    }
+    if (!claims.sub) {
+      throw kNoSubClaim;
+    }
+    return claims;
+  });
 }

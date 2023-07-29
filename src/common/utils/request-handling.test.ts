@@ -21,11 +21,6 @@ const kErrorResponse = new RequestError(
   "This is an error used for a test case"
 );
 
-async function errorController() {
-  return kErrorResponse;
-  return new Success();
-}
-
 describe("validateRequest", () => {
   it("should return a 500 if the request body is invalid", async () => {
     const body = {
@@ -65,7 +60,28 @@ describe("validateRequest", () => {
         number: 1,
       },
       validator: basicValidator,
-      controller: errorController,
+      controller: async () => {
+        return kErrorResponse;
+      },
+    });
+    expect(res.statusCode).toEqual(500);
+    expect(JSON.parse(res.body)).toEqual({
+      message: kErrorResponse.message,
+      type: kErrorResponse.type,
+    });
+    expect(res.headers).toEqual(kDefaultHeaders);
+  });
+
+  it("should pass through errors when thrown", async () => {
+    const res = await validateRequest({
+      data: {
+        name: "testName",
+        number: 1,
+      },
+      validator: basicValidator,
+      controller: () => {
+        throw kErrorResponse;
+      },
     });
     expect(res.statusCode).toEqual(500);
     expect(JSON.parse(res.body)).toEqual({

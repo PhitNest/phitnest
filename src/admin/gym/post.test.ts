@@ -1,12 +1,10 @@
 import { Address, kGymParser } from "common/entities";
-import { invoke } from "./post";
+import { CoordinatesNotFound, invoke } from "./post";
 import { mockPost } from "common/test-helpers";
 import {
-  OpenStreetMapError,
   RequestError,
   dynamo,
   kDefaultHeaders,
-  kOpenStreetMapErrorType,
   kZodErrorType,
 } from "common/utils";
 import * as uuid from "uuid";
@@ -34,7 +32,7 @@ jest.mock("common/utils", () => {
     ...originalModule,
     getLocation: jest.fn(async (address: Address) => {
       if (address.state === "ZA") {
-        return new OpenStreetMapError();
+        return new CoordinatesNotFound();
       }
       return {
         longitude: -75.996,
@@ -67,7 +65,9 @@ describe("POST /gym", () => {
         },
       })
     );
-    expect(JSON.parse(result.body).type).toBe(kOpenStreetMapErrorType);
+    expect(JSON.parse(result.body).type).toEqual(
+      new CoordinatesNotFound().type
+    );
   });
 
   it("should create a gym when used with valid input", async () => {
@@ -93,8 +93,8 @@ describe("POST /gym", () => {
     );
     const body = JSON.parse(result.body);
     expect(body.location).toBeDefined();
-    expect(body.location.longitude).toEqual(-75.996);
-    expect(body.location.latitude).toEqual(36.85);
+    expect(body.location.longitude).toBeCloseTo(-75.996);
+    expect(body.location.latitude).toBeCloseTo(36.85);
     expect(uuidSpy).toBeCalledTimes(1);
     const uuidResult = uuidSpy.mock.results[0];
     expect(uuidResult.type).toBe("return");

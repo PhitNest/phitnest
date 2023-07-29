@@ -2,6 +2,7 @@ import { SerializedDynamo, DynamoParser } from "./dynamo";
 import {
   AccountDetails,
   CreationDetails,
+  accountDetailsToDynamo,
   creationDetailsToDynamo,
   kAccountDetailsParser,
   kCreationDetailsParser,
@@ -16,14 +17,17 @@ import {
 } from "./invite";
 import { kGymWithoutAdminParser } from "./gym";
 import { kAdminParser } from "./admin";
+import { omit } from "lodash";
 
 export type UserExplore = CreationDetails & {
   firstName: string;
   lastName: string;
+  identityId: string;
 };
 
 export const kUserExploreParser: DynamoParser<UserExplore> = {
   ...kCreationDetailsParser,
+  identityId: "S",
   firstName: "S",
   lastName: "S",
 };
@@ -81,12 +85,29 @@ export const kUserInvitedByAdminParser: DynamoParser<UserInvitedByAdmin> = {
   },
 };
 
+export type UserInvitedByUserWithoutIdentity = Omit<
+  UserInvitedByUser,
+  "identityId"
+>;
+
+export const kUserInvitedByUserWithoutIdentityParser: DynamoParser<UserInvitedByUserWithoutIdentity> =
+  omit(kUserInvitedByUserParser, "identityId");
+
+export type UserInvitedByAdminWithoutIdentity = Omit<
+  UserInvitedByAdmin,
+  "identityId"
+>;
+
+export const kUserInvitedByAdminWithoutIdentityParser: DynamoParser<UserInvitedByAdminWithoutIdentity> =
+  omit(kUserInvitedByAdminParser, "identityId");
+
 export function userExploreToDynamo(
   userExplore: UserExplore
 ): SerializedDynamo<UserExplore> {
   return {
     firstName: { S: userExplore.firstName },
     lastName: { S: userExplore.lastName },
+    identityId: { S: userExplore.identityId },
     ...creationDetailsToDynamo(userExplore),
   };
 }
@@ -125,5 +146,29 @@ export function userInvitedByAdminToDynamo(
   return {
     invite: { M: adminInviteToDynamo(user.invite) },
     ...userWithoutInviteToDynamo(user),
+  };
+}
+
+export function userInvitedByUserWithoutIdentityToDynamo(
+  user: UserInvitedByUserWithoutIdentity
+): SerializedDynamo<UserInvitedByUserWithoutIdentity> {
+  return {
+    ...accountDetailsToDynamo(user),
+    invite: { M: userInviteToDynamo(user.invite) },
+    firstName: { S: user.firstName },
+    lastName: { S: user.lastName },
+    numInvites: { N: user.numInvites.toString() },
+  };
+}
+
+export function userInvitedByAdminWithoutIdentityToDynamo(
+  user: UserInvitedByAdminWithoutIdentity
+): SerializedDynamo<UserInvitedByAdminWithoutIdentity> {
+  return {
+    ...accountDetailsToDynamo(user),
+    invite: { M: adminInviteToDynamo(user.invite) },
+    firstName: { S: user.firstName },
+    lastName: { S: user.lastName },
+    numInvites: { N: user.numInvites.toString() },
   };
 }

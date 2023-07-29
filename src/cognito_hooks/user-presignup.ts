@@ -1,11 +1,6 @@
 import {
   UserWithoutInvite,
   parseDynamo,
-  userExploreToDynamo,
-  userInvitedByAdminToDynamo,
-  userInvitedByUserToDynamo,
-  friendshipWithoutMessageToDynamo,
-  FriendshipWithoutMessage,
   InviteWithoutSender,
   kInviteWithoutSenderParser,
   UserInvite,
@@ -14,15 +9,13 @@ import {
   kAdminInviteParser,
   UserInvitedByUser,
   UserInvitedByAdmin,
+  UserInvitedByUserWithoutIdentity,
+  UserInvitedByAdminWithoutIdentity,
+  userInvitedByAdminWithoutIdentityToDynamo,
+  userInvitedByUserWithoutIdentityToDynamo,
 } from "common/entities";
-import {
-  ResourceNotFoundError,
-  TransactionParams,
-  dynamo,
-  DynamoParseError,
-} from "common/utils";
+import { ResourceNotFoundError, TransactionParams, dynamo } from "common/utils";
 import { PreSignUpTriggerEvent } from "aws-lambda";
-import * as uuid from "uuid";
 
 const kInitialNumInvites = 5;
 
@@ -56,117 +49,77 @@ export async function invoke(event: PreSignUpTriggerEvent) {
     inviteQuery,
     kInviteWithoutSenderParser
   );
-  if (invite instanceof DynamoParseError) {
-    throw new Error(invite.message);
-  } else {
-    const invitedByUser = invite.type === "user";
 
-    // Transaction for writing to database (we are writing multiple objects)
-    const transaction: TransactionParams<UserWithoutInvite> = {
-      updates: [],
-      puts: [],
-      deletes: [],
-    };
+  const invitedByUser = invite.type === "user";
 
-    const newUserExplore = {
-      id: event.userName,
-      email: event.request.userAttributes.email,
-      createdAt: new Date(),
-      firstName: firstName,
-      lastName: lastName,
-    };
+  // Transaction for writing to database (we are writing multiple objects)
+  const transaction: TransactionParams<UserWithoutInvite> = {
+    updates: [],
+    puts: [],
+    deletes: [],
+  };
 
-    let newUser: UserInvitedByUser | UserInvitedByAdmin;
-    // Parse as admin or user depending on the type
-    if (invitedByUser) {
-      const parsedInviteFromUser = parseDynamo<UserInvite>(
-        inviteQuery,
-        kUserInviteParser
-      );
-      if (parsedInviteFromUser instanceof DynamoParseError) {
-        throw new Error(parsedInviteFromUser.message);
-      }
-      const inviter = parsedInviteFromUser.inviter;
+  const newUserWithoutInvite: Omit<UserWithoutInvite, "identityId"> = {
+    id: event.userName,
+    email: event.request.userAttributes.email,
+    createdAt: new Date(),
+    firstName: firstName,
+    lastName: lastName,
+    numInvites: kInitialNumInvites,
+  };
 
-      // Check that inviter has invite remaining
-      if (inviter.numInvites <= 0) {
-        throw new Error(`${inviter.email} has no invites left`);
-      }
+  let newUser:
+    | UserInvitedByUserWithoutIdentity
+    | UserInvitedByAdminWithoutIdentity;
+  // Parse as admin or user depending on the type
+  if (invitedByUser) {
+    const parsedInviteFromUser = parseDynamo<UserInvite>(
+      inviteQuery,
+      kUserInviteParser
+    );
+    const inviter = parsedInviteFromUser.inviter;
 
-      // Decrement the inviters remaining invites
-      transaction.updates.push({
-        pk: "USERS",
-        sk: `USER#${inviter.id}`,
-        expression: "SET numInvites = numInvites - 1",
-      });
-
-      const friendshipId = uuid.v4();
-      const friendshipCreationDate = new Date();
-
-      const newUserFriendship: FriendshipWithoutMessage = {
-        id: friendshipId,
-        createdAt: friendshipCreationDate,
-        otherUser: inviter,
-      };
-
-      const inviterFriendship: FriendshipWithoutMessage = {
-        id: friendshipId,
-        createdAt: friendshipCreationDate,
-        otherUser: newUserExplore,
-      };
-
-      transaction.puts.push({
-        pk: `USER#${event.userName}`,
-        sk: `FRIENDSHIP${inviter.id}`,
-        data: friendshipWithoutMessageToDynamo(newUserFriendship),
-      });
-      transaction.puts.push({
-        pk: `USER#${inviter.id}`,
-        sk: `FRIENDSHIP${event.userName}`,
-        data: friendshipWithoutMessageToDynamo(inviterFriendship),
-      });
-
-      // Create our newly registered user
-      newUser = {
-        ...newUserExplore,
-        numInvites: kInitialNumInvites,
-        invite: parsedInviteFromUser,
-      };
-    } else {
-      // If the inviter is an admin, no action needed after parsing
-      const parsedInviteFromAdmin = parseDynamo<AdminInvite>(
-        inviteQuery,
-        kAdminInviteParser
-      );
-      if (parsedInviteFromAdmin instanceof DynamoParseError) {
-        throw new Error(parsedInviteFromAdmin.message);
-      }
-      // Create our newly registered user
-      newUser = {
-        ...newUserExplore,
-        numInvites: kInitialNumInvites,
-        invite: parsedInviteFromAdmin,
-      };
+    // Check that inviter has invite remaining
+    if (inviter.numInvites <= 0) {
+      throw new Error(`${inviter.email} has no invites left`);
     }
 
-    // Add the users details to the DB
-    transaction.puts.push(
-      {
-        pk: "USERS",
-        sk: `USER#${event.userName}`,
-        data: invitedByUser
-          ? userInvitedByUserToDynamo(newUser as UserInvitedByUser)
-          : userInvitedByAdminToDynamo(newUser as UserInvitedByAdmin),
-      },
-      {
-        // Add the required user details to the gym PK so users can be explored/queried by gym
-        pk: `GYM#${newUser.invite.gym.id}`,
-        sk: `USER#${event.userName}`,
-        data: userExploreToDynamo(newUser),
-      }
-    );
+    // Decrement the inviters remaining invites
+    transaction.updates.push({
+      pk: "USERS",
+      sk: `USER#${inviter.id}`,
+      expression: "SET numInvites = numInvites - 1",
+    });
 
-    await client.writeTransaction(transaction);
-    return event;
+    // Create our newly registered user
+    newUser = {
+      ...newUserWithoutInvite,
+      invite: parsedInviteFromUser,
+    };
+  } else {
+    // If the inviter is an admin, no action needed after parsing
+    const parsedInviteFromAdmin = parseDynamo<AdminInvite>(
+      inviteQuery,
+      kAdminInviteParser
+    );
+    // Create our newly registered user
+    newUser = {
+      ...newUserWithoutInvite,
+      invite: parsedInviteFromAdmin,
+    };
   }
+
+  // Add the users details to the DB
+  transaction.puts.push({
+    pk: "USERS",
+    sk: `USER#${event.userName}`,
+    data: invitedByUser
+      ? userInvitedByUserWithoutIdentityToDynamo(newUser as UserInvitedByUser)
+      : userInvitedByAdminWithoutIdentityToDynamo(
+          newUser as UserInvitedByAdmin
+        ),
+  });
+
+  await client.writeTransaction(transaction);
+  return event;
 }
