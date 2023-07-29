@@ -64,16 +64,24 @@ final class PhitNestApp extends StatelessWidget {
               ),
             ),
           ],
-          child: MaterialApp(
-            title: title,
-            theme: theme,
-            debugShowCheckedModeBanner: false,
-            scaffoldMessengerKey: StyledBanner.scaffoldMessengerKey,
-            home: RestoreSessionProvider(
-              useAdminAuth: useAdminAuth,
-              loader: loader,
-              onSessionRestoreFailed: sessionRestoreFailedBuilder,
-              onSessionRestored: sessionRestoredBuilder,
+          child: GestureDetector(
+            onTap: () {
+              final currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            child: MaterialApp(
+              title: title,
+              theme: theme,
+              debugShowCheckedModeBanner: false,
+              scaffoldMessengerKey: StyledBanner.scaffoldMessengerKey,
+              home: RestoreSessionProvider(
+                useAdminAuth: useAdminAuth,
+                loader: loader,
+                onSessionRestoreFailed: sessionRestoreFailedBuilder,
+                onSessionRestored: sessionRestoredBuilder,
+              ),
             ),
           ),
         );
