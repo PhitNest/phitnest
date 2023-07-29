@@ -86,36 +86,31 @@ export type DynamoParser<T> = {
 export function parseDynamo<T>(
   dynamo: Record<string, AttributeValue>,
   parser: DynamoParser<T>
-): T | DynamoParseError {
+): T {
   // Here we lose some type information on the parsing shape, but it's not a big deal. We can still
   // cast the results to the correct type. We can do some runtime validation to throw proper errors
   // if the data is not in the correct shape.
-  return parseMap(dynamo, parser) as T | DynamoParseError;
+  return parseMap(dynamo, parser) as T;
 }
 
 function parseMap(
   dynamo: Record<string, AttributeValue>,
   parser: Record<string, unknown>
-): Record<string, unknown> | DynamoParseError {
+): Record<string, unknown> {
   const results: Record<string, unknown> = {};
   if (!parser) {
-    return new DynamoParseError(
+    throw new DynamoParseError(
       `Dynamo parser not found for ${JSON.stringify(dynamo)}`
     );
   }
   for (const [key, type] of Object.entries(parser)) {
     const value = dynamo[key];
     if (!value) {
-      return new DynamoParseError(
+      throw new DynamoParseError(
         `Dynamo key ${key} not found in ${JSON.stringify(dynamo)}`
       );
     }
-    const parseResult = parseAttribute(value, type, key);
-    if (parseResult instanceof DynamoParseError) {
-      return parseResult;
-    } else {
-      results[key] = parseResult;
-    }
+    results[key] = parseAttribute(value, type, key);
   }
   return results;
 }
@@ -124,7 +119,7 @@ function checkType(
   type: unknown,
   check: Label,
   key: string
-): "CONVERT_TO_DATE" | "SUCCESS" | DynamoParseError {
+): "CONVERT_TO_DATE" | "SUCCESS" {
   if ((check === "N" && type === "D") || (check === "NS" && type === "DS")) {
     return "CONVERT_TO_DATE";
   }
@@ -133,7 +128,7 @@ function checkType(
     ((check === "L" && !(type instanceof Array)) ||
       (check === "M" && typeof type !== "object"))
   ) {
-    return new DynamoParseError(
+    throw new DynamoParseError(
       `Dynamo key: ${key} must be type ${check} but was type ${type}`
     );
   }
@@ -193,10 +188,10 @@ function parseAttribute(
       return parseMap(value, type as Record<string, unknown>);
     },
     NULL: () => {
-      return new DynamoParseError(`Dynamo ${key} must not be null`);
+      throw new DynamoParseError(`Dynamo ${key} must not be null`);
     },
     _: () => {
-      return new DynamoParseError(`Dynamo ${key} must be a primitive`);
+      throw new DynamoParseError(`Dynamo ${key} must be a primitive`);
     },
   });
 }

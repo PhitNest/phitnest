@@ -1,6 +1,17 @@
 import { APIGatewayProxyResult } from "aws-lambda";
 import { kGymWithoutAdminParser } from "common/entities";
-import { RequestError, Success, dynamo, handleRequest } from "common/utils";
+import {
+  RequestError,
+  ResourceNotFoundError,
+  Success,
+  dynamo,
+  handleRequest,
+} from "common/utils";
+
+const kCouldNotFindGyms = new RequestError(
+  "GymsNotFound",
+  "Could not find gyms"
+);
 
 export async function invoke(): Promise<APIGatewayProxyResult> {
   return await handleRequest(async () => {
@@ -10,8 +21,8 @@ export async function invoke(): Promise<APIGatewayProxyResult> {
       sk: { q: "GYM#", op: "BEGINS_WITH" },
       parseShape: kGymWithoutAdminParser,
     });
-    if (gyms instanceof RequestError) {
-      return gyms;
+    if (gyms instanceof ResourceNotFoundError) {
+      return kCouldNotFindGyms;
     } else {
       return new Success(gyms);
     }

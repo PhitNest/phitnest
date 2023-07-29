@@ -6,7 +6,7 @@ import {
   MultiRowKey,
   ParseParams,
   PutParams,
-  RequestError,
+  ResourceNotFoundError,
   RowKey,
   SingleOrPlural,
   SkOperator,
@@ -28,11 +28,13 @@ export class DynamoClientMock extends DynamoClient {
   async query<Op extends SkOperator>(
     params: MultiRowKey<Op>,
     projection?: string
-  ): Promise<SingleOrPlural<Record<string, AttributeValue>, Op>> {
+  ): Promise<
+    SingleOrPlural<Record<string, AttributeValue>, Op> | ResourceNotFoundError
+  > {
     const partition = this.table[params.pk];
     if (!partition) {
       if (params.sk) {
-        throw new RequestError("ResourceNotFound", `No such pk: ${params.pk}`);
+        return new ResourceNotFoundError(params);
       }
     }
     if (params.sk) {
@@ -69,7 +71,7 @@ export class DynamoClientMock extends DynamoClient {
         )
       ) as SingleOrPlural<Record<string, AttributeValue>, Op>;
     } else {
-      throw new RequestError("ResourceNotFound", `No such sk: ${params.sk}`);
+      return new ResourceNotFoundError(params);
     }
   }
 
@@ -85,11 +87,14 @@ export class DynamoClientMock extends DynamoClient {
 
   async parsedQuery<T, Op extends SkOperator>(
     params: ParseParams<T> & MultiRowKey<Op>
-  ): Promise<SingleOrPlural<T, Op>> {
+  ): Promise<SingleOrPlural<T, Op> | ResourceNotFoundError> {
     const res = await this.query(
       params,
       Object.keys(params.parseShape).join(",")
     );
+    if (res instanceof ResourceNotFoundError) {
+      return res;
+    }
     if (!params.sk || params.sk.op === "EQ") {
       return parseDynamo(
         res as Record<string, AttributeValue>,

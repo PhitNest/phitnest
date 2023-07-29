@@ -1,11 +1,11 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { z } from "zod";
 import {
-  CognitoClaimsError,
-  RequestError,
+  ResourceNotFoundError,
   Success,
   dynamo,
   getUserClaims,
+  kUserNotFound,
   validateRequest,
 } from "common/utils";
 import {
@@ -25,31 +25,27 @@ export async function invoke(
     validator: validator,
     controller: async (data) => {
       const userClaims = getUserClaims(event);
-      if (userClaims instanceof CognitoClaimsError) {
-        return userClaims;
+      const client = dynamo().connect();
+      const user = await client.parsedQuery({
+        pk: "USERS",
+        sk: { q: `USER#${userClaims.sub}`, op: "EQ" },
+        parseShape: kUserWithPartialInviteParser,
+      });
+      if (user instanceof ResourceNotFoundError) {
+        return kUserNotFound;
       } else {
-        const client = dynamo().connect();
-        const user = await client.parsedQuery({
-          pk: "USERS",
-          sk: { q: `USER#${userClaims.sub}`, op: "EQ" },
-          parseShape: kUserWithPartialInviteParser,
+        await client.put({
+          pk: `INVITE#${userClaims.email}`,
+          sk: `RECEIVER#${data.receiverEmail}`,
+          data: userInviteToDynamo({
+            type: "user",
+            receiverEmail: data.receiverEmail,
+            inviter: user,
+            createdAt: new Date(),
+            gym: user.invite.gym,
+          }),
         });
-        if (user instanceof RequestError) {
-          return user;
-        } else {
-          await client.put({
-            pk: `INVITE#${userClaims.email}`,
-            sk: `RECEIVER#${data.receiverEmail}`,
-            data: userInviteToDynamo({
-              type: "user",
-              receiverEmail: data.receiverEmail,
-              inviter: user,
-              createdAt: new Date(),
-              gym: user.invite.gym,
-            }),
-          });
-          return new Success();
-        }
+        return new Success();
       }
     },
   });

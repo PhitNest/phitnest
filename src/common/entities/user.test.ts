@@ -1,34 +1,45 @@
+import { omit } from "lodash";
 import { SerializedDynamo, parseDynamo } from "./dynamo";
 import { InviteWithoutSender } from "./invite";
 import {
   UserInvitedByAdmin,
+  UserInvitedByAdminWithoutIdentity,
   UserInvitedByUser,
+  UserInvitedByUserWithoutIdentity,
   UserWithoutInvite,
   kUserInvitedByAdminParser,
+  kUserInvitedByAdminWithoutIdentityParser,
   kUserInvitedByUserParser,
+  kUserInvitedByUserWithoutIdentityParser,
+  kUserWithoutInviteParser,
   userInvitedByAdminToDynamo,
+  userInvitedByAdminWithoutIdentityToDynamo,
   userInvitedByUserToDynamo,
+  userInvitedByUserWithoutIdentityToDynamo,
+  userWithoutInviteToDynamo,
 } from "./user";
 
-const testUserWithoutInvite: UserWithoutInvite = {
+const kTestUserWithoutInvite: UserWithoutInvite = {
   id: "test",
   email: "test",
   createdAt: new Date(Date.UTC(2020, 1, 1)),
   firstName: "test",
   lastName: "test",
   numInvites: 1,
+  identityId: "test",
 };
 
-const serializedUserWithoutInvite: SerializedDynamo<UserWithoutInvite> = {
+const kSerializedUserWithoutInvite: SerializedDynamo<UserWithoutInvite> = {
   id: { S: "test" },
   email: { S: "test" },
   createdAt: { N: Date.UTC(2020, 1, 1).toString() },
   firstName: { S: "test" },
   lastName: { S: "test" },
   numInvites: { N: "1" },
+  identityId: { S: "test" },
 };
 
-const testInviteWithoutSender: InviteWithoutSender = {
+const kTestInviteWithoutSender: InviteWithoutSender = {
   type: "user",
   createdAt: new Date(Date.UTC(2020, 1, 1)),
   receiverEmail: "something",
@@ -49,7 +60,7 @@ const testInviteWithoutSender: InviteWithoutSender = {
   },
 };
 
-const serializedInviteWithoutSender: SerializedDynamo<InviteWithoutSender> = {
+const kSerializedInviteWithoutSender: SerializedDynamo<InviteWithoutSender> = {
   type: { S: "user" },
   createdAt: { N: Date.UTC(2020, 1, 1).toString() },
   receiverEmail: { S: "something" },
@@ -76,30 +87,30 @@ const serializedInviteWithoutSender: SerializedDynamo<InviteWithoutSender> = {
   },
 };
 
-const testUserInvitedByUser: UserInvitedByUser = {
-  ...testUserWithoutInvite,
+const kTestUserInvitedByUser: UserInvitedByUser = {
+  ...kTestUserWithoutInvite,
   invite: {
-    ...testInviteWithoutSender,
+    ...kTestInviteWithoutSender,
     type: "user",
-    inviter: testUserWithoutInvite,
+    inviter: kTestUserWithoutInvite,
   },
 };
 
-const serializedUserInvitedByUser: SerializedDynamo<UserInvitedByUser> = {
-  ...serializedUserWithoutInvite,
+const kSerializedUserInvitedByUser: SerializedDynamo<UserInvitedByUser> = {
+  ...kSerializedUserWithoutInvite,
   invite: {
     M: {
-      ...serializedInviteWithoutSender,
+      ...kSerializedInviteWithoutSender,
       type: { S: "user" },
-      inviter: { M: serializedUserWithoutInvite },
+      inviter: { M: kSerializedUserWithoutInvite },
     },
   },
 };
 
-const testUserInvitedByAdmin: UserInvitedByAdmin = {
-  ...testUserWithoutInvite,
+const kTestUserInvitedByAdmin: UserInvitedByAdmin = {
+  ...kTestUserWithoutInvite,
   invite: {
-    ...testInviteWithoutSender,
+    ...kTestInviteWithoutSender,
     type: "admin",
     inviter: {
       email: "test",
@@ -108,11 +119,11 @@ const testUserInvitedByAdmin: UserInvitedByAdmin = {
   },
 };
 
-const serializedUserInvitedByAdmin: SerializedDynamo<UserInvitedByAdmin> = {
-  ...serializedUserWithoutInvite,
+const kSerializedUserInvitedByAdmin: SerializedDynamo<UserInvitedByAdmin> = {
+  ...kSerializedUserWithoutInvite,
   invite: {
     M: {
-      ...serializedInviteWithoutSender,
+      ...kSerializedInviteWithoutSender,
       type: { S: "admin" },
       inviter: {
         M: {
@@ -124,30 +135,94 @@ const serializedUserInvitedByAdmin: SerializedDynamo<UserInvitedByAdmin> = {
   },
 };
 
-describe("User invited by user", () => {
+const kTestUserInvitedByUserWithoutIdentity: UserInvitedByUserWithoutIdentity =
+  omit(kTestUserInvitedByUser, "identityId");
+
+const kSerializedUserInvitedByUserWithoutIdentity: SerializedDynamo<UserInvitedByUserWithoutIdentity> =
+  omit(kSerializedUserInvitedByUser, "identityId");
+
+const kTestUserInvitedByAdminWithoutIdentity: UserInvitedByAdminWithoutIdentity =
+  omit(kTestUserInvitedByAdmin, "identityId");
+
+const kSerializedUserInvitedByAdminWithoutIdentity: SerializedDynamo<UserInvitedByAdminWithoutIdentity> =
+  omit(kSerializedUserInvitedByAdmin, "identityId");
+
+describe("User without invite", () => {
   it("serializes to dynamo", () => {
-    expect(userInvitedByUserToDynamo(testUserInvitedByUser)).toEqual(
-      serializedUserInvitedByUser
+    expect(userWithoutInviteToDynamo(kTestUserWithoutInvite)).toEqual(
+      kSerializedUserWithoutInvite
     );
   });
 
   it("deserializes from dynamo", () => {
     expect(
-      parseDynamo(serializedUserInvitedByUser, kUserInvitedByUserParser)
-    ).toEqual(testUserInvitedByUser);
+      parseDynamo(kSerializedUserWithoutInvite, kUserWithoutInviteParser)
+    ).toEqual(kTestUserWithoutInvite);
+  });
+});
+
+describe("User invited by user", () => {
+  it("serializes to dynamo", () => {
+    expect(userInvitedByUserToDynamo(kTestUserInvitedByUser)).toEqual(
+      kSerializedUserInvitedByUser
+    );
+  });
+
+  it("deserializes from dynamo", () => {
+    expect(
+      parseDynamo(kSerializedUserInvitedByUser, kUserInvitedByUserParser)
+    ).toEqual(kTestUserInvitedByUser);
   });
 });
 
 describe("User invited by admin", () => {
   it("serializes to dynamo", () => {
-    expect(userInvitedByAdminToDynamo(testUserInvitedByAdmin)).toEqual(
-      serializedUserInvitedByAdmin
+    expect(userInvitedByAdminToDynamo(kTestUserInvitedByAdmin)).toEqual(
+      kSerializedUserInvitedByAdmin
     );
   });
 
   it("deserializes from dynamo", () => {
     expect(
-      parseDynamo(serializedUserInvitedByAdmin, kUserInvitedByAdminParser)
-    ).toEqual(testUserInvitedByAdmin);
+      parseDynamo(kSerializedUserInvitedByAdmin, kUserInvitedByAdminParser)
+    ).toEqual(kTestUserInvitedByAdmin);
+  });
+});
+
+describe("User invited by user without identity id", () => {
+  it("serializes to dynamo", () => {
+    expect(
+      userInvitedByUserWithoutIdentityToDynamo(
+        kTestUserInvitedByUserWithoutIdentity
+      )
+    ).toEqual(kSerializedUserInvitedByUserWithoutIdentity);
+  });
+
+  it("deserializes from dynamo", () => {
+    expect(
+      parseDynamo(
+        kSerializedUserInvitedByUserWithoutIdentity,
+        kUserInvitedByUserWithoutIdentityParser
+      )
+    ).toEqual(kTestUserInvitedByUserWithoutIdentity);
+  });
+});
+
+describe("User invited by admin without identity id", () => {
+  it("serializes to dynamo", () => {
+    expect(
+      userInvitedByAdminWithoutIdentityToDynamo(
+        kTestUserInvitedByAdminWithoutIdentity
+      )
+    ).toEqual(kSerializedUserInvitedByAdminWithoutIdentity);
+  });
+
+  it("deserializes from dynamo", () => {
+    expect(
+      parseDynamo(
+        kSerializedUserInvitedByAdminWithoutIdentity,
+        kUserInvitedByAdminWithoutIdentityParser
+      )
+    ).toEqual(kTestUserInvitedByAdminWithoutIdentity);
   });
 });

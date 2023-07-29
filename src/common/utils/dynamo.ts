@@ -112,7 +112,7 @@ export type SingleOrPlural<T, Op extends SkOperator> = Op extends Exclude<
 export class ResourceNotFoundError extends RequestError {
   constructor(key: RowKey | MultiRowKey) {
     super(
-      "RESOURCE_NOT_FOUND",
+      "ResourceNotFound",
       `Could not find item for query: ${JSON.stringify(key)}`
     );
   }
@@ -120,7 +120,7 @@ export class ResourceNotFoundError extends RequestError {
 
 export class DynamoParseError extends RequestError {
   constructor(message: string) {
-    super("DYNAMO_PARSE_ERROR", message);
+    super("DynamoParseError", message);
   }
 }
 
@@ -137,7 +137,7 @@ export abstract class DynamoClient {
 
   abstract parsedQuery<T, Op extends SkOperator>(
     params: ParseParams<T> & MultiRowKey<Op>
-  ): Promise<SingleOrPlural<T, Op> | ResourceNotFoundError | DynamoParseError>;
+  ): Promise<SingleOrPlural<T, Op> | ResourceNotFoundError>;
 
   abstract update<
     UpdateTypes extends Record<string, unknown>,
@@ -298,7 +298,7 @@ class DynamoClientImpl extends DynamoClient {
 
   async parsedQuery<T, Op extends SkOperator>(
     params: ParseParams<T> & MultiRowKey<Op>
-  ): Promise<SingleOrPlural<T, Op> | ResourceNotFoundError | DynamoParseError> {
+  ): Promise<SingleOrPlural<T, Op> | ResourceNotFoundError> {
     const queryRes = await this.query(
       params,
       Object.keys(params.parseShape).join(",")

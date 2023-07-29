@@ -1,8 +1,8 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { z } from "zod";
 import {
-  CognitoClaimsError,
   RequestError,
+  ResourceNotFoundError,
   Success,
   dynamo,
   getAdminClaims,
@@ -15,6 +15,8 @@ const validator = z.object({
   gymId: z.string(),
 });
 
+const kGymNotFound = new RequestError("GymNotFound", "Gym not found");
+
 export async function invoke(
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> {
@@ -23,34 +25,30 @@ export async function invoke(
     validator: validator,
     controller: async (data) => {
       const adminClaims = getAdminClaims(event);
-      if (adminClaims instanceof CognitoClaimsError) {
-        return adminClaims;
+      const client = dynamo().connect();
+      const gym = await client.parsedQuery({
+        pk: "GYMS",
+        sk: { q: `GYM#${data.gymId}`, op: "EQ" },
+        parseShape: kGymWithoutAdminParser,
+      });
+      if (gym instanceof ResourceNotFoundError) {
+        return kGymNotFound;
       } else {
-        const client = dynamo().connect();
-        const gym = await client.parsedQuery({
-          pk: "GYMS",
-          sk: { q: `GYM#${data.gymId}`, op: "EQ" },
-          parseShape: kGymWithoutAdminParser,
+        await client.put({
+          pk: `INVITE#${adminClaims.email}`,
+          sk: `RECEIVER#${data.receiverEmail}`,
+          data: adminInviteToDynamo({
+            type: "admin",
+            receiverEmail: data.receiverEmail,
+            inviter: {
+              email: adminClaims.email,
+              id: adminClaims.sub,
+            },
+            createdAt: new Date(),
+            gym: gym,
+          }),
         });
-        if (gym instanceof RequestError) {
-          return gym;
-        } else {
-          await client.put({
-            pk: `INVITE#${adminClaims.email}`,
-            sk: `RECEIVER#${data.receiverEmail}`,
-            data: adminInviteToDynamo({
-              type: "admin",
-              receiverEmail: data.receiverEmail,
-              inviter: {
-                email: adminClaims.email,
-                id: adminClaims.sub,
-              },
-              createdAt: new Date(),
-              gym: gym,
-            }),
-          });
-          return new Success();
-        }
+        return new Success();
       }
     },
   });
