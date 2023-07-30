@@ -5,6 +5,7 @@ import '../cognito/cognito.dart';
 import 'loader.dart';
 
 typedef SessionBloc = LoaderBloc<Session, RefreshSessionResponse>;
+typedef SessionConsumer = LoaderConsumer<Session, RefreshSessionResponse>;
 
 extension GetSessionLoader on BuildContext {
   SessionBloc get sessionLoader => BlocProvider.of(this);
