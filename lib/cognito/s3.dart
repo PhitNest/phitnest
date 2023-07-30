@@ -118,7 +118,11 @@ Future<Failure?> uploadProfilePicture({
     }
     return null;
   } catch (e) {
-    prettyLogger.e(e.toString());
+    prettyLogger.e(
+      'Error thrown while uploading pfp\n'
+      'Identity ID: ${session.credentials.userIdentityId}\n'
+      'Error: ${e.toString()}',
+    );
     return Failure('FailedToUpload', e.toString());
   }
 }
