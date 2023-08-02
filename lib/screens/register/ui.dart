@@ -1,33 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_core/core.dart';
-
-import '../confirm_email.dart';
-
-part 'pages/account_info.dart';
-part 'pages/inviter_email.dart';
-part 'pages/loading.dart';
-part 'pages/name.dart';
-
-final class RegisterControllers extends FormControllers {
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final inviterEmailController = TextEditingController();
-  final pageController = PageController();
-
-  @override
-  void dispose() {
-    firstNameController.dispose();
-    lastNameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    inviterEmailController.dispose();
-    pageController.dispose();
-  }
-}
+part of 'register.dart';
 
 final class RegisterScreen extends StatelessWidget {
   final ApiInfo apiInfo;
@@ -85,37 +56,49 @@ final class RegisterScreen extends StatelessWidget {
                 }
               },
               builder: (context, loaderState, submit) {
-                nextPage() => controllers.pageController.nextPage(
+                finishPage() {
+                  if ((context.registerFormBloc.formKey.currentState
+                          ?.validate()) ??
+                      false) {
+                    controllers.pageController.nextPage(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
                     );
+                  }
+                }
+
                 return switch (loaderState) {
-                  LoaderLoadingState() => const RegisterLoadingPage(),
-                  _ => PageView(
-                      controller: controllers.pageController,
-                      children: [
-                        RegisterNamePage(
-                          controllers: controllers,
-                          onSubmit: nextPage,
-                        ),
-                        RegisterAccountInfoPage(
-                          controllers: controllers,
-                          onSubmit: nextPage,
-                        ),
-                        RegisterInviterEmailPage(
-                          controllers: controllers,
-                          onSubmit: () => submit(
-                            RegisterParams(
-                              email: controllers.emailController.text,
-                              password: controllers.passwordController.text,
-                              firstName: controllers.firstNameController.text,
-                              lastName: controllers.lastNameController.text,
-                              inviterEmail:
-                                  controllers.inviterEmailController.text,
+                  LoaderLoadingState() =>
+                    const Center(child: CircularProgressIndicator()),
+                  _ => SingleChildScrollView(
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
+                      child: PageView(
+                        controller: controllers.pageController,
+                        children: [
+                          RegisterNamePage(
+                            controllers: controllers,
+                            onSubmit: finishPage,
+                          ),
+                          RegisterAccountInfoPage(
+                            controllers: controllers,
+                            onSubmit: finishPage,
+                          ),
+                          RegisterInviterEmailPage(
+                            controllers: controllers,
+                            onSubmit: () => submit(
+                              RegisterParams(
+                                email: controllers.emailController.text,
+                                password: controllers.passwordController.text,
+                                firstName: controllers.firstNameController.text,
+                                lastName: controllers.lastNameController.text,
+                                inviterEmail:
+                                    controllers.inviterEmailController.text,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                 };
               },

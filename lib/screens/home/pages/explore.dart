@@ -1,11 +1,7 @@
-import 'package:flutter/material.dart';
-
-import '../ui.dart';
-import 'widgets/empty_page.dart';
-import 'widgets/user_page.dart';
+part of '../home.dart';
 
 class ExploreScreen extends StatelessWidget {
-  final List<UserExplore> users;
+  final List<UserWithProfilePicture> users;
   final PageController pageController;
   final int? countdown;
 

@@ -1,25 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_core/core.dart';
-
-import 'confirm_email.dart';
-
-final class ForgotPasswordControllers extends FormControllers {
-  final emailController = TextEditingController();
-  final newPasswordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  final pageController = PageController();
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    newPasswordController.dispose();
-    confirmPasswordController.dispose();
-    pageController.dispose();
-  }
-}
+part of 'forgot_password.dart';
 
 final class ForgotPasswordScreen extends StatelessWidget {
   final ApiInfo apiInfo;
