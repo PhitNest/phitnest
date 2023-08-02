@@ -1,4 +1,4 @@
-part of '../ui.dart';
+part of '../register.dart';
 
 String? validateName(dynamic value) {
   if (value == null || (value is String && value.isEmpty)) {

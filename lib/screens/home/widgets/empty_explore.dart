@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of '../home.dart';
 
 final class EmptyPage extends StatelessWidget {
   const EmptyPage({

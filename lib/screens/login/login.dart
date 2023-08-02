@@ -4,25 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_core/core.dart';
 
-import 'confirm_email.dart';
-import 'forgot_password.dart';
-import 'home/ui.dart';
-import 'register/ui.dart';
+import '../confirm_email/confirm_email.dart';
+import '../forgot_password/forgot_password.dart';
+import '../home/home.dart';
+import '../register/register.dart';
 
-final class LoginControllers extends FormControllers {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-  }
-}
-
-extension on BuildContext {
-  LoaderBloc<LoginParams, LoginResponse> get loginLoaderBloc => loader();
-}
+part 'bloc.dart';
+part 'ui.dart';
 
 final class LoginScreen extends StatelessWidget {
   final ApiInfo apiInfo;
@@ -127,8 +115,7 @@ final class LoginScreen extends StatelessWidget {
                       children: [
                         TextButton(
                           onPressed: () {
-                            context.loginLoaderBloc
-                                .add(const LoaderCancelEvent());
+                            context.loginBloc.add(const LoaderCancelEvent());
                             Navigator.push(
                               context,
                               CupertinoPageRoute<void>(
@@ -173,7 +160,7 @@ final class LoginScreen extends StatelessWidget {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                context.loginLoaderBloc
+                                context.loginBloc
                                     .add(const LoaderCancelEvent());
                                 Navigator.of(context).push(
                                   CupertinoPageRoute<void>(

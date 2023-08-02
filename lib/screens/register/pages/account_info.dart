@@ -1,4 +1,4 @@
-part of '../ui.dart';
+part of '../register.dart';
 
 final class RegisterAccountInfoPage extends StatelessWidget {
   final RegisterControllers controllers;
@@ -24,19 +24,24 @@ final class RegisterAccountInfoPage extends StatelessWidget {
             hint: 'Your email address',
             controller: controllers.emailController,
             validator: EmailValidator.validateEmail,
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
           ),
           24.verticalSpace,
-          StyledUnderlinedTextField(
+          StyledPasswordField(
             hint: 'Password',
             controller: controllers.passwordController,
             validator: validatePassword,
+            textInputAction: TextInputAction.next,
           ),
           24.verticalSpace,
-          StyledUnderlinedTextField(
+          StyledPasswordField(
             hint: 'Confirm password',
             validator: (value) => value == controllers.passwordController.text
                 ? null
                 : 'Passwords do not match',
+            textInputAction: TextInputAction.done,
+            onFieldSubmitted: (_) => onSubmit(),
           ),
           32.verticalSpace,
           ElevatedButton(

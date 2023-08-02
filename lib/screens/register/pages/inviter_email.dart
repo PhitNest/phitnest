@@ -1,4 +1,4 @@
-part of '../ui.dart';
+part of '../register.dart';
 
 final class RegisterInviterEmailPage extends StatelessWidget {
   final RegisterControllers controllers;
@@ -25,6 +25,9 @@ final class RegisterInviterEmailPage extends StatelessWidget {
             hint: 'Inviter Email',
             controller: controllers.inviterEmailController,
             validator: EmailValidator.validateEmail,
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.done,
+            onFieldSubmitted: (_) => onSubmit(),
           ),
           28.verticalSpace,
           Center(
