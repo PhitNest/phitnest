@@ -70,35 +70,31 @@ final class RegisterScreen extends StatelessWidget {
                 return switch (loaderState) {
                   LoaderLoadingState() =>
                     const Center(child: CircularProgressIndicator()),
-                  _ => SingleChildScrollView(
-                      keyboardDismissBehavior:
-                          ScrollViewKeyboardDismissBehavior.onDrag,
-                      child: PageView(
-                        controller: controllers.pageController,
-                        children: [
-                          RegisterNamePage(
-                            controllers: controllers,
-                            onSubmit: finishPage,
-                          ),
-                          RegisterAccountInfoPage(
-                            controllers: controllers,
-                            onSubmit: finishPage,
-                          ),
-                          RegisterInviterEmailPage(
-                            controllers: controllers,
-                            onSubmit: () => submit(
-                              RegisterParams(
-                                email: controllers.emailController.text,
-                                password: controllers.passwordController.text,
-                                firstName: controllers.firstNameController.text,
-                                lastName: controllers.lastNameController.text,
-                                inviterEmail:
-                                    controllers.inviterEmailController.text,
-                              ),
+                  _ => PageView(
+                      controller: controllers.pageController,
+                      children: [
+                        RegisterNamePage(
+                          controllers: controllers,
+                          onSubmit: finishPage,
+                        ),
+                        RegisterAccountInfoPage(
+                          controllers: controllers,
+                          onSubmit: finishPage,
+                        ),
+                        RegisterInviterEmailPage(
+                          controllers: controllers,
+                          onSubmit: () => submit(
+                            RegisterParams(
+                              email: controllers.emailController.text,
+                              password: controllers.passwordController.text,
+                              firstName: controllers.firstNameController.text,
+                              lastName: controllers.lastNameController.text,
+                              inviterEmail:
+                                  controllers.inviterEmailController.text,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                 };
               },
