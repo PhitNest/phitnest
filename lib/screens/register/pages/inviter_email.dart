@@ -11,34 +11,37 @@ final class RegisterInviterEmailPage extends StatelessWidget {
   }) : super();
 
   @override
-  Widget build(BuildContext context) => Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          120.verticalSpace,
-          Text(
-            'Inviter email',
-            style: theme.textTheme.bodyLarge,
-          ),
-          42.verticalSpace,
-          StyledUnderlinedTextField(
-            hint: 'Inviter Email',
-            controller: controllers.inviterEmailController,
-            validator: EmailValidator.validateEmail,
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.done,
-            onFieldSubmitted: (_) => onSubmit(),
-          ),
-          28.verticalSpace,
-          Center(
-            child: ElevatedButton(
-              onPressed: onSubmit,
-              child: Text(
-                'SUBMIT',
-                style: theme.textTheme.bodySmall,
-              ),
+  Widget build(BuildContext context) => SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            120.verticalSpace,
+            Text(
+              'Inviter email',
+              style: theme.textTheme.bodyLarge,
             ),
-          )
-        ],
+            42.verticalSpace,
+            StyledUnderlinedTextField(
+              hint: 'Inviter Email',
+              controller: controllers.inviterEmailController,
+              validator: EmailValidator.validateEmail,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) => onSubmit(),
+            ),
+            28.verticalSpace,
+            Center(
+              child: ElevatedButton(
+                onPressed: onSubmit,
+                child: Text(
+                  'SUBMIT',
+                  style: theme.textTheme.bodySmall,
+                ),
+              ),
+            )
+          ],
+        ),
       );
 }
