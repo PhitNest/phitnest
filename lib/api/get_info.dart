@@ -25,13 +25,13 @@ final class ApiInfo extends JsonSerializable {
   CognitoUserPool get pool => useAdmin ? adminPool : userPool;
 
   @override
-  Map<String, Serializable> toJson() => {
-        kAdminPoolIdJsonKey: Serializable.string(adminPool.getUserPoolId()),
-        kUserPoolIdJsonKey: Serializable.string(userPool.getUserPoolId()),
-        kAdminClientIdJsonKey: Serializable.string(adminPool.getClientId()!),
-        kUserClientIdJsonKey: Serializable.string(userPool.getClientId()!),
-        kUserIdentityPoolJsonKey: Serializable.string(identityPoolId),
-        kUserBucketJsonKey: Serializable.string(userBucketName),
+  Map<String, Serializable> json() => {
+        kAdminPoolIdJsonKey: SerializableString(adminPool.getUserPoolId()),
+        kUserPoolIdJsonKey: SerializableString(userPool.getUserPoolId()),
+        kAdminClientIdJsonKey: SerializableString(adminPool.getClientId()!),
+        kUserClientIdJsonKey: SerializableString(userPool.getClientId()!),
+        kUserIdentityPoolJsonKey: SerializableString(identityPoolId),
+        kUserBucketJsonKey: SerializableString(userBucketName),
       };
 
   factory ApiInfo.fromJson(dynamic json, bool useAdmin) => switch (json) {

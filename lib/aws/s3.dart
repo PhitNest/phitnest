@@ -1,4 +1,4 @@
-part of 'cognito.dart';
+part of 'aws.dart';
 
 const kS3Service = 's3';
 
@@ -87,8 +87,8 @@ Future<Failure?> uploadProfilePicture({
       's3',
     );
 
-    final policy = base64.encode(utf8.encode('''
-{ "expiration": "$expiration",
+    final policy = base64.encode(utf8.encode('''{ 
+  "expiration": "$expiration",
   "conditions": [
     {"bucket": "${session.apiInfo.userBucketName}"},
     ["starts-with", "\$key", "$bucketKey"],
@@ -98,8 +98,7 @@ Future<Failure?> uploadProfilePicture({
     {"x-amz-date": "$datetime" },
     {"x-amz-security-token": "${session.credentials.sessionToken!}" }
   ]
-}
-'''));
+}'''));
 
     final signature = SigV4.calculateSignature(key, policy);
 
@@ -113,12 +112,12 @@ Future<Failure?> uploadProfilePicture({
     req.fields['x-amz-security-token'] = session.credentials.sessionToken!;
 
     final res = await req.send();
-    await for (var value in res.stream.transform(utf8.decoder)) {
-      prettyLogger.d(value);
+    await for (String value in res.stream.transform(utf8.decoder)) {
+      debug(value);
     }
     return null;
   } catch (e) {
-    prettyLogger.e(
+    error(
       'Error thrown while uploading pfp\n'
       'Identity ID: ${session.credentials.userIdentityId}\n'
       'Error: ${e.toString()}',

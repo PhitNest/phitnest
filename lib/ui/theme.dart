@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-bool _screenUtils = false;
-
-void initializeTheme(bool useScreenUtils) => _screenUtils = useScreenUtils;
-
-bool get screenUtils => _screenUtils;
-
 ThemeData get theme => ThemeData(
       scaffoldBackgroundColor: const Color(0xFF000000),
       colorScheme: const ColorScheme(
@@ -25,19 +19,19 @@ ThemeData get theme => ThemeData(
       ),
       textTheme: TextTheme(
         bodyLarge: GoogleFonts.inter(
-          fontSize: screenUtils ? 28.sp : 28,
+          fontSize: 28.sp,
           fontWeight: FontWeight.w700,
           height: 1.25,
           color: const Color(0xFFF8FEFF),
         ),
         bodyMedium: GoogleFonts.inter(
-          fontSize: screenUtils ? 20.sp : 20,
+          fontSize: 20.sp,
           fontWeight: FontWeight.w500,
           height: 1.25,
           color: const Color(0xFFF8FEFF),
         ),
         bodySmall: GoogleFonts.inter(
-          fontSize: screenUtils ? 12.sp : 12,
+          fontSize: 12.sp,
           fontWeight: FontWeight.w700,
           height: 1.25,
           color: const Color(0xFFF8FEFF),
@@ -48,7 +42,7 @@ ThemeData get theme => ThemeData(
           color: Color(0xFFF8FEFF),
         ),
         titleTextStyle: GoogleFonts.inter(
-          fontSize: screenUtils ? 20.sp : 20,
+          fontSize: 20.sp,
           fontWeight: FontWeight.w500,
           height: 1.25,
           color: const Color(0xFFF8FEFF),
@@ -58,8 +52,8 @@ ThemeData get theme => ThemeData(
         style: ButtonStyle(
           padding: MaterialStateProperty.all(
             EdgeInsets.symmetric(
-              horizontal: screenUtils ? 24.w : 24,
-              vertical: screenUtils ? 18.h : 18,
+              horizontal: 24.w,
+              vertical: 18.h,
             ),
           ),
           backgroundColor: MaterialStateProperty.all(
@@ -67,7 +61,7 @@ ThemeData get theme => ThemeData(
           ),
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(screenUtils ? 50.r : 50),
+              borderRadius: BorderRadius.circular(50.r),
             ),
           ),
         ),
@@ -77,7 +71,7 @@ ThemeData get theme => ThemeData(
           backgroundColor: MaterialStateProperty.all(Colors.transparent),
           textStyle: MaterialStateProperty.all(
             GoogleFonts.inter(
-              fontSize: screenUtils ? 14.sp : 14,
+              fontSize: 14.sp,
               fontWeight: FontWeight.w400,
               fontStyle: FontStyle.italic,
               height: 1.25,

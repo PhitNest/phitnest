@@ -1,4 +1,4 @@
-part of 'cognito.dart';
+part of 'aws.dart';
 
 const kUnknownError = 'An unknown error occurred.';
 const kInvalidPool = 'Invalid user pool.';

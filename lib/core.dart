@@ -1,9 +1,8 @@
 export 'api/api.dart';
 export 'app.dart';
+export 'aws/aws.dart';
 export 'bloc/bloc.dart';
-export 'cache.dart';
-export 'cognito/cognito.dart';
-export 'errors.dart';
+export 'cache/cache.dart';
 export 'failure.dart';
 export 'http/http.dart';
 export 'logger.dart';

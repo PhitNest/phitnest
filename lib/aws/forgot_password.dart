@@ -1,4 +1,4 @@
-part of 'cognito.dart';
+part of 'aws.dart';
 
 sealed class SendForgotPasswordResponse extends Equatable {
   const SendForgotPasswordResponse() : super();

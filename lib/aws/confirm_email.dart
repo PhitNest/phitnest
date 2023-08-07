@@ -1,4 +1,4 @@
-part of 'cognito.dart';
+part of 'aws.dart';
 
 Future<bool> confirmEmail({
   required CognitoUser user,
