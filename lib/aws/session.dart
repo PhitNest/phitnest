@@ -1,4 +1,4 @@
-part of 'cognito.dart';
+part of 'aws.dart';
 
 sealed class RefreshSessionResponse extends Equatable {
   const RefreshSessionResponse();

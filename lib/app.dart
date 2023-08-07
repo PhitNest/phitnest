@@ -4,13 +4,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'api/api.dart';
-import 'bloc/session.dart';
-import 'cache.dart';
+import 'bloc/loader.dart';
+import 'cache/cache.dart';
 import 'http/http.dart';
 import 'ui/ui.dart';
 
 Future<void> runPhitNest({
-  required bool useScreenUtils,
   required bool useAdminAuth,
   required String title,
   required Widget loader,
@@ -22,13 +21,11 @@ Future<void> runPhitNest({
   initializeHttp(
       host: dotenv.get('BACKEND_HOST'),
       port: dotenv.get('BACKEND_PORT', fallback: ''));
-  await initializeCache();
-  initializeTheme(useScreenUtils);
+  // await initializeCache();
   runApp(
     PhitNestApp(
       useAdminAuth: useAdminAuth,
       title: title,
-      useScreenUtil: useScreenUtils,
       loader: loader,
       sessionRestoreFailedBuilder: sessionRestoreFailedBuilder,
       sessionRestoredBuilder: sessionRestoredBuilder,
@@ -37,7 +34,6 @@ Future<void> runPhitNest({
 }
 
 final class PhitNestApp extends StatelessWidget {
-  final bool useScreenUtil;
   final bool useAdminAuth;
   final String title;
   final Widget loader;
@@ -46,7 +42,6 @@ final class PhitNestApp extends StatelessWidget {
 
   const PhitNestApp({
     Key? key,
-    required this.useScreenUtil,
     required this.title,
     required this.useAdminAuth,
     required this.loader,
@@ -55,8 +50,10 @@ final class PhitNestApp extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    builder(BuildContext context) => MultiBlocProvider(
+  Widget build(BuildContext context) => ScreenUtilInit(
+        minTextAdapt: true,
+        designSize: const Size(375, 667),
+        builder: (context, _) => MultiBlocProvider(
           providers: [
             BlocProvider(
               create: (_) => SessionBloc(
@@ -84,15 +81,6 @@ final class PhitNestApp extends StatelessWidget {
               ),
             ),
           ),
-        );
-    if (useScreenUtil) {
-      return ScreenUtilInit(
-        minTextAdapt: true,
-        designSize: const Size(375, 667),
-        builder: (context, _) => builder(context),
+        ),
       );
-    } else {
-      return builder(context);
-    }
-  }
 }

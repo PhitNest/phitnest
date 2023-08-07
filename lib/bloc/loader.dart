@@ -3,7 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../errors.dart';
+import '../aws/aws.dart';
+import '../logger.dart';
 
 extension GetLoader on BuildContext {
   LoaderBloc<ReqType, ResType> loader<ReqType, ResType>() =>
@@ -185,4 +186,80 @@ final class LoaderBloc<ReqType, ResType>
     }
     return super.close();
   }
+}
+
+typedef SessionBloc = LoaderBloc<Session, RefreshSessionResponse>;
+
+extension GetSessionLoader on BuildContext {
+  SessionBloc get sessionLoader => BlocProvider.of(this);
+}
+
+sealed class AuthResOrLost<ResType> extends Equatable {
+  const AuthResOrLost() : super();
+}
+
+final class AuthRes<ResType> extends AuthResOrLost<ResType> {
+  final ResType data;
+
+  const AuthRes(this.data) : super();
+
+  @override
+  List<Object?> get props => [data];
+}
+
+final class AuthLost<ResType> extends AuthResOrLost<ResType> {
+  const AuthLost() : super();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class AuthLoaderBloc<ReqType, ResType> extends LoaderBloc<
+    ({ReqType data, BuildContext context}), AuthResOrLost<ResType>> {
+  AuthLoaderBloc({
+    required Future<ResType> Function(ReqType, Session) load,
+  }) : super(
+          load: (req) async {
+            final sessionLoader = req.context.sessionLoader;
+
+            Future<AuthResOrLost<ResType>> handleResponse(
+              RefreshSessionResponse response,
+            ) async {
+              switch (response) {
+                case RefreshSessionSuccess(newSession: final newSession):
+                  if (newSession.cognitoSession.isValid()) {
+                    return AuthRes(await load(req.data, newSession));
+                  } else {
+                    sessionLoader.add(LoaderLoadEvent(newSession));
+                    final response = await sessionLoader.stream.firstWhere(
+                            (state) => state
+                                is LoaderLoadedState<RefreshSessionResponse>,
+                            orElse: () => LoaderLoadedState(
+                                RefreshSessionUnknownResponse(message: null)))
+                        as LoaderLoadedState<RefreshSessionResponse>;
+                    return await handleResponse(response.data);
+                  }
+                case RefreshSessionFailureResponse():
+                  return AuthLost();
+              }
+            }
+
+            switch (sessionLoader.state) {
+              case LoaderLoadedState(data: final response):
+                return await handleResponse(response);
+              case LoaderLoadingState(operation: final operation):
+                final response = await operation
+                    .then(
+                      (response) => response,
+                      onCancel: () => null,
+                    )
+                    .value;
+                if (response != null) {
+                  return await handleResponse(response);
+                }
+              default:
+            }
+            return AuthLost();
+          },
+        );
 }

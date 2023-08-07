@@ -1,58 +1,136 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:equatable/equatable.dart';
 
-/// A class that can be serialized into a JSON encodable object.
-sealed class Serializable {
-  dynamic toJson();
+sealed class JsonMember<T> extends Equatable {
+  final String key;
+  T? _value;
+  dynamic _serialized;
 
-  factory Serializable.double(double double) => _SerializablePrimitive(double);
+  JsonMember(this.key) : super();
 
-  factory Serializable.string(String string) => _SerializablePrimitive(string);
+  V _get<V>(V? value) {
+    if (value != null) {
+      return value;
+    } else {
+      throw StateError('JsonMember $key has not been parsed yet');
+    }
+  }
 
-  factory Serializable.int(int int) => _SerializablePrimitive(int);
+  T get value => _get(_value);
 
-  factory Serializable.bool(bool bool) => _SerializablePrimitive(bool);
+  dynamic get serialized => _get(_serialized);
 
-  factory Serializable.list(List<Serializable> list) => SerializableList(list);
+  void _parseInternal(dynamic data) => _value = parse(_serialized = data);
 
-  factory Serializable.map(Map<String, Serializable> map) =>
-      SerializableMap(map);
+  T parse(dynamic data);
+
+  @override
+  List<Object?> get props => [value];
 }
 
-/// Extend this to make a class serializable to JSON.
-abstract class JsonSerializable with EquatableMixin implements Serializable {
-  @override
-  Map<String, Serializable> toJson();
-
-  const JsonSerializable() : super();
+final class _JsonPrimitiveMember<T> extends JsonMember<T> {
+  _JsonPrimitiveMember(super.key) : super();
 
   @override
-  bool get stringify => true;
+  T parse(dynamic data) => data as T;
+
+  @override
+  T get serialized => super.serialized as T;
 }
 
-final class _SerializablePrimitive implements Serializable {
-  final dynamic _primitive;
+sealed class _JsonListMember<T> extends JsonMember<List<T>> {
+  _JsonListMember(super.key) : super();
 
-  const _SerializablePrimitive(this._primitive) : super();
+  T parseItem(dynamic data);
 
   @override
-  dynamic toJson() => _primitive;
+  List<T> parse(dynamic data) =>
+      (data as List<dynamic>).map((e) => parseItem(e)).toList();
 }
 
-final class SerializableList implements Serializable {
-  final List<Serializable> _list;
-
-  const SerializableList(this._list) : super();
+final class _JsonPrimitiveListMember<T> extends _JsonListMember<T> {
+  _JsonPrimitiveListMember(super.key) : super();
 
   @override
-  List<dynamic> toJson() => _list.map((e) => e.toJson()).toList();
+  T parseItem(dynamic data) => data as T;
 }
 
-final class SerializableMap implements Serializable {
-  final Map<String, Serializable> _map;
+abstract class JsonSerializable extends Equatable {
+  late final List<JsonMember<dynamic>> _members;
 
-  const SerializableMap(this._map) : super();
+  JsonSerializable() : super() {
+    _members = members;
+  }
+
+  List<JsonMember<dynamic>> get members;
 
   @override
+  List<Object?> get props => _members;
+
   Map<String, dynamic> toJson() =>
-      _map.map((key, value) => MapEntry(key, value.toJson()));
+      Map.fromEntries(_members.map((e) => MapEntry(e.key, e.serialized)));
+
+  void parseJson(Map<String, dynamic> json) {
+    for (final member in _members) {
+      if (json.containsKey(member.key)) {
+        member._parseInternal(json[member.key]);
+      } else {
+        throw FormatException('JSON key ${member.key} not found', json);
+      }
+    }
+  }
+}
+
+final class _JsonSerializableMember<T extends JsonSerializable>
+    extends JsonMember<T> {
+  @override
+  final T value;
+
+  _JsonSerializableMember(super.key, this.value) : super();
+
+  @override
+  T parse(dynamic data) {
+    if (_value != null) {
+      return _value!;
+    } else {
+      return value..parseJson(data as Map<String, dynamic>);
+    }
+  }
+}
+
+final class _JsonSerializableListMember<T extends JsonSerializable>
+    extends _JsonListMember<T> {
+  final T Function() constructor;
+
+  _JsonSerializableListMember(super.key, this.constructor) : super();
+
+  @override
+  T parseItem(dynamic data) =>
+      constructor()..parseJson(data as Map<String, dynamic>);
+}
+
+typedef Int = int;
+typedef Double = double;
+typedef Bool = bool;
+
+abstract class Json {
+  static JsonMember<String> string(String key) => _JsonPrimitiveMember(key);
+  static JsonMember<Int> int(String key) => _JsonPrimitiveMember(key);
+  static JsonMember<Double> double(String key) => _JsonPrimitiveMember(key);
+  static JsonMember<Bool> bool(String key) => _JsonPrimitiveMember(key);
+  static JsonMember<T> object<T extends JsonSerializable>(String key, T obj) =>
+      _JsonSerializableMember(key, obj);
+
+  static JsonMember<List<String>> stringList(String key) =>
+      _JsonPrimitiveListMember(key);
+  static JsonMember<List<Int>> intList(String key) =>
+      _JsonPrimitiveListMember(key);
+  static JsonMember<List<Double>> doubleList(String key) =>
+      _JsonPrimitiveListMember(key);
+  static JsonMember<List<Bool>> boolList(String key) =>
+      _JsonPrimitiveListMember(key);
+  static JsonMember<List<T>> objectList<T extends JsonSerializable>(
+          String key, T Function() constructor) =>
+      _JsonSerializableListMember(key, constructor);
 }

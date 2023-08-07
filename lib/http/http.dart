@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
-import '../cognito/cognito.dart';
+import '../aws/aws.dart';
 import '../failure.dart';
 import '../logger.dart';
 
@@ -69,11 +69,10 @@ Future<HttpResponse<ResType>> request<ResType>({
 
     // Helper function for generating log descriptions
     String descriptionLog(dynamic data) =>
-        '\n\tmethod: $method${wrapText('\n\turl: $url')}'
-        '${wrapText("\n\tdata: $data")}';
+        '\n\tmethod: $method\n\turl: $url\n\tdata: $data';
 
     // Log the request details
-    prettyLogger.d('Request${session != null ? " (Authorized)" : ""}:'
+    debug('Request${session != null ? " (Authorized)" : ""}:'
         '${descriptionLog(data)}');
 
     int elapsedMs() =>
@@ -88,7 +87,7 @@ Future<HttpResponse<ResType>> request<ResType>({
     if (readFromCache != null) {
       final cached = readFromCache();
       if (cached != null) {
-        prettyLogger.d(responseLog('cached', cached));
+        debug(responseLog('cached', cached));
         return HttpResponseCache(cached);
       }
     }
@@ -128,24 +127,24 @@ Future<HttpResponse<ResType>> request<ResType>({
             // Parse the response data
             final parsed = parser(response.data);
             // Log success
-            prettyLogger.d(responseLog('success', parsed));
+            debug(responseLog('success', parsed));
             return HttpResponseOk(parsed, response.headers);
           }
           // Handle unsuccessful responses
           final failure = Failure.fromJson(response.data);
-          prettyLogger.e(responseLog('failure', failure));
+          error(responseLog('failure', failure));
           return HttpResponseFailure(failure, response.headers);
         },
       );
     } on TimeoutException {
       // Log and return a NetworkConnectionFailure on timeout
-      prettyLogger.e(responseLog('timeout', data));
+      error(responseLog('timeout', data));
       return HttpResponseFailure(
           const Failure('Timeout', 'Request timeout'), Headers());
     } catch (e) {
       // Log and return failure by value
-      final failure = invalidJson(e);
-      prettyLogger.e(responseLog('failure', failure));
+      final failure = invalidFailure(e);
+      error(responseLog('failure', failure));
       return HttpResponseFailure(failure, Headers());
     }
   }
