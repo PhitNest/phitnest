@@ -1,23 +1,27 @@
-import 'package:equatable/equatable.dart';
+import 'package:json_types/json.dart';
 
-Failure invalidFailure(dynamic data) =>
-    Failure('InvalidFailure', 'Invalid JSON for root of Failure: $data');
+final class Failure extends Json {
+  final typeJson = Json.string('type');
+  final messageJson = Json.string('message');
 
-final class Failure extends Equatable {
-  final String type;
-  final String message;
+  String get type => typeJson.value;
+  String get message => messageJson.value;
 
-  const Failure(this.type, this.message);
+  Failure.parser() : super();
+
+  Failure.populated(
+    String type,
+    String message,
+  ) : super() {
+    typeJson.populate(type);
+    messageJson.populate(message);
+  }
+
+  Failure.parse(super.json) : super.parse();
 
   @override
   String toString() => message;
 
-  factory Failure.fromJson(dynamic json) => switch (json) {
-        {'type': final String type, 'message': final String message} =>
-          Failure(type, message),
-        _ => invalidFailure(json),
-      };
-
   @override
-  List<Object?> get props => [type, message];
+  List<JsonKey<dynamic, dynamic>> get keys => [typeJson, messageJson];
 }

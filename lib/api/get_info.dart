@@ -1,95 +1,63 @@
 part of 'api.dart';
 
-const kAdminPoolIdJsonKey = 'adminPoolId';
-const kUserPoolIdJsonKey = 'userPoolId';
-const kAdminClientIdJsonKey = 'adminClientId';
-const kUserClientIdJsonKey = 'userClientId';
-const kUserIdentityPoolJsonKey = 'userIdentityPoolId';
-const kUserBucketJsonKey = 'userBucketName';
+final class CognitoPoolInfo extends Json {
+  final poolIdJson = Json.string('poolId');
+  final clientIdJson = Json.string('clientId');
 
-final class ApiInfo extends JsonSerializable {
-  final CognitoUserPool userPool;
-  final CognitoUserPool adminPool;
-  final String identityPoolId;
-  final String userBucketName;
+  String get poolId => poolIdJson.value;
+  String get clientId => clientIdJson.value;
+
+  CognitoPoolInfo.parser() : super();
+
+  @override
+  List<JsonKey<dynamic, dynamic>> get keys => [poolIdJson, clientIdJson];
+}
+
+final class ApiInfo extends Json {
+  final userPoolJson = JsonObject.parser('userPool', CognitoPoolInfo.parser);
+  final adminPoolJson = JsonObject.parser('adminPool', CognitoPoolInfo.parser);
+  final identityPoolIdJson = Json.string('identityPoolId');
+  final userBucketNameJson = Json.string('userBucketName');
   final bool useAdmin;
 
-  const ApiInfo({
-    required this.userPool,
-    required this.adminPool,
-    required this.identityPoolId,
-    required this.userBucketName,
-    required this.useAdmin,
-  }) : super();
+  CognitoUserPool get userPool => _pool(userPoolJson.value);
+  CognitoUserPool get adminPool => _pool(adminPoolJson.value);
+  String get identityPoolId => identityPoolIdJson.value;
+  String get userBucketName => userBucketNameJson.value;
+
+  CognitoUserPool _pool(CognitoPoolInfo info) => CognitoUserPool(
+        info.poolId,
+        info.clientId,
+        storage: SecureCognitoStorage(),
+      );
+
+  ApiInfo.parse(Map<String, dynamic> json, this.useAdmin) : super.parse(json);
+
+  ApiInfo.parser(this.useAdmin) : super();
 
   CognitoUserPool get pool => useAdmin ? adminPool : userPool;
 
   @override
-  Map<String, Serializable> json() => {
-        kAdminPoolIdJsonKey: SerializableString(adminPool.getUserPoolId()),
-        kUserPoolIdJsonKey: SerializableString(userPool.getUserPoolId()),
-        kAdminClientIdJsonKey: SerializableString(adminPool.getClientId()!),
-        kUserClientIdJsonKey: SerializableString(userPool.getClientId()!),
-        kUserIdentityPoolJsonKey: SerializableString(identityPoolId),
-        kUserBucketJsonKey: SerializableString(userBucketName),
-      };
-
-  factory ApiInfo.fromJson(dynamic json, bool useAdmin) => switch (json) {
-        {
-          kUserPoolIdJsonKey: final String userPoolId,
-          kUserClientIdJsonKey: final String userClientId,
-          kAdminClientIdJsonKey: final String adminClientId,
-          kAdminPoolIdJsonKey: final String adminPoolId,
-          kUserIdentityPoolJsonKey: final String identityPoolId,
-          kUserBucketJsonKey: final String userBucketName,
-        } =>
-          ApiInfo(
-            adminPool: CognitoUserPool(
-              adminPoolId,
-              adminClientId,
-              storage: SecureCognitoStorage(),
-            ),
-            userPool: CognitoUserPool(
-              userPoolId,
-              userClientId,
-              storage: SecureCognitoStorage(),
-            ),
-            identityPoolId: identityPoolId,
-            userBucketName: userBucketName,
-            useAdmin: useAdmin,
-          ),
-        _ => throw FormatException(
-            'Invalid JSON for ApiInfo',
-            json,
-          ),
-      };
+  List<JsonKey<dynamic, dynamic>> get keys => [
+        userPoolJson,
+        adminPoolJson,
+        identityPoolIdJson,
+        userBucketNameJson,
+      ];
 
   @override
-  List<Object?> get props => [
-        adminPool.getUserPoolId(),
-        adminPool.getClientId(),
-        userPool.getUserPoolId(),
-        userPool.getClientId(),
-        userBucketName,
-        identityPoolId,
-        useAdmin,
-      ];
+  List<Object?> get props => [...super.props, useAdmin];
 }
 
-const kApiInfoCacheKey = 'apiInfo';
+const kApiInfoJsonKey = 'apiInfo';
 
 Future<void> cacheApiInfo(
   ApiInfo? details,
 ) =>
-    cacheObject(
-      kApiInfoCacheKey,
-      details,
-    );
+    cacheObject(kApiInfoJsonKey, details);
 
-ApiInfo? getCachedApiInfo(bool admin) => getCachedObject(
-      kApiInfoCacheKey,
-      (json) => ApiInfo.fromJson(json, admin),
-    );
+ApiInfo? getCachedApiInfo(bool admin) =>
+    getCachedObject(kApiInfoJsonKey, () => ApiInfo.parser(admin));
 
 Future<HttpResponse<ApiInfo>> requestApiInfo({
   required bool writeToCache,
@@ -99,7 +67,7 @@ Future<HttpResponse<ApiInfo>> requestApiInfo({
     request(
       route: '/info',
       method: HttpMethod.get,
-      parser: (json) => ApiInfo.fromJson(json, useAdmin),
+      parse: (json) => ApiInfo.parse(json as Map<String, dynamic>, useAdmin),
       writeToCache: writeToCache ? cacheApiInfo : null,
       readFromCache: readFromCache ? () => getCachedApiInfo(useAdmin) : null,
     );
