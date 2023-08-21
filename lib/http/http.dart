@@ -51,7 +51,7 @@ void initializeHttp({String? host, String? port, Duration? timeout}) {
 Future<HttpResponse<ResType>> request<ResType>({
   required String route,
   required HttpMethod method,
-  required ResType Function(dynamic) parser,
+  required ResType Function(dynamic) parse,
   Map<String, dynamic>? data,
   Map<String, dynamic>? headers,
   Session? session,
@@ -125,7 +125,7 @@ Future<HttpResponse<ResType>> request<ResType>({
           // Handle successful responses
           if (response.statusCode == 200) {
             // Parse the response data
-            final parsed = parser(response.data);
+            final parsed = parse(response.data);
             // Log success
             debug(responseLog('success', parsed));
             return HttpResponseOk(parsed, response.headers);

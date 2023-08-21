@@ -14,6 +14,6 @@ part 'constants.dart';
 part 'forgot_password.dart';
 part 'register.dart';
 part 's3.dart';
-// part 'secure_storage.dart';
+part 'secure_storage.dart';
 part 'session.dart';
 part 'login.dart';

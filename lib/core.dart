@@ -5,7 +5,6 @@ export 'bloc/bloc.dart';
 export 'cache/cache.dart';
 export 'failure.dart';
 export 'http/http.dart';
-export 'json.dart';
 export 'logger.dart';
 export 'ui/theme.dart';
 export 'ui/ui.dart';
