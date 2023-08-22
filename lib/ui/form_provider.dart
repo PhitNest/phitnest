@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../bloc/form.dart';
-import '../bloc/loader.dart';
+import '../bloc/form/form.dart';
+import '../bloc/loader/loader.dart';
 
 final class FormProvider<Controllers extends FormControllers, ReqType, ResType>
     extends StatelessWidget {
   final Widget Function(
-    BuildContext context,
-    Controllers controllers,
-    Widget Function({
-      required Widget Function(
-              BuildContext, LoaderState<ResType>, void Function(ReqType) submit)
-          builder,
-      required void Function(
-              BuildContext, LoaderState<ResType>, void Function(ReqType) submit)
-          listener,
-    }) consumer,
-  ) formBuilder;
+      BuildContext context,
+      Controllers controllers,
+      Widget Function(
+        Widget Function(BuildContext, LoaderState<ResType>,
+                void Function(ReqType) submit)
+            formBuilder,
+        void Function(BuildContext, LoaderState<ResType>,
+                void Function(ReqType) submit)
+            formListener,
+      )) formConsumer;
 
   final Controllers Function(BuildContext context) createControllers;
   final Future<ResType> Function(ReqType req) load;
@@ -32,7 +31,7 @@ final class FormProvider<Controllers extends FormControllers, ReqType, ResType>
 
   const FormProvider({
     required this.load,
-    required this.formBuilder,
+    required this.formConsumer,
     required this.createControllers,
     this.initialData,
   }) : super();
@@ -53,12 +52,11 @@ final class FormProvider<Controllers extends FormControllers, ReqType, ResType>
             final formBloc = BlocProvider.of<FormBloc<Controllers>>(context);
             return Form(
               key: formBloc.formKey,
-              child: formBuilder(
+              child: formConsumer(
                 context,
                 formBloc.controllers,
-                ({required builder, required listener}) =>
-                    LoaderConsumer<ReqType, ResType>(
-                  builder: (context, loaderState) => builder(
+                (formBuilder, formListener) => LoaderConsumer<ReqType, ResType>(
+                  builder: (context, loaderState) => formBuilder(
                     context,
                     loaderState,
                     (req) => switch (loaderState) {
@@ -66,7 +64,7 @@ final class FormProvider<Controllers extends FormControllers, ReqType, ResType>
                       _ => submit(context, req),
                     },
                   ),
-                  listener: (context, loaderState) => listener(
+                  listener: (context, loaderState) => formListener(
                     context,
                     loaderState,
                     (req) => switch (loaderState) {

@@ -5,9 +5,9 @@ Future<bool> confirmEmail({
   required String code,
 }) async {
   try {
-    await user.confirmRegistration(code);
-    return true;
-  } catch (_) {
+    return await user.confirmRegistration(code);
+  } catch (e) {
+    error(e.toString());
     return false;
   }
 }
@@ -18,7 +18,8 @@ Future<bool> resendConfirmationEmail({
   try {
     await user.resendConfirmationCode();
     return true;
-  } catch (_) {
+  } catch (e) {
+    error(e.toString());
     return false;
   }
 }

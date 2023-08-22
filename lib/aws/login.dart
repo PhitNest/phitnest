@@ -131,23 +131,28 @@ Future<LoginResponse> login({
       }
     }
     return const LoginUnknownResponse(message: null);
-  } on CognitoUserConfirmationNecessaryException catch (_) {
+  } on CognitoUserConfirmationNecessaryException catch (e) {
+    error(e.toString());
     return LoginConfirmationRequired(user: user, password: params.password);
-  } on CognitoClientException catch (error) {
-    return switch (error.code) {
+  } on CognitoClientException catch (e) {
+    error(e.toString());
+    return switch (e.code) {
       'ResourceNotFoundException' =>
         const LoginFailure(LoginFailureType.invalidUserPool),
       'NotAuthorizedException' =>
         const LoginFailure(LoginFailureType.invalidEmailPassword),
       'UserNotFoundException' =>
         const LoginFailure(LoginFailureType.noSuchUser),
-      _ => LoginUnknownResponse(message: error.message),
+      _ => LoginUnknownResponse(message: e.message),
     };
-  } on ArgumentError catch (_) {
+  } on ArgumentError catch (e) {
+    error(e.toString());
     return const LoginFailure(LoginFailureType.invalidUserPool);
-  } on CognitoUserNewPasswordRequiredException {
+  } on CognitoUserNewPasswordRequiredException catch (e) {
+    error(e.toString());
     return LoginChangePasswordRequired(user);
   } catch (err) {
+    error(err.toString());
     return LoginUnknownResponse(message: err.toString());
   }
 }

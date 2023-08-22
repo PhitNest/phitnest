@@ -3,8 +3,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../aws/aws.dart';
-import '../logger.dart';
+import '../../aws/aws.dart';
+import '../../logger.dart';
+
+part 'event.dart';
+part 'state.dart';
 
 extension GetLoader on BuildContext {
   LoaderBloc<ReqType, ResType> loader<ReqType, ResType>() =>
@@ -13,91 +16,6 @@ extension GetLoader on BuildContext {
 
 typedef LoaderConsumer<ReqType, ResType>
     = BlocConsumer<LoaderBloc<ReqType, ResType>, LoaderState<ResType>>;
-
-sealed class LoaderState<ResType> extends Equatable {
-  const LoaderState();
-}
-
-final class LoaderInitialState<ResType> extends LoaderState<ResType> {
-  const LoaderInitialState() : super();
-
-  @override
-  List<Object?> get props => [];
-}
-
-sealed class LoaderLoadingState<ResType> extends LoaderState<ResType> {
-  final CancelableOperation<ResType> operation;
-
-  const LoaderLoadingState(this.operation) : super();
-
-  @override
-  List<Object?> get props => [operation];
-}
-
-final class LoaderInitialLoadingState<ResType>
-    extends LoaderLoadingState<ResType> {
-  const LoaderInitialLoadingState(super.operation) : super();
-}
-
-final class LoaderRefreshingState<ResType> extends LoaderLoadingState<ResType> {
-  final ResType data;
-
-  const LoaderRefreshingState(this.data, super.operation) : super();
-
-  @override
-  List<Object?> get props => [super.props, data];
-}
-
-final class LoaderLoadedState<ResType> extends LoaderState<ResType> {
-  final ResType data;
-
-  const LoaderLoadedState(this.data) : super();
-
-  @override
-  List<Object?> get props => [data];
-}
-
-sealed class LoaderEvent<ReqType, ResType> extends Equatable {
-  const LoaderEvent();
-}
-
-final class LoaderLoadEvent<ReqType, ResType>
-    extends LoaderEvent<ReqType, ResType> {
-  final ReqType requestData;
-
-  const LoaderLoadEvent(this.requestData) : super();
-
-  @override
-  List<Object?> get props => [requestData];
-}
-
-final class LoaderLoadedEvent<ReqType, ResType>
-    extends LoaderEvent<ReqType, ResType> {
-  final ResType data;
-
-  const LoaderLoadedEvent(this.data) : super();
-
-  @override
-  List<Object?> get props => [data];
-}
-
-final class LoaderSetEvent<ReqType, ResType>
-    extends LoaderEvent<ReqType, ResType> {
-  final ResType data;
-
-  const LoaderSetEvent(this.data) : super();
-
-  @override
-  List<Object?> get props => [data];
-}
-
-final class LoaderCancelEvent<ReqType, ResType>
-    extends LoaderEvent<ReqType, ResType> {
-  const LoaderCancelEvent() : super();
-
-  @override
-  List<Object?> get props => [];
-}
 
 final class LoaderBloc<ReqType, ResType>
     extends Bloc<LoaderEvent<ReqType, ResType>, LoaderState<ResType>> {

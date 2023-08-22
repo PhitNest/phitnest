@@ -2,25 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-final class FormBlocState extends Equatable {
-  final AutovalidateMode autovalidateMode;
-
-  const FormBlocState({
-    required this.autovalidateMode,
-  }) : super();
-
-  @override
-  List<Object?> get props => [autovalidateMode];
-}
-
-final class FormSetValidationEvent extends Equatable {
-  final AutovalidateMode autovalidateMode;
-
-  const FormSetValidationEvent(this.autovalidateMode) : super();
-
-  @override
-  List<Object?> get props => [autovalidateMode];
-}
+part 'event.dart';
+part 'state.dart';
 
 abstract class FormControllers {
   void dispose();
@@ -48,11 +31,8 @@ final class FormBloc<Controllers extends FormControllers>
 
   FormBloc(this.controllers)
       : super(FormBlocState(autovalidateMode: AutovalidateMode.disabled)) {
-    on<FormSetValidationEvent>(
-      (event, emit) {
-        emit(FormBlocState(autovalidateMode: event.autovalidateMode));
-      },
-    );
+    on<FormSetValidationEvent>((event, emit) =>
+        emit(FormBlocState(autovalidateMode: event.autovalidateMode)));
   }
 
   @override

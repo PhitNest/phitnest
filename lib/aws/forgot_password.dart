@@ -13,17 +13,15 @@ final class SendForgotPasswordSuccess extends SendForgotPasswordResponse {
   List<Object?> get props => [user];
 }
 
-enum ForgotPasswordFailure {
+enum SendForgotPasswordFailure {
   invalidUserPool,
   invalidEmail,
-  noSuchUser,
-  unknown;
+  noSuchUser;
 
   String get message => switch (this) {
-        ForgotPasswordFailure.invalidUserPool => kInvalidPool,
-        ForgotPasswordFailure.invalidEmail => kInvalidEmail,
-        ForgotPasswordFailure.noSuchUser => kNoSuchUser,
-        ForgotPasswordFailure.unknown => kUnknownError,
+        SendForgotPasswordFailure.invalidUserPool => kInvalidPool,
+        SendForgotPasswordFailure.invalidEmail => kInvalidEmail,
+        SendForgotPasswordFailure.noSuchUser => kNoSuchUser,
       };
 }
 
@@ -34,25 +32,25 @@ sealed class SendForgotPasswordFailureResponse
   const SendForgotPasswordFailureResponse() : super();
 }
 
-final class SendForgotPasswordFailure
+final class SendForgotPasswordKnownFailure
     extends SendForgotPasswordFailureResponse {
   @override
   String get message => type.message;
 
-  final ForgotPasswordFailure type;
+  final SendForgotPasswordFailure type;
 
-  const SendForgotPasswordFailure(this.type) : super();
+  const SendForgotPasswordKnownFailure(this.type) : super();
 
   @override
   List<Object?> get props => [type];
 }
 
-final class SendForgotPasswordUnknownResponse
+final class SendForgotPasswordUnknownFailure
     extends SendForgotPasswordFailureResponse {
   @override
   final String message;
 
-  const SendForgotPasswordUnknownResponse({
+  const SendForgotPasswordUnknownFailure({
     required String? message,
   })  : message = message ?? kUnknownError,
         super();
@@ -69,20 +67,25 @@ Future<SendForgotPasswordResponse> sendForgotPasswordRequest({
     final user = CognitoUser(email, apiInfo.pool);
     await user.forgotPassword();
     return SendForgotPasswordSuccess(user);
-  } on CognitoClientException catch (error) {
-    return switch (error.code) {
-      'ResourceNotFoundException' =>
-        SendForgotPasswordFailure(ForgotPasswordFailure.invalidUserPool),
-      'InvalidParameterException' =>
-        SendForgotPasswordFailure(ForgotPasswordFailure.invalidEmail),
-      'UserNotFoundException' =>
-        SendForgotPasswordFailure(ForgotPasswordFailure.noSuchUser),
-      _ => SendForgotPasswordUnknownResponse(message: error.message),
+  } on CognitoClientException catch (e) {
+    error(e.toString());
+    return switch (e.code) {
+      'ResourceNotFoundException' => const SendForgotPasswordKnownFailure(
+          SendForgotPasswordFailure.invalidUserPool),
+      'InvalidParameterException' => const SendForgotPasswordKnownFailure(
+          SendForgotPasswordFailure.invalidEmail),
+      'UserNotFoundException' => const SendForgotPasswordKnownFailure(
+          SendForgotPasswordFailure.noSuchUser),
+      _ => SendForgotPasswordUnknownFailure(message: e.message),
     };
-  } on ArgumentError catch (_) {
-    return SendForgotPasswordFailure(ForgotPasswordFailure.invalidUserPool);
-  } catch (error) {
-    return SendForgotPasswordUnknownResponse(message: error.toString());
+  } on ArgumentError catch (e) {
+    error(e.toString());
+    return const SendForgotPasswordKnownFailure(
+      SendForgotPasswordFailure.invalidUserPool,
+    );
+  } catch (e) {
+    error(e.toString());
+    return SendForgotPasswordUnknownFailure(message: e.toString());
   }
 }
 
@@ -134,8 +137,9 @@ Future<SubmitForgotPasswordFailure?> submitForgotPassword({
     } else {
       return SubmitForgotPasswordFailure.invalidCode;
     }
-  } on CognitoClientException catch (error) {
-    return switch (error.code) {
+  } on CognitoClientException catch (e) {
+    error(e.toString());
+    return switch (e.code) {
       'ResourceNotFoundException' =>
         SubmitForgotPasswordFailure.invalidUserPool,
       'InvalidParameterException' =>
@@ -145,7 +149,8 @@ Future<SubmitForgotPasswordFailure?> submitForgotPassword({
       'UserNotFoundException' => SubmitForgotPasswordFailure.noSuchUser,
       _ => SubmitForgotPasswordFailure.unknown,
     };
-  } catch (_) {
+  } catch (e) {
+    error(e.toString());
     return SubmitForgotPasswordFailure.unknown;
   }
 }

@@ -31,24 +31,23 @@ sealed class ChangePasswordFailureResponse extends ChangePasswordResponse {
   const ChangePasswordFailureResponse() : super();
 }
 
-final class ChangePasswordFailure extends ChangePasswordFailureResponse {
+final class ChangePasswordKnownFailure extends ChangePasswordFailureResponse {
   final ChangePasswordFailureType type;
 
   @override
   String get message => type.message;
 
-  const ChangePasswordFailure(this.type) : super();
+  const ChangePasswordKnownFailure(this.type) : super();
 
   @override
   List<Object?> get props => [type];
 }
 
-final class ChangePasswordUnknownResponse
-    extends ChangePasswordFailureResponse {
+final class ChangePasswordUnknownFailure extends ChangePasswordFailureResponse {
   @override
   final String message;
 
-  const ChangePasswordUnknownResponse({
+  const ChangePasswordUnknownFailure({
     required String? message,
   })  : message = message ?? kUnknownError,
         super();
@@ -58,8 +57,8 @@ final class ChangePasswordUnknownResponse
 }
 
 Future<ChangePasswordResponse> changePassword({
-  required UnauthenticatedSession unauthenticatedSession,
   required String newPassword,
+  required UnauthenticatedSession unauthenticatedSession,
 }) async {
   try {
     final session =
@@ -85,26 +84,29 @@ Future<ChangePasswordResponse> changePassword({
         ),
       );
     } else {
-      return const ChangePasswordUnknownResponse(message: null);
+      return const ChangePasswordUnknownFailure(message: null);
     }
-  } on CognitoClientException catch (error) {
-    return switch (error.code) {
-      'ResourceNotFoundException' => const ChangePasswordFailure(
+  } on CognitoClientException catch (e) {
+    error(e.toString());
+    return switch (e.code) {
+      'ResourceNotFoundException' => const ChangePasswordKnownFailure(
           ChangePasswordFailureType.invalidUserPool,
         ),
-      'NotAuthorizedException' => const ChangePasswordFailure(
+      'NotAuthorizedException' => const ChangePasswordKnownFailure(
           ChangePasswordFailureType.invalidPassword,
         ),
-      'UserNotFoundException' => const ChangePasswordFailure(
+      'UserNotFoundException' => const ChangePasswordKnownFailure(
           ChangePasswordFailureType.noSuchUser,
         ),
-      _ => ChangePasswordUnknownResponse(message: error.message),
+      _ => ChangePasswordUnknownFailure(message: e.message),
     };
-  } on ArgumentError catch (_) {
-    return const ChangePasswordFailure(
+  } on ArgumentError catch (err) {
+    error(err.toString());
+    return const ChangePasswordKnownFailure(
       ChangePasswordFailureType.invalidUserPool,
     );
   } catch (err) {
-    return ChangePasswordUnknownResponse(message: err.toString());
+    error(err.toString());
+    return ChangePasswordUnknownFailure(message: err.toString());
   }
 }

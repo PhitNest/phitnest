@@ -119,22 +119,25 @@ Future<RegisterResponse> register({
     } else {
       return const RegisterUnknownResponse(message: null);
     }
-  } on CognitoClientException catch (error) {
-    return switch (error.code) {
+  } on CognitoClientException catch (e) {
+    error(e.toString());
+    return switch (e.code) {
       'ResourceNotFoundException' =>
         const RegisterFailure((RegisterFailureType.invalidUserPool)),
       'UsernameExistsException' =>
         const RegisterFailure(RegisterFailureType.userExists),
       'InvalidPasswordException' => ValidationFailure(
-          error.message ?? 'Invalid password',
+          e.message ?? 'Invalid password',
         ),
       'InvalidParameterException' =>
-        ValidationFailure(error.message ?? 'Invalid email'),
-      _ => RegisterUnknownResponse(message: error.message),
+        ValidationFailure(e.message ?? 'Invalid email'),
+      _ => RegisterUnknownResponse(message: e.message),
     };
-  } on ArgumentError catch (_) {
+  } on ArgumentError catch (e) {
+    error(e.toString());
     return const RegisterFailure(RegisterFailureType.invalidUserPool);
-  } catch (err) {
-    return RegisterUnknownResponse(message: err.toString());
+  } catch (e) {
+    error(e.toString());
+    return RegisterUnknownResponse(message: e.toString());
   }
 }
