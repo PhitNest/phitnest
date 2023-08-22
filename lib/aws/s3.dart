@@ -60,7 +60,7 @@ Future<Failure?> uploadProfilePicture({
         'https://${session.apiInfo.userBucketName}.$kS3Service.$region.amazonaws.com';
     final String? userId = session.credentials.userIdentityId;
     if (userId == null) {
-      return Failure('FailedToUpload', 'User is not logged in');
+      return Failure.populated('FailedToUpload', 'User is not logged in');
     }
     final String bucketKey = 'profilePictures/$userId.txt';
     final uri = Uri.parse(s3Endpoint);
@@ -122,6 +122,6 @@ Future<Failure?> uploadProfilePicture({
       'Identity ID: ${session.credentials.userIdentityId}\n'
       'Error: ${e.toString()}',
     );
-    return Failure('FailedToUpload', e.toString());
+    return Failure.populated('FailedToUpload', e.toString());
   }
 }

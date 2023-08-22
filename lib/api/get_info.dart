@@ -9,19 +9,28 @@ final class CognitoPoolInfo extends Json {
 
   CognitoPoolInfo.parser() : super();
 
+  CognitoPoolInfo.populated(String poolId, String clientId) : super() {
+    poolIdJson.populate(poolId);
+    clientIdJson.populate(clientId);
+  }
+
   @override
   List<JsonKey<dynamic, dynamic>> get keys => [poolIdJson, clientIdJson];
 }
 
 final class ApiInfo extends Json {
-  final userPoolJson = JsonObject.parser('userPool', CognitoPoolInfo.parser);
-  final adminPoolJson = JsonObject.parser('adminPool', CognitoPoolInfo.parser);
+  final userPoolJson = JsonObjectKey.parser('userPool', CognitoPoolInfo.parser);
+  final adminPoolJson =
+      JsonObjectKey.parser('adminPool', CognitoPoolInfo.parser);
   final identityPoolIdJson = Json.string('identityPoolId');
   final userBucketNameJson = Json.string('userBucketName');
   final bool useAdmin;
 
-  CognitoUserPool get userPool => _pool(userPoolJson.value);
-  CognitoUserPool get adminPool => _pool(adminPoolJson.value);
+  late final CognitoUserPool _userPool = _pool(userPoolJson.value);
+  late final CognitoUserPool _adminPool = _pool(adminPoolJson.value);
+
+  CognitoUserPool get userPool => _userPool;
+  CognitoUserPool get adminPool => _adminPool;
   String get identityPoolId => identityPoolIdJson.value;
   String get userBucketName => userBucketNameJson.value;
 
@@ -67,7 +76,7 @@ Future<HttpResponse<ApiInfo>> requestApiInfo({
     request(
       route: '/info',
       method: HttpMethod.get,
-      parse: (json) => ApiInfo.parse(json as Map<String, dynamic>, useAdmin),
+      parse: (json) => ApiInfo.parse(json, useAdmin),
       writeToCache: writeToCache ? cacheApiInfo : null,
       readFromCache: readFromCache ? () => getCachedApiInfo(useAdmin) : null,
     );
