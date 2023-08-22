@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -51,7 +52,7 @@ void initializeHttp({String? host, String? port, Duration? timeout}) {
 Future<HttpResponse<ResType>> request<ResType>({
   required String route,
   required HttpMethod method,
-  required ResType Function(dynamic) parse,
+  required ResType Function(Map<String, dynamic>) parse,
   Map<String, dynamic>? data,
   Map<String, dynamic>? headers,
   Session? session,
@@ -120,30 +121,37 @@ Future<HttpResponse<ResType>> request<ResType>({
         HttpMethod.delete => dio.delete<dynamic>(url),
       }
           .timeout(_timeout)
-          .then(
-        (response) {
+          .then((response) {
+        final jsonData = jsonDecode(response.data as String);
+        if (jsonData is Map<String, dynamic>) {
           // Handle successful responses
           if (response.statusCode == 200) {
             // Parse the response data
-            final parsed = parse(response.data);
+            final parsed = parse(jsonData);
             // Log success
             debug(responseLog('success', parsed));
             return HttpResponseOk(parsed, response.headers);
+          } else {
+            // Handle unsuccessful responses
+            final parsed = Failure.parse(jsonData);
+            error(responseLog('failure', parsed));
+            return HttpResponseFailure(parsed, response.headers);
           }
-          // Handle unsuccessful responses
-          final failure = Failure.fromJson(response.data);
-          error(responseLog('failure', failure));
-          return HttpResponseFailure(failure, response.headers);
-        },
-      );
+        } else {
+          throw Failure.populated('Invalid response', response.data.toString());
+        }
+      });
     } on TimeoutException {
       // Log and return a NetworkConnectionFailure on timeout
       error(responseLog('timeout', data));
       return HttpResponseFailure(
-          const Failure('Timeout', 'Request timeout'), Headers());
+          Failure.populated('Timeout', 'Request timeout'), Headers());
+    } on Failure catch (failure) {
+      error(responseLog('failure', failure));
+      return HttpResponseFailure(failure, Headers());
     } catch (e) {
       // Log and return failure by value
-      final failure = invalidFailure(e);
+      final failure = Failure.populated('UnknownFailure', e.toString());
       error(responseLog('failure', failure));
       return HttpResponseFailure(failure, Headers());
     }
