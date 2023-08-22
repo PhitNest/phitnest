@@ -60,9 +60,7 @@ final class ApiInfo extends Json {
 
 const kApiInfoJsonKey = 'apiInfo';
 
-Future<void> cacheApiInfo(
-  ApiInfo? details,
-) =>
+Future<void> cacheApiInfo(ApiInfo? details) =>
     cacheObject(kApiInfoJsonKey, details);
 
 ApiInfo? getCachedApiInfo(bool admin) =>

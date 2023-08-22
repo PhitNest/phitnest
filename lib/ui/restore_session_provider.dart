@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../api/api.dart';
 import '../aws/aws.dart';
-import '../bloc/loader.dart';
+import '../bloc/loader/loader.dart';
 import '../http/http.dart';
 import 'styled/styled_banner.dart';
 
@@ -19,8 +19,9 @@ extension on BuildContext {
 final class RestoreSessionProvider extends StatelessWidget {
   final Widget loader;
   final bool useAdminAuth;
-  final PageRoute<void> Function(ApiInfo) onSessionRestored;
-  final PageRoute<void> Function(ApiInfo) onSessionRestoreFailed;
+  final void Function(BuildContext context, ApiInfo apiInfo) onSessionRestored;
+  final void Function(BuildContext context, ApiInfo apiInfo)
+      onSessionRestoreFailed;
 
   const RestoreSessionProvider({
     super.key,
@@ -58,8 +59,7 @@ final class RestoreSessionProvider extends StatelessWidget {
                   // server, but our cache was empty so a session will not be
                   // restored.
                   case HttpResponseOk(data: final apiInfo):
-                    Navigator.pushReplacement(
-                        context, onSessionRestoreFailed(apiInfo));
+                    onSessionRestoreFailed(context, apiInfo);
                   case HttpResponseCache():
                 }
               default:
@@ -84,21 +84,13 @@ final class RestoreSessionProvider extends StatelessWidget {
                             ):
                             switch (restoreSessionResponse) {
                               case RefreshSessionFailureResponse():
-                                Navigator.pushReplacement(
-                                  context,
-                                  onSessionRestoreFailed(
-                                    cachedApiInfo,
-                                  ),
-                                );
+                                onSessionRestoreFailed(context, cachedApiInfo);
                               case RefreshSessionSuccess(
                                   newSession: final newSession
                                 ):
                                 context.sessionLoader.add(LoaderSetEvent(
                                     RefreshSessionSuccess(newSession)));
-                                Navigator.pushReplacement(
-                                  context,
-                                  onSessionRestored(newSession.apiInfo),
-                                );
+                                onSessionRestored(context, newSession.apiInfo);
                             }
                           default:
                         }

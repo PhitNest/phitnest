@@ -4,7 +4,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'api/api.dart';
-import 'bloc/loader.dart';
+import 'aws/aws.dart';
+import 'bloc/loader/loader.dart';
 import 'cache/cache.dart';
 import 'http/http.dart';
 import 'ui/ui.dart';
@@ -13,8 +14,10 @@ Future<void> runPhitNest({
   required bool useAdminAuth,
   required String title,
   required Widget loader,
-  required PageRoute<void> Function(ApiInfo) sessionRestoreFailedBuilder,
-  required PageRoute<void> Function(ApiInfo) sessionRestoredBuilder,
+  required void Function(BuildContext context, ApiInfo apiInfo)
+      sessionRestoreFailedBuilder,
+  required void Function(BuildContext context, ApiInfo apiInfo)
+      sessionRestoredBuilder,
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
@@ -37,8 +40,10 @@ final class PhitNestApp extends StatelessWidget {
   final bool useAdminAuth;
   final String title;
   final Widget loader;
-  final PageRoute<void> Function(ApiInfo) sessionRestoreFailedBuilder;
-  final PageRoute<void> Function(ApiInfo) sessionRestoredBuilder;
+  final void Function(BuildContext context, ApiInfo apiInfo)
+      sessionRestoreFailedBuilder;
+  final void Function(BuildContext context, ApiInfo apiInfo)
+      sessionRestoredBuilder;
 
   const PhitNestApp({
     Key? key,
@@ -55,11 +60,7 @@ final class PhitNestApp extends StatelessWidget {
         designSize: const Size(375, 667),
         builder: (context, _) => MultiBlocProvider(
           providers: [
-            BlocProvider(
-              create: (_) => SessionBloc(
-                load: (session) => session.refreshSession(),
-              ),
-            ),
+            BlocProvider(create: (_) => SessionBloc(load: refreshSession)),
           ],
           child: GestureDetector(
             onTap: () {
