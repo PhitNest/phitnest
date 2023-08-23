@@ -1,36 +1,7 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:phitnest_core/core.dart';
 
-final class InviteParams extends Equatable {
-  final String email;
-  final String gymId;
-
-  const InviteParams({
-    required this.email,
-    required this.gymId,
-  }) : super();
-
-  @override
-  List<Object?> get props => [email, gymId];
-
-  Map<String, dynamic> toJson() => {
-        'receiverEmail': email,
-        'gymId': gymId,
-      };
-}
-
-Future<HttpResponse<void>> invite({
-  required InviteParams params,
-  required Session session,
-}) =>
-    request(
-      route: '/adminInvite',
-      method: HttpMethod.post,
-      parser: (_) {},
-      data: params.toJson(),
-      session: session,
-    );
+import '../api/api.dart';
 
 final class InviteFormControllers extends FormControllers {
   final emailController = TextEditingController();
@@ -54,22 +25,35 @@ final class InviteForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
-        child: FormProvider<InviteFormControllers, InviteParams,
-            HttpResponse<void>?>(
+        child: AuthFormProvider<InviteFormControllers, AdminInviteParams,
+            HttpResponse<void>>(
           createControllers: (_) => InviteFormControllers(),
-          load: (params) => context.sessionLoader.session.then(
-            (session) {
-              if (session != null) {
-                return invite(
-                  params: params,
-                  session: session,
-                );
-              } else {
-                return null;
-              }
-            },
-          ),
-          formBuilder: (context, controllers, consumer) => Column(
+          createLoader: (context) => AuthLoaderBloc(load: adminInvite),
+          listener: (_, controllers, loaderState, __) {
+            switch (loaderState) {
+              case LoaderLoadedState(data: final response):
+                switch (response) {
+                  case AuthRes(data: final data):
+                    switch (data) {
+                      case HttpResponseSuccess():
+                        StyledBanner.show(
+                          message: 'Invite sent',
+                          error: false,
+                        );
+                        controllers.emailController.clear();
+                      case HttpResponseFailure(failure: final failure):
+                        StyledBanner.show(
+                          message: failure.message,
+                          error: true,
+                        );
+                    }
+                  case AuthLost():
+                    onSessionLost(context);
+                }
+              default:
+            }
+          },
+          builder: (context, controllers, loaderState, submit) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text('Invite'),
@@ -77,49 +61,28 @@ final class InviteForm extends StatelessWidget {
                 hint: 'Email',
                 validator: EmailValidator.validateEmail,
                 controller: controllers.emailController,
+                textInputAction: TextInputAction.next,
               ),
               StyledUnderlinedTextField(
                 hint: 'Gym ID',
                 controller: controllers.gymIdController,
+                textInputAction: TextInputAction.done,
               ),
-              consumer(
-                listener: (context, submitState, _) {
-                  switch (submitState) {
-                    case LoaderLoadedState(data: final response):
-                      if (response != null) {
-                        switch (response) {
-                          case HttpResponseSuccess():
-                            StyledBanner.show(
-                              message: 'Invite sent',
-                              error: false,
-                            );
-                            controllers.emailController.clear();
-                          case HttpResponseFailure(failure: final failure):
-                            StyledBanner.show(
-                              message: failure.message,
-                              error: true,
-                            );
-                        }
-                      } else {
-                        onSessionLost(context);
-                      }
-                    default:
-                  }
-                },
-                builder: (context, submitState, submit) =>
-                    switch (submitState) {
-                  LoaderLoadedState() || LoaderInitialState() => TextButton(
-                      onPressed: () => submit(
-                        InviteParams(
+              switch (loaderState) {
+                LoaderLoadingState() => const Loader(),
+                _ => TextButton(
+                    onPressed: () => submit(
+                      (
+                        sessionLoader: context.sessionLoader,
+                        data: AdminInviteParams.populated(
                           email: controllers.emailController.text,
                           gymId: controllers.gymIdController.text,
-                        ),
+                        )
                       ),
-                      child: const Text('Invite'),
                     ),
-                  LoaderLoadingState() => const CircularProgressIndicator(),
-                },
-              )
+                    child: const Text('Invite'),
+                  ),
+              },
             ],
           ),
         ),

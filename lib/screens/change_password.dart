@@ -49,85 +49,82 @@ final class ChangePasswordScreen extends StatelessWidget {
           child: FormProvider<ChangePasswordControllers, String,
               ChangePasswordResponse>(
             createControllers: (_) => ChangePasswordControllers(),
-            load: (newPassword) => changePassword(
-              unauthenticatedSession: unauthenticatedSession,
-              newPassword: newPassword,
-            ),
-            formBuilder: (context, controllers, consumer) => consumer(
-              listener: (context, state, _) {
-                switch (state) {
-                  case LoaderLoadedState(data: final response):
-                    switch (response) {
-                      case ChangePasswordSuccess(session: final session):
-                        context.sessionLoader.add(
-                            LoaderSetEvent(RefreshSessionSuccess(session)));
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (context) => HomeScreen(
-                              apiInfo: session.apiInfo,
-                            ),
-                          ),
-                          (_) => false,
-                        );
-                      case ChangePasswordFailureResponse(
-                          message: final message
-                        ):
-                        StyledBanner.show(
-                          message: message,
-                          error: true,
-                        );
-                    }
-                  default:
-                }
-              },
-              builder: (context, state, submit) => Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Change Password',
-                    style: Theme.of(context).textTheme.headlineLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  StyledPasswordField(
-                    hint: 'Password',
-                    controller: controllers.passwordController,
-                    textInputAction: TextInputAction.next,
-                    validator: validatePassword,
-                  ),
-                  StyledPasswordField(
-                    hint: 'Confirm Password',
-                    controller: controllers.confirmPasswordController,
-                    textInputAction: TextInputAction.done,
-                    validator: (val) =>
-                        validatePassword(val) ??
-                        (controllers.passwordController.text == val
-                            ? null
-                            : 'Passwords do not match'),
-                    onFieldSubmitted: (_) =>
-                        submit(controllers.passwordController.text),
-                  ),
-                  switch (state) {
-                    LoaderLoadingState() => const CircularProgressIndicator(),
-                    LoaderLoadedState() || LoaderInitialState() => SubmitButton(
-                        onSubmit: () =>
-                            submit(controllers.passwordController.text),
-                      ),
-                  },
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  MaterialButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text(
-                      'Back',
-                    ),
-                  ),
-                ],
+            createLoader: (_) => LoaderBloc(
+              load: (newPassword) => changePassword(
+                unauthenticatedSession: unauthenticatedSession,
+                newPassword: newPassword,
               ),
+            ),
+            listener: (context, controllers, state, _) {
+              switch (state) {
+                case LoaderLoadedState(data: final response):
+                  switch (response) {
+                    case ChangePasswordSuccess(session: final session):
+                      context.sessionLoader
+                          .add(LoaderSetEvent(RefreshSessionSuccess(session)));
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (context) =>
+                              HomeScreen(initialSession: session),
+                        ),
+                        (_) => false,
+                      );
+                    case ChangePasswordFailureResponse(message: final message):
+                      StyledBanner.show(
+                        message: message,
+                        error: true,
+                      );
+                  }
+                default:
+              }
+            },
+            builder: (context, controllers, state, submit) => Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Change Password',
+                  style: Theme.of(context).textTheme.headlineLarge,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                StyledPasswordField(
+                  hint: 'Password',
+                  controller: controllers.passwordController,
+                  textInputAction: TextInputAction.next,
+                  validator: validatePassword,
+                ),
+                StyledPasswordField(
+                  hint: 'Confirm Password',
+                  controller: controllers.confirmPasswordController,
+                  textInputAction: TextInputAction.done,
+                  validator: (val) =>
+                      validatePassword(val) ??
+                      (controllers.passwordController.text == val
+                          ? null
+                          : 'Passwords do not match'),
+                  onFieldSubmitted: (_) =>
+                      submit(controllers.passwordController.text),
+                ),
+                switch (state) {
+                  LoaderLoadingState() => const CircularProgressIndicator(),
+                  LoaderLoadedState() || LoaderInitialState() => SubmitButton(
+                      onSubmit: () =>
+                          submit(controllers.passwordController.text),
+                    ),
+                },
+                const SizedBox(
+                  height: 10,
+                ),
+                MaterialButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    'Back',
+                  ),
+                ),
+              ],
             ),
           ),
         ),

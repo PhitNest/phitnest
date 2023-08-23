@@ -6,17 +6,21 @@ import 'screens/login_screen.dart';
 
 Future<void> main() => runPhitNest(
       useAdminAuth: true,
-      useScreenUtils: false,
       title: 'PhitNest Admin',
-      loader: const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
+      sessionRestoredBuilder: (context, session) =>
+          Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) => HomeScreen(initialSession: session),
         ),
+        (_) => false,
       ),
-      sessionRestoredBuilder: (apiInfo) => MaterialPageRoute(
-        builder: (context) => HomeScreen(apiInfo: apiInfo),
-      ),
-      sessionRestoreFailedBuilder: (apiInfo) => MaterialPageRoute(
-        builder: (context) => LoginScreen(apiInfo: apiInfo),
+      sessionRestoreFailedBuilder: (context, apiInfo) =>
+          Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) => LoginScreen(apiInfo: apiInfo),
+        ),
+        (_) => false,
       ),
     );
