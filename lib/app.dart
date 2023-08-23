@@ -70,10 +70,12 @@ final class PhitNestApp extends StatelessWidget {
               theme: theme,
               debugShowCheckedModeBanner: false,
               scaffoldMessengerKey: StyledBanner.scaffoldMessengerKey,
-              home: RestoreSessionProvider(
-                useAdminAuth: useAdminAuth,
-                onSessionRestoreFailed: sessionRestoreFailedBuilder,
-                onSessionRestored: sessionRestoredBuilder,
+              home: Scaffold(
+                body: RestoreSessionProvider(
+                  useAdminAuth: useAdminAuth,
+                  onSessionRestoreFailed: sessionRestoreFailedBuilder,
+                  onSessionRestored: sessionRestoredBuilder,
+                ),
               ),
             ),
           ),
