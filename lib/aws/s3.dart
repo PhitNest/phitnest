@@ -49,6 +49,24 @@ $payload''';
   );
 }
 
+Future<Image?> getProfilePicture(String identityId, Session session) async {
+  try {
+    final uri = getProfilePictureUri(session, identityId);
+    final res = await http.get(uri.uri, headers: uri.headers);
+    if (res.statusCode != 200) {
+      return null;
+    }
+    return Image.memory(res.bodyBytes);
+  } catch (e) {
+    error(
+      'Error thrown while getting pfp\n'
+      'Identity ID: ${session.credentials.userIdentityId}\n'
+      'Error: ${e.toString()}',
+    );
+    return null;
+  }
+}
+
 Future<Failure?> uploadProfilePicture({
   required http.ByteStream photo,
   required int length,
