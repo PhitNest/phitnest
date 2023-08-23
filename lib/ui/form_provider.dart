@@ -4,36 +4,48 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/form/form.dart';
 import '../bloc/loader/loader.dart';
 
-final class FormProvider<Controllers extends FormControllers, ReqType, ResType>
-    extends StatelessWidget {
+typedef FormProvider<Controllers extends FormControllers, ReqType, ResType>
+    = _FormProvider<Controllers, LoaderBloc<ReqType, ResType>, ReqType,
+        ResType>;
+
+typedef AuthFormProvider<Controllers extends FormControllers, ReqType, ResType>
+    = _FormProvider<Controllers, AuthLoaderBloc<ReqType, ResType>,
+        ({ReqType data, SessionBloc sessionLoader}), AuthResOrLost<ResType>>;
+
+final class _FormProvider<
+    Controllers extends FormControllers,
+    BlocType extends LoaderBloc<ReqType, ResType>,
+    ReqType,
+    ResType> extends StatelessWidget {
   final Widget Function(
-      BuildContext context,
-      Controllers controllers,
-      Widget Function(
-        Widget Function(BuildContext, LoaderState<ResType>,
-                void Function(ReqType) submit)
-            formBuilder,
-        void Function(BuildContext, LoaderState<ResType>,
-                void Function(ReqType) submit)
-            formListener,
-      )) formConsumer;
+    BuildContext context,
+    Controllers controllers,
+    LoaderState<ResType> loaderState,
+    void Function(ReqType) submit,
+  ) builder;
+
+  final void Function(
+    BuildContext context,
+    Controllers controllers,
+    LoaderState<ResType> loaderState,
+    void Function(ReqType) submit,
+  ) listener;
 
   final Controllers Function(BuildContext context) createControllers;
-  final Future<ResType> Function(ReqType req) load;
-  final ResType? initialData;
+  final BlocType Function(BuildContext) createLoader;
 
   void submit(BuildContext context, ReqType request) =>
       context.formBloc<Controllers>().submit(
-            onAccept: () => context.loader<ReqType, ResType>().add(
-                  LoaderLoadEvent(request),
-                ),
+            onAccept: () => context
+                .loader<ReqType, ResType>()
+                .add(LoaderLoadEvent(request)),
           );
 
-  const FormProvider({
-    required this.load,
-    required this.formConsumer,
+  const _FormProvider({
+    required this.createLoader,
+    required this.listener,
+    required this.builder,
     required this.createControllers,
-    this.initialData,
   }) : super();
 
   @override
@@ -42,9 +54,7 @@ final class FormProvider<Controllers extends FormControllers, ReqType, ResType>
           BlocProvider(
             create: (context) => FormBloc(createControllers(context)),
           ),
-          BlocProvider(
-            create: (_) => LoaderBloc(load: load),
-          ),
+          BlocProvider(create: createLoader),
         ],
         child: FormConsumer<Controllers>(
           listener: (context, formState) {},
@@ -57,15 +67,17 @@ final class FormProvider<Controllers extends FormControllers, ReqType, ResType>
             final FormBloc<Controllers> formBloc = context.formBloc();
             return Form(
               key: formBloc.formKey,
-              child: formConsumer(
-                context,
-                formBloc.controllers,
-                (formBuilder, formListener) => LoaderConsumer<ReqType, ResType>(
-                  builder: (context, loaderState) => formBuilder(context,
-                      loaderState, (req) => handleSubmit(req, loaderState)),
-                  listener: (context, loaderState) => formListener(context,
-                      loaderState, (req) => handleSubmit(req, loaderState)),
-                ),
+              child: LoaderConsumer<ReqType, ResType>(
+                listener: (context, loaderState) => listener(
+                    context,
+                    formBloc.controllers,
+                    loaderState,
+                    (req) => handleSubmit(req, loaderState)),
+                builder: (context, loaderState) => builder(
+                    context,
+                    formBloc.controllers,
+                    loaderState,
+                    (req) => handleSubmit(req, loaderState)),
               ),
             );
           },
