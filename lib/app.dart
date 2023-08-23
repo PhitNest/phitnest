@@ -13,7 +13,6 @@ import 'ui/ui.dart';
 Future<void> runPhitNest({
   required bool useAdminAuth,
   required String title,
-  required Widget loader,
   required void Function(BuildContext context, ApiInfo apiInfo)
       sessionRestoreFailedBuilder,
   required void Function(BuildContext context, Session session)
