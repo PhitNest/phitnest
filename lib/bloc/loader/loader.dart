@@ -12,6 +12,9 @@ part 'state.dart';
 extension GetLoader on BuildContext {
   LoaderBloc<ReqType, ResType> loader<ReqType, ResType>() =>
       BlocProvider.of(this);
+
+  AuthLoaderBloc<ReqType, ResType> authLoader<ReqType, ResType>() =>
+      BlocProvider.of(this);
 }
 
 typedef LoaderConsumer<ReqType, ResType>
@@ -134,13 +137,14 @@ final class AuthLost<ResType> extends AuthResOrLost<ResType> {
 
 typedef _Loaded = LoaderLoadedState<RefreshSessionResponse>;
 
+typedef AuthLoaderConsumer<ReqType, ResType> = BlocConsumer<
+    AuthLoaderBloc<ReqType, ResType>, LoaderState<AuthResOrLost<ResType>>>;
+
 final class AuthLoaderBloc<ReqType, ResType> extends LoaderBloc<
-    ({ReqType data, BuildContext context}), AuthResOrLost<ResType>> {
+    ({ReqType data, SessionBloc sessionLoader}), AuthResOrLost<ResType>> {
   AuthLoaderBloc({required Future<ResType> Function(ReqType, Session) load})
       : super(
           load: (req) async {
-            final sessionLoader = req.context.sessionLoader;
-
             Future<AuthResOrLost<ResType>> handleResponse(
               RefreshSessionResponse response,
             ) async {
@@ -149,8 +153,8 @@ final class AuthLoaderBloc<ReqType, ResType> extends LoaderBloc<
                   if (newSession.cognitoSession.isValid()) {
                     return AuthRes(await load(req.data, newSession));
                   } else {
-                    sessionLoader.add(LoaderLoadEvent(newSession));
-                    final response = await sessionLoader.stream.firstWhere(
+                    req.sessionLoader.add(LoaderLoadEvent(newSession));
+                    final response = await req.sessionLoader.stream.firstWhere(
                             (state) => state is _Loaded,
                             orElse: () => LoaderLoadedState(
                                 RefreshSessionUnknownResponse(message: null)))
@@ -162,7 +166,7 @@ final class AuthLoaderBloc<ReqType, ResType> extends LoaderBloc<
               }
             }
 
-            switch (sessionLoader.state) {
+            switch (req.sessionLoader.state) {
               case LoaderLoadedState(data: final response):
                 return await handleResponse(response);
               case LoaderLoadingState(operation: final operation):
