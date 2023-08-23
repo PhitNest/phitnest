@@ -27,7 +27,7 @@ final class PhotoInstructionsScreen extends StatelessWidget {
         },
       ).catchError(
         (dynamic e) {
-          prettyLogger.e(e.toString());
+          error(e.toString());
           return null;
         },
       );

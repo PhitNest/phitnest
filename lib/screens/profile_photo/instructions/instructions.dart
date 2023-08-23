@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:phitnest_core/core.dart';
 
 import '../../../common/constants/constants.dart';
+import '../../../widgets/widgets.dart';
 import '../confirm/confirm.dart';
 
 part 'bloc.dart';

@@ -14,6 +14,8 @@ class ConfirmEmailControllers extends FormControllers {
 typedef ResendEmailLoaderBloc = LoaderBloc<void, bool>;
 typedef ResendEmailLoaderConsumer = LoaderConsumer<void, bool>;
 
+typedef ConfirmEmailBloc = LoaderBloc<String, LoginResponse?>;
+
 extension on BuildContext {
   ResendEmailLoaderBloc get resendEmailLoaderBloc => loader();
 }

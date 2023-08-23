@@ -15,109 +15,101 @@ final class ForgotPasswordScreen extends StatelessWidget {
           child: FormProvider<ForgotPasswordControllers, String,
               SendForgotPasswordResponse>(
             createControllers: (_) => ForgotPasswordControllers(),
-            load: (email) => sendForgotPasswordRequest(
-              email: email,
-              apiInfo: apiInfo,
+            createLoader: (_) => LoaderBloc(
+              load: (email) => sendForgotPasswordRequest(
+                email: email,
+                apiInfo: apiInfo,
+              ),
             ),
-            formBuilder: (context, controllers, consumer) => PageView(
-              controller: controllers.pageController,
-              children: [
-                Column(
-                  children: [
-                    64.verticalSpace,
-                    Text(
-                      'Forgot Password?',
-                      style: theme.textTheme.bodyLarge,
-                    ),
-                    32.verticalSpace,
-                    Text(
-                      'Enter your email address',
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                    16.verticalSpace,
-                    StyledUnderlinedTextField(
-                      hint: 'Email',
-                      controller: controllers.emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                      onFieldSubmitted: (_) =>
-                          BlocProvider.of<FormBloc<ForgotPasswordControllers>>(
-                                      context)
-                                  .formKey
-                                  .currentState!
-                                  .validate()
-                              ? controllers.pageController.nextPage(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut,
-                                )
-                              : {},
-                      validator: EmailValidator.validateEmail,
-                    ),
-                    23.verticalSpace,
-                    StyledOutlineButton(
-                      onPress: () => controllers.pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      ),
-                      text: 'NEXT',
-                    ),
-                  ],
-                ),
-                consumer(
-                  listener: (context, state, _) {
-                    switch (state) {
-                      case LoaderLoadedState(data: final response):
-                        switch (response) {
-                          case SendForgotPasswordSuccess(user: final user):
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute<void>(
-                                builder: (context) => ConfirmEmailScreen(
-                                  loginParams: LoginParams(
-                                    email: controllers.emailController.text,
-                                    password:
-                                        controllers.newPasswordController.text,
-                                  ),
-                                  unauthenticatedSession:
-                                      UnauthenticatedSession(
-                                    user: user,
-                                    apiInfo: apiInfo,
-                                  ),
-                                  resendConfirmationEmail: (session) =>
-                                      sendForgotPasswordRequest(
-                                    apiInfo: apiInfo,
-                                    email: controllers.emailController.text,
-                                  ).then(
-                                    (state) =>
-                                        state is SendForgotPasswordSuccess,
-                                  ),
-                                  confirmEmail: (session, code) =>
-                                      submitForgotPassword(
-                                    params: SubmitForgotPasswordParams(
-                                      email: controllers.emailController.text,
-                                      code: code,
-                                      newPassword: controllers
-                                          .newPasswordController.text,
-                                    ),
-                                    session: session,
-                                  ).then((state) => state == null),
-                                ),
+            listener: (context, controllers, loaderState, _) {
+              switch (loaderState) {
+                case LoaderLoadedState(data: final response):
+                  switch (response) {
+                    case SendForgotPasswordSuccess(user: final user):
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute<void>(
+                          builder: (context) => ConfirmEmailScreen(
+                            apiInfo: apiInfo,
+                            loginParams: LoginParams(
+                              email: controllers.emailController.text,
+                              password: controllers.newPasswordController.text,
+                            ),
+                            unauthenticatedSession: UnauthenticatedSession(
+                              user: user,
+                              apiInfo: apiInfo,
+                            ),
+                            resendConfirmationEmail: (session) =>
+                                sendForgotPasswordRequest(
+                              apiInfo: apiInfo,
+                              email: controllers.emailController.text,
+                            ).then(
+                              (state) => state is SendForgotPasswordSuccess,
+                            ),
+                            confirmEmail: (session, code) =>
+                                submitForgotPassword(
+                              params: SubmitForgotPasswordParams(
+                                email: controllers.emailController.text,
+                                code: code,
+                                newPassword:
+                                    controllers.newPasswordController.text,
                               ),
-                            );
-                          case SendForgotPasswordFailureResponse(
-                              message: final message
-                            ):
-                            StyledBanner.show(
-                              message: message,
-                              error: true,
-                            );
-                        }
-                      default:
-                    }
-                  },
-                  builder: (context, state, submit) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                              session: session,
+                            ).then((state) => state == null),
+                          ),
+                        ),
+                      );
+                    case SendForgotPasswordFailureResponse(
+                        message: final message
+                      ):
+                      StyledBanner.show(
+                        message: message,
+                        error: true,
+                      );
+                  }
+                default:
+              }
+            },
+            builder: (context, controllers, loaderState, submit) {
+              final formBloc = context.formBloc<ForgotPasswordControllers>();
+              return PageView(
+                controller: controllers.pageController,
+                children: [
+                  Column(
                     children: [
+                      64.verticalSpace,
+                      Text(
+                        'Forgot Password?',
+                        style: theme.textTheme.bodyLarge,
+                      ),
+                      32.verticalSpace,
+                      Text(
+                        'Enter your email address',
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                      16.verticalSpace,
+                      StyledUnderlinedTextField(
+                        hint: 'Email',
+                        controller: controllers.emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        onFieldSubmitted: (_) =>
+                            formBloc.formKey.currentState!.validate()
+                                ? controllers.pageController.nextPage(
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeInOut,
+                                  )
+                                : {},
+                        validator: EmailValidator.validateEmail,
+                      ),
+                      23.verticalSpace,
+                      StyledOutlineButton(
+                        onPress: () => controllers.pageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        ),
+                        text: 'NEXT',
+                      ),
                       64.verticalSpace,
                       Text(
                         'Forgot Password?',
@@ -150,7 +142,7 @@ final class ForgotPasswordScreen extends StatelessWidget {
                       ),
                       23.verticalSpace,
                       Center(
-                        child: switch (state) {
+                        child: switch (loaderState) {
                           LoaderLoadingState() =>
                             const CircularProgressIndicator(),
                           _ => ElevatedButton(
@@ -165,9 +157,9 @@ final class ForgotPasswordScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
+                ],
+              );
+            },
           ),
         ),
       );

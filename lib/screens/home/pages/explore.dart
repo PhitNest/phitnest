@@ -1,7 +1,7 @@
 part of '../home.dart';
 
 class ExploreScreen extends StatelessWidget {
-  final List<UserWithProfilePicture> users;
+  final List<UserExplore> users;
   final PageController pageController;
   final int? countdown;
 

@@ -111,7 +111,7 @@ final class HomePressPageEvent extends HomeEvent {
 }
 
 final class HomeLoadedExploreEvent extends HomeEvent {
-  final List<UserWithProfilePicture> exploreUsers;
+  final List<UserExplore> exploreUsers;
 
   const HomeLoadedExploreEvent(this.exploreUsers) : super();
 

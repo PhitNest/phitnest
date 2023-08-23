@@ -10,12 +10,7 @@ final class ConfirmPhotoScreen extends StatelessWidget {
     required this.apiInfo,
   }) : super();
 
-  Future<ConfirmPhotoResponse> submit(BuildContext context) async {
-    final session = await context.sessionLoader.session;
-    if (session == null) {
-      prettyLogger.e('Lost auth while confirming photo');
-      return const ConfirmPhotoLostAuth();
-    }
+  Future<ConfirmPhotoResponse> submit(Session session) async {
     final bytes = await photo.readAsBytes();
     final failure = await uploadProfilePicture(
       photo: ByteStream.fromBytes(bytes),
@@ -31,47 +26,50 @@ final class ConfirmPhotoScreen extends StatelessWidget {
     }
   }
 
-  void handleStateChanged(
-      BuildContext context, LoaderState<ConfirmPhotoResponse> confirmState) {
-    switch (confirmState) {
-      case LoaderLoadedState(data: final failure):
-        switch (failure) {
-          case ConfirmPhotoLostAuth():
-            Navigator.pushAndRemoveUntil(
-              context,
-              CupertinoPageRoute<void>(
-                builder: (context) => LoginScreen(
-                  apiInfo: apiInfo,
-                ),
-              ),
-              (_) => false,
-            );
-          case ConfirmPhotoSuccess():
-            Navigator.pushAndRemoveUntil(
-              context,
-              CupertinoPageRoute<void>(
-                builder: (context) => HomeScreen(
-                  apiInfo: apiInfo,
-                ),
-              ),
-              (_) => false,
-            );
-          case ConfirmPhotoFailure(error: final error):
-            StyledBanner.show(message: error.message, error: true);
-        }
-      default:
-    }
-  }
-
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Center(
           child: BlocProvider(
             create: (_) => ConfirmPhotoBloc(
-              load: (_) => submit(context),
+              load: (_, session) => submit(session),
             ),
             child: ConfirmPhotoConsumer(
-              listener: handleStateChanged,
+              listener: (context, confirmState) {
+                switch (confirmState) {
+                  case LoaderLoadedState(data: final data):
+                    switch (data) {
+                      case AuthLost():
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          CupertinoPageRoute<void>(
+                            builder: (context) => LoginScreen(
+                              apiInfo: apiInfo,
+                            ),
+                          ),
+                          (_) => false,
+                        );
+                      case AuthRes(data: final data):
+                        switch (data) {
+                          case ConfirmPhotoSuccess():
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              CupertinoPageRoute<void>(
+                                builder: (context) => HomeScreen(
+                                  apiInfo: apiInfo,
+                                ),
+                              ),
+                              (_) => false,
+                            );
+                          case ConfirmPhotoFailure(error: final error):
+                            StyledBanner.show(
+                              message: error.message,
+                              error: true,
+                            );
+                        }
+                    }
+                  default:
+                }
+              },
               builder: (context, confirmState) => SingleChildScrollView(
                 child: Column(
                   children: [
@@ -89,8 +87,11 @@ final class ConfirmPhotoScreen extends StatelessWidget {
                               'CONFIRM',
                               style: theme.textTheme.bodySmall,
                             ),
-                            onPressed: () => context.confirmPhotoBloc
-                                .add(const LoaderLoadEvent(null)),
+                            onPressed: () => context.confirmPhotoBloc.add(
+                                LoaderLoadEvent((
+                              data: null,
+                              sessionLoader: context.sessionLoader
+                            ))),
                           ),
                           12.verticalSpace,
                           StyledOutlineButton(

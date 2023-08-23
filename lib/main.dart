@@ -4,17 +4,17 @@ import 'package:phitnest_core/core.dart';
 
 import 'screens/home/home.dart';
 import 'screens/login/login.dart';
-import 'widgets/widgets.dart';
 
 Future<void> main() => runPhitNest(
       useAdminAuth: false,
-      useScreenUtils: true,
       title: 'PhitNest',
-      loader: const Scaffold(
-        body: Loader(),
-      ),
-      sessionRestoredBuilder: (apiInfo) => CupertinoPageRoute(
-        builder: (context) => HomeScreen(apiInfo: apiInfo),
+      sessionRestoredBuilder: (context, session) =>
+          Navigator.pushAndRemoveUntil(
+        context,
+        CupertinoPageRoute<void>(
+          builder: (context) => HomeScreen(initialSession: session),
+        ),
+        (_) => false,
       ),
       sessionRestoreFailedBuilder: (apiInfo) => CupertinoPageRoute(
         builder: (context) => LoginScreen(apiInfo: apiInfo),

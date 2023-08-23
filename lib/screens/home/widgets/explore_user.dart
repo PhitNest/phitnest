@@ -1,7 +1,7 @@
 part of '../home.dart';
 
 final class UserPage extends StatelessWidget {
-  final UserWithProfilePicture user;
+  final UserExplore user;
   final int? countdown;
 
   const UserPage({
@@ -71,7 +71,7 @@ final class UserPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${user.firstName} ${user.lastName}',
+                  '${user.user.firstName} ${user.user.lastName}',
                   style: theme.textTheme.bodyLarge,
                 ),
                 Text(
