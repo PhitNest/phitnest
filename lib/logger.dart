@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:logger/logger.dart';
 
 String _wrapText(String text) =>
-    StringUtils.addCharAtPosition(text, '\n\t', 100, repeat: true);
+    StringUtils.addCharAtPosition(text, '\n\t', 120, repeat: true);
 
 final _prettyLogger = Logger(printer: PrettyPrinter(methodCount: 0));
 
