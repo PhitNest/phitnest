@@ -12,7 +12,7 @@ export async function invoke(): Promise<APIGatewayProxyResult> {
         poolId: EnvironmentVars.adminPoolId(),
         clientId: EnvironmentVars.adminPoolClientId(),
       },
-      userIdentityPoolId: EnvironmentVars.userIdentityPoolId(),
+      identityPoolId: EnvironmentVars.userIdentityPoolId(),
       userBucketName: EnvironmentVars.userS3BucketName(),
     });
   });
