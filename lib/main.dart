@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:phitnest_core/core.dart';
 
 import 'screens/home/home.dart';
@@ -12,11 +11,18 @@ Future<void> main() => runPhitNest(
           Navigator.pushAndRemoveUntil(
         context,
         CupertinoPageRoute<void>(
-          builder: (context) => HomeScreen(initialSession: session),
+          builder: (context) => HomeScreen(
+            apiInfo: session.apiInfo,
+          ),
         ),
         (_) => false,
       ),
-      sessionRestoreFailedBuilder: (apiInfo) => CupertinoPageRoute(
-        builder: (context) => LoginScreen(apiInfo: apiInfo),
+      sessionRestoreFailedBuilder: (context, apiInfo) =>
+          Navigator.pushAndRemoveUntil(
+        context,
+        CupertinoPageRoute<void>(
+          builder: (context) => LoginScreen(apiInfo: apiInfo),
+        ),
+        (_) => false,
       ),
     );
