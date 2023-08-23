@@ -35,6 +35,7 @@ final class RegisterScreen extends StatelessWidget {
                         CupertinoPageRoute<void>(
                           builder: (context) => ConfirmEmailScreen(
                             loginParams: loginParams,
+                            apiInfo: apiInfo,
                             resendConfirmationEmail: (session) =>
                                 resendConfirmationEmail(
                               user: session.user,
