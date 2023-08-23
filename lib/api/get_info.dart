@@ -61,5 +61,5 @@ final class ApiInfo extends Json {
 Future<HttpResponse<ApiInfo>> requestApiInfo(bool useAdmin) => request(
       route: '/info',
       method: HttpMethod.get,
-      parse: (json) => ApiInfo.parse(json, useAdmin),
+      parse: (json) => ApiInfo.parse(json as Map<String, dynamic>, useAdmin),
     );

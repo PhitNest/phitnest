@@ -52,7 +52,7 @@ void initializeHttp({String? host, String? port, Duration? timeout}) {
 Future<HttpResponse<ResType>> request<ResType>({
   required String route,
   required HttpMethod method,
-  required ResType Function(Map<String, dynamic>) parse,
+  required ResType Function(dynamic) parse,
   Map<String, dynamic>? data,
   Map<String, dynamic>? headers,
   Session? session,
