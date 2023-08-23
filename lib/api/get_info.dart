@@ -58,8 +58,6 @@ final class ApiInfo extends Json {
   List<Object?> get props => [...super.props, useAdmin];
 }
 
-const kApiInfoJsonKey = 'apiInfo';
-
 Future<HttpResponse<ApiInfo>> requestApiInfo(bool useAdmin) => request(
       route: '/info',
       method: HttpMethod.get,
