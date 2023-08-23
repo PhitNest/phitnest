@@ -22,16 +22,9 @@ final class ConfirmPhotoFailure extends ConfirmPhotoResponse {
   List<Object?> get props => [error];
 }
 
-final class ConfirmPhotoLostAuth extends ConfirmPhotoResponse {
-  const ConfirmPhotoLostAuth() : super();
-
-  @override
-  List<Object?> get props => [];
-}
-
-typedef ConfirmPhotoBloc = LoaderBloc<void, ConfirmPhotoResponse>;
-typedef ConfirmPhotoConsumer = LoaderConsumer<void, ConfirmPhotoResponse>;
+typedef ConfirmPhotoBloc = AuthLoaderBloc<void, ConfirmPhotoResponse>;
+typedef ConfirmPhotoConsumer = AuthLoaderConsumer<void, ConfirmPhotoResponse>;
 
 extension on BuildContext {
-  ConfirmPhotoBloc get confirmPhotoBloc => loader();
+  ConfirmPhotoBloc get confirmPhotoBloc => authLoader();
 }

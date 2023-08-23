@@ -8,164 +8,153 @@ final class LoginScreen extends StatelessWidget {
     required this.apiInfo,
   }) : super();
 
+  static LoginParams _params(LoginControllers controllers) => LoginParams(
+        email: controllers.emailController.text,
+        password: controllers.passwordController.text,
+      );
+
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 40.w),
           child: FormProvider<LoginControllers, LoginParams, LoginResponse>(
-            load: (params) => login(
-              params: params,
-              apiInfo: apiInfo,
+            createLoader: (_) => LoaderBloc(
+              load: (params) => login(
+                params: params,
+                apiInfo: apiInfo,
+              ),
             ),
             createControllers: (_) => LoginControllers(),
-            formBuilder: (
-              context,
-              controllers,
-              consumer,
-            ) {
-              params() => LoginParams(
-                    email: controllers.emailController.text,
-                    password: controllers.passwordController.text,
-                  );
-              return consumer(
-                listener: (context, loginState, _) {
-                  switch (loginState) {
-                    case LoaderLoadedState(data: final response):
-                      switch (response) {
-                        case LoginSuccess():
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            CupertinoPageRoute<void>(
-                              builder: (context) => HomeScreen(
-                                apiInfo: apiInfo,
-                              ),
+            listener: (context, controllers, loaderState, consumer) {
+              switch (loaderState) {
+                case LoaderLoadedState(data: final response):
+                  switch (response) {
+                    case LoginSuccess():
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        CupertinoPageRoute<void>(
+                          builder: (context) => HomeScreen(apiInfo: apiInfo),
+                        ),
+                        (_) => false,
+                      );
+                    case LoginConfirmationRequired(user: final user):
+                      Navigator.pushReplacement(
+                        context,
+                        CupertinoPageRoute<void>(
+                          builder: (context) => ConfirmEmailScreen(
+                            unauthenticatedSession: UnauthenticatedSession(
+                              apiInfo: apiInfo,
+                              user: user,
                             ),
-                            (_) => false,
-                          );
-                        case LoginConfirmationRequired(user: final user):
-                          Navigator.pushReplacement(
-                            context,
-                            CupertinoPageRoute<void>(
-                              builder: (context) => ConfirmEmailScreen(
-                                unauthenticatedSession: UnauthenticatedSession(
-                                  apiInfo: apiInfo,
-                                  user: user,
-                                ),
-                                resendConfirmationEmail: (session) =>
-                                    resendConfirmationEmail(
-                                  user: session.user,
-                                ),
-                                confirmEmail: (session, code) => confirmEmail(
-                                  user: session.user,
-                                  code: code,
-                                ),
-                                loginParams: params(),
-                              ),
+                            resendConfirmationEmail: (session) =>
+                                resendConfirmationEmail(
+                              user: session.user,
                             ),
-                          );
-                        case LoginFailure(message: final message) ||
-                              LoginUnknownResponse(message: final message) ||
-                              LoginChangePasswordRequired(
-                                message: final message
-                              ):
-                          StyledBanner.show(
-                            message: message,
-                            error: true,
-                          );
-                      }
-                    default:
+                            confirmEmail: (session, code) => confirmEmail(
+                              user: session.user,
+                              code: code,
+                            ),
+                            apiInfo: apiInfo,
+                            loginParams: _params(controllers),
+                          ),
+                        ),
+                      );
+                    case LoginFailure(message: final message) ||
+                          LoginUnknownResponse(message: final message) ||
+                          LoginChangePasswordRequired(message: final message):
+                      StyledBanner.show(
+                        message: message,
+                        error: true,
+                      );
                   }
-                },
-                builder: (context, loginState, submit) => Column(
+                default:
+              }
+            },
+            builder: (context, controllers, loaderState, submit) => Column(
+              children: [
+                120.verticalSpace,
+                Text(
+                  'Login',
+                  style: theme.textTheme.bodyLarge,
+                ),
+                70.verticalSpace,
+                StyledUnderlinedTextField(
+                  hint: 'Email',
+                  controller: controllers.emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  validator: EmailValidator.validateEmail,
+                ),
+                24.verticalSpace,
+                StyledPasswordField(
+                  hint: 'Password',
+                  controller: controllers.passwordController,
+                  textInputAction: TextInputAction.done,
+                  validator: validatePassword,
+                  onFieldSubmitted: (_) => submit(_params(controllers)),
+                ),
+                Row(
                   children: [
-                    120.verticalSpace,
-                    Text(
-                      'Login',
-                      style: theme.textTheme.bodyLarge,
+                    TextButton(
+                      onPressed: () {
+                        context.loginBloc.add(const LoaderCancelEvent());
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute<void>(
+                            builder: (context) => ForgotPasswordScreen(
+                              apiInfo: apiInfo,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Forgot Password?',
+                        style: theme.textTheme.bodySmall!
+                            .copyWith(fontStyle: FontStyle.normal),
+                      ),
                     ),
-                    70.verticalSpace,
-                    StyledUnderlinedTextField(
-                      hint: 'Email',
-                      controller: controllers.emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                      validator: EmailValidator.validateEmail,
+                  ],
+                ),
+                8.verticalSpace,
+                switch (loaderState) {
+                  LoaderLoadingState() => const CircularProgressIndicator(),
+                  LoaderInitialState() || LoaderLoadedState() => ElevatedButton(
+                      onPressed: () => submit(_params(controllers)),
+                      child: Text(
+                        'LOGIN',
+                        style: theme.textTheme.bodySmall,
+                      ),
                     ),
-                    24.verticalSpace,
-                    StyledPasswordField(
-                      hint: 'Password',
-                      controller: controllers.passwordController,
-                      textInputAction: TextInputAction.done,
-                      validator: validatePassword,
-                      onFieldSubmitted: (_) => submit(params()),
-                    ),
-                    Row(
-                      children: [
-                        TextButton(
-                          onPressed: () {
+                },
+                32.verticalSpace,
+                RichText(
+                  text: TextSpan(
+                    text: "Don't have an account?",
+                    style: theme.textTheme.bodySmall,
+                    children: [
+                      TextSpan(
+                        text: 'Register',
+                        style: theme.textTheme.bodySmall!.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
                             context.loginBloc.add(const LoaderCancelEvent());
-                            Navigator.push(
-                              context,
+                            Navigator.of(context).push(
                               CupertinoPageRoute<void>(
-                                builder: (context) => ForgotPasswordScreen(
+                                builder: (context) => RegisterScreen(
                                   apiInfo: apiInfo,
                                 ),
                               ),
                             );
                           },
-                          child: Text(
-                            'Forgot Password?',
-                            style: theme.textTheme.bodySmall!
-                                .copyWith(fontStyle: FontStyle.normal),
-                          ),
-                        ),
-                      ],
-                    ),
-                    8.verticalSpace,
-                    switch (loginState) {
-                      LoaderLoadingState() => const CircularProgressIndicator(),
-                      LoaderInitialState() ||
-                      LoaderLoadedState() =>
-                        ElevatedButton(
-                          onPressed: () => submit(params()),
-                          child: Text(
-                            'LOGIN',
-                            style: theme.textTheme.bodySmall,
-                          ),
-                        ),
-                    },
-                    32.verticalSpace,
-                    RichText(
-                      text: TextSpan(
-                        text: "Don't have an account?",
-                        style: theme.textTheme.bodySmall,
-                        children: [
-                          TextSpan(
-                            text: 'Register',
-                            style: theme.textTheme.bodySmall!.copyWith(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                context.loginBloc
-                                    .add(const LoaderCancelEvent());
-                                Navigator.of(context).push(
-                                  CupertinoPageRoute<void>(
-                                    builder: (context) => RegisterScreen(
-                                      apiInfo: apiInfo,
-                                    ),
-                                  ),
-                                );
-                              },
-                          ),
-                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              );
-            },
+              ],
+            ),
           ),
         ),
       );

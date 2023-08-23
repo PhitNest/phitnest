@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:http/http.dart' as http;
 import 'package:phitnest_core/core.dart';
 
+import '../../api/api.dart';
 import '../../common/constants/constants.dart';
 import '../../widgets/widgets.dart';
 import '../login/login.dart';

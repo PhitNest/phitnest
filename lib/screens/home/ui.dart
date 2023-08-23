@@ -3,10 +3,7 @@ part of 'home.dart';
 class HomeScreen extends StatelessWidget {
   final ApiInfo apiInfo;
 
-  void goToLogin(
-    BuildContext context,
-  ) =>
-      Navigator.pushAndRemoveUntil(
+  void goToLogin(BuildContext context) => Navigator.pushAndRemoveUntil(
         context,
         CupertinoPageRoute<void>(
           builder: (context) => LoginScreen(apiInfo: apiInfo),
@@ -25,29 +22,23 @@ class HomeScreen extends StatelessWidget {
           providers: [
             BlocProvider(
               create: (context) => ExploreBloc(
-                load: (_) => context.sessionLoader.session.then(
-                  (session) => session != null ? explore(session) : null,
+                load: (_, session) => explore(session),
+                loadOnStart: (
+                  req: (data: null, sessionLoader: context.sessionLoader)
                 ),
-                loadOnStart: (req: null),
               ),
             ),
             BlocProvider(
               create: (context) => UserBloc(
-                load: (_) => context.sessionLoader.session.then(
-                  (session) => session != null ? getUser(session) : null,
+                load: (_, session) => getUser(session),
+                loadOnStart: (
+                  req: (data: null, sessionLoader: context.sessionLoader)
                 ),
-                loadOnStart: (req: null),
               ),
             ),
             BlocProvider(
               create: (context) => LogoutBloc(
-                load: (_) async {
-                  final session = await context.sessionLoader.session;
-                  if (session != null) {
-                    await cacheUser(null);
-                    await logout(session: session);
-                  }
-                },
+                load: (_, session) => logout(session: session),
               ),
             ),
             BlocProvider(
@@ -63,155 +54,217 @@ class HomeScreen extends StatelessWidget {
               }
             },
             builder: (context, logoutState) => switch (logoutState) {
+              LoaderLoadingState() || LoaderLoadedState() => const Loader(),
               LoaderInitialState() => UserConsumer(
                   listener: (context, userLoaderState) {
                     switch (userLoaderState) {
                       case LoaderLoadedState(data: final response):
-                        if (response == null) {
-                          goToLogin(context);
-                        } else {
-                          switch (response) {
-                            case FailedToLoadProfilePicture():
-                              Navigator.pushReplacement(
-                                context,
-                                CupertinoPageRoute<void>(
-                                  builder: (context) => PhotoInstructionsScreen(
-                                    apiInfo: apiInfo,
-                                  ),
-                                ),
-                              );
-                            case FailedToLoadUser(error: final error):
-                              StyledBanner.show(
-                                message: error.message,
-                                error: true,
-                              );
-                              context.userBloc.add(const LoaderLoadEvent(null));
-                            case GetUserSuccess():
-                          }
+                        switch (response) {
+                          case AuthLost():
+                            goToLogin(context);
+                          case AuthRes(data: final response):
+                            switch (response) {
+                              case HttpResponseSuccess(data: final response):
+                                switch (response) {
+                                  case FailedToLoadProfilePicture():
+                                    Navigator.pushReplacement(
+                                      context,
+                                      CupertinoPageRoute<void>(
+                                        builder: (context) =>
+                                            PhotoInstructionsScreen(
+                                          apiInfo: apiInfo,
+                                        ),
+                                      ),
+                                    );
+                                  case GetUserSuccess():
+                                }
+                              case HttpResponseFailure(failure: final failure):
+                                StyledBanner.show(
+                                  message: failure.message,
+                                  error: true,
+                                );
+                                context.userBloc.add(LoaderLoadEvent((
+                                  data: null,
+                                  sessionLoader: context.sessionLoader
+                                )));
+                            }
                         }
                       default:
                     }
                   },
-                  builder: (context, userState) => switch (userState) {
+                  builder: (context, userLoaderState) =>
+                      switch (userLoaderState) {
                     LoaderLoadedState(data: final getUserResponse) => switch (
                           getUserResponse) {
-                        GetUserSuccess(user: final user) => ExploreConsumer(
-                            listener: (context, exploreState) {
-                              switch (exploreState) {
-                                case LoaderLoadedState(data: final response):
-                                  if (response != null) {
-                                    switch (response) {
-                                      case HttpResponseSuccess(
-                                          data: final users
-                                        ):
-                                        context.homeBloc
-                                            .add(HomeLoadedExploreEvent(users));
-                                      case HttpResponseFailure():
-                                        context.exploreBloc
-                                            .add(const LoaderLoadEvent(null));
-                                    }
-                                  } else {
-                                    goToLogin(context);
-                                  }
-                                default:
-                              }
-                            },
-                            builder: (context, exploreState) =>
-                                BlocConsumer<HomeBloc, HomeState>(
-                              listener: (context, homeState) {},
-                              builder: (context, homeState) => StyledNavBar(
-                                state: homeState,
-                                builder: (context) => Expanded(
-                                  child: switch (homeState.page) {
-                                    NavBarPage.news => const Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text('News screen'),
-                                          Text('Coming soon'),
-                                        ],
-                                      ),
-                                    NavBarPage.explore => ExploreConsumer(
-                                        listener: (context, exploreState) {
-                                          switch (exploreState) {
-                                            case LoaderLoadedState(
-                                                data: final response
-                                              ):
+                        AuthLost() => const Loader(),
+                        AuthRes(data: final getUserResponse) => switch (
+                              getUserResponse) {
+                            HttpResponseFailure() => const Loader(),
+                            HttpResponseSuccess(data: final getUserResponse) =>
+                              switch (getUserResponse) {
+                                FailedToLoadProfilePicture() => const Loader(),
+                                GetUserSuccess(
+                                  profilePicture: final profilePicture
+                                ) =>
+                                  ExploreConsumer(
+                                    listener: (context, exploreState) {
+                                      switch (exploreState) {
+                                        case LoaderLoadedState(
+                                            data: final response
+                                          ):
+                                          switch (response) {
+                                            case AuthLost():
+                                              goToLogin(context);
+                                            case AuthRes(data: final response):
                                               switch (response) {
-                                                case HttpResponseFailure(
-                                                    failure: final failure
+                                                case HttpResponseSuccess(
+                                                    data: final users
                                                   ):
-                                                  StyledBanner.show(
-                                                    message: failure.message,
-                                                    error: true,
-                                                  );
-                                                default:
+                                                  context.homeBloc.add(
+                                                      HomeLoadedExploreEvent(
+                                                          users));
+                                                case HttpResponseFailure():
+                                                  context.exploreBloc.add(
+                                                      LoaderLoadEvent((
+                                                    data: null,
+                                                    sessionLoader:
+                                                        context.sessionLoader
+                                                  )));
                                               }
-                                            default:
                                           }
-                                        },
-                                        builder: (context, exploreState) =>
-                                            switch (exploreState) {
-                                          LoaderLoadedState(
-                                            data: final exploreResponse
-                                          ) =>
-                                            switch (exploreResponse) {
-                                              HttpResponseSuccess(
-                                                data: final users
-                                              ) =>
-                                                ExploreScreen(
-                                                  users: users,
-                                                  pageController: context
-                                                      .homeBloc
-                                                      .explorePageController,
-                                                  countdown: switch (
-                                                      homeState) {
-                                                    HomeHoldingLogoState(
-                                                      countdown: final countdown
-                                                    ) =>
-                                                      countdown,
-                                                    _ => null,
-                                                  },
-                                                ),
-                                              _ => const Loader(),
-                                            },
-                                          _ => const Loader(),
-                                        },
+                                        default:
+                                      }
+                                    },
+                                    builder: (context, exploreState) =>
+                                        BlocConsumer<HomeBloc, HomeState>(
+                                      listener: (context, homeState) {},
+                                      builder: (context, homeState) =>
+                                          StyledNavBar(
+                                        state: homeState,
+                                        builder: (context) => Expanded(
+                                          child: switch (homeState.page) {
+                                            NavBarPage.news => const Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text('News screen'),
+                                                  Text('Coming soon'),
+                                                ],
+                                              ),
+                                            NavBarPage.explore =>
+                                              ExploreConsumer(
+                                                listener:
+                                                    (context, exploreState) {
+                                                  switch (exploreState) {
+                                                    case LoaderLoadedState(
+                                                        data: final response
+                                                      ):
+                                                      switch (response) {
+                                                        case AuthRes(
+                                                            data: final response
+                                                          ):
+                                                          switch (response) {
+                                                            // ignore: lines_longer_than_80_chars
+                                                            case HttpResponseFailure(
+                                                                failure:
+                                                                    // ignore: lines_longer_than_80_chars
+                                                                    final failure
+                                                              ):
+                                                              StyledBanner.show(
+                                                                message: failure
+                                                                    .message,
+                                                                error: true,
+                                                              );
+                                                            default:
+                                                          }
+                                                        case AuthLost():
+                                                          goToLogin(context);
+                                                      }
+                                                    default:
+                                                  }
+                                                },
+                                                builder:
+                                                    (context, exploreState) =>
+                                                        switch (exploreState) {
+                                                  LoaderLoadedState(
+                                                    data: final exploreResponse
+                                                  ) =>
+                                                    switch (exploreResponse) {
+                                                      AuthRes(
+                                                        data:
+                                                            // ignore: lines_longer_than_80_chars
+                                                            final exploreResponse
+                                                      ) =>
+                                                        switch (
+                                                            exploreResponse) {
+                                                          HttpResponseSuccess(
+                                                            data: final users
+                                                          ) =>
+                                                            ExploreScreen(
+                                                              users: users,
+                                                              // ignore: lines_longer_than_80_chars
+                                                              pageController: context
+                                                                  .homeBloc
+                                                                  // ignore: lines_longer_than_80_chars
+                                                                  .explorePageController,
+                                                              // ignore: lines_longer_than_80_chars
+                                                              countdown: switch (
+                                                                  homeState) {
+                                                                // ignore: lines_longer_than_80_chars
+                                                                HomeHoldingLogoState(
+                                                                  countdown:
+                                                                      // ignore: lines_longer_than_80_chars
+                                                                      final countdown
+                                                                ) =>
+                                                                  countdown,
+                                                                _ => null,
+                                                              },
+                                                            ),
+                                                          _ => const Loader(),
+                                                        },
+                                                      _ => const Loader(),
+                                                    },
+                                                  _ => const Loader(),
+                                                },
+                                              ),
+                                            NavBarPage.chat => const Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text('Chat screen'),
+                                                  Text('Coming soon'),
+                                                ],
+                                              ),
+                                            NavBarPage.options => Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  const Text('Options screen'),
+                                                  20.verticalSpace,
+                                                  profilePicture,
+                                                  StyledOutlineButton(
+                                                    onPress: () => context
+                                                        .logoutBloc
+                                                        .add(LoaderLoadEvent((
+                                                      data: null,
+                                                      sessionLoader:
+                                                          context.sessionLoader
+                                                    ))),
+                                                    text: 'Logout',
+                                                  ),
+                                                ],
+                                              ),
+                                          },
+                                        ),
                                       ),
-                                    NavBarPage.chat => const Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text('Chat screen'),
-                                          Text('Coming soon'),
-                                        ],
-                                      ),
-                                    NavBarPage.options => Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          const Text('Options screen'),
-                                          20.verticalSpace,
-                                          user.profilePicture,
-                                          StyledOutlineButton(
-                                            onPress: () => context.logoutBloc
-                                                .add(const LoaderLoadEvent(
-                                                    null)),
-                                            text: 'Logout',
-                                          ),
-                                        ],
-                                      ),
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                        _ => const Loader(),
+                                    ),
+                                  ),
+                              },
+                          }
                       },
                     _ => const Loader(),
                   },
-                ),
-              _ => const Loader(),
+                )
             },
           ),
         ),
