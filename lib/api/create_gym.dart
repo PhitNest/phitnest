@@ -93,5 +93,5 @@ Future<HttpResponse<CreateGymSuccess>> createGym(
       method: HttpMethod.post,
       session: session,
       data: params.toJson(),
-      parse: CreateGymSuccess.parse,
+      parse: (json) => CreateGymSuccess.parse(json as Map<String, dynamic>),
     );
