@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -122,7 +121,7 @@ Future<HttpResponse<ResType>> request<ResType>({
       }
           .timeout(_timeout)
           .then((response) {
-        final jsonData = jsonDecode(response.data as String);
+        final jsonData = response.data;
         if (jsonData is Map<String, dynamic>) {
           // Handle successful responses
           if (response.statusCode == 200) {
@@ -138,7 +137,7 @@ Future<HttpResponse<ResType>> request<ResType>({
             return HttpResponseFailure(parsed, response.headers);
           }
         } else {
-          throw Failure.populated('Invalid response', response.data.toString());
+          throw Failure.populated('Invalid response', jsonData.toString());
         }
       });
     } on TimeoutException {
