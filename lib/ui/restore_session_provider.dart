@@ -5,27 +5,26 @@ import '../api/api.dart';
 import '../aws/aws.dart';
 import '../bloc/loader/loader.dart';
 import '../http/http.dart';
-import 'styled/styled_banner.dart';
+import 'styled/styled.dart';
 
-typedef ApiInfoBloc = LoaderBloc<void, HttpResponse<ApiInfo>>;
-typedef ApiInfoConsumer = LoaderConsumer<void, HttpResponse<ApiInfo>>;
-typedef RestoreSessionBloc = LoaderBloc<void, RefreshSessionResponse>;
-typedef RestoreSessionConsumer = LoaderConsumer<void, RefreshSessionResponse>;
+typedef ApiInfoBloc = LoaderBloc<bool, HttpResponse<ApiInfo>>;
+typedef ApiInfoConsumer = LoaderConsumer<bool, HttpResponse<ApiInfo>>;
+typedef RestoreSessionBloc = LoaderBloc<ApiInfo, RefreshSessionResponse>;
+typedef RestoreSessionConsumer
+    = LoaderConsumer<ApiInfo, RefreshSessionResponse>;
 
 extension on BuildContext {
   ApiInfoBloc get apiInfoBloc => loader();
 }
 
 final class RestoreSessionProvider extends StatelessWidget {
-  final Widget loader;
   final bool useAdminAuth;
-  final void Function(BuildContext context, ApiInfo apiInfo) onSessionRestored;
+  final void Function(BuildContext context, Session session) onSessionRestored;
   final void Function(BuildContext context, ApiInfo apiInfo)
       onSessionRestoreFailed;
 
   const RestoreSessionProvider({
     super.key,
-    required this.loader,
     required this.onSessionRestored,
     required this.onSessionRestoreFailed,
     required this.useAdminAuth,
@@ -34,12 +33,8 @@ final class RestoreSessionProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocProvider(
         create: (_) => ApiInfoBloc(
-          load: (_) => requestApiInfo(
-            readFromCache: true,
-            writeToCache: true,
-            useAdmin: useAdminAuth,
-          ),
-          loadOnStart: (req: null),
+          load: requestApiInfo,
+          loadOnStart: (req: useAdminAuth),
         ),
         child: ApiInfoConsumer(
           listener: (context, apiInfoState) {
@@ -47,59 +42,47 @@ final class RestoreSessionProvider extends StatelessWidget {
               case LoaderLoadedState(data: final apiInfoResponse):
                 switch (apiInfoResponse) {
                   case HttpResponseFailure(failure: final failure):
-                    // Show error message if we failed to load API info from
-                    // server
-                    StyledBanner.show(
-                      message: failure.message,
-                      error: true,
-                    );
-                    // Retry loading API info from server
-                    context.apiInfoBloc.add(const LoaderLoadEvent(null));
-                  // This indicates that we successfully loaded API info from
-                  // server, but our cache was empty so a session will not be
-                  // restored.
-                  case HttpResponseOk(data: final apiInfo):
-                    onSessionRestoreFailed(context, apiInfo);
-                  case HttpResponseCache():
+                    StyledBanner.show(message: failure.message, error: true);
+                    context.apiInfoBloc.add(LoaderLoadEvent(useAdminAuth));
+                  default:
                 }
               default:
             }
           },
-          builder: (context, apiInfoState) => switch (apiInfoState) {
-            LoaderInitialState() || LoaderLoadingState() => loader,
-            LoaderLoadedState(data: final apiInfoResponse) => switch (
-                  apiInfoResponse) {
-                // This indicates that we successfully loaded API info from the
-                // cache, so a session might be restorable.
-                HttpResponseCache(data: final cachedApiInfo) => BlocProvider(
-                    create: (_) => RestoreSessionBloc(
-                      load: (_) => getPreviousSession(cachedApiInfo),
-                      loadOnStart: (req: null),
+          builder: (context, apiInfoState) {
+            final loader = const Loader();
+            return switch (apiInfoState) {
+              LoaderLoadedState(data: final apiInfoResponse) => switch (
+                    apiInfoResponse) {
+                  HttpResponseSuccess(data: final apiInfo) => BlocProvider(
+                      create: (_) => RestoreSessionBloc(
+                        load: getPreviousSession,
+                        loadOnStart: (req: apiInfo),
+                      ),
+                      child: RestoreSessionConsumer(
+                        listener: (context, restoreSessionState) {
+                          switch (restoreSessionState) {
+                            case LoaderLoadedState(
+                                data: final restoreSessionResponse
+                              ):
+                              switch (restoreSessionResponse) {
+                                case RefreshSessionFailureResponse():
+                                  onSessionRestoreFailed(context, apiInfo);
+                                case RefreshSessionSuccess(
+                                    newSession: final newSession
+                                  ):
+                                  onSessionRestored(context, newSession);
+                              }
+                            default:
+                          }
+                        },
+                        builder: (context, restoreSessionState) => loader,
+                      ),
                     ),
-                    child: RestoreSessionConsumer(
-                      listener: (context, restoreSessionState) {
-                        switch (restoreSessionState) {
-                          case LoaderLoadedState(
-                              data: final restoreSessionResponse
-                            ):
-                            switch (restoreSessionResponse) {
-                              case RefreshSessionFailureResponse():
-                                onSessionRestoreFailed(context, cachedApiInfo);
-                              case RefreshSessionSuccess(
-                                  newSession: final newSession
-                                ):
-                                context.sessionLoader.add(LoaderSetEvent(
-                                    RefreshSessionSuccess(newSession)));
-                                onSessionRestored(context, newSession.apiInfo);
-                            }
-                          default:
-                        }
-                      },
-                      builder: (context, restoreSessionState) => loader,
-                    ),
-                  ),
-                _ => loader,
-              }
+                  _ => loader,
+                },
+              _ => loader,
+            };
           },
         ),
       );

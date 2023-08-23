@@ -60,21 +60,8 @@ final class ApiInfo extends Json {
 
 const kApiInfoJsonKey = 'apiInfo';
 
-Future<void> cacheApiInfo(ApiInfo? details) =>
-    cacheObject(kApiInfoJsonKey, details);
-
-ApiInfo? getCachedApiInfo(bool admin) =>
-    getCachedObject(kApiInfoJsonKey, () => ApiInfo.parser(admin));
-
-Future<HttpResponse<ApiInfo>> requestApiInfo({
-  required bool writeToCache,
-  required bool readFromCache,
-  required bool useAdmin,
-}) =>
-    request(
+Future<HttpResponse<ApiInfo>> requestApiInfo(bool useAdmin) => request(
       route: '/info',
       method: HttpMethod.get,
       parse: (json) => ApiInfo.parse(json, useAdmin),
-      writeToCache: writeToCache ? cacheApiInfo : null,
-      readFromCache: readFromCache ? () => getCachedApiInfo(useAdmin) : null,
     );

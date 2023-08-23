@@ -4,7 +4,7 @@ final class UnauthenticatedSession extends Equatable {
   final CognitoUser user;
   final ApiInfo apiInfo;
 
-  UnauthenticatedSession({
+  const UnauthenticatedSession({
     required this.user,
     required this.apiInfo,
   }) : super();
@@ -17,7 +17,7 @@ final class Session extends UnauthenticatedSession {
   final CognitoCredentials credentials;
   final CognitoUserSession cognitoSession;
 
-  Session({
+  const Session({
     required super.user,
     required super.apiInfo,
     required this.cognitoSession,

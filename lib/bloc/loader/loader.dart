@@ -132,11 +132,12 @@ final class AuthLost<ResType> extends AuthResOrLost<ResType> {
   List<Object?> get props => [];
 }
 
+typedef _Loaded = LoaderLoadedState<RefreshSessionResponse>;
+
 final class AuthLoaderBloc<ReqType, ResType> extends LoaderBloc<
     ({ReqType data, BuildContext context}), AuthResOrLost<ResType>> {
-  AuthLoaderBloc({
-    required Future<ResType> Function(ReqType, Session) load,
-  }) : super(
+  AuthLoaderBloc({required Future<ResType> Function(ReqType, Session) load})
+      : super(
           load: (req) async {
             final sessionLoader = req.context.sessionLoader;
 
@@ -150,11 +151,10 @@ final class AuthLoaderBloc<ReqType, ResType> extends LoaderBloc<
                   } else {
                     sessionLoader.add(LoaderLoadEvent(newSession));
                     final response = await sessionLoader.stream.firstWhere(
-                            (state) => state
-                                is LoaderLoadedState<RefreshSessionResponse>,
+                            (state) => state is _Loaded,
                             orElse: () => LoaderLoadedState(
                                 RefreshSessionUnknownResponse(message: null)))
-                        as LoaderLoadedState<RefreshSessionResponse>;
+                        as _Loaded;
                     return await handleResponse(response.data);
                   }
                 case RefreshSessionFailureResponse():
@@ -177,7 +177,7 @@ final class AuthLoaderBloc<ReqType, ResType> extends LoaderBloc<
                 }
               default:
             }
-            return AuthLost();
+            return const AuthLost();
           },
         );
 }
