@@ -142,8 +142,11 @@ typedef AuthLoaderConsumer<ReqType, ResType> = BlocConsumer<
 
 final class AuthLoaderBloc<ReqType, ResType> extends LoaderBloc<
     ({ReqType data, SessionBloc sessionLoader}), AuthResOrLost<ResType>> {
-  AuthLoaderBloc({required Future<ResType> Function(ReqType, Session) load})
-      : super(
+  AuthLoaderBloc({
+    required super.initialData,
+    required super.loadOnStart,
+    required Future<ResType> Function(ReqType, Session) load,
+  }) : super(
           load: (req) async {
             Future<AuthResOrLost<ResType>> handleResponse(
               RefreshSessionResponse response,
