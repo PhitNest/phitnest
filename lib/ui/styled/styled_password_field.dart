@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'styled_underline_text_field.dart';
 
 final class _State extends ChangeNotifier {
-  var _obscureText = true;
+  bool _obscureText = true;
   final FocusNode iconButtonNode = FocusNode()..skipTraversal = true;
 
   bool get obscureText => _obscureText;

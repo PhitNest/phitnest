@@ -8,8 +8,7 @@ final class StyledBanner extends MaterialBanner {
   final String message;
   final bool error;
 
-  static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-      GlobalKey();
+  static final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   static void show({required String message, required bool error}) {
     scaffoldMessengerKey.currentState?.showMaterialBanner(

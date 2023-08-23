@@ -23,11 +23,11 @@ final class FormProvider<Controllers extends FormControllers, ReqType, ResType>
   final ResType? initialData;
 
   void submit(BuildContext context, ReqType request) =>
-      BlocProvider.of<FormBloc<Controllers>>(context).submit(
-        onAccept: () => context.loader<ReqType, ResType>().add(
-              LoaderLoadEvent(request),
-            ),
-      );
+      context.formBloc<Controllers>().submit(
+            onAccept: () => context.loader<ReqType, ResType>().add(
+                  LoaderLoadEvent(request),
+                ),
+          );
 
   const FormProvider({
     required this.load,
@@ -49,29 +49,22 @@ final class FormProvider<Controllers extends FormControllers, ReqType, ResType>
         child: FormConsumer<Controllers>(
           listener: (context, formState) {},
           builder: (context, formState) {
-            final formBloc = BlocProvider.of<FormBloc<Controllers>>(context);
+            handleSubmit(ReqType req, LoaderState<ResType> loaderState) =>
+                switch (loaderState) {
+                  LoaderLoadingState() => null,
+                  _ => submit(context, req),
+                };
+            final FormBloc<Controllers> formBloc = context.formBloc();
             return Form(
               key: formBloc.formKey,
               child: formConsumer(
                 context,
                 formBloc.controllers,
                 (formBuilder, formListener) => LoaderConsumer<ReqType, ResType>(
-                  builder: (context, loaderState) => formBuilder(
-                    context,
-                    loaderState,
-                    (req) => switch (loaderState) {
-                      LoaderLoadingState() => {},
-                      _ => submit(context, req),
-                    },
-                  ),
-                  listener: (context, loaderState) => formListener(
-                    context,
-                    loaderState,
-                    (req) => switch (loaderState) {
-                      LoaderLoadingState() => {},
-                      _ => submit(context, req),
-                    },
-                  ),
+                  builder: (context, loaderState) => formBuilder(context,
+                      loaderState, (req) => handleSubmit(req, loaderState)),
+                  listener: (context, loaderState) => formListener(context,
+                      loaderState, (req) => handleSubmit(req, loaderState)),
                 ),
               ),
             );

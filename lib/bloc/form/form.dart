@@ -9,6 +9,10 @@ abstract class FormControllers {
   void dispose();
 }
 
+extension FormBlocGetter on BuildContext {
+  FormBloc<T> formBloc<T extends FormControllers>() => BlocProvider.of(this);
+}
+
 typedef FormConsumer<Controllers extends FormControllers>
     = BlocConsumer<FormBloc<Controllers>, FormBlocState>;
 

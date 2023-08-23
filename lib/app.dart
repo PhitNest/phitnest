@@ -16,7 +16,7 @@ Future<void> runPhitNest({
   required Widget loader,
   required void Function(BuildContext context, ApiInfo apiInfo)
       sessionRestoreFailedBuilder,
-  required void Function(BuildContext context, ApiInfo apiInfo)
+  required void Function(BuildContext context, Session session)
       sessionRestoredBuilder,
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +29,6 @@ Future<void> runPhitNest({
     PhitNestApp(
       useAdminAuth: useAdminAuth,
       title: title,
-      loader: loader,
       sessionRestoreFailedBuilder: sessionRestoreFailedBuilder,
       sessionRestoredBuilder: sessionRestoredBuilder,
     ),
@@ -39,17 +38,15 @@ Future<void> runPhitNest({
 final class PhitNestApp extends StatelessWidget {
   final bool useAdminAuth;
   final String title;
-  final Widget loader;
   final void Function(BuildContext context, ApiInfo apiInfo)
       sessionRestoreFailedBuilder;
-  final void Function(BuildContext context, ApiInfo apiInfo)
+  final void Function(BuildContext context, Session session)
       sessionRestoredBuilder;
 
   const PhitNestApp({
     Key? key,
     required this.title,
     required this.useAdminAuth,
-    required this.loader,
     required this.sessionRestoreFailedBuilder,
     required this.sessionRestoredBuilder,
   }) : super(key: key);
@@ -76,7 +73,6 @@ final class PhitNestApp extends StatelessWidget {
               scaffoldMessengerKey: StyledBanner.scaffoldMessengerKey,
               home: RestoreSessionProvider(
                 useAdminAuth: useAdminAuth,
-                loader: loader,
                 onSessionRestoreFailed: sessionRestoreFailedBuilder,
                 onSessionRestored: sessionRestoredBuilder,
               ),
