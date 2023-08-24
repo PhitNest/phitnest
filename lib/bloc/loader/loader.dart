@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../api/api.dart';
 import '../../aws/aws.dart';
 import '../../logger.dart';
 
@@ -129,62 +130,77 @@ final class AuthRes<ResType> extends AuthResOrLost<ResType> {
 }
 
 final class AuthLost<ResType> extends AuthResOrLost<ResType> {
-  const AuthLost() : super();
+  final String message;
+
+  const AuthLost(this.message) : super();
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [message];
 }
-
-typedef _Loaded = LoaderLoadedState<RefreshSessionResponse>;
 
 typedef AuthLoaderConsumer<ReqType, ResType> = BlocConsumer<
     AuthLoaderBloc<ReqType, ResType>, LoaderState<AuthResOrLost<ResType>>>;
 
+Future<AuthResOrLost<T>> handleRefreshSessionResponse<T>(
+        RefreshSessionResponse refreshSessionResponse,
+        Future<T> Function(Session session) load) async =>
+    switch (refreshSessionResponse) {
+      RefreshSessionSuccess(newSession: final newSession) =>
+        AuthRes(await load(newSession)),
+      RefreshSessionFailureResponse(message: final message) =>
+        AuthLost(message),
+    };
+
 final class AuthLoaderBloc<ReqType, ResType> extends LoaderBloc<
     ({ReqType data, SessionBloc sessionLoader}), AuthResOrLost<ResType>> {
   AuthLoaderBloc({
+    required ApiInfo apiInfo,
     required Future<ResType> Function(ReqType, Session) load,
     super.initialData,
     super.loadOnStart,
   }) : super(
           load: (req) async {
-            Future<AuthResOrLost<ResType>> handleResponse(
-              RefreshSessionResponse response,
-            ) async {
-              switch (response) {
-                case RefreshSessionSuccess(newSession: final newSession):
-                  if (newSession.cognitoSession.isValid()) {
-                    return AuthRes(await load(req.data, newSession));
-                  } else {
-                    req.sessionLoader.add(LoaderLoadEvent(newSession));
-                    final response = await req.sessionLoader.stream.firstWhere(
-                            (state) => state is _Loaded,
-                            orElse: () => LoaderLoadedState(
-                                RefreshSessionUnknownResponse(message: null)))
-                        as _Loaded;
-                    return await handleResponse(response.data);
-                  }
-                case RefreshSessionFailureResponse():
-                  return AuthLost();
-              }
-            }
-
             switch (req.sessionLoader.state) {
               case LoaderLoadedState(data: final response):
-                return await handleResponse(response);
+                switch (response) {
+                  case RefreshSessionSuccess(newSession: final newSession):
+                    if (newSession.cognitoSession.isValid()) {
+                      return await handleRefreshSessionResponse(
+                          response, (session) => load(req.data, session));
+                    } else {
+                      final nextResponse = req.sessionLoader.stream
+                              .firstWhere((event) => switch (event) {
+                                    LoaderLoadedState() => true,
+                                    _ => false,
+                                  })
+                          as Future<LoaderLoadedState<RefreshSessionResponse>>;
+                      req.sessionLoader.add(LoaderLoadEvent(newSession));
+                      return await handleRefreshSessionResponse(
+                          (await nextResponse).data,
+                          (session) => load(req.data, session));
+                    }
+                  default:
+                }
               case LoaderLoadingState(operation: final operation):
-                final response = await operation
-                    .then(
-                      (response) => response,
-                      onCancel: () => null,
-                    )
-                    .value;
-                if (response != null) {
-                  return await handleResponse(response);
+                final response = await operation.valueOrCancellation();
+                if (response == null) {
+                  return AuthLost('Operation canceled');
+                }
+                return await handleRefreshSessionResponse(
+                    response, (session) => load(req.data, session));
+              default:
+            }
+            final response = await getPreviousSession(apiInfo);
+            req.sessionLoader.add(LoaderSetEvent(response));
+            switch (response) {
+              case RefreshSessionSuccess(newSession: final newSession):
+                if (newSession.cognitoSession.isValid()) {
+                  return await handleRefreshSessionResponse(
+                      response, (session) => load(req.data, session));
                 }
               default:
             }
-            return const AuthLost();
+            return AuthLost('Could not restore session');
           },
         );
 }

@@ -11,7 +11,8 @@ T? _getSecureCached<T>(JsonKey<T, dynamic> params) {
     val = params.parse(jsonDecode(_cache.stringifiedSecureCache[params.key]!));
   }
   if (val != null) {
-    debug('Lazy loaded cache hit:\n\tkey: ${params.key}\n\tvalue: $val');
+    debug('Lazy loaded cache hit:',
+        details: ['key: ${params.key}', 'value: $val']);
   }
   return val;
 }
@@ -71,7 +72,7 @@ Future<void> _cacheSecure<T>(
       () {
         if (value != null) {
           final params = parser(key, value);
-          debug('Caching secure $T:\n\tkey: $key\n\tvalue: $value');
+          debug('Caching secure $T:', details: ['key: $key', 'value: $value']);
           final stringifiedValue = jsonEncode(params.serialized);
           _cache.stringifiedSecureCache[params.key] = stringifiedValue;
           _cache.lazyLoadedSecureCache[params.key] = params.value;
@@ -80,16 +81,18 @@ Future<void> _cacheSecure<T>(
             value: stringifiedValue,
           );
         } else {
-          debug('Removing cached secure $T:\n\tkey: $key\n\t'
-              'old value: ${() {
-            final stringified = _cache.stringifiedSecureCache.remove(key);
-            final lazyLoaded = _cache.lazyLoadedSecureCache.remove(key);
-            if (lazyLoaded != null) {
-              return '$lazyLoaded\n\tLazy loaded cache hit';
-            } else if (stringified != null) {
-              return stringified;
-            }
-          }()}');
+          debug('Removing cached secure $T:', details: [
+            'key: $key',
+            'old value: ${() {
+              final stringified = _cache.stringifiedSecureCache.remove(key);
+              final lazyLoaded = _cache.lazyLoadedSecureCache.remove(key);
+              if (lazyLoaded != null) {
+                return '$lazyLoaded\n\tLazy loaded cache hit';
+              } else if (stringified != null) {
+                return stringified;
+              }
+            }()}'
+          ]);
           return _cache.secureStorage.write(
             key: key,
             value: null,

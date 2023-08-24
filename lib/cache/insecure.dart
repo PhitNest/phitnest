@@ -98,11 +98,13 @@ Map<String, T>? getCachedPolymorphicMap<T extends JsonPolymorphic<T>>(
 Future<void> _cacheItem<T>(
     String key, T? value, Future<void> Function(String, T) setter) async {
   if (value != null) {
-    debug('Caching $T (insecure):\n\tkey: $key\n\tvalue: $value');
+    debug('Caching $T (insecure):', details: ['key: $key', 'value: $value']);
     await setter(key, value);
   } else {
-    debug('Removing cached $T:\n\tkey: $key\n\told value: '
-        '${await _cache.sharedPreferences.remove(key)}');
+    debug('Removing cached $T:', details: [
+      'key: $key',
+      'old value: ${await _cache.sharedPreferences.remove(key)}'
+    ]);
   }
 }
 
