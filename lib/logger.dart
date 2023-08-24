@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 String _wrapText(String line, int spaces) => StringUtils.addCharAtPosition(
       line,
       '\n${List.filled(spaces, '\t').join('')}',
-      120,
+      100,
       repeat: true,
     );
 
