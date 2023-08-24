@@ -68,26 +68,25 @@ Future<HttpResponse<ResType>> request<ResType>({
     final String url = _createUrl(route, overrideHost, overridePort);
 
     // Helper function for generating log descriptions
-    String descriptionLog(dynamic data) =>
-        '\n\tmethod: $method\n\turl: $url\n\tdata: $data';
+    List<String> details(dynamic data) =>
+        ['method: $method', 'url: $url', 'data: $data'];
 
     // Log the request details
-    debug('Request${session != null ? " (Authorized)" : ""}:'
-        '${descriptionLog(data)}');
+    debug('Request${session != null ? " (Authorized)" : ""}:',
+        details: details(data));
 
     int elapsedMs() =>
         DateTime.now().millisecondsSinceEpoch -
         startTime.millisecondsSinceEpoch;
 
-    String responseLog(String situation, dynamic data) =>
-        'Request $situation:${descriptionLog(data)}\n\telapsed: ${elapsedMs()} '
-        'ms';
+    List<String> responseDetails(dynamic data) =>
+        [...details(data), 'elapsed: ${elapsedMs()} ms'];
 
     // Check if the request should be read from cache
     if (readFromCache != null) {
       final cached = readFromCache();
       if (cached != null) {
-        debug(responseLog('cached', cached));
+        debug('Request cached:', details: [cached.toString()]);
         return HttpResponseCache(cached);
       }
     }
@@ -128,12 +127,12 @@ Future<HttpResponse<ResType>> request<ResType>({
             // Parse the response data
             final parsed = parse(jsonData);
             // Log success
-            debug(responseLog('success', parsed));
+            debug('Request success:', details: responseDetails(parsed));
             return HttpResponseOk(parsed, response.headers);
           } else {
             // Handle unsuccessful responses
             final parsed = Failure.parse(jsonData);
-            error(responseLog('failure', parsed));
+            error('Request failure:', details: responseDetails(parsed));
             return HttpResponseFailure(parsed, response.headers);
           }
         } else {
@@ -142,16 +141,16 @@ Future<HttpResponse<ResType>> request<ResType>({
       });
     } on TimeoutException {
       // Log and return a NetworkConnectionFailure on timeout
-      error(responseLog('timeout', data));
+      error('Request timeout:', details: responseDetails(data));
       return HttpResponseFailure(
           Failure.populated('Timeout', 'Request timeout'), Headers());
     } on Failure catch (failure) {
-      error(responseLog('failure', failure));
+      error('Request failure:', details: responseDetails(failure));
       return HttpResponseFailure(failure, Headers());
     } catch (e) {
       // Log and return failure by value
       final failure = Failure.populated('UnknownFailure', e.toString());
-      error(responseLog('failure', failure));
+      error('Request failure:', details: responseDetails(failure));
       return HttpResponseFailure(failure, Headers());
     }
   }
