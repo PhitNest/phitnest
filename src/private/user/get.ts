@@ -6,12 +6,11 @@ import {
   ResourceNotFoundError,
   EnvironmentVars,
   RequestError,
-  kUserNotFound,
   UpdateParams,
 } from "common/utils";
 import {
-  UserInvitedByAdminWithoutIdentity,
-  UserInvitedByUserWithoutIdentity,
+  UserInvitedByAdmin,
+  UserInvitedByUser,
   friendshipWithoutMessageToDynamo,
   kUserInvitedByAdminParser,
   kUserInvitedByUserParser,
@@ -44,13 +43,13 @@ export async function invoke(
 ): Promise<APIGatewayProxyResult> {
   return handleRequest(async () => {
     const userClaims = getUserClaims(event);
-    const client = dynamo().connect();
+    const client = dynamo();
     const userRaw = await client.query({
       pk: "USERS",
       sk: { q: `USER#${userClaims.sub}`, op: "EQ" },
     });
     if (userRaw instanceof ResourceNotFoundError) {
-      return kUserNotFound;
+      return userRaw;
     } else {
       if (!userRaw.identityId) {
         if (!event.headers.Authorization) {
@@ -92,19 +91,14 @@ export async function invoke(
           userRawWithIdentity,
           kUserWithPartialInviteParser
         );
-        let user:
-          | UserInvitedByAdminWithoutIdentity
-          | UserInvitedByUserWithoutIdentity;
+        let user: UserInvitedByAdmin | UserInvitedByUser;
         if (userWithPartialInvite.invite.type === "user") {
           user = parseDynamo(userRaw, kUserInvitedByUserParser);
         } else {
           user = parseDynamo(userRaw, kUserInvitedByAdminParser);
         }
 
-        const updateIdentity: UpdateParams<
-          typeof user & { identityId: string },
-          keyof typeof kUpdateExpressionVarMap
-        > = {
+        const updateIdentity: UpdateParams = {
           pk: "USERS",
           sk: `USER#${user.id}`,
           expression: "SET identityId = :identity",
@@ -113,10 +107,7 @@ export async function invoke(
         if (user.invite.type === "user") {
           const friendshipId = uuid.v4();
           const friendshipCreatedAt = new Date();
-          await client.writeTransaction<
-            typeof user & { identityId: string },
-            keyof typeof kUpdateExpressionVarMap
-          >({
+          await client.writeTransaction({
             updates: [updateIdentity],
             puts: [
               {
@@ -145,10 +136,7 @@ export async function invoke(
             ],
           });
         } else {
-          await client.update<
-            typeof user & { identityId: string },
-            keyof typeof kUpdateExpressionVarMap
-          >(updateIdentity);
+          await client.update(updateIdentity);
         }
         return new Success(userWithPartialInvite);
       } else if (!userRaw.identityId.S) {
@@ -158,9 +146,7 @@ export async function invoke(
           userRaw,
           kUserWithPartialInviteParser
         );
-        let user:
-          | UserInvitedByAdminWithoutIdentity
-          | UserInvitedByUserWithoutIdentity;
+        let user: UserInvitedByAdmin | UserInvitedByUser;
         if (userWithPartialInvite.invite.type === "user") {
           user = parseDynamo(userRaw, kUserInvitedByUserParser);
         } else {

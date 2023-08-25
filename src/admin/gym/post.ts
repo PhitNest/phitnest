@@ -71,7 +71,7 @@ export async function invoke(
       if (location instanceof CoordinatesNotFound) {
         return location;
       } else {
-        const client = dynamo().connect();
+        const client = dynamo();
         const gymId = uuid.v4();
         await client.put({
           pk: "GYMS",

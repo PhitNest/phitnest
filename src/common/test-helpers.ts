@@ -6,16 +6,6 @@ import {
 } from "aws-lambda";
 import { AdminCognitoClaims, UserCognitoClaims } from "./utils";
 
-/**
- * This is required for spying on functions that are imported from other files
- */
-export function setupMocks() {
-  jest.mock("uuid", () => ({
-    __esModule: true,
-    ...jest.requireActual("uuid"),
-  }));
-}
-
 type HttpParams = {
   headers?: APIGatewayProxyEventMultiValueHeaders;
 };

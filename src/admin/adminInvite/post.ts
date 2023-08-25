@@ -1,7 +1,6 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { z } from "zod";
 import {
-  RequestError,
   ResourceNotFoundError,
   Success,
   dynamo,
@@ -15,8 +14,6 @@ const validator = z.object({
   gymId: z.string(),
 });
 
-const kGymNotFound = new RequestError("GymNotFound", "Gym not found");
-
 export async function invoke(
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> {
@@ -25,14 +22,14 @@ export async function invoke(
     validator: validator,
     controller: async (data) => {
       const adminClaims = getAdminClaims(event);
-      const client = dynamo().connect();
+      const client = dynamo();
       const gym = await client.parsedQuery({
         pk: "GYMS",
         sk: { q: `GYM#${data.gymId}`, op: "EQ" },
         parseShape: kGymWithoutAdminParser,
       });
       if (gym instanceof ResourceNotFoundError) {
-        return kGymNotFound;
+        return gym;
       } else {
         await client.put({
           pk: `INVITE#${adminClaims.email}`,

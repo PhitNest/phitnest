@@ -3,9 +3,7 @@ import {
   Success,
   handleRequest,
   getUserClaims,
-  RequestError,
   ResourceNotFoundError,
-  kUserNotFound,
 } from "common/utils";
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import {
@@ -16,32 +14,12 @@ import {
   kUserWithPartialInviteParser,
 } from "common/entities";
 
-const kFriendshipsNotFound = new RequestError(
-  "FriendshipsNotFound",
-  "Friendships not found."
-);
-
-const kIncomingFriendRequestsNotFound = new RequestError(
-  "IncomingFriendRequestsNotFound",
-  "Incoming friend requests not found."
-);
-
-const kOutgoingFriendRequestsNotFound = new RequestError(
-  "OutgoingFriendRequestsNotFound",
-  "Outgoing friend requests not found."
-);
-
-const kInvitesNotFound = new RequestError(
-  "InvitesNotFound",
-  "Invites not found."
-);
-
 export async function invoke(
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> {
   return handleRequest(async () => {
     const userClaims = getUserClaims(event);
-    const client = dynamo().connect();
+    const client = dynamo();
     const [user, incomingFriendRequests, friendRequests, friends, invites] =
       await Promise.all([
         client.parsedQuery({
@@ -71,15 +49,7 @@ export async function invoke(
         }),
       ]);
     if (user instanceof ResourceNotFoundError) {
-      return kUserNotFound;
-    } else if (incomingFriendRequests instanceof ResourceNotFoundError) {
-      return kIncomingFriendRequestsNotFound;
-    } else if (friendRequests instanceof ResourceNotFoundError) {
-      return kOutgoingFriendRequestsNotFound;
-    } else if (friends instanceof ResourceNotFoundError) {
-      return kFriendshipsNotFound;
-    } else if (invites instanceof ResourceNotFoundError) {
-      return kInvitesNotFound;
+      return user;
     } else {
       await Promise.all(
         [
