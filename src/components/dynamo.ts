@@ -19,8 +19,8 @@ export interface DynamoStackProps {
   backupRegion: string;
 }
 
-const kPartKey = "part_id";
-const kSortKey = "sort_id";
+const kPartKey = "pk";
+const kSortKey = "sk";
 
 export class DynamoStack extends Construct {
   public readonly tableName: string;
