@@ -9,7 +9,7 @@ import {
   kGymWithoutAdminParser,
 } from "./gym";
 import { SerializedDynamo, DynamoParser } from "./dynamo";
-import { Admin, kAdminParser } from "./admin";
+import { Admin } from "./admin";
 
 export type InviteWithoutSender = {
   type: "admin" | "user";
@@ -37,8 +37,8 @@ export type UserInvite = InviteWithoutSender & {
 
 export const kAdminInviteParser: DynamoParser<AdminInvite> = {
   inviter: {
-    id: kAdminParser.id,
-    email: kAdminParser.email,
+    id: "S",
+    email: "S",
   },
   ...kInviteWithoutSenderParser,
 };
@@ -77,8 +77,8 @@ export function adminInviteToDynamo(
     type: { S: "admin" },
     inviter: {
       M: {
-        email: { S: invite.inviter.email },
         id: { S: invite.inviter.id },
+        email: { S: invite.inviter.email },
       },
     },
   };

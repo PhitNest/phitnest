@@ -3,9 +3,7 @@ import {
   Success,
   getUserClaims,
   handleRequest,
-  RequestError,
   ResourceNotFoundError,
-  kUserNotFound,
 } from "common/utils";
 import {
   kFriendshipWithoutMessageParser,
@@ -15,34 +13,19 @@ import {
 } from "common/entities";
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 
-const kNoExploreUsersFound = new RequestError(
-  "NoExploreUsersFound",
-  "No users could be found."
-);
-
-const kNoFriendshipsFound = new RequestError(
-  "NoFriendshipsFound",
-  "No friendships could be found."
-);
-
-const kNoFriendRequestsFound = new RequestError(
-  "NoFriendRequestsFound",
-  "No friend requests could be found."
-);
-
 export async function invoke(
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> {
   return handleRequest(async () => {
     const userClaims = getUserClaims(event);
-    const client = dynamo().connect();
+    const client = dynamo();
     const user = await client.parsedQuery({
       pk: "USERS",
       sk: { q: `USER#${userClaims.sub}`, op: "EQ" },
       parseShape: kUserWithPartialInviteParser,
     });
     if (user instanceof ResourceNotFoundError) {
-      return kUserNotFound;
+      return user;
     } else {
       const [othersAtGym, friends, friendRequests] = await Promise.all([
         client.parsedQuery({
@@ -61,28 +44,19 @@ export async function invoke(
           parseShape: kOutgoingFriendRequestParser,
         }),
       ]);
-      if (othersAtGym instanceof ResourceNotFoundError) {
-        return kNoExploreUsersFound;
-      } else if (friends instanceof ResourceNotFoundError) {
-        return kNoFriendshipsFound;
-      } else if (friendRequests instanceof ResourceNotFoundError) {
-        return kNoFriendRequestsFound;
-      } else {
-        const exploreUsers = await Promise.all(
-          othersAtGym.filter((other) => {
-            return (
-              other.id !== user.id &&
-              !friends.some(
-                (friendship) => friendship.otherUser.id === other.id
-              ) &&
-              !friendRequests.some(
-                (friendRequest) => friendRequest.receiver.id === other.id
-              )
-            );
-          })
-        );
-        return new Success(exploreUsers);
-      }
+      const exploreUsers = await Promise.all(
+        othersAtGym.filter((other) => {
+          const isMe = other.id === user.id;
+          const isMyFriend = friends.some(
+            (friendship) => friendship.otherUser.id === other.id
+          );
+          const sentRequest = friendRequests.some(
+            (friendRequest) => friendRequest.receiver.id === other.id
+          );
+          return !isMe && !isMyFriend && !sentRequest;
+        })
+      );
+      return new Success(exploreUsers);
     }
   });
 }

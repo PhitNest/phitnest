@@ -22,16 +22,12 @@ export type SkOperator = "EQ" | "BEGINS_WITH" | "CONTAINS";
 /**
  * This key is can be queried based only on equality, unlike the SK which can be queried with operators.
  */
-export type PartitionKey = {
-  pk: string;
-};
+export type PartitionKey = { pk: string };
 
 /**
  * Used to query one particular row only. Queries by equality on both PK and SK.
  */
-export type RowKey = PartitionKey & {
-  sk?: string;
-};
+export type RowKey = PartitionKey & { sk?: string };
 
 /**
  * Allows you to query multiple rows at once. Queries by equality on PK and by operator on SK.
@@ -43,9 +39,7 @@ export type MultiRowKey<Op extends SkOperator = SkOperator> = PartitionKey & {
 /**
  * This allows you to provide a custom parser for the data returned from the database.
  */
-export type ParseParams<T> = {
-  parseShape: DynamoParser<T>;
-};
+export type ParseParams<T> = { parseShape: DynamoParser<T> };
 
 /**
  * These params are used to put a new item into the database.
@@ -53,61 +47,20 @@ export type ParseParams<T> = {
 export type PutParams = RowKey & { data: Record<string, AttributeValue> };
 
 /**
- * This represents a symbol that can be used in an update expression.
- */
-type UpdateExpressionSymbol<
-  T extends Record<string, unknown>,
-  VarNames extends `:${string}` | undefined,
-> = Extract<keyof T, string> | Extract<VarNames, string> | number;
-
-/**
- * This represents an update expression that can be used in an update query.
- */
-export type UpdateExpression<
-  T extends Record<string, unknown>,
-  VarNames extends `:${string}` | undefined,
-> = `SET ${Extract<keyof T, string>} = ${`${UpdateExpressionSymbol<
-  T,
-  VarNames
->}${` ${"+" | "-" | "*" | "/"} ${UpdateExpressionSymbol<T, VarNames>}` | ""}`}`;
-
-/**
  * These params are used to update an existing item in the database.
  */
-export type UpdateParams<
-  T extends Record<string, unknown>,
-  VarNames extends `:${string}` | undefined = undefined,
-> = string extends keyof T
-  ? never
-  : RowKey & {
-      expression: UpdateExpression<T, VarNames>;
-    } & (VarNames extends undefined
-        ? { varMap?: undefined }
-        : {
-            varMap: { [Key in Extract<VarNames, string>]: AttributeValue };
-          });
-
+export type UpdateParams = RowKey & {
+  expression: string;
+  varMap: Record<string, AttributeValue>;
+};
 /**
  * These params are used for multiple operations in a single transaction.
  */
-export type TransactionParams<
-  UpdateTypes extends Record<string, unknown> = Record<string, unknown>,
-  UpdateVarNames extends `:${string}` | undefined = undefined,
-> = {
-  updates?: UpdateParams<UpdateTypes, UpdateVarNames>[];
+export type TransactionParams = {
+  updates?: UpdateParams[];
   puts?: PutParams[];
   deletes?: RowKey[];
 };
-
-/**
- * This is a type that represents either a single item or an array of items.
- */
-export type SingleOrPlural<T, Op extends SkOperator> = Op extends Exclude<
-  SkOperator,
-  "EQ"
->
-  ? T[]
-  : T;
 
 export class ResourceNotFoundError extends RequestError {
   constructor(key: RowKey | MultiRowKey) {
@@ -124,47 +77,13 @@ export class DynamoParseError extends RequestError {
   }
 }
 
-/**
- * This is the DynamoClient interface. It is used to query the database.
- */
-export abstract class DynamoClient {
-  abstract query<Op extends SkOperator>(
-    params: MultiRowKey<Op>,
-    projection?: string
-  ): Promise<
-    SingleOrPlural<Record<string, AttributeValue>, Op> | ResourceNotFoundError
-  >;
-
-  abstract parsedQuery<T, Op extends SkOperator>(
-    params: ParseParams<T> & MultiRowKey<Op>
-  ): Promise<SingleOrPlural<T, Op> | ResourceNotFoundError>;
-
-  abstract update<
-    UpdateTypes extends Record<string, unknown>,
-    UpdateVarNames extends `:${string}` | undefined = undefined,
-  >(params: UpdateParams<UpdateTypes, UpdateVarNames>): Promise<void>;
-
-  abstract writeTransaction<
-    UpdateTypes extends Record<string, unknown> = Record<string, unknown>,
-    UpdateVarNames extends `:${string}` | undefined = undefined,
-  >(params: TransactionParams<UpdateTypes, UpdateVarNames>): Promise<void>;
-
-  abstract put(params: PutParams): Promise<void>;
-
-  abstract delete(params: RowKey): Promise<void>;
-}
-
-export abstract class DynamoConnection {
-  abstract connect(): DynamoClient;
-}
-
 function rowKey(key: RowKey): {
-  part_id: { S: string };
-  sort_id?: { S: string };
+  pk: { S: string };
+  sk?: { S: string };
 } {
   return {
-    part_id: { S: key.pk },
-    ...(key.sk ? { sort_id: { S: key.sk } } : {}),
+    pk: { S: key.pk },
+    ...(key.sk ? { sk: { S: key.sk } } : {}),
   };
 }
 
@@ -175,13 +94,13 @@ function queryCommand(
   return {
     TableName: process.env.DYNAMO_TABLE_NAME,
     KeyConditions: {
-      part_id: {
+      pk: {
         ComparisonOperator: "EQ",
         AttributeValueList: [{ S: key.pk }],
       },
       ...(key.sk
         ? {
-            sort_id: {
+            sk: {
               ComparisonOperator: key.sk.op,
               AttributeValueList: [{ S: key.sk.q }],
             },
@@ -192,12 +111,9 @@ function queryCommand(
   };
 }
 
-function updateCommand<
-  UpdateTypes extends Record<string, unknown> = Record<string, unknown>,
-  UpdateVarNames extends `:${string}` | undefined = undefined,
->(
-  params: UpdateParams<UpdateTypes, UpdateVarNames>
-): UpdateItemCommandInput & { UpdateExpression: string } {
+function updateCommand(params: UpdateParams): UpdateItemCommandInput & {
+  UpdateExpression: string;
+} {
   return {
     TableName: process.env.DYNAMO_TABLE_NAME,
     Key: rowKey(params),
@@ -219,25 +135,26 @@ function putCommand(params: PutParams): PutItemCommandInput {
 function deleteCommand(params: RowKey): DeleteItemCommandInput {
   return {
     TableName: process.env.DYNAMO_TABLE_NAME,
-    Key: {
-      part_id: { S: params.pk },
-      ...(params.sk ? { sort_id: { S: params.sk } } : {}),
-    },
+    Key: rowKey(params),
   };
 }
 
-class DynamoClientImpl extends DynamoClient {
+type QueryResult<Op extends SkOperator> = Op extends "EQ"
+  ? Record<string, AttributeValue> | ResourceNotFoundError
+  : Record<string, AttributeValue>[];
+
+type ParsedQueryResult<T, Op extends SkOperator> = Op extends "EQ"
+  ? T | ResourceNotFoundError
+  : T[];
+
+class DynamoClient {
   private client: DynamoDBClient;
 
   constructor(client: DynamoDBClient) {
-    super();
     this.client = client;
   }
 
-  async update<
-    T extends Record<string, unknown>,
-    VarNames extends `:${string}` | undefined = undefined,
-  >(params: UpdateParams<T, VarNames>): Promise<void> {
+  async update(params: UpdateParams): Promise<void> {
     await this.client.send(new UpdateItemCommand(updateCommand(params)));
   }
 
@@ -248,37 +165,28 @@ class DynamoClientImpl extends DynamoClient {
   async query<Op extends SkOperator>(
     key: MultiRowKey<Op>,
     projection?: string
-  ): Promise<
-    SingleOrPlural<Record<string, AttributeValue>, Op> | ResourceNotFoundError
-  > {
-    try {
-      const res = await this.client.send(
-        new QueryCommand(queryCommand(key, projection))
-      );
-      if (key.sk && key.sk.op === "EQ") {
-        if (res.Items && res.Items.length > 0) {
-          return res.Items[0] as SingleOrPlural<
-            Record<string, AttributeValue>,
-            Op
-          >;
+  ): Promise<QueryResult<Op>> {
+    return (await (async () => {
+      try {
+        const res = await this.client.send(
+          new QueryCommand(queryCommand(key, projection))
+        );
+        if (key.sk && key.sk.op === "EQ") {
+          if (res.Items && res.Items.length > 0) {
+            return res.Items[0];
+          } else {
+            return new ResourceNotFoundError(key);
+          }
         } else {
-          return new ResourceNotFoundError(key);
+          return res.Items ?? [];
         }
-      } else {
-        return (res.Items ?? []) as SingleOrPlural<
-          Record<string, AttributeValue>,
-          Op
-        >;
+      } catch {
+        return new ResourceNotFoundError(key);
       }
-    } catch {
-      return new ResourceNotFoundError(key);
-    }
+    })()) as QueryResult<Op>;
   }
 
-  async writeTransaction<
-    UpdateTypes extends Record<string, unknown> = Record<string, unknown>,
-    UpdateVarNames extends `:${string}` | undefined = undefined,
-  >(params: TransactionParams<UpdateTypes, UpdateVarNames>): Promise<void> {
+  async writeTransaction(params: TransactionParams): Promise<void> {
     await this.client.send(
       new TransactWriteItemsCommand({
         TransactItems: [
@@ -298,31 +206,27 @@ class DynamoClientImpl extends DynamoClient {
 
   async parsedQuery<T, Op extends SkOperator>(
     params: ParseParams<T> & MultiRowKey<Op>
-  ): Promise<SingleOrPlural<T, Op> | ResourceNotFoundError> {
-    const queryRes = await this.query(
-      params,
-      Object.keys(params.parseShape).join(",")
-    );
-    if (queryRes instanceof ResourceNotFoundError) {
-      return queryRes;
-    }
-    if (params.sk && params.sk.op === "EQ") {
-      return parseDynamo(
-        queryRes as Record<string, AttributeValue>,
-        params.parseShape
-      ) as SingleOrPlural<T, Op> | DynamoParseError;
-    } else {
-      const parsed = (queryRes as Record<string, AttributeValue>[]).map(
-        (item) => parseDynamo(item, params.parseShape)
+  ): Promise<ParsedQueryResult<T, Op>> {
+    return (await (async () => {
+      const queryRes = await this.query(
+        params,
+        Object.keys(params.parseShape).join(",")
       );
-      if (parsed.some((item) => item instanceof DynamoParseError)) {
-        return parsed[
-          parsed.findIndex((item) => item instanceof DynamoParseError)
-        ] as DynamoParseError;
-      } else {
-        return parsed as SingleOrPlural<T, Op>;
+      if (queryRes instanceof ResourceNotFoundError) {
+        return queryRes;
       }
-    }
+      if (params.sk && params.sk.op === "EQ") {
+        return parseDynamo(
+          queryRes as Record<string, AttributeValue>,
+          params.parseShape
+        );
+      } else {
+        const parsed = (queryRes as Record<string, AttributeValue>[]).map(
+          (item) => parseDynamo(item, params.parseShape)
+        );
+        return parsed;
+      }
+    })()) as ParsedQueryResult<T, Op>;
   }
 
   async delete(params: RowKey): Promise<void> {
@@ -330,26 +234,10 @@ class DynamoClientImpl extends DynamoClient {
   }
 }
 
-class DynamoConnectionImpl extends DynamoConnection {
-  constructor() {
-    super();
-  }
-
-  connect(): DynamoClient {
-    return new DynamoClientImpl(
-      new DynamoDBClient({
-        region: process.env.AWS_REGION,
-      })
-    );
-  }
-}
-
-let injectedDynamo: DynamoConnection = new DynamoConnectionImpl();
-
-export function dynamo(): DynamoConnection {
-  return injectedDynamo;
-}
-
-export function injectDynamo(newDynamo: DynamoConnection): void {
-  injectedDynamo = newDynamo;
+export function dynamo() {
+  return new DynamoClient(
+    new DynamoDBClient({
+      region: process.env.AWS_REGION,
+    })
+  );
 }

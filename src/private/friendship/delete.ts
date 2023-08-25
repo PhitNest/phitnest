@@ -14,7 +14,7 @@ export async function invoke(
     validator: validator,
     controller: async (data) => {
       const userClaims = getUserClaims(event);
-      const client = dynamo().connect();
+      const client = dynamo();
       await client.writeTransaction({
         deletes: [
           {

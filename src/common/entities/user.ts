@@ -1,13 +1,5 @@
 import { SerializedDynamo, DynamoParser } from "./dynamo";
 import {
-  AccountDetails,
-  CreationDetails,
-  accountDetailsToDynamo,
-  creationDetailsToDynamo,
-  kAccountDetailsParser,
-  kCreationDetailsParser,
-} from "./account";
-import {
   AdminInvite,
   InviteWithoutSender,
   UserInvite,
@@ -16,46 +8,84 @@ import {
   userInviteToDynamo,
 } from "./invite";
 import { kGymWithoutAdminParser } from "./gym";
-import { kAdminParser } from "./admin";
-import { omit } from "lodash";
 
-export type UserExplore = CreationDetails & {
+export type UserWithoutIdentity = {
+  id: string;
   firstName: string;
   lastName: string;
+  createdAt: Date;
+};
+
+export const kUserWithoutIdentityParser: DynamoParser<UserWithoutIdentity> = {
+  id: "S",
+  firstName: "S",
+  lastName: "S",
+  createdAt: "D",
+};
+
+export type UserExplore = UserWithoutIdentity & {
   identityId: string;
 };
 
 export const kUserExploreParser: DynamoParser<UserExplore> = {
-  ...kCreationDetailsParser,
+  ...kUserWithoutIdentityParser,
   identityId: "S",
-  firstName: "S",
-  lastName: "S",
 };
 
-export type UserWithoutInvite = UserExplore &
-  AccountDetails & {
-    numInvites: number;
-  };
+type _UserWithoutInvite = {
+  email: string;
+  numInvites: number;
+};
 
-export const kUserWithoutInviteParser: DynamoParser<UserWithoutInvite> = {
-  ...kAccountDetailsParser,
-  ...kUserExploreParser,
+const kUserWithoutInviteShape: DynamoParser<_UserWithoutInvite> = {
+  email: "S",
   numInvites: "N",
 };
 
-export type UserWithPartialInvite = UserWithoutInvite & {
+export type UserWithoutInvite = UserExplore & _UserWithoutInvite;
+
+export type UserWithoutInviteOrIdentity = UserWithoutIdentity &
+  _UserWithoutInvite;
+
+export const kUserWithoutInviteParser: DynamoParser<UserWithoutInvite> = {
+  ...kUserExploreParser,
+  ...kUserWithoutInviteShape,
+};
+
+export const kUserWithoutInviteOrIdentityParser: DynamoParser<UserWithoutInviteOrIdentity> =
+  {
+    ...kUserWithoutIdentityParser,
+    ...kUserWithoutInviteShape,
+  };
+
+type _PartialInvite = {
   invite: InviteWithoutSender;
 };
+
+const kPartialInviteShape: DynamoParser<_PartialInvite> = {
+  invite: {
+    type: "S",
+    receiverEmail: "S",
+    createdAt: "D",
+    gym: kGymWithoutAdminParser,
+  },
+};
+
+export type UserWithPartialInvite = UserWithoutInvite & _PartialInvite;
 
 export const kUserWithPartialInviteParser: DynamoParser<UserWithPartialInvite> =
   {
     ...kUserWithoutInviteParser,
-    invite: {
-      type: "S",
-      receiverEmail: "S",
-      createdAt: "D",
-      gym: kGymWithoutAdminParser,
-    },
+    ...kPartialInviteShape,
+  };
+
+export type UserWithoutIdentityPartialInvite = UserWithoutInviteOrIdentity &
+  _PartialInvite;
+
+export const kUserWithoutIdentityPartialInviteParser: DynamoParser<UserWithoutIdentityPartialInvite> =
+  {
+    ...kUserWithoutInviteOrIdentityParser,
+    ...kPartialInviteShape,
   };
 
 export type UserInvitedByAdmin = UserWithoutInvite & {
@@ -79,36 +109,58 @@ export const kUserInvitedByAdminParser: DynamoParser<UserInvitedByAdmin> = {
   invite: {
     ...kUserWithPartialInviteParser.invite,
     inviter: {
-      id: kAdminParser.id,
-      email: kAdminParser.email,
+      id: "S",
+      email: "S",
     },
   },
 };
 
-export type UserInvitedByUserWithoutIdentity = Omit<
-  UserInvitedByUser,
-  "identityId"
->;
+export type UserInvitedByAdminWithoutIdentity = UserWithoutInviteOrIdentity & {
+  invite: AdminInvite;
+};
+
+export type UserInvitedByUserWithoutIdentity = UserWithoutInviteOrIdentity & {
+  invite: UserInvite;
+};
 
 export const kUserInvitedByUserWithoutIdentityParser: DynamoParser<UserInvitedByUserWithoutIdentity> =
-  omit(kUserInvitedByUserParser, "identityId");
-
-export type UserInvitedByAdminWithoutIdentity = Omit<
-  UserInvitedByAdmin,
-  "identityId"
->;
+  {
+    ...kUserWithoutInviteOrIdentityParser,
+    invite: {
+      ...kUserWithPartialInviteParser.invite,
+      inviter: kUserWithoutInviteParser,
+    },
+  };
 
 export const kUserInvitedByAdminWithoutIdentityParser: DynamoParser<UserInvitedByAdminWithoutIdentity> =
-  omit(kUserInvitedByAdminParser, "identityId");
+  {
+    ...kUserWithoutInviteOrIdentityParser,
+    invite: {
+      ...kUserWithPartialInviteParser.invite,
+      inviter: {
+        id: "S",
+        email: "S",
+      },
+    },
+  };
+
+export function userWithoutIdentityToDynamo(
+  user: UserWithoutIdentity
+): SerializedDynamo<UserWithoutIdentity> {
+  return {
+    id: { S: user.id },
+    firstName: { S: user.firstName },
+    lastName: { S: user.lastName },
+    createdAt: { N: user.createdAt.getTime().toString() },
+  };
+}
 
 export function userExploreToDynamo(
   userExplore: UserExplore
 ): SerializedDynamo<UserExplore> {
   return {
-    firstName: { S: userExplore.firstName },
-    lastName: { S: userExplore.lastName },
     identityId: { S: userExplore.identityId },
-    ...creationDetailsToDynamo(userExplore),
+    ...userWithoutIdentityToDynamo(userExplore),
   };
 }
 
@@ -122,12 +174,31 @@ export function userWithoutInviteToDynamo(
   };
 }
 
+export function userWithoutInviteOrIdentityToDynamo(
+  user: UserWithoutInviteOrIdentity
+): SerializedDynamo<UserWithoutInviteOrIdentity> {
+  return {
+    numInvites: { N: user.numInvites.toString() },
+    email: { S: user.email },
+    ...userWithoutIdentityToDynamo(user),
+  };
+}
+
 export function userWithPartialInviteToDynamo(
   user: UserWithPartialInvite
 ): SerializedDynamo<UserWithPartialInvite> {
   return {
     invite: { M: inviteWithoutSenderToDynamo(user.invite) },
     ...userWithoutInviteToDynamo(user),
+  };
+}
+
+export function userWithoutIdentityPartialInviteToDynamo(
+  user: UserWithoutIdentityPartialInvite
+): SerializedDynamo<UserWithoutIdentityPartialInvite> {
+  return {
+    invite: { M: inviteWithoutSenderToDynamo(user.invite) },
+    ...userWithoutInviteOrIdentityToDynamo(user),
   };
 }
 
@@ -153,11 +224,8 @@ export function userInvitedByUserWithoutIdentityToDynamo(
   user: UserInvitedByUserWithoutIdentity
 ): SerializedDynamo<UserInvitedByUserWithoutIdentity> {
   return {
-    ...accountDetailsToDynamo(user),
     invite: { M: userInviteToDynamo(user.invite) },
-    firstName: { S: user.firstName },
-    lastName: { S: user.lastName },
-    numInvites: { N: user.numInvites.toString() },
+    ...userWithoutInviteOrIdentityToDynamo(user),
   };
 }
 
@@ -165,10 +233,7 @@ export function userInvitedByAdminWithoutIdentityToDynamo(
   user: UserInvitedByAdminWithoutIdentity
 ): SerializedDynamo<UserInvitedByAdminWithoutIdentity> {
   return {
-    ...accountDetailsToDynamo(user),
     invite: { M: adminInviteToDynamo(user.invite) },
-    firstName: { S: user.firstName },
-    lastName: { S: user.lastName },
-    numInvites: { N: user.numInvites.toString() },
+    ...userWithoutInviteOrIdentityToDynamo(user),
   };
 }

@@ -5,7 +5,6 @@ import {
   Success,
   dynamo,
   getUserClaims,
-  kUserNotFound,
   validateRequest,
 } from "common/utils";
 import {
@@ -25,14 +24,14 @@ export async function invoke(
     validator: validator,
     controller: async (data) => {
       const userClaims = getUserClaims(event);
-      const client = dynamo().connect();
+      const client = dynamo();
       const user = await client.parsedQuery({
         pk: "USERS",
         sk: { q: `USER#${userClaims.sub}`, op: "EQ" },
         parseShape: kUserWithPartialInviteParser,
       });
       if (user instanceof ResourceNotFoundError) {
-        return kUserNotFound;
+        return user;
       } else {
         await client.put({
           pk: `INVITE#${userClaims.email}`,

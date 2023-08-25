@@ -3,7 +3,7 @@ import { dynamo } from "common/utils";
 import { PreSignUpTriggerEvent } from "aws-lambda";
 
 export async function invoke(event: PreSignUpTriggerEvent) {
-  const client = dynamo().connect();
+  const client = dynamo();
   await client.put({
     pk: "ADMINS",
     sk: `ADMIN#${event.userName}`,

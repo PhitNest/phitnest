@@ -5,7 +5,6 @@ import {
   RequestError,
   Success,
   ResourceNotFoundError,
-  kUserNotFound,
 } from "common/utils";
 import {
   kFriendshipParser,
@@ -27,19 +26,10 @@ const validator = z.object({
   receiverId: z.string(),
 });
 
-const kReceiverNotFound = new RequestError(
-  "ReceiverNotFound",
-  "Could not find receiver"
+const kFriendRequestExists = new RequestError(
+  "FriendRequestExists",
+  "Outgoing friend request already exists"
 );
-
-class FriendRequestExists extends RequestError {
-  constructor(outgoing: boolean) {
-    super(
-      "FriendRequestExists",
-      `${outgoing ? "Outgoing" : "Incoming"} friend request already exists`
-    );
-  }
-}
 
 const kFriendshipExists = new RequestError(
   "FriendshipExists",
@@ -54,7 +44,7 @@ export async function invoke(
     validator: validator,
     controller: async (data) => {
       const userClaims = getUserClaims(event);
-      const client = dynamo().connect();
+      const client = dynamo();
       const [friendRequest, outgoingRequest, friendship, sender, receiver] =
         await Promise.all([
           client.parsedQuery({
@@ -84,9 +74,9 @@ export async function invoke(
           }),
         ]);
       if (receiver instanceof ResourceNotFoundError) {
-        return kReceiverNotFound;
+        return receiver;
       } else if (sender instanceof ResourceNotFoundError) {
-        return kUserNotFound;
+        return sender;
       } else if (friendship instanceof ResourceNotFoundError) {
         if (outgoingRequest instanceof ResourceNotFoundError) {
           if (friendRequest instanceof ResourceNotFoundError) {
@@ -158,7 +148,7 @@ export async function invoke(
             return new Success(senderFriendship);
           }
         } else {
-          return new FriendRequestExists(true);
+          return kFriendRequestExists;
         }
       } else {
         return kFriendshipExists;

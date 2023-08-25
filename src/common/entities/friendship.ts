@@ -1,20 +1,18 @@
-import {
-  CreationDetails,
-  creationDetailsToDynamo,
-  kCreationDetailsParser,
-} from "./account";
 import { SerializedDynamo, DynamoParser } from "./dynamo";
 import { Message, kMessageParser, messageToDynamo } from "./message";
 import { UserExplore, kUserExploreParser, userExploreToDynamo } from "./user";
 
-export type FriendshipWithoutMessage = CreationDetails & {
+export type FriendshipWithoutMessage = {
+  id: string;
   otherUser: UserExplore;
+  createdAt: Date;
 };
 
 export const kFriendshipWithoutMessageParser: DynamoParser<FriendshipWithoutMessage> =
   {
+    id: "S",
     otherUser: kUserExploreParser,
-    ...kCreationDetailsParser,
+    createdAt: "D",
   };
 
 export type Friendship = FriendshipWithoutMessage & {
@@ -30,10 +28,11 @@ export function friendshipWithoutMessageToDynamo(
   friendship: FriendshipWithoutMessage
 ): SerializedDynamo<FriendshipWithoutMessage> {
   return {
+    id: { S: friendship.id },
     otherUser: {
       M: userExploreToDynamo(friendship.otherUser),
     },
-    ...creationDetailsToDynamo(friendship),
+    createdAt: { N: friendship.createdAt.getTime().toString() },
   };
 }
 
