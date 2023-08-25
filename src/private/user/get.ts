@@ -52,18 +52,6 @@ export async function invoke(
     if (userRaw instanceof ResourceNotFoundError) {
       return kUserNotFound;
     } else {
-      const userWithPartialInvite = parseDynamo(
-        userRaw,
-        kUserWithPartialInviteParser
-      );
-      let user:
-        | UserInvitedByAdminWithoutIdentity
-        | UserInvitedByUserWithoutIdentity;
-      if (userWithPartialInvite.invite.type === "user") {
-        user = parseDynamo(userRaw, kUserInvitedByUserParser);
-      } else {
-        user = parseDynamo(userRaw, kUserInvitedByAdminParser);
-      }
       if (!userRaw.identityId) {
         if (!event.headers.Authorization) {
           return kUnauthorized;
@@ -96,7 +84,22 @@ export async function invoke(
           ":identity": { S: identity.identityId },
         };
 
-        const userWithIdentity = { ...user, identityId: identity.identityId };
+        const userRawWithIdentity = {
+          ...userRaw,
+          identityId: { S: identity.identityId },
+        };
+        const userWithPartialInvite = parseDynamo(
+          userRawWithIdentity,
+          kUserWithPartialInviteParser
+        );
+        let user:
+          | UserInvitedByAdminWithoutIdentity
+          | UserInvitedByUserWithoutIdentity;
+        if (userWithPartialInvite.invite.type === "user") {
+          user = parseDynamo(userRaw, kUserInvitedByUserParser);
+        } else {
+          user = parseDynamo(userRaw, kUserInvitedByAdminParser);
+        }
 
         const updateIdentity: UpdateParams<
           typeof user & { identityId: string },
@@ -122,7 +125,7 @@ export async function invoke(
                 data: friendshipWithoutMessageToDynamo({
                   id: friendshipId,
                   createdAt: friendshipCreatedAt,
-                  otherUser: userWithIdentity,
+                  otherUser: userWithPartialInvite,
                 }),
               },
               {
@@ -137,7 +140,7 @@ export async function invoke(
               {
                 pk: `GYM#${user.invite.gym.id}`,
                 sk: `USER#${user.id}`,
-                data: userExploreToDynamo(userWithIdentity),
+                data: userExploreToDynamo(userWithPartialInvite),
               },
             ],
           });
@@ -147,10 +150,22 @@ export async function invoke(
             keyof typeof kUpdateExpressionVarMap
           >(updateIdentity);
         }
-        return new Success(userWithIdentity);
+        return new Success(userWithPartialInvite);
       } else if (!userRaw.identityId.S) {
         return kFailedToWriteIdentity;
       } else {
+        const userWithPartialInvite = parseDynamo(
+          userRaw,
+          kUserWithPartialInviteParser
+        );
+        let user:
+          | UserInvitedByAdminWithoutIdentity
+          | UserInvitedByUserWithoutIdentity;
+        if (userWithPartialInvite.invite.type === "user") {
+          user = parseDynamo(userRaw, kUserInvitedByUserParser);
+        } else {
+          user = parseDynamo(userRaw, kUserInvitedByAdminParser);
+        }
         return new Success({ ...user, identityId: userRaw.identityId.S });
       }
     }
