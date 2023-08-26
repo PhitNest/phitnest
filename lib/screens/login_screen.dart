@@ -55,80 +55,84 @@ final class LoginScreen extends StatelessWidget {
                 apiInfo: apiInfo,
               ),
             ),
-            listener: (context, controllers, loginState, _) {
-              switch (loginState) {
-                case LoaderLoadedState(data: final response):
-                  switch (response) {
-                    case LoginSuccess(session: final session):
-                      context.sessionLoader
-                          .add(LoaderSetEvent(RefreshSessionSuccess(session)));
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute<void>(
-                          builder: (context) => HomeScreen(
-                            initialSession: session,
-                          ),
-                        ),
-                        (_) => false,
-                      );
-                    case LoginChangePasswordRequired(user: final user):
-                      Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (context) => ChangePasswordScreen(
-                            unauthenticatedSession: UnauthenticatedSession(
-                              apiInfo: apiInfo,
-                              user: user,
+            createConsumer: (context, controllers, submit) => LoaderConsumer(
+              listener: (context, loaderState) {
+                switch (loaderState) {
+                  case LoaderLoadedState(data: final response):
+                    switch (response) {
+                      case LoginSuccess(session: final session):
+                        context.sessionLoader.add(
+                            LoaderSetEvent(RefreshSessionSuccess(session)));
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute<void>(
+                            builder: (context) => HomeScreen(
+                              apiInfo: session.apiInfo,
                             ),
                           ),
-                        ),
-                      );
-                    case LoginFailureResponse(message: final message):
-                      StyledBanner.show(
-                        message: message,
-                        error: true,
-                      );
-                  }
-                default:
-              }
-            },
-            builder: (context, controllers, loginState, submit) {
-              void submitForm() => submit(
-                    LoginParams(
-                      email: controllers.emailController.text,
-                      password: controllers.passwordController.text,
+                          (_) => false,
+                        );
+                      case LoginChangePasswordRequired(user: final user):
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (context) => ChangePasswordScreen(
+                              unauthenticatedSession: UnauthenticatedSession(
+                                apiInfo: apiInfo,
+                                user: user,
+                              ),
+                            ),
+                          ),
+                        );
+                      case LoginFailureResponse(message: final message):
+                        StyledBanner.show(
+                          message: message,
+                          error: true,
+                        );
+                    }
+                  default:
+                }
+              },
+              builder: (context, loaderState) {
+                void submitForm() => submit(
+                      LoginParams(
+                        email: controllers.emailController.text,
+                        password: controllers.passwordController.text,
+                      ),
+                      loaderState,
+                    );
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'PhitNest Admin Login',
+                      style: Theme.of(context).textTheme.headlineLarge,
+                      textAlign: TextAlign.center,
                     ),
-                  );
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'PhitNest Admin Login',
-                    style: Theme.of(context).textTheme.headlineLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  StyledUnderlinedTextField(
-                    hint: 'Email',
-                    controller: controllers.emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    validator: EmailValidator.validateEmail,
-                  ),
-                  StyledPasswordField(
-                    hint: 'Password',
-                    controller: controllers.passwordController,
-                    textInputAction: TextInputAction.done,
-                    validator: validatePassword,
-                    onFieldSubmitted: (_) => submitForm(),
-                  ),
-                  switch (loginState) {
-                    LoaderLoadingState() => const CircularProgressIndicator(),
-                    _ => LoginButton(onSubmit: submitForm),
-                  },
-                ],
-              );
-            },
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    StyledUnderlinedTextField(
+                      hint: 'Email',
+                      controller: controllers.emailController,
+                      autofillHints: const [AutofillHints.email],
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      validator: EmailValidator.validateEmail,
+                    ),
+                    StyledPasswordField(
+                      hint: 'Password',
+                      controller: controllers.passwordController,
+                      textInputAction: TextInputAction.done,
+                      validator: validatePassword,
+                      onFieldSubmitted: (_) => submitForm(),
+                    ),
+                    switch (loaderState) {
+                      LoaderLoadingState() => const CircularProgressIndicator(),
+                      _ => LoginButton(onSubmit: submitForm),
+                    },
+                  ],
+                );
+              },
+            ),
           ),
         ),
       );

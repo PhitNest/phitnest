@@ -1,10 +1,10 @@
 part of 'api.dart';
 
 final class AdminInviteParams extends Json {
-  final emailJson = Json.string('email');
+  final receiverEmailJson = Json.string('receiverEmail');
   final gymIdJson = Json.string('gymId');
 
-  String get email => emailJson.value;
+  String get receiverEmail => receiverEmailJson.value;
   String get gymId => gymIdJson.value;
 
   AdminInviteParams.parse(super.json) : super.parse();
@@ -12,15 +12,15 @@ final class AdminInviteParams extends Json {
   AdminInviteParams.parser() : super();
 
   AdminInviteParams.populated({
-    required String email,
+    required String receiverEmail,
     required String gymId,
   }) : super() {
-    emailJson.populate(email);
+    receiverEmailJson.populate(receiverEmail);
     gymIdJson.populate(gymId);
   }
 
   @override
-  List<JsonKey<dynamic, dynamic>> get keys => [emailJson, gymIdJson];
+  List<JsonKey<dynamic, dynamic>> get keys => [receiverEmailJson, gymIdJson];
 }
 
 Future<HttpResponse<void>> adminInvite(

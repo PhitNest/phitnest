@@ -13,14 +13,12 @@ extension on BuildContext {
 }
 
 final class HomeScreen extends StatelessWidget {
-  final Session initialSession;
   final ApiInfo apiInfo;
 
-  HomeScreen({
+  const HomeScreen({
     super.key,
-    required this.initialSession,
-  })  : apiInfo = initialSession.apiInfo,
-        super();
+    required this.apiInfo,
+  }) : super();
 
   void returnToLogin(BuildContext context) => Navigator.pushAndRemoveUntil(
         context,
@@ -40,12 +38,13 @@ final class HomeScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                InviteForm(onSessionLost: returnToLogin),
-                GymEntryForm(onSessionLost: returnToLogin),
+                InviteForm(apiInfo: apiInfo, onSessionLost: returnToLogin),
+                GymEntryForm(apiInfo: apiInfo, onSessionLost: returnToLogin),
               ],
             ),
             BlocProvider(
               create: (context) => LogoutBloc(
+                apiInfo: apiInfo,
                 load: (_, session) => logout(session: session),
               ),
               child: LogoutConsumer(
