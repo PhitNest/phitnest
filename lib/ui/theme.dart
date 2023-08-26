@@ -19,19 +19,19 @@ ThemeData get theme => ThemeData(
       ),
       textTheme: TextTheme(
         bodyLarge: GoogleFonts.inter(
-          fontSize: 28.sp,
+          fontSize: 28,
           fontWeight: FontWeight.w700,
           height: 1.25,
           color: const Color(0xFFF8FEFF),
         ),
         bodyMedium: GoogleFonts.inter(
-          fontSize: 20.sp,
+          fontSize: 20,
           fontWeight: FontWeight.w500,
           height: 1.25,
           color: const Color(0xFFF8FEFF),
         ),
         bodySmall: GoogleFonts.inter(
-          fontSize: 12.sp,
+          fontSize: 12,
           fontWeight: FontWeight.w700,
           height: 1.25,
           color: const Color(0xFFF8FEFF),
@@ -42,7 +42,7 @@ ThemeData get theme => ThemeData(
           color: Color(0xFFF8FEFF),
         ),
         titleTextStyle: GoogleFonts.inter(
-          fontSize: 20.sp,
+          fontSize: 20,
           fontWeight: FontWeight.w500,
           height: 1.25,
           color: const Color(0xFFF8FEFF),
@@ -71,7 +71,7 @@ ThemeData get theme => ThemeData(
           backgroundColor: MaterialStateProperty.all(Colors.transparent),
           textStyle: MaterialStateProperty.all(
             GoogleFonts.inter(
-              fontSize: 14.sp,
+              fontSize: 14,
               fontWeight: FontWeight.w400,
               fontStyle: FontStyle.italic,
               height: 1.25,
