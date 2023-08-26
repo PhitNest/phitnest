@@ -4,18 +4,16 @@ import 'package:logger/logger.dart';
 
 const kDetailLinePrefix = '\n\t';
 
-String _wrapText(String line, int spaces) => StringUtils.addCharAtPosition(
-      line,
-      kDetailLinePrefix,
-      100,
-      repeat: true,
-    );
-
 final _prettyLogger = Logger(printer: PrettyPrinter(methodCount: 0));
 
 String _logMessage(String title, List<String>? details) => '$title'
     '${details != null ? '$kDetailLinePrefix${details.map((e) {
-        return _wrapText(e, 1);
+        return StringUtils.addCharAtPosition(
+          e,
+          '\n\t\t',
+          100,
+          repeat: true,
+        );
       }).join(kDetailLinePrefix)}' : ''}';
 
 void debug(String title, {List<String>? details}) =>
