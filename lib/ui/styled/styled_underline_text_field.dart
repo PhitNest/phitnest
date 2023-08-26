@@ -14,6 +14,7 @@ final class StyledUnderlinedTextField extends StatelessWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final int? errorMaxLines;
   final Widget? suffix;
+  final List<String> autofillHints;
 
   const StyledUnderlinedTextField({
     super.key,
@@ -28,6 +29,7 @@ final class StyledUnderlinedTextField extends StatelessWidget {
     this.onFieldSubmitted,
     this.errorMaxLines,
     this.textCapitalization = TextCapitalization.none,
+    this.autofillHints = const [],
     this.validator,
     this.suffix,
   }) : super();
@@ -41,6 +43,7 @@ final class StyledUnderlinedTextField extends StatelessWidget {
         textInputAction: textInputAction,
         focusNode: focusNode,
         onEditingComplete: onEditingComplete,
+        autofillHints: autofillHints,
         onChanged: onChanged,
         validator: validator,
         textCapitalization: textCapitalization,
