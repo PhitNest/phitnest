@@ -49,40 +49,37 @@ final class RestoreSessionProvider extends StatelessWidget {
               default:
             }
           },
-          builder: (context, apiInfoState) {
-            final loader = const Loader();
-            return switch (apiInfoState) {
-              LoaderLoadedState(data: final apiInfoResponse) => switch (
-                    apiInfoResponse) {
-                  HttpResponseSuccess(data: final apiInfo) => BlocProvider(
-                      create: (_) => RestoreSessionBloc(
-                        load: getPreviousSession,
-                        loadOnStart: (req: apiInfo),
-                      ),
-                      child: RestoreSessionConsumer(
-                        listener: (context, restoreSessionState) {
-                          switch (restoreSessionState) {
-                            case LoaderLoadedState(
-                                data: final restoreSessionResponse
-                              ):
-                              switch (restoreSessionResponse) {
-                                case RefreshSessionFailureResponse():
-                                  onSessionRestoreFailed(context, apiInfo);
-                                case RefreshSessionSuccess(
-                                    newSession: final newSession
-                                  ):
-                                  onSessionRestored(context, newSession);
-                              }
-                            default:
-                          }
-                        },
-                        builder: (context, restoreSessionState) => loader,
-                      ),
+          builder: (context, apiInfoState) => switch (apiInfoState) {
+            LoaderLoadedState(data: final apiInfoResponse) => switch (
+                  apiInfoResponse) {
+                HttpResponseSuccess(data: final apiInfo) => BlocProvider(
+                    create: (_) => RestoreSessionBloc(
+                      load: getPreviousSession,
+                      loadOnStart: (req: apiInfo),
                     ),
-                  _ => loader,
-                },
-              _ => loader,
-            };
+                    child: RestoreSessionConsumer(
+                      listener: (context, restoreSessionState) {
+                        switch (restoreSessionState) {
+                          case LoaderLoadedState(
+                              data: final restoreSessionResponse
+                            ):
+                            switch (restoreSessionResponse) {
+                              case RefreshSessionFailureResponse():
+                                onSessionRestoreFailed(context, apiInfo);
+                              case RefreshSessionSuccess(
+                                  newSession: final newSession
+                                ):
+                                onSessionRestored(context, newSession);
+                            }
+                          default:
+                        }
+                      },
+                      builder: (context, restoreSessionState) => const Loader(),
+                    ),
+                  ),
+                _ => const Loader(),
+              },
+            _ => const Loader(),
           },
         ),
       );
