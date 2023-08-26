@@ -2,9 +2,11 @@ import 'package:basic_utils/basic_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:logger/logger.dart';
 
+const kDetailLinePrefix = '\n\t';
+
 String _wrapText(String line, int spaces) => StringUtils.addCharAtPosition(
       line,
-      '\n${List.filled(spaces, '\t').join('')}',
+      kDetailLinePrefix,
       100,
       repeat: true,
     );
@@ -12,9 +14,9 @@ String _wrapText(String line, int spaces) => StringUtils.addCharAtPosition(
 final _prettyLogger = Logger(printer: PrettyPrinter(methodCount: 0));
 
 String _logMessage(String title, List<String>? details) => '$title'
-    '${details != null ? '\n${details.map((e) {
+    '${details != null ? '$kDetailLinePrefix${details.map((e) {
         return _wrapText(e, 1);
-      }).join('\n\t')}' : ''}';
+      }).join(kDetailLinePrefix)}' : ''}';
 
 void debug(String title, {List<String>? details}) =>
     _prettyLogger.d(_logMessage(title, details));
