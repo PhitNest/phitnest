@@ -87,11 +87,12 @@ Future<void> _cacheSecure<T>(
               final stringified = _cache.stringifiedSecureCache.remove(key);
               final lazyLoaded = _cache.lazyLoadedSecureCache.remove(key);
               if (lazyLoaded != null) {
-                return '$lazyLoaded\n\tLazy loaded cache hit';
+                return lazyLoaded;
               } else if (stringified != null) {
                 return stringified;
               }
-            }()}'
+            }()}',
+            'Lazy loaded cache hit'
           ]);
           return _cache.secureStorage.write(
             key: key,
