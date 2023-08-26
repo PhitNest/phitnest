@@ -28,9 +28,10 @@ final class _FormProvider<
           void Function(ReqType req, LoaderState<ResType> loaderState) submit)
       createConsumer;
 
-  void _submit(BuildContext context, ReqType request) => context
-      .formBloc<Controllers>()
-      .submit(onAccept: () => BlocProvider.of<BlocType>(context));
+  void _submit(BuildContext context, ReqType request) =>
+      context.formBloc<Controllers>().submit(
+          onAccept: () =>
+              BlocProvider.of<BlocType>(context).add(LoaderLoadEvent(request)));
 
   const _FormProvider({
     required this.createLoader,
