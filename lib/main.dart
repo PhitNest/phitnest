@@ -11,7 +11,7 @@ Future<void> main() => runPhitNest(
           Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute<void>(
-          builder: (context) => HomeScreen(initialSession: session),
+          builder: (context) => HomeScreen(apiInfo: session.apiInfo),
         ),
         (_) => false,
       ),
