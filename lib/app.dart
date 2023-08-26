@@ -52,7 +52,6 @@ final class PhitNestApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ScreenUtilInit(
-        minTextAdapt: true,
         designSize: const Size(375, 667),
         builder: (context, _) => MultiBlocProvider(
           providers: [
