@@ -14,7 +14,7 @@ final _prettyLogger = Logger(printer: PrettyPrinter(methodCount: 0));
 String _logMessage(String title, List<String>? details) => '$title'
     '${details != null ? '\n${details.map((e) {
         return _wrapText(e, 1);
-      }).join('\n')}' : ''}';
+      }).join('\n\t')}' : ''}';
 
 void debug(String title, {List<String>? details}) =>
     _prettyLogger.d(_logMessage(title, details));
