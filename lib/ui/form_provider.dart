@@ -30,7 +30,7 @@ final class _FormProvider<
 
   void _submit(BuildContext context, ReqType request) => context
       .formBloc<Controllers>()
-      .submit(onAccept: () => BlocProvider.of(context));
+      .submit(onAccept: () => BlocProvider.of<BlocType>(context));
 
   const _FormProvider({
     required this.createLoader,
