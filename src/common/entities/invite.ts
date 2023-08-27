@@ -1,7 +1,7 @@
 import { SerializedDynamo, DynamoParser } from "./dynamo";
 
 export type Invite = {
-  type: "admin" | "user";
+  senderType: "admin" | "user";
   senderId: string;
   receiverEmail: string;
   createdAt: Date;
@@ -9,7 +9,7 @@ export type Invite = {
 };
 
 export const kInviteParser: DynamoParser<Invite> = {
-  type: "S",
+  senderType: "S",
   senderId: "S",
   receiverEmail: "S",
   createdAt: "D",
@@ -18,7 +18,7 @@ export const kInviteParser: DynamoParser<Invite> = {
 
 export function inviteToDynamo(invite: Invite): SerializedDynamo<Invite> {
   return {
-    type: { S: invite.type },
+    senderType: { S: invite.senderType },
     senderId: { S: invite.senderId },
     receiverEmail: { S: invite.receiverEmail },
     createdAt: { N: invite.createdAt.getTime().toString() },

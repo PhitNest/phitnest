@@ -84,7 +84,7 @@ export async function invoke(
         sk: `GYM#${userWithIdentity.invite.gymId}`,
         data: userToDynamo(userWithIdentity),
       };
-      if (userWithIdentity.invite.type === "user") {
+      if (userWithIdentity.invite.senderType === "user") {
         const friendshipId = uuid.v4();
         const friendshipCreatedAt = new Date();
         const sender = await client.parsedQuery({
