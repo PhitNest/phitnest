@@ -121,7 +121,7 @@ Future<HttpResponse<ResType>> request<ResType>({
           .timeout(_timeout)
           .then((response) {
         final jsonData = response.data;
-        if (jsonData is Map<String, dynamic>) {
+        if (jsonData is Map<String, dynamic> || jsonData is List<dynamic>) {
           // Handle successful responses
           if (response.statusCode == 200) {
             // Parse the response data
@@ -131,9 +131,7 @@ Future<HttpResponse<ResType>> request<ResType>({
             return HttpResponseOk(parsed, response.headers);
           } else {
             // Handle unsuccessful responses
-            final parsed = jsonData['message'] == 'Unauthorized'
-                ? Failure.populated('Unauthorized', 'Unauthorized')
-                : Failure.parse(jsonData);
+            final parsed = Failure.parse(jsonData as Map<String, dynamic>);
             error('Request failure:', details: responseDetails(parsed));
             return HttpResponseFailure(parsed, response.headers);
           }
