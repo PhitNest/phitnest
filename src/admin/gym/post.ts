@@ -12,21 +12,7 @@ import * as uuid from "uuid";
 
 import axios from "axios";
 
-export class CoordinatesNotFound extends RequestError {
-  constructor() {
-    super("CoordinatesNotFound", "No coordinates found for this address.");
-  }
-}
-
-/**
- * Gets the longitude and latitude of an address.
- *
- * @param address The address to get the location of.
- * @returns The longitude and latitude of the address, or an OpenStreetMapError if the address could not be found.
- */
-async function getLocation(
-  address: Address
-): Promise<Location | CoordinatesNotFound> {
+async function getLocation(address: Address): Promise<Location | RequestError> {
   const response = await axios.get(
     "https://nominatim.openstreetmap.org/search",
     {
@@ -48,7 +34,10 @@ async function getLocation(
       latitude: parseFloat(lat),
     };
   }
-  return new CoordinatesNotFound();
+  return new RequestError(
+    "CoordinatesNotFound",
+    "No coordinates found for this address."
+  );
 }
 
 const validator = z.object({
@@ -68,7 +57,7 @@ export async function invoke(
     controller: async (data) => {
       const adminClaims = getAdminClaims(event);
       const location = await getLocation(data);
-      if (location instanceof CoordinatesNotFound) {
+      if (location instanceof RequestError) {
         return location;
       } else {
         const client = dynamo();

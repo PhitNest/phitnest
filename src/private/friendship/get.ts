@@ -3,7 +3,7 @@ import {
   kFriendshipWithoutMessageParser,
   kFriendshipParser,
   parseDynamo,
-  kIncomingFriendRequestParser,
+  kFriendRequestParser,
 } from "common/entities";
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 
@@ -13,18 +13,28 @@ export async function invoke(
   return handleRequest(async () => {
     const userClaims = getUserClaims(event);
     const client = dynamo();
-    const [friendshipsRaw, friendRequests] = await Promise.all([
-      client.query({
-        pk: `USER#${userClaims.sub}`,
-        sk: { q: "FRIENDSHIP#", op: "BEGINS_WITH" },
-      }),
-      client.parsedQuery({
-        pk: `USER#${userClaims.sub}`,
-        sk: { q: "INCOMING_REQUEST#", op: "BEGINS_WITH" },
-        parseShape: kIncomingFriendRequestParser,
-      }),
-    ]);
-    const parsedFriendships = friendshipsRaw.map((friendship) => {
+    const [sentFriendshipsRaw, receivedFriendshipsRaw, receivedFriendRequests] =
+      await Promise.all([
+        client.query({
+          pk: `USER#${userClaims.sub}`,
+          sk: { q: "FRIENDSHIP#", op: "BEGINS_WITH" },
+        }),
+        client.query({
+          pk: `FRIENDSHIP#${userClaims.sub}`,
+          sk: { q: "USER#", op: "BEGINS_WITH" },
+          table: "inverted",
+        }),
+        client.parsedQuery({
+          pk: `FRIEND_REQUEST#${userClaims.sub}`,
+          sk: { q: "USER#", op: "BEGINS_WITH" },
+          table: "inverted",
+          parseShape: kFriendRequestParser,
+        }),
+      ]);
+    const parsedFriendships = [
+      ...sentFriendshipsRaw,
+      ...receivedFriendshipsRaw,
+    ].map((friendship) => {
       if (friendship["recentMessage"]) {
         return parseDynamo(friendship, kFriendshipParser);
       } else {
@@ -33,7 +43,7 @@ export async function invoke(
     });
     return new Success({
       friendships: parsedFriendships,
-      friendRequests: friendRequests,
+      friendRequests: receivedFriendRequests,
     });
   });
 }

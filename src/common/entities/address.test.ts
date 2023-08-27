@@ -1,14 +1,14 @@
 import { Address, addressToDynamo, kAddressParser } from "./address";
 import { SerializedDynamo, parseDynamo } from "./dynamo";
 
-const testAddress: Address = {
+const kTestAddress: Address = {
   city: "city",
   state: "state",
   street: "street",
   zipCode: "zip",
 };
 
-const serializedAddress: SerializedDynamo<Address> = {
+const kSerializedAddress: SerializedDynamo<Address> = {
   city: { S: "city" },
   state: { S: "state" },
   street: { S: "street" },
@@ -17,10 +17,12 @@ const serializedAddress: SerializedDynamo<Address> = {
 
 describe("Address", () => {
   it("serializes to dynamo", () => {
-    expect(addressToDynamo(testAddress)).toEqual(serializedAddress);
+    expect(addressToDynamo(kTestAddress)).toEqual(kSerializedAddress);
   });
 
   it("deserializes from dynamo", () => {
-    expect(parseDynamo(serializedAddress, kAddressParser)).toEqual(testAddress);
+    expect(parseDynamo(kSerializedAddress, kAddressParser)).toEqual(
+      kTestAddress
+    );
   });
 });

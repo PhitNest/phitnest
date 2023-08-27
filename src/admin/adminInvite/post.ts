@@ -1,13 +1,14 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { z } from "zod";
 import {
+  RequestError,
   ResourceNotFoundError,
   Success,
   dynamo,
   getAdminClaims,
   validateRequest,
 } from "common/utils";
-import { adminInviteToDynamo, kGymWithoutAdminParser } from "common/entities";
+import { inviteToDynamo, kGymParser, kInviteParser } from "common/entities";
 
 const validator = z.object({
   receiverEmail: z.string().email(),
@@ -23,26 +24,38 @@ export async function invoke(
     controller: async (data) => {
       const adminClaims = getAdminClaims(event);
       const client = dynamo();
-      const gym = await client.parsedQuery({
-        pk: "GYMS",
-        sk: { q: `GYM#${data.gymId}`, op: "EQ" },
-        parseShape: kGymWithoutAdminParser,
-      });
+      const [gym, existingInvite] = await Promise.all([
+        client.parsedQuery({
+          pk: "GYMS",
+          sk: { q: `GYM#${data.gymId}`, op: "EQ" },
+          parseShape: kGymParser,
+        }),
+        client.parsedQuery({
+          pk: `INVITE#${data.receiverEmail}`,
+          sk: {
+            q: `ADMIN#`,
+            op: "BEGINS_WITH",
+          },
+          limit: 1,
+          table: "inverted",
+          parseShape: kInviteParser,
+        }),
+      ]);
+      if (!(existingInvite instanceof ResourceNotFoundError)) {
+        return new RequestError("InviteAlreadyExists", "Invite already exists");
+      }
       if (gym instanceof ResourceNotFoundError) {
         return gym;
       } else {
         await client.put({
-          pk: `INVITE#${adminClaims.email}`,
-          sk: `RECEIVER#${data.receiverEmail}`,
-          data: adminInviteToDynamo({
+          pk: `ADMIN#${adminClaims.sub}`,
+          sk: `INVITE#${data.receiverEmail}`,
+          data: inviteToDynamo({
             type: "admin",
             receiverEmail: data.receiverEmail,
-            inviter: {
-              email: adminClaims.email,
-              id: adminClaims.sub,
-            },
+            senderId: adminClaims.sub,
             createdAt: new Date(),
-            gym: gym,
+            gymId: gym.id,
           }),
         });
         return new Success();

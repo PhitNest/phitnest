@@ -1,13 +1,13 @@
 import { Admin, adminToDynamo, kAdminParser } from "./admin";
 import { SerializedDynamo, parseDynamo } from "./dynamo";
 
-const testAdmin: Admin = {
+const kTestAdmin: Admin = {
   email: "something",
   id: "1",
   createdAt: new Date(Date.UTC(2020, 1, 1)),
 };
 
-const serializedAdmin: SerializedDynamo<Admin> = {
+const kSerializedAdmin: SerializedDynamo<Admin> = {
   email: { S: "something" },
   id: { S: "1" },
   createdAt: { N: Date.UTC(2020, 1, 1).toString() },
@@ -15,10 +15,10 @@ const serializedAdmin: SerializedDynamo<Admin> = {
 
 describe("Admin", () => {
   it("serializes to dynamo", () => {
-    expect(adminToDynamo(testAdmin)).toEqual(serializedAdmin);
+    expect(adminToDynamo(kTestAdmin)).toEqual(kSerializedAdmin);
   });
 
   it("deserializes from dynamo", () => {
-    expect(parseDynamo(serializedAdmin, kAdminParser)).toEqual(testAdmin);
+    expect(parseDynamo(kSerializedAdmin, kAdminParser)).toEqual(kTestAdmin);
   });
 });

@@ -15,20 +15,16 @@ export async function invoke(
     controller: async (data) => {
       const userClaims = getUserClaims(event);
       const client = dynamo();
-      await client.writeTransaction({
-        deletes: [
-          {
-            pk: `USER#${userClaims.sub}`,
-            sk: `FRIENDSHIP#${data.friendId}`,
-          },
-          {
-            pk: `USER#${data.friendId}`,
-            sk: `FRIENDSHIP#${userClaims.sub}`,
-          },
-        ],
-        puts: [],
-        updates: [],
-      });
+      await Promise.all([
+        client.delete({
+          pk: `USER#${userClaims.sub}`,
+          sk: `FRIENDSHIP#${data.friendId}`,
+        }),
+        client.delete({
+          pk: `USER#${data.friendId}`,
+          sk: `FRIENDSHIP#${userClaims.sub}`,
+        }),
+      ]);
       return new Success();
     },
   });

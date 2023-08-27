@@ -29,11 +29,20 @@ export type PartitionKey = { pk: string };
  */
 export type RowKey = PartitionKey & { sk?: string };
 
+type TableNames = "base" | "inverted";
+
 /**
  * Allows you to query multiple rows at once. Queries by equality on PK and by operator on SK.
  */
-export type MultiRowKey<Op extends SkOperator = SkOperator> = PartitionKey & {
+export type MultiRowKey<
+  Op extends SkOperator = SkOperator,
+  Limit extends number = number,
+  Table extends TableNames = "base",
+> = PartitionKey & {
   sk?: { q: string; op: Op };
+  projection?: string;
+  limit?: Limit;
+  table?: Table;
 };
 
 /**
@@ -63,7 +72,7 @@ export type TransactionParams = {
 };
 
 export class ResourceNotFoundError extends RequestError {
-  constructor(key: RowKey | MultiRowKey) {
+  constructor(key: RowKey | MultiRowKey<SkOperator, number, TableNames>) {
     super(
       "ResourceNotFound",
       `Could not find item for query: ${JSON.stringify(key)}`
@@ -87,27 +96,32 @@ function rowKey(key: RowKey): {
   };
 }
 
-function queryCommand(
-  key: MultiRowKey,
-  projection?: string
-): QueryCommandInput {
+function queryCommand<
+  Op extends SkOperator,
+  Limit extends number,
+  Table extends TableNames = "base",
+>(key: MultiRowKey<Op, Limit, Table>): QueryCommandInput {
+  const hashQuery = {
+    ComparisonOperator: "EQ",
+    AttributeValueList: [{ S: key.pk }],
+  };
+  const sortQuery = key.sk
+    ? {
+        ComparisonOperator: key.sk.op,
+        AttributeValueList: [{ S: key.sk.q }],
+      }
+    : undefined;
+  const pk = key.table == "inverted" ? sortQuery : hashQuery;
+  const sk = key.table == "inverted" ? hashQuery : sortQuery;
   return {
     TableName: process.env.DYNAMO_TABLE_NAME,
+    IndexName: key.table == "inverted" ? key.table : undefined,
+    Limit: key.limit,
     KeyConditions: {
-      pk: {
-        ComparisonOperator: "EQ",
-        AttributeValueList: [{ S: key.pk }],
-      },
-      ...(key.sk
-        ? {
-            sk: {
-              ComparisonOperator: key.sk.op,
-              AttributeValueList: [{ S: key.sk.q }],
-            },
-          }
-        : {}),
+      ...(pk ? { pk: pk } : {}),
+      ...(sk ? { sk: sk } : {}),
     },
-    ProjectionExpression: projection,
+    ProjectionExpression: key.projection,
   };
 }
 
@@ -139,11 +153,18 @@ function deleteCommand(params: RowKey): DeleteItemCommandInput {
   };
 }
 
-type QueryResult<Op extends SkOperator> = Op extends "EQ"
-  ? Record<string, AttributeValue> | ResourceNotFoundError
-  : Record<string, AttributeValue>[];
-
-type ParsedQueryResult<T, Op extends SkOperator> = Op extends "EQ"
+type QueryResult<
+  T,
+  Op extends SkOperator,
+  Limit extends number,
+  Table extends TableNames = "base",
+> = Op extends "EQ"
+  ? Table extends "inverted"
+    ? Limit extends 1
+      ? T | ResourceNotFoundError
+      : T[]
+    : T | ResourceNotFoundError
+  : Limit extends 1
   ? T | ResourceNotFoundError
   : T[];
 
@@ -162,16 +183,17 @@ class DynamoClient {
     await this.client.send(new PutItemCommand(putCommand(params)));
   }
 
-  async query<Op extends SkOperator>(
-    key: MultiRowKey<Op>,
-    projection?: string
-  ): Promise<QueryResult<Op>> {
+  async query<
+    Op extends SkOperator,
+    Limit extends number,
+    Table extends TableNames = "base",
+  >(
+    key: MultiRowKey<Op, Limit, Table>
+  ): Promise<QueryResult<Record<string, AttributeValue>, Op, Limit, Table>> {
     return (await (async () => {
       try {
-        const res = await this.client.send(
-          new QueryCommand(queryCommand(key, projection))
-        );
-        if (key.sk && key.sk.op === "EQ") {
+        const res = await this.client.send(new QueryCommand(queryCommand(key)));
+        if ((key.sk && key.sk.op === "EQ") || key.limit === 1) {
           if (res.Items && res.Items.length > 0) {
             return res.Items[0];
           } else {
@@ -183,7 +205,7 @@ class DynamoClient {
       } catch {
         return new ResourceNotFoundError(key);
       }
-    })()) as QueryResult<Op>;
+    })()) as QueryResult<Record<string, AttributeValue>, Op, Limit, Table>;
   }
 
   async writeTransaction(params: TransactionParams): Promise<void> {
@@ -204,18 +226,23 @@ class DynamoClient {
     );
   }
 
-  async parsedQuery<T, Op extends SkOperator>(
-    params: ParseParams<T> & MultiRowKey<Op>
-  ): Promise<ParsedQueryResult<T, Op>> {
+  async parsedQuery<
+    T,
+    Op extends SkOperator,
+    Limit extends number,
+    Table extends TableNames = "base",
+  >(
+    params: ParseParams<T> & MultiRowKey<Op, Limit, Table>
+  ): Promise<QueryResult<T, Op, Limit, Table>> {
     return (await (async () => {
-      const queryRes = await this.query(
-        params,
-        Object.keys(params.parseShape).join(",")
-      );
+      const queryRes = await this.query({
+        ...params,
+        projection: Object.keys(params.parseShape).join(","),
+      });
       if (queryRes instanceof ResourceNotFoundError) {
         return queryRes;
       }
-      if (params.sk && params.sk.op === "EQ") {
+      if ((params.sk && params.sk.op === "EQ") || params.limit === 1) {
         return parseDynamo(
           queryRes as Record<string, AttributeValue>,
           params.parseShape
@@ -226,7 +253,7 @@ class DynamoClient {
         );
         return parsed;
       }
-    })()) as ParsedQueryResult<T, Op>;
+    })()) as QueryResult<T, Op, Limit, Table>;
   }
 
   async delete(params: RowKey): Promise<void> {
