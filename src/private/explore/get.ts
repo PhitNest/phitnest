@@ -69,9 +69,7 @@ export async function invoke(
           const receivedFriendship = receivedFriendships.some(
             (friendship) => friendship.sender.id === other.id
           );
-          return (
-            !isMe && !sentFriendship && !receivedFriendship && !sentRequest
-          );
+          return true;
         })
       );
       return new Success(exploreUsers);
