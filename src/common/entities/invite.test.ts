@@ -2,7 +2,7 @@ import { SerializedDynamo, parseDynamo } from "./dynamo";
 import { Invite, inviteToDynamo, kInviteParser } from "./invite";
 
 const kTestInvite: Invite = {
-  type: "user",
+  senderType: "user",
   createdAt: new Date(Date.UTC(2020, 1, 1)),
   receiverEmail: "something",
   senderId: "1",
@@ -10,7 +10,7 @@ const kTestInvite: Invite = {
 };
 
 const kSerializedInvite: SerializedDynamo<Invite> = {
-  type: { S: "user" },
+  senderType: { S: "user" },
   senderId: { S: "1" },
   createdAt: { N: Date.UTC(2020, 1, 1).toString() },
   receiverEmail: { S: "something" },

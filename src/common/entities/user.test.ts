@@ -10,7 +10,7 @@ const kTestUser: User = {
   numInvites: 1,
   identityId: "test",
   invite: {
-    type: "user",
+    senderType: "user",
     createdAt: new Date(Date.UTC(2020, 1, 1)),
     senderId: "test",
     receiverEmail: "test",
@@ -28,7 +28,7 @@ const kSerializedUser: SerializedDynamo<User> = {
   identityId: { S: "test" },
   invite: {
     M: {
-      type: { S: "user" },
+      senderType: { S: "user" },
       createdAt: { N: Date.UTC(2020, 1, 1).toString() },
       senderId: { S: "test" },
       receiverEmail: { S: "test" },

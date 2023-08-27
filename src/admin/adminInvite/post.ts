@@ -51,7 +51,7 @@ export async function invoke(
           pk: `ADMIN#${adminClaims.sub}`,
           sk: `INVITE#${data.receiverEmail}`,
           data: inviteToDynamo({
-            type: "admin",
+            senderType: "admin",
             receiverEmail: data.receiverEmail,
             senderId: adminClaims.sub,
             createdAt: new Date(),
