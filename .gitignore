@@ -2,3 +2,5 @@
 pubspec.lock
 .flutter-plugins
 .flutter-plugins-dependencies
+.idea
+build
