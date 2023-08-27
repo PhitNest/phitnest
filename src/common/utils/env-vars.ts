@@ -19,6 +19,10 @@ function getEnvVar(varName: string): string {
 }
 
 export class EnvironmentVars {
+  static dynamoTableName() {
+    return getEnvVar("DYNAMO_TABLE_NAME");
+  }
+
   static userPoolId() {
     return getEnvVar("USER_POOL_ID");
   }
