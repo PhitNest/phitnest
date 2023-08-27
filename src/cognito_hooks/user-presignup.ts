@@ -37,7 +37,7 @@ export async function invoke(event: PreSignUpTriggerEvent) {
       parseShape: kInviteParser,
     });
     if (invite instanceof ResourceNotFoundError) {
-      throw new Error("You have not received an invite");
+      throw new Error(JSON.stringify(invite));
     }
   }
   await client.put({

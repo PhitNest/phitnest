@@ -111,11 +111,12 @@ function queryCommand<
         AttributeValueList: [{ S: key.sk.q }],
       }
     : undefined;
-  const pk = key.table == "inverted" ? sortQuery : hashQuery;
-  const sk = key.table == "inverted" ? hashQuery : sortQuery;
+  const inverted = key.table == "inverted";
+  const pk = inverted ? sortQuery : hashQuery;
+  const sk = inverted ? hashQuery : sortQuery;
   return {
     TableName: process.env.DYNAMO_TABLE_NAME,
-    IndexName: key.table == "inverted" ? key.table : undefined,
+    IndexName: inverted ? key.table : undefined,
     Limit: key.limit,
     KeyConditions: {
       ...(pk ? { pk: pk } : {}),
