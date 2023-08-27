@@ -204,7 +204,11 @@ class DynamoClient {
           return new ResourceNotFoundError(key);
         }
       } else {
-        return res.Items ?? [];
+        if (res.Items) {
+          return res.Items;
+        } else {
+          throw new ResourceNotFoundError(key);
+        }
       }
     })()) as QueryResult<Record<string, AttributeValue>, Op, Limit, Table>;
   }

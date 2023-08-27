@@ -6,7 +6,7 @@ import {
   ResourceNotFoundError,
   EnvironmentVars,
   RequestError,
-  PutParams,
+  TransactionParams,
 } from "common/utils";
 import {
   User,
@@ -79,10 +79,20 @@ export async function invoke(
         ...newUser,
         identityId: identity.identityId,
       };
-      const newUserParams: PutParams = {
-        pk: `USER#${userClaims.sub}`,
-        sk: `GYM#${userWithIdentity.invite.gymId}`,
-        data: userToDynamo(userWithIdentity),
+      const transaction: TransactionParams = {
+        deletes: [
+          {
+            pk: `USER#${userClaims.sub}`,
+            sk: `NEW#${userClaims.sub}`,
+          },
+        ],
+        puts: [
+          {
+            pk: `USER#${userClaims.sub}`,
+            sk: `GYM#${userWithIdentity.invite.gymId}`,
+            data: userToDynamo(userWithIdentity),
+          },
+        ],
       };
       if (userWithIdentity.invite.senderType === "user") {
         const friendshipId = uuid.v4();
@@ -96,13 +106,9 @@ export async function invoke(
           return sender;
         }
         await client.writeTransaction({
-          deletes: [
-            {
-              pk: `USER#${userClaims.sub}`,
-              sk: `NEW#${userClaims.sub}`,
-            },
-          ],
+          ...transaction,
           puts: [
+            ...(transaction.puts ? transaction.puts : []),
             {
               pk: `USER#${userWithIdentity.invite.senderId}`,
               sk: `FRIENDSHIP#${userClaims.sub}`,
@@ -119,11 +125,10 @@ export async function invoke(
                 sender: sender,
               }),
             },
-            newUserParams,
           ],
         });
       } else {
-        await client.put(newUserParams);
+        await client.writeTransaction(transaction);
       }
       return new Success(userWithIdentity);
     } else {
