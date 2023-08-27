@@ -1,6 +1,6 @@
 import { kInviteParser, userWithoutIdentityToDynamo } from "common/entities";
 import { PreSignUpTriggerEvent } from "aws-lambda";
-import { ResourceNotFoundError, dynamo, queryCommand } from "common/utils";
+import { ResourceNotFoundError, dynamo } from "common/utils";
 
 const kInitialNumInvites = 5;
 
@@ -37,16 +37,7 @@ export async function invoke(event: PreSignUpTriggerEvent) {
       parseShape: kInviteParser,
     });
     if (invite instanceof ResourceNotFoundError) {
-      throw new Error(
-        JSON.stringify(
-          queryCommand({
-            pk: `INVITE#${event.request.userAttributes.email}`,
-            sk: { q: "USER#", op: "BEGINS_WITH" },
-            table: "inverted",
-            limit: 1,
-          })
-        )
-      );
+      throw new Error("You have not received an invite");
     }
   }
   await client.put({
