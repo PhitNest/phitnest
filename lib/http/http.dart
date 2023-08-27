@@ -131,7 +131,9 @@ Future<HttpResponse<ResType>> request<ResType>({
             return HttpResponseOk(parsed, response.headers);
           } else {
             // Handle unsuccessful responses
-            final parsed = Failure.parse(jsonData);
+            final parsed = jsonData['message'] == 'Unauthorized'
+                ? Failure.populated('Unauthorized', 'Unauthorized')
+                : Failure.parse(jsonData);
             error('Request failure:', details: responseDetails(parsed));
             return HttpResponseFailure(parsed, response.headers);
           }
