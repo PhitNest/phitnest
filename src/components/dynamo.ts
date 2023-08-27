@@ -109,7 +109,7 @@ export class DynamoStack extends Construct {
                 sid: "AllowDynamoAccessForApi",
                 effect: Effect.ALLOW,
                 actions: ["dynamodb:*"],
-                resources: [table.attrArn],
+                resources: [table.attrArn, `${table.attrArn}/index/inverted`],
               }),
             ],
           }),
