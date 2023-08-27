@@ -96,7 +96,7 @@ function rowKey(key: RowKey): {
   };
 }
 
-export function queryCommand<
+function queryCommand<
   Op extends SkOperator,
   Limit extends number,
   Table extends TableNames = "base",
@@ -115,8 +115,7 @@ export function queryCommand<
   const pk = inverted ? sortQuery : hashQuery;
   const sk = inverted ? hashQuery : sortQuery;
   return {
-    TableName: process.env.DYNAMO_TABLE_NAME,
-    IndexName: inverted ? key.table : undefined,
+    TableName: inverted ? key.table : process.env.DYNAMO_TABLE_NAME,
     Limit: key.limit,
     KeyConditions: {
       ...(pk ? { pk: pk } : {}),
@@ -192,19 +191,18 @@ class DynamoClient {
     key: MultiRowKey<Op, Limit, Table>
   ): Promise<QueryResult<Record<string, AttributeValue>, Op, Limit, Table>> {
     return (await (async () => {
-      try {
-        const res = await this.client.send(new QueryCommand(queryCommand(key)));
-        if ((key.sk && key.sk.op === "EQ") || key.limit === 1) {
-          if (res.Items && res.Items.length > 0) {
-            return res.Items[0];
-          } else {
-            return new ResourceNotFoundError(key);
-          }
+      const res = await this.client.send(new QueryCommand(queryCommand(key)));
+      if (
+        (key.sk && key.sk.op === "EQ" && key.table !== "inverted") ||
+        key.limit === 1
+      ) {
+        if (res.Items && res.Items.length > 0) {
+          return res.Items[0];
         } else {
-          return res.Items ?? [];
+          return new ResourceNotFoundError(key);
         }
-      } catch {
-        return new ResourceNotFoundError(key);
+      } else {
+        return res.Items ?? [];
       }
     })()) as QueryResult<Record<string, AttributeValue>, Op, Limit, Table>;
   }
@@ -243,7 +241,10 @@ class DynamoClient {
       if (queryRes instanceof ResourceNotFoundError) {
         return queryRes;
       }
-      if ((params.sk && params.sk.op === "EQ") || params.limit === 1) {
+      if (
+        (params.sk && params.sk.op === "EQ" && params.table !== "inverted") ||
+        params.limit === 1
+      ) {
         return parseDynamo(
           queryRes as Record<string, AttributeValue>,
           params.parseShape
