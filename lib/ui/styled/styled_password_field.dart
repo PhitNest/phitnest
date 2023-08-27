@@ -44,7 +44,6 @@ final class StyledPasswordField extends StatelessWidget {
           builder: (context, state, child) => StyledUnderlinedTextField(
             onFieldSubmitted: onFieldSubmitted,
             hint: hint,
-            autofillHints: const [AutofillHints.password],
             errorMaxLines: 2,
             controller: controller,
             obscureText: state.obscureText,
