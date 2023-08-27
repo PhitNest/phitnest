@@ -66,6 +66,24 @@ export class DynamoStack extends Construct {
             keyType: "RANGE",
           },
         ],
+        globalSecondaryIndexes: [
+          {
+            indexName: "inverted",
+            keySchema: [
+              {
+                attributeName: kSortKey,
+                keyType: "HASH",
+              },
+              {
+                attributeName: kPartKey,
+                keyType: "RANGE",
+              },
+            ],
+            projection: {
+              projectionType: "ALL",
+            },
+          },
+        ],
         attributeDefinitions: [
           {
             attributeName: kPartKey,
