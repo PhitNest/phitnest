@@ -113,7 +113,6 @@ final class LoginScreen extends StatelessWidget {
                     StyledUnderlinedTextField(
                       hint: 'Email',
                       controller: controllers.emailController,
-                      autofillHints: const [AutofillHints.email],
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       validator: EmailValidator.validateEmail,
