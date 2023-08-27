@@ -74,14 +74,12 @@ final class RegisterParams extends Equatable {
   final String password;
   final String firstName;
   final String lastName;
-  final String inviterEmail;
 
   const RegisterParams({
     required this.email,
     required this.password,
     required this.firstName,
     required this.lastName,
-    required this.inviterEmail,
   });
 
   @override
@@ -90,7 +88,6 @@ final class RegisterParams extends Equatable {
         password,
         firstName,
         lastName,
-        inviterEmail,
       ];
 }
 
@@ -108,7 +105,6 @@ Future<RegisterResponse> register({
       validationData: [
         AttributeArg(name: 'firstName', value: params.firstName),
         AttributeArg(name: 'lastName', value: params.lastName),
-        AttributeArg(name: 'inviterEmail', value: params.inviterEmail),
       ],
     );
     if (signUpResult.userSub != null) {
