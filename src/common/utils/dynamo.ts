@@ -96,7 +96,7 @@ function rowKey(key: RowKey): {
   };
 }
 
-function queryCommand<
+export function queryCommand<
   Op extends SkOperator,
   Limit extends number,
   Table extends TableNames = "base",
