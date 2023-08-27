@@ -13,6 +13,7 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { DynamoParser, parseDynamo } from "../entities/dynamo";
 import { RequestError } from "./request-handling";
+import { EnvironmentVars } from "./env-vars";
 
 /**
  * These are the operators that you can use to query the database. (Used on SK field)
@@ -115,7 +116,8 @@ function queryCommand<
   const pk = inverted ? sortQuery : hashQuery;
   const sk = inverted ? hashQuery : sortQuery;
   return {
-    TableName: inverted ? key.table : process.env.DYNAMO_TABLE_NAME,
+    TableName: EnvironmentVars.dynamoTableName(),
+    IndexName: inverted ? key.table : undefined,
     Limit: key.limit,
     KeyConditions: {
       ...(pk ? { pk: pk } : {}),
