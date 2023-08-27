@@ -96,6 +96,12 @@ export async function invoke(
           return sender;
         }
         await client.writeTransaction({
+          deletes: [
+            {
+              pk: `USER#${userClaims.sub}`,
+              sk: `NEW#${userClaims.sub}`,
+            },
+          ],
           puts: [
             {
               pk: `USER#${userWithIdentity.invite.senderId}`,
