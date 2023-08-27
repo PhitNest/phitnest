@@ -37,7 +37,15 @@ export async function invoke(event: PreSignUpTriggerEvent) {
       parseShape: kInviteParser,
     });
     if (invite instanceof ResourceNotFoundError) {
-      throw new Error(JSON.stringify(invite));
+      throw new Error(
+        JSON.stringify({
+          pk: `INVITE#${event.request.userAttributes.email}`,
+          sk: { q: "USER#", op: "BEGINS_WITH" },
+          table: "inverted",
+          limit: 1,
+          parseShape: kInviteParser,
+        })
+      );
     }
   }
   await client.put({
