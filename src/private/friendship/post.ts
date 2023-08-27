@@ -10,13 +10,10 @@ import {
   kFriendshipParser,
   FriendshipWithoutMessage,
   friendshipWithoutMessageToDynamo,
-  kIncomingFriendRequestParser,
   kUserExploreParser,
-  kOutgoingFriendRequestParser,
-  OutgoingFriendRequest,
-  IncomingFriendRequest,
-  outgoingFriendRequestToDynamo,
-  incomingFriendRequestToDynamo,
+  kFriendRequestParser,
+  FriendRequest,
+  friendRequestToDynamo,
 } from "common/entities";
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { z } from "zod";
@@ -45,107 +42,94 @@ export async function invoke(
     controller: async (data) => {
       const userClaims = getUserClaims(event);
       const client = dynamo();
-      const [friendRequest, outgoingRequest, friendship, sender, receiver] =
-        await Promise.all([
-          client.parsedQuery({
-            pk: `USER#${userClaims.sub}`,
-            sk: { q: `INCOMING_REQUEST#${data.receiverId}`, op: "EQ" },
-            parseShape: kIncomingFriendRequestParser,
-          }),
-          client.parsedQuery({
-            pk: `USER#${userClaims.sub}`,
-            sk: { q: `OUTGOING_REQUEST#${data.receiverId}`, op: "EQ" },
-            parseShape: kOutgoingFriendRequestParser,
-          }),
-          client.parsedQuery({
-            pk: `USER#${userClaims.sub}`,
-            sk: { q: `FRIENDSHIP#${data.receiverId}`, op: "EQ" },
-            parseShape: kFriendshipParser,
-          }),
-          client.parsedQuery({
-            pk: "USERS",
-            sk: { q: `USER#${userClaims.sub}`, op: "EQ" },
-            parseShape: kUserExploreParser,
-          }),
-          client.parsedQuery({
-            pk: "USERS",
-            sk: { q: `USER#${data.receiverId}`, op: "EQ" },
-            parseShape: kUserExploreParser,
-          }),
-        ]);
+      const [
+        receivedRequest,
+        sentRequest,
+        sentFriendship,
+        receivedFriendship,
+        sender,
+        receiver,
+      ] = await Promise.all([
+        client.parsedQuery({
+          pk: `USER#${data.receiverId}`,
+          sk: { q: `FRIEND_REQUEST#${userClaims.sub}`, op: "EQ" },
+          parseShape: kFriendRequestParser,
+        }),
+        client.parsedQuery({
+          pk: `USER#${userClaims.sub}`,
+          sk: { q: `FRIEND_REQUEST#${data.receiverId}`, op: "EQ" },
+          parseShape: kFriendRequestParser,
+        }),
+        client.parsedQuery({
+          pk: `USER#${userClaims.sub}`,
+          sk: { q: `FRIENDSHIP#${data.receiverId}`, op: "EQ" },
+          parseShape: kFriendshipParser,
+        }),
+        client.parsedQuery({
+          pk: `USER#${data.receiverId}`,
+          sk: { q: `FRIENDSHIP#${userClaims.sub}`, op: "EQ" },
+          parseShape: kFriendshipParser,
+        }),
+        client.parsedQuery({
+          pk: `USER#${userClaims.sub}`,
+          sk: { q: "GYM#", op: "BEGINS_WITH" },
+          limit: 1,
+          parseShape: kUserExploreParser,
+        }),
+        client.parsedQuery({
+          pk: `USER#${data.receiverId}`,
+          sk: { q: "GYM#", op: "BEGINS_WITH" },
+          limit: 1,
+          parseShape: kUserExploreParser,
+        }),
+      ]);
       if (receiver instanceof ResourceNotFoundError) {
         return receiver;
       } else if (sender instanceof ResourceNotFoundError) {
         return sender;
-      } else if (friendship instanceof ResourceNotFoundError) {
-        if (outgoingRequest instanceof ResourceNotFoundError) {
-          if (friendRequest instanceof ResourceNotFoundError) {
-            const senderRequest: OutgoingFriendRequest = {
+      } else if (
+        sentFriendship instanceof ResourceNotFoundError &&
+        receivedFriendship instanceof ResourceNotFoundError
+      ) {
+        if (sentRequest instanceof ResourceNotFoundError) {
+          if (receivedRequest instanceof ResourceNotFoundError) {
+            const request: FriendRequest = {
               receiver: receiver,
-              createdAt: new Date(),
-              id: uuid.v4(),
-            };
-            const receiverRequest: IncomingFriendRequest = {
               sender: sender,
               createdAt: new Date(),
               id: uuid.v4(),
             };
-            await client.writeTransaction({
-              puts: [
-                {
-                  pk: `USER#${userClaims.sub}`,
-                  sk: `OUTGOING_REQUEST#${data.receiverId}`,
-                  data: outgoingFriendRequestToDynamo(senderRequest),
-                },
-                {
-                  pk: `USER#${data.receiverId}`,
-                  sk: `INCOMING_REQUEST#${userClaims.sub}`,
-                  data: incomingFriendRequestToDynamo(receiverRequest),
-                },
-              ],
-              updates: [],
-              deletes: [],
+            await client.put({
+              pk: `USER#${userClaims.sub}`,
+              sk: `FRIEND_REQUEST#${data.receiverId}`,
+              data: friendRequestToDynamo(request),
             });
-            return new Success(senderRequest);
+            return new Success(request);
           } else {
             const friendshipCreatedAt = new Date();
             const friendshipId = uuid.v4();
-            const senderFriendship: FriendshipWithoutMessage = {
-              otherUser: receiver,
-              createdAt: friendshipCreatedAt,
-              id: friendshipId,
-            };
-            const receiverFriendship: FriendshipWithoutMessage = {
-              otherUser: sender,
+            const friendship: FriendshipWithoutMessage = {
+              receiver: sender,
+              sender: receiver,
               createdAt: friendshipCreatedAt,
               id: friendshipId,
             };
             await client.writeTransaction({
-              updates: [],
               deletes: [
                 {
                   pk: `USER#${data.receiverId}`,
-                  sk: `OUGOING_REQUEST#${userClaims.sub}`,
-                },
-                {
-                  pk: `USER#${userClaims.sub}`,
-                  sk: `INCOMING_REQUEST#${data.receiverId}`,
+                  sk: `FRIEND_REQUEST#${userClaims.sub}`,
                 },
               ],
               puts: [
                 {
-                  pk: `USER#${userClaims.sub}`,
-                  sk: `FRIENDSHIP#${data.receiverId}`,
-                  data: friendshipWithoutMessageToDynamo(senderFriendship),
-                },
-                {
                   pk: `USER#${data.receiverId}`,
                   sk: `FRIENDSHIP#${userClaims.sub}`,
-                  data: friendshipWithoutMessageToDynamo(receiverFriendship),
+                  data: friendshipWithoutMessageToDynamo(friendship),
                 },
               ],
             });
-            return new Success(senderFriendship);
+            return new Success(friendship);
           }
         } else {
           return kFriendRequestExists;

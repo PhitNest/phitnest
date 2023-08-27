@@ -7,11 +7,10 @@ import {
 } from "common/utils";
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import {
+  kFriendRequestParser,
   kFriendshipWithoutMessageParser,
-  kIncomingFriendRequestParser,
-  kInviteWithoutSenderParser,
-  kOutgoingFriendRequestParser,
-  kUserWithPartialInviteParser,
+  kInviteParser,
+  kUserWithoutIdentityParser,
 } from "common/entities";
 
 export async function invoke(
@@ -20,80 +19,80 @@ export async function invoke(
   return handleRequest(async () => {
     const userClaims = getUserClaims(event);
     const client = dynamo();
-    const [user, incomingFriendRequests, friendRequests, friends, invites] =
-      await Promise.all([
-        client.parsedQuery({
-          pk: "USERS",
-          sk: { q: `USER#${userClaims.sub}`, op: "EQ" },
-          parseShape: kUserWithPartialInviteParser,
-        }),
-        client.parsedQuery({
-          pk: `USER#${userClaims.sub}`,
-          sk: { q: "INCOMING_REQUEST#", op: "BEGINS_WITH" },
-          parseShape: kIncomingFriendRequestParser,
-        }),
-        client.parsedQuery({
-          pk: `USER#${userClaims.sub}`,
-          sk: { q: "OUTGOING_REQUEST#", op: "BEGINS_WITH" },
-          parseShape: kOutgoingFriendRequestParser,
-        }),
-        client.parsedQuery({
-          pk: `USER#${userClaims.sub}`,
-          sk: { q: "FRIENDSHIP#", op: "BEGINS_WITH" },
-          parseShape: kFriendshipWithoutMessageParser,
-        }),
-        client.parsedQuery({
-          pk: `INVITE#${userClaims.email}`,
-          sk: { q: "RECEIVER#", op: "BEGINS_WITH" },
-          parseShape: kInviteWithoutSenderParser,
-        }),
-      ]);
+    const [
+      user,
+      receivedRequests,
+      sentRequests,
+      sentFriendships,
+      receivedFriendships,
+      invites,
+    ] = await Promise.all([
+      client.parsedQuery({
+        pk: `USER#${userClaims.sub}`,
+        sk: { q: "GYM#", op: "BEGINS_WITH" },
+        limit: 1,
+        parseShape: kUserWithoutIdentityParser,
+      }),
+      client.parsedQuery({
+        pk: `FRIEND_REQUEST#${userClaims.sub}`,
+        sk: { q: "USER#", op: "BEGINS_WITH" },
+        table: "inverted",
+        parseShape: kFriendRequestParser,
+      }),
+      client.parsedQuery({
+        pk: `USER#${userClaims.sub}`,
+        sk: { q: "FRIEND_REQUEST#", op: "BEGINS_WITH" },
+        parseShape: kFriendRequestParser,
+      }),
+      client.parsedQuery({
+        pk: `USER#${userClaims.sub}`,
+        sk: { q: "FRIENDSHIP#", op: "BEGINS_WITH" },
+        parseShape: kFriendshipWithoutMessageParser,
+      }),
+      client.parsedQuery({
+        pk: `FRIENDSHIP#${userClaims.sub}`,
+        sk: { q: "USER#", op: "BEGINS_WITH" },
+        table: "inverted",
+        parseShape: kFriendshipWithoutMessageParser,
+      }),
+      client.parsedQuery({
+        pk: `USER#${userClaims.sub}`,
+        sk: { q: "INVITE#", op: "BEGINS_WITH" },
+        parseShape: kInviteParser,
+      }),
+    ]);
     if (user instanceof ResourceNotFoundError) {
       return user;
     } else {
       await Promise.all(
         [
           {
-            pk: "USERS",
-            sk: `USER#${userClaims.sub}`,
+            pk: `USER#${userClaims.sub}`,
+            sk: `GYM#${user.invite.gymId}`,
           },
           {
-            pk: `GYM${user.invite.gym.id}`,
-            sk: `USER#${userClaims.sub}`,
+            pk: `USER#${userClaims.sub}`,
+            sk: `NEW#${userClaims.sub}`,
           },
-          ...incomingFriendRequests.flatMap((request) => [
-            {
-              pk: `INCOMING_REQUEST#${userClaims.sub}`,
-              sk: `SENDER#${request.sender.id}`,
-            },
-            {
-              pk: `USER#${request.sender.id}`,
-              sk: `FRIEND_REQUEST#${userClaims.sub}`,
-            },
-          ]),
-          ...friendRequests.flatMap((request) => [
-            {
-              pk: `INCOMING_REQUEST#${request.receiver.id}`,
-              sk: `SENDER#${userClaims.sub}`,
-            },
-            {
-              pk: `USER#${userClaims.sub}`,
-              sk: `FRIEND_REQUEST#${request.receiver.id}`,
-            },
-          ]),
-          ...friends.flatMap((friendship) => [
-            {
-              pk: `USER#${friendship.otherUser.id}`,
-              sk: `FRIENDSHIP#${userClaims.sub}`,
-            },
-            {
-              pk: `USER#${userClaims.sub}`,
-              sk: `FRIENDSHIP#${friendship.otherUser.id}`,
-            },
-          ]),
+          ...receivedRequests.map((request) => ({
+            pk: `USER#${request.sender.id}`,
+            sk: `FRIEND_REQUEST#${userClaims.sub}`,
+          })),
+          ...sentRequests.map((request) => ({
+            pk: `USER#${userClaims.sub}`,
+            sk: `FRIEND_REQUEST#${request.receiver.id}`,
+          })),
+          ...sentFriendships.map((friendship) => ({
+            pk: `USER#${userClaims.sub}`,
+            sk: `FRIENDSHIP#${friendship.receiver.id}`,
+          })),
+          ...receivedFriendships.map((friendship) => ({
+            pk: `USER#${friendship.sender.id}`,
+            sk: `FRIENDSHIP#${userClaims.sub}`,
+          })),
           ...invites.map((invite) => ({
-            pk: `INVITE#${userClaims.sub}`,
-            sk: `RECEIVER#${invite.receiverEmail}`,
+            pk: `USER#${userClaims.sub}`,
+            sk: `INVITE#${invite.receiverEmail}`,
           })),
         ].map((key) => client.delete(key))
       );

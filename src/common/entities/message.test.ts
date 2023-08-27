@@ -1,14 +1,14 @@
 import { Message, kMessageParser, messageToDynamo } from "./message";
 import { SerializedDynamo, parseDynamo } from "./dynamo";
 
-const testMessage: Message = {
+const kTestMessage: Message = {
   senderId: "1",
   text: "hi",
   createdAt: new Date(Date.UTC(2020, 1, 1)),
   id: "1",
 };
 
-const serializedMessage: SerializedDynamo<Message> = {
+const kSerializedMessage: SerializedDynamo<Message> = {
   senderId: { S: "1" },
   text: { S: "hi" },
   createdAt: { N: Date.UTC(2020, 1, 1).toString() },
@@ -17,10 +17,12 @@ const serializedMessage: SerializedDynamo<Message> = {
 
 describe("Message", () => {
   it("serializes to dynamo", () => {
-    expect(messageToDynamo(testMessage)).toEqual(serializedMessage);
+    expect(messageToDynamo(kTestMessage)).toEqual(kSerializedMessage);
   });
 
   it("deserializes from dynamo", () => {
-    expect(parseDynamo(serializedMessage, kMessageParser)).toEqual(testMessage);
+    expect(parseDynamo(kSerializedMessage, kMessageParser)).toEqual(
+      kTestMessage
+    );
   });
 });

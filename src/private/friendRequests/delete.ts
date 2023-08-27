@@ -15,19 +15,9 @@ export async function invoke(
     controller: async (data) => {
       const userClaims = getUserClaims(event);
       const client = dynamo();
-      await client.writeTransaction({
-        deletes: [
-          {
-            pk: `USER#${data.friendId}`,
-            sk: `OUTGOING_REQUEST#${userClaims.sub}`,
-          },
-          {
-            pk: `USER#${userClaims.sub}`,
-            sk: `INCOMING_REQUEST#${data.friendId}`,
-          },
-        ],
-        puts: [],
-        updates: [],
+      await client.delete({
+        pk: `USER#${userClaims.sub}`,
+        sk: `FRIEND_REQUEST#${data.friendId}`,
       });
       return new Success();
     },

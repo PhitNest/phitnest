@@ -1,14 +1,11 @@
 import { SerializedDynamo, parseDynamo } from "./dynamo";
 import {
-  IncomingFriendRequest,
-  incomingFriendRequestToDynamo,
-  kIncomingFriendRequestParser,
-  OutgoingFriendRequest,
-  outgoingFriendRequestToDynamo,
-  kOutgoingFriendRequestParser,
+  FriendRequest,
+  friendRequestToDynamo,
+  kFriendRequestParser,
 } from "./friend-request";
 
-const testIncomingFriendRequest: IncomingFriendRequest = {
+const kTestFriendRequest: FriendRequest = {
   createdAt: new Date(Date.UTC(2020, 1, 1)),
   id: "1",
   sender: {
@@ -18,11 +15,6 @@ const testIncomingFriendRequest: IncomingFriendRequest = {
     lastName: "Doe",
     identityId: "1",
   },
-};
-
-const testOutgoingFriendRequest: OutgoingFriendRequest = {
-  createdAt: new Date(Date.UTC(2020, 1, 1)),
-  id: "1",
   receiver: {
     id: "2",
     createdAt: new Date(Date.UTC(2020, 1, 1)),
@@ -32,60 +24,39 @@ const testOutgoingFriendRequest: OutgoingFriendRequest = {
   },
 };
 
-const serializedIncomingFriendRequest: SerializedDynamo<IncomingFriendRequest> =
-  {
-    createdAt: { N: Date.UTC(2020, 1, 1).toString() },
-    id: { S: "1" },
-    sender: {
-      M: {
-        id: { S: "1" },
-        createdAt: { N: Date.UTC(2020, 1, 1).toString() },
-        firstName: { S: "John" },
-        lastName: { S: "Doe" },
-        identityId: { S: "1" },
-      },
+const kSerializedFriendRequest: SerializedDynamo<FriendRequest> = {
+  createdAt: { N: Date.UTC(2020, 1, 1).toString() },
+  id: { S: "1" },
+  sender: {
+    M: {
+      id: { S: "1" },
+      createdAt: { N: Date.UTC(2020, 1, 1).toString() },
+      firstName: { S: "John" },
+      lastName: { S: "Doe" },
+      identityId: { S: "1" },
     },
-  };
-
-const serializedOutgoingFriendRequest: SerializedDynamo<OutgoingFriendRequest> =
-  {
-    createdAt: { N: Date.UTC(2020, 1, 1).toString() },
-    id: { S: "1" },
-    receiver: {
-      M: {
-        id: { S: "2" },
-        createdAt: { N: Date.UTC(2020, 1, 1).toString() },
-        firstName: { S: "Jane" },
-        lastName: { S: "Doe" },
-        identityId: { S: "2" },
-      },
+  },
+  receiver: {
+    M: {
+      id: { S: "2" },
+      createdAt: { N: Date.UTC(2020, 1, 1).toString() },
+      firstName: { S: "Jane" },
+      lastName: { S: "Doe" },
+      identityId: { S: "2" },
     },
-  };
+  },
+};
 
-describe("IncomingFriendRequest", () => {
+describe("FriendRequest", () => {
   it("serializes to dynamo", () => {
-    expect(incomingFriendRequestToDynamo(testIncomingFriendRequest)).toEqual(
-      serializedIncomingFriendRequest
+    expect(friendRequestToDynamo(kTestFriendRequest)).toEqual(
+      kSerializedFriendRequest
     );
   });
 
   it("deserializes from dynamo", () => {
-    expect(
-      parseDynamo(serializedIncomingFriendRequest, kIncomingFriendRequestParser)
-    ).toEqual(testIncomingFriendRequest);
-  });
-});
-
-describe("OutgoingFriendRequest", () => {
-  it("serializes to dynamo", () => {
-    expect(outgoingFriendRequestToDynamo(testOutgoingFriendRequest)).toEqual(
-      serializedOutgoingFriendRequest
+    expect(parseDynamo(kSerializedFriendRequest, kFriendRequestParser)).toEqual(
+      kTestFriendRequest
     );
-  });
-
-  it("deserializes from dynamo", () => {
-    expect(
-      parseDynamo(serializedOutgoingFriendRequest, kOutgoingFriendRequestParser)
-    ).toEqual(testOutgoingFriendRequest);
   });
 });

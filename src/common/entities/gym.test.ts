@@ -1,14 +1,7 @@
 import { SerializedDynamo, parseDynamo } from "./dynamo";
-import {
-  Gym,
-  GymWithoutAdmin,
-  gymToDynamo,
-  gymWithoutAdminToDynamo,
-  kGymParser,
-  kGymWithoutAdminParser,
-} from "./gym";
+import { Gym, gymToDynamo, kGymParser } from "./gym";
 
-const testGymWithoutAdmin: GymWithoutAdmin = {
+const kTestGym: Gym = {
   id: "1",
   gymName: "test",
   createdAt: new Date(Date.UTC(2020, 1, 1)),
@@ -22,9 +15,10 @@ const testGymWithoutAdmin: GymWithoutAdmin = {
     latitude: 1,
     longitude: 1,
   },
+  adminEmail: "adminEmail",
 };
 
-const serializedGymWithoutAdmin: SerializedDynamo<GymWithoutAdmin> = {
+const kSerializedGym: SerializedDynamo<Gym> = {
   id: { S: "1" },
   gymName: { S: "test" },
   createdAt: { N: Date.UTC(2020, 1, 1).toString() },
@@ -42,38 +36,15 @@ const serializedGymWithoutAdmin: SerializedDynamo<GymWithoutAdmin> = {
       longitude: { N: "1" },
     },
   },
-};
-
-const testGym: Gym = {
-  ...testGymWithoutAdmin,
-  adminEmail: "adminEmail",
-};
-
-const serializedGym: SerializedDynamo<Gym> = {
-  ...serializedGymWithoutAdmin,
   adminEmail: { S: "adminEmail" },
 };
 
-describe("GymWithoutAdmin", () => {
-  it("serializes to dynamo", () => {
-    expect(gymWithoutAdminToDynamo(testGymWithoutAdmin)).toEqual(
-      serializedGymWithoutAdmin
-    );
-  });
-
-  it("deserializes from dynamo", () => {
-    expect(
-      parseDynamo(serializedGymWithoutAdmin, kGymWithoutAdminParser)
-    ).toEqual(testGymWithoutAdmin);
-  });
-});
-
 describe("Gym", () => {
   it("serializes to dynamo", () => {
-    expect(gymToDynamo(testGym)).toEqual(serializedGym);
+    expect(gymToDynamo(kTestGym)).toEqual(kSerializedGym);
   });
 
   it("deserializes from dynamo", () => {
-    expect(parseDynamo(serializedGym, kGymParser)).toEqual(testGym);
+    expect(parseDynamo(kSerializedGym, kGymParser)).toEqual(kTestGym);
   });
 });

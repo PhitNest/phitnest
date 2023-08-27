@@ -1,16 +1,14 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { z } from "zod";
 import {
+  RequestError,
   ResourceNotFoundError,
   Success,
   dynamo,
   getUserClaims,
   validateRequest,
 } from "common/utils";
-import {
-  kUserWithPartialInviteParser,
-  userInviteToDynamo,
-} from "common/entities";
+import { inviteToDynamo, kUserParser } from "common/entities";
 
 const validator = z.object({
   receiverEmail: z.string().email(),
@@ -26,25 +24,40 @@ export async function invoke(
       const userClaims = getUserClaims(event);
       const client = dynamo();
       const user = await client.parsedQuery({
-        pk: "USERS",
-        sk: { q: `USER#${userClaims.sub}`, op: "EQ" },
-        parseShape: kUserWithPartialInviteParser,
+        pk: `USER#${userClaims.sub}`,
+        sk: { q: "GYM#", op: "BEGINS_WITH" },
+        limit: 1,
+        parseShape: kUserParser,
       });
       if (user instanceof ResourceNotFoundError) {
         return user;
-      } else {
-        await client.put({
-          pk: `INVITE#${userClaims.email}`,
-          sk: `RECEIVER#${data.receiverEmail}`,
-          data: userInviteToDynamo({
-            type: "user",
-            receiverEmail: data.receiverEmail,
-            inviter: user,
-            createdAt: new Date(),
-            gym: user.invite.gym,
-          }),
+      } else if (user.numInvites > 0) {
+        await client.writeTransaction({
+          updates: [
+            {
+              pk: `USER#${userClaims.sub}`,
+              sk: `GYM#${user.invite.gymId}`,
+              expression: "SET numInvites = numInvites - 1",
+              varMap: {},
+            },
+          ],
+          puts: [
+            {
+              pk: `USER#${userClaims.sub}`,
+              sk: `INVITE#${data.receiverEmail}`,
+              data: inviteToDynamo({
+                type: "user",
+                receiverEmail: data.receiverEmail,
+                senderId: userClaims.sub,
+                createdAt: new Date(),
+                gymId: user.invite.gymId,
+              }),
+            },
+          ],
         });
         return new Success();
+      } else {
+        return new RequestError("NoInvites", "No invites available");
       }
     },
   });

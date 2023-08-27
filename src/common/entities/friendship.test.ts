@@ -8,10 +8,17 @@ import {
   kFriendshipWithoutMessageParser,
 } from "./friendship";
 
-const testFriendshipWithoutMessage: FriendshipWithoutMessage = {
+const kTestFriendshipWithoutMessage: FriendshipWithoutMessage = {
   createdAt: new Date(Date.UTC(2020, 1, 1)),
   id: "1",
-  otherUser: {
+  sender: {
+    id: "1",
+    createdAt: new Date(Date.UTC(2020, 1, 1)),
+    firstName: "John",
+    lastName: "Doe",
+    identityId: "1",
+  },
+  receiver: {
     id: "2",
     createdAt: new Date(Date.UTC(2020, 1, 1)),
     firstName: "Jane",
@@ -20,11 +27,20 @@ const testFriendshipWithoutMessage: FriendshipWithoutMessage = {
   },
 };
 
-const serializedFriendshipWithoutMessage: SerializedDynamo<FriendshipWithoutMessage> =
+const kSerializedFriendshipWithoutMessage: SerializedDynamo<FriendshipWithoutMessage> =
   {
     createdAt: { N: Date.UTC(2020, 1, 1).toString() },
     id: { S: "1" },
-    otherUser: {
+    sender: {
+      M: {
+        id: { S: "1" },
+        createdAt: { N: Date.UTC(2020, 1, 1).toString() },
+        firstName: { S: "John" },
+        lastName: { S: "Doe" },
+        identityId: { S: "1" },
+      },
+    },
+    receiver: {
       M: {
         id: { S: "2" },
         createdAt: { N: Date.UTC(2020, 1, 1).toString() },
@@ -35,8 +51,8 @@ const serializedFriendshipWithoutMessage: SerializedDynamo<FriendshipWithoutMess
     },
   };
 
-const testFriendship: Friendship = {
-  ...testFriendshipWithoutMessage,
+const kTestFriendship: Friendship = {
+  ...kTestFriendshipWithoutMessage,
   recentMessage: {
     id: "1",
     createdAt: new Date(Date.UTC(2020, 1, 1)),
@@ -46,7 +62,7 @@ const testFriendship: Friendship = {
 };
 
 const serializedFriendship: SerializedDynamo<Friendship> = {
-  ...serializedFriendshipWithoutMessage,
+  ...kSerializedFriendshipWithoutMessage,
   recentMessage: {
     M: {
       id: { S: "1" },
@@ -60,28 +76,28 @@ const serializedFriendship: SerializedDynamo<Friendship> = {
 describe("FriendshipWithoutMessage", () => {
   it("serializes to dynamo", () => {
     expect(
-      friendshipWithoutMessageToDynamo(testFriendshipWithoutMessage)
-    ).toEqual(serializedFriendshipWithoutMessage);
+      friendshipWithoutMessageToDynamo(kTestFriendshipWithoutMessage)
+    ).toEqual(kSerializedFriendshipWithoutMessage);
   });
 
   it("deserializes from dynamo", () => {
     expect(
       parseDynamo(
-        serializedFriendshipWithoutMessage,
+        kSerializedFriendshipWithoutMessage,
         kFriendshipWithoutMessageParser
       )
-    ).toEqual(testFriendshipWithoutMessage);
+    ).toEqual(kTestFriendshipWithoutMessage);
   });
 });
 
 describe("Friendship", () => {
   it("serializes to dynamo", () => {
-    expect(friendshipToDynamo(testFriendship)).toEqual(serializedFriendship);
+    expect(friendshipToDynamo(kTestFriendship)).toEqual(serializedFriendship);
   });
 
   it("deserializes from dynamo", () => {
     expect(parseDynamo(serializedFriendship, kFriendshipParser)).toEqual(
-      testFriendship
+      kTestFriendship
     );
   });
 });
