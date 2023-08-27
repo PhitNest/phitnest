@@ -112,7 +112,7 @@ function queryCommand<
         AttributeValueList: [{ S: key.sk.q }],
       }
     : undefined;
-  const inverted = key.table == "inverted";
+  const inverted = key.table === "inverted";
   const pk = inverted ? sortQuery : hashQuery;
   const sk = inverted ? hashQuery : sortQuery;
   return {
