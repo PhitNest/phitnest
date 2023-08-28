@@ -4,9 +4,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/form/form.dart';
 import '../bloc/loader/loader.dart';
 
+typedef CreateFormConsumer<Controllers extends FormControllers, ReqType,
+        ResType>
+    = LoaderConsumer<ReqType, ResType> Function(
+  BuildContext context,
+  Controllers controllers,
+  void Function(ReqType req, LoaderState<ResType> loaderState) submit,
+);
+
 typedef FormProvider<Controllers extends FormControllers, ReqType, ResType>
     = _FormProvider<Controllers, LoaderBloc<ReqType, ResType>,
         LoaderConsumer<ReqType, ResType>, ReqType, ResType>;
+
+typedef CreateAuthFormConsumer<Controllers extends FormControllers, ReqType,
+        ResType>
+    = AuthLoaderConsumer<ReqType, ResType> Function(
+  BuildContext context,
+  Controllers controllers,
+  void Function(({ReqType data, SessionBloc sessionLoader}),
+          LoaderState<AuthResOrLost<ResType>> loaderState)
+      submit,
+);
 
 typedef AuthFormProvider<Controllers extends FormControllers, ReqType, ResType>
     = _FormProvider<
