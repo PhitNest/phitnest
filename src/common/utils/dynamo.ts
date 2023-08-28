@@ -170,7 +170,7 @@ type QueryResult<
   ? T | ResourceNotFoundError
   : T[];
 
-class DynamoClient {
+export class DynamoClient {
   private client: DynamoDBClient;
 
   constructor(client: DynamoDBClient) {

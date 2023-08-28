@@ -1,6 +1,7 @@
-import { dynamo, validateRequest, Success, getUserClaims } from "common/utils";
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { z } from "zod";
+import { dynamo, validateRequest, Success, getUserClaims } from "common/utils";
+import { deleteFriendship } from "common/repository";
 
 const validator = z.object({
   friendId: z.string(),
@@ -16,14 +17,8 @@ export async function invoke(
       const userClaims = getUserClaims(event);
       const client = dynamo();
       await Promise.all([
-        client.delete({
-          pk: `USER#${userClaims.sub}`,
-          sk: `FRIENDSHIP#${data.friendId}`,
-        }),
-        client.delete({
-          pk: `USER#${data.friendId}`,
-          sk: `FRIENDSHIP#${userClaims.sub}`,
-        }),
+        deleteFriendship(client, userClaims.sub, data.friendId),
+        deleteFriendship(client, data.friendId, userClaims.sub),
       ]);
       return new Success();
     },
