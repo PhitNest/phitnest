@@ -2,20 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phitnest_core/core.dart';
 
-import '../widgets/widgets.dart';
-import 'login_screen.dart';
+import '../login/login.dart';
+import 'widgets/widgets.dart';
 
-typedef LogoutBloc = AuthLoaderBloc<void, void>;
-typedef LogoutConsumer = AuthLoaderConsumer<void, void>;
-
-extension on BuildContext {
-  LogoutBloc get logoutBloc => authLoader();
-}
-
-final class HomeScreen extends StatelessWidget {
+final class HomePage extends StatelessWidget {
   final ApiInfo apiInfo;
 
-  const HomeScreen({
+  const HomePage({
     super.key,
     required this.apiInfo,
   }) : super();
@@ -23,12 +16,19 @@ final class HomeScreen extends StatelessWidget {
   void returnToLogin(BuildContext context) => Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute<void>(
-          builder: (context) => LoginScreen(
-            apiInfo: apiInfo,
-          ),
+          builder: (context) => LoginPage(apiInfo: apiInfo),
         ),
         (_) => false,
       );
+
+  void handleLogoutStateChanged(
+      BuildContext context, LoaderState<void> logoutState) {
+    switch (logoutState) {
+      case LoaderLoadedState():
+        returnToLogin(context);
+      default:
+    }
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -43,25 +43,9 @@ final class HomeScreen extends StatelessWidget {
               ],
             ),
             BlocProvider(
-              create: (context) => LogoutBloc(
-                apiInfo: apiInfo,
-                load: (_, session) => logout(
-                    session: session, sessionLoader: context.sessionLoader),
-              ),
+              create: (context) => createLogoutBloc(apiInfo, context),
               child: LogoutConsumer(
-                listener: (context, logoutState) {
-                  switch (logoutState) {
-                    case LoaderLoadedState():
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (context) => LoginScreen(apiInfo: apiInfo),
-                        ),
-                        (_) => false,
-                      );
-                    default:
-                  }
-                },
+                listener: handleLogoutStateChanged,
                 builder: (context, logoutState) => switch (logoutState) {
                   LoaderLoadingState() ||
                   LoaderLoadedState() =>

@@ -1,17 +1,17 @@
 import 'package:json_types/json.dart';
 
-final class AdminInviteParams extends Json {
+final class InviteParams extends Json {
   final receiverEmailJson = Json.string('receiverEmail');
   final gymIdJson = Json.string('gymId');
 
   String get receiverEmail => receiverEmailJson.value;
   String get gymId => gymIdJson.value;
 
-  AdminInviteParams.parse(super.json) : super.parse();
+  InviteParams.parse(super.json) : super.parse();
 
-  AdminInviteParams.parser() : super();
+  InviteParams.parser() : super();
 
-  AdminInviteParams.populated({
+  InviteParams.populated({
     required String receiverEmail,
     required String gymId,
   }) : super() {

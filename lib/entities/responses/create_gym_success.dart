@@ -1,6 +1,6 @@
 import 'package:json_types/json.dart';
 
-import 'location.dart';
+import '../location.dart';
 
 final class CreateGymSuccess extends Json {
   final gymIdJson = Json.string('gymId');

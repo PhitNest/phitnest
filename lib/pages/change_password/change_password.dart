@@ -1,42 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:phitnest_core/core.dart';
 
-import 'home_screen.dart';
+import '../home/home.dart';
+import 'widgets/widgets.dart';
 
-final class ChangePasswordControllers extends FormControllers {
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+part 'bloc.dart';
 
-  @override
-  void dispose() {
-    passwordController.dispose();
-    confirmPasswordController.dispose();
+void handleStateChanged(
+  BuildContext context,
+  LoaderState<ChangePasswordResponse> loaderState,
+) {
+  switch (loaderState) {
+    case LoaderLoadedState(data: final response):
+      switch (response) {
+        case ChangePasswordSuccess(session: final session):
+          context.sessionLoader
+              .add(LoaderSetEvent(RefreshSessionSuccess(session)));
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute<void>(
+              builder: (context) => HomePage(apiInfo: session.apiInfo),
+            ),
+            (_) => false,
+          );
+        case ChangePasswordFailureResponse(message: final message):
+          StyledBanner.show(
+            message: message,
+            error: true,
+          );
+      }
+    default:
   }
 }
 
-final class SubmitButton extends StatelessWidget {
-  final void Function() onSubmit;
-
-  const SubmitButton({
-    super.key,
-    required this.onSubmit,
-  }) : super();
-
-  @override
-  Widget build(BuildContext context) => MaterialButton(
-        onPressed: onSubmit,
-        color: Colors.black,
-        textColor: Colors.white,
-        child: const Text(
-          'Submit',
-        ),
-      );
-}
-
-final class ChangePasswordScreen extends StatelessWidget {
+final class ChangePasswordPage extends StatelessWidget {
   final UnauthenticatedSession unauthenticatedSession;
 
-  const ChangePasswordScreen({
+  const ChangePasswordPage({
     super.key,
     required this.unauthenticatedSession,
   }) : super();
@@ -46,42 +46,10 @@ final class ChangePasswordScreen extends StatelessWidget {
         body: Container(
           margin: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.25),
-          child: FormProvider<ChangePasswordControllers, String,
-              ChangePasswordResponse>(
-            createControllers: (_) => ChangePasswordControllers(),
-            createLoader: (_) => LoaderBloc(
-              load: (newPassword) => changePassword(
-                unauthenticatedSession: unauthenticatedSession,
-                newPassword: newPassword,
-              ),
-            ),
-            createConsumer: (context, controllers, submit) => LoaderConsumer(
-              listener: (controllers, loaderState) {
-                switch (loaderState) {
-                  case LoaderLoadedState(data: final response):
-                    switch (response) {
-                      case ChangePasswordSuccess(session: final session):
-                        context.sessionLoader.add(
-                            LoaderSetEvent(RefreshSessionSuccess(session)));
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (context) =>
-                                HomeScreen(apiInfo: session.apiInfo),
-                          ),
-                          (_) => false,
-                        );
-                      case ChangePasswordFailureResponse(
-                          message: final message
-                        ):
-                        StyledBanner.show(
-                          message: message,
-                          error: true,
-                        );
-                    }
-                  default:
-                }
-              },
+          child: changePasswordForm(
+            unauthenticatedSession,
+            (context, controllers, submit) => LoaderConsumer(
+              listener: handleStateChanged,
               builder: (context, loaderState) => Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
