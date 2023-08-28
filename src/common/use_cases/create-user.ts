@@ -18,7 +18,11 @@ export async function createUser(
     ...params,
     createdAt: new Date(),
   };
-  let invite = await getReceivedInvites(dynamo, newUserWithoutInvite.email, 1);
+  const invite = await getReceivedInvites(
+    dynamo,
+    newUserWithoutInvite.email,
+    1
+  );
   if (invite instanceof ResourceNotFoundError) {
     return new RequestError("InviteNotFound", "Invite not found");
   }
