@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:phitnest_core/core.dart';
 
-import '../api/api.dart';
+import '../entities/entities.dart';
+import '../repositories/repositories.dart';
 
 final class InviteFormControllers extends FormControllers {
   final emailController = TextEditingController();
@@ -27,8 +28,7 @@ final class InviteForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
-        child: AuthFormProvider<InviteFormControllers, AdminInviteParams,
-            HttpResponse<void>>(
+        child: AuthFormProvider(
           createControllers: (_) => InviteFormControllers(),
           createLoader: (context) =>
               AuthLoaderBloc(apiInfo: apiInfo, load: adminInvite),

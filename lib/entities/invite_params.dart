@@ -1,4 +1,4 @@
-part of 'api.dart';
+import 'package:json_types/json.dart';
 
 final class AdminInviteParams extends Json {
   final receiverEmailJson = Json.string('receiverEmail');
@@ -22,13 +22,3 @@ final class AdminInviteParams extends Json {
   @override
   List<JsonKey<dynamic, dynamic>> get keys => [receiverEmailJson, gymIdJson];
 }
-
-Future<HttpResponse<void>> adminInvite(
-        AdminInviteParams params, Session session) =>
-    request(
-      route: '/adminInvite',
-      method: HttpMethod.post,
-      session: session,
-      data: params.toJson(),
-      parse: (_) {},
-    );
