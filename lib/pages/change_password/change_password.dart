@@ -6,7 +6,7 @@ import 'widgets/widgets.dart';
 
 part 'bloc.dart';
 
-void handleStateChanged(
+void _handleStateChanged(
   BuildContext context,
   LoaderState<ChangePasswordResponse> loaderState,
 ) {
@@ -49,7 +49,7 @@ final class ChangePasswordPage extends StatelessWidget {
           child: changePasswordForm(
             unauthenticatedSession,
             (context, controllers, submit) => LoaderConsumer(
-              listener: handleStateChanged,
+              listener: _handleStateChanged,
               builder: (context, loaderState) => Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
