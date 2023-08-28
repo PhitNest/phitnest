@@ -19,6 +19,16 @@ sealed class RefreshSessionFailureResponse extends RefreshSessionResponse {
   const RefreshSessionFailureResponse() : super();
 }
 
+final class SessionReset extends RefreshSessionFailureResponse {
+  @override
+  String get message => 'You have been logged out.';
+
+  const SessionReset() : super();
+
+  @override
+  List<Object?> get props => [];
+}
+
 enum RefreshSessionFailureType {
   invalidUserPool,
   noSuchUser,
