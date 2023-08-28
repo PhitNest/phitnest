@@ -5,7 +5,6 @@ final class RegisterControllers extends FormControllers {
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final inviterEmailController = TextEditingController();
   final pageController = PageController();
 
   @override
@@ -14,7 +13,6 @@ final class RegisterControllers extends FormControllers {
     lastNameController.dispose();
     emailController.dispose();
     passwordController.dispose();
-    inviterEmailController.dispose();
     pageController.dispose();
   }
 }

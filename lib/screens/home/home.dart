@@ -6,8 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phitnest_core/core.dart';
 
-import '../../api/api.dart';
-import '../../common/constants/constants.dart';
+import '../../constants/constants.dart';
+import '../../entities/entities.dart';
+import '../../repositories/repositories.dart';
 import '../../widgets/widgets.dart';
 import '../login/login.dart';
 import '../profile_photo/profile_photo.dart';

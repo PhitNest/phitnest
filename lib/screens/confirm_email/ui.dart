@@ -55,102 +55,107 @@ final class ConfirmEmailScreen extends StatelessWidget {
                         LoginResponse?>(
                       createLoader: (_) => ConfirmEmailBloc(load: submit),
                       createControllers: (_) => ConfirmEmailControllers(),
-                      listener: (context, controllers, loaderState, _) {
-                        switch (loaderState) {
-                          case LoaderLoadedState(data: final response):
-                            if (response != null) {
-                              switch (response) {
-                                case LoginSuccess():
-                                  Navigator.pushAndRemoveUntil(
-                                    context,
-                                    CupertinoPageRoute<void>(
-                                      builder: (context) => HomeScreen(
-                                        apiInfo: apiInfo,
+                      createConsumer: (context, controllers, submit) =>
+                          LoaderConsumer(
+                        listener: (context, loaderState) {
+                          switch (loaderState) {
+                            case LoaderLoadedState(data: final response):
+                              if (response != null) {
+                                switch (response) {
+                                  case LoginSuccess():
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      CupertinoPageRoute<void>(
+                                        builder: (context) => HomeScreen(
+                                          apiInfo: apiInfo,
+                                        ),
                                       ),
-                                    ),
-                                    (_) => false,
-                                  );
-                                case LoginFailureResponse(
-                                    message: final message
-                                  ):
-                                  StyledBanner.show(
-                                      message: message, error: true);
-                                  controllers.codeController.clear();
-                              }
-                            } else {
-                              StyledBanner.show(
-                                  message: 'Invalid code', error: true);
-                              controllers.codeController.clear();
-                            }
-                          default:
-                        }
-                      },
-                      builder: (_, controllers, loaderState, submit) =>
-                          ResendEmailLoaderConsumer(
-                        listener: (context, resendState) {
-                          switch (resendState) {
-                            case LoaderLoadedState(data: final resent):
-                              if (resent) {
-                                StyledBanner.show(
-                                  message: 'Email resent',
-                                  error: false,
-                                );
+                                      (_) => false,
+                                    );
+                                  case LoginFailureResponse(
+                                      message: final message
+                                    ):
+                                    StyledBanner.show(
+                                        message: message, error: true);
+                                    controllers.codeController.clear();
+                                }
                               } else {
                                 StyledBanner.show(
-                                  message: 'Email not resent',
-                                  error: true,
-                                );
+                                    message: 'Invalid code', error: true);
+                                controllers.codeController.clear();
                               }
                             default:
                           }
                         },
-                        builder: (context, resendState) => Column(
-                          children: [
-                            StyledVerificationField(
-                              controller: controllers.codeController,
-                              focusNode: controllers.focusNode,
-                              onChanged: (value) {},
-                              onCompleted: switch (resendState) {
-                                LoaderLoadingState() => (_) {},
-                                _ => (code) {
-                                    submit(code);
-                                    final currentFocus = FocusScope.of(context);
-                                    if (!currentFocus.hasPrimaryFocus) {
-                                      currentFocus.unfocus();
+                        builder: (context, loaderState) =>
+                            ResendEmailLoaderConsumer(
+                          listener: (context, resendState) {
+                            switch (resendState) {
+                              case LoaderLoadedState(data: final resent):
+                                if (resent) {
+                                  StyledBanner.show(
+                                    message: 'Email resent',
+                                    error: false,
+                                  );
+                                } else {
+                                  StyledBanner.show(
+                                    message: 'Email not resent',
+                                    error: true,
+                                  );
+                                }
+                              default:
+                            }
+                          },
+                          builder: (context, resendState) => Column(
+                            children: [
+                              StyledVerificationField(
+                                controller: controllers.codeController,
+                                focusNode: controllers.focusNode,
+                                onChanged: (value) {},
+                                onCompleted: switch (resendState) {
+                                  LoaderLoadingState() => (_) {},
+                                  _ => (code) {
+                                      submit(code, loaderState);
+                                      final currentFocus =
+                                          FocusScope.of(context);
+                                      if (!currentFocus.hasPrimaryFocus) {
+                                        currentFocus.unfocus();
+                                      }
                                     }
-                                  }
-                              },
-                            ),
-                            16.verticalSpace,
-                            ...switch (loaderState) {
-                              LoaderLoadingState() => [const Loader()],
-                              _ => switch (resendState) {
-                                  LoaderLoadingState() => [
-                                      const Loader(),
-                                    ],
-                                  _ => [
-                                      ElevatedButton(
-                                        onPressed: () => submit(
-                                          controllers.codeController.text,
-                                        ),
-                                        child: Text(
-                                          'CONFIRM',
-                                          style: theme.textTheme.bodySmall,
-                                        ),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () => context
-                                            .resendEmailLoaderBloc
-                                            .add(const LoaderLoadEvent(null)),
-                                        child: Text(
-                                          'RESEND',
-                                          style: theme.textTheme.bodySmall,
-                                        ),
-                                      ),
-                                    ],
                                 },
-                            },
-                          ],
+                              ),
+                              16.verticalSpace,
+                              ...switch (loaderState) {
+                                LoaderLoadingState() => [const Loader()],
+                                _ => switch (resendState) {
+                                    LoaderLoadingState() => [
+                                        const Loader(),
+                                      ],
+                                    _ => [
+                                        ElevatedButton(
+                                          onPressed: () => submit(
+                                            controllers.codeController.text,
+                                            loaderState,
+                                          ),
+                                          child: Text(
+                                            'CONFIRM',
+                                            style: theme.textTheme.bodySmall,
+                                          ),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () => context
+                                              .resendEmailLoaderBloc
+                                              .add(const LoaderLoadEvent(null)),
+                                          child: Text(
+                                            'RESEND',
+                                            style: theme.textTheme.bodySmall,
+                                          ),
+                                        ),
+                                      ],
+                                  },
+                              },
+                            ],
+                          ),
                         ),
                       ),
                     ),

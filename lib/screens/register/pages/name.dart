@@ -33,12 +33,15 @@ final class RegisterNamePage extends StatelessWidget {
               hint: 'First name',
               controller: controllers.firstNameController,
               validator: validateName,
+              textInputAction: TextInputAction.next,
             ),
             24.verticalSpace,
             StyledUnderlinedTextField(
               hint: 'Last name',
               controller: controllers.lastNameController,
               validator: validateName,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) => onSubmit(),
             ),
             147.verticalSpace,
             ElevatedButton(
