@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phitnest_core/core.dart';
 
-import 'pages/home/home.dart';
-import 'pages/login/login.dart';
+import 'pages/pages.dart';
 
 Future<void> main() => runPhitNest(
       useAdminAuth: true,
