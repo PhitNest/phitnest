@@ -8,7 +8,7 @@ import {
   getSentFriendRequests,
   getSentInvites,
   getUserWithoutIdentity,
-} from "common/repository";
+} from "common/repositories";
 import { DynamoClient, ResourceNotFoundError } from "common/utils";
 
 export async function deleteUserAccount(

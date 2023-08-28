@@ -1,6 +1,6 @@
 import { APIGatewayProxyResult } from "aws-lambda";
 import { Success, dynamo, handleRequest } from "common/utils";
-import { getGyms } from "common/repository";
+import { getGyms } from "common/repositories";
 
 export async function invoke(): Promise<APIGatewayProxyResult> {
   return await handleRequest(async () => {

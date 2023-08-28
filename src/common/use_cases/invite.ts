@@ -4,7 +4,7 @@ import {
   getGym,
   getReceivedInvites,
   getUser,
-} from "common/repository";
+} from "common/repositories";
 import {
   DynamoClient,
   RequestError,

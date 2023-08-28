@@ -4,7 +4,7 @@ import {
   getFriendships,
   getSentFriendRequests,
   getUser,
-} from "common/repository";
+} from "common/repositories";
 import { DynamoClient, ResourceNotFoundError } from "common/utils";
 
 export async function exploreUsers(

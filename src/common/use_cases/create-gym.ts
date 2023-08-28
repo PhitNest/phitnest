@@ -1,5 +1,5 @@
 import { Address, Gym } from "common/entities";
-import { createGymWithLocation, getLocation } from "common/repository";
+import { createGymWithLocation, getLocation } from "common/repositories";
 import { DynamoClient, RequestError } from "common/utils";
 
 export async function createGym(

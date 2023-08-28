@@ -7,7 +7,7 @@ import {
   getReceivedFriendRequests,
   getSentFriendRequests,
   getUserExplore,
-} from "common/repository";
+} from "common/repositories";
 import {
   DynamoClient,
   RequestError,

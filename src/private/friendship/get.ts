@@ -3,7 +3,7 @@ import { dynamo, Success, getUserClaims, handleRequest } from "common/utils";
 import {
   getFriendshipsWithMessages,
   getReceivedFriendRequests,
-} from "common/repository";
+} from "common/repositories";
 
 export async function invoke(
   event: APIGatewayEvent

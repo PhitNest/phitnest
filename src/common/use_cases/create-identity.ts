@@ -8,7 +8,7 @@ import {
   getUserExplore,
   getUserWithoutIdentity,
   newUserKey,
-} from "common/repository";
+} from "common/repositories";
 import {
   DynamoClient,
   EnvironmentVars,

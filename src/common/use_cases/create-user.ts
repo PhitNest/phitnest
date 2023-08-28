@@ -1,4 +1,4 @@
-import { createNewUser, getReceivedInvites } from "common/repository";
+import { createNewUser, getReceivedInvites } from "common/repositories";
 import {
   DynamoClient,
   RequestError,
