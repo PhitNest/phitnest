@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:phitnest_core/core.dart';
 
-import 'screens/home_screen.dart';
-import 'screens/login_screen.dart';
+import 'pages/home/home.dart';
+import 'pages/login/login.dart';
 
 Future<void> main() => runPhitNest(
       useAdminAuth: true,
@@ -11,7 +11,7 @@ Future<void> main() => runPhitNest(
           Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute<void>(
-          builder: (context) => HomeScreen(apiInfo: session.apiInfo),
+          builder: (context) => HomePage(apiInfo: session.apiInfo),
         ),
         (_) => false,
       ),
@@ -19,7 +19,7 @@ Future<void> main() => runPhitNest(
           Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute<void>(
-          builder: (context) => LoginScreen(apiInfo: apiInfo),
+          builder: (context) => LoginPage(apiInfo: apiInfo),
         ),
         (_) => false,
       ),

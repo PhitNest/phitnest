@@ -1,29 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:phitnest_core/core.dart';
 
-import '../entities/entities.dart';
-import '../repositories/repositories.dart';
+import '../../../../entities/entities.dart';
+import '../../../../repositories/repositories.dart';
 
-final class GymEntryFormControllers extends FormControllers {
-  final nameController = TextEditingController();
-  final streetController = TextEditingController();
-  final cityController = TextEditingController();
-  final stateController = TextEditingController();
-  final zipCodeController = TextEditingController();
-
-  @override
-  void dispose() {
-    nameController.dispose();
-    streetController.dispose();
-    cityController.dispose();
-    stateController.dispose();
-    zipCodeController.dispose();
-  }
-}
+part 'bloc.dart';
 
 final class GymEntryForm extends StatelessWidget {
   final ApiInfo apiInfo;
   final void Function(BuildContext) onSessionLost;
+
+  void handleStateChanged(
+    BuildContext context,
+    GymEntryFormControllers controllers,
+    LoaderState<AuthResOrLost<HttpResponse<CreateGymSuccess>>> loaderState,
+  ) {
+    switch (loaderState) {
+      case LoaderLoadedState(data: final response):
+        switch (response) {
+          case AuthRes(data: final data):
+            switch (data) {
+              case HttpResponseSuccess(data: final data):
+                StyledBanner.show(
+                  message: 'Created gym with ID: ${data.gymId}',
+                  error: false,
+                );
+                controllers.nameController.clear();
+                controllers.streetController.clear();
+                controllers.cityController.clear();
+                controllers.stateController.clear();
+                controllers.zipCodeController.clear();
+              case HttpResponseFailure(failure: final failure):
+                StyledBanner.show(
+                  message: failure.message,
+                  error: true,
+                );
+            }
+          case AuthLost():
+            onSessionLost(context);
+        }
+      default:
+    }
+  }
 
   const GymEntryForm({
     super.key,
@@ -34,39 +52,11 @@ final class GymEntryForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
-        child: AuthFormProvider(
-          createControllers: (_) => GymEntryFormControllers(),
-          createLoader: (context) =>
-              AuthLoaderBloc(apiInfo: apiInfo, load: createGym),
-          createConsumer: (context, controllers, submit) => AuthLoaderConsumer(
-            listener: (context, loaderState) {
-              switch (loaderState) {
-                case LoaderLoadedState(data: final response):
-                  switch (response) {
-                    case AuthRes(data: final data):
-                      switch (data) {
-                        case HttpResponseSuccess(data: final data):
-                          StyledBanner.show(
-                            message: 'Created gym with ID: ${data.gymId}',
-                            error: false,
-                          );
-                          controllers.nameController.clear();
-                          controllers.streetController.clear();
-                          controllers.cityController.clear();
-                          controllers.stateController.clear();
-                          controllers.zipCodeController.clear();
-                        case HttpResponseFailure(failure: final failure):
-                          StyledBanner.show(
-                            message: failure.message,
-                            error: true,
-                          );
-                      }
-                    case AuthLost():
-                      onSessionLost(context);
-                  }
-                default:
-              }
-            },
+        child: gymEntryForm(
+          apiInfo,
+          (context, controllers, submit) => AuthLoaderConsumer(
+            listener: (context, loaderState) =>
+                handleStateChanged(context, controllers, loaderState),
             builder: (context, loaderState) => Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
