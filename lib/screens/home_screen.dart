@@ -45,7 +45,8 @@ final class HomeScreen extends StatelessWidget {
             BlocProvider(
               create: (context) => LogoutBloc(
                 apiInfo: apiInfo,
-                load: (_, session) => logout(session: session),
+                load: (_, session) => logout(
+                    session: session, sessionLoader: context.sessionLoader),
               ),
               child: LogoutConsumer(
                 listener: (context, logoutState) {
