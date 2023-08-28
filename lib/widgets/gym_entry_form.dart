@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:phitnest_core/core.dart';
 
-import '../api/api.dart';
+import '../entities/entities.dart';
+import '../repositories/repositories.dart';
 
 final class GymEntryFormControllers extends FormControllers {
   final nameController = TextEditingController();
@@ -33,8 +34,7 @@ final class GymEntryForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
-        child: AuthFormProvider<GymEntryFormControllers, CreateGymParams,
-            HttpResponse<CreateGymSuccess>>(
+        child: AuthFormProvider(
           createControllers: (_) => GymEntryFormControllers(),
           createLoader: (context) =>
               AuthLoaderBloc(apiInfo: apiInfo, load: createGym),
