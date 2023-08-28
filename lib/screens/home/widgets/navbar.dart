@@ -31,36 +31,43 @@ final class StyledNavBarLogoState extends State<StyledNavBarLogo>
   StyledNavBarLogoState() : super();
 
   @override
-  Widget build(BuildContext context) => switch (widget.state) {
-        HomeLoadingState() ||
-        HomeSendingFriendRequestState() =>
-          const CircularProgressIndicator(),
-        _ => GestureDetector(
-            onTapCancel: () =>
-                context.homeBloc.add(const HomeReleaseLogoEvent()),
-            onTapDown: (_) => context.homeBloc.add(const HomePressLogoEvent()),
-            onTapUp: (_) => context.homeBloc.add(const HomeReleaseLogoEvent()),
-            child: AnimatedBuilder(
-              animation: controller,
-              builder: (context, child) =>
-                  Image.asset(widget.state.logoAssetPath!,
-                      width: 38.62.w +
-                          switch (widget.state) {
-                                HomeHoldingLogoState() => 1,
-                                HomeMatchedState() => 0,
-                                HomeLoadedState(page: final page) => switch (
-                                      page) {
-                                    NavBarPage.explore => controller.value,
-                                    _ => 0,
-                                  },
-                                HomeLoadingState() ||
-                                HomeSendingFriendRequestState() =>
-                                  throw Exception('invalid state'),
-                              } *
-                              5.w),
-            ),
-          ),
-      };
+  Widget build(BuildContext context) {
+    switch (widget.state) {
+      case HomeLoadingState(page: final page) ||
+            HomeSendingFriendRequestState(page: final page):
+        if (page == NavBarPage.explore) {
+          return const CircularProgressIndicator();
+        }
+      default:
+    }
+    return GestureDetector(
+      onTapCancel: () => context.homeBloc.add(const HomeReleaseLogoEvent()),
+      onTapDown: (_) => context.homeBloc.add(const HomePressLogoEvent()),
+      onTapUp: (_) => context.homeBloc.add(const HomeReleaseLogoEvent()),
+      child: AnimatedBuilder(
+        animation: controller,
+        builder: (context, child) => Image.asset(widget.state.logoAssetPath!,
+            width: 38.62.w +
+                switch (widget.state) {
+                      HomeHoldingLogoState() => 1,
+                      HomeMatchedState() ||
+                      HomeLoadingState() ||
+                      HomeSendingFriendRequestState() =>
+                        0,
+                      HomeLoadedState(
+                        page: final page,
+                        exploreUsers: final exploreUsers
+                      ) =>
+                        switch (page) {
+                          NavBarPage.explore =>
+                            exploreUsers.isNotEmpty ? controller.value : 0,
+                          _ => 0,
+                        },
+                    } *
+                    5.w),
+      ),
+    );
+  }
 
   @override
   void dispose() {

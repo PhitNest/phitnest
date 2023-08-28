@@ -9,5 +9,4 @@ import '../confirm_email/confirm_email.dart';
 part 'bloc.dart';
 part 'ui.dart';
 part 'pages/account_info.dart';
-part 'pages/inviter_email.dart';
 part 'pages/name.dart';

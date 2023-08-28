@@ -208,32 +208,44 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomePressLogoEvent>(
       (event, emit) {
         switch (state) {
-          case HomeLoadingState() ||
-                HomeHoldingLogoState() ||
-                HomeSendingFriendRequestState():
+          case HomeHoldingLogoState():
             badState(state, event);
           case HomeMatchedState(exploreUsers: final exploreUsers):
             emit(HomeLoadedState(
                 page: NavBarPage.explore, exploreUsers: exploreUsers));
+          case HomeLoadingState():
+            emit(const HomeLoadingState(page: NavBarPage.explore));
+          case HomeSendingFriendRequestState(
+              exploreUsers: final exploreUsers,
+              user: final user,
+              userIndex: final userIndex
+            ):
+            emit(HomeSendingFriendRequestState(
+                exploreUsers: exploreUsers,
+                page: NavBarPage.explore,
+                user: user,
+                userIndex: userIndex));
           case HomeLoadedState(
               exploreUsers: final exploreUsers,
               page: final page
             ):
             switch (page) {
               case NavBarPage.explore:
-                emit(
-                  HomeHoldingLogoState(
-                    countdown: 3,
-                    exploreUsers: exploreUsers,
-                    nextCount: CancelableOperation.fromFuture(
-                        Future.delayed(const Duration(seconds: 1)))
-                      ..then(
-                        (_) => add(
-                          const HomeCountDownEvent(),
+                if (exploreUsers.isNotEmpty) {
+                  emit(
+                    HomeHoldingLogoState(
+                      countdown: 3,
+                      exploreUsers: exploreUsers,
+                      nextCount: CancelableOperation.fromFuture(
+                          Future.delayed(const Duration(seconds: 1)))
+                        ..then(
+                          (_) => add(
+                            const HomeCountDownEvent(),
+                          ),
                         ),
-                      ),
-                  ),
-                );
+                    ),
+                  );
+                }
               case NavBarPage.chat || NavBarPage.options || NavBarPage.news:
                 emit(
                   HomeLoadedState(
@@ -256,6 +268,10 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
               exploreUsers: exploreUsers,
               page: NavBarPage.explore,
             ));
+          case HomeLoadedState() ||
+                HomeLoadingState() ||
+                HomeSendingFriendRequestState():
+            break;
           default:
             badState(state, event);
         }

@@ -3,13 +3,18 @@ part of 'home.dart';
 class HomeScreen extends StatelessWidget {
   final ApiInfo apiInfo;
 
-  void goToLogin(BuildContext context) => Navigator.pushAndRemoveUntil(
-        context,
-        CupertinoPageRoute<void>(
-          builder: (context) => LoginScreen(apiInfo: apiInfo),
-        ),
-        (_) => false,
-      );
+  void goToLogin(BuildContext context, String? error) {
+    if (error != null) {
+      StyledBanner.show(message: error, error: true);
+    }
+    Navigator.pushAndRemoveUntil(
+      context,
+      CupertinoPageRoute<void>(
+        builder: (context) => LoginScreen(apiInfo: apiInfo),
+      ),
+      (_) => false,
+    );
+  }
 
   const HomeScreen({
     super.key,
@@ -22,7 +27,8 @@ class HomeScreen extends StatelessWidget {
           providers: [
             BlocProvider(
               create: (context) => ExploreBloc(
-                load: (_, session) => explore(session),
+                apiInfo: apiInfo,
+                load: (_, session) => exploreUsers(session),
                 loadOnStart: (
                   req: (data: null, sessionLoader: context.sessionLoader)
                 ),
@@ -30,6 +36,7 @@ class HomeScreen extends StatelessWidget {
             ),
             BlocProvider(
               create: (context) => UserBloc(
+                apiInfo: apiInfo,
                 load: (_, session) => getUser(session),
                 loadOnStart: (
                   req: (data: null, sessionLoader: context.sessionLoader)
@@ -38,7 +45,9 @@ class HomeScreen extends StatelessWidget {
             ),
             BlocProvider(
               create: (context) => LogoutBloc(
-                load: (_, session) => logout(session: session),
+                apiInfo: apiInfo,
+                load: (_, session) => logout(
+                    session: session, sessionLoader: context.sessionLoader),
               ),
             ),
             BlocProvider(
@@ -49,7 +58,7 @@ class HomeScreen extends StatelessWidget {
             listener: (context, logoutState) {
               switch (logoutState) {
                 case LoaderLoadedState():
-                  goToLogin(context);
+                  goToLogin(context, null);
                 default:
               }
             },
@@ -60,8 +69,8 @@ class HomeScreen extends StatelessWidget {
                     switch (userLoaderState) {
                       case LoaderLoadedState(data: final response):
                         switch (response) {
-                          case AuthLost():
-                            goToLogin(context);
+                          case AuthLost(message: final message):
+                            goToLogin(context, message);
                           case AuthRes(data: final response):
                             switch (response) {
                               case HttpResponseSuccess(data: final response):
@@ -113,8 +122,10 @@ class HomeScreen extends StatelessWidget {
                                             data: final response
                                           ):
                                           switch (response) {
-                                            case AuthLost():
-                                              goToLogin(context);
+                                            case AuthLost(
+                                                message: final message
+                                              ):
+                                              goToLogin(context, message);
                                             case AuthRes(data: final response):
                                               switch (response) {
                                                 case HttpResponseSuccess(
@@ -177,8 +188,12 @@ class HomeScreen extends StatelessWidget {
                                                               );
                                                             default:
                                                           }
-                                                        case AuthLost():
-                                                          goToLogin(context);
+                                                        case AuthLost(
+                                                            message:
+                                                                final message
+                                                          ):
+                                                          goToLogin(
+                                                              context, message);
                                                       }
                                                     default:
                                                   }

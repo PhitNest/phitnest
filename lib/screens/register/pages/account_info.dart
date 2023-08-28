@@ -49,7 +49,7 @@ final class RegisterAccountInfoPage extends StatelessWidget {
             ElevatedButton(
               onPressed: onSubmit,
               child: Text(
-                'NEXT',
+                'SUBMIT',
                 style: theme.textTheme.bodySmall,
               ),
             )

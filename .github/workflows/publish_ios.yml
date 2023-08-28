@@ -12,7 +12,6 @@ jobs:
 
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/ios/Gemfile
-      GH_ACCESS_PAT: ${{ secrets.GH_ACCESS_PAT }}
 
     steps:
       - name: Check out from git

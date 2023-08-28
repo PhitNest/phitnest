@@ -21,85 +21,80 @@ final class RegisterScreen extends StatelessWidget {
                 pool: apiInfo.pool,
               ),
             ),
-            listener: (context, controllers, loaderState, _) {
-              switch (loaderState) {
-                case LoaderLoadedState(data: final response):
-                  switch (response) {
-                    case RegisterSuccess(user: final user):
-                      final LoginParams loginParams = LoginParams(
-                        email: controllers.emailController.text,
-                        password: controllers.passwordController.text,
-                      );
-                      Navigator.pushReplacement(
-                        context,
-                        CupertinoPageRoute<void>(
-                          builder: (context) => ConfirmEmailScreen(
-                            loginParams: loginParams,
-                            apiInfo: apiInfo,
-                            resendConfirmationEmail: (session) =>
-                                resendConfirmationEmail(
-                              user: session.user,
-                            ),
-                            confirmEmail: (session, code) => confirmEmail(
-                              user: session.user,
-                              code: code,
-                            ),
-                            unauthenticatedSession: UnauthenticatedSession(
-                              user: user,
+            createConsumer: (context, controllers, submit) => LoaderConsumer(
+              listener: (context, loaderState) {
+                switch (loaderState) {
+                  case LoaderLoadedState(data: final response):
+                    switch (response) {
+                      case RegisterSuccess(user: final user):
+                        final LoginParams loginParams = LoginParams(
+                          email: controllers.emailController.text,
+                          password: controllers.passwordController.text,
+                        );
+                        Navigator.pushReplacement(
+                          context,
+                          CupertinoPageRoute<void>(
+                            builder: (context) => ConfirmEmailScreen(
+                              loginParams: loginParams,
                               apiInfo: apiInfo,
+                              resendConfirmationEmail: (session) =>
+                                  resendConfirmationEmail(
+                                user: session.user,
+                              ),
+                              confirmEmail: (session, code) => confirmEmail(
+                                user: session.user,
+                                code: code,
+                              ),
+                              unauthenticatedSession: UnauthenticatedSession(
+                                user: user,
+                                apiInfo: apiInfo,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    case RegisterFailureResponse(message: final message):
-                      StyledBanner.show(message: message, error: true);
-                  }
-                default:
-              }
-            },
-            builder: (context, controllers, loaderState, submit) {
-              void finishPage() {
-                if ((context.registerFormBloc.formKey.currentState
-                        ?.validate()) ??
-                    false) {
-                  controllers.pageController.nextPage(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
+                        );
+                      case RegisterFailureResponse(message: final message):
+                        StyledBanner.show(message: message, error: true);
+                    }
+                  default:
                 }
-              }
-
-              return switch (loaderState) {
-                LoaderLoadingState() =>
-                  const Center(child: CircularProgressIndicator()),
-                _ => PageView(
-                    controller: controllers.pageController,
-                    children: [
-                      RegisterNamePage(
-                        controllers: controllers,
-                        onSubmit: finishPage,
-                      ),
-                      RegisterAccountInfoPage(
-                        controllers: controllers,
-                        onSubmit: finishPage,
-                      ),
-                      RegisterInviterEmailPage(
-                        controllers: controllers,
-                        onSubmit: () => submit(
-                          RegisterParams(
-                            email: controllers.emailController.text,
-                            password: controllers.passwordController.text,
-                            firstName: controllers.firstNameController.text,
-                            lastName: controllers.lastNameController.text,
-                            inviterEmail:
-                                controllers.inviterEmailController.text,
+              },
+              builder: (context, loaderState) {
+                return switch (loaderState) {
+                  LoaderLoadingState() =>
+                    const Center(child: CircularProgressIndicator()),
+                  _ => PageView(
+                      controller: controllers.pageController,
+                      children: [
+                        RegisterNamePage(
+                          controllers: controllers,
+                          onSubmit: () {
+                            if ((context.registerFormBloc.formKey.currentState
+                                    ?.validate()) ??
+                                false) {
+                              controllers.pageController.nextPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            }
+                          },
+                        ),
+                        RegisterAccountInfoPage(
+                          controllers: controllers,
+                          onSubmit: () => submit(
+                            RegisterParams(
+                              email: controllers.emailController.text,
+                              password: controllers.passwordController.text,
+                              firstName: controllers.firstNameController.text,
+                              lastName: controllers.lastNameController.text,
+                            ),
+                            loaderState,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-              };
-            },
+                      ],
+                    ),
+                };
+              },
+            ),
           ),
         ),
       );

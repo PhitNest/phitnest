@@ -31,6 +31,7 @@ final class ConfirmPhotoScreen extends StatelessWidget {
         body: Center(
           child: BlocProvider(
             create: (_) => ConfirmPhotoBloc(
+              apiInfo: apiInfo,
               load: (_, session) => submit(session),
             ),
             child: ConfirmPhotoConsumer(
@@ -38,7 +39,11 @@ final class ConfirmPhotoScreen extends StatelessWidget {
                 switch (confirmState) {
                   case LoaderLoadedState(data: final data):
                     switch (data) {
-                      case AuthLost():
+                      case AuthLost(message: final message):
+                        StyledBanner.show(
+                          message: message,
+                          error: true,
+                        );
                         Navigator.pushAndRemoveUntil(
                           context,
                           CupertinoPageRoute<void>(

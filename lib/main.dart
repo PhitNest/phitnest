@@ -11,9 +11,7 @@ Future<void> main() => runPhitNest(
           Navigator.pushAndRemoveUntil(
         context,
         CupertinoPageRoute<void>(
-          builder: (context) => HomeScreen(
-            apiInfo: session.apiInfo,
-          ),
+          builder: (context) => HomeScreen(apiInfo: session.apiInfo),
         ),
         (_) => false,
       ),
