@@ -6,7 +6,7 @@ import {
   handleRequest,
   RequestError,
 } from "common/utils";
-import { getUser } from "common/repository";
+import { getUser } from "common/repositories";
 import { createIdentity } from "common/use_cases/create-identity";
 import { User } from "common/entities";
 

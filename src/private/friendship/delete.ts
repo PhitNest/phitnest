@@ -1,7 +1,7 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { z } from "zod";
 import { dynamo, validateRequest, Success, getUserClaims } from "common/utils";
-import { deleteFriendship } from "common/repository";
+import { deleteFriendship } from "common/repositories";
 
 const validator = z.object({
   friendId: z.string(),
