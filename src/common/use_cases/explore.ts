@@ -1,11 +1,10 @@
 import { UserExplore } from "common/entities";
+import { getExploreUsers, getFriendships, getUser } from "common/repositories";
 import {
-  getExploreUsers,
-  getFriendships,
-  getSentFriendRequests,
-  getUser,
-} from "common/repositories";
-import { DynamoClient, ResourceNotFoundError } from "common/utils";
+  DynamoClient,
+  RequestError,
+  ResourceNotFoundError,
+} from "common/utils";
 
 export async function exploreUsers(
   dynamo: DynamoClient,
@@ -15,25 +14,24 @@ export async function exploreUsers(
   if (user instanceof ResourceNotFoundError) {
     return user;
   } else {
-    const [othersAtGym, friendships, sentFriendRequests] = await Promise.all([
+    const [othersAtGym, friendships] = await Promise.all([
       getExploreUsers(dynamo, user.invite.gymId),
       getFriendships(dynamo, user.id),
-      getSentFriendRequests(dynamo, user.id),
     ]);
-    const exploreResponse = await Promise.all(
+    if (friendships instanceof RequestError) {
+      return friendships;
+    }
+    return await Promise.all(
       othersAtGym.filter((other) => {
-        const isMe = other.id === user.id;
-        const sentRequest = sentFriendRequests.some(
-          (friendship) => friendship.receiver.id === other.id
+        return (
+          user.id !== other.id &&
+          !friendships.some(
+            (friendship) =>
+              friendship.receiver.id === other.id ||
+              friendship.sender.id === other.id
+          )
         );
-        const isFriend = friendships.some(
-          (friendship) =>
-            friendship.receiver.id === other.id ||
-            friendship.sender.id === other.id
-        );
-        return !isMe && !sentRequest && !isFriend;
       })
     );
-    return exploreResponse;
   }
 }

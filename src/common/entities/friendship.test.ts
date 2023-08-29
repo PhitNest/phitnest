@@ -1,14 +1,13 @@
 import { SerializedDynamo, parseDynamo } from "./dynamo";
 import {
+  FriendRequest,
   Friendship,
   FriendshipWithoutMessage,
   friendshipToDynamo,
-  friendshipWithoutMessageToDynamo,
   kFriendshipParser,
-  kFriendshipWithoutMessageParser,
 } from "./friendship";
 
-const kTestFriendshipWithoutMessage: FriendshipWithoutMessage = {
+const kTestFriendRequest: FriendRequest = {
   createdAt: new Date(Date.UTC(2020, 1, 1)),
   id: "1",
   sender: {
@@ -25,30 +24,44 @@ const kTestFriendshipWithoutMessage: FriendshipWithoutMessage = {
     lastName: "Doe",
     identityId: "2",
   },
+  __poly__: "FriendRequest",
+};
+
+const kSerializedFriendRequest: SerializedDynamo<FriendRequest> = {
+  createdAt: { N: Date.UTC(2020, 1, 1).toString() },
+  id: { S: "1" },
+  sender: {
+    M: {
+      id: { S: "1" },
+      createdAt: { N: Date.UTC(2020, 1, 1).toString() },
+      firstName: { S: "John" },
+      lastName: { S: "Doe" },
+      identityId: { S: "1" },
+    },
+  },
+  receiver: {
+    M: {
+      id: { S: "2" },
+      createdAt: { N: Date.UTC(2020, 1, 1).toString() },
+      firstName: { S: "Jane" },
+      lastName: { S: "Doe" },
+      identityId: { S: "2" },
+    },
+  },
+  __poly__: { S: "FriendRequest" },
+};
+
+const kTestFriendshipWithoutMessage: FriendshipWithoutMessage = {
+  ...kTestFriendRequest,
+  acceptedAt: new Date(Date.UTC(2020, 1, 1)),
+  __poly__: "FriendshipWithoutMessage",
 };
 
 const kSerializedFriendshipWithoutMessage: SerializedDynamo<FriendshipWithoutMessage> =
   {
-    createdAt: { N: Date.UTC(2020, 1, 1).toString() },
-    id: { S: "1" },
-    sender: {
-      M: {
-        id: { S: "1" },
-        createdAt: { N: Date.UTC(2020, 1, 1).toString() },
-        firstName: { S: "John" },
-        lastName: { S: "Doe" },
-        identityId: { S: "1" },
-      },
-    },
-    receiver: {
-      M: {
-        id: { S: "2" },
-        createdAt: { N: Date.UTC(2020, 1, 1).toString() },
-        firstName: { S: "Jane" },
-        lastName: { S: "Doe" },
-        identityId: { S: "2" },
-      },
-    },
+    ...kSerializedFriendRequest,
+    acceptedAt: { N: Date.UTC(2020, 1, 1).toString() },
+    __poly__: { S: "FriendshipWithoutMessage" },
   };
 
 const kTestFriendship: Friendship = {
@@ -59,6 +72,7 @@ const kTestFriendship: Friendship = {
     text: "Hello",
     senderId: "1",
   },
+  __poly__: "Friendship",
 };
 
 const serializedFriendship: SerializedDynamo<Friendship> = {
@@ -71,24 +85,8 @@ const serializedFriendship: SerializedDynamo<Friendship> = {
       senderId: { S: "1" },
     },
   },
+  __poly__: { S: "Friendship" },
 };
-
-describe("FriendshipWithoutMessage", () => {
-  it("serializes to dynamo", () => {
-    expect(
-      friendshipWithoutMessageToDynamo(kTestFriendshipWithoutMessage)
-    ).toEqual(kSerializedFriendshipWithoutMessage);
-  });
-
-  it("deserializes from dynamo", () => {
-    expect(
-      parseDynamo(
-        kSerializedFriendshipWithoutMessage,
-        kFriendshipWithoutMessageParser
-      )
-    ).toEqual(kTestFriendshipWithoutMessage);
-  });
-});
 
 describe("Friendship", () => {
   it("serializes to dynamo", () => {

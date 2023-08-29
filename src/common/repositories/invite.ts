@@ -1,20 +1,41 @@
-import { Invite, inviteToDynamo, kInviteParser } from "common/entities";
-import { DynamoClient, PutParams, ResourceNotFoundError } from "common/utils";
+import { Invite, kInviteParser } from "common/entities";
+import { DynamoClient, ResourceNotFoundError } from "common/utils";
 
 type GetInvitesResponse<Limit extends number> = Promise<
   Limit extends 1 ? Invite | ResourceNotFoundError : Invite[]
 >;
 
+type SenderType = "user" | "admin";
+
 const kInviteSkPrefix = "INVITE#";
+
+export function invitePk(senderType: SenderType, senderId: string) {
+  return `${senderType.toUpperCase()}#${senderId}`;
+}
+
+export function inviteSk(receiverEmail: string) {
+  return `${kInviteSkPrefix}${receiverEmail}`;
+}
+
+export function inviteKey(
+  senderType: SenderType,
+  senderId: string,
+  receiverEmail: string
+) {
+  return {
+    pk: invitePk(senderType, senderId),
+    sk: inviteSk(receiverEmail),
+  };
+}
 
 export async function getSentInvites<Limit extends number>(
   dynamo: DynamoClient,
   senderId: string,
-  senderType: "user" | "admin",
+  senderType: SenderType,
   limit?: Limit
 ): GetInvitesResponse<Limit> {
   return await dynamo.parsedQuery({
-    pk: `${senderType.toUpperCase()}#${senderId}`,
+    pk: invitePk(senderType, senderId),
     sk: { q: kInviteSkPrefix, op: "BEGINS_WITH" },
     limit: limit,
     parseShape: kInviteParser,
@@ -27,38 +48,18 @@ export async function getReceivedInvites<Limit extends number>(
   limit?: Limit
 ): GetInvitesResponse<Limit> {
   return await dynamo.parsedQuery({
-    pk: `${kInviteSkPrefix}${receiverEmail}`,
+    pk: inviteSk(receiverEmail),
     table: "inverted",
     limit: limit,
     parseShape: kInviteParser,
   });
 }
 
-export function createInviteParameters(params: {
-  senderId: string;
-  receiverEmail: string;
-  senderType: "user" | "admin";
-  gymId: string;
-}): PutParams {
-  return {
-    pk: `${params.senderType.toUpperCase()}#${params.senderId}`,
-    sk: `${kInviteSkPrefix}${params.receiverEmail}`,
-    data: inviteToDynamo({
-      ...params,
-      createdAt: new Date(),
-      senderType: params.senderType,
-    }),
-  };
-}
-
-export function deleteInvite(
+export async function deleteInvite(
   dynamo: DynamoClient,
   senderId: string,
   receiverEmail: string,
-  senderType: "user" | "admin"
+  senderType: SenderType
 ): Promise<void> {
-  return dynamo.delete({
-    pk: `${senderType.toUpperCase()}#${senderId}`,
-    sk: `${kInviteSkPrefix}${receiverEmail}`,
-  });
+  await dynamo.delete(inviteKey(senderType, senderId, receiverEmail));
 }

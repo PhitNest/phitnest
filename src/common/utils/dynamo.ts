@@ -30,7 +30,10 @@ export type PartitionKey = { pk: string };
  */
 export type RowKey = PartitionKey & { sk?: string };
 
-type TableNames = "base" | "inverted";
+/**
+ * These are the tables that are available in the database.
+ */
+export type TableNames = "base" | "inverted";
 
 /**
  * Allows you to query multiple rows at once. Queries by equality on PK and by operator on SK.

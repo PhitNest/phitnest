@@ -11,6 +11,17 @@ import * as uuid from "uuid";
 const kGymPk = "GYMS";
 const kGymSkPrefix = "GYM#";
 
+export function gymSk(id: string) {
+  return `${kGymSkPrefix}${id}`;
+}
+
+export function gymKey(id: string) {
+  return {
+    pk: kGymPk,
+    sk: gymSk(id),
+  };
+}
+
 export async function createGymWithLocation(
   dynamo: DynamoClient,
   params: {
@@ -29,8 +40,7 @@ export async function createGymWithLocation(
     gymLocation: params.location,
   };
   await dynamo.put({
-    pk: kGymPk,
-    sk: `${kGymSkPrefix}${gym.id}`,
+    ...gymKey(gym.id),
     data: gymToDynamo(gym),
   });
   return gym;
@@ -42,7 +52,7 @@ export async function getGym(
 ): Promise<Gym | ResourceNotFoundError> {
   return await dynamo.parsedQuery({
     pk: kGymPk,
-    sk: { q: `${kGymSkPrefix}${id}`, op: "EQ" },
+    sk: { q: gymSk(id), op: "EQ" },
     parseShape: kGymParser,
   });
 }

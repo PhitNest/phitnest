@@ -1,8 +1,19 @@
 import { Admin, adminToDynamo, kAdminParser } from "common/entities";
-import { DynamoClient, ResourceNotFoundError } from "common/utils";
+import { DynamoClient, ResourceNotFoundError, RowKey } from "common/utils";
 
 const kAdminPk = "ADMINS";
 const kAdminSkPrefix = "ADMIN#";
+
+export function adminSk(id: string) {
+  return `${kAdminSkPrefix}${id}`;
+}
+
+export function adminKey(id: string): RowKey {
+  return {
+    pk: kAdminPk,
+    sk: adminSk(id),
+  };
+}
 
 export async function createAdmin(
   dynamo: DynamoClient,
@@ -15,8 +26,7 @@ export async function createAdmin(
     createdAt: new Date(),
   };
   await dynamo.put({
-    pk: kAdminPk,
-    sk: `${kAdminSkPrefix}${id}`,
+    ...adminKey(id),
     data: adminToDynamo(admin),
   });
   return admin;
@@ -28,7 +38,7 @@ export async function getAdmin(
 ): Promise<Admin | ResourceNotFoundError> {
   return await dynamo.parsedQuery({
     pk: kAdminPk,
-    sk: { q: `${kAdminSkPrefix}${id}`, op: "EQ" },
+    sk: { q: adminSk(id), op: "EQ" },
     parseShape: kAdminParser,
   });
 }

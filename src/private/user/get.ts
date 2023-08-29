@@ -26,9 +26,7 @@ export async function invoke(
       if (user instanceof RequestError) {
         return user;
       }
-      return new Success(user);
-    } else {
-      return new Success(user);
     }
+    return new Success(user);
   });
 }

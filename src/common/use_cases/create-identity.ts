@@ -1,13 +1,17 @@
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
 import * as uuid from "uuid";
-import { User } from "common/entities";
 import {
-  createFriendshipParams,
-  createUserExploreParams,
+  User,
+  friendshipWithoutMessageToDynamo,
+  userToDynamo,
+} from "common/entities";
+import {
+  friendshipKey,
   getUserExplore,
   getUserWithoutIdentity,
   newUserKey,
+  userKey,
 } from "common/repositories";
 import {
   DynamoClient,
@@ -60,7 +64,12 @@ export async function createIdentity(
   };
   const transaction: TransactionParams = {
     deletes: [newUserKey(userWithIdentity.id)],
-    puts: [createUserExploreParams(userWithIdentity)],
+    puts: [
+      {
+        ...userKey(userWithIdentity.id, userWithIdentity.invite.gymId),
+        data: userToDynamo(userWithIdentity),
+      },
+    ],
   };
   if (userWithIdentity.invite.senderType === "user") {
     const sender = await getUserExplore(
@@ -70,10 +79,12 @@ export async function createIdentity(
     if (sender instanceof ResourceNotFoundError) {
       return sender;
     }
-    transaction.puts?.push(
-      createFriendshipParams({
+    transaction.puts?.push({
+      ...friendshipKey(sender.id, userWithIdentity.id),
+      data: friendshipWithoutMessageToDynamo({
         id: uuid.v4(),
         createdAt: new Date(),
+        acceptedAt: new Date(),
         receiver: {
           id: userWithIdentity.id,
           firstName: userWithIdentity.firstName,
@@ -82,8 +93,9 @@ export async function createIdentity(
           createdAt: userWithIdentity.createdAt,
         },
         sender: sender,
-      })
-    );
+        __poly__: "FriendshipWithoutMessage",
+      }),
+    });
   }
   await dynamo.writeTransaction(transaction);
   return userWithIdentity;

@@ -1,8 +1,6 @@
 import { APIGatewayProxyResult } from "aws-lambda";
 import { ZodError, z } from "zod";
 
-export const kPolyKey = "__poly__";
-
 /**
  * Return this to reply with a status code 200.
  */

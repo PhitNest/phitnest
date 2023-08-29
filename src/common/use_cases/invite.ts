@@ -1,9 +1,10 @@
+import { inviteToDynamo } from "common/entities";
 import {
-  createDecrementNumInvitesParameters,
-  createInviteParameters,
   getGym,
   getReceivedInvites,
   getUser,
+  inviteKey,
+  userKey,
 } from "common/repositories";
 import {
   DynamoClient,
@@ -29,7 +30,14 @@ export async function adminInvite(
   if (gym instanceof ResourceNotFoundError) {
     return gym;
   }
-  await dynamo.put(createInviteParameters({ ...params, senderType: "admin" }));
+  await dynamo.put({
+    ...inviteKey("admin", params.senderId, params.receiverEmail),
+    data: inviteToDynamo({
+      ...params,
+      senderType: "admin",
+      createdAt: new Date(),
+    }),
+  });
 }
 
 export async function userInvite(
@@ -52,17 +60,22 @@ export async function userInvite(
   if (sender.numInvites > 0) {
     await dynamo.writeTransaction({
       updates: [
-        createDecrementNumInvitesParameters(
-          params.senderId,
-          sender.invite.gymId
-        ),
+        {
+          ...userKey(params.senderId, sender.invite.gymId),
+          expression: "SET numInvites = numInvites - 1",
+          varMap: {},
+        },
       ],
       puts: [
-        createInviteParameters({
-          ...params,
-          gymId: sender.invite.gymId,
-          senderType: "user",
-        }),
+        {
+          ...inviteKey("user", params.senderId, params.receiverEmail),
+          data: inviteToDynamo({
+            ...params,
+            gymId: sender.invite.gymId,
+            senderType: "user",
+            createdAt: new Date(),
+          }),
+        },
       ],
     });
   } else {
