@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:phitnest_core/core.dart';
 
-import 'screens/home/home.dart';
-import 'screens/login/login.dart';
+import 'pages/pages.dart';
 
 Future<void> main() => runPhitNest(
       useAdminAuth: false,
@@ -11,7 +10,7 @@ Future<void> main() => runPhitNest(
           Navigator.pushAndRemoveUntil(
         context,
         CupertinoPageRoute<void>(
-          builder: (context) => HomeScreen(apiInfo: session.apiInfo),
+          builder: (context) => HomePage(apiInfo: session.apiInfo),
         ),
         (_) => false,
       ),
@@ -19,7 +18,7 @@ Future<void> main() => runPhitNest(
           Navigator.pushAndRemoveUntil(
         context,
         CupertinoPageRoute<void>(
-          builder: (context) => LoginScreen(apiInfo: apiInfo),
+          builder: (context) => LoginPage(apiInfo: apiInfo),
         ),
         (_) => false,
       ),

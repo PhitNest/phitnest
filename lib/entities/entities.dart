@@ -1,2 +1,2 @@
-export 'get_user_response.dart';
+export 'responses/responses.dart';
 export 'user.dart';
