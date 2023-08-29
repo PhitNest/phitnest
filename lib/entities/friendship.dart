@@ -14,7 +14,8 @@ sealed class Friendship extends JsonPolymorphic<Friendship> {
   String get createdAt => createdAtJson.value;
 
   factory Friendship.polymorphicParse(Map<String, dynamic> json) =>
-      JsonPolymorphic.polymorphicParse(json, [FriendRequest.parser]);
+      JsonPolymorphic.polymorphicParse(
+          json, [FriendRequest.parser, FriendshipWithoutMessage.parser]);
 
   Friendship.parse(super.json) : super.parse();
 
