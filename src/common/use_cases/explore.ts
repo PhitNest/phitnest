@@ -21,7 +21,7 @@ export async function exploreUsers(
     if (friendships instanceof RequestError) {
       return friendships;
     }
-    const removeUserIds = new Set<string>();
+    const removeUserIds = new Set<string>([user.id]);
     for (const friendship of friendships) {
       if (friendship.__poly__ === "FriendRequest") {
         if (user.id === friendship.sender.id) {
