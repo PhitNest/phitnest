@@ -1,9 +1,12 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
-import { dynamo, Success, getUserClaims, handleRequest } from "common/utils";
+import { getFriendships } from "common/repositories";
 import {
-  getFriendshipsWithMessages,
-  getReceivedFriendRequests,
-} from "common/repositories";
+  dynamo,
+  Success,
+  getUserClaims,
+  handleRequest,
+  RequestError,
+} from "common/utils";
 
 export async function invoke(
   event: APIGatewayEvent
@@ -11,13 +14,10 @@ export async function invoke(
   return handleRequest(async () => {
     const userClaims = getUserClaims(event);
     const client = dynamo();
-    const [friendships, receivedFriendRequests] = await Promise.all([
-      getFriendshipsWithMessages(client, userClaims.sub),
-      getReceivedFriendRequests(client, userClaims.sub),
-    ]);
-    return new Success({
-      friendships: friendships,
-      friendRequests: receivedFriendRequests,
-    });
+    const response = await getFriendships(client, userClaims.sub);
+    if (response instanceof RequestError) {
+      return response;
+    }
+    return new Success(response);
   });
 }

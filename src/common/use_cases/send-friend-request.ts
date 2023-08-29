@@ -1,11 +1,8 @@
 import { FriendRequest, FriendshipWithoutMessage } from "common/entities";
 import {
   createFriendRequest,
-  createFriendRequestKey,
-  createFriendshipParams,
+  createFriendship,
   getFriendship,
-  getReceivedFriendRequests,
-  getSentFriendRequests,
   getUserExplore,
 } from "common/repositories";
 import {
@@ -13,63 +10,40 @@ import {
   RequestError,
   ResourceNotFoundError,
 } from "common/utils";
-import * as uuid from "uuid";
 
 export async function sendFriendRequest(
   dynamo: DynamoClient,
   senderId: string,
   receiverId: string
-): Promise<
-  | ((FriendRequest | FriendshipWithoutMessage) & {
-      kPolyKey: string;
-    })
-  | RequestError
-> {
-  const [receivedRequest, sentRequest, friendship, sender, receiver] =
-    await Promise.all([
-      getReceivedFriendRequests(dynamo, senderId),
-      getSentFriendRequests(dynamo, senderId),
-      getFriendship(dynamo, senderId, receiverId),
-      getUserExplore(dynamo, senderId),
-      getUserExplore(dynamo, receiverId),
-    ]);
+): Promise<FriendRequest | FriendshipWithoutMessage | RequestError> {
+  const [friendship, sender, receiver] = await Promise.all([
+    getFriendship(dynamo, senderId, receiverId),
+    getUserExplore(dynamo, senderId),
+    getUserExplore(dynamo, receiverId),
+  ]);
   if (receiver instanceof ResourceNotFoundError) {
     return receiver;
   } else if (sender instanceof ResourceNotFoundError) {
     return sender;
-  } else if (friendship instanceof ResourceNotFoundError) {
-    if (sentRequest instanceof ResourceNotFoundError) {
-      if (receivedRequest instanceof ResourceNotFoundError) {
-        const request = await createFriendRequest(dynamo, sender, receiver);
-        return {
-          ...request,
-          kPolyKey: "FriendRequest",
-        };
-      } else {
-        const friendshipCreatedAt = new Date();
-        const friendshipId = uuid.v4();
-        const friendship: FriendshipWithoutMessage = {
-          receiver: sender,
-          sender: receiver,
-          createdAt: friendshipCreatedAt,
-          id: friendshipId,
-        };
-        await dynamo.writeTransaction({
-          deletes: [createFriendRequestKey(sender.id, receiver.id)],
-          puts: [createFriendshipParams(friendship)],
-        });
-        return {
-          ...friendship,
-          kPolyKey: "Friendship",
-        };
-      }
-    } else {
-      return new RequestError(
-        "FriendRequestExists",
-        "Outgoing friend request already exists"
-      );
-    }
+  } else if (friendship instanceof RequestError) {
+    const request = await createFriendRequest(dynamo, sender, receiver);
+    return request;
   } else {
-    return new RequestError("FriendshipExists", "Friendship already exists");
+    switch (friendship.__poly__) {
+      case "FriendRequest":
+        if (friendship.sender.id === senderId) {
+          return new RequestError(
+            "FriendRequestExists",
+            "Outgoing friend request already exists"
+          );
+        } else {
+          return await createFriendship(dynamo, friendship);
+        }
+      default:
+        return new RequestError(
+          "FriendshipExists",
+          "Friendship already exists"
+        );
+    }
   }
 }
