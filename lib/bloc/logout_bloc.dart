@@ -11,8 +11,7 @@ extension LogoutBlocGetter on BuildContext {
   LogoutBloc get logoutBloc => authLoader();
 }
 
-LogoutBloc createLogoutBloc(ApiInfo apiInfo, BuildContext context) =>
-    LogoutBloc(
+LogoutBloc logoutBloc(ApiInfo apiInfo, BuildContext context) => LogoutBloc(
       apiInfo: apiInfo,
       load: (_, session) async {
         await logout(session);
