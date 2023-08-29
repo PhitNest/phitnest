@@ -21,17 +21,19 @@ export async function exploreUsers(
     if (friendships instanceof RequestError) {
       return friendships;
     }
+    const removeUserIds = new Set<string>();
+    for (const friendship of friendships) {
+      if (friendship.__poly__ === "FriendRequest") {
+        if (user.id === friendship.sender.id) {
+          removeUserIds.add(friendship.receiver.id);
+        }
+      } else {
+        removeUserIds.add(friendship.sender.id);
+        removeUserIds.add(friendship.receiver.id);
+      }
+    }
     return await Promise.all(
-      othersAtGym.filter((other) => {
-        return (
-          user.id !== other.id &&
-          !friendships.some(
-            (friendship) =>
-              friendship.receiver.id === other.id ||
-              friendship.sender.id === other.id
-          )
-        );
-      })
+      othersAtGym.filter((other) => removeUserIds.has(other.id))
     );
   }
 }
