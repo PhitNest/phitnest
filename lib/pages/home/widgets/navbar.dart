@@ -87,7 +87,7 @@ final class NavBarLogo extends StatelessWidget {
               NavBarPage.explore => exploreUsers.isNotEmpty
                   ? NavBarAnimation(state: state)
                   : _image(0, state),
-              _ => _image(1, state),
+              _ => _image(0, state),
             },
         });
   }
