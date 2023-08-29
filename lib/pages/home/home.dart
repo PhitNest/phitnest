@@ -43,7 +43,7 @@ final class HomePage extends StatelessWidget {
               ],
             ),
             BlocProvider(
-              create: (context) => createLogoutBloc(apiInfo, context),
+              create: (context) => logoutBloc(apiInfo, context),
               child: LogoutConsumer(
                 listener: handleLogoutStateChanged,
                 builder: (context, logoutState) => switch (logoutState) {
