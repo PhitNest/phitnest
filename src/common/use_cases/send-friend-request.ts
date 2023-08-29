@@ -19,7 +19,12 @@ export async function sendFriendRequest(
   dynamo: DynamoClient,
   senderId: string,
   receiverId: string
-): Promise<FriendRequest | FriendshipWithoutMessage | RequestError> {
+): Promise<
+  | ((FriendRequest | FriendshipWithoutMessage) & {
+      kPolyKey: string;
+    })
+  | RequestError
+> {
   const [receivedRequest, sentRequest, friendship, sender, receiver] =
     await Promise.all([
       getReceivedFriendRequests(dynamo, senderId),
@@ -36,7 +41,10 @@ export async function sendFriendRequest(
     if (sentRequest instanceof ResourceNotFoundError) {
       if (receivedRequest instanceof ResourceNotFoundError) {
         const request = await createFriendRequest(dynamo, sender, receiver);
-        return request;
+        return {
+          ...request,
+          kPolyKey: "FriendRequest",
+        };
       } else {
         const friendshipCreatedAt = new Date();
         const friendshipId = uuid.v4();
@@ -50,7 +58,10 @@ export async function sendFriendRequest(
           deletes: [createFriendRequestKey(sender.id, receiver.id)],
           puts: [createFriendshipParams(friendship)],
         });
-        return friendship;
+        return {
+          ...friendship,
+          kPolyKey: "Friendship",
+        };
       }
     } else {
       return new RequestError(
