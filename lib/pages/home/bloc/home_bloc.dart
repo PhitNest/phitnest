@@ -39,7 +39,7 @@ sealed class HomeLoadedBaseState extends HomeState {
   }) : super();
 
   @override
-  List<Object?> get props => [super.props, exploreUsers];
+  List<Object?> get props => [...super.props, exploreUsers];
 }
 
 final class HomeLoadedState extends HomeLoadedBaseState {
@@ -79,7 +79,7 @@ final class HomeSendingFriendRequestState extends HomeLoadedBaseState {
   }) : super();
 
   @override
-  List<Object?> get props => [super.props, userIndex, user];
+  List<Object?> get props => [...super.props, userIndex, user];
 }
 
 final class HomeMatchedState extends HomeLoadedBaseState {

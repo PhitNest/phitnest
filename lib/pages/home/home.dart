@@ -8,6 +8,7 @@ import 'package:phitnest_core/core.dart';
 
 import '../../constants/constants.dart';
 import '../../entities/entities.dart';
+import '../../repositories/repositories.dart';
 import '../../use_cases/use_cases.dart';
 import '../../widgets/widgets.dart';
 import '../login/login.dart';
@@ -17,6 +18,7 @@ import 'widgets/widgets.dart';
 part 'bloc/explore_bloc.dart';
 part 'bloc/home_bloc.dart';
 part 'bloc/user_bloc.dart';
+part 'bloc/send_friend_request.dart';
 
 class HomePage extends StatelessWidget {
   final ApiInfo apiInfo;
@@ -32,6 +34,17 @@ class HomePage extends StatelessWidget {
       ),
       (_) => false,
     );
+  }
+
+  void handleHomeStateChanged(BuildContext context, HomeState homeState) {
+    switch (homeState) {
+      case HomeSendingFriendRequestState(user: final user):
+        context.sendFriendRequestBloc.add(
+          LoaderLoadEvent(
+              (data: user.user.id, sessionLoader: context.sessionLoader)),
+        );
+      default:
+    }
   }
 
   void handleLogoutStateChanged(
@@ -146,6 +159,12 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
+            BlocProvider(
+              create: (context) => SendFriendRequestBloc(
+                apiInfo: apiInfo,
+                load: sendFriendRequest,
+              ),
+            ),
             BlocProvider(create: (context) => logoutBloc(apiInfo, context)),
             BlocProvider(
               create: (_) => HomeBloc(),
@@ -176,7 +195,7 @@ class HomePage extends StatelessWidget {
                                     listener: handleExploreStateChanged,
                                     builder: (context, exploreState) =>
                                         BlocConsumer<HomeBloc, HomeState>(
-                                      listener: (context, homeState) {},
+                                      listener: handleHomeStateChanged,
                                       builder: (context, homeState) => NavBar(
                                         state: homeState,
                                         builder: (context) => Expanded(
