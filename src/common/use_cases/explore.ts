@@ -33,7 +33,7 @@ export async function exploreUsers(
       }
     }
     return await Promise.all(
-      othersAtGym.filter((other) => removeUserIds.has(other.id))
+      othersAtGym.filter((other) => !removeUserIds.has(other.id))
     );
   }
 }
