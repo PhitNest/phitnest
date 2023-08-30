@@ -15,36 +15,34 @@ final class StyledIndicator extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        child,
-        Visibility(
-          visible: count > 0,
-          child: Positioned(
-            right: offset.width,
-            top: offset.height,
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 9.w,
-                vertical: 2.5.h,
-              ),
-              decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(32.r),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                count.toString(),
-                style: theme.textTheme.bodySmall!.copyWith(
-                  color: Colors.white,
+  Widget build(BuildContext context) => Stack(
+        children: [
+          child,
+          Visibility(
+            visible: count > 0,
+            child: Positioned(
+              right: offset.width,
+              top: offset.height,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 9.w,
+                  vertical: 2.5.h,
+                ),
+                decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(32.r),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  count.toString(),
+                  style: theme.textTheme.bodySmall!.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 }

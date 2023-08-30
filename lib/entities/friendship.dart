@@ -2,7 +2,7 @@ import 'package:json_types/json.dart';
 
 import 'user.dart';
 
-sealed class Friendship extends JsonPolymorphic<Friendship> {
+sealed class FriendshipResponse extends JsonPolymorphic<FriendshipResponse> {
   final idJson = Json.string('id');
   final senderJson = Json.object('sender', User.parser);
   final receiverJson = Json.object('receiver', User.parser);
@@ -13,15 +13,15 @@ sealed class Friendship extends JsonPolymorphic<Friendship> {
   User get receiver => receiverJson.value;
   String get createdAt => createdAtJson.value;
 
-  factory Friendship.polymorphicParse(Map<String, dynamic> json) =>
+  factory FriendshipResponse.polymorphicParse(Map<String, dynamic> json) =>
       JsonPolymorphic.polymorphicParse(
           json, [FriendRequest.parser, FriendshipWithoutMessage.parser]);
 
-  Friendship.parse(super.json) : super.parse();
+  FriendshipResponse.parse(super.json) : super.parse();
 
-  Friendship.parser() : super();
+  FriendshipResponse.parser() : super();
 
-  Friendship.populated({
+  FriendshipResponse.populated({
     required String id,
     required User sender,
     required User receiver,
@@ -38,7 +38,7 @@ sealed class Friendship extends JsonPolymorphic<Friendship> {
       [idJson, senderJson, receiverJson, createdAtJson];
 }
 
-final class FriendRequest extends Friendship {
+final class FriendRequest extends FriendshipResponse {
   FriendRequest.parse(super.json) : super.parse();
 
   FriendRequest.parser() : super.parser();
@@ -51,7 +51,7 @@ final class FriendRequest extends Friendship {
   }) : super.populated();
 }
 
-final class FriendshipWithoutMessage extends Friendship {
+final class FriendshipWithoutMessage extends FriendshipResponse {
   final acceptedAtJson = Json.string('acceptedAt');
 
   String get acceptedAt => acceptedAtJson.value;

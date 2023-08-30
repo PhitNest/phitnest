@@ -1,7 +1,5 @@
 part of '../home.dart';
 
-enum NavBarPage { news, explore, chat, options }
-
 sealed class HomeState extends Equatable {
   final NavBarPage page;
   String? get logoAssetPath;
