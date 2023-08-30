@@ -2,7 +2,7 @@ import 'package:phitnest_core/core.dart';
 
 import '../entities/friendship.dart';
 
-Future<HttpResponse<Friendship>> sendFriendRequest(
+Future<HttpResponse<FriendshipResponse>> sendFriendRequest(
   String receiverId,
   Session session,
 ) =>
@@ -14,5 +14,5 @@ Future<HttpResponse<Friendship>> sendFriendRequest(
         'receiverId': receiverId,
       },
       parse: (json) =>
-          Friendship.polymorphicParse(json as Map<String, dynamic>),
+          FriendshipResponse.polymorphicParse(json as Map<String, dynamic>),
     );
