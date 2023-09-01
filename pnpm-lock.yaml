@@ -14,9 +14,9 @@ importers:
 
   apps/admin:
     dependencies:
-      core:
+      dart-core:
         specifier: workspace:*
-        version: link:../../packages/core
+        version: link:../../packages/dart-core
 
   apps/aws:
     dependencies:
@@ -72,9 +72,9 @@ importers:
 
   apps/mobile:
     dependencies:
-      core:
+      dart-core:
         specifier: workspace:*
-        version: link:../../packages/core
+        version: link:../../packages/dart-core
 
   packages/api:
     dependencies:
@@ -152,13 +152,24 @@ importers:
         specifier: ^5.1.6
         version: 5.2.2
 
-  packages/core:
+  packages/aws-config-to-dart: {}
+
+  packages/dart-analysis: {}
+
+  packages/dart-core:
     dependencies:
+      aws-config-to-dart:
+        specifier: workspace:*
+        version: link:../aws-config-to-dart
       dart-analysis:
         specifier: workspace:*
         version: link:../dart-analysis
 
-  packages/dart-analysis: {}
+  packages/dart-ui:
+    dependencies:
+      dart-analysis:
+        specifier: workspace:*
+        version: link:../dart-analysis
 
   packages/tsconfigs: {}
 
