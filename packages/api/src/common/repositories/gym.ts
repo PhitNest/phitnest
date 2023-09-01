@@ -29,7 +29,7 @@ export async function createGymWithLocation(
     name: string;
     address: Address;
     location: Location;
-  }
+  },
 ): Promise<Gym> {
   const gym = {
     id: uuid.v4(),
@@ -48,7 +48,7 @@ export async function createGymWithLocation(
 
 export async function getGym(
   dynamo: DynamoClient,
-  id: string
+  id: string,
 ): Promise<Gym | ResourceNotFoundError> {
   return await dynamo.parsedQuery({
     pk: kGymPk,

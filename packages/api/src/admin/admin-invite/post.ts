@@ -15,7 +15,7 @@ const validator = z.object({
 });
 
 export async function invoke(
-  event: APIGatewayEvent
+  event: APIGatewayEvent,
 ): Promise<APIGatewayProxyResult> {
   return validateRequest({
     data: JSON.parse(event.body ?? "{}"),

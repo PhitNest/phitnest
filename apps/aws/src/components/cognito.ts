@@ -42,25 +42,23 @@ export class CognitoStack extends Construct {
       sesRegion: props.region,
     });
     const userPoolPrefix = "PhitnestUser";
-    if (false) {
       const userPresignupDeploymentDir = path.join(
         props.cognitoHookDeploymentDir,
-        "user_presignup"
+        "user_presignup",
       );
       createDeploymentPackage(
         path.join(props.cognitoHookSrcDir, "user-presignup.ts"),
         props.nodeModulesDir,
         props.commonDir,
-        userPresignupDeploymentDir
+        userPresignupDeploymentDir,
       );
-      this.createPresignupHook(
+     const userPresignupHook = this.createPresignupHook(
         scope,
         props.dynamoTableName,
         props.dynamoTableRole,
         userPoolPrefix,
-        userPresignupDeploymentDir
+        userPresignupDeploymentDir,
       );
-    }
     this.userPool = new UserPool(
       scope,
       `${userPoolPrefix}Pool-${props.deploymentEnv}`,
@@ -80,9 +78,9 @@ export class CognitoStack extends Construct {
           },
         },
         lambdaTriggers: {
-          // preSignUp: userPresignupHook,
+          preSignUp: userPresignupHook,
         },
-      }
+      },
     );
     this.userPool.applyRemovalPolicy(RemovalPolicy.DESTROY);
     const userClient = this.createClient(scope, this.userPool, userPoolPrefix);
@@ -100,30 +98,28 @@ export class CognitoStack extends Construct {
             clientId: userClient.userPoolClientId,
           },
         ],
-      }
+      },
     );
     userIdentityPool.applyRemovalPolicy(RemovalPolicy.DESTROY);
     this.userIdentityPoolId = userIdentityPool.ref;
     const adminPoolPrefix = "PhitnestAdmin";
-    if (false) {
       const adminPresignupDeploymentDir = path.join(
         props.cognitoHookDeploymentDir,
-        "admin_presignup"
+        "admin_presignup",
       );
       createDeploymentPackage(
         path.join(props.cognitoHookSrcDir, "admin-presignup.ts"),
         props.nodeModulesDir,
         props.commonDir,
-        adminPresignupDeploymentDir
+        adminPresignupDeploymentDir,
       );
-      this.createPresignupHook(
+    const adminPresignupHook =  this.createPresignupHook(
         scope,
         props.dynamoTableName,
         props.dynamoTableRole,
         adminPoolPrefix,
-        adminPresignupDeploymentDir
+        adminPresignupDeploymentDir,
       );
-    }
     this.adminPool = new UserPool(
       scope,
       `${adminPoolPrefix}Pool-${props.deploymentEnv}`,
@@ -143,15 +139,15 @@ export class CognitoStack extends Construct {
           },
         },
         lambdaTriggers: {
-          // preSignUp: adminPresignupHook,
+          preSignUp: adminPresignupHook,
         },
-      }
+      },
     );
     this.adminPool.applyRemovalPolicy(RemovalPolicy.DESTROY);
     const adminClient = this.createClient(
       scope,
       this.adminPool,
-      adminPoolPrefix
+      adminPoolPrefix,
     );
     adminClient.applyRemovalPolicy(RemovalPolicy.DESTROY);
     this.adminClientId = adminClient.userPoolClientId;
@@ -162,7 +158,7 @@ export class CognitoStack extends Construct {
     dynamoTableName: string,
     apiRole: Role,
     prefix: string,
-    deploymentDir: string
+    deploymentDir: string,
   ) {
     const hook = new Function(
       scope,
@@ -175,7 +171,7 @@ export class CognitoStack extends Construct {
         },
         code: Code.fromAsset(deploymentDir),
         role: apiRole,
-      }
+      },
     );
     hook.applyRemovalPolicy(RemovalPolicy.DESTROY);
     return hook;
@@ -184,12 +180,12 @@ export class CognitoStack extends Construct {
   private createClient(
     scope: Construct,
     pool: UserPool,
-    prefix: string
+    prefix: string,
   ): UserPoolClient {
     const client = new UserPoolClient(
       scope,
       `${prefix}Client-${this.props.deploymentEnv}`,
-      { userPool: pool }
+      { userPool: pool },
     );
     client.applyRemovalPolicy(RemovalPolicy.DESTROY);
     return client;

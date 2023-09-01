@@ -14,7 +14,7 @@ import {
 
 export async function deleteUserAccount(
   dynamo: DynamoClient,
-  id: string
+  id: string,
 ): Promise<void | ResourceNotFoundError> {
   const [user, friendships, invites] = await Promise.all([
     getUserWithoutIdentity(dynamo, id),
@@ -29,10 +29,10 @@ export async function deleteUserAccount(
     await Promise.all([
       deleteUser(dynamo, { id: id, gymId: user.invite.gymId }),
       ...friendships.map((friendship) =>
-        deleteFriendship(dynamo, friendship.sender.id, friendship.receiver.id)
+        deleteFriendship(dynamo, friendship.sender.id, friendship.receiver.id),
       ),
       ...invites.map((invite) =>
-        deleteInvite(dynamo, invite.senderId, invite.receiverEmail, "user")
+        deleteInvite(dynamo, invite.senderId, invite.receiverEmail, "user"),
       ),
     ]);
   }

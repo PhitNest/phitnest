@@ -3,11 +3,13 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "eslint-configs": "workspace:*",
     "jest": "^29.6.1",
+    "eslint": "^8.44.0",
     "tsconfigs": "workspace:*"
   }
 }

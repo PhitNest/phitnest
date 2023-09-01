@@ -18,7 +18,7 @@ export function adminKey(id: string): RowKey {
 export async function createAdmin(
   dynamo: DynamoClient,
   id: string,
-  email: string
+  email: string,
 ): Promise<Admin> {
   const admin = {
     id: id,
@@ -34,7 +34,7 @@ export async function createAdmin(
 
 export async function getAdmin(
   dynamo: DynamoClient,
-  id: string
+  id: string,
 ): Promise<Admin | ResourceNotFoundError> {
   return await dynamo.parsedQuery({
     pk: kAdminPk,

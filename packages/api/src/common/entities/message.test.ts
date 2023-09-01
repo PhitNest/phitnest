@@ -22,7 +22,7 @@ describe("Message", () => {
 
   it("deserializes from dynamo", () => {
     expect(parseDynamo(kSerializedMessage, kMessageParser)).toEqual(
-      kTestMessage
+      kTestMessage,
     );
   });
 });

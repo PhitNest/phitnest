@@ -7,13 +7,13 @@ import * as fs from "fs";
 export const tsconfig: TranspileOptions = JSON.parse(
   fs.readFileSync(path.join(process.cwd(), "tsconfig.json"), {
     encoding: "utf-8",
-  })
+  }),
 );
 
 export function transpileFiles(
   srcDir: string,
   outputDir: string,
-  ignoreTests = true
+  ignoreTests = true,
 ) {
   for (const file of getFilesRecursive(srcDir)) {
     if (file.endsWith(".ts") && !(ignoreTests && file.endsWith(".test.ts"))) {
@@ -33,13 +33,13 @@ export function createDeploymentPackage(
   sourcePath: string,
   nodeModulesDir: string,
   commonDir: string,
-  outputDir: string
+  outputDir: string,
 ) {
   fs.mkdirSync(outputDir, { recursive: true });
   const source = fs.readFileSync(sourcePath, { encoding: "utf-8" });
   fs.writeFileSync(
     path.join(outputDir, "index.js"),
-    transpileModule(source, tsconfig).outputText
+    transpileModule(source, tsconfig).outputText,
   );
   fse.copySync(nodeModulesDir, path.join(outputDir, "node_modules"), {
     dereference: true,

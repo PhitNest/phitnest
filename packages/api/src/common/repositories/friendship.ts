@@ -39,7 +39,7 @@ export function friendshipKey(senderId: string, receiverId: string): RowKey {
 
 export function friendshipInvertedKey(
   senderId: string,
-  receiverId: string
+  receiverId: string,
 ): RowKey {
   return {
     pk: friendshipSk(receiverId),
@@ -48,7 +48,7 @@ export function friendshipInvertedKey(
 }
 
 function polymorphicParseFriendship(
-  data: Record<string, AttributeValue>
+  data: Record<string, AttributeValue>,
 ): FriendRequest | FriendshipWithoutMessage | Friendship {
   switch (data.__poly__.S) {
     case "FriendRequest":
@@ -60,20 +60,20 @@ function polymorphicParseFriendship(
     default:
       throw new RequestError(
         "InvalidFriendshipType",
-        "Invalid friendship type"
+        "Invalid friendship type",
       );
   }
 }
 
 const kNoFriendshipFound = new RequestError(
   "NoFriendshipFound",
-  "No friendship found between users"
+  "No friendship found between users",
 );
 
 export async function getFriendship(
   dynamo: DynamoClient,
   userId: string,
-  friendId: string
+  friendId: string,
 ): Promise<
   FriendRequest | FriendshipWithoutMessage | Friendship | RequestError
 > {
@@ -93,7 +93,7 @@ export async function getFriendship(
     return kNoFriendshipFound;
   } else {
     const friendship = friendships.find(
-      (friendship) => !(friendship instanceof ResourceNotFoundError)
+      (friendship) => !(friendship instanceof ResourceNotFoundError),
     );
     if (friendship) {
       if (friendship instanceof ResourceNotFoundError) {
@@ -108,7 +108,7 @@ export async function getFriendship(
 
 export async function getFriendships(
   dynamo: DynamoClient,
-  userId: string
+  userId: string,
 ): Promise<
   (FriendRequest | FriendshipWithoutMessage | Friendship)[] | RequestError
 > {
@@ -132,7 +132,7 @@ export async function getFriendships(
 export async function createFriendRequest(
   dynamo: DynamoClient,
   sender: UserExplore,
-  receiver: UserExplore
+  receiver: UserExplore,
 ): Promise<FriendRequest> {
   const friendRequest: FriendRequest = {
     id: uuid.v4(),
@@ -150,7 +150,7 @@ export async function createFriendRequest(
 
 export async function createFriendship(
   dynamo: DynamoClient,
-  friendRequest: FriendRequest
+  friendRequest: FriendRequest,
 ): Promise<FriendshipWithoutMessage> {
   const friendship: FriendshipWithoutMessage = {
     ...friendRequest,
@@ -171,7 +171,7 @@ export async function createFriendship(
 export async function deleteFriendship(
   dynamo: DynamoClient,
   senderId: string,
-  receiverId: string
+  receiverId: string,
 ) {
   await dynamo.delete(friendshipKey(senderId, receiverId));
 }

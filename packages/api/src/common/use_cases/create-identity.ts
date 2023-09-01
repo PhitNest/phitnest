@@ -24,7 +24,7 @@ import {
 export async function createIdentity(
   dynamo: DynamoClient,
   userId: string,
-  authorization: string | undefined
+  authorization: string | undefined,
 ): Promise<User | RequestError> {
   const newUser = await getUserWithoutIdentity(dynamo, userId);
   if (newUser instanceof ResourceNotFoundError) {
@@ -33,7 +33,7 @@ export async function createIdentity(
   if (!authorization) {
     return new RequestError(
       "Unauthorized",
-      "No Authorization header found on request."
+      "No Authorization header found on request.",
     );
   }
   const identityClient = new CognitoIdentityClient({
@@ -55,7 +55,7 @@ export async function createIdentity(
   if (!identity || !identity.identityId) {
     return new RequestError(
       "IdentityAuthenticationFailed",
-      "Could not authenticate with identity pool."
+      "Could not authenticate with identity pool.",
     );
   }
   const userWithIdentity: User = {
@@ -74,7 +74,7 @@ export async function createIdentity(
   if (userWithIdentity.invite.senderType === "user") {
     const sender = await getUserExplore(
       dynamo,
-      userWithIdentity.invite.senderId
+      userWithIdentity.invite.senderId,
     );
     if (sender instanceof ResourceNotFoundError) {
       return sender;

@@ -1,5 +1,5 @@
 import { HttpMethod } from "aws-cdk-lib/aws-lambda";
-import { getSharedTestDataPath } from "../test-helpers";
+import { getSharedTestDataPath } from "jest-helpers/src/test-helpers";
 import {
   getFilesRecursive,
   getRoutesFromFilesystem,
@@ -95,7 +95,7 @@ describe("getRoutesFromFilesystem", () => {
       filesystemAbsolutePath: route1GetAbsolutePath,
       filesystemRelativePath: path.relative(
         apiRoutesDir,
-        route1GetAbsolutePath
+        route1GetAbsolutePath,
       ),
     });
 
@@ -106,7 +106,7 @@ describe("getRoutesFromFilesystem", () => {
       filesystemAbsolutePath: route2GetAbsolutePath,
       filesystemRelativePath: path.relative(
         apiRoutesDir,
-        route2GetAbsolutePath
+        route2GetAbsolutePath,
       ),
     });
 
@@ -117,7 +117,7 @@ describe("getRoutesFromFilesystem", () => {
       filesystemAbsolutePath: route1PostAbsolutePath,
       filesystemRelativePath: path.relative(
         apiRoutesDir,
-        route1PostAbsolutePath
+        route1PostAbsolutePath,
       ),
     });
 
@@ -128,7 +128,7 @@ describe("getRoutesFromFilesystem", () => {
       filesystemAbsolutePath: route2PostAbsolutePath,
       filesystemRelativePath: path.relative(
         apiRoutesDir,
-        route2PostAbsolutePath
+        route2PostAbsolutePath,
       ),
     });
 

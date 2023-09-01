@@ -14,7 +14,7 @@ const validator = z.object({
 });
 
 export async function invoke(
-  event: APIGatewayEvent
+  event: APIGatewayEvent,
 ): Promise<APIGatewayProxyResult> {
   return validateRequest({
     data: JSON.parse(event.body ?? "{}"),
@@ -25,7 +25,7 @@ export async function invoke(
       const result = await sendFriendRequest(
         client,
         userClaims.sub,
-        data.receiverId
+        data.receiverId,
       );
       if (result instanceof RequestError) {
         return result;

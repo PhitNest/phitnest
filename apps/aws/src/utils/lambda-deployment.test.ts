@@ -2,7 +2,7 @@ import {
   getSharedTestDataPath,
   getTestDataPath,
   getTestOutputPath,
-} from "../test-helpers";
+} from "jest-helpers/src/test-helpers";
 import { createDeploymentPackage } from "./lambda-deployment";
 import { getFilesRecursive } from "./file-based-routing";
 import * as path from "path";
@@ -19,7 +19,7 @@ describe("createDeploymentPackage", () => {
       sourcePath,
       nodeModulesDir,
       path.join(apiSrcDir, "common"),
-      outputPath
+      outputPath,
     );
     const outputFilePath = path.join(outputPath, "index.js");
     expect(fs.existsSync(outputFilePath));
@@ -30,7 +30,7 @@ describe("createDeploymentPackage", () => {
       getTestDataPath("expected_route1_post_out", "index.js"),
       {
         encoding: "utf-8",
-      }
+      },
     );
     expect(fileData).toEqual(expectedFileData);
     const nodeModulesOutput = path.join(outputPath, "node_modules");
@@ -38,13 +38,13 @@ describe("createDeploymentPackage", () => {
       getFilesRecursive(nodeModulesOutput).map((file) => [
         path.relative(nodeModulesOutput, file),
         fs.readFileSync(file, { encoding: "utf-8" }),
-      ])
+      ]),
     );
     const expectedNodeModules = new Set(
       getFilesRecursive(nodeModulesDir).map((file) => [
         path.relative(nodeModulesDir, file),
         fs.readFileSync(file, { encoding: "utf-8" }),
-      ])
+      ]),
     );
     expect(copiedNodeModules).toEqual(expectedNodeModules);
     const commonOutput = path.join(outputPath, "common");
@@ -52,14 +52,14 @@ describe("createDeploymentPackage", () => {
       getFilesRecursive(commonOutput).map((file) => [
         path.relative(commonOutput, file),
         fs.readFileSync(file, { encoding: "utf-8" }),
-      ])
+      ]),
     );
     const expectedCommon = getTestDataPath("expected_common_out");
     const expectedCommonFiles = new Set(
       getFilesRecursive(expectedCommon).map((file) => [
         path.relative(expectedCommon, file),
         fs.readFileSync(file, { encoding: "utf-8" }),
-      ])
+      ]),
     );
     expect(copiedCommonFiles).toEqual(expectedCommonFiles);
   });

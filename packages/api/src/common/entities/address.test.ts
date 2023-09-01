@@ -22,7 +22,7 @@ describe("Address", () => {
 
   it("deserializes from dynamo", () => {
     expect(parseDynamo(kSerializedAddress, kAddressParser)).toEqual(
-      kTestAddress
+      kTestAddress,
     );
   });
 });

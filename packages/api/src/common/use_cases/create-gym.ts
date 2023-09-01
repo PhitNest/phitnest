@@ -8,7 +8,7 @@ export async function createGym(
     adminEmail: string;
     name: string;
     address: Address;
-  }
+  },
 ): Promise<Gym | RequestError> {
   const location = await getLocation(params.address);
   if (location instanceof RequestError) {

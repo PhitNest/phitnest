@@ -72,7 +72,7 @@ export class ApiStack extends Construct {
       route53Certificate = Certificate.fromCertificateArn(
         scope,
         `phitnest-route53-certificate-${props.deploymentEnv}`,
-        props.apiRoute53CertificateArn
+        props.apiRoute53CertificateArn,
       );
       route53Certificate.applyRemovalPolicy(RemovalPolicy.DESTROY);
     }
@@ -94,19 +94,18 @@ export class ApiStack extends Construct {
           allowMethods: Cors.ALL_METHODS,
           allowCredentials: true,
         },
-      }
+      },
     );
     this.restApi.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
-    if (false) {
       const routes: Route[] = [];
       for (const authLevel of Object.entries(AuthLevel)) {
         for (const route of getRoutesFromFilesystem(
-          path.join(props.apiSrcDir, authLevel[1])
+          path.join(props.apiSrcDir, authLevel[1]),
         )) {
           if (routes.includes(route)) {
             throw new Error(
-              `Route is defined twice: ${route.method} ${route.path}`
+              `Route is defined twice: ${route.method} ${route.path}`,
             );
           }
           routes.push(route);
@@ -114,11 +113,11 @@ export class ApiStack extends Construct {
           createDeploymentPackage(
             path.join(
               route.filesystemAbsolutePath,
-              `${route.method.toLowerCase()}.ts`
+              `${route.method.toLowerCase()}.ts`,
             ),
             props.nodeModulesDir,
             props.commonDir,
-            this.deploymentDir(route)
+            this.deploymentDir(route),
           );
 
           const lambdaFunction = this.createLambdaFunction(scope, route);
@@ -137,10 +136,9 @@ export class ApiStack extends Construct {
               //     : authLevel[1] === AuthLevel.ADMIN
               //     ? adminAuthorizer
               //     : undefined,
-            }
+            },
           );
         }
-      }
     }
   }
 
@@ -148,7 +146,7 @@ export class ApiStack extends Construct {
     return path.join(
       this.props.apiDeploymentDir,
       route.filesystemRelativePath,
-      route.method.toLowerCase()
+      route.method.toLowerCase(),
     );
   }
 
@@ -174,7 +172,7 @@ export class ApiStack extends Construct {
           REGION: this.props.region,
         },
         role: this.props.dynamoTableRole,
-      }
+      },
     );
     func.applyRemovalPolicy(RemovalPolicy.DESTROY);
     return func;

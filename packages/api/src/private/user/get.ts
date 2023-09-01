@@ -11,7 +11,7 @@ import { createIdentity } from "common/use_cases/create-identity";
 import { User } from "common/entities";
 
 export async function invoke(
-  event: APIGatewayEvent
+  event: APIGatewayEvent,
 ): Promise<APIGatewayProxyResult> {
   return handleRequest(async () => {
     const userClaims = getUserClaims(event);
@@ -21,7 +21,7 @@ export async function invoke(
       user = await createIdentity(
         client,
         userClaims.sub,
-        event.headers.Authorization
+        event.headers.Authorization,
       );
       if (user instanceof RequestError) {
         return user;

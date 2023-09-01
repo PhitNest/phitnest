@@ -11,7 +11,7 @@ export const kLocationParser: DynamoParser<Location> = {
 };
 
 export function locationToDynamo(
-  location: Location
+  location: Location,
 ): SerializedDynamo<Location> {
   return {
     latitude: {

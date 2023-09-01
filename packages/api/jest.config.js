@@ -1,9 +1,1 @@
-module.exports = {
-  testEnvironment: "node",
-  testMatch: ["**/*.test.ts"],
-  setupFilesAfterEnv: ["./src/jest.setup.ts"],
-  transform: {
-    "^.+\\.tsx?$": "ts-jest",
-  },
-  moduleDirectories: ["src", "node_modules"],
-};
+module.exports = require("jest-helpers/base");

@@ -9,7 +9,7 @@ import {
 } from "common/utils";
 
 export async function invoke(
-  event: APIGatewayEvent
+  event: APIGatewayEvent,
 ): Promise<APIGatewayProxyResult> {
   return handleRequest(async () => {
     const userClaims = getUserClaims(event);

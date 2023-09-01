@@ -79,7 +79,7 @@ export class ResourceNotFoundError extends RequestError {
   constructor(key: RowKey | MultiRowKey<SkOperator, number, TableNames>) {
     super(
       "ResourceNotFound",
-      `Could not find item for query: ${JSON.stringify(key)}`
+      `Could not find item for query: ${JSON.stringify(key)}`,
     );
   }
 }
@@ -193,7 +193,7 @@ export class DynamoClient {
     Limit extends number,
     Table extends TableNames = "base",
   >(
-    key: MultiRowKey<Op, Limit, Table>
+    key: MultiRowKey<Op, Limit, Table>,
   ): Promise<QueryResult<Record<string, AttributeValue>, Op, Limit, Table>> {
     return (await (async () => {
       const res = await this.client.send(new QueryCommand(queryCommand(key)));
@@ -230,7 +230,7 @@ export class DynamoClient {
             Delete: deleteCommand(deleter),
           })),
         ],
-      })
+      }),
     );
   }
 
@@ -240,7 +240,7 @@ export class DynamoClient {
     Limit extends number,
     Table extends TableNames = "base",
   >(
-    params: ParseParams<T> & MultiRowKey<Op, Limit, Table>
+    params: ParseParams<T> & MultiRowKey<Op, Limit, Table>,
   ): Promise<QueryResult<T, Op, Limit, Table>> {
     return (await (async () => {
       const queryRes = await this.query({
@@ -256,11 +256,11 @@ export class DynamoClient {
       ) {
         return parseDynamo(
           queryRes as Record<string, AttributeValue>,
-          params.parseShape
+          params.parseShape,
         );
       } else {
         const parsed = (queryRes as Record<string, AttributeValue>[]).map(
-          (item) => parseDynamo(item, params.parseShape)
+          (item) => parseDynamo(item, params.parseShape),
         );
         return parsed;
       }
@@ -276,6 +276,6 @@ export function dynamo() {
   return new DynamoClient(
     new DynamoDBClient({
       region: process.env.AWS_REGION,
-    })
+    }),
   );
 }

@@ -23,7 +23,7 @@ export const kNoAuthorizer = new CognitoClaimsError("No authorizer");
 
 function checkClaims<Claims extends object>(
   event: APIGatewayEvent,
-  extractClaims: (claims: Claims) => Claims
+  extractClaims: (claims: Claims) => Claims,
 ): Claims {
   if (
     event.requestContext.authorizer &&

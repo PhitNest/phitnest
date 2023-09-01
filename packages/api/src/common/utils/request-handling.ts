@@ -10,7 +10,7 @@ export class Success {
 
   constructor(
     body?: Record<string, unknown> | Record<string, unknown>[],
-    headers?: { [header: string]: string }
+    headers?: { [header: string]: string },
   ) {
     this.body = body;
     this.headers = headers;
@@ -44,7 +44,7 @@ export const kDefaultHeaders = {
  * @returns An APIGatewayProxyResult derived from either the Success the RequestError you return.
  */
 export async function handleRequest(
-  controller: () => Promise<Success | RequestError>
+  controller: () => Promise<Success | RequestError>,
 ): Promise<APIGatewayProxyResult> {
   try {
     const controllerOutput = await controller();
@@ -119,7 +119,7 @@ interface ValidateRequestProps<
    * @returns Either a Success or RequestError.
    */
   controller: (
-    requestData: z.infer<ValidatorType>
+    requestData: z.infer<ValidatorType>,
   ) => Promise<Success | RequestError>;
 }
 
@@ -144,7 +144,7 @@ export async function validateRequest<
           kZodErrorType,
           err.issues
             .map((issue) => issue.path.join(".") + ": " + issue.message)
-            .join(", ")
+            .join(", "),
         );
       }
       throw err;

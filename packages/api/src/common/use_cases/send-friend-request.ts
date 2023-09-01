@@ -14,7 +14,7 @@ import {
 export async function sendFriendRequest(
   dynamo: DynamoClient,
   senderId: string,
-  receiverId: string
+  receiverId: string,
 ): Promise<FriendRequest | FriendshipWithoutMessage | RequestError> {
   const [friendship, sender, receiver] = await Promise.all([
     getFriendship(dynamo, senderId, receiverId),
@@ -34,7 +34,7 @@ export async function sendFriendRequest(
         if (friendship.sender.id === senderId) {
           return new RequestError(
             "FriendRequestExists",
-            "Outgoing friend request already exists"
+            "Outgoing friend request already exists",
           );
         } else {
           return await createFriendship(dynamo, friendship);
@@ -42,7 +42,7 @@ export async function sendFriendRequest(
       default:
         return new RequestError(
           "FriendshipExists",
-          "Friendship already exists"
+          "Friendship already exists",
         );
     }
   }

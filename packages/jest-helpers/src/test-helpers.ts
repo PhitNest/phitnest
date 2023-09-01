@@ -27,7 +27,7 @@ export function getTestOutputPath(...subPath: string[]) {
   // Calculating the relative path from the src directory to the test file
   const testPath = path.relative(
     path.join(process.cwd(), "src"),
-    testPathString
+    testPathString,
   );
   // Returning the complete path to the test output location
   const jointPath = path.parse(path.join(testOutputPath, testPath, ...subPath));
@@ -55,7 +55,7 @@ export function getTestDataPath(...subPath: string[]) {
   // Calculating the relative path from the src directory to the test file
   const testPath = path.relative(
     path.join(process.cwd(), "src"),
-    testPathString
+    testPathString,
   );
   // Returning the complete path to the test data location
   return path.join(testDataPath, testPath, ...subPath);
@@ -73,6 +73,6 @@ export function getSharedTestDataPath(...subPath: string[]): string {
     process.cwd(),
     TEST_DATA_DIRECTORY_PATH,
     SHARED_TEST_DATA_DIRECTORY_PATH,
-    ...subPath
+    ...subPath,
   );
 }

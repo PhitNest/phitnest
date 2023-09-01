@@ -18,7 +18,7 @@ describe("Location", () => {
 
   it("deserializes from dynamo", () => {
     expect(parseDynamo(kSerializedLocation, kLocationParser)).toEqual(
-      kTestLocation
+      kTestLocation,
     );
   });
 });

@@ -12,7 +12,7 @@ export async function createUser(
     email: string;
     firstName: string;
     lastName: string;
-  }
+  },
 ): Promise<void | RequestError> {
   const newUserWithoutInvite = {
     ...params,
@@ -21,7 +21,7 @@ export async function createUser(
   const invite = await getReceivedInvites(
     dynamo,
     newUserWithoutInvite.email,
-    1
+    1,
   );
   if (invite instanceof ResourceNotFoundError) {
     return new RequestError("InviteNotFound", "Invite not found");

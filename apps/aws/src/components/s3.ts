@@ -59,9 +59,9 @@ export class S3Stack extends Construct {
               "cognito-identity.amazonaws.com:amr": "authenticated",
             },
           },
-          "sts:AssumeRoleWithWebIdentity"
+          "sts:AssumeRoleWithWebIdentity",
         ),
-      }
+      },
     );
     authenticatedRole.applyRemovalPolicy(RemovalPolicy.DESTROY);
     authenticatedRole.addToPolicy(
@@ -71,14 +71,14 @@ export class S3Stack extends Construct {
         resources: [
           `${userBucket.bucketArn}/profilePictures/\${cognito-identity.amazonaws.com:sub}.txt`,
         ],
-      })
+      }),
     );
     authenticatedRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
         actions: ["s3:GetObject"],
         resources: [`${userBucket.bucketArn}/profilePictures/*`],
-      })
+      }),
     );
 
     const unauthenticatedRole = new Role(
@@ -95,9 +95,9 @@ export class S3Stack extends Construct {
               "cognito-identity.amazonaws.com:amr": "unauthenticated",
             },
           },
-          "sts:AssumeRoleWithWebIdentity"
+          "sts:AssumeRoleWithWebIdentity",
         ),
-      }
+      },
     );
     unauthenticatedRole.applyRemovalPolicy(RemovalPolicy.DESTROY);
     unauthenticatedRole.addToPolicy(
@@ -105,7 +105,7 @@ export class S3Stack extends Construct {
         effect: Effect.DENY,
         actions: ["s3:*", "cognito-identity:*"],
         resources: ["*"],
-      })
+      }),
     );
 
     const defaultPolicy = new CfnIdentityPoolRoleAttachment(
@@ -117,7 +117,7 @@ export class S3Stack extends Construct {
           unauthenticated: unauthenticatedRole.roleArn,
           authenticated: authenticatedRole.roleArn,
         },
-      }
+      },
     );
     defaultPolicy.applyRemovalPolicy(RemovalPolicy.DESTROY);
   }

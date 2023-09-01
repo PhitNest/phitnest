@@ -20,7 +20,7 @@ export function inviteSk(receiverEmail: string) {
 export function inviteKey(
   senderType: SenderType,
   senderId: string,
-  receiverEmail: string
+  receiverEmail: string,
 ) {
   return {
     pk: invitePk(senderType, senderId),
@@ -32,7 +32,7 @@ export async function getSentInvites<Limit extends number>(
   dynamo: DynamoClient,
   senderId: string,
   senderType: SenderType,
-  limit?: Limit
+  limit?: Limit,
 ): GetInvitesResponse<Limit> {
   return await dynamo.parsedQuery({
     pk: invitePk(senderType, senderId),
@@ -45,7 +45,7 @@ export async function getSentInvites<Limit extends number>(
 export async function getReceivedInvites<Limit extends number>(
   dynamo: DynamoClient,
   receiverEmail: string,
-  limit?: Limit
+  limit?: Limit,
 ): GetInvitesResponse<Limit> {
   return await dynamo.parsedQuery({
     pk: inviteSk(receiverEmail),
@@ -59,7 +59,7 @@ export async function deleteInvite(
   dynamo: DynamoClient,
   senderId: string,
   receiverEmail: string,
-  senderType: SenderType
+  senderType: SenderType,
 ): Promise<void> {
   await dynamo.delete(inviteKey(senderType, senderId, receiverEmail));
 }

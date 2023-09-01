@@ -18,7 +18,7 @@ async function basicController(data: Record<string, unknown>) {
 
 const kErrorResponse = new RequestError(
   "TestError",
-  "This is an error used for a test case"
+  "This is an error used for a test case",
 );
 
 describe("validateRequest", () => {

@@ -47,7 +47,7 @@ export const kUserParser: DynamoParser<User> = {
 };
 
 export function userWithoutIdentityToDynamo(
-  user: UserWithoutIdentity
+  user: UserWithoutIdentity,
 ): SerializedDynamo<UserWithoutIdentity> {
   return {
     id: { S: user.id },
@@ -61,7 +61,7 @@ export function userWithoutIdentityToDynamo(
 }
 
 export function userExploreToDynamo(
-  userExplore: UserExplore
+  userExplore: UserExplore,
 ): SerializedDynamo<UserExplore> {
   return {
     id: { S: userExplore.id },

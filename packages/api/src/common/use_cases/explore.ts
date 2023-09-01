@@ -8,7 +8,7 @@ import {
 
 export async function exploreUsers(
   dynamo: DynamoClient,
-  userId: string
+  userId: string,
 ): Promise<UserExplore[] | ResourceNotFoundError> {
   const user = await getUser(dynamo, userId);
   if (user instanceof ResourceNotFoundError) {
@@ -33,7 +33,7 @@ export async function exploreUsers(
       }
     }
     return await Promise.all(
-      othersAtGym.filter((other) => !removeUserIds.has(other.id))
+      othersAtGym.filter((other) => !removeUserIds.has(other.id)),
     );
   }
 }

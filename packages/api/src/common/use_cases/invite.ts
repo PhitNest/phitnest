@@ -18,7 +18,7 @@ export async function adminInvite(
     senderId: string;
     receiverEmail: string;
     gymId: string;
-  }
+  },
 ): Promise<void | RequestError> {
   const [gym, existingInvite] = await Promise.all([
     getGym(dynamo, params.gymId),
@@ -45,7 +45,7 @@ export async function userInvite(
   params: {
     senderId: string;
     receiverEmail: string;
-  }
+  },
 ): Promise<void | RequestError> {
   const [sender, existingInvite] = await Promise.all([
     getUser(dynamo, params.senderId),

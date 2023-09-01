@@ -17,16 +17,16 @@ describe("getUserClaims", () => {
   it("should return a CognitoClaimsError if there is no sub", () => {
     expect(() =>
       getUserClaims(
-        mockPost({ authClaims: { email: "test" } as UserCognitoClaims })
-      )
+        mockPost({ authClaims: { email: "test" } as UserCognitoClaims }),
+      ),
     ).toThrowError(kNoSubClaim);
   });
 
   it("should return a CognitoClaimsError if there is no email", () => {
     expect(() =>
       getUserClaims(
-        mockPost({ authClaims: { sub: "test" } as UserCognitoClaims })
-      )
+        mockPost({ authClaims: { sub: "test" } as UserCognitoClaims }),
+      ),
     ).toThrowError(kNoEmailClaim);
   });
 
@@ -38,8 +38,8 @@ describe("getUserClaims", () => {
             sub: "testSub",
             email: "testEmail",
           } as UserCognitoClaims,
-        })
-      )
+        }),
+      ),
     ).toEqual({ sub: "testSub", email: "testEmail" });
   });
 });
@@ -52,16 +52,16 @@ describe("getAdminClaims", () => {
   it("should return a CognitoClaimsError if there is no sub", () => {
     expect(() =>
       getAdminClaims(
-        mockPost({ authClaims: { email: "test" } as AdminCognitoClaims })
-      )
+        mockPost({ authClaims: { email: "test" } as AdminCognitoClaims }),
+      ),
     ).toThrowError(kNoSubClaim);
   });
 
   it("should return a CognitoClaimsError if there is no email", () => {
     expect(() =>
       getAdminClaims(
-        mockPost({ authClaims: { sub: "test" } as AdminCognitoClaims })
-      )
+        mockPost({ authClaims: { sub: "test" } as AdminCognitoClaims }),
+      ),
     ).toThrowError(kNoEmailClaim);
   });
 
@@ -73,8 +73,8 @@ describe("getAdminClaims", () => {
             sub: "testSub",
             email: "testEmail",
           } as AdminCognitoClaims,
-        })
-      )
+        }),
+      ),
     ).toEqual({ sub: "testSub", email: "testEmail" });
   });
 });

@@ -94,7 +94,7 @@ export class DynamoStack extends Construct {
             attributeType: AttributeType.STRING,
           },
         ],
-      }
+      },
     );
     table.applyRemovalPolicy(RemovalPolicy.DESTROY);
     this.tableRole = new Role(
@@ -114,7 +114,7 @@ export class DynamoStack extends Construct {
             ],
           }),
         },
-      }
+      },
     );
     this.tableRole.applyRemovalPolicy(RemovalPolicy.DESTROY);
     const tableName = table.tableName;

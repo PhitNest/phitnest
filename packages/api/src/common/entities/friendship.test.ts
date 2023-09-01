@@ -95,7 +95,7 @@ describe("Friendship", () => {
 
   it("deserializes from dynamo", () => {
     expect(parseDynamo(serializedFriendship, kFriendshipParser)).toEqual(
-      kTestFriendship
+      kTestFriendship,
     );
   });
 });
