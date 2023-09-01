@@ -152,19 +152,13 @@ importers:
         specifier: ^5.1.6
         version: 5.2.2
 
-  packages/aws-config-to-dart:
-    dependencies:
-      aws:
-        specifier: workspace:*
-        version: link:../../apps/aws
-
   packages/dart-analysis: {}
 
   packages/dart-core:
     dependencies:
       aws-config-to-dart:
         specifier: workspace:*
-        version: link:../aws-config-to-dart
+        version: link:../../scripts/aws-config-to-dart
       dart-analysis:
         specifier: workspace:*
         version: link:../dart-analysis
@@ -176,6 +170,12 @@ importers:
         version: link:../dart-analysis
 
   packages/tsconfigs: {}
+
+  scripts/aws-config-to-dart:
+    dependencies:
+      aws:
+        specifier: workspace:*
+        version: link:../../apps/aws
 
 packages:
 
