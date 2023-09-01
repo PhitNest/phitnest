@@ -1,25 +1,16 @@
 {
-  "name": "phitnest-aws",
+  "name": "aws",
+  "private": true,
   "version": "1.0.0",
-  "description": "",
   "main": "src/index.ts",
   "scripts": {
     "test": "jest",
     "cdk": "cdk",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "clean": "rm -rf test_output && rm -rf node_modules"
+    "clean": "rm -rf test_output && rm -rf node_modules",
+    "deploy_dev": "DEPLOYMENT_ENV=dev cdk deploy --require-approval never --outputs-file ./outputs.json"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/PhitNest/phitnest-aws.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/PhitNest/phitnest-aws/issues"
-  },
-  "homepage": "https://github.com/PhitNest/phitnest-aws#readme",
   "dependencies": {
     "aws-cdk-lib": "^2.87.0",
     "constructs": "^10.2.69",

@@ -45,11 +45,11 @@ export interface ApiStackProps {
 
 export class ApiStack extends Construct {
   private readonly props: ApiStackProps;
+  public readonly restApi: RestApi;
 
   constructor(scope: Construct, props: ApiStackProps) {
     super(scope, `phitnest-api-stack-${props.deploymentEnv}`);
     this.props = props;
-
     const userAuthorizer = new CognitoUserPoolsAuthorizer(
       scope,
       `PhitNestUserAuthorizer-${this.props.deploymentEnv}`,
@@ -76,64 +76,70 @@ export class ApiStack extends Construct {
       );
       route53Certificate.applyRemovalPolicy(RemovalPolicy.DESTROY);
     }
-    const api = new RestApi(scope, `phitnest-rest-api-${props.deploymentEnv}`, {
-      restApiName: `Phitnest-API-${props.deploymentEnv}`,
-      description: "This service serves the Phitnest API.",
-      domainName: route53Certificate
-        ? {
-            domainName: "api.phitnest.com",
-            certificate: route53Certificate,
-          }
-        : undefined,
-      defaultCorsPreflightOptions: {
-        allowHeaders: Cors.DEFAULT_HEADERS,
-        allowOrigins: Cors.ALL_ORIGINS,
-        allowMethods: Cors.ALL_METHODS,
-        allowCredentials: true,
-      },
-    });
-    api.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    this.restApi = new RestApi(
+      scope,
+      `phitnest-rest-api-${props.deploymentEnv}`,
+      {
+        restApiName: `Phitnest-API-${props.deploymentEnv}`,
+        description: "This service serves the Phitnest API.",
+        domainName: route53Certificate
+          ? {
+              domainName: "api.phitnest.com",
+              certificate: route53Certificate,
+            }
+          : undefined,
+        defaultCorsPreflightOptions: {
+          allowHeaders: Cors.DEFAULT_HEADERS,
+          allowOrigins: Cors.ALL_ORIGINS,
+          allowMethods: Cors.ALL_METHODS,
+          allowCredentials: true,
+        },
+      }
+    );
+    this.restApi.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
-    const routes: Route[] = [];
-    for (const authLevel of Object.entries(AuthLevel)) {
-      for (const route of getRoutesFromFilesystem(
-        path.join(props.apiSrcDir, authLevel[1])
-      )) {
-        if (routes.includes(route)) {
-          throw new Error(
-            `Route is defined twice: ${route.method} ${route.path}`
+    if (false) {
+      const routes: Route[] = [];
+      for (const authLevel of Object.entries(AuthLevel)) {
+        for (const route of getRoutesFromFilesystem(
+          path.join(props.apiSrcDir, authLevel[1])
+        )) {
+          if (routes.includes(route)) {
+            throw new Error(
+              `Route is defined twice: ${route.method} ${route.path}`
+            );
+          }
+          routes.push(route);
+
+          createDeploymentPackage(
+            path.join(
+              route.filesystemAbsolutePath,
+              `${route.method.toLowerCase()}.ts`
+            ),
+            props.nodeModulesDir,
+            props.commonDir,
+            this.deploymentDir(route)
+          );
+
+          const lambdaFunction = this.createLambdaFunction(scope, route);
+          const resource = this.restApi.root.resourceForPath(route.path);
+          resource.addMethod(
+            route.method,
+            new LambdaIntegration(lambdaFunction),
+            {
+              authorizationType:
+                authLevel[1] === AuthLevel.PUBLIC
+                  ? undefined
+                  : AuthorizationType.COGNITO,
+              authorizer:
+                authLevel[1] === AuthLevel.PRIVATE
+                  ? userAuthorizer
+                  : authLevel[1] === AuthLevel.ADMIN
+                  ? adminAuthorizer
+                  : undefined,
+            }
           );
         }
-        routes.push(route);
-
-        createDeploymentPackage(
-          path.join(
-            route.filesystemAbsolutePath,
-            `${route.method.toLowerCase()}.ts`
-          ),
-          props.nodeModulesDir,
-          props.commonDir,
-          this.deploymentDir(route)
-        );
-
-        const lambdaFunction = this.createLambdaFunction(scope, route);
-        const resource = api.root.resourceForPath(route.path);
-        resource.addMethod(
-          route.method,
-          new LambdaIntegration(lambdaFunction),
-          {
-            authorizationType:
-              authLevel[1] === AuthLevel.PUBLIC
-                ? undefined
-                : AuthorizationType.COGNITO,
-            authorizer:
-              authLevel[1] === AuthLevel.PRIVATE
-                ? userAuthorizer
-                : authLevel[1] === AuthLevel.ADMIN
-                ? adminAuthorizer
-                : undefined,
-          }
-        );
       }
     }
   }

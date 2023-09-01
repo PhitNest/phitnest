@@ -1,4 +1,4 @@
-import { Stack } from "aws-cdk-lib";
+import { CfnOutput, Stack } from "aws-cdk-lib";
 import { ApiStack, CognitoStack, DynamoStack, S3Stack } from "./components";
 import { Construct } from "constructs";
 import * as path from "path";
@@ -40,7 +40,7 @@ export class PhitnestStack extends Stack {
       identityPoolId: cognito.userIdentityPoolId,
     });
 
-    new ApiStack(this, {
+    const api = new ApiStack(this, {
       deploymentEnv: kDeploymentEnv,
       apiSrcDir: apiSrcDir,
       nodeModulesDir: nodeModulesDir,
@@ -57,6 +57,34 @@ export class PhitnestStack extends Stack {
       region: kRegion,
       apiRoute53CertificateArn:
         kDeploymentEnv === "prod" ? kApiRoute53Arn : undefined,
+    });
+
+    new CfnOutput(this, "UserPoolId", {
+      value: cognito.userPool.userPoolId,
+    });
+    new CfnOutput(this, "ClientId", {
+      value: cognito.userClientId,
+    });
+    new CfnOutput(this, "AdminPoolId", {
+      value: cognito.adminPool.userPoolId,
+    });
+    new CfnOutput(this, "AdminClientId", {
+      value: cognito.adminClientId,
+    });
+    new CfnOutput(this, "IdentityPoolId", {
+      value: cognito.userIdentityPoolId,
+    });
+    new CfnOutput(this, "UserBucketName", {
+      value: s3.userBucketName,
+    });
+    new CfnOutput(this, "Region", {
+      value: kRegion,
+    });
+    new CfnOutput(this, "Host", {
+      value: api.restApi.url,
+    });
+    new CfnOutput(this, "Port", {
+      value: "443",
     });
   }
 }

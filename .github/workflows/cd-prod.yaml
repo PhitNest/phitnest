@@ -1,0 +1,14 @@
+name: CD Production
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  cd:
+    uses: ./.github/workflows/cd.yaml
+    with:
+      deployment_env: prod
+    secrets:
+      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

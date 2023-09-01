@@ -1,0 +1,9 @@
+{
+  "name": "phitnest",
+  "private": true,
+  "scripts": {},
+  "devDependencies": {
+    "turbo": "latest"
+  },
+  "packageManager": "pnpm@8.7.0"
+}
