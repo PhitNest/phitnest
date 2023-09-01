@@ -5,5 +5,5 @@ final class Loader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      Center(child: CircularProgressIndicator());
+      const Center(child: CircularProgressIndicator());
 }

@@ -1,0 +1,13 @@
+{
+  "name": "jest-helpers",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "eslint-configs": "workspace:*",
+    "jest": "^29.6.1",
+    "tsconfigs": "workspace:*"
+  }
+}
