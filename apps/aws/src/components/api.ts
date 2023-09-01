@@ -1,7 +1,7 @@
 import { RemovalPolicy } from "aws-cdk-lib";
 import {
   AuthorizationType,
-  CognitoUserPoolsAuthorizer,
+  // CognitoUserPoolsAuthorizer,
   Cors,
   LambdaIntegration,
   RestApi,
@@ -50,23 +50,23 @@ export class ApiStack extends Construct {
   constructor(scope: Construct, props: ApiStackProps) {
     super(scope, `phitnest-api-stack-${props.deploymentEnv}`);
     this.props = props;
-    const userAuthorizer = new CognitoUserPoolsAuthorizer(
-      scope,
-      `PhitNestUserAuthorizer-${this.props.deploymentEnv}`,
-      {
-        cognitoUserPools: [props.userPool],
-      }
-    );
-    userAuthorizer.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    // const userAuthorizer = new CognitoUserPoolsAuthorizer(
+    //   scope,
+    //   `PhitNestUserAuthorizer-${this.props.deploymentEnv}`,
+    //   {
+    //     cognitoUserPools: [props.userPool],
+    //   }
+    // );
+    // userAuthorizer.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
-    const adminAuthorizer = new CognitoUserPoolsAuthorizer(
-      scope,
-      `PhitNestAdminAuthorizer-${this.props.deploymentEnv}`,
-      {
-        cognitoUserPools: [props.adminPool],
-      }
-    );
-    adminAuthorizer.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    // const adminAuthorizer = new CognitoUserPoolsAuthorizer(
+    //   scope,
+    //   `PhitNestAdminAuthorizer-${this.props.deploymentEnv}`,
+    //   {
+    //     cognitoUserPools: [props.adminPool],
+    //   }
+    // );
+    // adminAuthorizer.applyRemovalPolicy(RemovalPolicy.DESTROY);
     let route53Certificate: ICertificate | undefined;
     if (props.apiRoute53CertificateArn) {
       route53Certificate = Certificate.fromCertificateArn(
@@ -131,12 +131,12 @@ export class ApiStack extends Construct {
                 authLevel[1] === AuthLevel.PUBLIC
                   ? undefined
                   : AuthorizationType.COGNITO,
-              authorizer:
-                authLevel[1] === AuthLevel.PRIVATE
-                  ? userAuthorizer
-                  : authLevel[1] === AuthLevel.ADMIN
-                  ? adminAuthorizer
-                  : undefined,
+              // authorizer:
+              //   authLevel[1] === AuthLevel.PRIVATE
+              //     ? userAuthorizer
+              //     : authLevel[1] === AuthLevel.ADMIN
+              //     ? adminAuthorizer
+              //     : undefined,
             }
           );
         }
