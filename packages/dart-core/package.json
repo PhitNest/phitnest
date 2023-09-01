@@ -1,0 +1,12 @@
+{
+  "name": "dart-core",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "install": "flutter pub get"
+  },
+  "dependencies": {
+    "dart-analysis": "workspace:*",
+    "aws-config-to-dart": "workspace:*"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "aws-config-to-dart",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "deploy_dev": "python aws_config_to_dart.py ../../apps/aws/outputs.json ../dart-core/lib/config/aws.dart"
+  }
+}
