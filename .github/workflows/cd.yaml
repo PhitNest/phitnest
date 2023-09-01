@@ -41,7 +41,7 @@ jobs:
       - name: Commit AWS changes
         uses: EndBug/add-and-commit@v9
         with:
-          add: 'apps/dart-core/lib/config/aws.dart'
+          add: 'packages/dart-core/lib/config/aws.dart'
           author_name: The PhitMachine
           author_email: machine@phitnest.com
           commit: --signoff
