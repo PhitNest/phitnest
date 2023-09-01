@@ -41,24 +41,26 @@ export class CognitoStack extends Construct {
       sesVerifiedDomain: "phitnest.com",
       sesRegion: props.region,
     });
-    const userPresignupDeploymentDir = path.join(
-      props.cognitoHookDeploymentDir,
-      "user_presignup"
-    );
-    createDeploymentPackage(
-      path.join(props.cognitoHookSrcDir, "user-presignup.ts"),
-      props.nodeModulesDir,
-      props.commonDir,
-      userPresignupDeploymentDir
-    );
     const userPoolPrefix = "PhitnestUser";
-    const userPresignupHook = this.createPresignupHook(
-      scope,
-      props.dynamoTableName,
-      props.dynamoTableRole,
-      userPoolPrefix,
-      userPresignupDeploymentDir
-    );
+    if (false) {
+      const userPresignupDeploymentDir = path.join(
+        props.cognitoHookDeploymentDir,
+        "user_presignup"
+      );
+      createDeploymentPackage(
+        path.join(props.cognitoHookSrcDir, "user-presignup.ts"),
+        props.nodeModulesDir,
+        props.commonDir,
+        userPresignupDeploymentDir
+      );
+      this.createPresignupHook(
+        scope,
+        props.dynamoTableName,
+        props.dynamoTableRole,
+        userPoolPrefix,
+        userPresignupDeploymentDir
+      );
+    }
     this.userPool = new UserPool(
       scope,
       `${userPoolPrefix}Pool-${props.deploymentEnv}`,
@@ -78,7 +80,7 @@ export class CognitoStack extends Construct {
           },
         },
         lambdaTriggers: {
-          preSignUp: userPresignupHook,
+          // preSignUp: userPresignupHook,
         },
       }
     );
@@ -102,24 +104,26 @@ export class CognitoStack extends Construct {
     );
     userIdentityPool.applyRemovalPolicy(RemovalPolicy.DESTROY);
     this.userIdentityPoolId = userIdentityPool.ref;
-    const adminPresignupDeploymentDir = path.join(
-      props.cognitoHookDeploymentDir,
-      "admin_presignup"
-    );
-    createDeploymentPackage(
-      path.join(props.cognitoHookSrcDir, "admin-presignup.ts"),
-      props.nodeModulesDir,
-      props.commonDir,
-      adminPresignupDeploymentDir
-    );
     const adminPoolPrefix = "PhitnestAdmin";
-    const adminPresignupHook = this.createPresignupHook(
-      scope,
-      props.dynamoTableName,
-      props.dynamoTableRole,
-      adminPoolPrefix,
-      adminPresignupDeploymentDir
-    );
+    if (false) {
+      const adminPresignupDeploymentDir = path.join(
+        props.cognitoHookDeploymentDir,
+        "admin_presignup"
+      );
+      createDeploymentPackage(
+        path.join(props.cognitoHookSrcDir, "admin-presignup.ts"),
+        props.nodeModulesDir,
+        props.commonDir,
+        adminPresignupDeploymentDir
+      );
+      this.createPresignupHook(
+        scope,
+        props.dynamoTableName,
+        props.dynamoTableRole,
+        adminPoolPrefix,
+        adminPresignupDeploymentDir
+      );
+    }
     this.adminPool = new UserPool(
       scope,
       `${adminPoolPrefix}Pool-${props.deploymentEnv}`,
@@ -139,7 +143,7 @@ export class CognitoStack extends Construct {
           },
         },
         lambdaTriggers: {
-          preSignUp: adminPresignupHook,
+          // preSignUp: adminPresignupHook,
         },
       }
     );
