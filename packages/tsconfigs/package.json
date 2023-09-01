@@ -2,7 +2,7 @@
   "name": "tsconfigs",
   "version": "0.0.0",
   "private": true,
-    "publishConfig": {
+  "publishConfig": {
     "access": "public"
   }
 }
