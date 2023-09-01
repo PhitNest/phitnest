@@ -6,6 +6,7 @@
     "install": "flutter pub get"
   },
   "dependencies": {
-    "dart-analysis": "workspace:*"
+    "dart-analysis": "workspace:*",
+    "dart-core": "workspace:*"
   }
 }

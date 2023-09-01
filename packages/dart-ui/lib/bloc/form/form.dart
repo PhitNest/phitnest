@@ -29,12 +29,13 @@ final class FormBloc<Controllers extends FormControllers>
       onAccept();
     } else {
       onReject?.call();
-      add(FormSetValidationEvent(AutovalidateMode.always));
+      add(const FormSetValidationEvent(AutovalidateMode.always));
     }
   }
 
   FormBloc(this.controllers)
-      : super(FormBlocState(autovalidateMode: AutovalidateMode.disabled)) {
+      : super(
+            const FormBlocState(autovalidateMode: AutovalidateMode.disabled)) {
     on<FormSetValidationEvent>((event, emit) =>
         emit(FormBlocState(autovalidateMode: event.autovalidateMode)));
   }

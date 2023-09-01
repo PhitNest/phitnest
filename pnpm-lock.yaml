@@ -76,6 +76,38 @@ importers:
         specifier: workspace:*
         version: link:../../packages/dart-core
 
+  configs/dart-analysis: {}
+
+  configs/eslint-configs:
+    devDependencies:
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^5.61.0
+        version: 5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.48.0)(typescript@5.2.2)
+      '@typescript-eslint/parser':
+        specifier: ^5.61.0
+        version: 5.62.0(eslint@8.48.0)(typescript@5.2.2)
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-config-prettier:
+        specifier: ^8.8.0
+        version: 8.10.0(eslint@8.48.0)
+      eslint-plugin-prettier:
+        specifier: ^5.0.0-alpha.2
+        version: 5.0.0(eslint-config-prettier@8.10.0)(eslint@8.48.0)(prettier@3.0.3)
+      prettier:
+        specifier: ^3.0.0
+        version: 3.0.3
+
+  configs/tsconfigs:
+    devDependencies:
+      '@types/jest':
+        specifier: ^29.5.4
+        version: 29.5.4
+      '@types/node':
+        specifier: ^20.5.7
+        version: 20.5.7
+
   packages/api:
     dependencies:
       '@aws-sdk/client-cognito-identity':
@@ -141,7 +173,7 @@ importers:
         version: 5.0.0(eslint-config-prettier@8.10.0)(eslint@8.48.0)(prettier@3.0.3)
       jest:
         specifier: ^29.6.1
-        version: 29.6.4(@types/node@20.5.7)(ts-node@10.9.1)
+        version: 29.6.4(@types/node@20.5.7)
       prettier:
         specifier: ^3.0.0
         version: 3.0.3
@@ -152,8 +184,6 @@ importers:
         specifier: ^5.1.6
         version: 5.2.2
 
-  packages/dart-analysis: {}
-
   packages/dart-core:
     dependencies:
       aws-config-to-dart:
@@ -161,15 +191,28 @@ importers:
         version: link:../../scripts/aws-config-to-dart
       dart-analysis:
         specifier: workspace:*
-        version: link:../dart-analysis
+        version: link:../../configs/dart-analysis
 
   packages/dart-ui:
     dependencies:
       dart-analysis:
         specifier: workspace:*
-        version: link:../dart-analysis
+        version: link:../../configs/dart-analysis
+      dart-core:
+        specifier: workspace:*
+        version: link:../dart-core
 
-  packages/tsconfigs: {}
+  packages/jest-helpers:
+    devDependencies:
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../configs/eslint-configs
+      jest:
+        specifier: ^29.6.1
+        version: 29.6.4(@types/node@20.5.7)
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../configs/tsconfigs
 
   scripts/aws-config-to-dart:
     dependencies:
@@ -3328,6 +3371,35 @@ packages:
       - supports-color
     dev: true
 
+  /jest-cli@29.6.4(@types/node@20.5.7):
+    resolution: {integrity: sha512-+uMCQ7oizMmh8ZwRfZzKIEszFY9ksjjEQnTEMTaL7fYiL3Kw4XhqT9bYh+A4DQKUb67hZn2KbtEnDuHvcgK4pQ==}
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    hasBin: true
+    peerDependencies:
+      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    dependencies:
+      '@jest/core': 29.6.4(ts-node@10.9.1)
+      '@jest/test-result': 29.6.4
+      '@jest/types': 29.6.3
+      chalk: 4.1.2
+      exit: 0.1.2
+      graceful-fs: 4.2.11
+      import-local: 3.1.0
+      jest-config: 29.6.4(@types/node@20.5.7)(ts-node@10.9.1)
+      jest-util: 29.6.3
+      jest-validate: 29.6.3
+      prompts: 2.4.2
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+    dev: true
+
   /jest-cli@29.6.4(@types/node@20.5.7)(ts-node@10.9.1):
     resolution: {integrity: sha512-+uMCQ7oizMmh8ZwRfZzKIEszFY9ksjjEQnTEMTaL7fYiL3Kw4XhqT9bYh+A4DQKUb67hZn2KbtEnDuHvcgK4pQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -3679,6 +3751,27 @@ packages:
       jest-util: 29.6.3
       merge-stream: 2.0.0
       supports-color: 8.1.1
+    dev: true
+
+  /jest@29.6.4(@types/node@20.5.7):
+    resolution: {integrity: sha512-tEFhVQFF/bzoYV1YuGyzLPZ6vlPrdfvDmmAxudA1dLEuiztqg2Rkx20vkKY32xiDROcD2KXlgZ7Cu8RPeEHRKw==}
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    hasBin: true
+    peerDependencies:
+      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    dependencies:
+      '@jest/core': 29.6.4(ts-node@10.9.1)
+      '@jest/types': 29.6.3
+      import-local: 3.1.0
+      jest-cli: 29.6.4(@types/node@20.5.7)
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
     dev: true
 
   /jest@29.6.4(@types/node@20.5.7)(ts-node@10.9.1):
