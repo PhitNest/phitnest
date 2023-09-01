@@ -6,7 +6,6 @@
     "install": "dart pub get"
   },
   "dependencies": {
-    "dart-analysis": "workspace:*",
     "aws-config-to-dart": "workspace:*"
   }
 }
