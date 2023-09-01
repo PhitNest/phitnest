@@ -3,7 +3,7 @@
   "pipeline": {
     "build": {},
     "deploy_dev": {
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "^deploy_dev"]
     }
   }
 }
