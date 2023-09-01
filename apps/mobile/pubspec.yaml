@@ -14,7 +14,7 @@ dependencies:
   flutter_svg: ^2.0.7
   flutter_screenutil: ^5.8.4
   flutter_launcher_icons: ^0.13.1
-  phitnest_core:
+  core:
     path: ../../packages/dart-core
   flutter_bloc: ^8.1.3
   pin_code_fields: ^8.0.1
