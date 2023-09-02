@@ -55,7 +55,7 @@ export class ApiStack extends Construct {
       `PhitNestUserAuthorizer-${this.props.deploymentEnv}`,
       {
         cognitoUserPools: [props.userPool],
-      }
+      },
     );
     userAuthorizer.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
@@ -64,7 +64,7 @@ export class ApiStack extends Construct {
       `PhitNestAdminAuthorizer-${this.props.deploymentEnv}`,
       {
         cognitoUserPools: [props.adminPool],
-      }
+      },
     );
     adminAuthorizer.applyRemovalPolicy(RemovalPolicy.DESTROY);
     let route53Certificate: ICertificate | undefined;
@@ -98,47 +98,47 @@ export class ApiStack extends Construct {
     );
     this.restApi.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
-      const routes: Route[] = [];
-      for (const authLevel of Object.entries(AuthLevel)) {
-        for (const route of getRoutesFromFilesystem(
-          path.join(props.apiSrcDir, authLevel[1]),
-        )) {
-          if (routes.includes(route)) {
-            throw new Error(
-              `Route is defined twice: ${route.method} ${route.path}`,
-            );
-          }
-          routes.push(route);
-
-          createDeploymentPackage(
-            path.join(
-              route.filesystemAbsolutePath,
-              `${route.method.toLowerCase()}.ts`,
-            ),
-            props.nodeModulesDir,
-            props.commonDir,
-            this.deploymentDir(route),
-          );
-
-          const lambdaFunction = this.createLambdaFunction(scope, route);
-          const resource = this.restApi.root.resourceForPath(route.path);
-          resource.addMethod(
-            route.method,
-            new LambdaIntegration(lambdaFunction),
-            {
-              authorizationType:
-                authLevel[1] === AuthLevel.PUBLIC
-                  ? undefined
-                  : AuthorizationType.COGNITO,
-              authorizer:
-                authLevel[1] === AuthLevel.PRIVATE
-                  ? userAuthorizer
-                  : authLevel[1] === AuthLevel.ADMIN
-                  ? adminAuthorizer
-                  : undefined,
-            },
+    const routes: Route[] = [];
+    for (const authLevel of Object.entries(AuthLevel)) {
+      for (const route of getRoutesFromFilesystem(
+        path.join(props.apiSrcDir, authLevel[1]),
+      )) {
+        if (routes.includes(route)) {
+          throw new Error(
+            `Route is defined twice: ${route.method} ${route.path}`,
           );
         }
+        routes.push(route);
+
+        createDeploymentPackage(
+          path.join(
+            route.filesystemAbsolutePath,
+            `${route.method.toLowerCase()}.ts`,
+          ),
+          props.nodeModulesDir,
+          props.commonDir,
+          this.deploymentDir(route),
+        );
+
+        const lambdaFunction = this.createLambdaFunction(scope, route);
+        const resource = this.restApi.root.resourceForPath(route.path);
+        resource.addMethod(
+          route.method,
+          new LambdaIntegration(lambdaFunction),
+          {
+            authorizationType:
+              authLevel[1] === AuthLevel.PUBLIC
+                ? undefined
+                : AuthorizationType.COGNITO,
+            authorizer:
+              authLevel[1] === AuthLevel.PRIVATE
+                ? userAuthorizer
+                : authLevel[1] === AuthLevel.ADMIN
+                ? adminAuthorizer
+                : undefined,
+          },
+        );
+      }
     }
   }
 

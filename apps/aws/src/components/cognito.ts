@@ -42,23 +42,23 @@ export class CognitoStack extends Construct {
       sesRegion: props.region,
     });
     const userPoolPrefix = "PhitnestUser";
-      const userPresignupDeploymentDir = path.join(
-        props.cognitoHookDeploymentDir,
-        "user_presignup",
-      );
-      createDeploymentPackage(
-        path.join(props.cognitoHookSrcDir, "user-presignup.ts"),
-        props.nodeModulesDir,
-        props.commonDir,
-        userPresignupDeploymentDir,
-      );
-     const userPresignupHook = this.createPresignupHook(
-        scope,
-        props.dynamoTableName,
-        props.dynamoTableRole,
-        userPoolPrefix,
-        userPresignupDeploymentDir,
-      );
+    const userPresignupDeploymentDir = path.join(
+      props.cognitoHookDeploymentDir,
+      "user_presignup",
+    );
+    createDeploymentPackage(
+      path.join(props.cognitoHookSrcDir, "user-presignup.ts"),
+      props.nodeModulesDir,
+      props.commonDir,
+      userPresignupDeploymentDir,
+    );
+    const userPresignupHook = this.createPresignupHook(
+      scope,
+      props.dynamoTableName,
+      props.dynamoTableRole,
+      userPoolPrefix,
+      userPresignupDeploymentDir,
+    );
     this.userPool = new UserPool(
       scope,
       `${userPoolPrefix}Pool-${props.deploymentEnv}`,
@@ -103,23 +103,23 @@ export class CognitoStack extends Construct {
     userIdentityPool.applyRemovalPolicy(RemovalPolicy.DESTROY);
     this.userIdentityPoolId = userIdentityPool.ref;
     const adminPoolPrefix = "PhitnestAdmin";
-      const adminPresignupDeploymentDir = path.join(
-        props.cognitoHookDeploymentDir,
-        "admin_presignup",
-      );
-      createDeploymentPackage(
-        path.join(props.cognitoHookSrcDir, "admin-presignup.ts"),
-        props.nodeModulesDir,
-        props.commonDir,
-        adminPresignupDeploymentDir,
-      );
-    const adminPresignupHook =  this.createPresignupHook(
-        scope,
-        props.dynamoTableName,
-        props.dynamoTableRole,
-        adminPoolPrefix,
-        adminPresignupDeploymentDir,
-      );
+    const adminPresignupDeploymentDir = path.join(
+      props.cognitoHookDeploymentDir,
+      "admin_presignup",
+    );
+    createDeploymentPackage(
+      path.join(props.cognitoHookSrcDir, "admin-presignup.ts"),
+      props.nodeModulesDir,
+      props.commonDir,
+      adminPresignupDeploymentDir,
+    );
+    const adminPresignupHook = this.createPresignupHook(
+      scope,
+      props.dynamoTableName,
+      props.dynamoTableRole,
+      adminPoolPrefix,
+      adminPresignupDeploymentDir,
+    );
     this.adminPool = new UserPool(
       scope,
       `${adminPoolPrefix}Pool-${props.deploymentEnv}`,
