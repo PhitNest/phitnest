@@ -1,8 +1,8 @@
 import sys
 import json
 
-input_file = sys.argv[1]
-output_file = sys.argv[2]
+input_file = "../../apps/aws/outputs.json"
+output_file = "../../packages/dart-core/lib/config/aws.dart"
 
 config = next(iter(json.load(open(input_file)).values()))
 
