@@ -12,8 +12,10 @@ jobs:
     secrets:
       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    
+  commit:
     steps:
-      - name: Commit AWS changes
+      - name: Commit AWS development environment changes
         uses: EndBug/add-and-commit@v9
         with:
           add: 'packages/dart-core/lib/config/aws.dart'
