@@ -19,17 +19,11 @@ typedef ForgotPasswordProvider = FormProvider<ForgotPasswordControllers, String,
     SendForgotPasswordResponse>;
 
 ForgotPasswordProvider forgotPasswordForm(
-        ApiInfo apiInfo,
         CreateFormConsumer<ForgotPasswordControllers, String,
                 SendForgotPasswordResponse>
             createConsumer) =>
     ForgotPasswordProvider(
       createControllers: (_) => ForgotPasswordControllers(),
-      createLoader: (_) => LoaderBloc(
-        load: (email) => sendForgotPasswordRequest(
-          email: email,
-          apiInfo: apiInfo,
-        ),
-      ),
+      createLoader: (_) => LoaderBloc(load: sendForgotPasswordRequest),
       createConsumer: createConsumer,
     );

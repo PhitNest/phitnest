@@ -1,8 +1,9 @@
+import 'package:core/core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_core/core.dart';
+import 'package:ui/ui.dart';
 
 import '../verification/verification.dart';
 import 'widgets/widgets.dart';
@@ -10,12 +11,7 @@ import 'widgets/widgets.dart';
 part 'bloc.dart';
 
 final class RegisterPage extends StatelessWidget {
-  final ApiInfo apiInfo;
-
-  const RegisterPage({
-    super.key,
-    required this.apiInfo,
-  }) : super();
+  const RegisterPage({super.key}) : super();
 
   void handleStateChanged(
     BuildContext context,
@@ -35,7 +31,6 @@ final class RegisterPage extends StatelessWidget {
               CupertinoPageRoute<void>(
                 builder: (context) => VerificationPage(
                   loginParams: loginParams,
-                  apiInfo: apiInfo,
                   resend: (session) => resendConfirmationEmail(
                     user: session.user,
                   ),
@@ -43,10 +38,7 @@ final class RegisterPage extends StatelessWidget {
                     user: session.user,
                     code: code,
                   ),
-                  unauthenticatedSession: UnauthenticatedSession(
-                    user: user,
-                    apiInfo: apiInfo,
-                  ),
+                  unauthenticatedSession: UnauthenticatedSession(user: user),
                 ),
               ),
             );
@@ -62,7 +54,6 @@ final class RegisterPage extends StatelessWidget {
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 40.w),
           child: registerForm(
-            apiInfo,
             (context, controllers, submit) => LoaderConsumer(
               listener: (context, loaderState) =>
                   handleStateChanged(context, controllers, loaderState),

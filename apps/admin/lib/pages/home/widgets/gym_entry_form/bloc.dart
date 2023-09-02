@@ -22,16 +22,12 @@ typedef GymEntryFormProvider = AuthFormProvider<GymEntryFormControllers,
     CreateGymParams, HttpResponse<CreateGymSuccess>>;
 
 GymEntryFormProvider gymEntryForm(
-  ApiInfo apiInfo,
   CreateAuthFormConsumer<GymEntryFormControllers, CreateGymParams,
           HttpResponse<CreateGymSuccess>>
       createConsumer,
 ) =>
     GymEntryFormProvider(
       createControllers: (_) => GymEntryFormControllers(),
-      createLoader: (_) => AuthLoaderBloc(
-        apiInfo: apiInfo,
-        load: createGym,
-      ),
+      createLoader: (_) => AuthLoaderBloc(load: createGym),
       createConsumer: createConsumer,
     );

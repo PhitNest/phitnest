@@ -1,5 +1,6 @@
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:phitnest_core/core.dart';
+import 'package:ui/ui.dart';
 
 import '../../../../entities/entities.dart';
 import '../../../../repositories/repositories.dart';
@@ -7,7 +8,6 @@ import '../../../../repositories/repositories.dart';
 part 'bloc.dart';
 
 final class InviteForm extends StatelessWidget {
-  final ApiInfo apiInfo;
   final void Function(BuildContext) onSessionLost;
 
   void handleStateChanged(
@@ -41,7 +41,6 @@ final class InviteForm extends StatelessWidget {
 
   const InviteForm({
     super.key,
-    required this.apiInfo,
     required this.onSessionLost,
   }) : super();
 
@@ -49,7 +48,6 @@ final class InviteForm extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
         child: inviteForm(
-          apiInfo,
           (context, controllers, submit) => AuthLoaderConsumer(
             listener: (context, loaderState) =>
                 handleStateChanged(context, controllers, loaderState),
@@ -72,12 +70,12 @@ final class InviteForm extends StatelessWidget {
                   LoaderLoadingState() => const Loader(),
                   _ => TextButton(
                       onPressed: () => submit(
-                        (
-                          sessionLoader: context.sessionLoader,
-                          data: InviteParams.populated(
+                        AuthReq(
+                          InviteParams.populated(
                             receiverEmail: controllers.emailController.text,
                             gymId: controllers.gymIdController.text,
                           ),
+                          context.sessionLoader,
                         ),
                         loaderState,
                       ),

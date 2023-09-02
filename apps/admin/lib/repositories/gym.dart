@@ -1,4 +1,4 @@
-import 'package:phitnest_core/core.dart';
+import 'package:core/core.dart';
 
 import '../entities/entities.dart';
 

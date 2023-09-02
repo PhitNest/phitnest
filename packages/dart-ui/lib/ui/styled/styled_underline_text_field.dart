@@ -34,7 +34,7 @@ final class StyledUnderlinedTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => TextFormField(
-        autofillHints: [],
+        autofillHints: const [],
         onFieldSubmitted: onFieldSubmitted,
         controller: controller,
         obscureText: obscureText,

@@ -1,8 +1,9 @@
+import 'package:core/core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_core/core.dart';
+import 'package:ui/ui.dart';
 
 import '../pages.dart';
 
@@ -14,8 +15,6 @@ LoginParams _params(LoginControllers controllers) => LoginParams(
     );
 
 final class LoginPage extends StatelessWidget {
-  final ApiInfo apiInfo;
-
   void handleStateChanged(BuildContext context, LoginControllers controllers,
       LoaderState<LoginResponse> loaderState) {
     switch (loaderState) {
@@ -25,7 +24,7 @@ final class LoginPage extends StatelessWidget {
             Navigator.pushAndRemoveUntil(
               context,
               CupertinoPageRoute<void>(
-                builder: (context) => HomePage(apiInfo: apiInfo),
+                builder: (_) => const HomePage(),
               ),
               (_) => false,
             );
@@ -34,10 +33,7 @@ final class LoginPage extends StatelessWidget {
               context,
               CupertinoPageRoute<void>(
                 builder: (context) => VerificationPage(
-                  unauthenticatedSession: UnauthenticatedSession(
-                    apiInfo: apiInfo,
-                    user: user,
-                  ),
+                  unauthenticatedSession: UnauthenticatedSession(user: user),
                   resend: (session) => resendConfirmationEmail(
                     user: session.user,
                   ),
@@ -45,12 +41,11 @@ final class LoginPage extends StatelessWidget {
                     user: session.user,
                     code: code,
                   ),
-                  apiInfo: apiInfo,
                   loginParams: _params(controllers),
                 ),
               ),
             );
-          case LoginFailure(message: final message) ||
+          case LoginFailureResponse(message: final message) ||
                 LoginUnknownResponse(message: final message) ||
                 LoginChangePasswordRequired(message: final message):
             StyledBanner.show(
@@ -62,17 +57,13 @@ final class LoginPage extends StatelessWidget {
     }
   }
 
-  const LoginPage({
-    super.key,
-    required this.apiInfo,
-  }) : super();
+  const LoginPage({super.key}) : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 40.w),
           child: loginForm(
-            apiInfo,
             (context, controllers, submit) => LoaderConsumer(
               listener: (context, loaderState) =>
                   handleStateChanged(context, controllers, loaderState),
@@ -108,9 +99,8 @@ final class LoginPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             CupertinoPageRoute<void>(
-                              builder: (context) => ForgotPasswordScreen(
-                                apiInfo: apiInfo,
-                              ),
+                              builder: (context) =>
+                                  const ForgotPasswordScreen(),
                             ),
                           );
                         },
@@ -153,9 +143,7 @@ final class LoginPage extends StatelessWidget {
                               context.loginBloc.add(const LoaderCancelEvent());
                               Navigator.of(context).push(
                                 CupertinoPageRoute<void>(
-                                  builder: (context) => RegisterPage(
-                                    apiInfo: apiInfo,
-                                  ),
+                                  builder: (context) => const RegisterPage(),
                                 ),
                               );
                             },

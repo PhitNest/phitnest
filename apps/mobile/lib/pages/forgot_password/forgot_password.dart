@@ -1,7 +1,8 @@
+import 'package:core/core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_core/core.dart';
+import 'package:ui/ui.dart';
 
 import '../../widgets/widgets.dart';
 import '../verification/verification.dart';
@@ -9,8 +10,6 @@ import '../verification/verification.dart';
 part 'bloc.dart';
 
 final class ForgotPasswordScreen extends StatelessWidget {
-  final ApiInfo apiInfo;
-
   void handleStateChanged(
       BuildContext context,
       ForgotPasswordControllers controllers,
@@ -23,20 +22,21 @@ final class ForgotPasswordScreen extends StatelessWidget {
               context,
               CupertinoPageRoute<void>(
                 builder: (context) => VerificationPage(
-                  apiInfo: apiInfo,
                   loginParams: LoginParams(
                     email: controllers.emailController.text,
                     password: controllers.newPasswordController.text,
                   ),
-                  unauthenticatedSession: UnauthenticatedSession(
-                    user: user,
-                    apiInfo: apiInfo,
-                  ),
+                  unauthenticatedSession: UnauthenticatedSession(user: user),
                   resend: (session) => sendForgotPasswordRequest(
-                    apiInfo: apiInfo,
-                    email: controllers.emailController.text,
+                    controllers.emailController.text,
                   ).then(
-                    (state) => state is SendForgotPasswordSuccess,
+                    (state) => switch (state) {
+                      SendForgotPasswordSuccess() => null,
+                      SendForgotPasswordFailureResponse(
+                        message: final message
+                      ) =>
+                        message,
+                    },
                   ),
                   confirm: (session, code) => submitForgotPassword(
                     params: SubmitForgotPasswordParams(
@@ -45,7 +45,7 @@ final class ForgotPasswordScreen extends StatelessWidget {
                       newPassword: controllers.newPasswordController.text,
                     ),
                     session: session,
-                  ).then((state) => state == null),
+                  ).then((state) => state?.message),
                 ),
               ),
             );
@@ -59,17 +59,13 @@ final class ForgotPasswordScreen extends StatelessWidget {
     }
   }
 
-  const ForgotPasswordScreen({
-    super.key,
-    required this.apiInfo,
-  }) : super();
+  const ForgotPasswordScreen({super.key}) : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 40.w),
           child: forgotPasswordForm(
-            apiInfo,
             (context, controllers, submit) => LoaderConsumer(
               listener: (context, loaderState) =>
                   handleStateChanged(context, controllers, loaderState),

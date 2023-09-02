@@ -11,8 +11,8 @@ class VerificationControllers extends FormControllers {
   }
 }
 
-typedef ResendLoaderBloc = LoaderBloc<UnauthenticatedSession, bool>;
-typedef ResendLoaderConsumer = LoaderConsumer<UnauthenticatedSession, bool>;
+typedef ResendLoaderBloc = LoaderBloc<UnauthenticatedSession, String?>;
+typedef ResendLoaderConsumer = LoaderConsumer<UnauthenticatedSession, String?>;
 
 extension on BuildContext {
   ResendLoaderBloc get resendEmailLoaderBloc => loader();
@@ -22,7 +22,6 @@ typedef VerificationProvider
     = FormProvider<VerificationControllers, String, LoginResponse?>;
 
 VerificationProvider verificationForm(
-  ApiInfo apiInfo,
   Future<LoginResponse?> Function(String code) confirm,
   CreateFormConsumer<VerificationControllers, String, LoginResponse?>
       createConsumer,

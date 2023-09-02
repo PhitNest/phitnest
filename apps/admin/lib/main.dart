@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:phitnest_core/core.dart';
+import 'package:ui/ui.dart';
 
 import 'pages/pages.dart';
 
@@ -10,15 +10,14 @@ Future<void> main() => runPhitNest(
           Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute<void>(
-          builder: (context) => HomePage(apiInfo: session.apiInfo),
+          builder: (_) => const HomePage(),
         ),
         (_) => false,
       ),
-      sessionRestoreFailedBuilder: (context, apiInfo) =>
-          Navigator.pushAndRemoveUntil(
+      sessionRestoreFailedBuilder: (context) => Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute<void>(
-          builder: (context) => LoginPage(apiInfo: apiInfo),
+          builder: (_) => const LoginPage(),
         ),
         (_) => false,
       ),

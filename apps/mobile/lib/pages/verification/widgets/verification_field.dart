@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_core/core.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:ui/ui.dart';
 
 final class VerificationField extends StatelessWidget {
   final TextEditingController controller;

@@ -25,17 +25,11 @@ typedef RegisterProvider
     = FormProvider<RegisterControllers, RegisterParams, RegisterResponse>;
 
 RegisterProvider registerForm(
-  ApiInfo apiInfo,
   CreateFormConsumer<RegisterControllers, RegisterParams, RegisterResponse>
       createConsumer,
 ) =>
     RegisterProvider(
       createControllers: (_) => RegisterControllers(),
-      createLoader: (_) => LoaderBloc(
-        load: (params) => register(
-          params: params,
-          pool: apiInfo.pool,
-        ),
-      ),
+      createLoader: (_) => LoaderBloc(load: register),
       createConsumer: createConsumer,
     );
