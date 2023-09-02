@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "aws-config-to-dart": "python aws_config_to_dart.py"
+    "deploy-aws-dev": "python aws_config_to_dart.py"
   },
   "dependencies": {
     "aws": "workspace:*"

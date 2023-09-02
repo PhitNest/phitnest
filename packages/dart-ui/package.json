@@ -4,8 +4,5 @@
   "private": true,
   "scripts": {
     "install": "flutter pub get"
-  },
-  "dependencies": {
-    "aws-config-to-dart": "workspace:*"
   }
 }
