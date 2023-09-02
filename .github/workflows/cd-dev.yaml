@@ -4,19 +4,19 @@ on:
   workflow_dispatch:
   workflow_call:
 
-jobs:
-  cd:
-    uses: ./.github/workflows/cd.yaml
-    with:
-      deployment_env: dev
-    secrets:
-      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    
-  commit:
+jobs:    
+  deploy:
     needs: cd
     runs-on: ubuntu-latest
     steps:
+      - name: CD
+        uses: ./.github/workflows/cd.yaml
+        with:
+          deployment_env: dev
+        secrets:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
       - name: Commit AWS development environment changes
         uses: EndBug/add-and-commit@v9
         with:
