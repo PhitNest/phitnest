@@ -9,7 +9,7 @@
     },
     "aws-config-to-dart": {},
     "deploy-aws-dev": {
-      "dependsOn": ["aws-config-to-dart", "^deploy-aws-dev"]
+      "dependsOn": ["^deploy-aws-dev", "aws-config-to-dart"]
     }
   }
 }
