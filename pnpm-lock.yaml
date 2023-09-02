@@ -12,11 +12,7 @@ importers:
         specifier: latest
         version: 1.10.13
 
-  apps/admin:
-    dependencies:
-      aws-config-to-dart:
-        specifier: workspace:*
-        version: link:../../scripts/aws-config-to-dart
+  apps/admin: {}
 
   apps/aws:
     dependencies:
@@ -178,17 +174,9 @@ importers:
         specifier: workspace:*
         version: link:../../configs/tsconfigs
 
-  packages/dart-core:
-    dependencies:
-      aws-config-to-dart:
-        specifier: workspace:*
-        version: link:../../scripts/aws-config-to-dart
+  packages/dart-core: {}
 
-  packages/dart-ui:
-    dependencies:
-      aws-config-to-dart:
-        specifier: workspace:*
-        version: link:../../scripts/aws-config-to-dart
+  packages/dart-ui: {}
 
   packages/jest-helpers:
     devDependencies:
