@@ -7,8 +7,9 @@
       "persistent": true,
       "cache": false
     },
-    "deploy_dev": {
-      "dependsOn": ["^deploy_dev"]
+    "deploy-aws": {},
+    "deploy-aws-dev": {
+      "dependsOn": ["deploy-aws", "^deploy-aws-dev"]
     }
   }
 }
