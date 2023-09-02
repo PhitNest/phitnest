@@ -14,6 +14,7 @@ Future<void> runPhitNest({
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeCache();
+  initializeAws(useAdminAuth);
   runApp(
     PhitNestApp(
       useAdminAuth: useAdminAuth,
@@ -42,25 +43,26 @@ final class PhitNestApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ScreenUtilInit(
         designSize: const Size(375, 667),
-        builder: (context, _) =>
-            BlocProvider(create: (_) => SessionBloc(load: refreshSession)),
-        child: GestureDetector(
-          onTap: () {
-            final currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus) {
-              currentFocus.unfocus();
-            }
-          },
-          child: MaterialApp(
-            title: title,
-            theme: theme,
-            debugShowCheckedModeBanner: false,
-            scaffoldMessengerKey: StyledBanner.scaffoldMessengerKey,
-            home: Scaffold(
-              body: RestorePreviousSessionProvider(
-                useAdminAuth: useAdminAuth,
-                onSessionRestoreFailed: sessionRestoreFailedBuilder,
-                onSessionRestored: sessionRestoredBuilder,
+        builder: (context, _) => BlocProvider(
+          create: (_) => SessionBloc(load: refreshSession),
+          child: GestureDetector(
+            onTap: () {
+              final currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            child: MaterialApp(
+              title: title,
+              theme: theme,
+              debugShowCheckedModeBanner: false,
+              scaffoldMessengerKey: StyledBanner.scaffoldMessengerKey,
+              home: Scaffold(
+                body: RestorePreviousSessionProvider(
+                  useAdminAuth: useAdminAuth,
+                  onSessionRestoreFailed: sessionRestoreFailedBuilder,
+                  onSessionRestored: sessionRestoredBuilder,
+                ),
               ),
             ),
           ),

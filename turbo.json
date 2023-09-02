@@ -3,6 +3,10 @@
   "pipeline": {
     "lint": {},
     "test": {},
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
     "deploy_dev": {
       "dependsOn": ["^deploy_dev"]
     }
