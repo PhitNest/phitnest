@@ -36,7 +36,7 @@ jobs:
 
       - name: Deploy
         id: deploy
-        run: turbo deploy_${{ inputs.deployment_env }}
+        run: turbo deploy-aws-${{ inputs.deployment_env }}
 
       - name: Commit AWS development environment changes
         if: ${{ inputs.deployment_env == 'dev' }}

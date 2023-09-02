@@ -7,9 +7,9 @@
       "persistent": true,
       "cache": false
     },
-    "deploy-aws": {},
+    "aws-config-to-dart": {},
     "deploy-aws-dev": {
-      "dependsOn": ["deploy-aws", "^deploy-aws-dev"]
+      "dependsOn": ["aws-config-to-dart", "^deploy-aws-dev"]
     }
   }
 }
