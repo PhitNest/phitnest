@@ -4,7 +4,7 @@
     "lint": {},
     "test": {},
     "deploy_dev": {
-      "dependsOn": ["build", "^deploy_dev"]
+      "dependsOn": ["^deploy_dev"]
     }
   }
 }
