@@ -5,8 +5,5 @@
   "scripts": {
     "install": "flutter pub get",
     "dev": "flutter run -d chrome"
-  },
-  "dependencies": {
-    "aws-config-to-dart": "workspace:*"
   }
 }
