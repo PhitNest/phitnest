@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "install": "flutter pub get"
+    "install": "flutter pub get",
+    "dev": "flutter run -d chrome"
   },
   "dependencies": {
     "aws-config-to-dart": "workspace:*"

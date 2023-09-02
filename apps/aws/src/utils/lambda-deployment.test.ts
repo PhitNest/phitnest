@@ -23,29 +23,44 @@ describe("createDeploymentPackage", () => {
     );
     const outputFilePath = path.join(outputPath, "index.js");
     expect(fs.existsSync(outputFilePath));
+    const fileData = fs
+      .readFileSync(outputFilePath, {
+        encoding: "utf-8",
+      })
+      .replace(/\s/g, "");
+    const expectedFileData = fs
+      .readFileSync(getTestDataPath("expected_route1_post_out", "index.js"), {
+        encoding: "utf-8",
+      })
+      .replace(/\s/g, "");
+    expect(fileData).toEqual(expectedFileData);
     const nodeModulesOutput = path.join(outputPath, "node_modules");
     const copiedNodeModules = new Set(
-      getFilesRecursive(nodeModulesOutput).map((file) =>
+      getFilesRecursive(nodeModulesOutput).map((file) => [
         path.relative(nodeModulesOutput, file),
-      ),
+        fs.readFileSync(file, { encoding: "utf-8" }).replace(/\s/g, ""),
+      ]),
     );
     const expectedNodeModules = new Set(
-      getFilesRecursive(nodeModulesDir).map((file) =>
+      getFilesRecursive(nodeModulesDir).map((file) => [
         path.relative(nodeModulesDir, file),
-      ),
+        fs.readFileSync(file, { encoding: "utf-8" }).replace(/\s/g, ""),
+      ]),
     );
     expect(copiedNodeModules).toEqual(expectedNodeModules);
     const commonOutput = path.join(outputPath, "common");
     const copiedCommonFiles = new Set(
-      getFilesRecursive(commonOutput).map((file) =>
+      getFilesRecursive(commonOutput).map((file) => [
         path.relative(commonOutput, file),
-      ),
+        fs.readFileSync(file, { encoding: "utf-8" }).replace(/\s/g, ""),
+      ]),
     );
     const expectedCommon = getTestDataPath("expected_common_out");
     const expectedCommonFiles = new Set(
-      getFilesRecursive(expectedCommon).map((file) =>
+      getFilesRecursive(expectedCommon).map((file) => [
         path.relative(expectedCommon, file),
-      ),
+        fs.readFileSync(file, { encoding: "utf-8" }).replace(/\s/g, ""),
+      ]),
     );
     expect(copiedCommonFiles).toEqual(expectedCommonFiles);
   });

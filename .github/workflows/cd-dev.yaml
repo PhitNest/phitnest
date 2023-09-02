@@ -12,3 +12,15 @@ jobs:
     secrets:
       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Commit AWS changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: 'packages/dart-core/lib/config/aws.dart'
+          author_name: The PhitMachine
+          author_email: machine@phitnest.com
+          commit: --signoff
+          committer_name: The PhitMachine
+          committer_email: machine@phitnest.com
+          message: 'Saved CDK outputs'
+          new_branch: master

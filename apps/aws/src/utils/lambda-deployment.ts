@@ -5,9 +5,12 @@ import * as fse from "fs-extra";
 import * as fs from "fs";
 
 export const tsconfig: TranspileOptions = JSON.parse(
-  fs.readFileSync(path.join(process.cwd(), "tsconfig.json"), {
-    encoding: "utf-8",
-  }),
+  fs.readFileSync(
+    path.join(process.cwd(), "node_modules", "tsconfigs", "base.json"),
+    {
+      encoding: "utf-8",
+    },
+  ),
 );
 
 export function transpileFiles(
@@ -24,7 +27,7 @@ export function transpileFiles(
       const src = fs.readFileSync(file, { encoding: "utf-8" });
       const transpiledSrc = transpileModule(src, tsconfig).outputText;
       fs.mkdirSync(path.parse(outputPath).dir, { recursive: true });
-      fs.writeFileSync(outputPath, transpiledSrc);
+      fs.writeFileSync(outputPath, transpiledSrc, { encoding: "utf-8" });
     }
   }
 }
@@ -40,6 +43,7 @@ export function createDeploymentPackage(
   fs.writeFileSync(
     path.join(outputDir, "index.js"),
     transpileModule(source, tsconfig).outputText,
+    { encoding: "utf-8" },
   );
   fse.copySync(nodeModulesDir, path.join(outputDir, "node_modules"), {
     dereference: true,
