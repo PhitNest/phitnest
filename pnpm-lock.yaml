@@ -14,9 +14,9 @@ importers:
 
   apps/admin:
     dependencies:
-      dart-core:
+      aws-config-to-dart:
         specifier: workspace:*
-        version: link:../../packages/dart-core
+        version: link:../../scripts/aws-config-to-dart
 
   apps/aws:
     dependencies:

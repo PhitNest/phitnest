@@ -1,9 +1,9 @@
 import 'package:async/async.dart';
+import 'package:core/core.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_core/core.dart';
 
 import '../../../../constants/constants.dart';
 import '../styled_indicator.dart';
@@ -54,9 +54,7 @@ class NavBar extends StatelessWidget {
                         Center(
                           child: Padding(
                             padding: EdgeInsets.only(left: 12.w),
-                            child: NavBarLogo(
-                              state: state,
-                            ),
+                            child: NavBarLogo(state: state),
                           ),
                         ),
                         Row(

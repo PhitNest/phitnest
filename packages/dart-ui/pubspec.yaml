@@ -16,6 +16,7 @@ dependencies:
     path: ../dart-core
   google_fonts: ^5.1.0
   provider: ^6.0.5
+  http: ^1.1.0
   
 dev_dependencies:
   test: ^1.24.5

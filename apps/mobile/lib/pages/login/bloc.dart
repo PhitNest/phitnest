@@ -19,17 +19,11 @@ typedef LoginProvider
     = FormProvider<LoginControllers, LoginParams, LoginResponse>;
 
 LoginProvider loginForm(
-  ApiInfo apiInfo,
   CreateFormConsumer<LoginControllers, LoginParams, LoginResponse>
       createConsumer,
 ) =>
     LoginProvider(
       createControllers: (_) => LoginControllers(),
-      createLoader: (_) => LoaderBloc(
-        load: (params) => login(
-          params: params,
-          apiInfo: apiInfo,
-        ),
-      ),
+      createLoader: (_) => LoaderBloc(load: login),
       createConsumer: createConsumer,
     );

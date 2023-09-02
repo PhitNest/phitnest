@@ -1,6 +1,7 @@
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_core/core.dart';
+import 'package:ui/ui.dart';
 
 import '../register.dart';
 

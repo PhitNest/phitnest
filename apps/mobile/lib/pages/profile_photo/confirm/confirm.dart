@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:core/core.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:phitnest_core/core.dart';
+import 'package:ui/ui.dart';
 
 import '../../../widgets/widgets.dart';
 import '../../home/home.dart';
@@ -17,25 +18,22 @@ part 'bloc.dart';
 
 final class ConfirmPhotoPage extends StatelessWidget {
   final CroppedFile photo;
-  final ApiInfo apiInfo;
 
   const ConfirmPhotoPage({
     super.key,
     required this.photo,
-    required this.apiInfo,
   }) : super();
 
   Future<ConfirmPhotoResponse> submit(Session session) async {
     final bytes = await photo.readAsBytes();
-    final failure = await uploadProfilePicture(
+    final error = await uploadProfilePicture(
       photo: ByteStream.fromBytes(bytes),
       length: bytes.length,
       session: session,
+      identityId: session.credentials.userIdentityId!,
     );
-    if (failure != null) {
-      return ConfirmPhotoFailure(
-        error: failure,
-      );
+    if (error != null) {
+      return ConfirmPhotoFailure(message: error);
     } else {
       return const ConfirmPhotoSuccess();
     }
@@ -56,7 +54,7 @@ final class ConfirmPhotoPage extends StatelessWidget {
             Navigator.pushAndRemoveUntil(
               context,
               CupertinoPageRoute<void>(
-                builder: (context) => LoginPage(apiInfo: apiInfo),
+                builder: (_) => const LoginPage(),
               ),
               (_) => false,
             );
@@ -66,17 +64,12 @@ final class ConfirmPhotoPage extends StatelessWidget {
                 Navigator.pushAndRemoveUntil(
                   context,
                   CupertinoPageRoute<void>(
-                    builder: (context) => HomePage(
-                      apiInfo: apiInfo,
-                    ),
+                    builder: (_) => const HomePage(),
                   ),
                   (_) => false,
                 );
-              case ConfirmPhotoFailure(error: final error):
-                StyledBanner.show(
-                  message: error.message,
-                  error: true,
-                );
+              case ConfirmPhotoFailure(message: final error):
+                StyledBanner.show(message: error, error: true);
             }
         }
       default:
@@ -89,7 +82,6 @@ final class ConfirmPhotoPage extends StatelessWidget {
           child: SingleChildScrollView(
             child: BlocProvider(
               create: (_) => ConfirmPhotoBloc(
-                apiInfo: apiInfo,
                 load: (_, session) => submit(session),
               ),
               child: ConfirmPhotoConsumer(
@@ -111,10 +103,8 @@ final class ConfirmPhotoPage extends StatelessWidget {
                               style: theme.textTheme.bodySmall,
                             ),
                             onPressed: () => context.confirmPhotoBloc.add(
-                                LoaderLoadEvent((
-                              data: null,
-                              sessionLoader: context.sessionLoader
-                            ))),
+                                LoaderLoadEvent(
+                                    AuthReq(null, context.sessionLoader))),
                           ),
                           12.verticalSpace,
                           StyledOutlineButton(

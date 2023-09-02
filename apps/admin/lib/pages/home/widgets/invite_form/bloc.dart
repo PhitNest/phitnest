@@ -15,16 +15,12 @@ typedef InviteFormProvider
     = AuthFormProvider<InviteFormControllers, InviteParams, HttpResponse<void>>;
 
 InviteFormProvider inviteForm(
-  ApiInfo apiInfo,
   CreateAuthFormConsumer<InviteFormControllers, InviteParams,
           HttpResponse<void>>
       createConsumer,
 ) =>
     InviteFormProvider(
       createControllers: (_) => InviteFormControllers(),
-      createLoader: (_) => AuthLoaderBloc(
-        apiInfo: apiInfo,
-        load: createInvite,
-      ),
+      createLoader: (_) => AuthLoaderBloc(load: createInvite),
       createConsumer: createConsumer,
     );

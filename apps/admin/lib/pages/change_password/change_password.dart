@@ -1,5 +1,6 @@
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:phitnest_core/core.dart';
+import 'package:ui/ui.dart';
 
 import '../home/home.dart';
 import 'widgets/widgets.dart';
@@ -19,7 +20,7 @@ void _handleStateChanged(
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute<void>(
-              builder: (context) => HomePage(apiInfo: session.apiInfo),
+              builder: (_) => const HomePage(),
             ),
             (_) => false,
           );

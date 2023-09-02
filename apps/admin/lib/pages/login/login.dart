@@ -1,5 +1,6 @@
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:phitnest_core/core.dart';
+import 'package:ui/ui.dart';
 
 import '../change_password/change_password.dart';
 import '../home/home.dart';
@@ -8,10 +9,10 @@ import 'widgets/widgets.dart';
 part 'bloc.dart';
 
 final class LoginPage extends StatelessWidget {
-  final ApiInfo apiInfo;
-
   void handleStateChanged(
-      BuildContext context, LoaderState<LoginResponse> loaderState) {
+    BuildContext context,
+    LoaderState<LoginResponse> loaderState,
+  ) {
     switch (loaderState) {
       case LoaderLoadedState(data: final response):
         switch (response) {
@@ -20,9 +21,7 @@ final class LoginPage extends StatelessWidget {
                 .add(LoaderSetEvent(RefreshSessionSuccess(session)));
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute<void>(
-                builder: (context) => HomePage(
-                  apiInfo: session.apiInfo,
-                ),
+                builder: (_) => const HomePage(),
               ),
               (_) => false,
             );
@@ -31,7 +30,6 @@ final class LoginPage extends StatelessWidget {
               MaterialPageRoute<void>(
                 builder: (context) => ChangePasswordPage(
                   unauthenticatedSession: UnauthenticatedSession(
-                    apiInfo: apiInfo,
                     user: user,
                   ),
                 ),
@@ -47,10 +45,7 @@ final class LoginPage extends StatelessWidget {
     }
   }
 
-  const LoginPage({
-    super.key,
-    required this.apiInfo,
-  }) : super();
+  const LoginPage({super.key}) : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -58,7 +53,6 @@ final class LoginPage extends StatelessWidget {
           margin: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.25),
           child: loginForm(
-            apiInfo,
             (context, controllers, submit) => LoaderConsumer(
               listener: handleStateChanged,
               builder: (context, loaderState) {

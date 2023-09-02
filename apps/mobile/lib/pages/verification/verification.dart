@@ -1,8 +1,9 @@
+import 'package:core/core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phitnest_core/core.dart';
+import 'package:ui/ui.dart';
 
 import '../home/home.dart';
 import 'widgets/widgets.dart';
@@ -10,17 +11,17 @@ import 'widgets/widgets.dart';
 part 'bloc.dart';
 
 void _handleResendStateChanged(
-    BuildContext context, LoaderState<bool> loaderState) {
+    BuildContext context, LoaderState<String?> loaderState) {
   switch (loaderState) {
-    case LoaderLoadedState(data: final resent):
-      if (resent) {
+    case LoaderLoadedState(data: final error):
+      if (error == null) {
         StyledBanner.show(
           message: 'Email resent',
           error: false,
         );
       } else {
         StyledBanner.show(
-          message: 'Email not resent',
+          message: error,
           error: true,
         );
       }
@@ -31,10 +32,9 @@ void _handleResendStateChanged(
 final class VerificationPage extends StatelessWidget {
   final LoginParams loginParams;
   final UnauthenticatedSession unauthenticatedSession;
-  final Future<bool> Function(UnauthenticatedSession session) resend;
-  final Future<bool> Function(UnauthenticatedSession session, String code)
+  final Future<String?> Function(UnauthenticatedSession session) resend;
+  final Future<String?> Function(UnauthenticatedSession session, String code)
       confirm;
-  final ApiInfo apiInfo;
 
   const VerificationPage({
     super.key,
@@ -42,7 +42,6 @@ final class VerificationPage extends StatelessWidget {
     required this.unauthenticatedSession,
     required this.resend,
     required this.confirm,
-    required this.apiInfo,
   }) : super();
 
   void handleConfirmStateChanged(
@@ -58,9 +57,7 @@ final class VerificationPage extends StatelessWidget {
               Navigator.pushAndRemoveUntil(
                 context,
                 CupertinoPageRoute<void>(
-                  builder: (context) => HomePage(
-                    apiInfo: apiInfo,
-                  ),
+                  builder: (_) => const HomePage(),
                 ),
                 (_) => false,
               );
@@ -76,15 +73,12 @@ final class VerificationPage extends StatelessWidget {
     }
   }
 
-  Future<LoginResponse?> confirmAndLogin(String code) async {
-    final confirmed = await confirm(unauthenticatedSession, code);
-    if (confirmed) {
-      return await login(
-        apiInfo: unauthenticatedSession.apiInfo,
-        params: loginParams,
-      );
+  Future<LoginResponse> confirmAndLogin(String code) async {
+    final error = await confirm(unauthenticatedSession, code);
+    if (error == null) {
+      return await login(loginParams);
     } else {
-      return null;
+      return LoginUnknownResponse(message: error);
     }
   }
 
@@ -106,7 +100,6 @@ final class VerificationPage extends StatelessWidget {
                   52.verticalSpace,
                   Center(
                     child: verificationForm(
-                      apiInfo,
                       confirmAndLogin,
                       (context, controllers, submit) => LoaderConsumer(
                         listener: (context, loaderState) =>

@@ -1,10 +1,11 @@
+import 'package:core/core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:phitnest_core/core.dart';
+import 'package:ui/ui.dart';
 
 import '../../../constants/constants.dart';
 import '../../../widgets/widgets.dart';
@@ -50,20 +51,12 @@ Future<CroppedFile?> _takePhoto(BuildContext context) => _photoChosen(
     );
 
 final class PhotoInstructionsPage extends StatelessWidget {
-  final ApiInfo apiInfo;
-
-  const PhotoInstructionsPage({
-    super.key,
-    required this.apiInfo,
-  }) : super();
+  const PhotoInstructionsPage({super.key}) : super();
 
   void goToConfirm(BuildContext context, CroppedFile photo) =>
       Navigator.of(context).push(
         CupertinoPageRoute<void>(
-          builder: (context) => ConfirmPhotoPage(
-            photo: photo,
-            apiInfo: apiInfo,
-          ),
+          builder: (_) => ConfirmPhotoPage(photo: photo),
         ),
       );
 

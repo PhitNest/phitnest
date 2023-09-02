@@ -159,9 +159,10 @@ final class AuthLoaderBloc<ReqType, ResType>
     extends LoaderBloc<AuthReq<ReqType>, AuthResOrLost<ResType>> {
   AuthLoaderBloc({
     required Future<ResType> Function(ReqType, Session) load,
+    AuthReq<ReqType>? loadOnStart,
     super.initialData,
-    super.loadOnStart,
   }) : super(
+          loadOnStart: loadOnStart != null ? LoadOnStart(loadOnStart) : null,
           load: (req) async {
             switch (req.sessionLoader.state) {
               case LoaderLoadedState(data: final response):

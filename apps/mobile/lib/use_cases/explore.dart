@@ -1,4 +1,5 @@
-import 'package:phitnest_core/core.dart';
+import 'package:core/core.dart';
+import 'package:ui/ui.dart';
 
 import '../entities/entities.dart';
 import '../repositories/repositories.dart';
@@ -9,7 +10,7 @@ Future<HttpResponse<List<UserExplore>>> exploreUsers(Session session) async {
       final usersWithPictures = (await Future.wait(
         data.map(
           (user) async {
-            final pfp = await getProfilePicture(user.identityId, session);
+            final pfp = await getProfilePicture(session, user.identityId);
             return pfp != null
                 ? UserExplore(user: user, profilePicture: pfp)
                 : null;

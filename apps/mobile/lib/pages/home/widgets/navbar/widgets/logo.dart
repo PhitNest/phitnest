@@ -1,6 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../navbar.dart';
+
 const kLogoAnimationWidth = 8;
 const kLogoWidth = 36.62;
-Image _image(double animation, NavBarState state) => Image.asset(
+
+Image _logoImage(double animation, NavBarState state) => Image.asset(
       state.logoAssetPath!,
       width: kLogoWidth.w + animation * kLogoAnimationWidth.w,
     );
@@ -32,19 +38,13 @@ final class NavBarAnimationState extends State<NavBarAnimation>
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
       animation: controller,
-      builder: (context, child) => _image(controller.value, widget.state));
+      builder: (context, child) => _logoImage(controller.value, widget.state));
 
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
   }
-}
-
-enum AnimationState {
-  animating,
-  small,
-  large,
 }
 
 final class NavBarLogo extends StatelessWidget {
@@ -58,8 +58,7 @@ final class NavBarLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (state) {
-      case NavBarLoadingState(page: final page) ||
-            NavBarSendingFriendRequestState(page: final page):
+      case NavBarLoadingState(page: final page):
         if (page == NavBarPage.explore) {
           return const CircularProgressIndicator();
         }
@@ -72,18 +71,12 @@ final class NavBarLogo extends StatelessWidget {
         onTapDown: (_) => context.navBarBloc.add(const NavBarPressLogoEvent()),
         onTapUp: (_) => context.navBarBloc.add(const NavBarReleaseLogoEvent()),
         child: switch (state) {
-          NavBarHoldingLogoState() => _image(1, state),
-          NavBarReversedState() || NavBarLoadingState() => _image(0, state),
-          NavBarLoadedState(
-            page: final page,
-            exploreUsers: final exploreUsers
-          ) =>
-            switch (page) {
-              NavBarPage.explore => exploreUsers.isNotEmpty
-                  ? NavBarAnimation(state: state)
-                  : _image(0, state),
-              _ => _image(0, state),
-            },
+          NavBarHoldingLogoState() => _logoImage(1, state),
+          NavBarInactiveState() ||
+          NavBarReversedState() ||
+          NavBarLoadingState() =>
+            _logoImage(0, state),
+          NavBarLogoReadyState() => NavBarAnimation(state: state),
         });
   }
 }

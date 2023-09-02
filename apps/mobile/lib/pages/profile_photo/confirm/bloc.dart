@@ -12,14 +12,14 @@ final class ConfirmPhotoSuccess extends ConfirmPhotoResponse {
 }
 
 final class ConfirmPhotoFailure extends ConfirmPhotoResponse {
-  final Failure error;
+  final String message;
 
   const ConfirmPhotoFailure({
-    required this.error,
+    required this.message,
   }) : super();
 
   @override
-  List<Object?> get props => [error];
+  List<Object?> get props => [message];
 }
 
 typedef ConfirmPhotoBloc = AuthLoaderBloc<void, ConfirmPhotoResponse>;

@@ -1,22 +1,18 @@
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:phitnest_core/core.dart';
+import 'package:ui/ui.dart';
 
 import '../login/login.dart';
 import 'widgets/widgets.dart';
 
 final class HomePage extends StatelessWidget {
-  final ApiInfo apiInfo;
-
-  const HomePage({
-    super.key,
-    required this.apiInfo,
-  }) : super();
+  const HomePage({super.key}) : super();
 
   void returnToLogin(BuildContext context) => Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute<void>(
-          builder: (context) => LoginPage(apiInfo: apiInfo),
+          builder: (_) => const LoginPage(),
         ),
         (_) => false,
       );
@@ -38,12 +34,12 @@ final class HomePage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                InviteForm(apiInfo: apiInfo, onSessionLost: returnToLogin),
-                GymEntryForm(apiInfo: apiInfo, onSessionLost: returnToLogin),
+                InviteForm(onSessionLost: returnToLogin),
+                GymEntryForm(onSessionLost: returnToLogin),
               ],
             ),
             BlocProvider(
-              create: (context) => logoutBloc(apiInfo, context),
+              create: logoutBloc,
               child: LogoutConsumer(
                 listener: handleLogoutStateChanged,
                 builder: (context, logoutState) => switch (logoutState) {
@@ -52,7 +48,7 @@ final class HomePage extends StatelessWidget {
                     const CircularProgressIndicator(),
                   _ => TextButton(
                       onPressed: () => context.logoutBloc.add(LoaderLoadEvent(
-                          (data: null, sessionLoader: context.sessionLoader))),
+                          AuthReq(null, context.sessionLoader))),
                       child: const Text('Logout'),
                     ),
                 },
