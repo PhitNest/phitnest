@@ -5,8 +5,8 @@ on:
   workflow_call:
 
 jobs:
-  cd:
-    uses: ./.github/workflows/cd.yaml
+  cd-aws:
+    uses: ./.github/workflows/cd-aws.yaml
     with:
       deployment_env: prod
     secrets:
