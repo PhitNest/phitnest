@@ -25,7 +25,7 @@ jobs:
       - run: flutter --version
 
       - name: Install dependencies
-        run: npm i -g aws-cdk pnpm turbo && pnpm install
+        run: npm i -g aws-cdk pnpm turbo esbuild && pnpm install
 
       - name: Setup AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
