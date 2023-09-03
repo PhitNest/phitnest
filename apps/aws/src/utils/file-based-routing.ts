@@ -81,7 +81,7 @@ export function getRoutesFromFilesystem(routeDir: string): Route[] {
     }
 
     // Determine the HTTP method based on the dirname of the file
-    switch (filePath.dir) {
+    switch (path.basename(filePath.dir)) {
       case "get":
         method = HttpMethod.GET;
         break;
@@ -103,11 +103,14 @@ export function getRoutesFromFilesystem(routeDir: string): Route[] {
     }
 
     // Compute the relative and absolute paths for the route
-    const relativePath = path.relative(routeDir, path.parse(path.parse(file).dir).dir);
+    const relativePath = path.relative(routeDir, path.parse(file).dir);
     const absolutePath = path.join(routeDir, relativePath);
 
     // Format the API route path
-    let apiRoutePath = relativePath.replace(path.sep, "/");
+    let apiRoutePath = path.dirname(relativePath).replace(path.sep, "/");
+    if (apiRoutePath === ".") {
+      apiRoutePath = "";
+    }
     while (apiRoutePath.endsWith("/")) {
       apiRoutePath = apiRoutePath.substring(0, apiRoutePath.length - 1);
     }
@@ -118,8 +121,8 @@ export function getRoutesFromFilesystem(routeDir: string): Route[] {
     // Return the Route object
     return {
       path: apiRoutePath,
-      filesystemRelativePath: path.join(relativePath, filePath.dir),
-      filesystemAbsolutePath: path.join(absolutePath, filePath.dir),
+      filesystemRelativePath: relativePath,
+      filesystemAbsolutePath: absolutePath,
       method,
     };
   });

@@ -1,5 +1,5 @@
 import { HttpMethod } from "aws-cdk-lib/aws-lambda";
-import { getSharedTestDataPath } from "jest-helpers/src/test-helpers";
+import { getTestDataPath } from "jest-helpers/src/test-helpers";
 import {
   getFilesRecursive,
   getRoutesFromFilesystem,
@@ -7,7 +7,7 @@ import {
 import * as path from "path";
 import * as fs from "fs";
 
-interface TestPaths {
+type TestPaths = {
   rootPost: string;
   route1Get: string;
   route1Post: string;
@@ -18,14 +18,14 @@ interface TestPaths {
 
 function getTestPaths(apiRoutesDir: string): TestPaths {
   // Define the expected files in the directory
-  const rootPost = path.join(apiRoutesDir, "post.ts");
+  const rootPost = path.join(apiRoutesDir, "post", "index.ts");
   const route1 = path.join(apiRoutesDir, "route1");
-  const route1Get = path.join(route1, "get.js");
-  const route1Post = path.join(route1, "post.ts");
-  const route1Unknown = path.join(route1, "unknown.ts");
+  const route1Get = path.join(route1, "get", "index.js");
+  const route1Post = path.join(route1, "post", "index.ts");
+  const route1Unknown = path.join(route1, "index.ts");
   const route2 = path.join(apiRoutesDir, "route2", "subRoute");
-  const route2Get = path.join(route2, "get.ts");
-  const route2Post = path.join(route2, "post.js");
+  const route2Get = path.join(route2, "get", "index.ts");
+  const route2Post = path.join(route2, "post", "index.js");
 
   // Ensure that all the expected files exist
   expect(fs.existsSync(rootPost));
@@ -49,7 +49,7 @@ function getTestPaths(apiRoutesDir: string): TestPaths {
 describe("getFilesRecursive", () => {
   it("should return all files in a directory recursively", () => {
     // Define the directory to test, it is part of the shared test data
-    const apiRoutesDir = getSharedTestDataPath("api_routes", "src");
+    const apiRoutesDir = getTestDataPath("src");
 
     const {
       route1Post,
@@ -75,7 +75,7 @@ describe("getFilesRecursive", () => {
 describe("getRoutesFromFilesystem", () => {
   it("should return all routes in a directory", () => {
     // Define the directory to test, it is part of the shared test data
-    const apiRoutesDir = getSharedTestDataPath("api_routes", "src");
+    const apiRoutesDir = getTestDataPath("src");
 
     const { route1Post, route1Get, route2Get, route2Post } =
       getTestPaths(apiRoutesDir);
@@ -135,8 +135,8 @@ describe("getRoutesFromFilesystem", () => {
     expect(result).toContainEqual({
       path: "/",
       method: HttpMethod.POST,
-      filesystemAbsolutePath: apiRoutesDir,
-      filesystemRelativePath: "",
+      filesystemAbsolutePath: path.join(apiRoutesDir, "post"),
+      filesystemRelativePath: "post",
     });
   });
 });

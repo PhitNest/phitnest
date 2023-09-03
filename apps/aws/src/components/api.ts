@@ -93,7 +93,6 @@ export class ApiStack extends Construct {
       },
     );
     this.restApi.applyRemovalPolicy(RemovalPolicy.DESTROY);
-
     const routes: Route[] = [];
     for (const authLevel of Object.entries(AuthLevel)) {
       for (const route of getRoutesFromFilesystem(
