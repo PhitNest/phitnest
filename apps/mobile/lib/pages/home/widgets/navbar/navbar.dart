@@ -32,7 +32,7 @@ class NavBar extends StatelessWidget {
             return Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                builder(context, state),
+                Expanded(child: builder(context, state)),
                 Container(
                   height: NavBar.kHeight,
                   width: double.infinity,

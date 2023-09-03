@@ -79,6 +79,7 @@ final class PhotoInstructionsPage extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 40.w),
             child: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: MultiBlocProvider(
                 providers: [
                   BlocProvider(

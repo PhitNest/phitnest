@@ -80,6 +80,7 @@ final class ConfirmPhotoPage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         body: Center(
           child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: BlocProvider(
               create: (_) => ConfirmPhotoBloc(
                 load: (_, session) => _submit(session),

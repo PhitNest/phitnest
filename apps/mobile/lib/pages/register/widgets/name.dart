@@ -16,40 +16,43 @@ final class RegisterNamePage extends StatelessWidget {
   }) : super();
 
   @override
-  Widget build(BuildContext context) => SingleChildScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            120.verticalSpace,
-            Text(
-              'Let\'s get started! \nWhat\'s is your name?',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            42.verticalSpace,
-            StyledUnderlinedTextField(
-              hint: 'First name',
-              controller: controllers.firstNameController,
-              validator: validateNonEmpty,
-              textInputAction: TextInputAction.next,
-            ),
-            24.verticalSpace,
-            StyledUnderlinedTextField(
-              hint: 'Last name',
-              controller: controllers.lastNameController,
-              validator: validateNonEmpty,
-              textInputAction: TextInputAction.done,
-              onFieldSubmitted: (_) => onSubmit(),
-            ),
-            147.verticalSpace,
-            ElevatedButton(
-              onPressed: onSubmit,
-              child: Text(
-                'NEXT',
-                style: Theme.of(context).textTheme.bodySmall,
+  Widget build(BuildContext context) => Padding(
+        padding: EdgeInsets.symmetric(horizontal: 40.w),
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              120.verticalSpace,
+              Text(
+                'Let\'s get started! \nWhat\'s is your name?',
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
-            )
-          ],
+              42.verticalSpace,
+              StyledUnderlinedTextField(
+                hint: 'First name',
+                controller: controllers.firstNameController,
+                validator: validateNonEmpty,
+                textInputAction: TextInputAction.next,
+              ),
+              24.verticalSpace,
+              StyledUnderlinedTextField(
+                hint: 'Last name',
+                controller: controllers.lastNameController,
+                validator: validateNonEmpty,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) => onSubmit(),
+              ),
+              147.verticalSpace,
+              ElevatedButton(
+                onPressed: onSubmit,
+                child: Text(
+                  'NEXT',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              )
+            ],
+          ),
         ),
       );
 }
