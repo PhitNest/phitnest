@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
-    "deploy_dev": "DEPLOYMENT_ENV=dev cdk deploy --require-approval never --outputs-file ./outputs.json"
+    "deploy-aws-dev": "DEPLOYMENT_ENV=dev cdk deploy --require-approval never --outputs-file ./outputs.json"
   },
   "dependencies": {
     "aws-cdk-lib": "^2.87.0",

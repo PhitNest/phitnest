@@ -199,7 +199,13 @@ class HomePage extends StatelessWidget {
                   listener: handleExploreStateChanged,
                   builder: (context, exploreState) => NavBar(
                         listener: handleNavBarStateChanged,
-                        builder: (context, navBarState) => Container(),
+                        builder: (context, navBarState) =>
+                            switch (navBarState.page) {
+                          NavBarPage.explore => Container(),
+                          NavBarPage.news => Container(),
+                          NavBarPage.chat => Container(),
+                          NavBarPage.options => Container(),
+                        },
                       )),
             ),
           ),
