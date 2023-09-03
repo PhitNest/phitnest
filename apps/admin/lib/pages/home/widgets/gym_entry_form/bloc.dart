@@ -21,7 +21,7 @@ final class GymEntryFormControllers extends FormControllers {
 typedef GymEntryFormProvider = AuthFormProvider<GymEntryFormControllers,
     CreateGymParams, HttpResponse<CreateGymSuccess>>;
 
-GymEntryFormProvider gymEntryForm(
+GymEntryFormProvider _gymEntryForm(
   CreateAuthFormConsumer<GymEntryFormControllers, CreateGymParams,
           HttpResponse<CreateGymSuccess>>
       createConsumer,

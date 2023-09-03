@@ -14,59 +14,59 @@ LoginParams _params(LoginControllers controllers) => LoginParams(
       password: controllers.passwordController.text,
     );
 
-final class LoginPage extends StatelessWidget {
-  void handleStateChanged(BuildContext context, LoginControllers controllers,
-      LoaderState<LoginResponse> loaderState) {
-    switch (loaderState) {
-      case LoaderLoadedState(data: final response):
-        switch (response) {
-          case LoginSuccess():
-            Navigator.pushAndRemoveUntil(
-              context,
-              CupertinoPageRoute<void>(
-                builder: (_) => const HomePage(),
-              ),
-              (_) => false,
-            );
-          case LoginConfirmationRequired(user: final user):
-            Navigator.pushReplacement(
-              context,
-              CupertinoPageRoute<void>(
-                builder: (context) => VerificationPage(
-                  unauthenticatedSession: UnauthenticatedSession(user: user),
-                  resend: (session) => resendConfirmationEmail(
-                    user: session.user,
-                  ),
-                  confirm: (session, code) => confirmEmail(
-                    user: session.user,
-                    code: code,
-                  ),
-                  loginParams: _params(controllers),
+void _handleStateChanged(BuildContext context, LoginControllers controllers,
+    LoaderState<LoginResponse> loaderState) {
+  switch (loaderState) {
+    case LoaderLoadedState(data: final response):
+      switch (response) {
+        case LoginSuccess():
+          Navigator.pushAndRemoveUntil(
+            context,
+            CupertinoPageRoute<void>(
+              builder: (_) => const HomePage(),
+            ),
+            (_) => false,
+          );
+        case LoginConfirmationRequired(user: final user):
+          Navigator.pushReplacement(
+            context,
+            CupertinoPageRoute<void>(
+              builder: (context) => VerificationPage(
+                unauthenticatedSession: UnauthenticatedSession(user: user),
+                resend: (session) => resendConfirmationEmail(
+                  user: session.user,
                 ),
+                confirm: (session, code) => confirmEmail(
+                  user: session.user,
+                  code: code,
+                ),
+                loginParams: _params(controllers),
               ),
-            );
-          case LoginFailureResponse(message: final message) ||
-                LoginUnknownResponse(message: final message) ||
-                LoginChangePasswordRequired(message: final message):
-            StyledBanner.show(
-              message: message,
-              error: true,
-            );
-        }
-      default:
-    }
+            ),
+          );
+        case LoginFailureResponse(message: final message) ||
+              LoginUnknownResponse(message: final message) ||
+              LoginChangePasswordRequired(message: final message):
+          StyledBanner.show(
+            message: message,
+            error: true,
+          );
+      }
+    default:
   }
+}
 
+final class LoginPage extends StatelessWidget {
   const LoginPage({super.key}) : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 40.w),
-          child: loginForm(
+          child: _loginForm(
             (context, controllers, submit) => LoaderConsumer(
               listener: (context, loaderState) =>
-                  handleStateChanged(context, controllers, loaderState),
+                  _handleStateChanged(context, controllers, loaderState),
               builder: (context, loaderState) => Column(
                 children: [
                   120.verticalSpace,

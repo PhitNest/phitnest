@@ -50,28 +50,28 @@ Future<CroppedFile?> _takePhoto(BuildContext context) => _photoChosen(
       ),
     );
 
+void _goToConfirm(BuildContext context, CroppedFile photo) =>
+    Navigator.of(context).push(
+      CupertinoPageRoute<void>(
+        builder: (_) => ConfirmPhotoPage(photo: photo),
+      ),
+    );
+
+void _handleStateChanged(
+  BuildContext context,
+  LoaderState<CroppedFile?> loaderState,
+) {
+  switch (loaderState) {
+    case LoaderLoadedState(data: final photo):
+      if (photo != null) {
+        _goToConfirm(context, photo);
+      }
+    default:
+  }
+}
+
 final class PhotoInstructionsPage extends StatelessWidget {
   const PhotoInstructionsPage({super.key}) : super();
-
-  void goToConfirm(BuildContext context, CroppedFile photo) =>
-      Navigator.of(context).push(
-        CupertinoPageRoute<void>(
-          builder: (_) => ConfirmPhotoPage(photo: photo),
-        ),
-      );
-
-  void handleStateChanged(
-    BuildContext context,
-    LoaderState<CroppedFile?> loaderState,
-  ) {
-    switch (loaderState) {
-      case LoaderLoadedState(data: final photo):
-        if (photo != null) {
-          goToConfirm(context, photo);
-        }
-      default:
-    }
-  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -87,7 +87,7 @@ final class PhotoInstructionsPage extends StatelessWidget {
                   ),
                 ],
                 child: ChoosePhotoConsumer(
-                  listener: handleStateChanged,
+                  listener: _handleStateChanged,
                   builder: (context, choosePhotoState) => Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,

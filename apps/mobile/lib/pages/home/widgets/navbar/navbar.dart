@@ -11,14 +11,14 @@ import 'widgets/widgets.dart';
 
 part 'bloc.dart';
 
+void _handleNavBarStateChanged(BuildContext context, NavBarState state) {}
+
 class NavBar extends StatelessWidget {
   static double get kHeight => 66.h;
-  final void Function(BuildContext context, NavBarState state) listener;
   final Widget Function(BuildContext context, NavBarState state) builder;
 
   const NavBar({
     super.key,
-    required this.listener,
     required this.builder,
   });
 
@@ -26,7 +26,7 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) => BlocProvider(
         create: (_) => NavBarBloc(),
         child: BlocConsumer<NavBarBloc, NavBarState>(
-          listener: listener,
+          listener: _handleNavBarStateChanged,
           builder: (context, state) {
             final reversed = state is NavBarReversedState;
             return Column(

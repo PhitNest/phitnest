@@ -14,7 +14,7 @@ final class InviteFormControllers extends FormControllers {
 typedef InviteFormProvider
     = AuthFormProvider<InviteFormControllers, InviteParams, HttpResponse<void>>;
 
-InviteFormProvider inviteForm(
+InviteFormProvider _inviteForm(
   CreateAuthFormConsumer<InviteFormControllers, InviteParams,
           HttpResponse<void>>
       createConsumer,

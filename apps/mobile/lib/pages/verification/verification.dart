@@ -29,6 +29,35 @@ void _handleResendStateChanged(
   }
 }
 
+void _handleConfirmStateChanged(
+  BuildContext context,
+  VerificationControllers controllers,
+  LoaderState<LoginResponse?> loaderState,
+) {
+  switch (loaderState) {
+    case LoaderLoadedState(data: final response):
+      if (response != null) {
+        switch (response) {
+          case LoginSuccess():
+            Navigator.pushAndRemoveUntil(
+              context,
+              CupertinoPageRoute<void>(
+                builder: (_) => const HomePage(),
+              ),
+              (_) => false,
+            );
+          case LoginFailureResponse(message: final message):
+            StyledBanner.show(message: message, error: true);
+            controllers.codeController.clear();
+        }
+      } else {
+        StyledBanner.show(message: 'Invalid code', error: true);
+        controllers.codeController.clear();
+      }
+    default:
+  }
+}
+
 final class VerificationPage extends StatelessWidget {
   final LoginParams loginParams;
   final UnauthenticatedSession unauthenticatedSession;
@@ -44,36 +73,7 @@ final class VerificationPage extends StatelessWidget {
     required this.confirm,
   }) : super();
 
-  void handleConfirmStateChanged(
-    BuildContext context,
-    VerificationControllers controllers,
-    LoaderState<LoginResponse?> loaderState,
-  ) {
-    switch (loaderState) {
-      case LoaderLoadedState(data: final response):
-        if (response != null) {
-          switch (response) {
-            case LoginSuccess():
-              Navigator.pushAndRemoveUntil(
-                context,
-                CupertinoPageRoute<void>(
-                  builder: (_) => const HomePage(),
-                ),
-                (_) => false,
-              );
-            case LoginFailureResponse(message: final message):
-              StyledBanner.show(message: message, error: true);
-              controllers.codeController.clear();
-          }
-        } else {
-          StyledBanner.show(message: 'Invalid code', error: true);
-          controllers.codeController.clear();
-        }
-      default:
-    }
-  }
-
-  Future<LoginResponse> confirmAndLogin(String code) async {
+  Future<LoginResponse> _confirmAndLogin(String code) async {
     final error = await confirm(unauthenticatedSession, code);
     if (error == null) {
       return await login(loginParams);
@@ -100,10 +100,10 @@ final class VerificationPage extends StatelessWidget {
                   52.verticalSpace,
                   Center(
                     child: verificationForm(
-                      confirmAndLogin,
+                      _confirmAndLogin,
                       (context, controllers, submit) => LoaderConsumer(
                         listener: (context, loaderState) =>
-                            handleConfirmStateChanged(
+                            _handleConfirmStateChanged(
                                 context, controllers, loaderState),
                         builder: (context, loaderState) => ResendLoaderConsumer(
                           listener: _handleResendStateChanged,
