@@ -8,7 +8,7 @@ import 'package:ui/ui.dart';
 import '../../entities/entities.dart';
 import '../../repositories/repositories.dart';
 import '../../use_cases/use_cases.dart';
-import '../login/login.dart';
+import '../pages.dart';
 import 'widgets/widgets.dart';
 
 part 'bloc.dart';
@@ -66,14 +66,23 @@ void _handleGetUserStateChanged(
     _handleState(
       context,
       loaderState: loaderState,
-      onSuccess: (context, data) => _handleState(
-        context,
-        onSuccess: (context, exploreData) =>
-            context.homeBloc.add(HomeLoadedEvent(exploreData)),
-        onFailure: (context, failure) {},
-        authLost: (context, message) {},
-        loaderState: context.exploreBloc.state,
-      ),
+      onSuccess: (context, data) => switch (data) {
+        GetUserSuccess() => _handleState(
+            context,
+            onSuccess: (context, exploreData) =>
+                context.homeBloc.add(HomeLoadedEvent(exploreData)),
+            onFailure: (context, failure) {},
+            authLost: (context, message) {},
+            loaderState: context.exploreBloc.state,
+          ),
+        FailedToLoadProfilePicture() => Navigator.pushAndRemoveUntil(
+            context,
+            CupertinoPageRoute<void>(
+              builder: (_) => const PhotoInstructionsPage(),
+            ),
+            (_) => false,
+          ),
+      },
       onFailure: (context, data) => context.userBloc
           .add(LoaderLoadEvent(AuthReq(null, context.sessionLoader))),
       authLost: _goToLogin,

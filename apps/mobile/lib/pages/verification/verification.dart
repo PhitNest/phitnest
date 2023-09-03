@@ -87,6 +87,7 @@ final class VerificationPage extends StatelessWidget {
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 32.w),
           child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: BlocProvider(
               create: (_) => ResendLoaderBloc(load: resend),
               child: Column(
@@ -141,6 +142,7 @@ final class VerificationPage extends StatelessWidget {
                                             style: theme.textTheme.bodySmall,
                                           ),
                                         ),
+                                        16.verticalSpace,
                                         ElevatedButton(
                                           onPressed: () => context
                                               .resendEmailLoaderBloc

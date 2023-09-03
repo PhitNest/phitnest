@@ -3,7 +3,7 @@ import 'package:core/core.dart';
 import '../entities/entities.dart';
 
 Future<HttpResponse<List<User>>> getExploreUsers(Session session) => request(
-      route: '/explore',
+      route: 'explore',
       method: HttpMethod.get,
       session: session,
       parse: (list) => (list as List<dynamic>)
@@ -12,7 +12,7 @@ Future<HttpResponse<List<User>>> getExploreUsers(Session session) => request(
     );
 
 Future<HttpResponse<User>> getUser(Session session) => request(
-      route: '/user',
+      route: 'user',
       method: HttpMethod.get,
       parse: (json) => User.parse(json as Map<String, dynamic>),
       session: session,

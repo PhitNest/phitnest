@@ -7,7 +7,7 @@ Future<HttpResponse<FriendshipResponse>> sendFriendRequest(
   Session session,
 ) =>
     request(
-      route: '/friendship',
+      route: 'friendship',
       method: HttpMethod.post,
       session: session,
       data: {
