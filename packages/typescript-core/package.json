@@ -5,6 +5,7 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint ."
+
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity": "^3.370.0",

@@ -75,8 +75,13 @@ export function getRoutesFromFilesystem(routeDir: string): Route[] {
     // Initialize a variable to hold the HTTP method
     let method: HttpMethod;
 
-    // Determine the HTTP method based on the filename
-    switch (path.parse(file).name) {
+    const filePath = path.parse(file);
+    if (filePath.name !== "index") {
+      return [];
+    }
+
+    // Determine the HTTP method based on the dirname of the file
+    switch (filePath.dir) {
       case "get":
         method = HttpMethod.GET;
         break;
@@ -98,7 +103,7 @@ export function getRoutesFromFilesystem(routeDir: string): Route[] {
     }
 
     // Compute the relative and absolute paths for the route
-    const relativePath = path.relative(routeDir, path.parse(file).dir);
+    const relativePath = path.relative(routeDir, path.parse(path.parse(file).dir).dir);
     const absolutePath = path.join(routeDir, relativePath);
 
     // Format the API route path
@@ -113,8 +118,8 @@ export function getRoutesFromFilesystem(routeDir: string): Route[] {
     // Return the Route object
     return {
       path: apiRoutePath,
-      filesystemRelativePath: relativePath,
-      filesystemAbsolutePath: absolutePath,
+      filesystemRelativePath: path.join(relativePath, filePath.dir),
+      filesystemAbsolutePath: path.join(absolutePath, filePath.dir),
       method,
     };
   });

@@ -3,6 +3,10 @@
   "pipeline": {
     "lint": {},
     "test": {},
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
     "prebuild": {
       "dependsOn": ["^prebuild"]
     },
@@ -11,10 +15,6 @@
     },
     "postbuild": {
       "dependsOn": ["build", "^postbuild"]
-    },
-    "dev": {
-      "persistent": true,
-      "cache": false
     },
     "deploy-aws-dev": {
       "dependsOn": ["postbuild", "^deploy-aws-dev"]

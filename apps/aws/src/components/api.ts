@@ -15,7 +15,6 @@ import { Construct } from "constructs";
 import {
   Route,
   getRoutesFromFilesystem,
-  createDeploymentPackage,
 } from "../utils";
 import * as path from "path";
 
@@ -109,17 +108,6 @@ export class ApiStack extends Construct {
           );
         }
         routes.push(route);
-
-        createDeploymentPackage(
-          path.join(
-            route.filesystemAbsolutePath,
-            `${route.method.toLowerCase()}.ts`,
-          ),
-          props.nodeModulesDir,
-          props.commonDir,
-          this.deploymentDir(route),
-        );
-
         const lambdaFunction = this.createLambdaFunction(scope, route);
         const resource = this.restApi.root.resourceForPath(route.path);
         resource.addMethod(
@@ -142,25 +130,17 @@ export class ApiStack extends Construct {
     }
   }
 
-  private deploymentDir(route: Route): string {
-    return path.join(
-      this.props.apiDeploymentDir,
-      route.filesystemRelativePath,
-      route.method.toLowerCase(),
-    );
-  }
-
   private createLambdaFunction(scope: Construct, route: Route): NodejsFunction {
-    const deploymentDir = this.deploymentDir(route);
+    const deploymentDir = path.join(route.filesystemAbsolutePath, "dist");
     const func = new Function(
       scope,
-      `lambda-${route.path.replace("/", "-")}-${route.method}-${
+      `lambda-${route.method}-${route.path.replace("/", "-")}${
         this.props.deploymentEnv
       }`,
       {
         runtime: Runtime.NODEJS_16_X,
         handler: "index.invoke",
-        code: Code.fromAsset(deploymentDir),
+        code: Code.fromAsset(path.join(deploymentDir, "index.zip")),
         environment: {
           DYNAMO_TABLE_NAME: this.props.dynamoTableName,
           USER_POOL_ID: this.props.userPool.userPoolId,
