@@ -25,9 +25,6 @@ importers:
       fs-extra:
         specifier: ^11.1.1
         version: 11.1.1
-      typescript:
-        specifier: ^5.1.6
-        version: 5.2.2
     devDependencies:
       '@types/fs-extra':
         specifier: ^11.0.1
@@ -44,9 +41,18 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^5.61.0
         version: 5.62.0(eslint@8.48.0)(typescript@5.2.2)
-      api:
+      cognito-admin-presignup:
         specifier: workspace:*
-        version: link:../../packages/api
+        version: link:../../packages/api/cognito-hooks/admin-presignup
+      cognito-user-presignup:
+        specifier: workspace:*
+        version: link:../../packages/api/cognito-hooks/user-presignup
+      delete-friendship:
+        specifier: workspace:*
+        version: link:../../packages/api/private/friendship/delete
+      delete-user:
+        specifier: workspace:*
+        version: link:../../packages/api/private/user/delete
       eslint:
         specifier: ^8.44.0
         version: 8.48.0
@@ -59,12 +65,36 @@ importers:
       eslint-plugin-prettier:
         specifier: ^5.0.0-alpha.2
         version: 5.0.0(eslint-config-prettier@8.10.0)(eslint@8.48.0)(prettier@3.0.3)
+      get-explore:
+        specifier: workspace:*
+        version: link:../../packages/api/private/explore/get
+      get-friendship:
+        specifier: workspace:*
+        version: link:../../packages/api/private/friendship/get
+      get-gym-list:
+        specifier: workspace:*
+        version: link:../../packages/api/admin/gym/list/get
+      get-user:
+        specifier: workspace:*
+        version: link:../../packages/api/private/user/get
       jest:
         specifier: ^29.6.1
         version: 29.6.4(@types/node@20.5.7)(ts-node@10.9.1)
       jest-helpers:
         specifier: workspace:*
         version: link:../../packages/jest-helpers
+      post-admin-invite:
+        specifier: workspace:*
+        version: link:../../packages/api/admin/admin-invite/post
+      post-friendship:
+        specifier: workspace:*
+        version: link:../../packages/api/private/friendship/post
+      post-gym:
+        specifier: workspace:*
+        version: link:../../packages/api/admin/gym/post
+      post-invite:
+        specifier: workspace:*
+        version: link:../../packages/api/private/invite/post
       prettier:
         specifier: ^3.0.0
         version: 3.0.3
@@ -116,7 +146,329 @@ importers:
         specifier: ^20.5.7
         version: 20.5.7
 
-  packages/api:
+  packages/api/admin/admin-invite/post:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../../../typescript-core
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../../configs/tsconfigs
+
+  packages/api/admin/gym/list/get:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../../../../typescript-core
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../../../configs/tsconfigs
+
+  packages/api/admin/gym/post:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      axios:
+        specifier: ^1.4.0
+        version: 1.5.0
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../../../typescript-core
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../../configs/tsconfigs
+
+  packages/api/cognito-hooks/admin-presignup:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../../typescript-core
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../configs/tsconfigs
+
+  packages/api/cognito-hooks/user-presignup:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../../typescript-core
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../configs/tsconfigs
+
+  packages/api/private/explore/get:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../../../typescript-core
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../../configs/tsconfigs
+
+  packages/api/private/friendship/delete:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../../../typescript-core
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../../configs/tsconfigs
+
+  packages/api/private/friendship/get:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../../../typescript-core
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../../configs/tsconfigs
+
+  packages/api/private/friendship/post:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../../../typescript-core
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../../configs/tsconfigs
+
+  packages/api/private/invite/post:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../../../typescript-core
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../../configs/tsconfigs
+
+  packages/api/private/user/delete:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../../../typescript-core
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../../configs/tsconfigs
+
+  packages/api/private/user/get:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../../../typescript-core
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../../configs/tsconfigs
+
+  packages/dart-core: {}
+
+  packages/dart-ui: {}
+
+  packages/jest-helpers:
+    devDependencies:
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../configs/eslint-configs
+      jest:
+        specifier: ^29.6.1
+        version: 29.6.4(@types/node@20.5.7)
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../configs/tsconfigs
+
+  packages/typescript-core:
     dependencies:
       '@aws-sdk/client-cognito-identity':
         specifier: ^3.370.0
@@ -130,9 +482,6 @@ importers:
       aws-lambda:
         specifier: ^1.0.7
         version: 1.0.7
-      axios:
-        specifier: ^1.4.0
-        version: 1.5.0
       ksuid:
         specifier: ^3.0.0
         version: 3.0.0
@@ -140,7 +489,7 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       zod:
-        specifier: ^3.21.4
+        specifier: ^3.22.2
         version: 3.22.2
     devDependencies:
       '@aws-sdk/types':
@@ -170,28 +519,6 @@ importers:
       jest-helpers:
         specifier: workspace:*
         version: link:../jest-helpers
-      tsconfigs:
-        specifier: workspace:*
-        version: link:../../configs/tsconfigs
-      tslib:
-        specifier: ^2.6.2
-        version: 2.6.2
-
-  packages/dart-core: {}
-
-  packages/dart-ui: {}
-
-  packages/jest-helpers:
-    devDependencies:
-      eslint:
-        specifier: ^8.44.0
-        version: 8.48.0
-      eslint-configs:
-        specifier: workspace:*
-        version: link:../../configs/eslint-configs
-      jest:
-        specifier: ^29.6.1
-        version: 29.6.4(@types/node@20.5.7)
       tsconfigs:
         specifier: workspace:*
         version: link:../../configs/tsconfigs
@@ -4659,6 +4986,7 @@ packages:
     resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
     engines: {node: '>=14.17'}
     hasBin: true
+    dev: true
 
   /universalify@2.0.0:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
