@@ -12,7 +12,7 @@ export class PhitnestStack extends Stack {
   constructor(scope: Construct) {
     super(scope, `phitnest-stack-${kDeploymentEnv}`);
 
-    const apiDir = path.join(process.cwd(), "node_modules", "api");
+    const apiDir = path.join(process.cwd(), "..", "..", "packages", "api");
 
     const dynamo = new DynamoStack(this, {
       deploymentEnv: kDeploymentEnv,
