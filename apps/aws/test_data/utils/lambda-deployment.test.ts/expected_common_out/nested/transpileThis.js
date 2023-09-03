@@ -1,6 +1,0 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.myNumber = exports.myString = void 0;
-exports.myString = "otherFile";
-exports.myNumber = 4;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibW9kdWxlLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsibW9kdWxlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7OztBQUFhLFFBQUEsUUFBUSxHQUFXLFdBQVcsQ0FBQztBQUMvQixRQUFBLFFBQVEsR0FBVyxDQUFDLENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgY29uc3QgbXlTdHJpbmc6IHN0cmluZyA9IFwib3RoZXJGaWxlXCI7XHJcbmV4cG9ydCBjb25zdCBteU51bWJlcjogbnVtYmVyID0gNDtcclxuIl19
