@@ -69,7 +69,7 @@ export class S3Stack extends Construct {
         effect: Effect.ALLOW,
         actions: ["s3:PutObject", "s3:DeleteObject"],
         resources: [
-          `${userBucket.bucketArn}/profilePictures/\${cognito-identity.amazonaws.com:sub}.txt`,
+          `${userBucket.bucketArn}/profilePictures/\${cognito-identity.amazonaws.com:sub}`,
         ],
       }),
     );

@@ -21,9 +21,11 @@ Future<ChangePasswordResponse> changePassword({
         kIdentityPoolId,
         unauthenticatedSession.user.pool,
       );
-      await credentials.getAwsCredentials(
-        session.getIdToken().getJwtToken(),
-      );
+      if (!useAdminAuth) {
+        await credentials.getAwsCredentials(
+          session.getIdToken().getJwtToken(),
+        );
+      }
       return ChangePasswordSuccess(
         Session(
           user: unauthenticatedSession.user,

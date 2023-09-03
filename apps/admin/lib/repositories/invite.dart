@@ -4,7 +4,7 @@ import '../entities/entities.dart';
 
 Future<HttpResponse<void>> createInvite(InviteParams params, Session session) =>
     request(
-      route: '/adminInvite',
+      route: 'admin-invite',
       method: HttpMethod.post,
       session: session,
       data: params.toJson(),

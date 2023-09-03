@@ -21,7 +21,10 @@ Future<LoginResponse> login(LoginParams params) async {
       final userId = session.accessToken.getSub();
       if (userId != null) {
         final credentials = CognitoCredentials(kIdentityPoolId, userPool);
-        await credentials.getAwsCredentials(session.getIdToken().getJwtToken());
+        if (!useAdminAuth) {
+          await credentials
+              .getAwsCredentials(session.getIdToken().getJwtToken());
+        }
         return LoginSuccess(
           session: Session(
             user: user,

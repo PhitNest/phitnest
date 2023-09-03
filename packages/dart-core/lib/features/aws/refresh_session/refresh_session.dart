@@ -39,8 +39,10 @@ Future<RefreshSessionResponse> refreshSession(Session session) async {
       final newUserSession = await session.user
           .refreshSession(session.cognitoSession.refreshToken!);
       if (newUserSession != null) {
-        await session.credentials.getAwsCredentials(
-            session.cognitoSession.getIdToken().getJwtToken());
+        if (!useAdminAuth) {
+          await session.credentials.getAwsCredentials(
+              session.cognitoSession.getIdToken().getJwtToken());
+        }
         return RefreshSessionSuccess(
           Session(
             user: session.user,
@@ -65,8 +67,10 @@ Future<RefreshSessionResponse> getPreviousSession() async {
             kIdentityPoolId,
             userPool,
           );
-          await credentials
-              .getAwsCredentials(session.getIdToken().getJwtToken());
+          if (!useAdminAuth) {
+            await credentials
+                .getAwsCredentials(session.getIdToken().getJwtToken());
+          }
           return RefreshSessionSuccess(
             Session(
               user: user,
