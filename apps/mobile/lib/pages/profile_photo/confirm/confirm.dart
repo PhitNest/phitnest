@@ -16,6 +16,43 @@ import '../../login/login.dart';
 
 part 'bloc.dart';
 
+void _handleStateChanged(
+  BuildContext context,
+  LoaderState<AuthResOrLost<ConfirmPhotoResponse>> loaderState,
+) {
+  switch (loaderState) {
+    case LoaderLoadedState(data: final data):
+      switch (data) {
+        case AuthLost(message: final message):
+          StyledBanner.show(
+            message: message,
+            error: true,
+          );
+          Navigator.pushAndRemoveUntil(
+            context,
+            CupertinoPageRoute<void>(
+              builder: (_) => const LoginPage(),
+            ),
+            (_) => false,
+          );
+        case AuthRes(data: final data):
+          switch (data) {
+            case ConfirmPhotoSuccess():
+              Navigator.pushAndRemoveUntil(
+                context,
+                CupertinoPageRoute<void>(
+                  builder: (_) => const HomePage(),
+                ),
+                (_) => false,
+              );
+            case ConfirmPhotoFailure(message: final error):
+              StyledBanner.show(message: error, error: true);
+          }
+      }
+    default:
+  }
+}
+
 final class ConfirmPhotoPage extends StatelessWidget {
   final CroppedFile photo;
 
@@ -24,7 +61,7 @@ final class ConfirmPhotoPage extends StatelessWidget {
     required this.photo,
   }) : super();
 
-  Future<ConfirmPhotoResponse> submit(Session session) async {
+  Future<ConfirmPhotoResponse> _submit(Session session) async {
     final bytes = await photo.readAsBytes();
     final error = await uploadProfilePicture(
       photo: ByteStream.fromBytes(bytes),
@@ -39,53 +76,16 @@ final class ConfirmPhotoPage extends StatelessWidget {
     }
   }
 
-  void handleStateChanged(
-    BuildContext context,
-    LoaderState<AuthResOrLost<ConfirmPhotoResponse>> loaderState,
-  ) {
-    switch (loaderState) {
-      case LoaderLoadedState(data: final data):
-        switch (data) {
-          case AuthLost(message: final message):
-            StyledBanner.show(
-              message: message,
-              error: true,
-            );
-            Navigator.pushAndRemoveUntil(
-              context,
-              CupertinoPageRoute<void>(
-                builder: (_) => const LoginPage(),
-              ),
-              (_) => false,
-            );
-          case AuthRes(data: final data):
-            switch (data) {
-              case ConfirmPhotoSuccess():
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  CupertinoPageRoute<void>(
-                    builder: (_) => const HomePage(),
-                  ),
-                  (_) => false,
-                );
-              case ConfirmPhotoFailure(message: final error):
-                StyledBanner.show(message: error, error: true);
-            }
-        }
-      default:
-    }
-  }
-
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Center(
           child: SingleChildScrollView(
             child: BlocProvider(
               create: (_) => ConfirmPhotoBloc(
-                load: (_, session) => submit(session),
+                load: (_, session) => _submit(session),
               ),
               child: ConfirmPhotoConsumer(
-                listener: handleStateChanged,
+                listener: _handleStateChanged,
                 builder: (context, confirmState) => Column(
                   children: [
                     Image.file(

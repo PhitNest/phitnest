@@ -47,7 +47,7 @@ final class ChangePasswordPage extends StatelessWidget {
         body: Container(
           margin: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.25),
-          child: changePasswordForm(
+          child: _changePasswordForm(
             unauthenticatedSession,
             (context, controllers, submit) => LoaderConsumer(
               listener: _handleStateChanged,

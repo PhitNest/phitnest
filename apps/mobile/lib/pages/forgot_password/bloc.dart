@@ -18,10 +18,11 @@ final class ForgotPasswordControllers extends FormControllers {
 typedef ForgotPasswordProvider = FormProvider<ForgotPasswordControllers, String,
     SendForgotPasswordResponse>;
 
-ForgotPasswordProvider forgotPasswordForm(
-        CreateFormConsumer<ForgotPasswordControllers, String,
-                SendForgotPasswordResponse>
-            createConsumer) =>
+ForgotPasswordProvider _forgotPasswordForm(
+  CreateFormConsumer<ForgotPasswordControllers, String,
+          SendForgotPasswordResponse>
+      createConsumer,
+) =>
     ForgotPasswordProvider(
       createControllers: (_) => ForgotPasswordControllers(),
       createLoader: (_) => LoaderBloc(load: sendForgotPasswordRequest),

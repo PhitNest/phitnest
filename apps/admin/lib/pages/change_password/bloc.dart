@@ -14,7 +14,7 @@ final class ChangePasswordControllers extends FormControllers {
 typedef ChangePasswordProvider
     = FormProvider<ChangePasswordControllers, String, ChangePasswordResponse>;
 
-ChangePasswordProvider changePasswordForm(
+ChangePasswordProvider _changePasswordForm(
         UnauthenticatedSession unauthenticatedSession,
         CreateFormConsumer<ChangePasswordControllers, String,
                 ChangePasswordResponse>

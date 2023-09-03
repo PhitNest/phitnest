@@ -47,7 +47,7 @@ final class InviteForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
-        child: inviteForm(
+        child: _inviteForm(
           (context, controllers, submit) => AuthLoaderConsumer(
             listener: (context, loaderState) =>
                 handleStateChanged(context, controllers, loaderState),
