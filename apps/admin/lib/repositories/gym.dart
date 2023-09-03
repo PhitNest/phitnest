@@ -7,7 +7,7 @@ Future<HttpResponse<CreateGymSuccess>> createGym(
   Session session,
 ) =>
     request(
-      route: '/gym',
+      route: 'gym',
       method: HttpMethod.post,
       session: session,
       data: params.toJson(),

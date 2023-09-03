@@ -15,6 +15,7 @@ export 'secure_storage.dart';
 export 'session.dart';
 
 CognitoUserPool? _userPool;
+bool? _useAdminAuth;
 
 CognitoUserPool get userPool {
   if (_userPool == null) {
@@ -23,7 +24,15 @@ CognitoUserPool get userPool {
   return _userPool!;
 }
 
+bool get useAdminAuth {
+  if (_useAdminAuth == null) {
+    throw Exception('Admin auth not initialized. Call initializeAws() first.');
+  }
+  return _useAdminAuth!;
+}
+
 void initializeAws(bool useAdminAuth) {
+  _useAdminAuth = useAdminAuth;
   if (useAdminAuth) {
     _userPool = CognitoUserPool(
       kAdminPoolId,

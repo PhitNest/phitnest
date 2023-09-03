@@ -26,10 +26,13 @@ String _createUrl(
   String route,
   String? overrideHost,
   String? overridePort,
-) =>
-    '${overrideHost ?? _host}'
-    '${(overridePort ?? _port).isEmpty ? "" : ":${overridePort ?? _port}"}'
-    '$route';
+) {
+  final port = overridePort ?? _port;
+  return '${overrideHost ?? _host}'
+      '${port.isEmpty || port == "443" || port == "80" ? "" : ""
+          ":${overridePort ?? _port}"}'
+      '$route';
+}
 
 String _host = kHost;
 String _port = kPort;
