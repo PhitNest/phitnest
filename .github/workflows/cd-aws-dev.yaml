@@ -1,0 +1,14 @@
+name: CD Dev aws
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  cd-aws:
+    uses: ./.github/workflows/cd-aws.yaml
+    with:
+      deployment_env: dev
+    secrets:
+      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
