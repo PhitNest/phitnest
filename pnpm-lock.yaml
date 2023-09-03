@@ -35,18 +35,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^5.61.0
         version: 5.62.0(eslint@8.48.0)(typescript@5.2.2)
-      cognito-admin-presignup:
+      api:
         specifier: workspace:*
-        version: link:../../packages/api/cognito-hooks/admin-presignup
-      cognito-user-presignup:
-        specifier: workspace:*
-        version: link:../../packages/api/cognito-hooks/user-presignup
-      delete-friendship:
-        specifier: workspace:*
-        version: link:../../packages/api/private/friendship/delete
-      delete-user:
-        specifier: workspace:*
-        version: link:../../packages/api/private/user/delete
+        version: link:../../packages/api
       eslint:
         specifier: ^8.44.0
         version: 8.48.0
@@ -59,36 +50,12 @@ importers:
       eslint-plugin-prettier:
         specifier: ^5.0.0-alpha.2
         version: 5.0.0(eslint-config-prettier@8.10.0)(eslint@8.48.0)(prettier@3.0.3)
-      get-explore:
-        specifier: workspace:*
-        version: link:../../packages/api/private/explore/get
-      get-friendship:
-        specifier: workspace:*
-        version: link:../../packages/api/private/friendship/get
-      get-gym-list:
-        specifier: workspace:*
-        version: link:../../packages/api/admin/gym/list/get
-      get-user:
-        specifier: workspace:*
-        version: link:../../packages/api/private/user/get
       jest:
         specifier: ^29.6.1
         version: 29.6.4(@types/node@20.5.7)(ts-node@10.9.1)
       jest-helpers:
         specifier: workspace:*
         version: link:../../packages/jest-helpers
-      post-admin-invite:
-        specifier: workspace:*
-        version: link:../../packages/api/admin/admin-invite/post
-      post-friendship:
-        specifier: workspace:*
-        version: link:../../packages/api/private/friendship/post
-      post-gym:
-        specifier: workspace:*
-        version: link:../../packages/api/admin/gym/post
-      post-invite:
-        specifier: workspace:*
-        version: link:../../packages/api/private/invite/post
       prettier:
         specifier: ^3.0.0
         version: 3.0.3
@@ -139,6 +106,45 @@ importers:
       '@types/node':
         specifier: ^20.5.7
         version: 20.5.7
+
+  packages/api:
+    devDependencies:
+      cognito-admin-presignup:
+        specifier: workspace:*
+        version: link:cognito-hooks/admin-presignup
+      cognito-user-presignup:
+        specifier: workspace:*
+        version: link:cognito-hooks/user-presignup
+      delete-friendship:
+        specifier: workspace:*
+        version: link:private/friendship/delete
+      delete-user:
+        specifier: workspace:*
+        version: link:private/user/delete
+      get-explore:
+        specifier: workspace:*
+        version: link:private/explore/get
+      get-friendship:
+        specifier: workspace:*
+        version: link:private/friendship/get
+      get-gym-list:
+        specifier: workspace:*
+        version: link:admin/gym/list/get
+      get-user:
+        specifier: workspace:*
+        version: link:private/user/get
+      post-admin-invite:
+        specifier: workspace:*
+        version: link:admin/admin-invite/post
+      post-friendship:
+        specifier: workspace:*
+        version: link:private/friendship/post
+      post-gym:
+        specifier: workspace:*
+        version: link:admin/gym/post
+      post-invite:
+        specifier: workspace:*
+        version: link:private/invite/post
 
   packages/api/admin/admin-invite/post:
     dependencies:
