@@ -12,10 +12,7 @@ import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Role } from "aws-cdk-lib/aws-iam";
 import { Certificate, ICertificate } from "aws-cdk-lib/aws-certificatemanager";
 import { Construct } from "constructs";
-import {
-  Route,
-  getRoutesFromFilesystem,
-} from "../utils";
+import { Route, getRoutesFromFilesystem } from "../utils";
 import * as path from "path";
 
 enum AuthLevel {

@@ -49,11 +49,6 @@ export type Route = {
   method: HttpMethod;
 
   /**
-   * The route's relative path in the filesystem. (relative to the routeDir)
-   */
-  filesystemRelativePath: string;
-
-  /**
    * The route's absolute path in the filesystem.
    */
   filesystemAbsolutePath: string;
@@ -121,7 +116,6 @@ export function getRoutesFromFilesystem(routeDir: string): Route[] {
     // Return the Route object
     return {
       path: apiRoutePath,
-      filesystemRelativePath: relativePath,
       filesystemAbsolutePath: absolutePath,
       method,
     };

@@ -14,7 +14,7 @@ type TestPaths = {
   route1Unknown: string;
   route2Get: string;
   route2Post: string;
-}
+};
 
 function getTestPaths(apiRoutesDir: string): TestPaths {
   // Define the expected files in the directory
@@ -93,10 +93,6 @@ describe("getRoutesFromFilesystem", () => {
       path: "/route1",
       method: HttpMethod.GET,
       filesystemAbsolutePath: route1GetAbsolutePath,
-      filesystemRelativePath: path.relative(
-        apiRoutesDir,
-        route1GetAbsolutePath,
-      ),
     });
 
     const route2GetAbsolutePath = path.parse(route2Get).dir;
@@ -104,10 +100,6 @@ describe("getRoutesFromFilesystem", () => {
       path: "/route2/subRoute",
       method: HttpMethod.GET,
       filesystemAbsolutePath: route2GetAbsolutePath,
-      filesystemRelativePath: path.relative(
-        apiRoutesDir,
-        route2GetAbsolutePath,
-      ),
     });
 
     const route1PostAbsolutePath = path.parse(route1Post).dir;
@@ -115,10 +107,6 @@ describe("getRoutesFromFilesystem", () => {
       path: "/route1",
       method: HttpMethod.POST,
       filesystemAbsolutePath: route1PostAbsolutePath,
-      filesystemRelativePath: path.relative(
-        apiRoutesDir,
-        route1PostAbsolutePath,
-      ),
     });
 
     const route2PostAbsolutePath = path.parse(route2Post).dir;
@@ -126,17 +114,12 @@ describe("getRoutesFromFilesystem", () => {
       path: "/route2/subRoute",
       method: HttpMethod.POST,
       filesystemAbsolutePath: route2PostAbsolutePath,
-      filesystemRelativePath: path.relative(
-        apiRoutesDir,
-        route2PostAbsolutePath,
-      ),
     });
 
     expect(result).toContainEqual({
       path: "/",
       method: HttpMethod.POST,
       filesystemAbsolutePath: path.join(apiRoutesDir, "post"),
-      filesystemRelativePath: "post",
     });
   });
 });

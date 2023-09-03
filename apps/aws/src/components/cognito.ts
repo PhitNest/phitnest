@@ -38,10 +38,7 @@ export class CognitoStack extends Construct {
       sesRegion: props.region,
     });
     const userPoolPrefix = "PhitnestUser";
-    const userPresignupDir = path.join(
-      props.cognitoHooksDir,
-      "user-presignup",
-    );
+    const userPresignupDir = path.join(props.cognitoHooksDir, "user-presignup");
     const userPresignupHook = this.createPresignupHook(
       scope,
       props.dynamoTableName,

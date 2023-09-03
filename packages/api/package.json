@@ -1,0 +1,19 @@
+{
+  "name": "api",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "post-admin-invite": "workspace:*",
+    "get-gym-list": "workspace:*",
+    "post-gym": "workspace:*",
+    "cognito-user-presignup": "workspace:*",
+    "cognito-admin-presignup": "workspace:*",
+    "get-explore": "workspace:*",
+    "get-friendship": "workspace:*",
+    "delete-friendship": "workspace:*",
+    "post-friendship": "workspace:*",
+    "post-invite": "workspace:*",
+    "delete-user": "workspace:*",
+    "get-user": "workspace:*"
+  }
+}
