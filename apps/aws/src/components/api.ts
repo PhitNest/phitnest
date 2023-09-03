@@ -26,10 +26,7 @@ enum AuthLevel {
 
 export interface ApiStackProps {
   deploymentEnv: string;
-  apiSrcDir: string;
-  nodeModulesDir: string;
-  commonDir: string;
-  apiDeploymentDir: string;
+  apiDir: string;
   dynamoTableRole: Role;
   dynamoTableName: string;
   userPool: UserPool;
@@ -100,7 +97,7 @@ export class ApiStack extends Construct {
     const routes: Route[] = [];
     for (const authLevel of Object.entries(AuthLevel)) {
       for (const route of getRoutesFromFilesystem(
-        path.join(props.apiSrcDir, authLevel[1]),
+        path.join(props.apiDir, authLevel[1]),
       )) {
         if (routes.includes(route)) {
           throw new Error(

@@ -9,15 +9,11 @@ import {
 import { Role } from "aws-cdk-lib/aws-iam";
 import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 import { Construct } from "constructs";
-import { createDeploymentPackage } from "../utils";
 import * as path from "path";
 
 export interface CognitoStackProps {
   deploymentEnv: string;
-  cognitoHookDeploymentDir: string;
-  cognitoHookSrcDir: string;
-  nodeModulesDir: string;
-  commonDir: string;
+  cognitoHooksDir: string;
   dynamoTableName: string;
   dynamoTableRole: Role;
   region: string;
@@ -42,22 +38,16 @@ export class CognitoStack extends Construct {
       sesRegion: props.region,
     });
     const userPoolPrefix = "PhitnestUser";
-    const userPresignupDeploymentDir = path.join(
-      props.cognitoHookDeploymentDir,
-      "user_presignup",
-    );
-    createDeploymentPackage(
-      path.join(props.cognitoHookSrcDir, "user-presignup.ts"),
-      props.nodeModulesDir,
-      props.commonDir,
-      userPresignupDeploymentDir,
+    const userPresignupDir = path.join(
+      props.cognitoHooksDir,
+      "user-presignup",
     );
     const userPresignupHook = this.createPresignupHook(
       scope,
       props.dynamoTableName,
       props.dynamoTableRole,
       userPoolPrefix,
-      userPresignupDeploymentDir,
+      userPresignupDir,
     );
     this.userPool = new UserPool(
       scope,
@@ -104,14 +94,8 @@ export class CognitoStack extends Construct {
     this.userIdentityPoolId = userIdentityPool.ref;
     const adminPoolPrefix = "PhitnestAdmin";
     const adminPresignupDeploymentDir = path.join(
-      props.cognitoHookDeploymentDir,
-      "admin_presignup",
-    );
-    createDeploymentPackage(
-      path.join(props.cognitoHookSrcDir, "admin-presignup.ts"),
-      props.nodeModulesDir,
-      props.commonDir,
-      adminPresignupDeploymentDir,
+      props.cognitoHooksDir,
+      "admin-presignup",
     );
     const adminPresignupHook = this.createPresignupHook(
       scope,
@@ -158,7 +142,7 @@ export class CognitoStack extends Construct {
     dynamoTableName: string,
     apiRole: Role,
     prefix: string,
-    deploymentDir: string,
+    hookDir: string,
   ) {
     const hook = new Function(
       scope,
@@ -169,7 +153,7 @@ export class CognitoStack extends Construct {
         environment: {
           DYNAMO_TABLE_NAME: dynamoTableName,
         },
-        code: Code.fromAsset(deploymentDir),
+        code: Code.fromAsset(path.join(hookDir, "dist", "index.zip")),
         role: apiRole,
       },
     );

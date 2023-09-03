@@ -13,10 +13,6 @@ export class PhitnestStack extends Stack {
     super(scope, `phitnest-stack-${kDeploymentEnv}`);
 
     const apiDir = path.join(process.cwd(), "node_modules", "api");
-    const apiSrcDir = path.join(apiDir, "src");
-    const apiDeploymentDir = path.join(process.cwd(), "dist");
-    const nodeModulesDir = path.join(apiDir, "node_modules");
-    const commonDir = path.join(apiSrcDir, "common");
 
     const dynamo = new DynamoStack(this, {
       deploymentEnv: kDeploymentEnv,
@@ -26,10 +22,7 @@ export class PhitnestStack extends Stack {
 
     const cognito = new CognitoStack(this, {
       deploymentEnv: kDeploymentEnv,
-      cognitoHookSrcDir: path.join(apiSrcDir, "cognito-hooks"),
-      nodeModulesDir: nodeModulesDir,
-      commonDir: commonDir,
-      cognitoHookDeploymentDir: path.join(apiDeploymentDir, "cognito-hooks"),
+      cognitoHooksDir: path.join(apiDir, "cognito-hooks"),
       dynamoTableName: dynamo.tableName,
       dynamoTableRole: dynamo.tableRole,
       region: kRegion,
@@ -42,10 +35,7 @@ export class PhitnestStack extends Stack {
 
     const api = new ApiStack(this, {
       deploymentEnv: kDeploymentEnv,
-      apiSrcDir: apiSrcDir,
-      nodeModulesDir: nodeModulesDir,
-      commonDir: commonDir,
-      apiDeploymentDir: apiDeploymentDir,
+      apiDir: apiDir,
       userPool: cognito.userPool,
       userClientId: cognito.userClientId,
       adminClientId: cognito.adminClientId,
