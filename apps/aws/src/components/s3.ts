@@ -19,7 +19,7 @@ export class S3Stack extends Construct {
 
   constructor(scope: Construct, props: S3StackProps) {
     super(scope, `phitnest-s3-stack-${props.deploymentEnv}`);
-    const userBucket = new Bucket(scope, "PhitnestBucket", {
+    const userBucket = new Bucket(scope, `PhitnestBucket-${props.deploymentEnv}`, {
       bucketName: `phitnest-user-bucket-${props.deploymentEnv}`,
       autoDeleteObjects: true,
       removalPolicy: RemovalPolicy.DESTROY,
@@ -69,7 +69,7 @@ export class S3Stack extends Construct {
         effect: Effect.ALLOW,
         actions: ["s3:PutObject", "s3:DeleteObject"],
         resources: [
-          `${userBucket.bucketArn}/profilePictures/\${cognito-identity.amazonaws.com:sub}`,
+          `${userBucket.bucketArn}/profilePictures/\${cognito-identity.amazonaws.com:sub}.pfp`,
         ],
       }),
     );
