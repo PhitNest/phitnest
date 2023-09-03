@@ -1,0 +1,20 @@
+{
+  "name": "post-gym",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "aws-lambda": "^1.0.7",
+    "typescript-core": "workspace:*",
+    "zod": "^3.22.2",
+    "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.119",
+    "eslint": "^8.44.0",
+    "eslint-configs": "workspace:*",
+    "tsconfigs": "workspace:*"
+  }
+}

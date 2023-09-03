@@ -1,7 +1,0 @@
-{
-  "extends": "tsconfigs/base.json",  
-  "compilerOptions": {
-    "baseUrl": "./src",
-    "rootDir": "./src",
-  },
-}
