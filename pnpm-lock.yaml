@@ -109,9 +109,6 @@ importers:
 
   packages/api:
     devDependencies:
-      cognito-admin-presignup:
-        specifier: workspace:*
-        version: link:cognito-hooks/admin-presignup
       cognito-user-postconfirmation:
         specifier: workspace:*
         version: link:cognito-hooks/user-postconfirmation
@@ -130,12 +127,12 @@ importers:
       get-friendship:
         specifier: workspace:*
         version: link:private/friendship/get
+      get-gym-admin:
+        specifier: workspace:*
+        version: link:admin/gym/admin/get
       get-user:
         specifier: workspace:*
         version: link:private/user/get
-      post-admin-invite:
-        specifier: workspace:*
-        version: link:admin/admin-invite/post
       post-friendship:
         specifier: workspace:*
         version: link:private/friendship/post
@@ -145,18 +142,18 @@ importers:
       post-invite:
         specifier: workspace:*
         version: link:private/invite/post
+      post-invite-admin:
+        specifier: workspace:*
+        version: link:admin/invite/admin/post
 
-  packages/api/admin/admin-invite/post:
+  packages/api/admin/gym/admin/get:
     dependencies:
       aws-lambda:
         specifier: ^1.0.7
         version: 1.0.7
       typescript-core:
         specifier: workspace:*
-        version: link:../../../../typescript-core
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
+        version: link:../../../../../typescript-core
     devDependencies:
       '@types/aws-lambda':
         specifier: ^8.10.119
@@ -166,10 +163,10 @@ importers:
         version: 8.48.0
       eslint-configs:
         specifier: workspace:*
-        version: link:../../../../../configs/eslint-configs
+        version: link:../../../../../../configs/eslint-configs
       tsconfigs:
         specifier: workspace:*
-        version: link:../../../../../configs/tsconfigs
+        version: link:../../../../../../configs/tsconfigs
 
   packages/api/admin/gym/post:
     dependencies:
@@ -177,7 +174,7 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7
       axios:
-        specifier: ^1.4.0
+        specifier: ^1.5.0
         version: 1.5.0
       typescript-core:
         specifier: workspace:*
@@ -199,14 +196,17 @@ importers:
         specifier: workspace:*
         version: link:../../../../../configs/tsconfigs
 
-  packages/api/cognito-hooks/admin-presignup:
+  packages/api/admin/invite/admin/post:
     dependencies:
       aws-lambda:
         specifier: ^1.0.7
         version: 1.0.7
       typescript-core:
         specifier: workspace:*
-        version: link:../../../typescript-core
+        version: link:../../../../../typescript-core
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
     devDependencies:
       '@types/aws-lambda':
         specifier: ^8.10.119
@@ -216,10 +216,10 @@ importers:
         version: 8.48.0
       eslint-configs:
         specifier: workspace:*
-        version: link:../../../../configs/eslint-configs
+        version: link:../../../../../../configs/eslint-configs
       tsconfigs:
         specifier: workspace:*
-        version: link:../../../../configs/tsconfigs
+        version: link:../../../../../../configs/tsconfigs
 
   packages/api/cognito-hooks/user-postconfirmation:
     dependencies:
@@ -276,9 +276,6 @@ importers:
       typescript-core:
         specifier: workspace:*
         version: link:../../../../typescript-core
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
     devDependencies:
       '@types/aws-lambda':
         specifier: ^8.10.119
@@ -326,9 +323,6 @@ importers:
       typescript-core:
         specifier: workspace:*
         version: link:../../../../typescript-core
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
     devDependencies:
       '@types/aws-lambda':
         specifier: ^8.10.119
@@ -351,6 +345,9 @@ importers:
       typescript-core:
         specifier: workspace:*
         version: link:../../../../typescript-core
+      uuid:
+        specifier: ^9.0.0
+        version: 9.0.0
       zod:
         specifier: ^3.22.2
         version: 3.22.2
@@ -358,6 +355,9 @@ importers:
       '@types/aws-lambda':
         specifier: ^8.10.119
         version: 8.10.119
+      '@types/uuid':
+        specifier: ^9.0.2
+        version: 9.0.3
       eslint:
         specifier: ^8.44.0
         version: 8.48.0
@@ -401,9 +401,6 @@ importers:
       typescript-core:
         specifier: workspace:*
         version: link:../../../../typescript-core
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
     devDependencies:
       '@types/aws-lambda':
         specifier: ^8.10.119
@@ -435,9 +432,6 @@ importers:
       uuid:
         specifier: ^9.0.0
         version: 9.0.0
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
     devDependencies:
       '@aws-sdk/types':
         specifier: ^3.347.0
