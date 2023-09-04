@@ -4,13 +4,13 @@ import 'user.dart';
 
 sealed class FriendshipResponse extends JsonPolymorphic<FriendshipResponse> {
   final idJson = Json.string('id');
-  final senderJson = Json.object('sender', User.parser);
-  final receiverJson = Json.object('receiver', User.parser);
+  final senderJson = Json.object('sender', UserExplore.parser);
+  final receiverJson = Json.object('receiver', UserExplore.parser);
   final createdAtJson = Json.string('createdAt');
 
   String get id => idJson.value;
-  User get sender => senderJson.value;
-  User get receiver => receiverJson.value;
+  UserExplore get sender => senderJson.value;
+  UserExplore get receiver => receiverJson.value;
   String get createdAt => createdAtJson.value;
 
   factory FriendshipResponse.polymorphicParse(Map<String, dynamic> json) =>
@@ -23,8 +23,8 @@ sealed class FriendshipResponse extends JsonPolymorphic<FriendshipResponse> {
 
   FriendshipResponse.populated({
     required String id,
-    required User sender,
-    required User receiver,
+    required UserExplore sender,
+    required UserExplore receiver,
     required String createdAt,
   }) : super() {
     idJson.populate(id);

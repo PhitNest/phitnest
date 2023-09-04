@@ -90,7 +90,8 @@ void _handleGetUserStateChanged(
 
 void _handleExploreStateChanged(
   BuildContext context,
-  LoaderState<AuthResOrLost<HttpResponse<List<UserExplore>>>> loaderState,
+  LoaderState<AuthResOrLost<HttpResponse<List<UserExploreWithPicture>>>>
+      loaderState,
 ) =>
     _handleState(
       context,
@@ -147,15 +148,19 @@ class HomePage extends StatelessWidget {
                         listener: _handleHomeStateChanged,
                         builder: (context, homeState) => NavBar(
                           builder: (context, navBarState) =>
-                              switch (navBarState.page) {
-                            NavBarPage.explore => ExploreScreen(
-                                pageController: context.homeBloc.pageController,
-                                homeState: homeState,
-                                navBarState: navBarState,
-                              ),
-                            NavBarPage.news => Container(),
-                            NavBarPage.chat => Container(),
-                            NavBarPage.options => Container(),
+                              switch (logoutState) {
+                            LoaderInitialState() => switch (navBarState.page) {
+                                NavBarPage.explore => ExploreScreen(
+                                    pageController:
+                                        context.homeBloc.pageController,
+                                    homeState: homeState,
+                                    navBarState: navBarState,
+                                  ),
+                                NavBarPage.news => Container(),
+                                NavBarPage.chat => Container(),
+                                NavBarPage.options => const OptionsScreen(),
+                              },
+                            _ => const Loader(),
                           },
                         ),
                       )),

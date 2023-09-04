@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../entities/entities.dart';
 
 final class ExploreUserPage extends StatelessWidget {
-  final UserExplore user;
+  final UserExploreWithPicture user;
   final int? countdown;
 
   const ExploreUserPage({

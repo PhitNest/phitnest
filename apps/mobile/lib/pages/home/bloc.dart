@@ -12,7 +12,7 @@ final class HomeLoadingState extends HomeState {
 }
 
 final class HomeLoadedState extends HomeState {
-  final List<UserExplore> exploreUsers;
+  final List<UserExploreWithPicture> exploreUsers;
 
   const HomeLoadedState(this.exploreUsers) : super();
 
@@ -25,7 +25,7 @@ sealed class HomeEvent extends Equatable {
 }
 
 final class HomeLoadedEvent extends HomeEvent {
-  final List<UserExplore> exploreUsers;
+  final List<UserExploreWithPicture> exploreUsers;
 
   const HomeLoadedEvent(this.exploreUsers) : super();
 
@@ -51,9 +51,10 @@ final class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 }
 
-typedef ExploreBloc = AuthLoaderBloc<void, HttpResponse<List<UserExplore>>>;
+typedef ExploreBloc
+    = AuthLoaderBloc<void, HttpResponse<List<UserExploreWithPicture>>>;
 typedef ExploreConsumer
-    = AuthLoaderConsumer<void, HttpResponse<List<UserExplore>>>;
+    = AuthLoaderConsumer<void, HttpResponse<List<UserExploreWithPicture>>>;
 
 typedef SendFriendRequestBloc = AuthLoaderBloc<String, HttpResponse<void>>;
 typedef SendFriendRequestConsumer

@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:json_types/json.dart';
 
-final class User extends Json {
+final class UserExplore extends Json {
   final idJson = Json.string('id');
   final firstNameJson = Json.string('firstName');
   final lastNameJson = Json.string('lastName');
@@ -13,11 +13,11 @@ final class User extends Json {
   String get lastName => lastNameJson.value;
   String get identityId => identityIdJson.value;
 
-  User.parse(super.json) : super.parse();
+  UserExplore.parse(super.json) : super.parse();
 
-  User.parser() : super();
+  UserExplore.parser() : super();
 
-  User.populated({
+  UserExplore.populated({
     required String id,
     required String firstName,
     required String lastName,
@@ -34,15 +34,38 @@ final class User extends Json {
       [idJson, firstNameJson, lastNameJson, identityIdJson];
 }
 
-final class UserExplore extends Equatable {
+final class UserExploreWithPicture extends Equatable {
   final Image profilePicture;
-  final User user;
+  final UserExplore user;
 
-  const UserExplore({
+  const UserExploreWithPicture({
     required this.user,
     required this.profilePicture,
   }) : super();
 
   @override
   List<Object?> get props => [user, profilePicture];
+}
+
+final class User extends UserExplore {
+  final emailJson = Json.string('email');
+
+  String get email => emailJson.value;
+
+  User.parse(super.json) : super.parse();
+
+  User.parser() : super.parser();
+
+  User.populated({
+    required super.id,
+    required super.firstName,
+    required super.lastName,
+    required super.identityId,
+    required String email,
+  }) : super.populated() {
+    emailJson.populate(email);
+  }
+
+  @override
+  List<JsonKey<dynamic, dynamic>> get keys => [...super.keys, emailJson];
 }

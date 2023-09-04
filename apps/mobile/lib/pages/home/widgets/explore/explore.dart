@@ -9,7 +9,8 @@ import 'widgets/widgets.dart';
 
 void _handleExploreStateChanged(
   BuildContext context,
-  LoaderState<AuthResOrLost<HttpResponse<List<UserExplore>>>> loaderState,
+  LoaderState<AuthResOrLost<HttpResponse<List<UserExploreWithPicture>>>>
+      loaderState,
 ) {
   switch (loaderState) {
     case LoaderLoadedState(data: final response):
