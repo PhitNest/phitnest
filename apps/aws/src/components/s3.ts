@@ -69,7 +69,7 @@ export class S3Stack extends Construct {
         effect: Effect.ALLOW,
         actions: ["s3:PutObject", "s3:DeleteObject"],
         resources: [
-          `${userBucket.bucketArn}/profilePictures/\${cognito-identity.amazonaws.com:sub}.txt`,
+          `${userBucket.bucketArn}/profilePictures/\${cognito-identity.amazonaws.com:sub}`,
         ],
       }),
     );
@@ -100,14 +100,6 @@ export class S3Stack extends Construct {
       },
     );
     unauthenticatedRole.applyRemovalPolicy(RemovalPolicy.DESTROY);
-    unauthenticatedRole.addToPolicy(
-      new PolicyStatement({
-        effect: Effect.DENY,
-        actions: ["s3:*", "cognito-identity:*"],
-        resources: ["*"],
-      }),
-    );
-
     const defaultPolicy = new CfnIdentityPoolRoleAttachment(
       scope,
       `DefaultValid-${props.deploymentEnv}`,
