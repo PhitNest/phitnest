@@ -4,6 +4,8 @@ import { Gym, gymToDynamo, kGymParser } from "./gym";
 const kTestGym: Gym = {
   id: "1",
   gymName: "test",
+  adminFirstName: "adminFirstName",
+  adminLastName: "adminLastName",
   createdAt: new Date(Date.UTC(2020, 1, 1)),
   address: {
     street: "street",
@@ -21,6 +23,8 @@ const kTestGym: Gym = {
 const kSerializedGym: SerializedDynamo<Gym> = {
   id: { S: "1" },
   gymName: { S: "test" },
+  adminFirstName: { S: "adminFirstName" },
+  adminLastName: { S: "adminLastName" },
   createdAt: { N: Date.UTC(2020, 1, 1).toString() },
   address: {
     M: {

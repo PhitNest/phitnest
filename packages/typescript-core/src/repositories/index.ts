@@ -1,4 +1,3 @@
-export * from "./admin";
 export * from "./gym";
 export * from "./user";
 export * from "./invite";

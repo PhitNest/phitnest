@@ -1,20 +1,36 @@
 import { SerializedDynamo, parseDynamo } from "./dynamo";
-import { Invite, inviteToDynamo, kInviteParser } from "./invite";
+import {
+  Invite,
+  UserInvite,
+  inviteToDynamo,
+  kInviteParser,
+  userInviteToDynamo,
+} from "./invite";
 
 const kTestInvite: Invite = {
-  senderType: "user",
+  __poly__: "Invite",
   createdAt: new Date(Date.UTC(2020, 1, 1)),
   receiverEmail: "something",
-  senderId: "1",
   gymId: "1",
 };
 
 const kSerializedInvite: SerializedDynamo<Invite> = {
-  senderType: { S: "user" },
-  senderId: { S: "1" },
+  __poly__: { S: "Invite" },
   createdAt: { N: Date.UTC(2020, 1, 1).toString() },
   receiverEmail: { S: "something" },
   gymId: { S: "1" },
+};
+
+const kTestUserInvite: UserInvite = {
+  ...kTestInvite,
+  __poly__: "UserInvite",
+  senderId: "2",
+};
+
+const kSerializedUserInvite: SerializedDynamo<UserInvite> = {
+  ...kSerializedInvite,
+  __poly__: { S: "UserInvite" },
+  senderId: { S: "2" },
 };
 
 describe("Invite", () => {
@@ -24,5 +40,17 @@ describe("Invite", () => {
 
   it("deserializes from dynamo", () => {
     expect(parseDynamo(kSerializedInvite, kInviteParser)).toEqual(kTestInvite);
+  });
+});
+
+describe("UserInvite", () => {
+  it("serializes to dynamo", () => {
+    expect(userInviteToDynamo(kTestUserInvite)).toEqual(kSerializedUserInvite);
+  });
+
+  it("deserializes from dynamo", () => {
+    expect(parseDynamo(kSerializedUserInvite, kInviteParser)).toEqual(
+      kTestUserInvite,
+    );
   });
 });

@@ -2,7 +2,7 @@ import { Address, Gym, Location, gymToDynamo, kGymParser } from "../entities";
 import { DynamoClient, ResourceNotFoundError } from "../utils";
 import * as uuid from "uuid";
 
-const kGymPk = "GYMS";
+const kGymPk = "GYM";
 const kGymSkPrefix = "GYM#";
 
 export function gymSk(id: string) {
@@ -19,19 +19,18 @@ export function gymKey(id: string) {
 export async function createGym(
   dynamo: DynamoClient,
   params: {
+    adminFirstName: string;
+    adminLastName: string;
     adminEmail: string;
-    name: string;
+    gymName: string;
     address: Address;
-    location: Location;
+    gymLocation: Location;
   },
 ): Promise<Gym> {
   const gym = {
+    ...params,
     id: uuid.v4(),
-    gymName: params.name,
-    address: params.address,
-    adminEmail: params.adminEmail,
     createdAt: new Date(),
-    gymLocation: params.location,
   };
   await dynamo.put({
     ...gymKey(gym.id),
@@ -47,14 +46,6 @@ export async function getGym(
   return await dynamo.parsedQuery({
     pk: kGymPk,
     sk: { q: gymSk(id), op: "EQ" },
-    parseShape: kGymParser,
-  });
-}
-
-export async function getGyms(dynamo: DynamoClient): Promise<Gym[]> {
-  return await dynamo.parsedQuery({
-    pk: kGymPk,
-    sk: { q: kGymSkPrefix, op: "BEGINS_WITH" },
     parseShape: kGymParser,
   });
 }

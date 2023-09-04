@@ -17,7 +17,6 @@ import { inviteToDynamo } from "typescript-core/src/entities";
 
 const validator = z.object({
   receiverEmail: z.string().email(),
-  gymId: z.string(),
 });
 
 export async function invoke(
@@ -30,7 +29,7 @@ export async function invoke(
       const adminClaims = getAdminClaims(event);
       const client = dynamo();
       const [gym, existingInvite] = await Promise.all([
-        getGym(client, data.gymId),
+        getGym(client, adminClaims.sub),
         getReceivedInvites(client, data.receiverEmail, 1),
       ]);
       if (!(existingInvite instanceof ResourceNotFoundError)) {
