@@ -9,7 +9,10 @@ Future<Image?> getProfilePicture(Session session, String identityId) async {
     if (res.statusCode == 200) {
       return Image.memory(res.bodyBytes);
     } else {
-      error('Failed to get profile picture: ${res.statusCode}');
+      error('Failed to get profile picture', details: [
+        'Status code: ${res.statusCode}',
+        'Response body: ${res.body}',
+      ]);
       return null;
     }
   } catch (e) {
