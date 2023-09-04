@@ -25,6 +25,7 @@ const kSortKey = "sk";
 export class DynamoStack extends Construct {
   public readonly tableName: string;
   public readonly tableRole: Role;
+  public readonly tableArn: string;
 
   constructor(scope: Construct, props: DynamoStackProps) {
     super(scope, `phitnest-dynamo-stack-${props.deploymentEnv}`);
@@ -97,6 +98,7 @@ export class DynamoStack extends Construct {
       },
     );
     table.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    this.tableArn = table.attrArn;
     this.tableRole = new Role(
       scope,
       `PhitnestDynamoTableRole-${props.deploymentEnv}`,

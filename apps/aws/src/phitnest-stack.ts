@@ -24,6 +24,7 @@ export class PhitnestStack extends Stack {
       deploymentEnv: kDeploymentEnv,
       cognitoHooksDir: path.join(apiDir, "cognito-hooks"),
       dynamoTableName: dynamo.tableName,
+      dynamoTableArn: dynamo.tableArn,
       dynamoTableRole: dynamo.tableRole,
       region: kRegion,
     });
