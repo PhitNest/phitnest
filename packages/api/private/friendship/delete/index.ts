@@ -1,6 +1,11 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { z } from "zod";
-import { dynamo, validateRequest, Success, getUserClaims } from "typescript-core/src/utils";
+import {
+  dynamo,
+  validateRequest,
+  Success,
+  getUserClaims,
+} from "typescript-core/src/utils";
 import { deleteFriendship } from "typescript-core/src/repositories";
 
 const validator = z.object({

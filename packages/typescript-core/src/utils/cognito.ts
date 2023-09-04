@@ -9,6 +9,7 @@ export type AdminCognitoClaims = {
 export type UserCognitoClaims = AdminCognitoClaims & {
   email: string;
   sub: string;
+  gymId: string;
 };
 
 export class CognitoClaimsError extends RequestError {
@@ -54,6 +55,9 @@ export function getUserClaims(event: APIGatewayEvent): UserCognitoClaims {
     }
     if (!claims.sub) {
       throw kNoSubClaim;
+    }
+    if (!claims.gymId) {
+      throw new CognitoClaimsError("No gymId claim");
     }
     return claims;
   });

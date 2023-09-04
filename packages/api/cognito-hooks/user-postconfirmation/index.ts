@@ -5,7 +5,7 @@ import {
   dynamo,
 } from "typescript-core/src/utils";
 import { getUserWithoutIdentity } from "typescript-core/src/repositories";
-// import { CognitoIdentityServiceProvider } from "aws-sdk";
+import { CognitoIdentityServiceProvider } from "aws-sdk";
 
 export async function invoke(event: PostConfirmationTriggerEvent) {
   // AWS.config.update({ region: EnvironmentVars.region() });
