@@ -1,12 +1,13 @@
 import 'package:core/core.dart';
 
-import '../entities/entities.dart';
-
-Future<HttpResponse<void>> createInvite(InviteParams params, Session session) =>
+Future<HttpResponse<void>> createInvite(
+        String receiverEmail, Session session) =>
     request(
-      route: 'admin-invite',
+      route: 'invite/admin',
       method: HttpMethod.post,
       session: session,
-      data: params.toJson(),
+      data: {
+        'receiverEmail': receiverEmail,
+      },
       parse: (_) {},
     );

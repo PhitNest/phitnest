@@ -1,19 +1,17 @@
-import { z } from "zod";
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
+import { z } from "zod";
 import {
-  validateRequest,
-  dynamo,
-  Success,
-  getAdminClaims,
   RequestError,
+  Success,
+  dynamo,
+  getAdminClaims,
+  validateRequest,
 } from "typescript-core/src/utils";
-import { createGym } from "typescript-core/src/repositories";
-import { Address, Location } from "typescript-core/src/entities";
+import { gymKey } from "typescript-core/src/repositories";
+import { Address, Location, gymToDynamo } from "typescript-core/src/entities";
 import axios from "axios";
 
-export async function getLocation(
-  address: Address,
-): Promise<Location | RequestError> {
+async function getLocation(address: Address): Promise<Location | RequestError> {
   const response = await axios.get(
     "https://nominatim.openstreetmap.org/search",
     {
@@ -42,11 +40,13 @@ export async function getLocation(
 }
 
 const validator = z.object({
-  name: z.string(),
   street: z.string(),
   city: z.string(),
   state: z.string(),
   zipCode: z.string(),
+  gymName: z.string(),
+  adminFirstName: z.string(),
+  adminLastName: z.string(),
 });
 
 export async function invoke(
@@ -57,24 +57,32 @@ export async function invoke(
     validator: validator,
     controller: async (data) => {
       const adminClaims = getAdminClaims(event);
-      const location = await getLocation(data);
+      const address = {
+        street: data.street,
+        city: data.city,
+        state: data.state,
+        zipCode: data.zipCode,
+      };
+      const location = await getLocation(address);
       if (location instanceof RequestError) {
         return location;
       }
       const client = dynamo();
-      const gym = await createGym(client, {
+      const gym = {
+        address: address,
+        gymLocation: location,
+        id: adminClaims.sub,
         adminEmail: adminClaims.email,
-        name: data.name,
-        address: data,
-        location: location,
+        adminFirstName: data.adminFirstName,
+        adminLastName: data.adminLastName,
+        gymName: data.gymName,
+        createdAt: new Date(),
+      };
+      await client.put({
+        ...gymKey(gym.id),
+        data: gymToDynamo(gym),
       });
-      if (gym instanceof RequestError) {
-        return gym;
-      }
-      return new Success({
-        gymId: gym.id,
-        location: gym.gymLocation,
-      });
+      return new Success();
     },
   });
 }

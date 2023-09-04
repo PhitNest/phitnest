@@ -1,7 +1,8 @@
 import { PreSignUpTriggerEvent } from "aws-lambda";
+import { userWithoutIdentityToDynamo } from "typescript-core/src/entities";
 import {
-  createNewUser,
   getReceivedInvites,
+  newUserKey,
 } from "typescript-core/src/repositories";
 import {
   RequestError,
@@ -9,8 +10,9 @@ import {
   dynamo,
 } from "typescript-core/src/utils";
 
+const kInitialNumInvites = 5;
+
 export async function invoke(event: PreSignUpTriggerEvent) {
-  const client = dynamo();
   const { firstName, lastName } = event.request.validationData ?? {};
   if (!firstName) {
     throw new Error("Missing firstName");
@@ -25,6 +27,7 @@ export async function invoke(event: PreSignUpTriggerEvent) {
     email: event.request.userAttributes.email,
     createdAt: new Date(),
   };
+  const client = dynamo();
   const invite = await getReceivedInvites(
     client,
     newUserWithoutInvite.email,
@@ -33,6 +36,14 @@ export async function invoke(event: PreSignUpTriggerEvent) {
   if (invite instanceof ResourceNotFoundError) {
     return new RequestError("InviteNotFound", "Invite not found");
   }
-  await createNewUser(client, { ...newUserWithoutInvite, invite: invite });
+  await client.put({
+    ...newUserKey(event.userName),
+    data: userWithoutIdentityToDynamo({
+      ...newUserWithoutInvite,
+      invite: invite,
+      createdAt: new Date(),
+      numInvites: kInitialNumInvites,
+    }),
+  });
   return event;
 }

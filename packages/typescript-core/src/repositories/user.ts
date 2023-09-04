@@ -1,12 +1,10 @@
 import {
-  Invite,
   User,
   UserExplore,
   UserWithoutIdentity,
   kUserExploreParser,
   kUserParser,
   kUserWithoutIdentityParser,
-  userWithoutIdentityToDynamo,
 } from "../entities";
 import { DynamoParser } from "../entities/dynamo";
 import { DynamoClient, ResourceNotFoundError, RowKey } from "../utils";
@@ -85,28 +83,6 @@ export async function getExploreUsers(
     sk: { q: kUserPkPrefix, op: "BEGINS_WITH" },
     table: "inverted",
     parseShape: kUserExploreParser,
-  });
-}
-
-const kInitialNumInvites = 5;
-
-export async function createNewUser(
-  dynamo: DynamoClient,
-  params: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    invite: Invite;
-  },
-) {
-  await dynamo.put({
-    ...newUserKey(params.id),
-    data: userWithoutIdentityToDynamo({
-      ...params,
-      createdAt: new Date(),
-      numInvites: kInitialNumInvites,
-    }),
   });
 }
 

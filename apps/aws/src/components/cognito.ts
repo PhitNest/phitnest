@@ -45,15 +45,27 @@ export class CognitoStack extends Construct {
       sesVerifiedDomain: "phitnest.com",
       sesRegion: props.region,
     });
-    const userPoolPrefix = "PhitnestUser";
-    const userPresignupDir = path.join(props.cognitoHooksDir, "user-presignup");
-    const userPresignupHook = this.createPresignupHook(
+    const userPresignupHook = new Function(
       scope,
-      props.dynamoTableName,
-      props.dynamoTableRole,
-      userPoolPrefix,
-      userPresignupDir,
+      `UserPresignup-${this.props.deploymentEnv}`,
+      {
+        runtime: Runtime.NODEJS_16_X,
+        handler: `index.invoke`,
+        environment: {
+          DYNAMO_TABLE_NAME: props.dynamoTableName,
+        },
+        code: Code.fromAsset(
+          path.join(
+            props.cognitoHooksDir,
+            "user-presignup",
+            "dist",
+            "index.zip",
+          ),
+        ),
+        role: props.dynamoTableRole,
+      },
     );
+    userPresignupHook.applyRemovalPolicy(RemovalPolicy.DESTROY);
     const userPostConfirmationRole = new Role(
       this,
       `UserPostConfirmationRole-${this.props.deploymentEnv}`,
@@ -85,7 +97,7 @@ export class CognitoStack extends Construct {
     userPostConfirmationRole.applyRemovalPolicy(RemovalPolicy.DESTROY);
     const userPostConfirmationHook = new Function(
       scope,
-      `${userPoolPrefix}PostConfirmation-${this.props.deploymentEnv}`,
+      `UserPostConfirmation-${this.props.deploymentEnv}`,
       {
         runtime: Runtime.NODEJS_16_X,
         handler: `index.invoke`,
@@ -104,40 +116,36 @@ export class CognitoStack extends Construct {
       },
     );
     userPostConfirmationHook.applyRemovalPolicy(RemovalPolicy.DESTROY);
-    this.userPool = new UserPool(
-      scope,
-      `${userPoolPrefix}Pool-${props.deploymentEnv}`,
-      {
-        userPoolName: `Phitnest-User-Pool-${props.deploymentEnv}`,
-        selfSignUpEnabled: true,
-        signInAliases: {
-          email: true,
-          username: false,
-        },
-        accountRecovery: AccountRecovery.EMAIL_ONLY,
-        email: emailConfig,
-        standardAttributes: {
-          email: {
-            mutable: true,
-            required: true,
-          },
-        },
-        customAttributes: {
-          gymId: new StringAttribute({ mutable: true }),
-        },
-        lambdaTriggers: {
-          preSignUp: userPresignupHook,
-          postConfirmation: userPostConfirmationHook,
+    this.userPool = new UserPool(scope, `UserPool-${props.deploymentEnv}`, {
+      userPoolName: `Phitnest-User-Pool-${props.deploymentEnv}`,
+      selfSignUpEnabled: true,
+      signInAliases: {
+        email: true,
+        username: false,
+      },
+      accountRecovery: AccountRecovery.EMAIL_ONLY,
+      email: emailConfig,
+      standardAttributes: {
+        email: {
+          mutable: true,
+          required: true,
         },
       },
-    );
+      customAttributes: {
+        gymId: new StringAttribute({ mutable: true }),
+      },
+      lambdaTriggers: {
+        preSignUp: userPresignupHook,
+        postConfirmation: userPostConfirmationHook,
+      },
+    });
     this.userPool.applyRemovalPolicy(RemovalPolicy.DESTROY);
-    const userClient = this.createClient(scope, this.userPool, userPoolPrefix);
+    const userClient = this.createClient(scope, this.userPool, "User");
     userClient.applyRemovalPolicy(RemovalPolicy.DESTROY);
     this.userClientId = userClient.userPoolClientId;
     const userIdentityPool = new CfnIdentityPool(
       scope,
-      `${userPoolPrefix}IdentityPool-${props.deploymentEnv}`,
+      `UserIdentityPool-${props.deploymentEnv}`,
       {
         identityPoolName: `Phitnest-User-Identity-Pool-${props.deploymentEnv}`,
         allowUnauthenticatedIdentities: false,
@@ -151,73 +159,26 @@ export class CognitoStack extends Construct {
     );
     userIdentityPool.applyRemovalPolicy(RemovalPolicy.DESTROY);
     this.userIdentityPoolId = userIdentityPool.ref;
-    const adminPoolPrefix = "PhitnestAdmin";
-    const adminPresignupDeploymentDir = path.join(
-      props.cognitoHooksDir,
-      "admin-presignup",
-    );
-    const adminPresignupHook = this.createPresignupHook(
-      scope,
-      props.dynamoTableName,
-      props.dynamoTableRole,
-      adminPoolPrefix,
-      adminPresignupDeploymentDir,
-    );
-    this.adminPool = new UserPool(
-      scope,
-      `${adminPoolPrefix}Pool-${props.deploymentEnv}`,
-      {
-        userPoolName: `Phitnest-Admin-Pool-${props.deploymentEnv}`,
-        selfSignUpEnabled: true,
-        signInAliases: {
-          email: true,
-          username: false,
-        },
-        accountRecovery: AccountRecovery.EMAIL_ONLY,
-        email: emailConfig,
-        standardAttributes: {
-          email: {
-            mutable: true,
-            required: true,
-          },
-        },
-        lambdaTriggers: {
-          preSignUp: adminPresignupHook,
+    this.adminPool = new UserPool(scope, `AdminPool-${props.deploymentEnv}`, {
+      userPoolName: `Phitnest-Admin-Pool-${props.deploymentEnv}`,
+      selfSignUpEnabled: true,
+      signInAliases: {
+        email: true,
+        username: false,
+      },
+      accountRecovery: AccountRecovery.EMAIL_ONLY,
+      email: emailConfig,
+      standardAttributes: {
+        email: {
+          mutable: true,
+          required: true,
         },
       },
-    );
+    });
     this.adminPool.applyRemovalPolicy(RemovalPolicy.DESTROY);
-    const adminClient = this.createClient(
-      scope,
-      this.adminPool,
-      adminPoolPrefix,
-    );
+    const adminClient = this.createClient(scope, this.adminPool, "Admin");
     adminClient.applyRemovalPolicy(RemovalPolicy.DESTROY);
     this.adminClientId = adminClient.userPoolClientId;
-  }
-
-  private createPresignupHook(
-    scope: Construct,
-    dynamoTableName: string,
-    apiRole: Role,
-    prefix: string,
-    hookDir: string,
-  ) {
-    const hook = new Function(
-      scope,
-      `${prefix}Presignup-${this.props.deploymentEnv}`,
-      {
-        runtime: Runtime.NODEJS_16_X,
-        handler: `index.invoke`,
-        environment: {
-          DYNAMO_TABLE_NAME: dynamoTableName,
-        },
-        code: Code.fromAsset(path.join(hookDir, "dist", "index.zip")),
-        role: apiRole,
-      },
-    );
-    hook.applyRemovalPolicy(RemovalPolicy.DESTROY);
-    return hook;
   }
 
   private createClient(

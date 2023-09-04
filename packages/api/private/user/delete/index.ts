@@ -5,14 +5,12 @@ import {
   deleteUser,
   getFriendships,
   getSentInvites,
-  getUserWithoutIdentity,
 } from "typescript-core/src/repositories";
 import {
   dynamo,
   Success,
   handleRequest,
   getUserClaims,
-  ResourceNotFoundError,
   RequestError,
 } from "typescript-core/src/utils";
 
@@ -22,18 +20,15 @@ export async function invoke(
   return handleRequest(async () => {
     const userClaims = getUserClaims(event);
     const client = dynamo();
-    const [user, friendships, invites] = await Promise.all([
-      getUserWithoutIdentity(client, userClaims.sub),
+    const [friendships, invites] = await Promise.all([
       getFriendships(client, userClaims.sub),
       getSentInvites(client, userClaims.sub, "user"),
     ]);
-    if (user instanceof ResourceNotFoundError) {
-      return user;
-    } else if (friendships instanceof RequestError) {
+    if (friendships instanceof RequestError) {
       return friendships;
     } else {
       await Promise.all([
-        deleteUser(client, { id: userClaims.sub, gymId: user.invite.gymId }),
+        deleteUser(client, { id: userClaims.sub, gymId: userClaims.gymId }),
         ...friendships.map((friendship) =>
           deleteFriendship(
             client,

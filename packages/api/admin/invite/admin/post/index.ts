@@ -43,7 +43,7 @@ export async function invoke(
         data: inviteToDynamo({
           receiverEmail: data.receiverEmail,
           senderId: adminClaims.sub,
-          gymId: data.gymId,
+          gymId: adminClaims.sub,
           senderType: "admin",
           createdAt: new Date(),
         }),

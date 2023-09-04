@@ -1,44 +1,27 @@
 import { SerializedDynamo, DynamoParser } from "./dynamo";
 
 export type Invite = {
-  __poly__: "Invite";
+  senderType: "admin" | "user";
+  senderId: string;
   receiverEmail: string;
   createdAt: Date;
   gymId: string;
 };
 
 export const kInviteParser: DynamoParser<Invite> = {
-  __poly__: "S",
+  senderType: "S",
+  senderId: "S",
   receiverEmail: "S",
   createdAt: "D",
   gymId: "S",
 };
 
-export type UserInvite = Omit<Invite, "__poly__"> & {
-  __poly__: "UserInvite";
-  senderId: string;
-};
-
-export const kUserInviteParser: DynamoParser<UserInvite> = {
-  ...kInviteParser,
-  senderId: "S",
-};
-
 export function inviteToDynamo(invite: Invite): SerializedDynamo<Invite> {
   return {
-    __poly__: { S: invite.__poly__ },
+    senderType: { S: invite.senderType },
+    senderId: { S: invite.senderId },
     receiverEmail: { S: invite.receiverEmail },
     createdAt: { N: invite.createdAt.getTime().toString() },
     gymId: { S: invite.gymId },
-  };
-}
-
-export function userInviteToDynamo(
-  invite: UserInvite,
-): SerializedDynamo<UserInvite> {
-  return {
-    ...inviteToDynamo({ ...invite, __poly__: "Invite" }),
-    __poly__: { S: invite.__poly__ },
-    senderId: { S: invite.senderId },
   };
 }

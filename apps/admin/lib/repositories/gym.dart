@@ -2,7 +2,7 @@ import 'package:core/core.dart';
 
 import '../entities/entities.dart';
 
-Future<HttpResponse<CreateGymSuccess>> createGym(
+Future<HttpResponse<void>> createGym(
   CreateGymParams params,
   Session session,
 ) =>
@@ -11,5 +11,13 @@ Future<HttpResponse<CreateGymSuccess>> createGym(
       method: HttpMethod.post,
       session: session,
       data: params.toJson(),
-      parse: (json) => CreateGymSuccess.parse(json as Map<String, dynamic>),
+      parse: (_) {},
+    );
+
+Future<HttpResponse<void>> getGym(Session session) => request(
+      route: 'gym/admin',
+      method: HttpMethod.get,
+      session: session,
+      data: null,
+      parse: (_){},
     );

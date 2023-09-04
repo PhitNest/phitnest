@@ -9,11 +9,16 @@ import {
   Success,
 } from "typescript-core/src/utils";
 import {
-  createFriendRequest,
   createFriendship,
+  friendshipKey,
   getFriendship,
   getUserExplore,
 } from "typescript-core/src/repositories";
+import {
+  FriendRequest,
+  friendRequestToDynamo,
+} from "typescript-core/src/entities";
+import * as uuid from "uuid";
 
 const validator = z.object({
   receiverId: z.string(),
@@ -44,8 +49,18 @@ export async function invoke(
         if (receiver instanceof ResourceNotFoundError) {
           return receiver;
         }
-        const request = await createFriendRequest(client, sender, receiver);
-        return new Success(request);
+        const friendRequest: FriendRequest = {
+          id: uuid.v4(),
+          sender: sender,
+          receiver: receiver,
+          createdAt: new Date(),
+          __poly__: "FriendRequest",
+        };
+        await client.put({
+          ...friendshipKey(sender.id, receiver.id),
+          data: friendRequestToDynamo(friendRequest),
+        });
+        return new Success(friendRequest);
       } else {
         switch (friendship.__poly__) {
           case "FriendRequest":

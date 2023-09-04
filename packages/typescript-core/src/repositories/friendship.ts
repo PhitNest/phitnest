@@ -3,8 +3,6 @@ import {
   FriendRequest,
   Friendship,
   FriendshipWithoutMessage,
-  UserExplore,
-  friendRequestToDynamo,
   friendshipWithoutMessageToDynamo,
   kFriendRequestParser,
   kFriendshipParser,
@@ -17,7 +15,6 @@ import {
   ResourceNotFoundError,
   RowKey,
 } from "../utils";
-import * as uuid from "uuid";
 
 const kFriendshipPkPrefix = "USER#";
 const kFriendshipSkPrefix = "FRIENDSHIP#";
@@ -127,25 +124,6 @@ export async function getFriendships(
   )
     .flat()
     .map(polymorphicParseFriendship);
-}
-
-export async function createFriendRequest(
-  dynamo: DynamoClient,
-  sender: UserExplore,
-  receiver: UserExplore,
-): Promise<FriendRequest> {
-  const friendRequest: FriendRequest = {
-    id: uuid.v4(),
-    sender: sender,
-    receiver: receiver,
-    createdAt: new Date(),
-    __poly__: "FriendRequest",
-  };
-  await dynamo.put({
-    ...friendshipKey(sender.id, receiver.id),
-    data: friendRequestToDynamo(friendRequest),
-  });
-  return friendRequest;
 }
 
 export async function createFriendship(

@@ -10,8 +10,7 @@
   },
   "dependencies": {
     "aws-lambda": "^1.0.7",
-    "typescript-core": "workspace:*",
-    "zod": "^3.22.2"
+    "typescript-core": "workspace:*"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.119",
