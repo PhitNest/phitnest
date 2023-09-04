@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 Future<Image?> getProfilePicture(Session session, String identityId) async {
   final uri = getProfilePictureUri(session, identityId);
   try {
-    final res = await http.get(uri.uri);
+    final res = await http.get(uri.uri, headers: uri.headers);
     if (res.statusCode == 200) {
       return Image.memory(res.bodyBytes);
     } else {
