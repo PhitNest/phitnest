@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ui/ui.dart';
 
 import '../../../../entities/entities.dart';
@@ -53,6 +54,8 @@ final class GymEntryForm extends StatelessWidget {
               void handleSubmit() => submit(
                     AuthReq(
                       CreateGymParams.populated(
+                        firstName: controllers.firstNameController.text,
+                        lastName: controllers.lastNameController.text,
                         name: controllers.nameController.text,
                         street: controllers.streetController.text,
                         city: controllers.cityController.text,
@@ -66,7 +69,23 @@ final class GymEntryForm extends StatelessWidget {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const Text('Create Account'),
+                  12.verticalSpace,
+                  StyledUnderlinedTextField(
+                    hint: 'First Name',
+                    validator: validateNonEmpty,
+                    controller: controllers.firstNameController,
+                    textInputAction: TextInputAction.next,
+                  ),
+                  StyledUnderlinedTextField(
+                    hint: 'Last Name',
+                    validator: validateNonEmpty,
+                    controller: controllers.lastNameController,
+                    textInputAction: TextInputAction.next,
+                  ),
+                  24.verticalSpace,
                   const Text('Create Gym'),
+                  12.verticalSpace,
                   StyledUnderlinedTextField(
                     hint: 'Name',
                     validator: validateNonEmpty,
