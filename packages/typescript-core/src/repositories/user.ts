@@ -42,12 +42,12 @@ export function userKey(id: string, gymId: string): RowKey {
 async function getUserHelper<UserType extends UserExplore>(
   dynamo: DynamoClient,
   id: string,
-  gymId: string,
   parser: DynamoParser<UserType>,
 ): Promise<UserType | ResourceNotFoundError> {
   return await dynamo.parsedQuery({
     pk: userPk(id),
-    sk: { q: userSk(gymId), op: "EQ" },
+    sk: { q: kUserSkPrefix, op: "BEGINS_WITH" },
+    limit: 1,
     parseShape: parser,
   });
 }
@@ -55,17 +55,12 @@ async function getUserHelper<UserType extends UserExplore>(
 export async function getUser(
   dynamo: DynamoClient,
   id: string,
-  gymId: string,
 ): Promise<User | ResourceNotFoundError> {
-  return await getUserHelper(dynamo, id, gymId, kUserParser);
+  return await getUserHelper(dynamo, id, kUserParser);
 }
 
-export async function getUserExplore(
-  dynamo: DynamoClient,
-  id: string,
-  gymId: string,
-) {
-  return await getUserHelper(dynamo, id, gymId, kUserExploreParser);
+export async function getUserExplore(dynamo: DynamoClient, id: string) {
+  return await getUserHelper(dynamo, id, kUserExploreParser);
 }
 
 export async function getUserWithoutIdentity(

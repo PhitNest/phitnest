@@ -2,6 +2,7 @@ import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import {
   getExploreUsers,
   getFriendships,
+  getUser,
 } from "typescript-core/src/repositories";
 import {
   dynamo,
@@ -18,8 +19,12 @@ export async function invoke(
   return handleRequest(async () => {
     const userClaims = getUserClaims(event);
     const client = dynamo();
+    const user = await getUser(client, userClaims.sub);
+    if (user instanceof ResourceNotFoundError) {
+      return user;
+    }
     const [othersAtGym, friendships] = await Promise.all([
-      getExploreUsers(client, userClaims.gymId),
+      getExploreUsers(client, user.invite.gymId),
       getFriendships(client, userClaims.sub),
     ]);
     if (friendships instanceof RequestError) {
