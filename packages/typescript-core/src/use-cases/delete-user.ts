@@ -6,11 +6,7 @@ import {
   getSentInvites,
   getUserWithoutIdentity,
 } from "../repositories";
-import {
-  DynamoClient,
-  RequestError,
-  ResourceNotFoundError,
-} from "../utils";
+import { DynamoClient, RequestError, ResourceNotFoundError } from "../utils";
 
 export async function deleteUserAccount(
   dynamo: DynamoClient,

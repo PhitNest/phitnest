@@ -5,11 +5,7 @@ import {
   getFriendship,
   getUserExplore,
 } from "../repositories";
-import {
-  DynamoClient,
-  RequestError,
-  ResourceNotFoundError,
-} from "../utils";
+import { DynamoClient, RequestError, ResourceNotFoundError } from "../utils";
 
 export async function sendFriendRequest(
   dynamo: DynamoClient,

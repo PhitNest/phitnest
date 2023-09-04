@@ -6,11 +6,7 @@ import {
   inviteKey,
   userKey,
 } from "../repositories";
-import {
-  DynamoClient,
-  RequestError,
-  ResourceNotFoundError,
-} from "../utils";
+import { DynamoClient, RequestError, ResourceNotFoundError } from "../utils";
 
 export async function adminInvite(
   dynamo: DynamoClient,

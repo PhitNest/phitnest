@@ -112,6 +112,9 @@ importers:
       cognito-admin-presignup:
         specifier: workspace:*
         version: link:cognito-hooks/admin-presignup
+      cognito-user-postconfirmation:
+        specifier: workspace:*
+        version: link:cognito-hooks/user-postconfirmation
       cognito-user-presignup:
         specifier: workspace:*
         version: link:cognito-hooks/user-presignup
@@ -127,9 +130,6 @@ importers:
       get-friendship:
         specifier: workspace:*
         version: link:private/friendship/get
-      get-gym-list:
-        specifier: workspace:*
-        version: link:admin/gym/list/get
       get-user:
         specifier: workspace:*
         version: link:private/user/get
@@ -171,31 +171,6 @@ importers:
         specifier: workspace:*
         version: link:../../../../../configs/tsconfigs
 
-  packages/api/admin/gym/list/get:
-    dependencies:
-      aws-lambda:
-        specifier: ^1.0.7
-        version: 1.0.7
-      typescript-core:
-        specifier: workspace:*
-        version: link:../../../../../typescript-core
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
-    devDependencies:
-      '@types/aws-lambda':
-        specifier: ^8.10.119
-        version: 8.10.119
-      eslint:
-        specifier: ^8.44.0
-        version: 8.48.0
-      eslint-configs:
-        specifier: workspace:*
-        version: link:../../../../../../configs/eslint-configs
-      tsconfigs:
-        specifier: workspace:*
-        version: link:../../../../../../configs/tsconfigs
-
   packages/api/admin/gym/post:
     dependencies:
       aws-lambda:
@@ -232,9 +207,31 @@ importers:
       typescript-core:
         specifier: workspace:*
         version: link:../../../typescript-core
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../configs/tsconfigs
+
+  packages/api/cognito-hooks/user-postconfirmation:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      aws-sdk:
+        specifier: ^2.1450.0
+        version: 2.1450.0
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../../typescript-core
     devDependencies:
       '@types/aws-lambda':
         specifier: ^8.10.119
@@ -257,9 +254,6 @@ importers:
       typescript-core:
         specifier: workspace:*
         version: link:../../../typescript-core
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
     devDependencies:
       '@types/aws-lambda':
         specifier: ^8.10.119
@@ -2492,14 +2486,14 @@ packages:
     resolution: {integrity: sha512-9GNFMRrEMG5y3Jvv+V4azWvc+qNWdWLTjDdhf/zgMlz8haaaLWv0xeAIWxz9PuWUBawsVxy0zZotjCdR3Xq+2w==}
     hasBin: true
     dependencies:
-      aws-sdk: 2.1449.0
+      aws-sdk: 2.1450.0
       commander: 3.0.2
       js-yaml: 3.14.1
       watchpack: 2.4.0
     dev: false
 
-  /aws-sdk@2.1449.0:
-    resolution: {integrity: sha512-3AXg7S8mhOhUQDaqE8CpbkvRXCvVhzoLAGJ0Ngv7a6/m3JoZkGx7115HHcbiIqR13/AtMyid8MjIVHP0DPdwHw==}
+  /aws-sdk@2.1450.0:
+    resolution: {integrity: sha512-EfZLImJ0XNuIdlx5McHX0rJbOiQHz+vEjnpGV08gXSzaq2cN3vSjE+L2Dju7KmaIh85FTYvLOf2REUuCLDpSRg==}
     engines: {node: '>= 10.0.0'}
     dependencies:
       buffer: 4.9.2

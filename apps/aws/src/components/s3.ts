@@ -19,29 +19,33 @@ export class S3Stack extends Construct {
 
   constructor(scope: Construct, props: S3StackProps) {
     super(scope, `phitnest-s3-stack-${props.deploymentEnv}`);
-    const userBucket = new Bucket(scope, `PhitnestBucket-${props.deploymentEnv}`, {
-      bucketName: `phitnest-user-bucket-${props.deploymentEnv}`,
-      autoDeleteObjects: true,
-      removalPolicy: RemovalPolicy.DESTROY,
-      cors: [
-        {
-          allowedHeaders: ["*"],
-          allowedMethods: [
-            HttpMethods.POST,
-            HttpMethods.PUT,
-            HttpMethods.GET,
-            HttpMethods.DELETE,
-          ],
-          allowedOrigins: ["*"],
-          exposedHeaders: [
-            "x-amz-server-side-encryption",
-            "x-amz-request-id",
-            "x-amz-id-2",
-            "ETag",
-          ],
-        },
-      ],
-    });
+    const userBucket = new Bucket(
+      scope,
+      `PhitnestBucket-${props.deploymentEnv}`,
+      {
+        bucketName: `phitnest-user-bucket-${props.deploymentEnv}`,
+        autoDeleteObjects: true,
+        removalPolicy: RemovalPolicy.DESTROY,
+        cors: [
+          {
+            allowedHeaders: ["*"],
+            allowedMethods: [
+              HttpMethods.POST,
+              HttpMethods.PUT,
+              HttpMethods.GET,
+              HttpMethods.DELETE,
+            ],
+            allowedOrigins: ["*"],
+            exposedHeaders: [
+              "x-amz-server-side-encryption",
+              "x-amz-request-id",
+              "x-amz-id-2",
+              "ETag",
+            ],
+          },
+        ],
+      },
+    );
     userBucket.applyRemovalPolicy(RemovalPolicy.DESTROY);
     this.userBucketName = userBucket.bucketName;
 

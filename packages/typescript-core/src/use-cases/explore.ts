@@ -1,10 +1,6 @@
 import { UserExplore } from "../entities";
 import { getExploreUsers, getFriendships, getUser } from "../repositories";
-import {
-  DynamoClient,
-  RequestError,
-  ResourceNotFoundError,
-} from "../utils";
+import { DynamoClient, RequestError, ResourceNotFoundError } from "../utils";
 
 export async function exploreUsers(
   dynamo: DynamoClient,

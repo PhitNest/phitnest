@@ -1,9 +1,5 @@
 import { createNewUser, getReceivedInvites } from "../repositories";
-import {
-  DynamoClient,
-  RequestError,
-  ResourceNotFoundError,
-} from "../utils";
+import { DynamoClient, RequestError, ResourceNotFoundError } from "../utils";
 
 export async function createUser(
   dynamo: DynamoClient,

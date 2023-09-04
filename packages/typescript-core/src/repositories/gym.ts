@@ -1,10 +1,4 @@
-import {
-  Address,
-  Gym,
-  Location,
-  gymToDynamo,
-  kGymParser,
-} from "../entities";
+import { Address, Gym, Location, gymToDynamo, kGymParser } from "../entities";
 import { DynamoClient, ResourceNotFoundError } from "../utils";
 import * as uuid from "uuid";
 

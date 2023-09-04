@@ -2,11 +2,18 @@ import { RemovalPolicy } from "aws-cdk-lib";
 import {
   AccountRecovery,
   CfnIdentityPool,
+  StringAttribute,
   UserPool,
   UserPoolClient,
   UserPoolEmail,
 } from "aws-cdk-lib/aws-cognito";
-import { Role } from "aws-cdk-lib/aws-iam";
+import {
+  Effect,
+  PolicyDocument,
+  PolicyStatement,
+  Role,
+  ServicePrincipal,
+} from "aws-cdk-lib/aws-iam";
 import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 import { Construct } from "constructs";
 import * as path from "path";
@@ -15,6 +22,7 @@ export interface CognitoStackProps {
   deploymentEnv: string;
   cognitoHooksDir: string;
   dynamoTableName: string;
+  dynamoTableArn: string;
   dynamoTableRole: Role;
   region: string;
 }
@@ -46,6 +54,56 @@ export class CognitoStack extends Construct {
       userPoolPrefix,
       userPresignupDir,
     );
+    const userPostConfirmationRole = new Role(
+      this,
+      `UserPostConfirmationRole-${this.props.deploymentEnv}`,
+      {
+        assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
+        inlinePolicies: {
+          dynamoAccess: new PolicyDocument({
+            statements: [
+              new PolicyStatement({
+                sid: "AllowDynamoAccessForApi",
+                effect: Effect.ALLOW,
+                actions: ["dynamodb:*"],
+                resources: [
+                  props.dynamoTableArn,
+                  `${props.dynamoTableArn}/index/inverted`,
+                ],
+              }),
+              new PolicyStatement({
+                sid: "CognitoUpdate",
+                effect: Effect.ALLOW,
+                actions: ["cognito-idp:AdminUpdateUserAttributes"],
+                resources: ["*"],
+              }),
+            ],
+          }),
+        },
+      },
+    );
+    userPostConfirmationRole.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    const userPostConfirmationHook = new Function(
+      scope,
+      `${userPoolPrefix}PostConfirmation-${this.props.deploymentEnv}`,
+      {
+        runtime: Runtime.NODEJS_16_X,
+        handler: `index.invoke`,
+        environment: {
+          DYNAMO_TABLE_NAME: props.dynamoTableName,
+        },
+        code: Code.fromAsset(
+          path.join(
+            props.cognitoHooksDir,
+            "user-postconfirmation",
+            "dist",
+            "index.zip",
+          ),
+        ),
+        role: userPostConfirmationRole,
+      },
+    );
+    userPostConfirmationHook.applyRemovalPolicy(RemovalPolicy.DESTROY);
     this.userPool = new UserPool(
       scope,
       `${userPoolPrefix}Pool-${props.deploymentEnv}`,
@@ -64,8 +122,12 @@ export class CognitoStack extends Construct {
             required: true,
           },
         },
+        customAttributes: {
+          gymId: new StringAttribute({ mutable: true }),
+        },
         lambdaTriggers: {
           preSignUp: userPresignupHook,
+          postConfirmation: userPostConfirmationHook,
         },
       },
     );
