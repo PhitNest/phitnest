@@ -1,6 +1,8 @@
 part of 'gym_entry_form.dart';
 
 final class GymEntryFormControllers extends FormControllers {
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
   final nameController = TextEditingController();
   final streetController = TextEditingController();
   final cityController = TextEditingController();
@@ -9,9 +11,10 @@ final class GymEntryFormControllers extends FormControllers {
 
   @override
   void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
     nameController.dispose();
     streetController.dispose();
-
     cityController.dispose();
     stateController.dispose();
     zipCodeController.dispose();

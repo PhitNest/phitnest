@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ui/ui.dart';
 
 import '../../../../repositories/repositories.dart';
@@ -62,6 +63,7 @@ final class InviteForm extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text('Invite'),
+                  12.verticalSpace,
                   StyledUnderlinedTextField(
                     hint: 'Email',
                     validator: EmailValidator.validateEmail,

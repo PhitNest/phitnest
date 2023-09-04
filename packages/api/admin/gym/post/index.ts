@@ -45,8 +45,8 @@ const validator = z.object({
   state: z.string(),
   zipCode: z.string(),
   gymName: z.string(),
-  adminFirstName: z.string(),
-  adminLastName: z.string(),
+  firstName: z.string(),
+  lastName: z.string(),
 });
 
 export async function invoke(
@@ -73,8 +73,8 @@ export async function invoke(
         gymLocation: location,
         id: adminClaims.sub,
         adminEmail: adminClaims.email,
-        adminFirstName: data.adminFirstName,
-        adminLastName: data.adminLastName,
+        adminFirstName: data.firstName,
+        adminLastName: data.lastName,
         gymName: data.gymName,
         createdAt: new Date(),
       };
