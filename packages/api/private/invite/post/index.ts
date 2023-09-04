@@ -30,7 +30,7 @@ export async function invoke(
       const userClaims = getUserClaims(event);
       const client = dynamo();
       const [sender, existingInvite] = await Promise.all([
-        getUser(client, userClaims.sub),
+        getUser(client, userClaims.sub, userClaims.gymId),
         getReceivedInvites(client, data.receiverEmail, 1),
       ]);
       if (!(existingInvite instanceof ResourceNotFoundError)) {

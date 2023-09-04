@@ -40,8 +40,8 @@ export async function invoke(
       );
       if (friendship instanceof RequestError) {
         const [sender, receiver] = await Promise.all([
-          getUserExplore(client, userClaims.sub),
-          getUserExplore(client, data.receiverId),
+          getUserExplore(client, userClaims.sub, userClaims.gymId),
+          getUserExplore(client, data.receiverId, userClaims.gymId),
         ]);
         if (sender instanceof ResourceNotFoundError) {
           return sender;

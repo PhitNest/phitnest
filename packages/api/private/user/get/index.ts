@@ -30,6 +30,7 @@ import * as uuid from "uuid";
 async function createIdentity(
   dynamo: DynamoClient,
   userId: string,
+  gymId: string,
   authorization: string | undefined,
 ): Promise<User | RequestError> {
   const newUser = await getUserWithoutIdentity(dynamo, userId);
@@ -81,6 +82,7 @@ async function createIdentity(
     const sender = await getUserExplore(
       dynamo,
       userWithIdentity.invite.senderId,
+      gymId,
     );
     if (sender instanceof ResourceNotFoundError) {
       return sender;
@@ -113,11 +115,16 @@ export async function invoke(
   return handleRequest(async () => {
     const userClaims = getUserClaims(event);
     const client = dynamo();
-    let user: User | RequestError = await getUser(client, userClaims.sub);
+    let user: User | RequestError = await getUser(
+      client,
+      userClaims.sub,
+      userClaims.gymId,
+    );
     if (user instanceof RequestError) {
       user = await createIdentity(
         client,
         userClaims.sub,
+        userClaims.gymId,
         event.headers.Authorization,
       );
       if (user instanceof RequestError) {
