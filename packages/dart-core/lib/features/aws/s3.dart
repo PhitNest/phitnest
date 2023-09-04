@@ -11,7 +11,7 @@ const kS3Service = 's3';
 
 ({Uri uri, Map<String, String> headers}) getProfilePictureUri(
     Session session, String identityId) {
-  final key = '$kUserBucketName/profilePictures/$identityId.pfp';
+  final key = '$kUserBucketName/profilePictures/$identityId.txt';
   final payload = SigV4.hashCanonicalRequest('');
   final datetime = SigV4.generateDatetime();
   final host = '$kS3Service.$kRegion.amazonaws.com';
@@ -61,7 +61,7 @@ Future<String?> uploadProfilePicture({
   try {
     final s3Endpoint =
         'https://$kUserBucketName.$kS3Service.$kRegion.amazonaws.com';
-    final String bucketKey = 'profilePictures/$identityId.pfp';
+    final String bucketKey = 'profilePictures/$identityId.txt';
     final uri = Uri.parse(s3Endpoint);
     final req = http.MultipartRequest('POST', uri);
     final multipartFile = http.MultipartFile(
