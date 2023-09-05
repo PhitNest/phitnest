@@ -14,7 +14,7 @@
       "dependsOn": ["prebuild", "^build"]
     },
     "deploy": {
-      "dependsOn": ["^deploy-dev", "^deploy-prod", "^deploy"]
+      "dependsOn": ["^deploy-dev", "^deploy"]
     },
     "deploy-dev": {
       "dependsOn": ["deploy", "^deploy-dev"]
