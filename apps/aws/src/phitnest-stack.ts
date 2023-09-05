@@ -11,9 +11,9 @@ const kApiRoute53Arn = `arn:aws:acm:${kRegion}:235601651768:certificate/030219b7
 export class PhitnestStack extends Stack {
   constructor(scope: Construct) {
     super(scope, `phitnest-stack-${kDeploymentEnv}`);
+    const packagesDir = path.join(process.cwd(), "..", "..", "packages");
 
-    const apiDir = path.join(process.cwd(), "..", "..", "packages", "api");
-
+    const apiDir = path.join(packagesDir, "api");
     const dynamo = new DynamoStack(this, {
       deploymentEnv: kDeploymentEnv,
       region: kRegion,
@@ -22,7 +22,7 @@ export class PhitnestStack extends Stack {
 
     const cognito = new CognitoStack(this, {
       deploymentEnv: kDeploymentEnv,
-      cognitoHooksDir: path.join(apiDir, "cognito-hooks"),
+      cognitoHooksDir: path.join(packagesDir, "cognito-hooks"),
       dynamoTableName: dynamo.tableName,
       dynamoTableArn: dynamo.tableArn,
       dynamoTableRole: dynamo.tableRole,

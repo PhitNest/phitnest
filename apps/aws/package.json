@@ -24,7 +24,6 @@
     "prettier": "^3.0.0",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
-    "api": "workspace:*",
     "jest-helpers": "workspace:*",
     "eslint-configs": "workspace:*",
     "tsconfigs": "workspace:*"
