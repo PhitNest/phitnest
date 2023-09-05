@@ -53,7 +53,7 @@ void _handleGetUserStateChanged(
           switch (response) {
             case HttpResponseSuccess(data: final response):
               switch (response) {
-                case GetUserSuccess(exploreWithPictures: final exploreUsers):
+                case GetUserSuccess(exploreUsers: final exploreUsers):
                   switch (navBarState) {
                     case NavBarInitialState(page: final page):
                       if (page == NavBarPage.explore &&

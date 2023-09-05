@@ -12,13 +12,24 @@ Future<HttpResponse<GetUserResponse>> user(Session session) async {
       if (profilePicture == null) {
         return HttpResponseOk(FailedToLoadProfilePicture(data), headers);
       }
-      final removeFromExplore = {
-        data.user.id,
-        ...data.friendships.map((f) => switch (f) {
-              FriendRequest(sender: final sender) => sender.id == data.user.id,
-              _ => true,
-            })
-      };
+      final List<FriendRequest> sentRequests = [];
+      final List<FriendRequest> receivedRequests = [];
+      final List<FriendshipWithoutMessage> friends = [];
+      final removeFromExplore = {data.user.id};
+      for (final friendship in data.friendships) {
+        switch (friendship) {
+          case FriendRequest(sender: final sender):
+            if (sender.id == data.user.id) {
+              sentRequests.add(friendship);
+              removeFromExplore.add(friendship.receiver.id);
+            } else {
+              receivedRequests.add(friendship);
+            }
+          case FriendshipWithoutMessage():
+            friends.add(friendship);
+            removeFromExplore.add(friendship.other(data.user.id).id);
+        }
+      }
       final exploreUsers = (await Future.wait(data.explore.map((user) async {
         final profilePicture =
             await getProfilePicture(session, user.identityId);
@@ -38,8 +49,11 @@ Future<HttpResponse<GetUserResponse>> user(Session session) async {
       return HttpResponseOk(
         GetUserSuccess(
           data,
-          profilePicture,
-          exploreUsers,
+          profilePicture: profilePicture,
+          exploreUsers: exploreUsers,
+          sentFriendRequests: sentRequests,
+          receivedFriendRequests: receivedRequests,
+          friendships: friends,
         ),
         headers,
       );

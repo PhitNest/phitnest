@@ -13,6 +13,8 @@ sealed class FriendshipResponse extends JsonPolymorphic<FriendshipResponse> {
   UserExplore get receiver => receiverJson.value;
   String get createdAt => createdAtJson.value;
 
+  UserExplore other(String id) => sender.id == id ? receiver : sender;
+
   factory FriendshipResponse.polymorphicParse(Map<String, dynamic> json) =>
       JsonPolymorphic.polymorphicParse(
           json, [FriendRequest.parser, FriendshipWithoutMessage.parser]);
