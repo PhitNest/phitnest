@@ -58,7 +58,8 @@ final class NavBarLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (state) {
-      case NavBarLoadingState(page: final page):
+      case NavBarInitialState(page: final page) ||
+            NavBarSendingFriendRequestState(page: final page):
         if (page == NavBarPage.explore) {
           return const CircularProgressIndicator();
         }
@@ -74,7 +75,8 @@ final class NavBarLogo extends StatelessWidget {
           NavBarHoldingLogoState() => _logoImage(1, state),
           NavBarInactiveState() ||
           NavBarReversedState() ||
-          NavBarLoadingState() =>
+          NavBarSendingFriendRequestState() ||
+          NavBarInitialState() =>
             _logoImage(0, state),
           NavBarLogoReadyState() => NavBarAnimation(state: state),
         });

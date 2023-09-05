@@ -29,11 +29,6 @@ class _HomePageState extends State<HomePage> {
         body: MultiBlocProvider(
           providers: [
             BlocProvider(
-              create: (context) => ExploreBloc(
-                  load: (_, session) => exploreUsers(session),
-                  loadOnStart: AuthReq(null, context.sessionLoader)),
-            ),
-            BlocProvider(
               create: (context) => UserBloc(
                   load: (_, session) => user(session),
                   loadOnStart: AuthReq(null, context.sessionLoader)),
@@ -48,52 +43,54 @@ class _HomePageState extends State<HomePage> {
             pageController: pageController,
             builder: (context, navBarState) => LogoutConsumer(
               listener: _handleLogoutStateChanged,
-              builder: (context, logoutState) => UserConsumer(
-                listener: _handleGetUserStateChanged,
-                builder: (context, userState) => ExploreConsumer(
-                  listener: (context, exploreState) =>
-                      _handleExploreStateChanged(
-                          context, exploreState, navBarState),
-                  builder: (context, exploreState) => SendFriendRequestConsumer(
-                    listener: _handleSendFriendRequestStateChanged,
-                    builder: (context, sendFriendRequestState) =>
-                        switch (logoutState) {
-                      LoaderInitialState() => switch (userState) {
-                          LoaderLoadedState(data: final response) => switch (
-                                response) {
-                              AuthRes(data: final response) => switch (
-                                    response) {
-                                  HttpResponseSuccess(
-                                    data: final getUserResponse
-                                  ) =>
-                                    switch (getUserResponse) {
-                                      GetUserSuccess() => switch (
-                                            navBarState.page) {
-                                          NavBarPage.explore => ExploreScreen(
-                                              pageController: pageController,
-                                              navBarState: navBarState,
-                                            ),
-                                          NavBarPage.news => Container(),
-                                          NavBarPage.chat => Container(),
-                                          NavBarPage.options => OptionsScreen(
-                                              getUserResponse: getUserResponse,
-                                            ),
-                                        },
-                                      _ => const Loader(),
-                                    },
-                                  _ => const Loader(),
-                                },
-                              _ => const Loader(),
-                            },
-                          _ => const Loader(),
-                        },
-                      _ => const Loader(),
-                    },
-                  ),
+              builder: (context, logoutState) => SendFriendRequestConsumer(
+                listener: _handleSendFriendRequestStateChanged,
+                builder: (context, sendFriendRequestState) => UserConsumer(
+                  listener: (context, userState) => _handleGetUserStateChanged(
+                      context, userState, navBarState),
+                  builder: (context, userState) => switch (logoutState) {
+                    LoaderInitialState() => switch (userState) {
+                        LoaderLoadedState(data: final response) => switch (
+                              response) {
+                            AuthRes(data: final response) => switch (response) {
+                                HttpResponseSuccess(
+                                  data: final getUserResponse
+                                ) =>
+                                  switch (getUserResponse) {
+                                    GetUserSuccess() => switch (
+                                          navBarState.page) {
+                                        NavBarPage.explore => ExploreScreen(
+                                            pageController: pageController,
+                                            users: getUserResponse
+                                                .exploreWithPictures,
+                                            navBarState: navBarState,
+                                          ),
+                                        NavBarPage.news => Container(),
+                                        NavBarPage.chat => Container(),
+                                        NavBarPage.options => OptionsScreen(
+                                            getUserResponse: getUserResponse,
+                                          ),
+                                      },
+                                    _ => const Loader(),
+                                  },
+                                _ => const Loader(),
+                              },
+                            _ => const Loader(),
+                          },
+                        _ => const Loader(),
+                      },
+                    _ => const Loader(),
+                  },
                 ),
               ),
             ),
           ),
         ),
       );
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
 }

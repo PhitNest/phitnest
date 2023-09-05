@@ -12,9 +12,9 @@ Future<HttpResponse<List<UserExplore>>> getExploreUsers(Session session) =>
           .toList(),
     );
 
-Future<HttpResponse<User>> getUser(Session session) => request(
+Future<HttpResponse<GetUserResponseJson>> getUser(Session session) => request(
       route: 'user',
       method: HttpMethod.get,
-      parse: (json) => User.parse(json as Map<String, dynamic>),
+      parse: (json) => GetUserResponseJson.parse(json as Map<String, dynamic>),
       session: session,
     );

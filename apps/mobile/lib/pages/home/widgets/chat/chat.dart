@@ -1,18 +1,15 @@
 // import 'package:flutter/cupertino.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:ui/ui.dart';
 
-// import '../../../theme.dart';
-// import '../../../widgets/styled_outline_button.dart';
-// import '../bloc/bloc.dart';
-// import 'widgets/chat_conversation.dart';
-// import 'widgets/chat_tile.dart';
-// import 'widgets/friend_request.dart';
+// import '../../../../entities/friendship.dart';
+// import '../../../../widgets/widgets.dart';
 
-// class ChatScreen extends StatelessWidget {
-//   final List<Friendship> friends;
+// final class ChatPage extends StatelessWidget {
+//   final List<FriendshipResponse> friends;
 
-//   const ChatScreen({super.key, required this.friends});
+//   const ChatPage({super.key, required this.friends}) : super();
 
 //   @override
 //   Widget build(BuildContext context) => Scaffold(
@@ -28,7 +25,7 @@
 //                 children: [
 //                   Text(
 //                     'Chats',
-//                     style: AppTheme.instance.theme.textTheme.bodyLarge,
+//                     style: theme.textTheme.bodyLarge,
 //                   ),
 //                   StyledOutlineButton(
 //                     onPress: () => Navigator.of(context).push(

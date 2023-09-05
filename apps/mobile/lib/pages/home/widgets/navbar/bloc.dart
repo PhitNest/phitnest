@@ -16,20 +16,30 @@ sealed class NavBarState extends Equatable {
 
 enum NavBarLoadingReason { explore, sendRequest }
 
-final class NavBarLoadingState extends NavBarState {
-  final NavBarLoadingReason reason;
-
+sealed class NavBarLoadingBaseState extends NavBarState {
   @override
   String? get logoAssetPath =>
       page == NavBarPage.explore ? null : Assets.logo.path;
 
-  const NavBarLoadingState({
+  const NavBarLoadingBaseState({
     required super.page,
-    required this.reason,
   }) : super();
+}
 
+final class NavBarInitialState extends NavBarLoadingBaseState {
+  const NavBarInitialState({
+    required super.page,
+  }) : super();
+}
+
+final class NavBarSendingFriendRequestState extends NavBarLoadingBaseState {
   @override
-  List<Object?> get props => [...super.props, reason];
+  String? get logoAssetPath =>
+      page == NavBarPage.explore ? null : Assets.logo.path;
+
+  const NavBarSendingFriendRequestState({
+    required super.page,
+  }) : super();
 }
 
 final class NavBarInactiveState extends NavBarState {
@@ -83,12 +93,12 @@ final class NavBarPressPageEvent extends NavBarEvent {
 }
 
 final class NavBarSetLoadingEvent extends NavBarEvent {
-  final NavBarLoadingReason? reason;
+  final bool loading;
 
-  const NavBarSetLoadingEvent(this.reason) : super();
+  const NavBarSetLoadingEvent(this.loading) : super();
 
   @override
-  List<Object?> get props => [reason];
+  List<Object?> get props => [loading];
 }
 
 final class NavBarPressLogoEvent extends NavBarEvent {
@@ -134,13 +144,11 @@ final class NavBarAnimateEvent extends NavBarEvent {
 }
 
 final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
-  NavBarBloc()
-      : super(const NavBarLoadingState(
-            page: NavBarPage.explore, reason: NavBarLoadingReason.explore)) {
+  NavBarBloc() : super(const NavBarInitialState(page: NavBarPage.explore)) {
     on<NavBarSetLoadingEvent>(
       (event, emit) {
-        if (event.reason != null) {
-          emit(NavBarLoadingState(page: state.page, reason: event.reason!));
+        if (event.loading) {
+          emit(NavBarInitialState(page: state.page));
         } else {
           emit(NavBarInactiveState(page: state.page));
         }
@@ -150,8 +158,8 @@ final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
     on<NavBarPressPageEvent>(
       (event, emit) async {
         switch (state) {
-          case NavBarLoadingState(reason: final reason):
-            emit(NavBarLoadingState(page: event.page, reason: reason));
+          case NavBarInitialState() || NavBarSendingFriendRequestState():
+            emit(NavBarInitialState(page: event.page));
           case NavBarReversedState() ||
                 NavBarInactiveState() ||
                 NavBarLogoReadyState():
@@ -191,9 +199,12 @@ final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
                 NavBarReversedState() ||
                 NavBarLogoReadyState():
             emit(const NavBarInactiveState(page: NavBarPage.explore));
-          case NavBarLoadingState(reason: final reason):
-            emit(NavBarLoadingState(page: NavBarPage.explore, reason: reason));
+          case NavBarInitialState():
+            emit(const NavBarInitialState(page: NavBarPage.explore));
             break;
+          case NavBarSendingFriendRequestState():
+            emit(const NavBarSendingFriendRequestState(
+                page: NavBarPage.explore));
         }
       },
     );
@@ -227,9 +238,8 @@ final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
                 ),
               );
             } else {
-              emit(const NavBarLoadingState(
-                  page: NavBarPage.explore,
-                  reason: NavBarLoadingReason.sendRequest));
+              emit(const NavBarSendingFriendRequestState(
+                  page: NavBarPage.explore));
             }
           default:
             badState(state, event);
@@ -245,13 +255,8 @@ final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
                 NavBarReversedState() ||
                 NavBarHoldingLogoState():
             badState(state, event);
-          case NavBarLoadingState(reason: final reason):
-            switch (reason) {
-              case NavBarLoadingReason.explore:
-                badState(state, event);
-              case NavBarLoadingReason.sendRequest:
-                emit(const NavBarReversedState());
-            }
+          case NavBarInitialState() || NavBarSendingFriendRequestState():
+            emit(const NavBarReversedState());
         }
       },
     );
@@ -260,7 +265,8 @@ final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
       (event, emit) {
         switch (state) {
           case NavBarInactiveState() ||
-                NavBarLoadingState() ||
+                NavBarInitialState() ||
+                NavBarSendingFriendRequestState() ||
                 NavBarReversedState():
             emit(const NavBarLogoReadyState());
           case NavBarLogoReadyState() || NavBarHoldingLogoState():
@@ -292,29 +298,43 @@ void _handleNavBarStateChanged(
   PageController pageController,
   NavBarState state,
 ) {
-  switch (context.exploreBloc.state) {
+  switch (context.userBloc.state) {
     case LoaderLoadedState(data: final response):
       switch (response) {
         case AuthRes(data: final response):
           switch (response) {
-            case HttpResponseSuccess(data: final users):
-              switch (state) {
-                case NavBarInactiveState(page: final page):
-                  if (page == NavBarPage.explore) {
-                    if (users.isNotEmpty) {
-                      context.navBarBloc.add(const NavBarAnimateEvent());
-                    }
-                  }
-                case NavBarLoadingState(reason: final reason):
-                  if (reason == NavBarLoadingReason.sendRequest) {
-                    final currentPage = pageController.page!.round();
-                    context.exploreBloc.add(LoaderSetEvent(AuthRes(
-                        HttpResponseOk(
-                            [...users]..removeAt(currentPage % users.length),
-                            null))));
-                    context.sendFriendRequestBloc.add(LoaderLoadEvent(AuthReq(
-                        users[currentPage % users.length].user.id,
-                        context.sessionLoader)));
+            case HttpResponseSuccess(
+                data: final response,
+                headers: final headers,
+              ):
+              switch (response) {
+                case GetUserSuccess(
+                    json: final json,
+                    profilePicture: final profilePicture,
+                    exploreWithPictures: final exploreUsers,
+                  ):
+                  switch (state) {
+                    case NavBarInactiveState(page: final page):
+                      if (page == NavBarPage.explore) {
+                        if (exploreUsers.isNotEmpty) {
+                          context.navBarBloc.add(const NavBarAnimateEvent());
+                        }
+                      }
+                    case NavBarSendingFriendRequestState():
+                      final currentPage =
+                          pageController.page!.round() % exploreUsers.length;
+                      context.userBloc
+                          .add(LoaderSetEvent(AuthRes(HttpResponseOk(
+                              GetUserSuccess(
+                                json,
+                                profilePicture,
+                                [...exploreUsers]..removeAt(currentPage),
+                              ),
+                              headers))));
+                      context.sendFriendRequestBloc.add(LoaderLoadEvent(AuthReq(
+                          exploreUsers[currentPage].user.id,
+                          context.sessionLoader)));
+                    default:
                   }
                 default:
               }
