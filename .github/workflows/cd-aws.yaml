@@ -35,7 +35,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Build
-        run: turbo build --filter=(api|cognito)-*
+        run: turbo build --filter=cognito-*,api-*
 
       - name: Deploy
         id: deploy
