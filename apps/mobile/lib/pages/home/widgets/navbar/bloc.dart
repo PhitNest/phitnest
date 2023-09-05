@@ -259,12 +259,11 @@ final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
     on<NavBarAnimateEvent>(
       (event, emit) {
         switch (state) {
-          case NavBarInactiveState():
-            emit(const NavBarLogoReadyState());
-          case NavBarLogoReadyState() ||
-                NavBarReversedState() ||
+          case NavBarInactiveState() ||
                 NavBarLoadingState() ||
-                NavBarHoldingLogoState():
+                NavBarReversedState():
+            emit(const NavBarLogoReadyState());
+          case NavBarLogoReadyState() || NavBarHoldingLogoState():
             badState(state, event);
         }
       },

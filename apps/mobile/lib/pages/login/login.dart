@@ -135,7 +135,7 @@ final class LoginPage extends StatelessWidget {
                         style: theme.textTheme.bodySmall,
                         children: [
                           TextSpan(
-                            text: 'Register',
+                            text: ' Register',
                             style: theme.textTheme.bodySmall!.copyWith(
                               color: theme.colorScheme.primary,
                               fontWeight: FontWeight.bold,
