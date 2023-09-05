@@ -29,3 +29,30 @@ ChangePasswordProvider _changePasswordForm(
       ),
       createConsumer: createConsumer,
     );
+
+void _handleStateChanged(
+  BuildContext context,
+  LoaderState<ChangePasswordResponse> loaderState,
+) {
+  switch (loaderState) {
+    case LoaderLoadedState(data: final response):
+      switch (response) {
+        case ChangePasswordSuccess(session: final session):
+          context.sessionLoader
+              .add(LoaderSetEvent(RefreshSessionSuccess(session)));
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute<void>(
+              builder: (_) => const HomePage(),
+            ),
+            (_) => false,
+          );
+        case ChangePasswordFailureResponse(message: final message):
+          StyledBanner.show(
+            message: message,
+            error: true,
+          );
+      }
+    default:
+  }
+}

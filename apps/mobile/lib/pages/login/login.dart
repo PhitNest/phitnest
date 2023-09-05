@@ -9,53 +9,6 @@ import '../pages.dart';
 
 part 'bloc.dart';
 
-LoginParams _params(LoginControllers controllers) => LoginParams(
-      email: controllers.emailController.text,
-      password: controllers.passwordController.text,
-    );
-
-void _handleStateChanged(BuildContext context, LoginControllers controllers,
-    LoaderState<LoginResponse> loaderState) {
-  switch (loaderState) {
-    case LoaderLoadedState(data: final response):
-      switch (response) {
-        case LoginSuccess():
-          Navigator.pushAndRemoveUntil(
-            context,
-            CupertinoPageRoute<void>(
-              builder: (_) => const HomePage(),
-            ),
-            (_) => false,
-          );
-        case LoginConfirmationRequired(user: final user):
-          Navigator.pushReplacement(
-            context,
-            CupertinoPageRoute<void>(
-              builder: (context) => VerificationPage(
-                unauthenticatedSession: UnauthenticatedSession(user: user),
-                resend: (session) => resendConfirmationEmail(
-                  user: session.user,
-                ),
-                confirm: (session, code) => confirmEmail(
-                  user: session.user,
-                  code: code,
-                ),
-                loginParams: _params(controllers),
-              ),
-            ),
-          );
-        case LoginFailureResponse(message: final message) ||
-              LoginUnknownResponse(message: final message) ||
-              LoginChangePasswordRequired(message: final message):
-          StyledBanner.show(
-            message: message,
-            error: true,
-          );
-      }
-    default:
-  }
-}
-
 final class LoginPage extends StatelessWidget {
   const LoginPage({super.key}) : super();
 
