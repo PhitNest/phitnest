@@ -1,12 +1,8 @@
-import 'package:core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:ui/ui.dart';
 
 import '../../../../entities/entities.dart';
 import '../navbar/navbar.dart';
 import 'widgets/widgets.dart';
-
-part 'bloc.dart';
 
 class ExplorePage extends StatelessWidget {
   final PageController pageController;

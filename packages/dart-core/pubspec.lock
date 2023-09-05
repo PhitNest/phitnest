@@ -278,10 +278,10 @@ packages:
     dependency: "direct main"
     description:
       name: json_types
-      sha256: "8deac4278090cfec946cb68cf030aa532af32c4f78e520027a0bebeca986f987"
+      sha256: "0bb598265d57ee8a2b6d769685eae0c0694ef0430c9ab7a72797de4b2ae201c7"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1+1"
+    version: "2.0.2"
   lints:
     dependency: "direct dev"
     description:

@@ -14,6 +14,7 @@ typedef UserConsumer = AuthLoaderConsumer<void, HttpResponse<GetUserResponse>>;
 extension HomeBlocGetters on BuildContext {
   UserBloc get userBloc => authLoader();
   SendFriendRequestBloc get sendFriendRequestBloc => authLoader();
+  DeleteUserBloc get deleteUserBloc => authLoader();
 }
 
 void _goToLogin(BuildContext context, String? error) {
