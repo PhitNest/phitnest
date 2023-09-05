@@ -4,29 +4,74 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ui/ui.dart';
 
 import '../../../../constants/constants.dart';
+import '../../home.dart';
 import '../styled_indicator.dart';
 import 'widgets/widgets.dart';
 
 part 'bloc.dart';
 
-void _handleNavBarStateChanged(BuildContext context, NavBarState state) {}
+void _handleNavBarStateChanged(
+  BuildContext context,
+  PageController pageController,
+  NavBarState state,
+) {
+  switch (context.exploreBloc.state) {
+    case LoaderLoadedState(data: final response):
+      switch (response) {
+        case AuthRes(data: final response):
+          switch (response) {
+            case HttpResponseSuccess(data: final users):
+              switch (state) {
+                case NavBarInactiveState(page: final page):
+                  if (page == NavBarPage.explore) {
+                    if (users.isNotEmpty) {
+                      context.navBarBloc.add(const NavBarAnimateEvent());
+                    }
+                  }
+                case NavBarLoadingState(reason: final reason):
+                  if (reason == NavBarLoadingReason.sendRequest) {
+                    final currentPage = pageController.page!.round();
+                    context.exploreBloc.add(LoaderSetEvent(AuthRes(
+                        HttpResponseOk(
+                            [...users]..removeAt(currentPage % users.length),
+                            null))));
+                    context.sendFriendRequestBloc.add(LoaderLoadEvent(AuthReq(
+                        users[currentPage % users.length].user.id,
+                        context.sessionLoader)));
+                  }
+                default:
+              }
+            default:
+          }
+        default:
+      }
+    default:
+  }
+}
 
 class NavBar extends StatelessWidget {
   static double get kHeight => 66.h;
   final Widget Function(BuildContext context, NavBarState state) builder;
+  final PageController pageController;
 
   const NavBar({
     super.key,
     required this.builder,
+    required this.pageController,
   });
 
   @override
   Widget build(BuildContext context) => BlocProvider(
         create: (_) => NavBarBloc(),
         child: BlocConsumer<NavBarBloc, NavBarState>(
-          listener: _handleNavBarStateChanged,
+          listener: (context, navBarState) => _handleNavBarStateChanged(
+            context,
+            pageController,
+            navBarState,
+          ),
           builder: (context, state) {
             final reversed = state is NavBarReversedState;
             return Column(

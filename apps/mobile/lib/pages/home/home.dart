@@ -1,5 +1,4 @@
 import 'package:core/core.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,8 +25,6 @@ void _goToLogin(BuildContext context, String? error) {
   );
 }
 
-void _handleHomeStateChanged(BuildContext context, HomeState homeState) {}
-
 void _handleLogoutStateChanged(
   BuildContext context,
   LoaderState<void> loaderState,
@@ -39,78 +36,119 @@ void _handleLogoutStateChanged(
   }
 }
 
-void _handleState<T>(
-  BuildContext context, {
-  required void Function(BuildContext context, T data) onSuccess,
-  required void Function(BuildContext context, Failure failure) onFailure,
-  required void Function(BuildContext context, String message) authLost,
-  required LoaderState<AuthResOrLost<HttpResponse<T>>> loaderState,
-}) =>
-    switch (loaderState) {
-      LoaderLoadedState(data: final response) => switch (response) {
-          AuthRes(data: final response) => switch (response) {
-              HttpResponseSuccess(data: final response) =>
-                onSuccess(context, response),
-              HttpResponseFailure(failure: final failure) =>
-                onFailure(context, failure),
-            },
-          AuthLost(message: final message) => authLost(context, message),
-        },
-      _ => null,
-    };
-
 void _handleGetUserStateChanged(
   BuildContext context,
   LoaderState<AuthResOrLost<HttpResponse<GetUserResponse>>> loaderState,
-) =>
-    _handleState(
-      context,
-      loaderState: loaderState,
-      onSuccess: (context, data) => switch (data) {
-        GetUserSuccess() => _handleState(
-            context,
-            onSuccess: (context, exploreData) =>
-                context.homeBloc.add(HomeLoadedEvent(exploreData)),
-            onFailure: (context, failure) {},
-            authLost: (context, message) {},
-            loaderState: context.exploreBloc.state,
-          ),
-        FailedToLoadProfilePicture() => Navigator.pushAndRemoveUntil(
-            context,
-            CupertinoPageRoute<void>(
-              builder: (_) => const PhotoInstructionsPage(),
-            ),
-            (_) => false,
-          ),
-      },
-      onFailure: (context, data) => context.userBloc
-          .add(LoaderLoadEvent(AuthReq(null, context.sessionLoader))),
-      authLost: _goToLogin,
-    );
+) {
+  switch (loaderState) {
+    case LoaderLoadedState(data: final response):
+      switch (response) {
+        case AuthRes(data: final response):
+          switch (response) {
+            case HttpResponseSuccess(data: final response):
+              switch (response) {
+                case FailedToLoadProfilePicture():
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    CupertinoPageRoute<void>(
+                      builder: (_) => const PhotoInstructionsPage(),
+                    ),
+                    (_) => false,
+                  );
+                default:
+              }
+            default:
+          }
+        case AuthLost(message: final message):
+          _goToLogin(context, message);
+      }
+    default:
+  }
+}
 
 void _handleExploreStateChanged(
   BuildContext context,
   LoaderState<AuthResOrLost<HttpResponse<List<UserExploreWithPicture>>>>
       loaderState,
-) =>
-    _handleState(
-      context,
-      loaderState: loaderState,
-      onSuccess: (context, data) => _handleState(
-        context,
-        onSuccess: (context, userData) =>
-            context.homeBloc.add(HomeLoadedEvent(data)),
-        onFailure: (context, failure) {},
-        authLost: (context, message) {},
-        loaderState: context.userBloc.state,
-      ),
-      onFailure: (context, failure) => context.exploreBloc
-          .add(LoaderLoadEvent(AuthReq(null, context.sessionLoader))),
-      authLost: _goToLogin,
-    );
+  NavBarState navBarState,
+) {
+  switch (loaderState) {
+    case LoaderLoadedState(data: final response):
+      switch (response) {
+        case AuthRes(data: final response):
+          switch (response) {
+            case HttpResponseSuccess(data: final users):
+              switch (navBarState) {
+                case NavBarLoadingState(page: final page):
+                  if (page == NavBarPage.explore && users.isNotEmpty) {
+                    context.navBarBloc.add(const NavBarAnimateEvent());
+                  } else {
+                    context.navBarBloc.add(const NavBarSetLoadingEvent(null));
+                  }
+                default:
+              }
+            case HttpResponseFailure():
+              context.exploreBloc
+                  .add(LoaderLoadEvent(AuthReq(null, context.sessionLoader)));
+          }
+        case AuthLost(message: final message):
+          _goToLogin(context, message);
+      }
+    default:
+  }
+}
 
-class HomePage extends StatelessWidget {
+void _handleSendFriendRequestStateChanged(
+  BuildContext context,
+  LoaderState<AuthResOrLost<HttpResponse<FriendshipResponse>>> loaderState,
+) {
+  switch (loaderState) {
+    case LoaderLoadedState(data: final response):
+      switch (response) {
+        case AuthRes(data: final data):
+          switch (data) {
+            case HttpResponseSuccess(data: final data):
+              switch (data) {
+                case FriendRequest():
+                  StyledBanner.show(
+                    message: 'Friend request sent',
+                    error: false,
+                  );
+                  context.navBarBloc.add(const NavBarSetLoadingEvent(null));
+                case FriendshipWithoutMessage():
+                  StyledBanner.show(
+                    message: 'Friend request accepted',
+                    error: false,
+                  );
+                  context.navBarBloc.add(const NavBarReverseEvent());
+              }
+            case HttpResponseFailure(failure: final failure):
+              StyledBanner.show(
+                message: failure.message,
+                error: true,
+              );
+              context.navBarBloc.add(const NavBarSetLoadingEvent(null));
+            default:
+          }
+        case AuthLost():
+          _goToLogin(context, null);
+        default:
+      }
+    default:
+  }
+}
+
+class HomePage extends StatefulWidget {
   const HomePage({super.key}) : super();
+
+  @override
+  State<StatefulWidget> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final pageController = PageController();
+
+  _HomePageState() : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -130,40 +168,56 @@ class HomePage extends StatelessWidget {
               create: (_) => SendFriendRequestBloc(load: sendFriendRequest),
             ),
             const BlocProvider(create: logoutBloc),
-            BlocProvider(
-              create: (_) => HomeBloc(),
-            ),
-            BlocProvider(
-              create: (_) => NavBarBloc(),
-            ),
+            BlocProvider(create: (_) => NavBarBloc()),
           ],
-          child: LogoutConsumer(
-            listener: _handleLogoutStateChanged,
-            builder: (context, logoutState) => UserConsumer(
-              listener: _handleGetUserStateChanged,
-              builder: (context, userState) => ExploreConsumer(
-                  listener: _handleExploreStateChanged,
-                  builder: (context, exploreState) =>
-                      BlocConsumer<HomeBloc, HomeState>(
-                        listener: _handleHomeStateChanged,
-                        builder: (context, homeState) => NavBar(
-                          builder: (context, navBarState) =>
-                              switch (logoutState) {
-                            LoaderInitialState() => switch (navBarState.page) {
-                                NavBarPage.explore => ExploreScreen(
-                                    pageController:
-                                        context.homeBloc.pageController,
-                                    homeState: homeState,
-                                    navBarState: navBarState,
-                                  ),
-                                NavBarPage.news => Container(),
-                                NavBarPage.chat => Container(),
-                                NavBarPage.options => const OptionsScreen(),
-                              },
-                            _ => const Loader(),
-                          },
-                        ),
-                      )),
+          child: NavBar(
+            pageController: pageController,
+            builder: (context, navBarState) => LogoutConsumer(
+              listener: _handleLogoutStateChanged,
+              builder: (context, logoutState) => UserConsumer(
+                listener: _handleGetUserStateChanged,
+                builder: (context, userState) => ExploreConsumer(
+                  listener: (context, exploreState) =>
+                      _handleExploreStateChanged(
+                          context, exploreState, navBarState),
+                  builder: (context, exploreState) => SendFriendRequestConsumer(
+                    listener: _handleSendFriendRequestStateChanged,
+                    builder: (context, sendFriendRequestState) =>
+                        switch (logoutState) {
+                      LoaderInitialState() => switch (userState) {
+                          LoaderLoadedState(data: final response) => switch (
+                                response) {
+                              AuthRes(data: final response) => switch (
+                                    response) {
+                                  HttpResponseSuccess(
+                                    data: final getUserResponse
+                                  ) =>
+                                    switch (getUserResponse) {
+                                      GetUserSuccess() => switch (
+                                            navBarState.page) {
+                                          NavBarPage.explore => ExploreScreen(
+                                              pageController: pageController,
+                                              navBarState: navBarState,
+                                            ),
+                                          NavBarPage.news => Container(),
+                                          NavBarPage.chat => Container(),
+                                          NavBarPage.options => OptionsScreen(
+                                              getUserResponse: getUserResponse,
+                                            ),
+                                        },
+                                      _ => const Loader(),
+                                    },
+                                  _ => const Loader(),
+                                },
+                              _ => const Loader(),
+                            },
+                          _ => const Loader(),
+                        },
+                      _ => const Loader(),
+                    },
+                  ),
+                ),
+              ),
             ),
           ),
         ),
