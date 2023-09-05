@@ -138,6 +138,9 @@ export async function invoke(
     if (friendships instanceof RequestError) {
       return friendships;
     }
+    if (gym instanceof ResourceNotFoundError) {
+      return gym;
+    }
     return new Success({
       user: user,
       exploreUsers: exploreUsers,
