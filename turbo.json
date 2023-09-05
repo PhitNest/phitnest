@@ -13,6 +13,9 @@
     "build": {
       "dependsOn": ["prebuild", "^build"]
     },
+    "deploy": {
+      "dependsOn": ["^deploy"]
+    },
     "deploy-dev": {
       "dependsOn": ["^deploy-dev"]
     }
