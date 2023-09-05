@@ -5,6 +5,7 @@ import 'package:ui/ui.dart';
 
 import '../../../../entities/entities.dart';
 import '../../../../widgets/widgets.dart';
+import '../../home.dart';
 
 class OptionsPage extends StatelessWidget {
   final User user;
@@ -45,7 +46,7 @@ class OptionsPage extends StatelessWidget {
                 ),
                 16.verticalSpace,
                 Text(
-                  gym.address.toString(),
+                  gym.toString(),
                   style: theme.textTheme.bodyMedium,
                 ),
                 31.verticalSpace,
@@ -64,7 +65,8 @@ class OptionsPage extends StatelessWidget {
                   ),
                 ),
                 StyledOutlineButton(
-                  onPress: () {},
+                  onPress: () => context.deleteUserBloc.add(
+                      LoaderLoadEvent(AuthReq(null, context.sessionLoader))),
                   text: 'Delete Account',
                   hPadding: 16.w,
                   vPadding: 8.h,
