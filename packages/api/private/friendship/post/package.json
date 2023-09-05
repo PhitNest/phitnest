@@ -1,5 +1,5 @@
 {
-  "name": "post-friendship",
+  "name": "api-post-friendship",
   "private": true,
   "version": "1.0.0",
   "scripts": {

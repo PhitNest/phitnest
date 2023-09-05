@@ -1,5 +1,5 @@
 {
-  "name": "delete-friendship",
+  "name": "api-delete-friendship",
   "private": true,
   "version": "1.0.0",
   "scripts": {

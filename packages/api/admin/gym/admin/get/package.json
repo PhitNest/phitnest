@@ -1,5 +1,5 @@
 {
-  "name": "get-gym-admin",
+  "name": "api-get-gym-admin",
   "private": true,
   "version": "1.0.0",
   "scripts": {

@@ -1,5 +1,5 @@
 {
-  "name": "delete-user",
+  "name": "api-delete-user",
   "private": true,
   "version": "1.0.0",
   "scripts": {

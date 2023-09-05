@@ -1,5 +1,5 @@
 {
-  "name": "post-invite-admin",
+  "name": "api-post-invite-admin",
   "private": true,
   "version": "1.0.0",
   "scripts": {

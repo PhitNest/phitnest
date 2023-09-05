@@ -1,5 +1,5 @@
 {
-  "name": "get-friendship",
+  "name": "api-get-friendship",
   "private": true,
   "version": "1.0.0",
   "scripts": {

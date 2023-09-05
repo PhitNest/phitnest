@@ -35,11 +35,11 @@ jobs:
           aws-region: us-east-1
 
       - name: Build
-        run: turbo build
+        run: turbo build --filter=api-*
 
       - name: Deploy
         id: deploy
-        run: turbo deploy-aws-${{ inputs.deployment_env }}
+        run: turbo deploy-${{ inputs.deployment_env }} --filter=aws
 
       - name: Commit AWS development environment changes
         if: ${{ inputs.deployment_env == 'dev' }}

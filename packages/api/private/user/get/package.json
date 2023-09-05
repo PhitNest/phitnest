@@ -1,5 +1,5 @@
 {
-  "name": "get-user",
+  "name": "api-get-user",
   "private": true,
   "version": "1.0.0",
   "scripts": {
