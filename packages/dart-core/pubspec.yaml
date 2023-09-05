@@ -11,7 +11,7 @@ dependencies:
   basic_utils: ^5.5.4
   dio: ^5.1.2
   shared_preferences: ^2.1.1
-  flutter_secure_storage: ^8.0.0
+  flutter_secure_storage: ^9.0.0
   amazon_cognito_identity_dart_2: ^3.5.0
   equatable: ^2.0.5
   async: ^2.11.0
