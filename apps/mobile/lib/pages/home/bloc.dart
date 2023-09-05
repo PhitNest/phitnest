@@ -5,6 +5,9 @@ typedef SendFriendRequestBloc
 typedef SendFriendRequestConsumer
     = AuthLoaderConsumer<String, HttpResponse<FriendshipResponse>>;
 
+typedef DeleteUserBloc = AuthLoaderBloc<void, HttpResponse<bool>>;
+typedef DeleteUserConsumer = AuthLoaderConsumer<void, HttpResponse<bool>>;
+
 typedef UserBloc = AuthLoaderBloc<void, HttpResponse<GetUserResponse>>;
 typedef UserConsumer = AuthLoaderConsumer<void, HttpResponse<GetUserResponse>>;
 
@@ -78,6 +81,37 @@ void _handleGetUserStateChanged(
               );
               context.userBloc
                   .add(LoaderLoadEvent(AuthReq(null, context.sessionLoader)));
+          }
+        case AuthLost(message: final message):
+          _goToLogin(context, message);
+      }
+    default:
+  }
+}
+
+void _handleDeleteUserStateChanged(
+  BuildContext context,
+  LoaderState<AuthResOrLost<HttpResponse<bool>>> loaderState,
+) {
+  switch (loaderState) {
+    case LoaderLoadedState(data: final response):
+      switch (response) {
+        case AuthRes(data: final response):
+          switch (response) {
+            case HttpResponseSuccess(data: final deleted):
+              if (deleted) {
+                _goToLogin(context, null);
+              } else {
+                StyledBanner.show(
+                  message: 'Failed to delete user',
+                  error: true,
+                );
+              }
+            case HttpResponseFailure(failure: final failure):
+              StyledBanner.show(
+                message: failure.message,
+                error: true,
+              );
           }
         case AuthLost(message: final message):
           _goToLogin(context, message);
