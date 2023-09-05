@@ -6,7 +6,7 @@ name: mobile
 description: PhitNest Mobile App
 >>>>>>> 1b0e790b (Working on monorepo)
 publish_to: "none"
-version: 0.2.0+13
+version: 0.2.0+14
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
