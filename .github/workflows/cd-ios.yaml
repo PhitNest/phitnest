@@ -30,6 +30,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+          working-directory: ./apps/mobile
 
       - name: Install dependencies
         run: npm i -g aws-cdk pnpm turbo esbuild && pnpm install
