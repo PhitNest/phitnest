@@ -53,4 +53,5 @@ jobs:
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-        run: BUILD_NAME=build_name:${{ github.ref_name }} turbo deploy --filter=mobile 
+          BUILD_NAME: build_name:${{ github.ref_name }}
+        run: turbo deploy --filter=mobile
