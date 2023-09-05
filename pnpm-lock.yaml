@@ -35,9 +35,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^5.61.0
         version: 5.62.0(eslint@8.48.0)(typescript@5.2.2)
-      api:
-        specifier: workspace:*
-        version: link:../../packages/api
       eslint:
         specifier: ^8.44.0
         version: 8.48.0
@@ -106,42 +103,6 @@ importers:
       '@types/node':
         specifier: ^20.5.7
         version: 20.5.7
-
-  packages/api:
-    devDependencies:
-      cognito-user-presignup:
-        specifier: workspace:*
-        version: link:cognito-hooks/user-presignup
-      delete-friendship:
-        specifier: workspace:*
-        version: link:private/friendship/delete
-      delete-user:
-        specifier: workspace:*
-        version: link:private/user/delete
-      get-explore:
-        specifier: workspace:*
-        version: link:private/explore/get
-      get-friendship:
-        specifier: workspace:*
-        version: link:private/friendship/get
-      get-gym-admin:
-        specifier: workspace:*
-        version: link:admin/gym/admin/get
-      get-user:
-        specifier: workspace:*
-        version: link:private/user/get
-      post-friendship:
-        specifier: workspace:*
-        version: link:private/friendship/post
-      post-gym:
-        specifier: workspace:*
-        version: link:admin/gym/post
-      post-invite:
-        specifier: workspace:*
-        version: link:private/invite/post
-      post-invite-admin:
-        specifier: workspace:*
-        version: link:admin/invite/admin/post
 
   packages/api/admin/gym/admin/get:
     dependencies:
@@ -217,28 +178,6 @@ importers:
       tsconfigs:
         specifier: workspace:*
         version: link:../../../../../../configs/tsconfigs
-
-  packages/api/cognito-hooks/user-presignup:
-    dependencies:
-      aws-lambda:
-        specifier: ^1.0.7
-        version: 1.0.7
-      typescript-core:
-        specifier: workspace:*
-        version: link:../../../typescript-core
-    devDependencies:
-      '@types/aws-lambda':
-        specifier: ^8.10.119
-        version: 8.10.119
-      eslint:
-        specifier: ^8.44.0
-        version: 8.48.0
-      eslint-configs:
-        specifier: workspace:*
-        version: link:../../../../configs/eslint-configs
-      tsconfigs:
-        specifier: workspace:*
-        version: link:../../../../configs/tsconfigs
 
   packages/api/private/explore/get:
     dependencies:
@@ -423,6 +362,28 @@ importers:
       tsconfigs:
         specifier: workspace:*
         version: link:../../../../../configs/tsconfigs
+
+  packages/cognito-hooks/user-presignup:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../typescript-core
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../configs/tsconfigs
 
   packages/dart-core: {}
 
