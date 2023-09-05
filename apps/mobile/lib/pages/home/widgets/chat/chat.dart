@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ui/ui.dart';
@@ -8,9 +7,18 @@ import '../../../../widgets/widgets.dart';
 import 'widgets/widgets.dart';
 
 final class ChatPage extends StatelessWidget {
-  final List<FriendshipResponse> friends;
+  final String userId;
+  final List<FriendshipWithoutMessage> friends;
+  final List<FriendRequest> sentFriendRequests;
+  final List<FriendRequest> receivedFriendRequests;
 
-  const ChatPage({super.key, required this.friends}) : super();
+  const ChatPage({
+    super.key,
+    required this.userId,
+    required this.friends,
+    required this.sentFriendRequests,
+    required this.receivedFriendRequests,
+  }) : super();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -42,17 +50,10 @@ final class ChatPage extends StatelessWidget {
               18.verticalSpace,
               ...friends.map(
                 (friend) => ChatTile(
-                  name:
-                      '${friend.receiver.firstName} ${friend.receiver.lastName}',
+                  name: '${friend.other(userId).firstName} '
+                      '${friend.other(userId).lastName}',
                   message: 'Tap to chat',
-                  onTap: () => Navigator.of(context).push(
-                    CupertinoPageRoute<void>(
-                      builder: (context) => ChatConversation(
-                        name:
-                            '${friend.receiver.firstName} ${friend.receiver.lastName}',
-                      ),
-                    ),
-                  ),
+                  onTap: () {},
                 ),
               ),
             ],

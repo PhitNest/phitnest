@@ -103,12 +103,17 @@ class _HomePageState extends State<HomePage> {
                             _ => switch (navBarState.page) {
                                 NavBarPage.explore => ExplorePage(
                                     pageController: pageController,
-                                    users: getUserResponse.exploreWithPictures,
+                                    users: getUserResponse.exploreUsers,
                                     navBarState: navBarState,
                                   ),
                                 NavBarPage.news => Container(),
                                 NavBarPage.chat => ChatPage(
+                                    userId: getUserResponse.user.id,
                                     friends: getUserResponse.friendships,
+                                    sentFriendRequests:
+                                        getUserResponse.sentFriendRequests,
+                                    receivedFriendRequests:
+                                        getUserResponse.receivedFriendRequests,
                                   ),
                                 NavBarPage.options => OptionsPage(
                                     user: getUserResponse.user,

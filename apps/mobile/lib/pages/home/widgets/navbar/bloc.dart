@@ -308,11 +308,7 @@ void _handleNavBarStateChanged(
                 headers: final headers,
               ):
               switch (response) {
-                case GetUserSuccess(
-                    json: final json,
-                    profilePicture: final profilePicture,
-                    exploreWithPictures: final exploreUsers,
-                  ):
+                case GetUserSuccess(exploreUsers: final exploreUsers):
                   switch (state) {
                     case NavBarInactiveState(page: final page):
                       if (page == NavBarPage.explore) {
@@ -323,14 +319,19 @@ void _handleNavBarStateChanged(
                     case NavBarSendingFriendRequestState():
                       final currentPage =
                           pageController.page!.round() % exploreUsers.length;
-                      context.userBloc
-                          .add(LoaderSetEvent(AuthRes(HttpResponseOk(
-                              GetUserSuccess(
-                                json,
-                                profilePicture,
-                                [...exploreUsers]..removeAt(currentPage),
+                      context.userBloc.add(
+                        LoaderSetEvent(
+                          AuthRes(
+                            HttpResponseOk(
+                              response.copyWith(
+                                exploreUsers: [...exploreUsers]
+                                  ..removeAt(currentPage),
                               ),
-                              headers))));
+                              headers,
+                            ),
+                          ),
+                        ),
+                      );
                       context.sendFriendRequestBloc.add(LoaderLoadEvent(AuthReq(
                           exploreUsers[currentPage].user.id,
                           context.sessionLoader)));
