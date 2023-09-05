@@ -4,9 +4,7 @@
   "private": true,
   "scripts": {
     "install": "flutter pub get",
-    "dev": "flutter run",
-    "build": "bundle install --gemfile=$BUNDLE_GEMFILE",
-    "deploy": "cd ios && bundle exec fastlane ios beta \"build_name:${{ github.ref_name }}\""
+    "dev": "flutter run"
   },
   "dependencies": {
     "aws-config-to-dart": "workspace:*"
