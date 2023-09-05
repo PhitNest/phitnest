@@ -7,11 +7,15 @@ import '../../../../entities/entities.dart';
 import '../../../../widgets/widgets.dart';
 
 class OptionsScreen extends StatelessWidget {
-  final GetUserSuccess getUserResponse;
+  final User user;
+  final Image profilePicture;
+  final Gym gym;
 
   const OptionsScreen({
     super.key,
-    required this.getUserResponse,
+    required this.user,
+    required this.profilePicture,
+    required this.gym,
   }) : super();
 
   @override
@@ -31,22 +35,21 @@ class OptionsScreen extends StatelessWidget {
                 ),
                 32.verticalSpace,
                 Text(
-                  '${getUserResponse.user.firstName} '
-                  '${getUserResponse.user.lastName}',
+                  '${user.firstName} ${user.lastName}',
                   style: theme.textTheme.bodyMedium,
                 ),
                 16.verticalSpace,
                 Text(
-                  getUserResponse.user.email,
+                  user.email,
                   style: theme.textTheme.bodyMedium,
                 ),
                 16.verticalSpace,
                 Text(
-                  'TODO: POPULATE GYM ADDRESS',
+                  gym.address.toString(),
                   style: theme.textTheme.bodyMedium,
                 ),
                 31.verticalSpace,
-                getUserResponse.profilePicture,
+                profilePicture,
                 32.verticalSpace,
                 TextButton(
                   onPressed: () {},

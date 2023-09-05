@@ -68,7 +68,10 @@ class _HomePageState extends State<HomePage> {
                                         NavBarPage.news => Container(),
                                         NavBarPage.chat => Container(),
                                         NavBarPage.options => OptionsScreen(
-                                            getUserResponse: getUserResponse,
+                                            user: getUserResponse.user,
+                                            profilePicture:
+                                                getUserResponse.profilePicture,
+                                            gym: getUserResponse.gym,
                                           ),
                                       },
                                     _ => const Loader(),

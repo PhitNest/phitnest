@@ -24,6 +24,9 @@ final class Address extends Json {
 
   @override
   List<JsonKey<dynamic, dynamic>> get keys => [street, city, state, zipCode];
+
+  @override
+  String toString() => '$street, $city, $state $zipCode';
 }
 
 final class Location extends Json {

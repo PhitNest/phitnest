@@ -41,6 +41,7 @@ sealed class GetUserResponse extends Equatable {
   final GetUserResponseJson json;
 
   User get user => json.user;
+  Gym get gym => json.gym;
 
   const GetUserResponse(this.json) : super();
 
