@@ -2,7 +2,6 @@ import { RemovalPolicy } from "aws-cdk-lib";
 import {
   AccountRecovery,
   CfnIdentityPool,
-  StringAttribute,
   UserPool,
   UserPoolClient,
   UserPoolEmail,
@@ -74,9 +73,6 @@ export class CognitoStack extends Construct {
           mutable: true,
           required: true,
         },
-      },
-      customAttributes: {
-        gymId: new StringAttribute({ mutable: true }),
       },
       lambdaTriggers: {
         preSignUp: userPresignupHook,

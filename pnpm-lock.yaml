@@ -109,9 +109,6 @@ importers:
 
   packages/api:
     devDependencies:
-      cognito-user-postconfirmation:
-        specifier: workspace:*
-        version: link:cognito-hooks/user-postconfirmation
       cognito-user-presignup:
         specifier: workspace:*
         version: link:cognito-hooks/user-presignup
@@ -220,31 +217,6 @@ importers:
       tsconfigs:
         specifier: workspace:*
         version: link:../../../../../../configs/tsconfigs
-
-  packages/api/cognito-hooks/user-postconfirmation:
-    dependencies:
-      aws-lambda:
-        specifier: ^1.0.7
-        version: 1.0.7
-      aws-sdk:
-        specifier: ^2.1450.0
-        version: 2.1450.0
-      typescript-core:
-        specifier: workspace:*
-        version: link:../../../typescript-core
-    devDependencies:
-      '@types/aws-lambda':
-        specifier: ^8.10.119
-        version: 8.10.119
-      eslint:
-        specifier: ^8.44.0
-        version: 8.48.0
-      eslint-configs:
-        specifier: workspace:*
-        version: link:../../../../configs/eslint-configs
-      tsconfigs:
-        specifier: workspace:*
-        version: link:../../../../configs/tsconfigs
 
   packages/api/cognito-hooks/user-presignup:
     dependencies:

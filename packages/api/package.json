@@ -5,7 +5,6 @@
   "devDependencies": {
     "post-invite-admin": "workspace:*",
     "cognito-user-presignup": "workspace:*",
-    "cognito-user-postconfirmation": "workspace:*",
     "post-gym": "workspace:*",
     "get-gym-admin": "workspace:*",
     "get-explore": "workspace:*",
