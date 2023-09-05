@@ -144,7 +144,7 @@ export async function invoke(
     return new Success({
       user: user,
       exploreUsers: exploreUsers,
-      friendshisps: friendships,
+      friendships: friendships,
       gym: gym,
     });
   });
