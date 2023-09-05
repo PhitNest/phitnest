@@ -8,12 +8,12 @@ import 'widgets/widgets.dart';
 
 part 'bloc.dart';
 
-class ExploreScreen extends StatelessWidget {
+class ExplorePage extends StatelessWidget {
   final PageController pageController;
   final List<UserExploreWithPicture> users;
   final NavBarState navBarState;
 
-  const ExploreScreen({
+  const ExplorePage({
     super.key,
     required this.pageController,
     required this.users,
