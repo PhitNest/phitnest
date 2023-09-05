@@ -12,10 +12,10 @@ on:
         required: true
 
 jobs:
-  build_and_publish:
+  deploy:
     runs-on: macos-latest
     env:
-      BUNDLE_GEMFILE: ${{ github.workspace }}/ios/Gemfile
+      BUNDLE_GEMFILE: ${{ github.workspace }}/apps/mobile/ios/Gemfile
     steps:
       - name: Check out from git
         uses: actions/checkout@v2
