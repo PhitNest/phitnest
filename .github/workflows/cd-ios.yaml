@@ -16,6 +16,7 @@ jobs:
     runs-on: macos-latest
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/apps/mobile/ios/Gemfile
+      BUILD_NAME: build_name:${{ github.ref_name }}
     steps:
       - name: Check out from git
         uses: actions/checkout@v2
