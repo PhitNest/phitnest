@@ -8,6 +8,7 @@ import '../../entities/entities.dart';
 import '../../repositories/repositories.dart';
 import '../../use_cases/use_cases.dart';
 import '../pages.dart';
+import 'widgets/chat/chat.dart';
 import 'widgets/widgets.dart';
 
 part 'bloc.dart';
@@ -17,6 +18,41 @@ class HomePage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _HomePageState();
+}
+
+Widget _buildHome(
+  LoaderState<AuthResOrLost<HttpResponse<bool>>> deleteUserState,
+  LoaderState<AuthResOrLost<void>> logoutState,
+  LoaderState<AuthResOrLost<HttpResponse<GetUserResponse>>> userState,
+  Widget Function(GetUserResponse userResponse) builder,
+) {
+  Widget homeBuilder() => switch (logoutState) {
+        LoaderInitialState() => switch (userState) {
+            LoaderLoadedState(data: final response) => switch (response) {
+                AuthRes(data: final response) => switch (response) {
+                    HttpResponseSuccess(data: final getUserResponse) =>
+                      builder(getUserResponse),
+                    _ => const Loader(),
+                  },
+                _ => const Loader(),
+              },
+            _ => const Loader(),
+          },
+        _ => const Loader(),
+      };
+
+  return switch (deleteUserState) {
+    LoaderInitialState() => homeBuilder(),
+    LoaderLoadedState(data: final response) => switch (response) {
+        AuthRes(data: final response) => switch (response) {
+            HttpResponseSuccess(data: final deleted) =>
+              deleted ? const Loader() : homeBuilder(),
+            HttpResponseFailure() => homeBuilder(),
+          },
+        _ => const Loader(),
+      },
+    _ => const Loader(),
+  };
 }
 
 class _HomePageState extends State<HomePage> {
@@ -37,53 +73,55 @@ class _HomePageState extends State<HomePage> {
               create: (_) => SendFriendRequestBloc(load: sendFriendRequest),
             ),
             const BlocProvider(create: logoutBloc),
+            BlocProvider(
+              create: (_) => DeleteUserBloc(
+                load: (_, session) => deleteUserAccount(session),
+              ),
+            ),
             BlocProvider(create: (_) => NavBarBloc()),
           ],
-          child: LogoutConsumer(
-            listener: _handleLogoutStateChanged,
-            builder: (context, logoutState) => SendFriendRequestConsumer(
-              listener: _handleSendFriendRequestStateChanged,
-              builder: (context, sendFriendRequestState) => NavBarConsumer(
-                pageController: pageController,
-                builder: (context, navBarState) => UserConsumer(
-                  listener: (context, userState) => _handleGetUserStateChanged(
-                      context, userState, navBarState),
-                  builder: (context, userState) => switch (logoutState) {
-                    LoaderInitialState() => switch (userState) {
-                        LoaderLoadedState(data: final response) => switch (
-                              response) {
-                            AuthRes(data: final response) => switch (response) {
-                                HttpResponseSuccess(
-                                  data: final getUserResponse
-                                ) =>
-                                  switch (getUserResponse) {
-                                    GetUserSuccess() => switch (
-                                          navBarState.page) {
-                                        NavBarPage.explore => ExplorePage(
-                                            pageController: pageController,
-                                            users: getUserResponse
-                                                .exploreWithPictures,
-                                            navBarState: navBarState,
-                                          ),
-                                        NavBarPage.news => Container(),
-                                        NavBarPage.chat => Container(),
-                                        NavBarPage.options => OptionsPage(
-                                            user: getUserResponse.user,
-                                            profilePicture:
-                                                getUserResponse.profilePicture,
-                                            gym: getUserResponse.gym,
-                                          ),
-                                      },
-                                    _ => const Loader(),
-                                  },
-                                _ => const Loader(),
+          child: DeleteUserConsumer(
+            listener: _handleDeleteUserStateChanged,
+            builder: (context, deleteUserState) => LogoutConsumer(
+              listener: _handleLogoutStateChanged,
+              builder: (context, logoutState) => SendFriendRequestConsumer(
+                listener: _handleSendFriendRequestStateChanged,
+                builder: (context, sendFriendRequestState) => NavBarConsumer(
+                  pageController: pageController,
+                  builder: (context, navBarState) => UserConsumer(
+                    listener: (context, userState) =>
+                        _handleGetUserStateChanged(
+                            context, userState, navBarState),
+                    builder: (context, userState) => _buildHome(
+                      deleteUserState,
+                      logoutState,
+                      userState,
+                      (getUserResponse) => switch (getUserResponse) {
+                        GetUserSuccess() => switch (navBarState) {
+                            NavBarReversedState() =>
+                              const Center(child: Text('You have matched!')),
+                            _ => switch (navBarState.page) {
+                                NavBarPage.explore => ExplorePage(
+                                    pageController: pageController,
+                                    users: getUserResponse.exploreWithPictures,
+                                    navBarState: navBarState,
+                                  ),
+                                NavBarPage.news => Container(),
+                                NavBarPage.chat => ChatPage(
+                                    friends: getUserResponse.friendships,
+                                  ),
+                                NavBarPage.options => OptionsPage(
+                                    user: getUserResponse.user,
+                                    profilePicture:
+                                        getUserResponse.profilePicture,
+                                    gym: getUserResponse.gym,
+                                  ),
                               },
-                            _ => const Loader(),
                           },
                         _ => const Loader(),
                       },
-                    _ => const Loader(),
-                  },
+                    ),
+                  ),
                 ),
               ),
             ),
