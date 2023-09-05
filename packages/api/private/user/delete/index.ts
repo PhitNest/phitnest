@@ -34,13 +34,18 @@ export async function invoke(
     } else {
       await Promise.all([
         deleteUser(client, { id: userClaims.sub, gymId: user.invite.gymId }),
-        ...friendships.map((friendship) =>
+        ...friendships.flatMap((friendship) => [
           deleteFriendship(
             client,
             friendship.sender.id,
             friendship.receiver.id,
           ),
-        ),
+          deleteFriendship(
+            client,
+            friendship.receiver.id,
+            friendship.sender.id,
+          ),
+        ]),
         ...invites.map((invite) =>
           deleteInvite(client, invite.senderId, invite.receiverEmail, "user"),
         ),

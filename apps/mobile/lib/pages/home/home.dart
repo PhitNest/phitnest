@@ -39,13 +39,13 @@ class _HomePageState extends State<HomePage> {
             const BlocProvider(create: logoutBloc),
             BlocProvider(create: (_) => NavBarBloc()),
           ],
-          child: NavBar(
-            pageController: pageController,
-            builder: (context, navBarState) => LogoutConsumer(
-              listener: _handleLogoutStateChanged,
-              builder: (context, logoutState) => SendFriendRequestConsumer(
-                listener: _handleSendFriendRequestStateChanged,
-                builder: (context, sendFriendRequestState) => UserConsumer(
+          child: LogoutConsumer(
+            listener: _handleLogoutStateChanged,
+            builder: (context, logoutState) => SendFriendRequestConsumer(
+              listener: _handleSendFriendRequestStateChanged,
+              builder: (context, sendFriendRequestState) => NavBarConsumer(
+                pageController: pageController,
+                builder: (context, navBarState) => UserConsumer(
                   listener: (context, userState) => _handleGetUserStateChanged(
                       context, userState, navBarState),
                   builder: (context, userState) => switch (logoutState) {
@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                                   switch (getUserResponse) {
                                     GetUserSuccess() => switch (
                                           navBarState.page) {
-                                        NavBarPage.explore => ExploreScreen(
+                                        NavBarPage.explore => ExplorePage(
                                             pageController: pageController,
                                             users: getUserResponse
                                                 .exploreWithPictures,
@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         NavBarPage.news => Container(),
                                         NavBarPage.chat => Container(),
-                                        NavBarPage.options => OptionsScreen(
+                                        NavBarPage.options => OptionsPage(
                                             user: getUserResponse.user,
                                             profilePicture:
                                                 getUserResponse.profilePicture,

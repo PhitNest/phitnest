@@ -6,12 +6,12 @@ import 'package:ui/ui.dart';
 import '../../../../entities/entities.dart';
 import '../../../../widgets/widgets.dart';
 
-class OptionsScreen extends StatelessWidget {
+class OptionsPage extends StatelessWidget {
   final User user;
   final Image profilePicture;
   final Gym gym;
 
-  const OptionsScreen({
+  const OptionsPage({
     super.key,
     required this.user,
     required this.profilePicture,
