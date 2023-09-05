@@ -25,7 +25,7 @@ final class RegisterNamePage extends StatelessWidget {
             children: [
               120.verticalSpace,
               Text(
-                'Let\'s get started! \nWhat\'s is your name?',
+                'Let\'s get started!\nWhat is your name?',
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               42.verticalSpace,
