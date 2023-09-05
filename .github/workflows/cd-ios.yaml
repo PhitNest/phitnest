@@ -46,11 +46,11 @@ jobs:
           echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None SSH_ASKPASS=~/.ssh_askpass ssh-add - >/dev/null
 
       - name: Install fastlane
-        run: cd apps/mobile && bundle install --gemfile=$BUNDLE_GEMFILE
+        run: turbo build --filter=mobile
 
       - name: Build & Publish to TestFlight with Fastlane
         env:
           APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-        run: cd apps/mobile/ios && bundle exec fastlane ios beta "build_name:${{ github.ref_name }}"
+        run: turbo deploy --filter=mobile
