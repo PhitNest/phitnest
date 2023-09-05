@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ui/ui.dart';
 
 import '../../../../constants/constants.dart';
+import '../../../../entities/entities.dart';
 import '../../home.dart';
 import '../styled_indicator.dart';
 import 'widgets/widgets.dart';

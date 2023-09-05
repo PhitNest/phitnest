@@ -12,6 +12,9 @@ import {
 } from "typescript-core/src/utils";
 import {
   friendshipKey,
+  getExploreUsers,
+  getFriendships,
+  getGym,
   getUser,
   getUserExplore,
   getUserWithoutIdentity,
@@ -124,6 +127,22 @@ export async function invoke(
         return user;
       }
     }
-    return new Success(user);
+    if (user instanceof ResourceNotFoundError) {
+      return user;
+    }
+    const [gym, exploreUsers, friendships] = await Promise.all([
+      getGym(client, user.invite.gymId),
+      getExploreUsers(client, user.invite.gymId),
+      getFriendships(client, userClaims.sub),
+    ]);
+    if (friendships instanceof RequestError) {
+      return friendships;
+    }
+    return new Success({
+      user: user,
+      exploreUsers: exploreUsers,
+      friendshisps: friendships,
+      gym: gym,
+    });
   });
 }
