@@ -16,43 +16,6 @@ import '../../login/login.dart';
 
 part 'bloc.dart';
 
-void _handleStateChanged(
-  BuildContext context,
-  LoaderState<AuthResOrLost<ConfirmPhotoResponse>> loaderState,
-) {
-  switch (loaderState) {
-    case LoaderLoadedState(data: final data):
-      switch (data) {
-        case AuthLost(message: final message):
-          StyledBanner.show(
-            message: message,
-            error: true,
-          );
-          Navigator.pushAndRemoveUntil(
-            context,
-            CupertinoPageRoute<void>(
-              builder: (_) => const LoginPage(),
-            ),
-            (_) => false,
-          );
-        case AuthRes(data: final data):
-          switch (data) {
-            case ConfirmPhotoSuccess():
-              Navigator.pushAndRemoveUntil(
-                context,
-                CupertinoPageRoute<void>(
-                  builder: (_) => const HomePage(),
-                ),
-                (_) => false,
-              );
-            case ConfirmPhotoFailure(message: final error):
-              StyledBanner.show(message: error, error: true);
-          }
-      }
-    default:
-  }
-}
-
 final class ConfirmPhotoPage extends StatelessWidget {
   final CroppedFile photo;
 

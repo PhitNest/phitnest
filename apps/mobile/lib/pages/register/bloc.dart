@@ -33,3 +33,39 @@ RegisterProvider registerForm(
       createLoader: (_) => LoaderBloc(load: register),
       createConsumer: createConsumer,
     );
+
+void _handleStateChanged(
+  BuildContext context,
+  RegisterControllers controllers,
+  LoaderState<RegisterResponse> loaderState,
+) {
+  switch (loaderState) {
+    case LoaderLoadedState(data: final response):
+      switch (response) {
+        case RegisterSuccess(user: final user):
+          final LoginParams loginParams = LoginParams(
+            email: controllers.emailController.text,
+            password: controllers.passwordController.text,
+          );
+          Navigator.pushReplacement(
+            context,
+            CupertinoPageRoute<void>(
+              builder: (context) => VerificationPage(
+                loginParams: loginParams,
+                resend: (session) => resendConfirmationEmail(
+                  user: session.user,
+                ),
+                confirm: (session, code) => confirmEmail(
+                  user: session.user,
+                  code: code,
+                ),
+                unauthenticatedSession: UnauthenticatedSession(user: user),
+              ),
+            ),
+          );
+        case RegisterFailureResponse(message: final message):
+          StyledBanner.show(message: message, error: true);
+      }
+    default:
+  }
+}

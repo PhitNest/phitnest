@@ -10,54 +10,6 @@ import 'widgets/widgets.dart';
 
 part 'bloc.dart';
 
-void _handleResendStateChanged(
-    BuildContext context, LoaderState<String?> loaderState) {
-  switch (loaderState) {
-    case LoaderLoadedState(data: final error):
-      if (error == null) {
-        StyledBanner.show(
-          message: 'Email resent',
-          error: false,
-        );
-      } else {
-        StyledBanner.show(
-          message: error,
-          error: true,
-        );
-      }
-    default:
-  }
-}
-
-void _handleConfirmStateChanged(
-  BuildContext context,
-  VerificationControllers controllers,
-  LoaderState<LoginResponse?> loaderState,
-) {
-  switch (loaderState) {
-    case LoaderLoadedState(data: final response):
-      if (response != null) {
-        switch (response) {
-          case LoginSuccess():
-            Navigator.pushAndRemoveUntil(
-              context,
-              CupertinoPageRoute<void>(
-                builder: (_) => const HomePage(),
-              ),
-              (_) => false,
-            );
-          case LoginFailureResponse(message: final message):
-            StyledBanner.show(message: message, error: true);
-            controllers.codeController.clear();
-        }
-      } else {
-        StyledBanner.show(message: 'Invalid code', error: true);
-        controllers.codeController.clear();
-      }
-    default:
-  }
-}
-
 final class VerificationPage extends StatelessWidget {
   final LoginParams loginParams;
   final UnauthenticatedSession unauthenticatedSession;

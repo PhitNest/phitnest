@@ -13,45 +13,6 @@ import 'widgets/widgets.dart';
 
 part 'bloc.dart';
 
-void _handleNavBarStateChanged(
-  BuildContext context,
-  PageController pageController,
-  NavBarState state,
-) {
-  switch (context.exploreBloc.state) {
-    case LoaderLoadedState(data: final response):
-      switch (response) {
-        case AuthRes(data: final response):
-          switch (response) {
-            case HttpResponseSuccess(data: final users):
-              switch (state) {
-                case NavBarInactiveState(page: final page):
-                  if (page == NavBarPage.explore) {
-                    if (users.isNotEmpty) {
-                      context.navBarBloc.add(const NavBarAnimateEvent());
-                    }
-                  }
-                case NavBarLoadingState(reason: final reason):
-                  if (reason == NavBarLoadingReason.sendRequest) {
-                    final currentPage = pageController.page!.round();
-                    context.exploreBloc.add(LoaderSetEvent(AuthRes(
-                        HttpResponseOk(
-                            [...users]..removeAt(currentPage % users.length),
-                            null))));
-                    context.sendFriendRequestBloc.add(LoaderLoadEvent(AuthReq(
-                        users[currentPage % users.length].user.id,
-                        context.sessionLoader)));
-                  }
-                default:
-              }
-            default:
-          }
-        default:
-      }
-    default:
-  }
-}
-
 class NavBar extends StatelessWidget {
   static double get kHeight => 66.h;
   final Widget Function(BuildContext context, NavBarState state) builder;

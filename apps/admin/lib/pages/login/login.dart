@@ -8,42 +8,6 @@ import 'widgets/widgets.dart';
 
 part 'bloc.dart';
 
-void _handleStateChanged(
-  BuildContext context,
-  LoaderState<LoginResponse> loaderState,
-) {
-  switch (loaderState) {
-    case LoaderLoadedState(data: final response):
-      switch (response) {
-        case LoginSuccess(session: final session):
-          context.sessionLoader
-              .add(LoaderSetEvent(RefreshSessionSuccess(session)));
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute<void>(
-              builder: (_) => const HomePage(),
-            ),
-            (_) => false,
-          );
-        case LoginChangePasswordRequired(user: final user):
-          Navigator.of(context).push(
-            MaterialPageRoute<void>(
-              builder: (context) => ChangePasswordPage(
-                unauthenticatedSession: UnauthenticatedSession(
-                  user: user,
-                ),
-              ),
-            ),
-          );
-        case LoginFailureResponse(message: final message):
-          StyledBanner.show(
-            message: message,
-            error: true,
-          );
-      }
-    default:
-  }
-}
-
 final class LoginPage extends StatelessWidget {
   const LoginPage({super.key}) : super();
 
