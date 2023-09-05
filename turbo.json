@@ -13,8 +13,11 @@
     "build": {
       "dependsOn": ["prebuild", "^build"]
     },
+    "deploy": {
+      "dependsOn": ["^deploy-dev", "^deploy-prod", "^deploy"]
+    },
     "deploy-dev": {
-      "dependsOn": ["^deploy", "^deploy-dev"]
+      "dependsOn": ["deploy", "^deploy-dev"]
     }
   }
 }
