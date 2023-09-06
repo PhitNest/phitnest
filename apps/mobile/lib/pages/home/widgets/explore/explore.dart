@@ -8,6 +8,8 @@ class ExplorePage extends StatelessWidget {
   final PageController pageController;
   final List<UserExploreWithPicture> users;
   final NavBarState navBarState;
+  static const PageStorageKey<String> pageStorageKey =
+      PageStorageKey('explore');
 
   const ExplorePage({
     super.key,
@@ -20,6 +22,7 @@ class ExplorePage extends StatelessWidget {
   Widget build(BuildContext context) => users.isEmpty
       ? const EmptyPage()
       : PageView.builder(
+          key: pageStorageKey,
           controller: pageController,
           itemBuilder: (context, page) => ExploreUserPage(
             countdown: switch (navBarState) {

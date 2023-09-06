@@ -141,12 +141,23 @@ void _handleSendFriendRequestStateChanged(
                     message: 'Friend request sent',
                     error: false,
                   );
+                  context.userBloc.add(LoaderSetEvent(AuthRes(HttpResponseOk(
+                      getUserSuccess.copyWith(
+                        sentFriendRequests: getUserSuccess.sentFriendRequests
+                          ..add(data),
+                      ),
+                      null))));
                   context.navBarBloc.add(const NavBarSetLoadingEvent(false));
                 case FriendshipWithoutMessage():
                   StyledBanner.show(
                     message: 'Friend request accepted',
                     error: false,
                   );
+                  context.userBloc.add(LoaderSetEvent(AuthRes(HttpResponseOk(
+                      getUserSuccess.copyWith(
+                        friendships: getUserSuccess.friendships..add(data),
+                      ),
+                      null))));
                   context.navBarBloc.add(const NavBarReverseEvent());
               }
             case HttpResponseFailure(failure: final failure):
