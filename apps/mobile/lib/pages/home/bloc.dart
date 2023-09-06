@@ -1,9 +1,9 @@
 part of 'home.dart';
 
-typedef SendFriendRequestBloc
-    = AuthLoaderBloc<String, HttpResponse<FriendshipResponse>>;
-typedef SendFriendRequestConsumer
-    = AuthLoaderConsumer<String, HttpResponse<FriendshipResponse>>;
+typedef SendFriendRequestBloc = AuthLoaderBloc<UserExploreWithPicture,
+    (UserExploreWithPicture, HttpResponse<FriendshipResponse>)>;
+typedef SendFriendRequestConsumer = AuthLoaderConsumer<UserExploreWithPicture,
+    (UserExploreWithPicture, HttpResponse<FriendshipResponse>)>;
 
 typedef DeleteUserBloc = AuthLoaderBloc<void, HttpResponse<bool>>;
 typedef DeleteUserConsumer = AuthLoaderConsumer<void, HttpResponse<bool>>;
@@ -123,13 +123,17 @@ void _handleDeleteUserStateChanged(
 
 void _handleSendFriendRequestStateChanged(
   BuildContext context,
-  LoaderState<AuthResOrLost<HttpResponse<FriendshipResponse>>> loaderState,
+  LoaderState<
+          AuthResOrLost<
+              (UserExploreWithPicture, HttpResponse<FriendshipResponse>)>>
+      loaderState,
+  GetUserSuccess getUserSuccess,
 ) {
   switch (loaderState) {
     case LoaderLoadedState(data: final response):
       switch (response) {
         case AuthRes(data: final data):
-          switch (data) {
+          switch (data.$2) {
             case HttpResponseSuccess(data: final data):
               switch (data) {
                 case FriendRequest():
@@ -150,6 +154,10 @@ void _handleSendFriendRequestStateChanged(
                 message: failure.message,
                 error: true,
               );
+              context.userBloc.add(LoaderSetEvent(AuthRes(HttpResponseOk(
+                  getUserSuccess.copyWith(
+                      exploreUsers: getUserSuccess.exploreUsers..add(data.$1)),
+                  null))));
               context.navBarBloc.add(const NavBarSetLoadingEvent(false));
             default:
           }

@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ui/ui.dart';
 
 import '../../../../entities/friendship.dart';
 import '../../../../widgets/widgets.dart';
+import '../../../pages.dart';
 import 'widgets/widgets.dart';
 
 final class ChatPage extends StatelessWidget {
@@ -37,12 +39,14 @@ final class ChatPage extends StatelessWidget {
                     style: theme.textTheme.bodyLarge,
                   ),
                   StyledOutlineButton(
-                    onPress: () {},
-                    // onPress: () => Navigator.of(context).push(
-                    //   CupertinoPageRoute<void>(
-                    //     builder: (context) => const FriendRequestScreen(),
-                    //   ),
-                    // ),
+                    onPress: () => Navigator.of(context).push(
+                      CupertinoPageRoute<void>(
+                        builder: (context) => FriendsPage(
+                          receivedFriendRequests: receivedFriendRequests,
+                          friends: friends,
+                        ),
+                      ),
+                    ),
                     text: 'FRIENDS',
                   ),
                 ],
