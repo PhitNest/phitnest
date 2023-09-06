@@ -57,7 +57,7 @@ final class FriendRequest extends FriendshipResponse {
 final class FriendRequestWithProfilePicture extends FriendRequest {
   final Image profilePicture;
 
-  FriendRequestWithProfilePicture.populated({
+  FriendRequestWithProfilePicture({
     required super.id,
     required super.sender,
     required super.receiver,

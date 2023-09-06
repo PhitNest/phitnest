@@ -158,7 +158,7 @@ void _handleSendFriendRequestStateChanged(
                   context.userBloc.add(LoaderSetEvent(AuthRes(HttpResponseOk(
                       getUserSuccess.copyWith(
                         sentFriendRequests: getUserSuccess.sentFriendRequests
-                          ..add(FriendRequestWithProfilePicture.populated(
+                          ..add(FriendRequestWithProfilePicture(
                             id: id,
                             sender: sender,
                             receiver: receiver,

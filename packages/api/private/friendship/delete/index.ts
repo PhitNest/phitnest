@@ -16,7 +16,7 @@ export async function invoke(
   event: APIGatewayEvent,
 ): Promise<APIGatewayProxyResult> {
   return validateRequest({
-    data: JSON.parse(event.body ?? "{}"),
+    data: { ...event.queryStringParameters },
     validator: validator,
     controller: async (data) => {
       const userClaims = getUserClaims(event);
