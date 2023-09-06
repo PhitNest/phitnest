@@ -7,11 +7,6 @@ import '../repositories/repositories.dart';
 Future<HttpResponse<GetUserResponse>> user(Session session) async {
   switch (await getUser(session)) {
     case HttpResponseSuccess(data: final data, headers: final headers):
-      final profilePicture =
-          await getProfilePicture(session, data.user.identityId);
-      if (profilePicture == null) {
-        return HttpResponseOk(FailedToLoadProfilePicture(data), headers);
-      }
       final List<FriendRequestWithProfilePicture> sentRequests = [];
       final List<FriendRequestWithProfilePicture> receivedRequests = [];
       final List<FriendWithoutMessageWithProfilePicture> friends = [];
@@ -33,7 +28,7 @@ Future<HttpResponse<GetUserResponse>> user(Session session) async {
                 sender: sender,
                 receiver: receiver,
                 createdAt: createdAt,
-                profilePicture: profilePicture,
+                profilePicture: pfp,
               );
             case FriendWithoutMessage(
                 id: final id,
@@ -48,7 +43,7 @@ Future<HttpResponse<GetUserResponse>> user(Session session) async {
                 receiver: receiver,
                 createdAt: createdAt,
                 acceptedAt: acceptedAt,
-                profilePicture: profilePicture,
+                profilePicture: pfp,
               );
           }
         }
@@ -89,6 +84,20 @@ Future<HttpResponse<GetUserResponse>> user(Session session) async {
               !removeFromExplore.contains(exploreUser.user.id))
           .cast<UserExploreWithPicture>()
           .toList();
+      final profilePicture =
+          await getProfilePicture(session, data.user.identityId);
+      if (profilePicture == null) {
+        return HttpResponseOk(
+          FailedToLoadProfilePicture(
+            data,
+            sentFriendRequests: sentRequests,
+            receivedFriendRequests: receivedRequests,
+            friendships: friends,
+            exploreUsers: exploreUsers,
+          ),
+          headers,
+        );
+      }
       return HttpResponseOk(
         GetUserSuccess(
           data,

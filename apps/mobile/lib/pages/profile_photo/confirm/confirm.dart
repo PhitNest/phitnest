@@ -11,7 +11,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:ui/ui.dart';
 
 import '../../../widgets/widgets.dart';
-import '../../home/home.dart';
 import '../../login/login.dart';
 
 part 'bloc.dart';
@@ -40,47 +39,47 @@ final class ConfirmPhotoPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Center(
-          child: SingleChildScrollView(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            child: BlocProvider(
-              create: (_) => ConfirmPhotoBloc(
-                load: (_, session) => _submit(session),
-              ),
-              child: ConfirmPhotoConsumer(
-                listener: _handleStateChanged,
-                builder: (context, confirmState) => Column(
-                  children: [
-                    Image.file(
-                      File(photo.path),
-                      height: 444.h,
-                      width: double.infinity,
-                    ),
-                    56.verticalSpace,
-                    ...switch (confirmState) {
-                      LoaderLoadingState() => const [Loader()],
-                      _ => [
-                          ElevatedButton(
-                            child: Text(
-                              'CONFIRM',
-                              style: theme.textTheme.bodySmall,
-                            ),
-                            onPressed: () => context.confirmPhotoBloc.add(
-                                LoaderLoadEvent(
-                                    AuthReq(null, context.sessionLoader))),
+  Widget build(BuildContext context) {
+    final pfp = Image.file(File(photo.path));
+    return Scaffold(
+      body: Center(
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          child: BlocProvider(
+            create: (_) => ConfirmPhotoBloc(
+              load: (_, session) => _submit(session),
+            ),
+            child: ConfirmPhotoConsumer(
+              listener: (context, confirmState) =>
+                  _handleStateChanged(context, confirmState, pfp),
+              builder: (context, confirmState) => Column(
+                children: [
+                  pfp,
+                  56.verticalSpace,
+                  ...switch (confirmState) {
+                    LoaderLoadingState() => const [Loader()],
+                    _ => [
+                        ElevatedButton(
+                          child: Text(
+                            'CONFIRM',
+                            style: theme.textTheme.bodySmall,
                           ),
-                          12.verticalSpace,
-                          StyledOutlineButton(
-                              text: 'BACK',
-                              onPress: () => Navigator.of(context).pop()),
-                        ]
-                    },
-                  ],
-                ),
+                          onPressed: () => context.confirmPhotoBloc.add(
+                              LoaderLoadEvent(
+                                  AuthReq(null, context.sessionLoader))),
+                        ),
+                        12.verticalSpace,
+                        StyledOutlineButton(
+                            text: 'BACK',
+                            onPress: () => Navigator.of(context).pop()),
+                      ]
+                  },
+                ],
               ),
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
 }
