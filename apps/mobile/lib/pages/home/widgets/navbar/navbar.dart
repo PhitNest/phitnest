@@ -83,7 +83,7 @@ class NavBarConsumer extends StatelessWidget {
                           60.horizontalSpace,
                           StyledIndicator(
                             offset: const Size(8, 8),
-                            count: 0,
+                            count: state.numAlerts,
                             child: NavBarPageButton(
                               text: 'CHAT',
                               selected: state.page == NavBarPage.chat,
