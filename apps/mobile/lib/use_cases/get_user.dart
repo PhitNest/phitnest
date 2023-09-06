@@ -23,7 +23,7 @@ Future<HttpResponse<GetUserResponse>> user(Session session) async {
                 receiver: final receiver,
                 createdAt: final createdAt
               ):
-              return FriendRequestWithProfilePicture.populated(
+              return FriendRequestWithProfilePicture(
                 id: id,
                 sender: sender,
                 receiver: receiver,
