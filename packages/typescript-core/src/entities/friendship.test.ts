@@ -2,7 +2,7 @@ import { SerializedDynamo, parseDynamo } from "./dynamo";
 import {
   FriendRequest,
   Friendship,
-  FriendshipWithoutMessage,
+  FriendWithoutMessage,
   friendshipToDynamo,
   kFriendshipParser,
 } from "./friendship";
@@ -51,21 +51,21 @@ const kSerializedFriendRequest: SerializedDynamo<FriendRequest> = {
   __poly__: { S: "FriendRequest" },
 };
 
-const kTestFriendshipWithoutMessage: FriendshipWithoutMessage = {
+const kTestFriendWithoutMessage: FriendWithoutMessage = {
   ...kTestFriendRequest,
   acceptedAt: new Date(Date.UTC(2020, 1, 1)),
-  __poly__: "FriendshipWithoutMessage",
+  __poly__: "FriendWithoutMessage",
 };
 
-const kSerializedFriendshipWithoutMessage: SerializedDynamo<FriendshipWithoutMessage> =
+const kSerializedFriendWithoutMessage: SerializedDynamo<FriendWithoutMessage> =
   {
     ...kSerializedFriendRequest,
     acceptedAt: { N: Date.UTC(2020, 1, 1).toString() },
-    __poly__: { S: "FriendshipWithoutMessage" },
+    __poly__: { S: "FriendWithoutMessage" },
   };
 
 const kTestFriendship: Friendship = {
-  ...kTestFriendshipWithoutMessage,
+  ...kTestFriendWithoutMessage,
   recentMessage: {
     id: "1",
     createdAt: new Date(Date.UTC(2020, 1, 1)),
@@ -76,7 +76,7 @@ const kTestFriendship: Friendship = {
 };
 
 const serializedFriendship: SerializedDynamo<Friendship> = {
-  ...kSerializedFriendshipWithoutMessage,
+  ...kSerializedFriendWithoutMessage,
   recentMessage: {
     M: {
       id: { S: "1" },

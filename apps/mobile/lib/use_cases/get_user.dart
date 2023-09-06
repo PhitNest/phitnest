@@ -12,22 +12,65 @@ Future<HttpResponse<GetUserResponse>> user(Session session) async {
       if (profilePicture == null) {
         return HttpResponseOk(FailedToLoadProfilePicture(data), headers);
       }
-      final List<FriendRequest> sentRequests = [];
-      final List<FriendRequest> receivedRequests = [];
-      final List<FriendshipWithoutMessage> friends = [];
+      final List<FriendRequestWithProfilePicture> sentRequests = [];
+      final List<FriendRequestWithProfilePicture> receivedRequests = [];
+      final List<FriendWithoutMessageWithProfilePicture> friends = [];
       final removeFromExplore = {data.user.id};
-      for (final friendship in data.friendships) {
+      final friendships =
+          await Future.wait(data.friendships.map((friendship) async {
+        final pfp = await getProfilePicture(
+            session, friendship.other(data.user.id).identityId);
+        if (pfp != null) {
+          switch (friendship) {
+            case FriendRequest(
+                id: final id,
+                sender: final sender,
+                receiver: final receiver,
+                createdAt: final createdAt
+              ):
+              return FriendRequestWithProfilePicture.populated(
+                id: id,
+                sender: sender,
+                receiver: receiver,
+                createdAt: createdAt,
+                profilePicture: profilePicture,
+              );
+            case FriendWithoutMessage(
+                id: final id,
+                sender: final sender,
+                receiver: final receiver,
+                createdAt: final createdAt,
+                acceptedAt: final acceptedAt,
+              ):
+              return FriendWithoutMessageWithProfilePicture(
+                id: id,
+                sender: sender,
+                receiver: receiver,
+                createdAt: createdAt,
+                acceptedAt: acceptedAt,
+                profilePicture: profilePicture,
+              );
+          }
+        }
+      }));
+      for (final friendship in friendships) {
         switch (friendship) {
-          case FriendRequest(sender: final sender):
+          case null:
+            break;
+          case FriendRequestWithProfilePicture(sender: final sender):
             if (sender.id == data.user.id) {
               sentRequests.add(friendship);
-              removeFromExplore.add(friendship.receiver.id);
+              removeFromExplore.add(sender.id);
             } else {
               receivedRequests.add(friendship);
             }
-          case FriendshipWithoutMessage():
+            break;
+          case FriendWithoutMessageWithProfilePicture(sender: final sender):
             friends.add(friendship);
-            removeFromExplore.add(friendship.other(data.user.id).id);
+            removeFromExplore.add(sender.id);
+            break;
+          default:
+            throw Exception('An unknown error has occurred.');
         }
       }
       final exploreUsers = (await Future.wait(data.explore.map((user) async {

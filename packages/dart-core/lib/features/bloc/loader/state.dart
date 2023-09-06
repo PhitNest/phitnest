@@ -1,7 +1,7 @@
 part of 'loader.dart';
 
 sealed class LoaderState<ResType> extends Equatable {
-  const LoaderState();
+  const LoaderState() : super();
 }
 
 final class LoaderInitialState<ResType> extends LoaderState<ResType> {

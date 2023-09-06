@@ -18,25 +18,24 @@ export const kFriendRequestParser: DynamoParser<FriendRequest> = {
   __poly__: "S",
 };
 
-export type FriendshipWithoutMessage = Omit<FriendRequest, "__poly__"> & {
+export type FriendWithoutMessage = Omit<FriendRequest, "__poly__"> & {
   acceptedAt: Date;
-  __poly__: "FriendshipWithoutMessage";
+  __poly__: "FriendWithoutMessage";
 };
 
-export const kFriendshipWithoutMessageParser: DynamoParser<FriendshipWithoutMessage> =
-  {
-    ...kFriendRequestParser,
-    acceptedAt: "D",
-    __poly__: "S",
-  };
+export const kFriendWithoutMessageParser: DynamoParser<FriendWithoutMessage> = {
+  ...kFriendRequestParser,
+  acceptedAt: "D",
+  __poly__: "S",
+};
 
-export type Friendship = Omit<FriendshipWithoutMessage, "__poly__"> & {
+export type Friendship = Omit<FriendWithoutMessage, "__poly__"> & {
   recentMessage: Message;
   __poly__: "Friendship";
 };
 
 export const kFriendshipParser: DynamoParser<Friendship> = {
-  ...kFriendshipWithoutMessageParser,
+  ...kFriendWithoutMessageParser,
   recentMessage: kMessageParser,
   __poly__: "S",
 };
@@ -57,13 +56,13 @@ export function friendRequestToDynamo(
   };
 }
 
-export function friendshipWithoutMessageToDynamo(
-  friendship: FriendshipWithoutMessage,
-): SerializedDynamo<FriendshipWithoutMessage> {
+export function FriendWithoutMessageToDynamo(
+  friendship: FriendWithoutMessage,
+): SerializedDynamo<FriendWithoutMessage> {
   return {
     ...friendRequestToDynamo({ ...friendship, __poly__: "FriendRequest" }),
     acceptedAt: { N: friendship.acceptedAt.getTime().toString() },
-    __poly__: { S: "FriendshipWithoutMessage" },
+    __poly__: { S: "FriendWithoutMessage" },
   };
 }
 
@@ -71,9 +70,9 @@ export function friendshipToDynamo(
   friendship: Friendship,
 ): SerializedDynamo<Friendship> {
   return {
-    ...friendshipWithoutMessageToDynamo({
+    ...FriendWithoutMessageToDynamo({
       ...friendship,
-      __poly__: "FriendshipWithoutMessage",
+      __poly__: "FriendWithoutMessage",
     }),
     recentMessage: { M: messageToDynamo(friendship.recentMessage) },
     __poly__: { S: "Friendship" },

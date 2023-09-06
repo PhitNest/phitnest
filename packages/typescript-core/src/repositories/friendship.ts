@@ -2,11 +2,11 @@ import { AttributeValue } from "@aws-sdk/client-dynamodb";
 import {
   FriendRequest,
   Friendship,
-  FriendshipWithoutMessage,
-  friendshipWithoutMessageToDynamo,
+  FriendWithoutMessage,
+  FriendWithoutMessageToDynamo,
   kFriendRequestParser,
   kFriendshipParser,
-  kFriendshipWithoutMessageParser,
+  kFriendWithoutMessageParser,
   parseDynamo,
 } from "../entities";
 import {
@@ -46,12 +46,12 @@ export function friendshipInvertedKey(
 
 function polymorphicParseFriendship(
   data: Record<string, AttributeValue>,
-): FriendRequest | FriendshipWithoutMessage | Friendship {
+): FriendRequest | FriendWithoutMessage | Friendship {
   switch (data.__poly__.S) {
     case "FriendRequest":
       return parseDynamo(data, kFriendRequestParser);
-    case "FriendshipWithoutMessage":
-      return parseDynamo(data, kFriendshipWithoutMessageParser);
+    case "FriendWithoutMessage":
+      return parseDynamo(data, kFriendWithoutMessageParser);
     case "Friendship":
       return parseDynamo(data, kFriendshipParser);
     default:
@@ -71,9 +71,7 @@ export async function getFriendship(
   dynamo: DynamoClient,
   userId: string,
   friendId: string,
-): Promise<
-  FriendRequest | FriendshipWithoutMessage | Friendship | RequestError
-> {
+): Promise<FriendRequest | FriendWithoutMessage | Friendship | RequestError> {
   const friendships = (
     await Promise.all([
       dynamo.query({
@@ -107,7 +105,7 @@ export async function getFriendships(
   dynamo: DynamoClient,
   userId: string,
 ): Promise<
-  (FriendRequest | FriendshipWithoutMessage | Friendship)[] | RequestError
+  (FriendRequest | FriendWithoutMessage | Friendship)[] | RequestError
 > {
   return (
     await Promise.all([
@@ -129,17 +127,17 @@ export async function getFriendships(
 export async function createFriendship(
   dynamo: DynamoClient,
   friendRequest: FriendRequest,
-): Promise<FriendshipWithoutMessage> {
-  const friendship: FriendshipWithoutMessage = {
+): Promise<FriendWithoutMessage> {
+  const friendship: FriendWithoutMessage = {
     ...friendRequest,
     acceptedAt: new Date(),
-    __poly__: "FriendshipWithoutMessage",
+    __poly__: "FriendWithoutMessage",
   };
   await dynamo.writeTransaction({
     puts: [
       {
         ...friendshipKey(friendship.sender.id, friendship.receiver.id),
-        data: friendshipWithoutMessageToDynamo(friendship),
+        data: FriendWithoutMessageToDynamo(friendship),
       },
     ],
   });

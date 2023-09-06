@@ -319,7 +319,8 @@ void _handleNavBarStateChanged(
                     case NavBarSendingFriendRequestState():
                       final currentPage =
                           pageController.page!.round() % exploreUsers.length;
-                      context.sendFriendRequestBloc.add(LoaderLoadEvent(AuthReq(
+                      context.sendFriendRequestBloc
+                          .add(ParallelPushEvent(AuthReq(
                         exploreUsers[currentPage],
                         context.sessionLoader,
                       )));

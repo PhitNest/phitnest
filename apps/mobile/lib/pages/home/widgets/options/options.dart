@@ -36,7 +36,7 @@ class OptionsPage extends StatelessWidget {
                 ),
                 32.verticalSpace,
                 Text(
-                  '${user.firstName} ${user.lastName}',
+                  user.fullName,
                   style: theme.textTheme.bodyMedium,
                 ),
                 16.verticalSpace,

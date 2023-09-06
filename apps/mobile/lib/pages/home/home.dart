@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
             BlocProvider(
               create: (_) => SendFriendRequestBloc(
                   load: (user, session) async =>
-                      (user, await sendFriendRequest(user.user.id, session))),
+                      await sendFriendRequest(user.user.id, session)),
             ),
             const BlocProvider(create: logoutBloc),
             BlocProvider(

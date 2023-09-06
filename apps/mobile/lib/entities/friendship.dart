@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:json_types/json.dart';
 
 import 'user.dart';
@@ -17,7 +18,7 @@ sealed class FriendshipResponse extends JsonPolymorphic<FriendshipResponse> {
 
   factory FriendshipResponse.polymorphicParse(Map<String, dynamic> json) =>
       JsonPolymorphic.polymorphicParse(
-          json, [FriendRequest.parser, FriendshipWithoutMessage.parser]);
+          json, [FriendRequest.parser, FriendWithoutMessage.parser]);
 
   FriendshipResponse.parse(super.json) : super.parse();
 
@@ -53,16 +54,31 @@ final class FriendRequest extends FriendshipResponse {
   }) : super.populated();
 }
 
-final class FriendshipWithoutMessage extends FriendshipResponse {
+final class FriendRequestWithProfilePicture extends FriendRequest {
+  final Image profilePicture;
+
+  FriendRequestWithProfilePicture.populated({
+    required super.id,
+    required super.sender,
+    required super.receiver,
+    required super.createdAt,
+    required this.profilePicture,
+  }) : super.populated();
+
+  @override
+  List<Object?> get props => [...super.props, profilePicture];
+}
+
+final class FriendWithoutMessage extends FriendshipResponse {
   final acceptedAtJson = Json.string('acceptedAt');
 
   String get acceptedAt => acceptedAtJson.value;
 
-  FriendshipWithoutMessage.parse(super.json) : super.parse();
+  FriendWithoutMessage.parse(super.json) : super.parse();
 
-  FriendshipWithoutMessage.parser() : super.parser();
+  FriendWithoutMessage.parser() : super.parser();
 
-  FriendshipWithoutMessage.populated({
+  FriendWithoutMessage.populated({
     required super.id,
     required super.sender,
     required super.receiver,
@@ -74,4 +90,21 @@ final class FriendshipWithoutMessage extends FriendshipResponse {
 
   @override
   List<JsonKey<dynamic, dynamic>> get keys => [...super.keys, acceptedAtJson];
+}
+
+final class FriendWithoutMessageWithProfilePicture
+    extends FriendWithoutMessage {
+  final Image profilePicture;
+
+  FriendWithoutMessageWithProfilePicture({
+    required super.id,
+    required super.sender,
+    required super.receiver,
+    required super.createdAt,
+    required super.acceptedAt,
+    required this.profilePicture,
+  }) : super.populated();
+
+  @override
+  List<Object?> get props => [...super.props, profilePicture];
 }

@@ -1,9 +1,9 @@
 part of 'home.dart';
 
-typedef SendFriendRequestBloc = AuthLoaderBloc<UserExploreWithPicture,
-    (UserExploreWithPicture, HttpResponse<FriendshipResponse>)>;
-typedef SendFriendRequestConsumer = AuthLoaderConsumer<UserExploreWithPicture,
-    (UserExploreWithPicture, HttpResponse<FriendshipResponse>)>;
+typedef SendFriendRequestBloc = AuthParallelLoaderBloc<UserExploreWithPicture,
+    HttpResponse<FriendshipResponse>>;
+typedef SendFriendRequestConsumer = AuthParallelLoaderConsumer<
+    UserExploreWithPicture, HttpResponse<FriendshipResponse>>;
 
 typedef DeleteUserBloc = AuthLoaderBloc<void, HttpResponse<bool>>;
 typedef DeleteUserConsumer = AuthLoaderConsumer<void, HttpResponse<bool>>;
@@ -13,7 +13,7 @@ typedef UserConsumer = AuthLoaderConsumer<void, HttpResponse<GetUserResponse>>;
 
 extension HomeBlocGetters on BuildContext {
   UserBloc get userBloc => authLoader();
-  SendFriendRequestBloc get sendFriendRequestBloc => authLoader();
+  SendFriendRequestBloc get sendFriendRequestBloc => authParallelBloc();
   DeleteUserBloc get deleteUserBloc => authLoader();
 }
 
@@ -123,20 +123,24 @@ void _handleDeleteUserStateChanged(
 
 void _handleSendFriendRequestStateChanged(
   BuildContext context,
-  LoaderState<
-          AuthResOrLost<
-              (UserExploreWithPicture, HttpResponse<FriendshipResponse>)>>
+  ParallelLoaderState<AuthReq<UserExploreWithPicture>,
+          AuthResOrLost<HttpResponse<FriendshipResponse>>>
       loaderState,
   GetUserSuccess getUserSuccess,
 ) {
   switch (loaderState) {
-    case LoaderLoadedState(data: final response):
+    case ParallelLoadedState(data: final response, req: final req):
       switch (response) {
         case AuthRes(data: final data):
-          switch (data.$2) {
+          switch (data) {
             case HttpResponseSuccess(data: final data):
               switch (data) {
-                case FriendRequest():
+                case FriendRequest(
+                    id: final id,
+                    sender: final sender,
+                    receiver: final receiver,
+                    createdAt: final createdAt,
+                  ):
                   StyledBanner.show(
                     message: 'Friend request sent',
                     error: false,
@@ -144,18 +148,38 @@ void _handleSendFriendRequestStateChanged(
                   context.userBloc.add(LoaderSetEvent(AuthRes(HttpResponseOk(
                       getUserSuccess.copyWith(
                         sentFriendRequests: getUserSuccess.sentFriendRequests
-                          ..add(data),
+                          ..add(FriendRequestWithProfilePicture.populated(
+                            id: id,
+                            sender: sender,
+                            receiver: receiver,
+                            createdAt: createdAt,
+                            profilePicture: req.data.profilePicture,
+                          )),
                       ),
                       null))));
                   context.navBarBloc.add(const NavBarSetLoadingEvent(false));
-                case FriendshipWithoutMessage():
+                case FriendWithoutMessage(
+                    id: final id,
+                    sender: final sender,
+                    receiver: final receiver,
+                    createdAt: final createdAt,
+                    acceptedAt: final acceptedAt,
+                  ):
                   StyledBanner.show(
                     message: 'Friend request accepted',
                     error: false,
                   );
                   context.userBloc.add(LoaderSetEvent(AuthRes(HttpResponseOk(
                       getUserSuccess.copyWith(
-                        friendships: getUserSuccess.friendships..add(data),
+                        friendships: getUserSuccess.friendships
+                          ..add(FriendWithoutMessageWithProfilePicture(
+                            id: id,
+                            sender: sender,
+                            receiver: receiver,
+                            createdAt: createdAt,
+                            acceptedAt: acceptedAt,
+                            profilePicture: req.data.profilePicture,
+                          )),
                       ),
                       null))));
                   context.navBarBloc.add(const NavBarReverseEvent());
@@ -167,7 +191,7 @@ void _handleSendFriendRequestStateChanged(
               );
               context.userBloc.add(LoaderSetEvent(AuthRes(HttpResponseOk(
                   getUserSuccess.copyWith(
-                      exploreUsers: getUserSuccess.exploreUsers..add(data.$1)),
+                      exploreUsers: getUserSuccess.exploreUsers..add(req.data)),
                   null))));
               context.navBarBloc.add(const NavBarSetLoadingEvent(false));
             default:

@@ -54,9 +54,9 @@ sealed class GetUserResponse extends Equatable {
 final class GetUserSuccess extends GetUserResponse {
   final Image profilePicture;
   final List<UserExploreWithPicture> exploreUsers;
-  final List<FriendRequest> sentFriendRequests;
-  final List<FriendRequest> receivedFriendRequests;
-  final List<FriendshipWithoutMessage> friendships;
+  final List<FriendRequestWithProfilePicture> sentFriendRequests;
+  final List<FriendRequestWithProfilePicture> receivedFriendRequests;
+  final List<FriendWithoutMessageWithProfilePicture> friendships;
 
   const GetUserSuccess(
     super._json, {
@@ -68,9 +68,9 @@ final class GetUserSuccess extends GetUserResponse {
   }) : super();
 
   GetUserSuccess copyWith({
-    List<FriendRequest>? sentFriendRequests,
-    List<FriendRequest>? receivedFriendRequests,
-    List<FriendshipWithoutMessage>? friendships,
+    List<FriendRequestWithProfilePicture>? sentFriendRequests,
+    List<FriendRequestWithProfilePicture>? receivedFriendRequests,
+    List<FriendWithoutMessageWithProfilePicture>? friendships,
     Image? profilePicture,
     List<UserExploreWithPicture>? exploreUsers,
   }) =>

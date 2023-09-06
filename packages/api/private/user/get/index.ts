@@ -23,7 +23,7 @@ import {
 } from "typescript-core/src/repositories";
 import {
   User,
-  friendshipWithoutMessageToDynamo,
+  FriendWithoutMessageToDynamo,
   userToDynamo,
 } from "typescript-core/src/entities";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
@@ -90,7 +90,7 @@ async function createIdentity(
     }
     transaction.puts?.push({
       ...friendshipKey(sender.id, userWithIdentity.id),
-      data: friendshipWithoutMessageToDynamo({
+      data: FriendWithoutMessageToDynamo({
         id: uuid.v4(),
         createdAt: new Date(),
         acceptedAt: new Date(),
@@ -102,7 +102,7 @@ async function createIdentity(
           createdAt: userWithIdentity.createdAt,
         },
         sender: sender,
-        __poly__: "FriendshipWithoutMessage",
+        __poly__: "FriendWithoutMessage",
       }),
     });
   }
