@@ -1,7 +1,7 @@
 part of 'loader.dart';
 
 sealed class LoaderEvent<ReqType, ResType> extends Equatable {
-  const LoaderEvent();
+  const LoaderEvent() : super();
 }
 
 final class LoaderLoadEvent<ReqType, ResType>

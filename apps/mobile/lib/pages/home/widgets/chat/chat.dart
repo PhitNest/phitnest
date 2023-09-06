@@ -10,9 +10,9 @@ import 'widgets/widgets.dart';
 
 final class ChatPage extends StatelessWidget {
   final String userId;
-  final List<FriendshipWithoutMessage> friends;
-  final List<FriendRequest> sentFriendRequests;
-  final List<FriendRequest> receivedFriendRequests;
+  final List<FriendWithoutMessageWithProfilePicture> friends;
+  final List<FriendRequestWithProfilePicture> sentFriendRequests;
+  final List<FriendRequestWithProfilePicture> receivedFriendRequests;
 
   const ChatPage({
     super.key,
@@ -44,6 +44,7 @@ final class ChatPage extends StatelessWidget {
                         builder: (context) => FriendsPage(
                           receivedFriendRequests: receivedFriendRequests,
                           friends: friends,
+                          userId: userId,
                         ),
                       ),
                     ),
@@ -54,8 +55,7 @@ final class ChatPage extends StatelessWidget {
               18.verticalSpace,
               ...friends.map(
                 (friend) => ChatTile(
-                  name: '${friend.other(userId).firstName} '
-                      '${friend.other(userId).lastName}',
+                  name: friend.other(userId).fullName,
                   message: 'Tap to chat',
                   onTap: () {},
                 ),

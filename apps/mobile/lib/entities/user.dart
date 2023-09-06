@@ -13,6 +13,8 @@ final class UserExplore extends Json {
   String get lastName => lastNameJson.value;
   String get identityId => identityIdJson.value;
 
+  String get fullName => '$firstName $lastName';
+
   UserExplore.parse(super.json) : super.parse();
 
   UserExplore.parser() : super();
