@@ -31,7 +31,10 @@ final class PhotoInstructionsPage extends StatelessWidget {
                   ),
                 ],
                 child: ChoosePhotoConsumer(
-                  listener: _handleStateChanged,
+                  listener: (context, choosePhotoState) => _handleStateChanged(
+                    context,
+                    choosePhotoState,
+                  ),
                   builder: (context, choosePhotoState) => Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,

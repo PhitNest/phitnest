@@ -41,16 +41,25 @@ void _handleLogoutStateChanged(
   }
 }
 
-void _handleGetUserStateChanged(
+Future<void> _handleGetUserStateChanged(
   BuildContext context,
   LoaderState<AuthResOrLost<HttpResponse<GetUserResponse>>> loaderState,
   NavBarState navBarState,
-) {
+) async {
   switch (loaderState) {
     case LoaderLoadedState(data: final response):
       switch (response) {
+        case AuthLost(message: final message):
+          _goToLogin(context, message);
         case AuthRes(data: final response):
           switch (response) {
+            case HttpResponseFailure(failure: final failure):
+              StyledBanner.show(
+                message: failure.message,
+                error: true,
+              );
+              context.userBloc
+                  .add(LoaderLoadEvent(AuthReq(null, context.sessionLoader)));
             case HttpResponseSuccess(data: final response):
               switch (response) {
                 case GetUserSuccess(exploreUsers: final exploreUsers):
@@ -66,25 +75,21 @@ void _handleGetUserStateChanged(
                     default:
                   }
                 case FailedToLoadProfilePicture():
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    CupertinoPageRoute<void>(
-                      builder: (_) => const PhotoInstructionsPage(),
-                    ),
-                    (_) => false,
-                  );
+                  Image? image;
+                  final userBloc = context.userBloc;
+                  while (image == null) {
+                    image = await Navigator.push(
+                      context,
+                      CupertinoPageRoute<Image>(
+                        builder: (_) => const PhotoInstructionsPage(),
+                      ),
+                    );
+                  }
+                  userBloc.add(LoaderSetEvent(
+                      AuthRes(HttpResponseOk(response.copyWith(image), null))));
                 default:
               }
-            case HttpResponseFailure(failure: final failure):
-              StyledBanner.show(
-                message: failure.message,
-                error: true,
-              );
-              context.userBloc
-                  .add(LoaderLoadEvent(AuthReq(null, context.sessionLoader)));
           }
-        case AuthLost(message: final message):
-          _goToLogin(context, message);
       }
     default:
   }

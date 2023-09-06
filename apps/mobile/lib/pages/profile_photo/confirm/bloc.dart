@@ -32,6 +32,7 @@ extension on BuildContext {
 void _handleStateChanged(
   BuildContext context,
   LoaderState<AuthResOrLost<ConfirmPhotoResponse>> loaderState,
+  Image profilePicture,
 ) {
   switch (loaderState) {
     case LoaderLoadedState(data: final data):
@@ -51,13 +52,9 @@ void _handleStateChanged(
         case AuthRes(data: final data):
           switch (data) {
             case ConfirmPhotoSuccess():
-              Navigator.pushAndRemoveUntil(
-                context,
-                CupertinoPageRoute<void>(
-                  builder: (_) => const HomePage(),
-                ),
-                (_) => false,
-              );
+              Navigator.of(context)
+                ..pop()
+                ..pop(profilePicture);
             case ConfirmPhotoFailure(message: final error):
               StyledBanner.show(message: error, error: true);
           }

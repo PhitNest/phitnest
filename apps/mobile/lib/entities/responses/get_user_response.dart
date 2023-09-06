@@ -39,32 +39,42 @@ final class GetUserResponseJson extends Json {
 
 sealed class GetUserResponse extends Equatable {
   final GetUserResponseJson _json;
-
-  User get user => _json.user;
-  Gym get gym => _json.gym;
-
-  const GetUserResponse(
-    this._json,
-  ) : super();
-
-  @override
-  List<Object?> get props => [_json];
-}
-
-final class GetUserSuccess extends GetUserResponse {
-  final Image profilePicture;
   final List<UserExploreWithPicture> exploreUsers;
   final List<FriendRequestWithProfilePicture> sentFriendRequests;
   final List<FriendRequestWithProfilePicture> receivedFriendRequests;
   final List<FriendWithoutMessageWithProfilePicture> friendships;
 
-  const GetUserSuccess(
-    super._json, {
+  User get user => _json.user;
+  Gym get gym => _json.gym;
+
+  const GetUserResponse(
+    this._json, {
     required this.sentFriendRequests,
     required this.receivedFriendRequests,
     required this.friendships,
-    required this.profilePicture,
     required this.exploreUsers,
+  }) : super();
+
+  @override
+  List<Object?> get props => [
+        _json,
+        sentFriendRequests,
+        receivedFriendRequests,
+        friendships,
+        exploreUsers,
+      ];
+}
+
+final class GetUserSuccess extends GetUserResponse {
+  final Image profilePicture;
+
+  const GetUserSuccess(
+    super._json, {
+    required this.profilePicture,
+    required super.sentFriendRequests,
+    required super.receivedFriendRequests,
+    required super.friendships,
+    required super.exploreUsers,
   }) : super();
 
   GetUserSuccess copyWith({
@@ -96,5 +106,20 @@ final class GetUserSuccess extends GetUserResponse {
 }
 
 final class FailedToLoadProfilePicture extends GetUserResponse {
-  const FailedToLoadProfilePicture(super._json) : super();
+  const FailedToLoadProfilePicture(
+    super._json, {
+    required super.sentFriendRequests,
+    required super.receivedFriendRequests,
+    required super.friendships,
+    required super.exploreUsers,
+  }) : super();
+
+  GetUserSuccess copyWith(Image profilePicture) => GetUserSuccess(
+        super._json,
+        profilePicture: profilePicture,
+        sentFriendRequests: sentFriendRequests,
+        receivedFriendRequests: receivedFriendRequests,
+        friendships: friendships,
+        exploreUsers: exploreUsers,
+      );
 }

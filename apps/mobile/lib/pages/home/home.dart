@@ -2,11 +2,13 @@ import 'package:core/core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ui/ui.dart';
 
 import '../../entities/entities.dart';
 import '../../repositories/repositories.dart';
 import '../../use_cases/use_cases.dart';
+import '../../widgets/widgets.dart';
 import '../pages.dart';
 import 'widgets/chat/chat.dart';
 import 'widgets/widgets.dart';
@@ -21,11 +23,26 @@ class HomePage extends StatefulWidget {
 }
 
 Widget _buildHome(
-  LoaderState<AuthResOrLost<HttpResponse<bool>>> deleteUserState,
-  LoaderState<AuthResOrLost<void>> logoutState,
-  LoaderState<AuthResOrLost<HttpResponse<GetUserResponse>>> userState,
-  Widget Function(GetUserSuccess userResponse) builder,
-) {
+  BuildContext context, {
+  required LoaderState<AuthResOrLost<HttpResponse<bool>>> deleteUserState,
+  required LoaderState<AuthResOrLost<void>> logoutState,
+  required LoaderState<AuthResOrLost<HttpResponse<GetUserResponse>>> userState,
+  required Widget Function(GetUserSuccess userResponse) builder,
+}) {
+  final loader = Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      const Loader(),
+      16.verticalSpace,
+      StyledOutlineButton(
+        onPress: () => context.logoutBloc
+            .add(LoaderLoadEvent(AuthReq(null, context.sessionLoader))),
+        text: 'Sign Out',
+        hPadding: 16.w,
+        vPadding: 8.h,
+      ),
+    ],
+  );
   Widget homeBuilder() => switch (logoutState) {
         LoaderInitialState() => switch (userState) {
             LoaderLoadedState(data: final response) => switch (response) {
@@ -33,15 +50,15 @@ Widget _buildHome(
                     HttpResponseSuccess(data: final getUserResponse) => switch (
                           getUserResponse) {
                         GetUserSuccess() => builder(getUserResponse),
-                        _ => const Loader(),
+                        _ => loader,
                       },
-                    _ => const Loader(),
+                    _ => loader,
                   },
-                _ => const Loader(),
+                _ => loader,
               },
-            _ => const Loader(),
+            _ => loader,
           },
-        _ => const Loader(),
+        _ => loader,
       };
 
   return switch (deleteUserState) {
@@ -52,9 +69,9 @@ Widget _buildHome(
               deleted ? const Loader() : homeBuilder(),
             HttpResponseFailure() => homeBuilder(),
           },
-        _ => const Loader(),
+        _ => loader,
       },
-    _ => const Loader(),
+    _ => loader,
   };
 }
 
@@ -95,10 +112,11 @@ class _HomePageState extends State<HomePage> {
                   listener: (context, userState) => _handleGetUserStateChanged(
                       context, userState, navBarState),
                   builder: (context, userState) => _buildHome(
-                    deleteUserState,
-                    logoutState,
-                    userState,
-                    (getUserResponse) => SendFriendRequestConsumer(
+                    context,
+                    deleteUserState: deleteUserState,
+                    logoutState: logoutState,
+                    userState: userState,
+                    builder: (getUserResponse) => SendFriendRequestConsumer(
                       listener: (context, sendFriendRequestState) =>
                           _handleSendFriendRequestStateChanged(
                         context,
