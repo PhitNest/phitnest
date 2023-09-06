@@ -24,14 +24,17 @@ Widget _buildHome(
   LoaderState<AuthResOrLost<HttpResponse<bool>>> deleteUserState,
   LoaderState<AuthResOrLost<void>> logoutState,
   LoaderState<AuthResOrLost<HttpResponse<GetUserResponse>>> userState,
-  Widget Function(GetUserResponse userResponse) builder,
+  Widget Function(GetUserSuccess userResponse) builder,
 ) {
   Widget homeBuilder() => switch (logoutState) {
         LoaderInitialState() => switch (userState) {
             LoaderLoadedState(data: final response) => switch (response) {
                 AuthRes(data: final response) => switch (response) {
-                    HttpResponseSuccess(data: final getUserResponse) =>
-                      builder(getUserResponse),
+                    HttpResponseSuccess(data: final getUserResponse) => switch (
+                          getUserResponse) {
+                        GetUserSuccess() => builder(getUserResponse),
+                        _ => const Loader(),
+                      },
                     _ => const Loader(),
                   },
                 _ => const Loader(),
@@ -70,7 +73,9 @@ class _HomePageState extends State<HomePage> {
                   loadOnStart: AuthReq(null, context.sessionLoader)),
             ),
             BlocProvider(
-              create: (_) => SendFriendRequestBloc(load: sendFriendRequest),
+              create: (_) => SendFriendRequestBloc(
+                  load: (user, session) async =>
+                      (user, await sendFriendRequest(user.user.id, session))),
             ),
             const BlocProvider(create: logoutBloc),
             BlocProvider(
@@ -84,46 +89,47 @@ class _HomePageState extends State<HomePage> {
             listener: _handleDeleteUserStateChanged,
             builder: (context, deleteUserState) => LogoutConsumer(
               listener: _handleLogoutStateChanged,
-              builder: (context, logoutState) => SendFriendRequestConsumer(
-                listener: _handleSendFriendRequestStateChanged,
-                builder: (context, sendFriendRequestState) => NavBarConsumer(
-                  pageController: pageController,
-                  builder: (context, navBarState) => UserConsumer(
-                    listener: (context, userState) =>
-                        _handleGetUserStateChanged(
-                            context, userState, navBarState),
-                    builder: (context, userState) => _buildHome(
-                      deleteUserState,
-                      logoutState,
-                      userState,
-                      (getUserResponse) => switch (getUserResponse) {
-                        GetUserSuccess() => switch (navBarState) {
-                            NavBarReversedState() =>
-                              const Center(child: Text('You have matched!')),
-                            _ => switch (navBarState.page) {
-                                NavBarPage.explore => ExplorePage(
-                                    pageController: pageController,
-                                    users: getUserResponse.exploreUsers,
-                                    navBarState: navBarState,
-                                  ),
-                                NavBarPage.news => Container(),
-                                NavBarPage.chat => ChatPage(
-                                    userId: getUserResponse.user.id,
-                                    friends: getUserResponse.friendships,
-                                    sentFriendRequests:
-                                        getUserResponse.sentFriendRequests,
-                                    receivedFriendRequests:
-                                        getUserResponse.receivedFriendRequests,
-                                  ),
-                                NavBarPage.options => OptionsPage(
-                                    user: getUserResponse.user,
-                                    profilePicture:
-                                        getUserResponse.profilePicture,
-                                    gym: getUserResponse.gym,
-                                  ),
-                              },
+              builder: (context, logoutState) => NavBarConsumer(
+                pageController: pageController,
+                builder: (context, navBarState) => UserConsumer(
+                  listener: (context, userState) => _handleGetUserStateChanged(
+                      context, userState, navBarState),
+                  builder: (context, userState) => _buildHome(
+                    deleteUserState,
+                    logoutState,
+                    userState,
+                    (getUserResponse) => SendFriendRequestConsumer(
+                      listener: (context, sendFriendRequestState) =>
+                          _handleSendFriendRequestStateChanged(
+                        context,
+                        sendFriendRequestState,
+                        getUserResponse,
+                      ),
+                      builder: (context, sendFriendRequestState) =>
+                          switch (navBarState) {
+                        NavBarReversedState() =>
+                          const Center(child: Text('You have matched!')),
+                        _ => switch (navBarState.page) {
+                            NavBarPage.explore => ExplorePage(
+                                pageController: pageController,
+                                users: getUserResponse.exploreUsers,
+                                navBarState: navBarState,
+                              ),
+                            NavBarPage.news => Container(),
+                            NavBarPage.chat => ChatPage(
+                                userId: getUserResponse.user.id,
+                                friends: getUserResponse.friendships,
+                                sentFriendRequests:
+                                    getUserResponse.sentFriendRequests,
+                                receivedFriendRequests:
+                                    getUserResponse.receivedFriendRequests,
+                              ),
+                            NavBarPage.options => OptionsPage(
+                                user: getUserResponse.user,
+                                profilePicture: getUserResponse.profilePicture,
+                                gym: getUserResponse.gym,
+                              ),
                           },
-                        _ => const Loader(),
                       },
                     ),
                   ),

@@ -319,12 +319,16 @@ void _handleNavBarStateChanged(
                     case NavBarSendingFriendRequestState():
                       final currentPage =
                           pageController.page!.round() % exploreUsers.length;
+                      context.sendFriendRequestBloc.add(LoaderLoadEvent(AuthReq(
+                        exploreUsers[currentPage],
+                        context.sessionLoader,
+                      )));
                       context.userBloc.add(
                         LoaderSetEvent(
                           AuthRes(
                             HttpResponseOk(
                               response.copyWith(
-                                exploreUsers: [...exploreUsers]
+                                exploreUsers: exploreUsers
                                   ..removeAt(currentPage),
                               ),
                               headers,
@@ -332,9 +336,6 @@ void _handleNavBarStateChanged(
                           ),
                         ),
                       );
-                      context.sendFriendRequestBloc.add(LoaderLoadEvent(AuthReq(
-                          exploreUsers[currentPage].user.id,
-                          context.sessionLoader)));
                     default:
                   }
                 default:
