@@ -91,8 +91,8 @@ class _HomePageState extends State<HomePage> {
             ),
             BlocProvider(
               create: (_) => SendFriendRequestBloc(
-                  load: (user, session) async =>
-                      await sendFriendRequest(user.user.id, session)),
+                  load: (user, session) =>
+                      sendFriendRequest(user.user.id, session)),
             ),
             const BlocProvider(create: logoutBloc),
             BlocProvider(
@@ -135,12 +135,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             NavBarPage.news => Container(),
                             NavBarPage.chat => ChatPage(
-                                userId: getUserResponse.user.id,
-                                friends: getUserResponse.friendships,
-                                sentFriendRequests:
-                                    getUserResponse.sentFriendRequests,
-                                receivedFriendRequests:
-                                    getUserResponse.receivedFriendRequests,
+                                userResponse: getUserResponse,
                               ),
                             NavBarPage.options => OptionsPage(
                                 user: getUserResponse.user,
