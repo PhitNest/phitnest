@@ -1,25 +1,20 @@
+import 'package:core/core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ui/ui.dart';
 
-import '../../../../entities/friendship.dart';
+import '../../../../entities/entities.dart';
 import '../../../../widgets/widgets.dart';
 import '../../../pages.dart';
 import 'widgets/widgets.dart';
 
 final class ChatPage extends StatelessWidget {
-  final String userId;
-  final List<FriendWithoutMessageWithProfilePicture> friends;
-  final List<FriendRequestWithProfilePicture> sentFriendRequests;
-  final List<FriendRequestWithProfilePicture> receivedFriendRequests;
+  final GetUserSuccess userResponse;
 
   const ChatPage({
     super.key,
-    required this.userId,
-    required this.friends,
-    required this.sentFriendRequests,
-    required this.receivedFriendRequests,
+    required this.userResponse,
   }) : super();
 
   @override
@@ -39,23 +34,36 @@ final class ChatPage extends StatelessWidget {
                     style: theme.textTheme.bodyLarge,
                   ),
                   StyledOutlineButton(
-                    onPress: () => Navigator.of(context).push(
-                      CupertinoPageRoute<void>(
-                        builder: (context) => FriendsPage(
-                          receivedFriendRequests: receivedFriendRequests,
-                          friends: friends,
-                          userId: userId,
+                    onPress: () async {
+                      final userBloc = context.userBloc;
+                      final friendRequestState =
+                          await Navigator.of(context).push(
+                        CupertinoPageRoute<FriendRequestPageState>(
+                          builder: (context) => FriendsPage(
+                            initialReceivedRequests:
+                                userResponse.receivedFriendRequests,
+                            initialFriends: userResponse.friendships,
+                            userId: userResponse.user.id,
+                            initialExploreUsers: userResponse.exploreUsers,
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                      userBloc.add(LoaderSetEvent(AuthRes(HttpResponseOk(
+                          userResponse.copyWith(
+                            friendships: friendRequestState!.friends,
+                            receivedFriendRequests: friendRequestState.requests,
+                            exploreUsers: friendRequestState.exploreUsers,
+                          ),
+                          null))));
+                    },
                     text: 'FRIENDS',
                   ),
                 ],
               ),
               18.verticalSpace,
-              ...friends.map(
+              ...userResponse.friendships.map(
                 (friend) => ChatTile(
-                  name: friend.other(userId).fullName,
+                  name: friend.other(userResponse.user.id).fullName,
                   message: 'Tap to chat',
                   onTap: () {},
                 ),
