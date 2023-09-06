@@ -4,14 +4,16 @@ enum NavBarPage { news, explore, chat, options }
 
 sealed class NavBarState extends Equatable {
   final NavBarPage page;
+  final int numAlerts;
   String? get logoAssetPath;
 
   const NavBarState({
     required this.page,
+    required this.numAlerts,
   }) : super();
 
   @override
-  List<Object?> get props => [page, logoAssetPath];
+  List<Object?> get props => [page, logoAssetPath, numAlerts];
 }
 
 enum NavBarLoadingReason { explore, sendRequest }
@@ -23,12 +25,14 @@ sealed class NavBarLoadingBaseState extends NavBarState {
 
   const NavBarLoadingBaseState({
     required super.page,
+    required super.numAlerts,
   }) : super();
 }
 
 final class NavBarInitialState extends NavBarLoadingBaseState {
   const NavBarInitialState({
     required super.page,
+    required super.numAlerts,
   }) : super();
 }
 
@@ -39,6 +43,7 @@ final class NavBarSendingFriendRequestState extends NavBarLoadingBaseState {
 
   const NavBarSendingFriendRequestState({
     required super.page,
+    required super.numAlerts,
   }) : super();
 }
 
@@ -48,6 +53,7 @@ final class NavBarInactiveState extends NavBarState {
 
   const NavBarInactiveState({
     required super.page,
+    required super.numAlerts,
   }) : super();
 }
 
@@ -55,18 +61,26 @@ sealed class NavBarActiveState extends NavBarState {
   @override
   String? get logoAssetPath => Assets.coloredLogo.path;
 
-  const NavBarActiveState() : super(page: NavBarPage.explore);
+  const NavBarActiveState({
+    required super.numAlerts,
+  }) : super(page: NavBarPage.explore);
 }
 
 final class NavBarLogoReadyState extends NavBarActiveState {
-  const NavBarLogoReadyState() : super();
+  const NavBarLogoReadyState({
+    required super.numAlerts,
+  }) : super();
 }
 
 final class NavBarHoldingLogoState extends NavBarActiveState {
   final int countdown;
   final CancelableOperation<void> nextCount;
 
-  const NavBarHoldingLogoState(this.countdown, this.nextCount) : super();
+  const NavBarHoldingLogoState(
+    this.countdown,
+    this.nextCount, {
+    required super.numAlerts,
+  }) : super();
 
   @override
   List<Object?> get props => [...super.props, countdown, nextCount];
@@ -76,7 +90,9 @@ final class NavBarReversedState extends NavBarActiveState {
   @override
   String? get logoAssetPath => Assets.darkLogo.path;
 
-  const NavBarReversedState() : super();
+  const NavBarReversedState({
+    required super.numAlerts,
+  }) : super();
 }
 
 sealed class NavBarEvent extends Equatable {
@@ -143,14 +159,29 @@ final class NavBarAnimateEvent extends NavBarEvent {
   List<Object?> get props => [];
 }
 
+final class NavBarSetNumAlertsEvent extends NavBarEvent {
+  final int numAlerts;
+
+  const NavBarSetNumAlertsEvent(this.numAlerts) : super();
+
+  @override
+  List<Object?> get props => [numAlerts];
+}
+
 final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
-  NavBarBloc() : super(const NavBarInitialState(page: NavBarPage.explore)) {
+  NavBarBloc()
+      : super(
+            const NavBarInitialState(numAlerts: 0, page: NavBarPage.explore)) {
     on<NavBarSetLoadingEvent>(
       (event, emit) {
         if (event.loading) {
-          emit(NavBarInitialState(page: state.page));
+          emit(
+              NavBarInitialState(numAlerts: state.numAlerts, page: state.page));
         } else {
-          emit(NavBarInactiveState(page: state.page));
+          emit(NavBarInactiveState(
+            numAlerts: state.numAlerts,
+            page: state.page,
+          ));
         }
       },
     );
@@ -159,16 +190,19 @@ final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
       (event, emit) async {
         switch (state) {
           case NavBarInitialState() || NavBarSendingFriendRequestState():
-            emit(NavBarInitialState(page: event.page));
+            emit(NavBarInitialState(
+                page: event.page, numAlerts: state.numAlerts));
           case NavBarReversedState() ||
                 NavBarInactiveState() ||
                 NavBarLogoReadyState():
-            emit(NavBarInactiveState(page: event.page));
+            emit(NavBarInactiveState(
+                page: event.page, numAlerts: state.numAlerts));
           case NavBarHoldingLogoState(
               nextCount: final nextCount,
             ):
             await nextCount.cancel();
-            emit(NavBarInactiveState(page: event.page));
+            emit(NavBarInactiveState(
+                page: event.page, numAlerts: state.numAlerts));
         }
       },
     );
@@ -181,7 +215,8 @@ final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
                 3,
                 CancelableOperation.fromFuture(
                     Future.delayed(const Duration(seconds: 1)))
-                  ..then((_) => add(const NavBarCountDownEvent()))));
+                  ..then((_) => add(const NavBarCountDownEvent())),
+                numAlerts: state.numAlerts));
           case NavBarHoldingLogoState():
             badState(state, event);
           default:
@@ -194,17 +229,20 @@ final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
         switch (state) {
           case NavBarHoldingLogoState(nextCount: final nextCount):
             await nextCount.cancel();
-            emit(const NavBarInactiveState(page: NavBarPage.explore));
+            emit(NavBarInactiveState(
+                page: NavBarPage.explore, numAlerts: state.numAlerts));
           case NavBarInactiveState() ||
                 NavBarReversedState() ||
                 NavBarLogoReadyState():
-            emit(const NavBarInactiveState(page: NavBarPage.explore));
+            emit(NavBarInactiveState(
+                page: NavBarPage.explore, numAlerts: state.numAlerts));
           case NavBarInitialState():
-            emit(const NavBarInitialState(page: NavBarPage.explore));
+            emit(NavBarInitialState(
+                page: NavBarPage.explore, numAlerts: state.numAlerts));
             break;
           case NavBarSendingFriendRequestState():
-            emit(const NavBarSendingFriendRequestState(
-                page: NavBarPage.explore));
+            emit(NavBarSendingFriendRequestState(
+                page: NavBarPage.explore, numAlerts: state.numAlerts));
         }
       },
     );
@@ -214,7 +252,8 @@ final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
         switch (state) {
           case NavBarHoldingLogoState(nextCount: final nextCount):
             await nextCount.cancel();
-            emit(const NavBarInactiveState(page: NavBarPage.explore));
+            emit(NavBarInactiveState(
+                page: NavBarPage.explore, numAlerts: state.numAlerts));
           default:
         }
       },
@@ -235,11 +274,14 @@ final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
                         const NavBarCountDownEvent(),
                       ),
                     ),
+                  numAlerts: state.numAlerts,
                 ),
               );
             } else {
-              emit(const NavBarSendingFriendRequestState(
-                  page: NavBarPage.explore));
+              emit(NavBarSendingFriendRequestState(
+                page: NavBarPage.explore,
+                numAlerts: state.numAlerts,
+              ));
             }
           default:
             badState(state, event);
@@ -256,7 +298,7 @@ final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
                 NavBarHoldingLogoState():
             badState(state, event);
           case NavBarInitialState() || NavBarSendingFriendRequestState():
-            emit(const NavBarReversedState());
+            emit(NavBarReversedState(numAlerts: state.numAlerts));
         }
       },
     );
@@ -268,12 +310,34 @@ final class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
                 NavBarInitialState() ||
                 NavBarSendingFriendRequestState() ||
                 NavBarReversedState():
-            emit(const NavBarLogoReadyState());
+            emit(NavBarLogoReadyState(numAlerts: state.numAlerts));
           case NavBarLogoReadyState() || NavBarHoldingLogoState():
             badState(state, event);
         }
       },
     );
+
+    on<NavBarSetNumAlertsEvent>((event, emit) {
+      switch (state) {
+        case NavBarInitialState(page: final page):
+          emit(NavBarInitialState(page: page, numAlerts: event.numAlerts));
+        case NavBarInactiveState(page: final page):
+          emit(NavBarInactiveState(page: page, numAlerts: event.numAlerts));
+        case NavBarLogoReadyState():
+          emit(NavBarLogoReadyState(numAlerts: event.numAlerts));
+        case NavBarHoldingLogoState(
+            countdown: final countdown,
+            nextCount: final nextCount,
+          ):
+          emit(NavBarHoldingLogoState(countdown, nextCount,
+              numAlerts: event.numAlerts));
+        case NavBarReversedState():
+          emit(NavBarReversedState(numAlerts: event.numAlerts));
+        case NavBarSendingFriendRequestState():
+          emit(NavBarSendingFriendRequestState(
+              numAlerts: event.numAlerts, page: state.page));
+      }
+    });
   }
 
   @override
@@ -308,7 +372,10 @@ void _handleNavBarStateChanged(
                 headers: final headers,
               ):
               switch (response) {
-                case GetUserSuccess(exploreUsers: final exploreUsers):
+                case GetUserSuccess(
+                    exploreUsers: final exploreUsers,
+                    receivedFriendRequests: final receivedRequests,
+                  ):
                   switch (state) {
                     case NavBarInactiveState(page: final page):
                       if (page == NavBarPage.explore) {
@@ -319,11 +386,16 @@ void _handleNavBarStateChanged(
                     case NavBarSendingFriendRequestState():
                       final currentPage =
                           pageController.page!.round() % exploreUsers.length;
+                      final user = exploreUsers[currentPage];
                       context.sendFriendRequestBloc
                           .add(ParallelPushEvent(AuthReq(
-                        exploreUsers[currentPage],
+                        user,
                         context.sessionLoader,
                       )));
+                      final updatedReceivedRequests = receivedRequests
+                        ..removeWhere(
+                          (request) => request.sender.id == user.user.id,
+                        );
                       context.userBloc.add(
                         LoaderSetEvent(
                           AuthRes(
@@ -331,6 +403,7 @@ void _handleNavBarStateChanged(
                               response.copyWith(
                                 exploreUsers: exploreUsers
                                   ..removeAt(currentPage),
+                                receivedFriendRequests: updatedReceivedRequests,
                               ),
                               headers,
                             ),

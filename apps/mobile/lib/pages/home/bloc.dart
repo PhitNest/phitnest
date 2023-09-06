@@ -62,7 +62,12 @@ Future<void> _handleGetUserStateChanged(
                   .add(LoaderLoadEvent(AuthReq(null, context.sessionLoader)));
             case HttpResponseSuccess(data: final response):
               switch (response) {
-                case GetUserSuccess(exploreUsers: final exploreUsers):
+                case GetUserSuccess(
+                    exploreUsers: final exploreUsers,
+                    receivedFriendRequests: final receivedRequests,
+                  ):
+                  context.navBarBloc
+                      .add(NavBarSetNumAlertsEvent(receivedRequests.length));
                   switch (navBarState) {
                     case NavBarInitialState(page: final page):
                       if (page == NavBarPage.explore &&
@@ -176,6 +181,9 @@ void _handleSendFriendRequestStateChanged(
                   );
                   context.userBloc.add(LoaderSetEvent(AuthRes(HttpResponseOk(
                       getUserSuccess.copyWith(
+                        receivedFriendRequests: getUserSuccess
+                            .receivedFriendRequests
+                          ..removeWhere((request) => request.sender.id == id),
                         friendships: getUserSuccess.friendships
                           ..add(FriendWithoutMessageWithProfilePicture(
                             id: id,
