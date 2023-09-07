@@ -29,6 +29,9 @@ class FriendsPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 40.w),
           child: Column(
             children: [
+              TextButton(
+                  onPressed: () => Navigator.pop(context, pageState),
+                  child: const Text('BACK')),
               64.verticalSpace,
               Text(
                 'Friend requests',
