@@ -13,7 +13,7 @@ Future<LoginResponse> login(LoginParams params) async {
   try {
     final session = await user.authenticateUser(
       AuthenticationDetails(
-        username: params.email,
+        username: params.email.toLowerCase(),
         password: params.password,
       ),
     );

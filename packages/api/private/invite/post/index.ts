@@ -50,9 +50,9 @@ export async function invoke(
           ],
           puts: [
             {
-              ...inviteKey("user", userClaims.sub, data.receiverEmail),
+              ...inviteKey("user", userClaims.sub, data.receiverEmail.toLowerCase()),
               data: inviteToDynamo({
-                receiverEmail: data.receiverEmail,
+                receiverEmail: data.receiverEmail.toLowerCase(),
                 senderId: userClaims.sub,
                 gymId: sender.invite.gymId,
                 senderType: "user",

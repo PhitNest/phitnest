@@ -96,15 +96,13 @@ final class FriendRequestPageBloc
 
     on<FriendRequestDeniedEvent>(
       (event, emit) {
-        emit(FriendRequestPageState(
-          friends: state.friends,
-          requests: state.requests..remove(event.request),
-          exploreUsers: state.exploreUsers
-            ..add(UserExploreWithPicture(
-              user: event.request.sender,
-              profilePicture: event.request.profilePicture,
-            )),
-        ));
+        emit(
+          FriendRequestPageState(
+            friends: state.friends,
+            requests: state.requests..remove(event.request),
+            exploreUsers: state.exploreUsers,
+          ),
+        );
       },
     );
   }

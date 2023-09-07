@@ -39,9 +39,9 @@ export async function invoke(
         return gym;
       }
       await client.put({
-        ...inviteKey("admin", adminClaims.sub, data.receiverEmail),
+        ...inviteKey("admin", adminClaims.sub, data.receiverEmail.toLowerCase()),
         data: inviteToDynamo({
-          receiverEmail: data.receiverEmail,
+          receiverEmail: data.receiverEmail.toLowerCase(),
           senderId: adminClaims.sub,
           gymId: adminClaims.sub,
           senderType: "admin",

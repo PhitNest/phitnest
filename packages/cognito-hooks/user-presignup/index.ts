@@ -24,7 +24,7 @@ export async function invoke(event: PreSignUpTriggerEvent) {
     id: event.userName,
     firstName: firstName,
     lastName: lastName,
-    email: event.request.userAttributes.email,
+    email: event.request.userAttributes.email.toLowerCase(),
     createdAt: new Date(),
   };
   const client = dynamo();

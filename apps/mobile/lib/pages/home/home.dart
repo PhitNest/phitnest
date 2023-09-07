@@ -96,9 +96,10 @@ class _HomePageState extends State<HomePage> {
             ),
             const BlocProvider(create: logoutBloc),
             BlocProvider(
-              create: (_) => DeleteUserBloc(
-                load: (_, session) => deleteUserAccount(session),
-              ),
+              create: (_) => DeleteUserBloc(load: (_, session) {
+                context.sessionLoader.add(const LoaderSetEvent(SessionEnded()));
+                return deleteUserAccount(session);
+              }),
             ),
             BlocProvider(create: (_) => NavBarBloc()),
           ],
