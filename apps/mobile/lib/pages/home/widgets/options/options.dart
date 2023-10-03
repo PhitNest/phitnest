@@ -1,10 +1,12 @@
 import 'package:core/core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ui/ui.dart';
 
 import '../../../../entities/entities.dart';
 import '../../../../widgets/widgets.dart';
+import '../../../about_us/about_us.dart';
 import '../../home.dart';
 
 class OptionsPage extends StatelessWidget {
@@ -53,7 +55,12 @@ class OptionsPage extends StatelessWidget {
                 profilePicture,
                 32.verticalSpace,
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.push(
+                    context,
+                    CupertinoPageRoute<void>(
+                      builder: (_) => const AboutUsScreen(),
+                    ),
+                  ),
                   style: TextButton.styleFrom(),
                   child: Text(
                     'About Us',
@@ -65,15 +72,15 @@ class OptionsPage extends StatelessWidget {
                   ),
                 ),
                 StyledOutlineButton(
-                  onPress: () => context.deleteUserBloc.add(
-                      LoaderLoadEvent(AuthReq(null, context.sessionLoader))),
+                  onPress: () => context.deleteUserBloc
+                      .add(LoaderLoadEvent(AuthReq(null, context.sessionLoader))),
                   text: 'Delete Account',
                   hPadding: 16.w,
                   vPadding: 8.h,
                 ),
                 StyledOutlineButton(
-                  onPress: () => context.logoutBloc.add(
-                      LoaderLoadEvent(AuthReq(null, context.sessionLoader))),
+                  onPress: () =>
+                      context.logoutBloc.add(LoaderLoadEvent(AuthReq(null, context.sessionLoader))),
                   text: 'Sign Out',
                   hPadding: 16.w,
                   vPadding: 8.h,
