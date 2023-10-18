@@ -40,7 +40,7 @@ final class ConfirmPhotoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pfp = Image.file(File(photo.path));
+    final pfp = Image.network(photo.path);
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(

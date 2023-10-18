@@ -17,12 +17,15 @@ Future<CroppedFile?> _photoChosen(
       (image) async {
         if (image != null) {
           return await ImageCropper().cropImage(
-            sourcePath: image.path,
-            aspectRatio: CropAspectRatio(
-              ratioX: kProfilePictureAspectRatio.width,
-              ratioY: kProfilePictureAspectRatio.height,
-            ),
-          );
+              sourcePath: image.path,
+              aspectRatio: CropAspectRatio(
+                ratioX: kProfilePictureAspectRatio.width,
+                ratioY: kProfilePictureAspectRatio.height,
+              ),
+              uiSettings: [
+                WebUiSettings(
+                    context: context, presentStyle: CropperPresentStyle.page)
+              ]);
         }
         return null;
       },

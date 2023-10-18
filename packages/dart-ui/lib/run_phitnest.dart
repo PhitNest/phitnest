@@ -1,9 +1,18 @@
 import 'package:core/core.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'ui/ui.dart';
+
+class AppScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+      };
+}
 
 Future<void> runPhitNest({
   required bool useAdminAuth,
@@ -55,6 +64,7 @@ final class PhitNestApp extends StatelessWidget {
             child: MaterialApp(
               title: title,
               theme: theme,
+              scrollBehavior: AppScrollBehavior(),
               debugShowCheckedModeBanner: false,
               scaffoldMessengerKey: StyledBanner.scaffoldMessengerKey,
               home: Scaffold(
