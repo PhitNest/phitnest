@@ -29,15 +29,14 @@ class FriendsPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 40.w),
           child: Column(
             children: [
-              Container(
-                margin: EdgeInsets.only(top: 32.h, bottom: 64.h),
-                child: Row(
-                  children: [
-                    StyledOutlineButton(
-                      onPress: () => Navigator.pop(context, pageState),
-                      text: 'BACK',
-                    ),
-                  ],
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  margin: EdgeInsets.only(top: 32.h, bottom: 64.h),
+                  child: StyledOutlineButton(
+                    onPress: () => Navigator.pop(context, pageState),
+                    text: 'BACK',
+                  ),
                 ),
               ),
               Text(
