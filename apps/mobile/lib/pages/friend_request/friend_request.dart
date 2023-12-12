@@ -29,15 +29,20 @@ class FriendsPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 40.w),
           child: Column(
             children: [
-              TextButton(
-                  onPressed: () => Navigator.pop(context, pageState),
-                  child: const Text('BACK')),
-              64.verticalSpace,
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  margin: EdgeInsets.only(top: 32.h, bottom: 64.h),
+                  child: StyledOutlineButton(
+                    onPress: () => Navigator.pop(context, pageState),
+                    text: 'BACK',
+                  ),
+                ),
+              ),
               Text(
                 'Friend requests',
                 style: theme.textTheme.bodyLarge,
               ),
-              32.verticalSpace,
               Expanded(
                 child: ListView.builder(
                   padding: EdgeInsets.zero,
