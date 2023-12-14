@@ -1,5 +1,5 @@
 import { AttributeValue } from "@aws-sdk/client-dynamodb";
-import { DynamoParseError } from "../utils";
+import { dynamoParseError } from "../utils";
 
 /**
  * Each of these labels represents a type of data that can be stored in DynamoDB.
@@ -85,7 +85,7 @@ export type DynamoParser<T> = {
  */
 export function parseDynamo<T>(
   dynamo: Record<string, AttributeValue>,
-  parser: DynamoParser<T>,
+  parser: DynamoParser<T>
 ): T {
   // Here we lose some type information on the parsing shape, but it's not a big deal. We can still
   // cast the results to the correct type. We can do some runtime validation to throw proper errors
@@ -95,19 +95,19 @@ export function parseDynamo<T>(
 
 function parseMap(
   dynamo: Record<string, AttributeValue>,
-  parser: Record<string, unknown>,
+  parser: Record<string, unknown>
 ): Record<string, unknown> {
   const results: Record<string, unknown> = {};
   if (!parser) {
-    throw new DynamoParseError(
-      `Dynamo parser not found for ${JSON.stringify(dynamo)}`,
+    throw dynamoParseError(
+      `Dynamo parser not found for ${JSON.stringify(dynamo)}`
     );
   }
   for (const [key, type] of Object.entries(parser)) {
     const value = dynamo[key];
     if (!value) {
-      throw new DynamoParseError(
-        `Dynamo key ${key} not found in ${JSON.stringify(dynamo)}`,
+      throw dynamoParseError(
+        `Dynamo key ${key} not found in ${JSON.stringify(dynamo)}`
       );
     }
     results[key] = parseAttribute(value, type, key);
@@ -118,7 +118,7 @@ function parseMap(
 function checkType(
   type: unknown,
   check: Label,
-  key: string,
+  key: string
 ): "CONVERT_TO_DATE" | "SUCCESS" {
   if ((check === "N" && type === "D") || (check === "NS" && type === "DS")) {
     return "CONVERT_TO_DATE";
@@ -128,8 +128,8 @@ function checkType(
     ((check === "L" && !(type instanceof Array)) ||
       (check === "M" && typeof type !== "object"))
   ) {
-    throw new DynamoParseError(
-      `Dynamo key: ${key} must be type ${check} but was type ${type}`,
+    throw dynamoParseError(
+      `Dynamo key: ${key} must be type ${check} but was type ${type}`
     );
   }
   return "SUCCESS";
@@ -138,7 +138,7 @@ function checkType(
 function parseAttribute(
   dynamo: AttributeValue,
   type: unknown,
-  key: string,
+  key: string
 ): unknown {
   function check(check: Label) {
     return checkType(type, check, key);
@@ -166,7 +166,7 @@ function parseAttribute(
       return new Set<unknown>(
         checkResult === "CONVERT_TO_DATE"
           ? value.map((x) => new Date(parseFloat(x)))
-          : value.map(parseFloat),
+          : value.map(parseFloat)
       );
     },
     BS: (value) => {
@@ -180,7 +180,7 @@ function parseAttribute(
     L: (value) => {
       check("L");
       return value.map((item, index) =>
-        parseAttribute(item, (type as Array<unknown>)[index], key),
+        parseAttribute(item, (type as Array<unknown>)[index], key)
       );
     },
     M: (value) => {
@@ -188,10 +188,10 @@ function parseAttribute(
       return parseMap(value, type as Record<string, unknown>);
     },
     NULL: () => {
-      throw new DynamoParseError(`Dynamo ${key} must not be null`);
+      throw dynamoParseError(`Dynamo ${key} must not be null`);
     },
     _: () => {
-      throw new DynamoParseError(`Dynamo ${key} must be a primitive`);
+      throw dynamoParseError(`Dynamo ${key} must be a primitive`);
     },
   });
 }

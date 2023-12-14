@@ -1,11 +1,11 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { z } from "zod";
 import {
-  RequestError,
-  ResourceNotFoundError,
-  Success,
   dynamo,
   getAdminClaims,
+  isResourceNotFound,
+  requestError,
+  success,
   validateRequest,
 } from "typescript-core/src/utils";
 import {
@@ -20,7 +20,7 @@ const validator = z.object({
 });
 
 export async function invoke(
-  event: APIGatewayEvent,
+  event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> {
   return validateRequest({
     data: JSON.parse(event.body ?? "{}"),
@@ -32,14 +32,18 @@ export async function invoke(
         getGym(client, adminClaims.sub),
         getReceivedInvites(client, data.receiverEmail, 1),
       ]);
-      if (!(existingInvite instanceof ResourceNotFoundError)) {
-        return new RequestError("InviteAlreadyExists", "Invite already exists");
+      if (!isResourceNotFound(existingInvite)) {
+        return requestError("InviteAlreadyExists", "Invite already exists");
       }
-      if (gym instanceof ResourceNotFoundError) {
+      if (isResourceNotFound(gym)) {
         return gym;
       }
       await client.put({
-        ...inviteKey("admin", adminClaims.sub, data.receiverEmail.toLowerCase()),
+        ...inviteKey(
+          "admin",
+          adminClaims.sub,
+          data.receiverEmail.toLowerCase()
+        ),
         data: inviteToDynamo({
           receiverEmail: data.receiverEmail.toLowerCase(),
           senderId: adminClaims.sub,
@@ -48,7 +52,7 @@ export async function invoke(
           createdAt: new Date(),
         }),
       });
-      return new Success();
+      return success();
     },
   });
 }

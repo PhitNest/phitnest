@@ -3,8 +3,8 @@ import { z } from "zod";
 import {
   dynamo,
   validateRequest,
-  Success,
   getUserClaims,
+  success,
 } from "typescript-core/src/utils";
 import { deleteFriendship } from "typescript-core/src/repositories";
 
@@ -13,7 +13,7 @@ const validator = z.object({
 });
 
 export async function invoke(
-  event: APIGatewayEvent,
+  event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> {
   return validateRequest({
     data: { ...event.queryStringParameters },
@@ -25,7 +25,7 @@ export async function invoke(
         deleteFriendship(client, userClaims.sub, data.friendId),
         deleteFriendship(client, data.friendId, userClaims.sub),
       ]);
-      return new Success();
+      return success();
     },
   });
 }

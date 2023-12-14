@@ -7,7 +7,7 @@ import {
   kUserWithoutIdentityParser,
 } from "../entities";
 import { DynamoParser } from "../entities/dynamo";
-import { DynamoClient, ResourceNotFoundError, RowKey } from "../utils";
+import { DynamoClient, ResourceNotFound, RowKey } from "../utils";
 
 const kUserPkPrefix = "USER#";
 const kNewUserSkPrefix = "NEW#";
@@ -42,8 +42,8 @@ export function userKey(id: string, gymId: string): RowKey {
 async function getUserHelper<UserType extends UserExplore>(
   dynamo: DynamoClient,
   id: string,
-  parser: DynamoParser<UserType>,
-): Promise<UserType | ResourceNotFoundError> {
+  parser: DynamoParser<UserType>
+): Promise<UserType | ResourceNotFound> {
   return await dynamo.parsedQuery({
     pk: userPk(id),
     sk: { q: kUserSkPrefix, op: "BEGINS_WITH" },
@@ -54,8 +54,8 @@ async function getUserHelper<UserType extends UserExplore>(
 
 export async function getUser(
   dynamo: DynamoClient,
-  id: string,
-): Promise<User | ResourceNotFoundError> {
+  id: string
+): Promise<User | ResourceNotFound> {
   return await getUserHelper(dynamo, id, kUserParser);
 }
 
@@ -65,8 +65,8 @@ export async function getUserExplore(dynamo: DynamoClient, id: string) {
 
 export async function getUserWithoutIdentity(
   dynamo: DynamoClient,
-  id: string,
-): Promise<UserWithoutIdentity | ResourceNotFoundError> {
+  id: string
+): Promise<UserWithoutIdentity | ResourceNotFound> {
   return await dynamo.parsedQuery({
     pk: userPk(id),
     sk: { q: newUserSk(id), op: "EQ" },
@@ -76,7 +76,7 @@ export async function getUserWithoutIdentity(
 
 export async function getExploreUsers(
   dynamo: DynamoClient,
-  gymId: string,
+  gymId: string
 ): Promise<UserExplore[]> {
   return await dynamo.parsedQuery({
     pk: userSk(gymId),
@@ -91,7 +91,7 @@ export async function deleteUser(
   params: {
     id: string;
     gymId: string;
-  },
+  }
 ) {
   await Promise.all([
     dynamo.delete(newUserKey(params.id)),

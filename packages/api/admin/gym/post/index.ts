@@ -2,29 +2,33 @@ import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { z } from "zod";
 import {
   RequestError,
-  Success,
   dynamo,
   getAdminClaims,
+  isRequestError,
+  requestError,
+  success,
   validateRequest,
 } from "typescript-core/src/utils";
 import { gymKey } from "typescript-core/src/repositories";
 import { Address, Location, gymToDynamo } from "typescript-core/src/entities";
 import axios from "axios";
 
-async function getLocation(address: Address): Promise<Location | RequestError> {
+async function getLocation(
+  address: Address
+): Promise<Location | RequestError<"CoordinatesNotFound">> {
   const response = await axios.get(
     "https://nominatim.openstreetmap.org/search",
     {
       params: {
         q: `${address.street}, ${address.city}, ${address.state} ${address.zipCode}`.replace(
           /%20/g,
-          "+",
+          "+"
         ),
         format: "json",
         polygon: 1,
         addressdetails: 1,
       },
-    },
+    }
   );
   if (response.data && response.data.length > 0) {
     const { lon, lat } = response.data[0];
@@ -33,9 +37,9 @@ async function getLocation(address: Address): Promise<Location | RequestError> {
       latitude: parseFloat(lat),
     };
   }
-  return new RequestError(
+  return requestError(
     "CoordinatesNotFound",
-    "No coordinates found for this address.",
+    "No coordinates found for this address."
   );
 }
 
@@ -50,7 +54,7 @@ const validator = z.object({
 });
 
 export async function invoke(
-  event: APIGatewayEvent,
+  event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> {
   return validateRequest({
     data: JSON.parse(event.body ?? "{}"),
@@ -64,7 +68,7 @@ export async function invoke(
         zipCode: data.zipCode,
       };
       const location = await getLocation(address);
-      if (location instanceof RequestError) {
+      if (isRequestError(location)) {
         return location;
       }
       const client = dynamo();
@@ -82,7 +86,7 @@ export async function invoke(
         ...gymKey(gym.id),
         data: gymToDynamo(gym),
       });
-      return new Success();
+      return success();
     },
   });
 }

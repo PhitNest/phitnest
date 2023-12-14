@@ -1,11 +1,14 @@
 import { APIGatewayProxyResult } from "aws-lambda";
 import { ZodError, z } from "zod";
 
+const kSuccess = "Success";
+const kRequestError = "RequestError";
+
 /**
  * Return this to reply with a status code 200.
  */
 export type Success = {
-  responseType: "Success";
+  responseType: typeof kSuccess;
   body?: Record<string, unknown> | Record<string, unknown>[];
   headers?: { [header: string]: string };
 };
@@ -14,13 +17,73 @@ export type Success = {
  * Return this to reply with a status code 500.
  */
 export type RequestError<T extends string> = {
-  responseType: "RequestError";
+  responseType: typeof kRequestError;
   type: T;
   message: string;
 };
 
+/**
+ * This is the type of the response you should return from your controller function.
+ */
 export type Response = Success | RequestError<string>;
 
+/**
+ * Use this to check if the response is a Success.
+ */
+export function isSuccess(response: Response): response is Success {
+  return response.responseType === kSuccess;
+}
+
+/**
+ * Use this to create a Success.
+ */
+export function success(
+  body?: Record<string, unknown> | Record<string, unknown>[],
+  headers?: { [header: string]: string }
+): Success {
+  return {
+    responseType: kSuccess,
+    body: body,
+    headers: headers,
+  };
+}
+
+/**
+ * Use this to check if the response is a RequestError.
+ */
+export function isRequestError(
+  response: any
+): response is RequestError<string> {
+  return response.responseType === kRequestError;
+}
+
+/**
+ * Use this to create a RequestError.
+ */
+export function requestError<T extends string>(
+  type: T,
+  message: string
+): RequestError<T> {
+  return {
+    responseType: "RequestError",
+    type: type,
+    message: message,
+  };
+}
+
+/**
+ * Use this to check if the response is a RequestError of a specific type.
+ */
+export function isRequestErrorOfType<T extends string>(
+  response: RequestError<string>,
+  type: T
+): response is RequestError<T> {
+  return response.type === type;
+}
+
+/**
+ * These are the default headers that will be added to every response.
+ */
 export const kDefaultHeaders = {
   "Content-Type": "application/json",
   "Access-Control-Allow-Headers": "*",
@@ -40,7 +103,7 @@ export async function handleRequest(
 ): Promise<APIGatewayProxyResult> {
   try {
     const controllerOutput = await controller();
-    if (controllerOutput.responseType === "RequestError") {
+    if (isRequestError(controllerOutput)) {
       return {
         statusCode: 500,
         headers: kDefaultHeaders,
@@ -49,7 +112,7 @@ export async function handleRequest(
           message: controllerOutput.message,
         }),
       };
-    } else if (controllerOutput.responseType === "Success") {
+    } else if (isSuccess(controllerOutput)) {
       return {
         statusCode: 200,
         body: controllerOutput.body
@@ -72,7 +135,7 @@ export async function handleRequest(
       };
     }
   } catch (err: any) {
-    if (err.responseType === "RequestError") {
+    if (isRequestError(err)) {
       return {
         statusCode: 500,
         headers: kDefaultHeaders,
@@ -89,28 +152,6 @@ export async function handleRequest(
       };
     }
   }
-}
-
-export function success(
-  body?: Record<string, unknown> | Record<string, unknown>[],
-  headers?: { [header: string]: string }
-): Success {
-  return {
-    responseType: "Success",
-    body: body,
-    headers: headers,
-  };
-}
-
-export function requestError<T extends string>(
-  type: T,
-  message: string
-): RequestError<T> {
-  return {
-    responseType: "RequestError",
-    type: type,
-    message: message,
-  };
 }
 
 interface ValidateRequestProps<

@@ -4,9 +4,10 @@ import {
   dynamo,
   validateRequest,
   getUserClaims,
-  RequestError,
-  ResourceNotFoundError,
-  Success,
+  isRequestError,
+  isResourceNotFound,
+  success,
+  requestError,
 } from "typescript-core/src/utils";
 import {
   createFriendship,
@@ -25,7 +26,7 @@ const validator = z.object({
 });
 
 export async function invoke(
-  event: APIGatewayEvent,
+  event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> {
   return validateRequest({
     data: JSON.parse(event.body ?? "{}"),
@@ -36,17 +37,17 @@ export async function invoke(
       const friendship = await getFriendship(
         client,
         userClaims.sub,
-        data.receiverId,
+        data.receiverId
       );
-      if (friendship instanceof RequestError) {
+      if (isRequestError(friendship)) {
         const [sender, receiver] = await Promise.all([
           getUserExplore(client, userClaims.sub),
           getUserExplore(client, data.receiverId),
         ]);
-        if (sender instanceof ResourceNotFoundError) {
+        if (isResourceNotFound(sender)) {
           return sender;
         }
-        if (receiver instanceof ResourceNotFoundError) {
+        if (isResourceNotFound(receiver)) {
           return receiver;
         }
         const friendRequest: FriendRequest = {
@@ -60,22 +61,22 @@ export async function invoke(
           ...friendshipKey(sender.id, receiver.id),
           data: friendRequestToDynamo(friendRequest),
         });
-        return new Success(friendRequest);
+        return success(friendRequest);
       } else {
         switch (friendship.__poly__) {
           case "FriendRequest":
             if (friendship.sender.id === userClaims.sub) {
-              return new RequestError(
+              return requestError(
                 "FriendRequestExists",
-                "Outgoing friend request already exists",
+                "Outgoing friend request already exists"
               );
             } else {
-              return new Success(await createFriendship(client, friendship));
+              return success(await createFriendship(client, friendship));
             }
           default:
-            return new RequestError(
+            return requestError(
               "FriendshipExists",
-              "Friendship already exists",
+              "Friendship already exists"
             );
         }
       }

@@ -1,5 +1,5 @@
 import { Gym, kGymParser } from "../entities";
-import { DynamoClient, ResourceNotFoundError } from "../utils";
+import { DynamoClient, ResourceNotFound } from "../utils";
 
 const kGymPk = "GYM";
 const kGymSkPrefix = "GYM#";
@@ -17,8 +17,8 @@ export function gymKey(id: string) {
 
 export async function getGym(
   dynamo: DynamoClient,
-  id: string,
-): Promise<Gym | ResourceNotFoundError> {
+  id: string
+): Promise<Gym | ResourceNotFound> {
   return await dynamo.parsedQuery({
     pk: kGymPk,
     sk: { q: gymSk(id), op: "EQ" },

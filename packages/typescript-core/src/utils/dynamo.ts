@@ -79,6 +79,10 @@ const kResourceNotFoundErrorType = "ResourceNotFoundError";
 
 export type ResourceNotFound = RequestError<typeof kResourceNotFoundErrorType>;
 
+export function isResourceNotFound(err: unknown): err is ResourceNotFound {
+  return (err as ResourceNotFound).type === kResourceNotFoundErrorType;
+}
+
 export function resourceNotFound(
   key: RowKey | MultiRowKey<SkOperator, number, TableNames>
 ): ResourceNotFound {

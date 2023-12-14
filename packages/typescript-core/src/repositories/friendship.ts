@@ -11,8 +11,9 @@ import {
 } from "../entities";
 import {
   DynamoClient,
-  RequestError,
-  ResourceNotFoundError,
+  isResourceNotFound,
+  requestError,
+  ResourceNotFound,
   RowKey,
 } from "../utils";
 
@@ -36,7 +37,7 @@ export function friendshipKey(senderId: string, receiverId: string): RowKey {
 
 export function friendshipInvertedKey(
   senderId: string,
-  receiverId: string,
+  receiverId: string
 ): RowKey {
   return {
     pk: friendshipSk(receiverId),
@@ -45,7 +46,7 @@ export function friendshipInvertedKey(
 }
 
 function polymorphicParseFriendship(
-  data: Record<string, AttributeValue>,
+  data: Record<string, AttributeValue>
 ): FriendRequest | FriendWithoutMessage | Friendship {
   switch (data.__poly__.S) {
     case "FriendRequest":
@@ -55,23 +56,26 @@ function polymorphicParseFriendship(
     case "Friendship":
       return parseDynamo(data, kFriendshipParser);
     default:
-      throw new RequestError(
-        "InvalidFriendshipType",
-        "Invalid friendship type",
-      );
+      throw requestError("InvalidFriendshipType", "Invalid friendship type");
   }
 }
 
-const kNoFriendshipFound = new RequestError(
+const kNoFriendshipFound = requestError(
   "NoFriendshipFound",
-  "No friendship found between users",
+  "No friendship found between users"
 );
 
 export async function getFriendship(
   dynamo: DynamoClient,
   userId: string,
-  friendId: string,
-): Promise<FriendRequest | FriendWithoutMessage | Friendship | RequestError> {
+  friendId: string
+): Promise<
+  | FriendRequest
+  | FriendWithoutMessage
+  | Friendship
+  | typeof kNoFriendshipFound
+  | ResourceNotFound
+> {
   const friendships = (
     await Promise.all([
       dynamo.query({
@@ -88,10 +92,10 @@ export async function getFriendship(
     return kNoFriendshipFound;
   } else {
     const friendship = friendships.find(
-      (friendship) => !(friendship instanceof ResourceNotFoundError),
+      (friendship) => !isResourceNotFound(friendship)
     );
     if (friendship) {
-      if (friendship instanceof ResourceNotFoundError) {
+      if (isResourceNotFound(friendship)) {
         return friendship;
       }
       return polymorphicParseFriendship(friendship);
@@ -103,9 +107,9 @@ export async function getFriendship(
 
 export async function getFriendships(
   dynamo: DynamoClient,
-  userId: string,
+  userId: string
 ): Promise<
-  (FriendRequest | FriendWithoutMessage | Friendship)[] | RequestError
+  (FriendRequest | FriendWithoutMessage | Friendship)[] | ResourceNotFound
 > {
   return (
     await Promise.all([
@@ -126,7 +130,7 @@ export async function getFriendships(
 
 export async function createFriendship(
   dynamo: DynamoClient,
-  friendRequest: FriendRequest,
+  friendRequest: FriendRequest
 ): Promise<FriendWithoutMessage> {
   const friendship: FriendWithoutMessage = {
     ...friendRequest,
@@ -147,7 +151,7 @@ export async function createFriendship(
 export async function deleteFriendship(
   dynamo: DynamoClient,
   senderId: string,
-  receiverId: string,
+  receiverId: string
 ) {
   await dynamo.delete(friendshipKey(senderId, receiverId));
 }

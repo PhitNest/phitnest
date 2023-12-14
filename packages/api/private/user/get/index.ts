@@ -1,14 +1,17 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import {
   dynamo,
-  Success,
   getUserClaims,
   handleRequest,
   RequestError,
   DynamoClient,
-  ResourceNotFoundError,
   EnvironmentVars,
   TransactionParams,
+  ResourceNotFound,
+  isResourceNotFound,
+  requestError,
+  isRequestError,
+  success,
 } from "typescript-core/src/utils";
 import {
   friendshipKey,
@@ -33,16 +36,21 @@ import * as uuid from "uuid";
 async function createIdentity(
   dynamo: DynamoClient,
   userId: string,
-  authorization: string | undefined,
-): Promise<User | RequestError> {
+  authorization: string | undefined
+): Promise<
+  | User
+  | ResourceNotFound
+  | RequestError<"Unauthorized">
+  | RequestError<"IdentityAuthenticationFailed">
+> {
   const newUser = await getUserWithoutIdentity(dynamo, userId);
-  if (newUser instanceof ResourceNotFoundError) {
+  if (isResourceNotFound(newUser)) {
     return newUser;
   }
   if (!authorization) {
-    return new RequestError(
+    return requestError(
       "Unauthorized",
-      "No Authorization header found on request.",
+      "No Authorization header found on request."
     );
   }
   const identityClient = new CognitoIdentityClient({
@@ -62,9 +70,9 @@ async function createIdentity(
     identityId: string;
   };
   if (!identity || !identity.identityId) {
-    return new RequestError(
+    return requestError(
       "IdentityAuthenticationFailed",
-      "Could not authenticate with identity pool.",
+      "Could not authenticate with identity pool."
     );
   }
   const userWithIdentity: User = {
@@ -83,9 +91,9 @@ async function createIdentity(
   if (userWithIdentity.invite.senderType === "user") {
     const sender = await getUserExplore(
       dynamo,
-      userWithIdentity.invite.senderId,
+      userWithIdentity.invite.senderId
     );
-    if (sender instanceof ResourceNotFoundError) {
+    if (isResourceNotFound(sender)) {
       return sender;
     }
     transaction.puts?.push({
@@ -111,23 +119,30 @@ async function createIdentity(
 }
 
 export async function invoke(
-  event: APIGatewayEvent,
+  event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> {
   return handleRequest(async () => {
     const userClaims = getUserClaims(event);
     const client = dynamo();
-    let user: User | RequestError = await getUser(client, userClaims.sub);
-    if (user instanceof RequestError) {
+    let user:
+      | User
+      | ResourceNotFound
+      | RequestError<"Unauthorized">
+      | RequestError<"IdentityAuthenticationFailed"> = await getUser(
+      client,
+      userClaims.sub
+    );
+    if (isRequestError(user)) {
       user = await createIdentity(
         client,
         userClaims.sub,
-        event.headers.Authorization,
+        event.headers.Authorization
       );
-      if (user instanceof RequestError) {
+      if (isRequestError(user)) {
         return user;
       }
     }
-    if (user instanceof ResourceNotFoundError) {
+    if (isRequestError(user)) {
       return user;
     }
     const [gym, exploreUsers, friendships] = await Promise.all([
@@ -135,13 +150,13 @@ export async function invoke(
       getExploreUsers(client, user.invite.gymId),
       getFriendships(client, userClaims.sub),
     ]);
-    if (friendships instanceof RequestError) {
+    if (isResourceNotFound(friendships)) {
       return friendships;
     }
-    if (gym instanceof ResourceNotFoundError) {
+    if (isResourceNotFound(gym)) {
       return gym;
     }
-    return new Success({
+    return success({
       user: user,
       exploreUsers: exploreUsers,
       friendships: friendships,

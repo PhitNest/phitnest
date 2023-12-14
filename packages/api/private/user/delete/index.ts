@@ -9,15 +9,14 @@ import {
 } from "typescript-core/src/repositories";
 import {
   dynamo,
-  Success,
   handleRequest,
   getUserClaims,
-  RequestError,
-  ResourceNotFoundError,
+  isResourceNotFound,
+  success,
 } from "typescript-core/src/utils";
 
 export async function invoke(
-  event: APIGatewayEvent,
+  event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> {
   return handleRequest(async () => {
     const userClaims = getUserClaims(event);
@@ -27,9 +26,9 @@ export async function invoke(
       getSentInvites(client, userClaims.sub, "user"),
       getUser(client, userClaims.sub),
     ]);
-    if (friendships instanceof RequestError) {
+    if (isResourceNotFound(friendships)) {
       return friendships;
-    } else if (user instanceof ResourceNotFoundError) {
+    } else if (isResourceNotFound(user)) {
       return user;
     } else {
       await Promise.all([
@@ -38,19 +37,19 @@ export async function invoke(
           deleteFriendship(
             client,
             friendship.sender.id,
-            friendship.receiver.id,
+            friendship.receiver.id
           ),
           deleteFriendship(
             client,
             friendship.receiver.id,
-            friendship.sender.id,
+            friendship.sender.id
           ),
         ]),
         ...invites.map((invite) =>
-          deleteInvite(client, invite.senderId, invite.receiverEmail, "user"),
+          deleteInvite(client, invite.senderId, invite.receiverEmail, "user")
         ),
       ]);
     }
-    return new Success();
+    return success();
   });
 }

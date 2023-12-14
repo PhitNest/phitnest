@@ -1,11 +1,11 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { z } from "zod";
 import {
-  RequestError,
-  ResourceNotFoundError,
-  Success,
   dynamo,
   getUserClaims,
+  isResourceNotFound,
+  requestError,
+  success,
   validateRequest,
 } from "typescript-core/src/utils";
 import {
@@ -21,7 +21,7 @@ const validator = z.object({
 });
 
 export async function invoke(
-  event: APIGatewayEvent,
+  event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> {
   return validateRequest({
     data: JSON.parse(event.body ?? "{}"),
@@ -33,10 +33,10 @@ export async function invoke(
         getUser(client, userClaims.sub),
         getReceivedInvites(client, data.receiverEmail, 1),
       ]);
-      if (!(existingInvite instanceof ResourceNotFoundError)) {
-        return new RequestError("InviteAlreadyExists", "Invite already exists");
+      if (!isResourceNotFound(existingInvite)) {
+        return requestError("InviteAlreadyExists", "Invite already exists");
       }
-      if (sender instanceof ResourceNotFoundError) {
+      if (isResourceNotFound(sender)) {
         return sender;
       }
       if (sender.numInvites > 0) {
@@ -50,7 +50,11 @@ export async function invoke(
           ],
           puts: [
             {
-              ...inviteKey("user", userClaims.sub, data.receiverEmail.toLowerCase()),
+              ...inviteKey(
+                "user",
+                userClaims.sub,
+                data.receiverEmail.toLowerCase()
+              ),
               data: inviteToDynamo({
                 receiverEmail: data.receiverEmail.toLowerCase(),
                 senderId: userClaims.sub,
@@ -62,9 +66,9 @@ export async function invoke(
           ],
         });
       } else {
-        return new RequestError("NoInvites", "No invites available");
+        return requestError("NoInvites", "No invites available");
       }
-      return new Success();
+      return success();
     },
   });
 }
