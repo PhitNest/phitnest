@@ -186,10 +186,9 @@ class FriendsPage extends StatelessWidget {
               };
               return FriendRequestPageConsumer(
                 listener: _handleFriendRequestPageStateChanged,
-                builder: (context, pageState) => WillPopScope(
-                  onWillPop: () async {
+                builder: (context, pageState) => PopScope(
+                  onPopInvoked: (pop) {
                     Navigator.of(context).pop(pageState);
-                    return true;
                   },
                   child: _ui(context, pageState, loadingIds),
                 ),

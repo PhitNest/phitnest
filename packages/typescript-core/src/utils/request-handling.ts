@@ -4,30 +4,22 @@ import { ZodError, z } from "zod";
 /**
  * Return this to reply with a status code 200.
  */
-export class Success {
+export type Success = {
+  responseType: "Success";
   body?: Record<string, unknown> | Record<string, unknown>[];
   headers?: { [header: string]: string };
-
-  constructor(
-    body?: Record<string, unknown> | Record<string, unknown>[],
-    headers?: { [header: string]: string },
-  ) {
-    this.body = body;
-    this.headers = headers;
-  }
-}
+};
 
 /**
  * Return this to reply with a status code 500.
  */
-export class RequestError extends Error {
-  type: string;
+export type RequestError<T extends string> = {
+  responseType: "RequestError";
+  type: T;
+  message: string;
+};
 
-  constructor(type: string, message: string) {
-    super(message);
-    this.type = type;
-  }
-}
+export type Response = Success | RequestError<string>;
 
 export const kDefaultHeaders = {
   "Content-Type": "application/json",
@@ -44,11 +36,11 @@ export const kDefaultHeaders = {
  * @returns An APIGatewayProxyResult derived from either the Success the RequestError you return.
  */
 export async function handleRequest(
-  controller: () => Promise<Success | RequestError>,
+  controller: () => Promise<Response>
 ): Promise<APIGatewayProxyResult> {
   try {
     const controllerOutput = await controller();
-    if (controllerOutput instanceof RequestError) {
+    if (controllerOutput.responseType === "RequestError") {
       return {
         statusCode: 500,
         headers: kDefaultHeaders,
@@ -57,7 +49,7 @@ export async function handleRequest(
           message: controllerOutput.message,
         }),
       };
-    } else if (controllerOutput instanceof Success) {
+    } else if (controllerOutput.responseType === "Success") {
       return {
         statusCode: 200,
         body: controllerOutput.body
@@ -79,8 +71,8 @@ export async function handleRequest(
         }),
       };
     }
-  } catch (err) {
-    if (err instanceof RequestError) {
+  } catch (err: any) {
+    if (err.responseType === "RequestError") {
       return {
         statusCode: 500,
         headers: kDefaultHeaders,
@@ -97,6 +89,28 @@ export async function handleRequest(
       };
     }
   }
+}
+
+export function success(
+  body?: Record<string, unknown> | Record<string, unknown>[],
+  headers?: { [header: string]: string }
+): Success {
+  return {
+    responseType: "Success",
+    body: body,
+    headers: headers,
+  };
+}
+
+export function requestError<T extends string>(
+  type: T,
+  message: string
+): RequestError<T> {
+  return {
+    responseType: "RequestError",
+    type: type,
+    message: message,
+  };
 }
 
 interface ValidateRequestProps<
@@ -119,8 +133,8 @@ interface ValidateRequestProps<
    * @returns Either a Success or RequestError.
    */
   controller: (
-    requestData: z.infer<ValidatorType>,
-  ) => Promise<Success | RequestError>;
+    requestData: z.infer<ValidatorType>
+  ) => Promise<Success | RequestError<string>>;
 }
 
 export const kZodErrorType = "ValidationError";
@@ -140,11 +154,11 @@ export async function validateRequest<
       data = props.validator.parse(props.data);
     } catch (err) {
       if (err instanceof ZodError) {
-        return new RequestError(
+        return requestError(
           kZodErrorType,
           err.issues
             .map((issue) => issue.path.join(".") + ": " + issue.message)
-            .join(", "),
+            .join(", ")
         );
       }
       throw err;

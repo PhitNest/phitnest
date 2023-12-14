@@ -1,9 +1,9 @@
 import { z } from "zod";
 import {
-  RequestError,
-  Success,
   kDefaultHeaders,
   kZodErrorType,
+  requestError,
+  success,
   validateRequest,
 } from "./request-handling";
 
@@ -13,12 +13,12 @@ const basicValidator = z.object({
 });
 
 async function basicController(data: Record<string, unknown>) {
-  return new Success(data);
+  return success(data);
 }
 
-const kErrorResponse = new RequestError(
+const kErrorResponse = requestError(
   "TestError",
-  "This is an error used for a test case",
+  "This is an error used for a test case"
 );
 
 describe("validateRequest", () => {
@@ -98,7 +98,7 @@ describe("validateRequest", () => {
         number: 1,
       },
       validator: basicValidator,
-      controller: async () => new Success(),
+      controller: async () => success(),
     });
     expect(res.statusCode).toEqual(200);
     expect(res.body).toEqual("{}");
@@ -117,7 +117,7 @@ describe("validateRequest", () => {
         number: 1,
       },
       validator: basicValidator,
-      controller: async () => new Success(undefined, expectedHeaders),
+      controller: async () => success(undefined, expectedHeaders),
     });
     expect(res.statusCode).toEqual(200);
     expect(res.body).toEqual("{}");

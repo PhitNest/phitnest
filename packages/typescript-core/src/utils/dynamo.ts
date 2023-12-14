@@ -12,7 +12,7 @@ import {
   DeleteItemCommandInput,
 } from "@aws-sdk/client-dynamodb";
 import { DynamoParser, parseDynamo } from "../entities/dynamo";
-import { RequestError } from "./request-handling";
+import { RequestError, requestError } from "./request-handling";
 import { EnvironmentVars } from "./env-vars";
 
 /**
@@ -75,19 +75,25 @@ export type TransactionParams = {
   deletes?: RowKey[];
 };
 
-export class ResourceNotFoundError extends RequestError {
-  constructor(key: RowKey | MultiRowKey<SkOperator, number, TableNames>) {
-    super(
-      "ResourceNotFound",
-      `Could not find item for query: ${JSON.stringify(key)}`,
-    );
-  }
+const kResourceNotFoundErrorType = "ResourceNotFoundError";
+
+export type ResourceNotFound = RequestError<typeof kResourceNotFoundErrorType>;
+
+export function resourceNotFound(
+  key: RowKey | MultiRowKey<SkOperator, number, TableNames>
+): ResourceNotFound {
+  return requestError(
+    kResourceNotFoundErrorType,
+    `Could not find item for query: ${JSON.stringify(key)}`
+  );
 }
 
-export class DynamoParseError extends RequestError {
-  constructor(message: string) {
-    super("DynamoParseError", message);
-  }
+const kDynamoParseErrorType = "DynamoParseError";
+
+export type DynamoParseError = RequestError<typeof kDynamoParseErrorType>;
+
+export function dynamoParseError(message: string): DynamoParseError {
+  return requestError("DynamoParseError", message);
 }
 
 function rowKey(key: RowKey): {
@@ -166,11 +172,11 @@ type QueryResult<
 > = Op extends "EQ"
   ? Table extends "inverted"
     ? Limit extends 1
-      ? T | ResourceNotFoundError
+      ? T | ResourceNotFound
       : T[]
-    : T | ResourceNotFoundError
+    : T | ResourceNotFound
   : Limit extends 1
-  ? T | ResourceNotFoundError
+  ? T | ResourceNotFound
   : T[];
 
 export class DynamoClient {
@@ -193,7 +199,7 @@ export class DynamoClient {
     Limit extends number,
     Table extends TableNames = "base",
   >(
-    key: MultiRowKey<Op, Limit, Table>,
+    key: MultiRowKey<Op, Limit, Table>
   ): Promise<QueryResult<Record<string, AttributeValue>, Op, Limit, Table>> {
     return (await (async () => {
       const res = await this.client.send(new QueryCommand(queryCommand(key)));
@@ -204,13 +210,13 @@ export class DynamoClient {
         if (res.Items && res.Items.length > 0) {
           return res.Items[0];
         } else {
-          return new ResourceNotFoundError(key);
+          return resourceNotFound(key);
         }
       } else {
         if (res.Items) {
           return res.Items;
         } else {
-          throw new ResourceNotFoundError(key);
+          throw resourceNotFound(key);
         }
       }
     })()) as QueryResult<Record<string, AttributeValue>, Op, Limit, Table>;
@@ -230,7 +236,7 @@ export class DynamoClient {
             Delete: deleteCommand(deleter),
           })),
         ],
-      }),
+      })
     );
   }
 
@@ -240,14 +246,15 @@ export class DynamoClient {
     Limit extends number,
     Table extends TableNames = "base",
   >(
-    params: ParseParams<T> & MultiRowKey<Op, Limit, Table>,
+    params: ParseParams<T> & MultiRowKey<Op, Limit, Table>
   ): Promise<QueryResult<T, Op, Limit, Table>> {
     return (await (async () => {
       const queryRes = await this.query({
         ...params,
         projection: Object.keys(params.parseShape).join(","),
       });
-      if (queryRes instanceof ResourceNotFoundError) {
+      const queryAsError: ResourceNotFound = queryRes as ResourceNotFound;
+      if (queryAsError.type === kResourceNotFoundErrorType) {
         return queryRes;
       }
       if (
@@ -256,11 +263,11 @@ export class DynamoClient {
       ) {
         return parseDynamo(
           queryRes as Record<string, AttributeValue>,
-          params.parseShape,
+          params.parseShape
         );
       } else {
         const parsed = (queryRes as Record<string, AttributeValue>[]).map(
-          (item) => parseDynamo(item, params.parseShape),
+          (item) => parseDynamo(item, params.parseShape)
         );
         return parsed;
       }
@@ -276,6 +283,6 @@ export function dynamo() {
   return new DynamoClient(
     new DynamoDBClient({
       region: process.env.AWS_REGION,
-    }),
+    })
   );
 }

@@ -1,20 +1,16 @@
-import { RequestError } from "./request-handling";
+import { requestError } from "./request-handling";
 
-export class EnvironmentVarsError extends RequestError {
-  constructor(varName: string) {
-    super(
-      "EnvironmentVarsError",
-      `Unable to find environment variable: ${varName}`,
-    );
-  }
-}
+const kEnvironmentVarsError = requestError(
+  "EnvironmentVarsError",
+  "Unable to find environment variable: "
+);
 
 function getEnvVar(varName: string): string {
   const envVar = process.env[varName];
   if (envVar) {
     return envVar;
   } else {
-    throw new EnvironmentVarsError(varName);
+    throw kEnvironmentVarsError;
   }
 }
 
