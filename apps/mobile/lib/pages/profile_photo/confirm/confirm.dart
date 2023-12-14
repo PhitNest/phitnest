@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:core/core.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';

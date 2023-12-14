@@ -72,15 +72,15 @@ class OptionsPage extends StatelessWidget {
                   ),
                 ),
                 StyledOutlineButton(
-                  onPress: () => context.deleteUserBloc
-                      .add(LoaderLoadEvent(AuthReq(null, context.sessionLoader))),
+                  onPress: () => context.deleteUserBloc.add(
+                      LoaderLoadEvent(AuthReq(null, context.sessionLoader))),
                   text: 'Delete Account',
                   hPadding: 16.w,
                   vPadding: 8.h,
                 ),
                 StyledOutlineButton(
-                  onPress: () =>
-                      context.logoutBloc.add(LoaderLoadEvent(AuthReq(null, context.sessionLoader))),
+                  onPress: () => context.logoutBloc.add(
+                      LoaderLoadEvent(AuthReq(null, context.sessionLoader))),
                   text: 'Sign Out',
                   hPadding: 16.w,
                   vPadding: 8.h,
