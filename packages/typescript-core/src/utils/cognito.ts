@@ -1,5 +1,5 @@
 import { APIGatewayEvent } from "aws-lambda";
-import { RequestError } from "./request-handling";
+import { RequestError, requestError } from "./request-handling";
 
 export type AdminCognitoClaims = {
   email: string;
@@ -11,19 +11,21 @@ export type UserCognitoClaims = AdminCognitoClaims & {
   sub: string;
 };
 
-export class CognitoClaimsError extends RequestError {
-  constructor(message: string) {
-    super("CognitoClaimsError", message);
-  }
+const kCognitoClaimsError = "CognitoClaimsError";
+
+export function cognitoClaimsError(
+  message: string
+): RequestError<typeof kCognitoClaimsError> {
+  return requestError(kCognitoClaimsError, message);
 }
 
-export const kNoEmailClaim = new CognitoClaimsError("No email claim");
-export const kNoSubClaim = new CognitoClaimsError("No sub claim");
-export const kNoAuthorizer = new CognitoClaimsError("No authorizer");
+export const kNoEmailClaim = cognitoClaimsError("No email claim");
+export const kNoSubClaim = cognitoClaimsError("No sub claim");
+export const kNoAuthorizer = cognitoClaimsError("No authorizer");
 
 function checkClaims<Claims extends object>(
   event: APIGatewayEvent,
-  extractClaims: (claims: Claims) => Claims,
+  extractClaims: (claims: Claims) => Claims
 ): Claims {
   if (
     event.requestContext.authorizer &&
