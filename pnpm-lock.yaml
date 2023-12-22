@@ -104,6 +104,28 @@ importers:
         specifier: ^20.5.7
         version: 20.5.7
 
+  packages/api/admin/temp/delete:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      typescript-core:
+        specifier: workspace:*
+        version: link:../../../../typescript-core
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      eslint:
+        specifier: ^8.44.0
+        version: 8.48.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../../configs/eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../../configs/tsconfigs
+
   packages/api/private/friendship/delete:
     dependencies:
       aws-lambda:
