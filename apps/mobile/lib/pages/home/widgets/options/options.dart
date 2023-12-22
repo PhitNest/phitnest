@@ -12,13 +12,11 @@ import '../../home.dart';
 class OptionsPage extends StatelessWidget {
   final User user;
   final Image profilePicture;
-  final Gym gym;
 
   const OptionsPage({
     super.key,
     required this.user,
     required this.profilePicture,
-    required this.gym,
   }) : super();
 
   @override
@@ -47,11 +45,6 @@ class OptionsPage extends StatelessWidget {
                   style: theme.textTheme.bodyMedium,
                 ),
                 16.verticalSpace,
-                Text(
-                  gym.toString(),
-                  style: theme.textTheme.bodyMedium,
-                ),
-                31.verticalSpace,
                 profilePicture,
                 32.verticalSpace,
                 TextButton(

@@ -141,7 +141,6 @@ class _HomePageState extends State<HomePage> {
                             NavBarPage.options => OptionsPage(
                                 user: getUserResponse.user,
                                 profilePicture: getUserResponse.profilePicture,
-                                gym: getUserResponse.gym,
                               ),
                           },
                       },
