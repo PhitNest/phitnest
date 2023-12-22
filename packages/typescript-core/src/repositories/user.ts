@@ -11,14 +11,10 @@ import { DynamoClient, ResourceNotFound, RowKey } from "../utils";
 
 const kUserPkPrefix = "USER#";
 const kNewUserSkPrefix = "NEW#";
-const kUserSkPrefix = "GYM#";
+const kUserSk = "USER";
 
 export function userPk(id: string) {
   return `${kUserPkPrefix}${id}`;
-}
-
-export function userSk(gymId: string) {
-  return `${kUserSkPrefix}${gymId}`;
 }
 
 export function newUserSk(id: string) {
@@ -32,10 +28,10 @@ export function newUserKey(id: string): RowKey {
   };
 }
 
-export function userKey(id: string, gymId: string): RowKey {
+export function userKey(id: string): RowKey {
   return {
     pk: userPk(id),
-    sk: userSk(gymId),
+    sk: kUserSk,
   };
 }
 
@@ -46,7 +42,7 @@ async function getUserHelper<UserType extends UserExplore>(
 ): Promise<UserType | ResourceNotFound> {
   return await dynamo.parsedQuery({
     pk: userPk(id),
-    sk: { q: kUserSkPrefix, op: "BEGINS_WITH" },
+    sk: { q: kUserSk, op: "EQ" },
     limit: 1,
     parseShape: parser,
   });
@@ -75,26 +71,19 @@ export async function getUserWithoutIdentity(
 }
 
 export async function getExploreUsers(
-  dynamo: DynamoClient,
-  gymId: string
+  dynamo: DynamoClient
 ): Promise<UserExplore[]> {
   return await dynamo.parsedQuery({
-    pk: userSk(gymId),
+    pk: kUserSk,
     sk: { q: kUserPkPrefix, op: "BEGINS_WITH" },
     table: "inverted",
     parseShape: kUserExploreParser,
   });
 }
 
-export async function deleteUser(
-  dynamo: DynamoClient,
-  params: {
-    id: string;
-    gymId: string;
-  }
-) {
+export async function deleteUser(dynamo: DynamoClient, id: string) {
   await Promise.all([
-    dynamo.delete(newUserKey(params.id)),
-    dynamo.delete(userKey(params.id, params.gymId)),
+    dynamo.delete(newUserKey(id)),
+    dynamo.delete(userKey(id)),
   ]);
 }

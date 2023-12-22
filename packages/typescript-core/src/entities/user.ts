@@ -1,6 +1,8 @@
 import { SerializedDynamo, DynamoParser } from "./dynamo";
-import { Invite, inviteToDynamo, kInviteParser } from "./invite";
 
+/**
+ * Represents a user on the "explore" page of the mobile app.
+ */
 export type UserExplore = {
   id: string;
   firstName: string;
@@ -17,14 +19,16 @@ export const kUserExploreParser: DynamoParser<UserExplore> = {
   identityId: "S",
 };
 
+/**
+ * Represents a user who does not have an identity ID registered with Cognito yet.
+ * This does contain sensitive user information (email)
+ */
 export type UserWithoutIdentity = {
   id: string;
   firstName: string;
   lastName: string;
   createdAt: Date;
   email: string;
-  invite: Invite;
-  numInvites: number;
 };
 
 export const kUserWithoutIdentityParser: DynamoParser<UserWithoutIdentity> = {
@@ -33,8 +37,6 @@ export const kUserWithoutIdentityParser: DynamoParser<UserWithoutIdentity> = {
   lastName: "S",
   createdAt: "D",
   email: "S",
-  numInvites: "N",
-  invite: kInviteParser,
 };
 
 export type User = UserWithoutIdentity & {
@@ -47,7 +49,7 @@ export const kUserParser: DynamoParser<User> = {
 };
 
 export function userWithoutIdentityToDynamo(
-  user: UserWithoutIdentity,
+  user: UserWithoutIdentity
 ): SerializedDynamo<UserWithoutIdentity> {
   return {
     id: { S: user.id },
@@ -55,13 +57,11 @@ export function userWithoutIdentityToDynamo(
     lastName: { S: user.lastName },
     createdAt: { N: user.createdAt.getTime().toString() },
     email: { S: user.email },
-    numInvites: { N: user.numInvites.toString() },
-    invite: { M: inviteToDynamo(user.invite) },
   };
 }
 
 export function userExploreToDynamo(
-  userExplore: UserExplore,
+  userExplore: UserExplore
 ): SerializedDynamo<UserExplore> {
   return {
     id: { S: userExplore.id },

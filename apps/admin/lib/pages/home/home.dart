@@ -6,7 +6,6 @@ import 'package:ui/ui.dart';
 
 import '../../repositories/gym.dart';
 import '../login/login.dart';
-import 'widgets/widgets.dart';
 
 part 'bloc.dart';
 
@@ -42,17 +41,8 @@ final class HomePage extends StatelessWidget {
                           LoaderLoadingState() ||
                           LoaderInitialState() =>
                             const Loader(),
-                          LoaderLoadedState(data: final response) => switch (
-                                response) {
-                              AuthRes(data: final response) => switch (
-                                    response) {
-                                  HttpResponseSuccess() => const InviteForm(
-                                      onSessionLost: _returnToLogin),
-                                  HttpResponseFailure() => const GymEntryForm(
-                                      onSessionLost: _returnToLogin),
-                                },
-                              AuthLost() => const Loader(),
-                            }
+                          LoaderLoadedState() =>
+                            const Text('Invite system temporarily disabled'),
                         },
                       ),
                       32.verticalSpace,
