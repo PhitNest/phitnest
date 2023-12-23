@@ -3,13 +3,14 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "upgrade": "pnpm upgrade",
     "test": "jest",
     "lint": "eslint ."
   },
   "devDependencies": {
+    "eslint": "^8.56.0",
     "eslint-configs": "workspace:*",
-    "jest": "^29.6.1",
-    "eslint": "^8.44.0",
+    "jest": "^29.7.0",
     "tsconfigs": "workspace:*"
   }
 }
