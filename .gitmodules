@@ -1,0 +1,3 @@
+[submodule "apps/aws"]
+	path = apps/aws
+	url = https://github.com/PhitNest/goldnest-aws.git
