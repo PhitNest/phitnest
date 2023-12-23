@@ -7,15 +7,7 @@ const kTestUser: User = {
   createdAt: new Date(Date.UTC(2020, 1, 1)),
   firstName: "test",
   lastName: "test",
-  numInvites: 1,
   identityId: "test",
-  invite: {
-    senderType: "user",
-    createdAt: new Date(Date.UTC(2020, 1, 1)),
-    senderId: "test",
-    receiverEmail: "test",
-    gymId: "test",
-  },
 };
 
 const kSerializedUser: SerializedDynamo<User> = {
@@ -24,17 +16,7 @@ const kSerializedUser: SerializedDynamo<User> = {
   createdAt: { N: Date.UTC(2020, 1, 1).toString() },
   firstName: { S: "test" },
   lastName: { S: "test" },
-  numInvites: { N: "1" },
   identityId: { S: "test" },
-  invite: {
-    M: {
-      senderType: { S: "user" },
-      createdAt: { N: Date.UTC(2020, 1, 1).toString() },
-      senderId: { S: "test" },
-      receiverEmail: { S: "test" },
-      gymId: { S: "test" },
-    },
-  },
 };
 
 describe("User", () => {

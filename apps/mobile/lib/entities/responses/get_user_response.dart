@@ -9,12 +9,10 @@ final class GetUserResponseJson extends Json {
   final friendshipsJson =
       Json.polymorphicList('friendships', FriendshipResponse.polymorphicParse);
   final exploreJson = Json.objectList('exploreUsers', UserExplore.parser);
-  final gymJson = Json.object('gym', Gym.parser);
 
   User get user => userJson.value;
   List<FriendshipResponse> get friendships => friendshipsJson.value;
   List<UserExplore> get explore => exploreJson.value;
-  Gym get gym => gymJson.value;
 
   GetUserResponseJson.parse(super.json) : super.parse();
 
@@ -24,17 +22,15 @@ final class GetUserResponseJson extends Json {
     required User user,
     required List<FriendshipResponse> friendships,
     required List<UserExplore> explore,
-    required Gym gym,
   }) : super() {
     userJson.populate(user);
     friendshipsJson.populate(friendships);
     exploreJson.populate(explore);
-    gymJson.populate(gym);
   }
 
   @override
   List<JsonKey<dynamic, dynamic>> get keys =>
-      [userJson, friendshipsJson, exploreJson, gymJson];
+      [userJson, friendshipsJson, exploreJson];
 }
 
 sealed class GetUserResponse extends Equatable {
@@ -45,7 +41,6 @@ sealed class GetUserResponse extends Equatable {
   final List<FriendWithoutMessageWithProfilePicture> friendships;
 
   User get user => _json.user;
-  Gym get gym => _json.gym;
 
   const GetUserResponse(
     this._json, {

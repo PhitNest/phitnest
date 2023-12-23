@@ -41,7 +41,7 @@ export const kFriendshipParser: DynamoParser<Friendship> = {
 };
 
 export function friendRequestToDynamo(
-  friendRequest: FriendRequest,
+  friendRequest: FriendRequest
 ): SerializedDynamo<FriendRequest> {
   return {
     id: { S: friendRequest.id },
@@ -57,7 +57,7 @@ export function friendRequestToDynamo(
 }
 
 export function FriendWithoutMessageToDynamo(
-  friendship: FriendWithoutMessage,
+  friendship: FriendWithoutMessage
 ): SerializedDynamo<FriendWithoutMessage> {
   return {
     ...friendRequestToDynamo({ ...friendship, __poly__: "FriendRequest" }),
@@ -67,7 +67,7 @@ export function FriendWithoutMessageToDynamo(
 }
 
 export function friendshipToDynamo(
-  friendship: Friendship,
+  friendship: Friendship
 ): SerializedDynamo<Friendship> {
   return {
     ...FriendWithoutMessageToDynamo({

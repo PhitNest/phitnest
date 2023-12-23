@@ -14,24 +14,16 @@ import {
   success,
 } from "typescript-core/src/utils";
 import {
-  friendshipKey,
   getExploreUsers,
   getFriendships,
-  getGym,
   getUser,
-  getUserExplore,
   getUserWithoutIdentity,
   newUserKey,
   userKey,
 } from "typescript-core/src/repositories";
-import {
-  User,
-  FriendWithoutMessageToDynamo,
-  userToDynamo,
-} from "typescript-core/src/entities";
+import { User, userToDynamo } from "typescript-core/src/entities";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
-import * as uuid from "uuid";
 
 async function createIdentity(
   dynamo: DynamoClient,
@@ -83,37 +75,11 @@ async function createIdentity(
     deletes: [newUserKey(userWithIdentity.id)],
     puts: [
       {
-        ...userKey(userWithIdentity.id, userWithIdentity.invite.gymId),
+        ...userKey(userWithIdentity.id),
         data: userToDynamo(userWithIdentity),
       },
     ],
   };
-  if (userWithIdentity.invite.senderType === "user") {
-    const sender = await getUserExplore(
-      dynamo,
-      userWithIdentity.invite.senderId
-    );
-    if (isResourceNotFound(sender)) {
-      return sender;
-    }
-    transaction.puts?.push({
-      ...friendshipKey(sender.id, userWithIdentity.id),
-      data: FriendWithoutMessageToDynamo({
-        id: uuid.v4(),
-        createdAt: new Date(),
-        acceptedAt: new Date(),
-        receiver: {
-          id: userWithIdentity.id,
-          firstName: userWithIdentity.firstName,
-          lastName: userWithIdentity.lastName,
-          identityId: userWithIdentity.identityId,
-          createdAt: userWithIdentity.createdAt,
-        },
-        sender: sender,
-        __poly__: "FriendWithoutMessage",
-      }),
-    });
-  }
   await dynamo.writeTransaction(transaction);
   return userWithIdentity;
 }
@@ -145,22 +111,17 @@ export async function invoke(
     if (isRequestError(user)) {
       return user;
     }
-    const [gym, exploreUsers, friendships] = await Promise.all([
-      getGym(client, user.invite.gymId),
-      getExploreUsers(client, user.invite.gymId),
+    const [exploreUsers, friendships] = await Promise.all([
+      getExploreUsers(client),
       getFriendships(client, userClaims.sub),
     ]);
     if (isResourceNotFound(friendships)) {
       return friendships;
     }
-    if (isResourceNotFound(gym)) {
-      return gym;
-    }
     return success({
       user: user,
       exploreUsers: exploreUsers,
       friendships: friendships,
-      gym: gym,
     });
   });
 }

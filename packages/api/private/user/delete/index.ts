@@ -1,10 +1,8 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import {
   deleteFriendship,
-  deleteInvite,
   deleteUser,
   getFriendships,
-  getSentInvites,
   getUser,
 } from "typescript-core/src/repositories";
 import {
@@ -21,9 +19,8 @@ export async function invoke(
   return handleRequest(async () => {
     const userClaims = getUserClaims(event);
     const client = dynamo();
-    const [friendships, invites, user] = await Promise.all([
+    const [friendships, user] = await Promise.all([
       getFriendships(client, userClaims.sub),
-      getSentInvites(client, userClaims.sub, "user"),
       getUser(client, userClaims.sub),
     ]);
     if (isResourceNotFound(friendships)) {
@@ -32,7 +29,7 @@ export async function invoke(
       return user;
     } else {
       await Promise.all([
-        deleteUser(client, { id: userClaims.sub, gymId: user.invite.gymId }),
+        deleteUser(client, userClaims.sub),
         ...friendships.flatMap((friendship) => [
           deleteFriendship(
             client,
@@ -45,9 +42,6 @@ export async function invoke(
             friendship.sender.id
           ),
         ]),
-        ...invites.map((invite) =>
-          deleteInvite(client, invite.senderId, invite.receiverEmail, "user")
-        ),
       ]);
     }
     return success();
