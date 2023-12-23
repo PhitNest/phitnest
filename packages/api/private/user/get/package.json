@@ -3,22 +3,23 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "upgrade": "pnpm upgrade",
     "lint": "eslint index.ts",
     "prebuild": "rm -rf dist && esbuild index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js",
     "build": "cd dist && zip -r index.zip index.js*"
   },
   "dependencies": {
+    "@aws-sdk/client-cognito-identity": "^3.478.0",
+    "@aws-sdk/credential-provider-cognito-identity": "^3.478.0",
     "aws-lambda": "^1.0.7",
-    "@aws-sdk/credential-provider-cognito-identity": "^3.370.0",
-    "@aws-sdk/client-cognito-identity": "^3.370.0",
     "typescript-core": "workspace:*",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@aws-sdk/types": "^3.347.0",
-    "@types/uuid": "^9.0.2",
-    "@types/aws-lambda": "^8.10.119",
-    "eslint": "^8.44.0",
+    "@aws-sdk/types": "^3.468.0",
+    "@types/aws-lambda": "^8.10.130",
+    "@types/uuid": "^9.0.7",
+    "eslint": "^8.56.0",
     "eslint-configs": "workspace:*",
     "tsconfigs": "workspace:*"
   }

@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "upgrade": "pnpm upgrade",
     "lint": "eslint index.ts",
     "prebuild": "rm -rf dist && esbuild index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js",
     "build": "cd dist && zip -r index.zip index.js*"
