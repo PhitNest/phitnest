@@ -160,20 +160,20 @@ importers:
         specifier: workspace:*
         version: link:../../../../typescript-core
       uuid:
-        specifier: ^9.0.0
+        specifier: ^9.0.1
         version: 9.0.1
       zod:
-        specifier: ^3.22.2
+        specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
       '@types/aws-lambda':
-        specifier: ^8.10.119
+        specifier: ^8.10.130
         version: 8.10.130
       '@types/uuid':
-        specifier: ^9.0.2
+        specifier: ^9.0.7
         version: 9.0.7
       eslint:
-        specifier: ^8.44.0
+        specifier: ^8.56.0
         version: 8.56.0
       eslint-configs:
         specifier: workspace:*
@@ -251,11 +251,11 @@ importers:
         version: link:../../typescript-core
     devDependencies:
       '@types/aws-lambda':
-        specifier: ^8.10.119
-        version: 8.10.119
+        specifier: ^8.10.130
+        version: 8.10.130
       eslint:
-        specifier: ^8.44.0
-        version: 8.48.0
+        specifier: ^8.56.0
+        version: 8.56.0
       eslint-configs:
         specifier: workspace:*
         version: link:../../../configs/eslint-configs
@@ -2133,10 +2133,6 @@ packages:
 
   /@tsconfig/node16@1.0.4:
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
-    dev: true
-
-  /@types/aws-lambda@8.10.119:
-    resolution: {integrity: sha512-Vqm22aZrCvCd6I5g1SvpW151jfqwTzEZ7XJ3yZ6xaZG31nUEOEyzzVImjRcsN8Wi/QyPxId/x8GTtgIbsy8kEw==}
     dev: true
 
   /@types/aws-lambda@8.10.130:
