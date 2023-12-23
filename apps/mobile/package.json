@@ -6,7 +6,8 @@
     "install": "flutter pub get",
     "dev": "flutter run",
     "build": "bundle install --gemfile=$BUNDLE_GEMFILE",
-    "deploy": "cd ios && bundle exec fastlane ios beta $BUILD_NAME"
+    "deploy": "cd ios && bundle exec fastlane ios beta $BUILD_NAME",
+    "upgrade": "flutter pub upgrade"
   },
   "dependencies": {
     "aws-config-to-dart": "workspace:*"

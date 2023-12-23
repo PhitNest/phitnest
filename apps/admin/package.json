@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "install": "flutter pub get",
-    "dev": "flutter run -d chrome"
+    "dev": "flutter run -d chrome",
+    "upgrade": "flutter pub upgrade"
   }
 }
