@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-name: phitnest_mobile
-description: PhitNest mobile app
-=======
 name: mobile
 description: PhitNest Mobile App
->>>>>>> 1b0e790b (Working on monorepo)
 publish_to: "none"
 version: 0.2.0+16
 
