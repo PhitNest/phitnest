@@ -66,11 +66,7 @@ importers:
         specifier: workspace:*
         version: link:../../configs/tsconfigs
 
-  apps/mobile:
-    dependencies:
-      aws-config-to-dart:
-        specifier: workspace:*
-        version: link:../../scripts/aws-config-to-dart
+  apps/mobile: {}
 
   configs/dart-analysis: {}
 
@@ -103,6 +99,12 @@ importers:
       '@types/node':
         specifier: ^20.5.7
         version: 20.5.7
+
+  packages/api:
+    dependencies:
+      gh-workflows:
+        specifier: workspace:*
+        version: link:../gh-workflows
 
   packages/api/admin/temp/delete:
     dependencies:
@@ -266,6 +268,8 @@ importers:
   packages/dart-core: {}
 
   packages/dart-ui: {}
+
+  packages/gh-workflows: {}
 
   packages/jest-helpers:
     devDependencies:
