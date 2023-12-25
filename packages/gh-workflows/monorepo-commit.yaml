@@ -1,0 +1,39 @@
+name: Make a commit to monorepo
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/apps/mobile/ios/Gemfile
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Checkout monorepo
+        uses: actions/checkout@v3
+        with:
+          repository: 'PhitNest/phitnest'
+          path: 'phitnest'
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Update monorepo submodules
+        run: |
+          cd phitnest
+          git submodule update --init --recursive
+          cd ..
+
+      - name: Commit to monorepo
+        uses: EndBug/add-and-commit@v9
+        with:
+          cwd: './phitnest'
+          author_name: GoldNest
+          author_email: machine@phitnest.com
+          commit: --signoff
+          committer_name: GoldNest
+          committer_email: machine@phitnest.com
+          message: '${{ github.event.head_commit.message }}'
+          new_branch: master
