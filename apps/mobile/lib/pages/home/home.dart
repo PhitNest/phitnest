@@ -10,7 +10,6 @@ import '../../repositories/repositories.dart';
 import '../../use_cases/use_cases.dart';
 import '../../widgets/widgets.dart';
 import '../pages.dart';
-import 'widgets/chat/chat.dart';
 import 'widgets/widgets.dart';
 
 part 'bloc.dart';
@@ -135,8 +134,13 @@ class _HomePageState extends State<HomePage> {
                                 navBarState: navBarState,
                               ),
                             NavBarPage.news => Container(),
-                            NavBarPage.chat => ChatPage(
-                                userResponse: getUserResponse,
+                            NavBarPage.chat => FriendsPage(
+                                initialExploreUsers:
+                                    getUserResponse.exploreUsers,
+                                initialFriends: getUserResponse.friendships,
+                                initialReceivedRequests:
+                                    getUserResponse.receivedFriendRequests,
+                                userId: getUserResponse.user.id,
                               ),
                             NavBarPage.options => OptionsPage(
                                 user: getUserResponse.user,

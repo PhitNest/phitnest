@@ -85,7 +85,7 @@ class NavBarConsumer extends StatelessWidget {
                             offset: const Size(8, 8),
                             count: state.numAlerts,
                             child: NavBarPageButton(
-                              text: 'CHAT',
+                              text: 'FRIENDS',
                               selected: state.page == NavBarPage.chat,
                               reversed: reversed,
                               onPressed: () => context.navBarBloc.add(
