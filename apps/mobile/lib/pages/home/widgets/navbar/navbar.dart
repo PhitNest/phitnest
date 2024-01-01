@@ -66,12 +66,15 @@ class NavBarConsumer extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          NavBarPageButton(
-                            text: 'NEST',
-                            selected: state.page == NavBarPage.news,
-                            reversed: reversed,
-                            onPressed: () => context.navBarBloc.add(
-                                const NavBarPressPageEvent(NavBarPage.news)),
+                          Visibility(
+                            visible: false,
+                            child: NavBarPageButton(
+                              text: 'NEST',
+                              selected: state.page == NavBarPage.news,
+                              reversed: reversed,
+                              onPressed: () => context.navBarBloc.add(
+                                  const NavBarPressPageEvent(NavBarPage.news)),
+                            ),
                           ),
                           NavBarPageButton(
                             text: 'EXPLORE',
