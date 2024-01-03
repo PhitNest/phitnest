@@ -6,11 +6,13 @@ import '../../../../../entities/entities.dart';
 final class ExploreUserPage extends StatelessWidget {
   final UserExploreWithPicture user;
   final int? countdown;
+  final PageController pageController;
 
   const ExploreUserPage({
     super.key,
     required this.user,
     required this.countdown,
+    required this.pageController,
   }) : super();
 
   @override
@@ -29,7 +31,11 @@ final class ExploreUserPage extends StatelessWidget {
                 bottom: 16.h,
                 left: 16.w,
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    pageController.previousPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut);
+                  },
                   child: Container(
                     height: 48.h,
                     width: 48.w,
@@ -49,7 +55,11 @@ final class ExploreUserPage extends StatelessWidget {
                 bottom: 16.h,
                 right: 16.w,
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    pageController.nextPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut);
+                  },
                   child: Container(
                     height: 48.h,
                     width: 48.w,
