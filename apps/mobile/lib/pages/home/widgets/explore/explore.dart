@@ -30,6 +30,7 @@ class ExplorePage extends StatelessWidget {
               _ => null,
             },
             user: users[page % users.length],
+            pageController: pageController,
           ),
         );
 }
