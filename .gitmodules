@@ -7,9 +7,9 @@
 [submodule "packages/api"]
 	path = packages/api
 	url = https://github.com/PhitNest/api.git
-[submodule "packages/cognito-hooks"]
-	path = packages/cognito-hooks
-	url = https://github.com/PhitNest/cognito-hooks.git
+[submodule "packages/jest-helpers"]
+	path = packages/jest-helpers
+	url = https://github.com/PhitNest/jest-helpers.git
 [submodule "packages/typescript-core"]
 	path = packages/typescript-core
 	url = https://github.com/PhitNest/typescript-core.git
