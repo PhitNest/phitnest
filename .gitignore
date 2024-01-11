@@ -8,6 +8,3 @@ node_modules
 *.pem
 .idea
 .vscode
-
-# turbo
-.turbo
