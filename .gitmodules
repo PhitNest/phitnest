@@ -1,6 +1,9 @@
 [submodule "apps/aws"]
 	path = apps/aws
 	url = https://github.com/PhitNest/aws.git
+[submodule "apps/mobile"]
+	path = apps/mobile
+	url = https://github.com/PhitNest/mobile.git
 [submodule "packages/api"]
 	path = packages/api
 	url = https://github.com/PhitNest/api.git
