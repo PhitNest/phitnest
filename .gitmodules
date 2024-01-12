@@ -7,15 +7,6 @@
 [submodule "packages/api"]
 	path = packages/api
 	url = https://github.com/PhitNest/api.git
-[submodule "packages/jest-helpers"]
-	path = packages/jest-helpers
-	url = https://github.com/PhitNest/jest-helpers.git
 [submodule "packages/typescript-core"]
 	path = packages/typescript-core
 	url = https://github.com/PhitNest/typescript-core.git
-[submodule "configs/tsconfigs"]
-	path = configs/tsconfigs
-	url = https://github.com/PhitNest/tsconfigs.git
-[submodule "scripts/aws-config-to-dart"]
-	path = scripts/aws-config-to-dart
-	url = https://github.com/PhitNest/aws-config-to-dart.git
