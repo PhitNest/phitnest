@@ -7,6 +7,3 @@
 [submodule "packages/api"]
 	path = packages/api
 	url = https://github.com/PhitNest/api.git
-[submodule "packages/typescript-core"]
-	path = packages/typescript-core
-	url = https://github.com/PhitNest/typescript-core.git
