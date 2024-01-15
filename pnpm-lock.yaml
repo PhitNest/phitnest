@@ -33,21 +33,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^5.62.0
         version: 5.62.0(eslint@8.56.0)(typescript@5.3.3)
-      api-delete-friend-request:
+      api:
         specifier: workspace:*
-        version: link:../../packages/api/private/friend-request/delete
-      api-delete-user:
-        specifier: workspace:*
-        version: link:../../packages/api/private/user/delete
-      api-get-user:
-        specifier: workspace:*
-        version: link:../../packages/api/private/user/get
-      api-post-friend-request:
-        specifier: workspace:*
-        version: link:../../packages/api/private/friend-request/post
-      cognito-user-presignup:
-        specifier: workspace:*
-        version: link:../../packages/api/cognito-hooks/user-presignup
+        version: link:../../packages/api
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
@@ -80,6 +68,24 @@ importers:
         version: link:../../packages/tsconfigs
 
   apps/mobile: {}
+
+  packages/api:
+    devDependencies:
+      api-delete-friend-request:
+        specifier: workspace:*
+        version: link:private/friend-request/delete
+      api-delete-user:
+        specifier: workspace:*
+        version: link:private/user/delete
+      api-get-user:
+        specifier: workspace:*
+        version: link:private/user/get
+      api-post-friend-request:
+        specifier: workspace:*
+        version: link:private/friend-request/post
+      cognito-user-presignup:
+        specifier: workspace:*
+        version: link:cognito-hooks/user-presignup
 
   packages/api/cognito-hooks/user-presignup:
     dependencies:
