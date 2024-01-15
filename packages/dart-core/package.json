@@ -1,9 +1,0 @@
-{
-  "name": "dart-core",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "install": "dart pub get",
-    "upgrade": "dart pub upgrade"
-  }
-}

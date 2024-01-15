@@ -1,9 +1,0 @@
-{
-  "name": "dart-ui",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "install": "flutter pub get",
-    "upgrade": "flutter pub upgrade"
-  }
-}
