@@ -67,7 +67,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/tsconfigs
 
-  apps/mobile: {}
+  apps/mobile:
+    devDependencies:
+      dart-analysis:
+        specifier: workspace:*
+        version: link:../../packages/dart-analysis
 
   packages/api:
     devDependencies:
