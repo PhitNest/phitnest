@@ -1,7 +1,5 @@
 {
   "name": "dart-analysis",
   "version": "0.0.0",
-  "scripts": {
-    "install": "flutter pub get"
-  }
+  "scripts": {}
 }
