@@ -115,7 +115,7 @@ packages:
   dart_analysis:
     dependency: "direct dev"
     description:
-      path: "../../configs/dart-analysis"
+      path: "../dart-analysis"
       relative: true
     source: path
     version: "1.0.0+1"
