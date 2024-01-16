@@ -97,7 +97,7 @@ importers:
         specifier: workspace:*
         version: link:../../../tsconfigs
       typescript:
-        specifier: ^5.3.3
+        specifier: ^5.2.2
         version: 5.3.3
 
   packages/api/common:
@@ -201,7 +201,7 @@ importers:
         specifier: workspace:*
         version: link:../../../../tsconfigs
       typescript:
-        specifier: ^5.3.3
+        specifier: ^5.2.2
         version: 5.3.3
 
   packages/api/private/friend-request/post:
@@ -229,7 +229,7 @@ importers:
         specifier: workspace:*
         version: link:../../../../tsconfigs
       typescript:
-        specifier: ^5.3.3
+        specifier: ^5.2.2
         version: 5.3.3
 
   packages/api/private/user/delete:
@@ -254,7 +254,7 @@ importers:
         specifier: workspace:*
         version: link:../../../../tsconfigs
       typescript:
-        specifier: ^5.3.3
+        specifier: ^5.2.2
         version: 5.3.3
 
   packages/api/private/user/get:
@@ -288,7 +288,7 @@ importers:
         specifier: workspace:*
         version: link:../../../../tsconfigs
       typescript:
-        specifier: ^5.3.3
+        specifier: ^5.2.2
         version: 5.3.3
 
   packages/api/public/get:
