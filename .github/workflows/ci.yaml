@@ -3,9 +3,12 @@ name: CI
 on: push
 
 jobs:
-  run-tests:
+  test:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out from git
+        uses: actions/checkout@v2
+        with:
           repository: PhitNest/phitnest
           ref: ${{ github.ref_name }} 
           submodules: recursive
