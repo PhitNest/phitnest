@@ -6,8 +6,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out from git
-        uses: actions/checkout@v2
+          repository: PhitNest/phitnest
+          ref: ${{ github.ref_name }} 
+          submodules: recursive
+          token: ${{ secrets.PAT }}
 
       - name: Install dependencies
         run: npm i -g aws-cdk pnpm turbo && pnpm install
