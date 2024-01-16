@@ -1,0 +1,16 @@
+name: CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out from git
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm i -g aws-cdk pnpm turbo && pnpm install
+
+      - name: Run tests
+        run: turbo test

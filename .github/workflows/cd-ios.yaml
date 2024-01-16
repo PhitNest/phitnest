@@ -33,7 +33,7 @@ jobs:
           working-directory: apps/mobile
 
       - name: Install dependencies
-        run: npm i -g aws-cdk pnpm turbo esbuild && pnpm install
+        run: npm i -g aws-cdk pnpm turbo && pnpm install
 
       - name: Setup SSH key
         env:
