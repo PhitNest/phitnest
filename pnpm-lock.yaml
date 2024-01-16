@@ -33,9 +33,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^5.62.0
         version: 5.62.0(eslint@8.56.0)(typescript@5.3.3)
-      api:
-        specifier: workspace:*
-        version: link:../../packages/api
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
@@ -72,8 +69,6 @@ importers:
       dart-analysis:
         specifier: workspace:*
         version: link:../../packages/dart-analysis
-
-  packages/api: {}
 
   packages/api/cognito-hooks/user-presignup:
     dependencies:
