@@ -96,9 +96,6 @@ importers:
       tsconfigs:
         specifier: workspace:*
         version: link:../../../tsconfigs
-      typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
 
   packages/api/common:
     dependencies:
@@ -185,9 +182,6 @@ importers:
       tsconfigs:
         specifier: workspace:*
         version: link:../../../../tsconfigs
-      typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
 
   packages/api/private/friend-request/post:
     dependencies:
@@ -213,9 +207,6 @@ importers:
       tsconfigs:
         specifier: workspace:*
         version: link:../../../../tsconfigs
-      typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
 
   packages/api/private/user/delete:
     dependencies:
@@ -238,9 +229,6 @@ importers:
       tsconfigs:
         specifier: workspace:*
         version: link:../../../../tsconfigs
-      typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
 
   packages/api/private/user/get:
     dependencies:
@@ -272,9 +260,6 @@ importers:
       tsconfigs:
         specifier: workspace:*
         version: link:../../../../tsconfigs
-      typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
 
   packages/dart-analysis: {}
 
