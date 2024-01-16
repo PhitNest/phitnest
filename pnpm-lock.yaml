@@ -276,6 +276,37 @@ importers:
         specifier: workspace:*
         version: link:../../../../tsconfigs
 
+  packages/api/public/get:
+    dependencies:
+      '@aws-sdk/client-cognito-identity':
+        specifier: ^3.490.0
+        version: 3.490.0
+      '@aws-sdk/credential-provider-cognito-identity':
+        specifier: ^3.490.0
+        version: 3.490.0
+      api-common:
+        specifier: workspace:*
+        version: link:../../common
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+    devDependencies:
+      '@aws-sdk/types':
+        specifier: ^3.489.0
+        version: 3.489.0
+      '@types/aws-lambda':
+        specifier: ^8.10.131
+        version: 8.10.131
+      eslint:
+        specifier: ^8.56.0
+        version: 8.56.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../tsconfigs
+
   packages/dart-analysis: {}
 
   packages/eslint-configs:
