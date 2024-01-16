@@ -9,6 +9,7 @@
     "eslint": "^8.56.0",
     "eslint-configs": "workspace:*",
     "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
     "tsconfigs": "workspace:*"
   }
 }
