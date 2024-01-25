@@ -20,7 +20,7 @@ git submodule foreach git checkout master
 
 From monorepo:
 ```
-git pull --recurse-submodules
+git submodule foreach git pull
 ```
 
 ### To push changes:
