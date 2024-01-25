@@ -8,11 +8,8 @@
       "persistent": true,
       "cache": false
     },
-    "prebuild": {
-      "dependsOn": ["^prebuild"]
-    },
     "build": {
-      "dependsOn": ["prebuild", "^build"]
+      "dependsOn": ["^build"]
     }
   }
 }
