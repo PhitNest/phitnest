@@ -11,6 +11,7 @@ Some of our code is split into submodules, which are just separate GitHub reposi
 ### To clone this repo + all submodules:
 
 These commands will clone the monorepo, and all the submodules.
+
 ```
 git clone https://github.com/phitnest/phitnest.git --recurse-submodules
 git submodule foreach git checkout master
@@ -19,6 +20,7 @@ git submodule foreach git checkout master
 ### To pull changes for monorepo + all submodules:
 
 From monorepo:
+
 ```
 git submodule foreach git pull
 ```
@@ -26,11 +28,13 @@ git submodule foreach git pull
 ### To push changes:
 
 If your changes are part of:
+
 - apps/mobile
 - apps/aws
 - packages/api
 
 Then your changes are part of a submodule. If your changes are part of a submodule, just commit directly to the submodule. I.E. for making commits to the mobile app:
+
 ```
 cd apps/mobile
 git add .
@@ -41,3 +45,7 @@ git push
 Commits made to submodules will be automatically propogated up to the monorepo via GitHub actions.
 
 If your changes are not part of a submodule (I.E. dart-analysis configs, eslint configs, jest-helpers, tsconfigs, monorepo files), just commit your changes directly to the monorepo.
+
+### TypeScript Development
+
+Add the Prettier plugin to your IDE. This will automatically format your code on save, and will help you avoid formatting errors.
