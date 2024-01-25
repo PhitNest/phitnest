@@ -23,12 +23,13 @@ export function getTestOutputPath(...subPath: string[]) {
   // Type assertion to string
   testPathString = testPathString as string;
   // Constructing the path to the test output directory
-  const testOutputPath = path.join(process.cwd(), TEST_OUTPUT_DIRECTORY_PATH);
+  const cwd = process.cwd();
+  const testOutputPath = path.join(cwd, TEST_OUTPUT_DIRECTORY_PATH);
   // Calculating the relative path from the src directory to the test file
-  const testPath = path.relative(
-    path.join(process.cwd(), "src"),
-    testPathString,
-  );
+  const srcDir = path.join(cwd, "src");
+  const testPath = existsSync(srcDir)
+    ? path.relative(srcDir, testPathString)
+    : path.relative(cwd, testPathString);
   // Returning the complete path to the test output location
   const jointPath = path.parse(path.join(testOutputPath, testPath, ...subPath));
   if (!existsSync(jointPath.dir)) {
@@ -55,7 +56,7 @@ export function getTestDataPath(...subPath: string[]) {
   // Calculating the relative path from the src directory to the test file
   const testPath = path.relative(
     path.join(process.cwd(), "src"),
-    testPathString,
+    testPathString
   );
   // Returning the complete path to the test data location
   return path.join(testDataPath, testPath, ...subPath);
@@ -73,6 +74,6 @@ export function getSharedTestDataPath(...subPath: string[]): string {
     process.cwd(),
     TEST_DATA_DIRECTORY_PATH,
     SHARED_TEST_DATA_DIRECTORY_PATH,
-    ...subPath,
+    ...subPath
   );
 }
