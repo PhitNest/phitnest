@@ -9,6 +9,30 @@ const TEST_DATA_DIRECTORY_PATH = "test_data";
 /** Path to the directory where shared test data files are stored */
 const SHARED_TEST_DATA_DIRECTORY_PATH = "shared_test_data";
 
+function getTestPath(testDir: string, ...subPath: string[]) {
+  // Fetching the current test path from the testing framework
+  let testPathString = expect.getState().testPath;
+
+  // Asserting that the testPathString is valid
+  expect(testPathString);
+
+  // Type assertion to string
+  testPathString = testPathString as string;
+
+  // Constructing the path to the test directory
+  const cwd = process.cwd();
+  const testDataPath = path.join(cwd, testDir);
+
+  // Calculating the relative path from the src directory to the test file
+  const srcDir = path.join(cwd, "src");
+  const testPath = existsSync(srcDir)
+    ? path.relative(srcDir, testPathString)
+    : path.relative(cwd, testPathString);
+
+  // Returning the complete path to the test dir location
+  return path.join(testDataPath, testPath, ...subPath);
+}
+
 /**
  * Constructs and returns the path to the output directory for a particular test.
  *
@@ -16,22 +40,11 @@ const SHARED_TEST_DATA_DIRECTORY_PATH = "shared_test_data";
  * @returns The absolute path string of the test output location.
  */
 export function getTestOutputPath(...subPath: string[]) {
-  // Fetching the current test path from the testing framework
-  let testPathString = expect.getState().testPath;
-  // Asserting that the testPathString is valid
-  expect(testPathString);
-  // Type assertion to string
-  testPathString = testPathString as string;
-  // Constructing the path to the test output directory
-  const cwd = process.cwd();
-  const testOutputPath = path.join(cwd, TEST_OUTPUT_DIRECTORY_PATH);
-  // Calculating the relative path from the src directory to the test file
-  const srcDir = path.join(cwd, "src");
-  const testPath = existsSync(srcDir)
-    ? path.relative(srcDir, testPathString)
-    : path.relative(cwd, testPathString);
-  // Returning the complete path to the test output location
-  const jointPath = path.parse(path.join(testOutputPath, testPath, ...subPath));
+  const jointPath = path.parse(
+    getTestPath(TEST_OUTPUT_DIRECTORY_PATH, ...subPath)
+  );
+
+  // Creating the directory if it doesn't exist
   if (!existsSync(jointPath.dir)) {
     mkdirSync(jointPath.dir, { recursive: true });
   }
@@ -45,21 +58,7 @@ export function getTestOutputPath(...subPath: string[]) {
  * @returns The absolute path string of the test data location.
  */
 export function getTestDataPath(...subPath: string[]) {
-  // Fetching the current test path from the testing framework
-  let testPathString = expect.getState().testPath;
-  // Asserting that the testPathString is valid
-  expect(testPathString);
-  // Type assertion to string
-  testPathString = testPathString as string;
-  // Constructing the path to the test data directory
-  const testDataPath = path.join(process.cwd(), TEST_DATA_DIRECTORY_PATH);
-  // Calculating the relative path from the src directory to the test file
-  const testPath = path.relative(
-    path.join(process.cwd(), "src"),
-    testPathString
-  );
-  // Returning the complete path to the test data location
-  return path.join(testDataPath, testPath, ...subPath);
+  return getTestPath(TEST_DATA_DIRECTORY_PATH, ...subPath);
 }
 
 /**
