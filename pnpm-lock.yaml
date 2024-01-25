@@ -189,29 +189,7 @@ importers:
         specifier: workspace:*
         version: link:../../../../tsconfigs
 
-  packages/api/private/user/delete:
-    dependencies:
-      api-common:
-        specifier: workspace:*
-        version: link:../../../common
-      aws-lambda:
-        specifier: ^1.0.7
-        version: 1.0.7
-    devDependencies:
-      '@types/aws-lambda':
-        specifier: ^8.10.131
-        version: 8.10.131
-      eslint:
-        specifier: ^8.56.0
-        version: 8.56.0
-      eslint-configs:
-        specifier: workspace:*
-        version: link:../../../../eslint-configs
-      tsconfigs:
-        specifier: workspace:*
-        version: link:../../../../tsconfigs
-
-  packages/api/private/user/get:
+  packages/api/private/home/get:
     dependencies:
       '@aws-sdk/client-cognito-identity':
         specifier: ^3.499.0
@@ -229,6 +207,28 @@ importers:
       '@aws-sdk/types':
         specifier: ^3.496.0
         version: 3.496.0
+      '@types/aws-lambda':
+        specifier: ^8.10.131
+        version: 8.10.131
+      eslint:
+        specifier: ^8.56.0
+        version: 8.56.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../tsconfigs
+
+  packages/api/private/user/delete:
+    dependencies:
+      api-common:
+        specifier: workspace:*
+        version: link:../../../common
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+    devDependencies:
       '@types/aws-lambda':
         specifier: ^8.10.131
         version: 8.10.131
@@ -323,7 +323,7 @@ packages:
     resolution: {integrity: sha512-IzSgsrxUcsrejQbPVilIKy16kAT52EwB6zSaI+M3xxIhKh5+aldEyvI+z6erM7TCLB2BJsFrtHjp6/4/sr+3dA==}
     dependencies:
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.489.0
+      '@aws-sdk/types': 3.496.0
       tslib: 1.14.1
     dev: false
 
@@ -350,7 +350,7 @@ packages:
     resolution: {integrity: sha512-PnNN7os0+yd1XvXAy23CFOmTbMaDxgxXtTKHybrJ39Y8kGzBATgBFibWJKH6BhytLI/Zyszs87xCOBNyBig6vQ==}
     dependencies:
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.489.0
+      '@aws-sdk/types': 3.496.0
       tslib: 1.14.1
     dev: false
 
@@ -809,14 +809,6 @@ packages:
       tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
-    dev: false
-
-  /@aws-sdk/types@3.489.0:
-    resolution: {integrity: sha512-kcDtLfKog/p0tC4gAeqJqWxAiEzfe2LRPnKamvSG2Mjbthx4R/alE2dxyIq/wW+nvRv0fqR3OD5kD1+eVfdr/w==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@smithy/types': 2.8.0
-      tslib: 2.6.2
     dev: false
 
   /@aws-sdk/types@3.496.0:
@@ -1824,13 +1816,6 @@ packages:
       '@smithy/protocol-http': 3.1.1
       '@smithy/types': 2.9.1
       '@smithy/util-stream': 2.1.1
-      tslib: 2.6.2
-    dev: false
-
-  /@smithy/types@2.8.0:
-    resolution: {integrity: sha512-h9sz24cFgt/W1Re22OlhQKmUZkNh244ApgRsUDYinqF8R+QgcsBIX344u2j61TPshsTz3CvL6HYU1DnQdsSrHA==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
       tslib: 2.6.2
     dev: false
 
