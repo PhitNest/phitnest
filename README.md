@@ -5,7 +5,7 @@
 Some of our code is split into submodules, which are just separate GitHub repositories nested inside this repository. We use submodules so that individual repositories can have their own GitHub Actions workflows/secrets independent of each other, and so that certain components of our codebase can be private and some can be public. The submodules are:
 
 - [mobile](https://github.com/PhitNest/mobile) (public) - Flutter application for mobile
-- [api](https://github.com/PhitNest/api) (private) - REST API for to serve as the backend for the mobile app.
+- [api](https://github.com/PhitNest/api) (private) - API implementations to serve the mobile app.
 - [aws](https://github.com/PhitNest/aws) (private) - AWS CDK application for deploying AWS components programmatically.
 
 ### To clone this repo + all submodules:
