@@ -3,6 +3,7 @@
     "target": "ES2022",
     "module": "commonjs",
     "lib": ["es2022"],
+    "esModuleInterop": true,
     "declaration": true,
     "strict": true,
     "noImplicitAny": true,
