@@ -44,7 +44,7 @@ git push
 
 Commits made to submodules will be automatically propogated up to the monorepo via GitHub actions.
 
-If your changes are not part of a submodule (I.E. dart-analysis configs, eslint configs, jest-helpers, tsconfigs, monorepo files), just commit your changes directly to the monorepo.
+If your changes are not part of a submodule (I.E. eslint configs, jest-helpers, tsconfigs, monorepo files), just commit your changes directly to the monorepo.
 
 ### TypeScript Development
 
