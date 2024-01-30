@@ -69,7 +69,15 @@ importers:
 
   apps/mobile: {}
 
-  packages/api: {}
+  packages/api:
+    dependencies:
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.131
+        version: 8.10.131
 
   packages/api/cognito-hooks/user-presignup:
     dependencies:
