@@ -303,6 +303,28 @@ importers:
         specifier: workspace:*
         version: link:../../../tsconfigs
 
+  packages/api/websocket/disconnect:
+    dependencies:
+      api-common:
+        specifier: workspace:*
+        version: link:../../common
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.131
+        version: 8.10.131
+      eslint:
+        specifier: ^8.56.0
+        version: 8.56.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../tsconfigs
+
   packages/api/websocket/events/send-message:
     dependencies:
       '@aws-sdk/client-apigatewaymanagementapi':
