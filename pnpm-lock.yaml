@@ -112,6 +112,9 @@ importers:
       aws-lambda:
         specifier: ^1.0.7
         version: 1.0.7
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -125,6 +128,9 @@ importers:
       '@types/node':
         specifier: ^20.11.6
         version: 20.11.6
+      '@types/uuid':
+        specifier: ^9.0.8
+        version: 9.0.8
       '@typescript-eslint/parser':
         specifier: ^5.62.0
         version: 5.62.0(eslint@8.56.0)(typescript@5.3.3)
@@ -274,6 +280,31 @@ importers:
       tsconfigs:
         specifier: workspace:*
         version: link:../../../../tsconfigs
+
+  packages/api/private/user/log/post:
+    dependencies:
+      api-common:
+        specifier: workspace:*
+        version: link:../../../../common
+      aws-lambda:
+        specifier: ^1.0.7
+        version: 1.0.7
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.131
+        version: 8.10.131
+      eslint:
+        specifier: ^8.56.0
+        version: 8.56.0
+      eslint-configs:
+        specifier: workspace:*
+        version: link:../../../../../eslint-configs
+      tsconfigs:
+        specifier: workspace:*
+        version: link:../../../../../tsconfigs
 
   packages/api/websocket/auth-handler:
     dependencies:
@@ -2607,6 +2638,10 @@ packages:
 
   /@types/stack-utils@2.0.3:
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
+    dev: true
+
+  /@types/uuid@9.0.8:
+    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
     dev: true
 
   /@types/yargs-parser@21.0.3:
@@ -5328,6 +5363,11 @@ packages:
 
   /uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
+    dev: false
+
+  /uuid@9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
     dev: false
 
