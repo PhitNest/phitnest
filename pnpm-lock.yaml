@@ -281,11 +281,11 @@ importers:
         specifier: workspace:*
         version: link:../../../../tsconfigs
 
-  packages/api/private/user/log/post:
+  packages/api/public/log/post:
     dependencies:
       api-common:
         specifier: workspace:*
-        version: link:../../../../common
+        version: link:../../../common
       aws-lambda:
         specifier: ^1.0.7
         version: 1.0.7
@@ -301,10 +301,10 @@ importers:
         version: 8.56.0
       eslint-configs:
         specifier: workspace:*
-        version: link:../../../../../eslint-configs
+        version: link:../../../../eslint-configs
       tsconfigs:
         specifier: workspace:*
-        version: link:../../../../../tsconfigs
+        version: link:../../../../tsconfigs
 
   packages/api/websocket/auth-handler:
     dependencies:
