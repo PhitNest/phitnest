@@ -53,3 +53,7 @@ Add the Prettier plugin to your IDE. This will automatically format your code on
 ### System Architecture
 
 ![System Architecture](docs/architecture.png)
+
+### Development AWS Environments
+
+If you would like your own personal AWS development environment, you can create one by running the "CD dev" GitHub Action in the `apps/aws` submodule. This will create a new AWS environment with a unique name, and will deploy the API and other backend components to that environment.
