@@ -57,3 +57,27 @@ Add the Prettier plugin to your IDE. This will automatically format your code on
 ### Development AWS Environments
 
 If you would like your own personal AWS development environment, you can create one by running the "CD dev" GitHub Action in the `apps/aws` submodule. This will create a new AWS environment with a unique name, and will deploy the API and other backend components to that environment.
+
+### Unit Testing
+
+To run unit tests, from the root of the monorepo, run:
+
+```
+turbo test
+```
+
+To only run unit tests for a specific package(s), run:
+
+To run all tests in packages that start with "api":
+
+```
+turbo test --filter=api*
+```
+
+To run all tests in packages that start with "api" or "mobile":
+
+```
+turbo test --filter=api* --filter=mobile*
+```
+
+Package names are defined in the `package.json` file of each package.
