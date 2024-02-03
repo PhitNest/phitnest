@@ -49,3 +49,7 @@ If your changes are not part of a submodule (I.E. eslint configs, jest-helpers, 
 ### TypeScript Development
 
 Add the Prettier plugin to your IDE. This will automatically format your code on save, and will help you avoid formatting errors.
+
+### System Architecture
+
+![System Architecture](docs/architecture.png)
