@@ -35,9 +35,6 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.11.6)(ts-node@10.9.2)
-      jest-helpers:
-        specifier: workspace:*
-        version: link:jest-helpers
       prettier:
         specifier: ^3.2.4
         version: 3.2.4
@@ -117,18 +114,6 @@ importers:
         specifier: workspace:*
         version: link:../tsconfigs
 
-  apps/backend/jest-helpers:
-    devDependencies:
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.6)(ts-node@10.9.2)
-      ts-jest:
-        specifier: ^29.1.2
-        version: 29.1.2(@babel/core@7.23.7)(jest@29.7.0)(typescript@5.3.3)
-      tsconfigs:
-        specifier: workspace:*
-        version: link:../tsconfigs
-
   apps/backend/rest-api/private/conversation/get:
     dependencies:
       aws-lambda:
@@ -148,33 +133,7 @@ importers:
         specifier: workspace:*
         version: link:../../../../tsconfigs
 
-<<<<<<< HEAD
-  packages/api/private/explore/get:
-    dependencies:
-      api-common:
-        specifier: workspace:*
-        version: link:../../../common
-      aws-lambda:
-        specifier: ^1.0.7
-        version: 1.0.7
-    devDependencies:
-      '@types/aws-lambda':
-        specifier: ^8.10.131
-        version: 8.10.131
-      eslint:
-        specifier: ^8.56.0
-        version: 8.56.0
-      eslint-configs:
-        specifier: workspace:*
-        version: link:../../../../eslint-configs
-      tsconfigs:
-        specifier: workspace:*
-        version: link:../../../../tsconfigs
-
-  packages/api/private/friend-request/delete:
-=======
   apps/backend/rest-api/private/explore/get:
->>>>>>> 4427b7ce (Rearranged aws and api into backend)
     dependencies:
       aws-lambda:
         specifier: ^1.0.7
