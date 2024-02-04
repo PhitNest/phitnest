@@ -13,6 +13,7 @@ These commands will clone the monorepo, and all the submodules.
 
 ```
 git clone https://github.com/phitnest/phitnest.git --recurse-submodules
+git submodule update --init --recursive .
 git submodule foreach git checkout master
 ```
 
