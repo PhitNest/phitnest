@@ -47,28 +47,6 @@ If your changes are not part of a submodule (I.E. eslint configs, jest-helpers, 
 
 PRs should be made to the submodules, not the monorepo.
 
-### TypeScript Development
-
-Add the [Prettier ESLint](https://marketplace.visualstudio.com/items?itemName=rvest.vs-code-prettier-eslint) plugin to your IDE. This will automatically format your code on save, and will help you avoid formatting errors.
-
-To make sure your code is following the correct formatting, run:
-
-```
-turbo lint
-```
-
 ### System Architecture
 
 ![System Architecture](docs/architecture.png)
-
-### Development AWS Environments
-
-If you would like your own personal AWS development environment, you can create one by running the "CD dev" GitHub Action in the `apps/backend` submodule. This will create a new AWS environment with a unique name, and will deploy the API and other backend components to that environment.
-
-### Unit Testing
-
-To run unit tests, from the root of the monorepo, run:
-
-```
-turbo test
-```
