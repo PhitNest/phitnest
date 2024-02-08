@@ -7,7 +7,6 @@ node_modules
 .DS_Store
 *.pem
 .idea
-.vscode
 
 # turbo
 .turbo
