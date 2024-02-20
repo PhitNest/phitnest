@@ -1,12 +1,15 @@
 import {OpenAPIHono} from '@hono/zod-openapi'
 import {serve} from "@hono/node-server";
 import {swaggerUI} from "@hono/swagger-ui";
-import registerPaths from "./routes/route";
-import registerSchemas from "./schemas/schema";
+import routes from "routes/route";
+import schemas from "schemas/schema";
+import {tags} from '~/tags';
+import {servers} from "~/servers";
 
 const app = new OpenAPIHono()
-registerPaths(app)
-registerSchemas(app)
+
+app.route("/", routes)
+app.route("/", schemas)
 
 // Middleware to serve the Swagger-UI at /api-doc
 app.use('/api-doc', swaggerUI({url: '/doc-json'}))
@@ -16,45 +19,11 @@ app.doc('/doc-json', {
     openapi: '3.0.0',
     info: {
         title: "apps/backend/rest-api",
-        description: "Backend Represetation of GoldNest",
+        description: "Backend Representation of GoldNest",
         version: "1.0.0"
     },
-    servers: [
-        {
-            "description": "SwaggerHub API Auto Mocking",
-            "url": "https://virtserver.swaggerhub.com/CAGLARKULLU_1/Demo/1.0.0"
-        },
-        {
-            "url": "http://api.yourdomain.com/v1",
-            "description": "Production server"
-        }
-    ],
-    tags: [
-        {
-            name: "User Management",
-            description: "Operations related to user account management."
-        },
-        {
-            name: "Friend Requests",
-            description: "Operations for managing friend requests."
-        },
-        {
-            name: "Messaging",
-            description: "Operations related to user messaging."
-        },
-        {
-            name: "Reporting",
-            description: "Operations for reporting.route.ts users or content."
-        },
-        {
-            name: "Logging",
-            description: "Operations for submitting and managing log events."
-        },
-        {
-            name: "Home Data",
-            description: "Operations for fetching home screen data."
-        },
-    ],
+    servers: servers,
+    tags: tags,
 })
 
 

@@ -13,6 +13,9 @@
       ],
       "schemas/*": [
         "./src/schemas/*"
+      ],
+      "~/*": [
+        "./src/*"
       ]
     },
     "jsx": "react-jsx",
