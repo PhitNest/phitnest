@@ -1,0 +1,11 @@
+# Node
+node_modules
+
+# Jetbrains
+.idea
+
+# Misc
+.env
+
+# MacOS generated files
+.DS_STORE
