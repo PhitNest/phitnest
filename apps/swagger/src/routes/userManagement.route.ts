@@ -2,7 +2,7 @@ import {createRoute, z} from "@hono/zod-openapi";
 
 export const deleteUserRoute = createRoute({
     method: 'delete',
-    path: '/private/user',
+    path: '/user',
     tags: ['User Management'],
     description: "Deletes the user's account along with all associated friend requests, messages, and other related data. This operation is irreversible.",
     summary: "Delete user account",
@@ -47,7 +47,7 @@ export const deleteUserRoute = createRoute({
 
 export const exploreUsersRoute = createRoute({
     method: 'get',
-    path: '/private/explore',
+    path: '/explore',
     tags: ['User Management'],
     description: "Provides a list of users for exploration, potentially to find new friends or connections.",
     summary: "Explore Users",

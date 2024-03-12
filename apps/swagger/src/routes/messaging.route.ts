@@ -2,7 +2,7 @@ import {createRoute, z} from "@hono/zod-openapi";
 
 export const conversationRoute = createRoute({
     method: 'get',
-    path: '/private/conversation',
+    path: '/conversation',
     tags: ['Messaging'],
     description: "Fetches conversation messages between the authenticated user and the specified friend, using the friend's user ID (`friendId`) to identify the conversation.",
     summary: "Retrieve conversation messages",

@@ -2,7 +2,7 @@ import {createRoute, z} from "@hono/zod-openapi";
 
 export const sendFriendRequestRoute = createRoute({
     method: 'post',
-    path: '/private/friend-request',
+    path: '/friend-request',
     tags: ['Friend Requests'],
     description: "Sends a new friend request to the specified user or accepts an existing one if found. If an outgoing friend request already exists, an error is returned.",
     summary: "Send or accept friend request",
@@ -56,7 +56,7 @@ export const sendFriendRequestRoute = createRoute({
 
 export const deleteFriendRequestRoute = createRoute({
     method: 'delete',
-    path: '/private/friend-request',
+    path: '/friend-request',
     tags: ['Friend Requests'],
     description: "Deletes an existing friend request, either sent by the user or received from the specified friend.",
     summary: "Delete friend request",
