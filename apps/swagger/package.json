@@ -15,5 +15,12 @@
     "@types/node": "^20.11.17",
     "@types/swagger-ui-express": "^4.1.6",
     "tsx": "^3.12.2"
-  }
+  },
+  "name": "swagger",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

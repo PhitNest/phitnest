@@ -2,7 +2,7 @@ import {createRoute, z} from "@hono/zod-openapi";
 
 export const getReportRoute = createRoute({
     method: 'get',
-    path: '/private/report',
+    path: '/report',
     tags: ['Reporting'],
     description: "Retrieves a list of reports made by users, including details such as the reporter, the reported user, the reason for the report, and the date the report was created.",
     summary: "Fetch user reports",
@@ -50,7 +50,7 @@ export const getReportRoute = createRoute({
 
 export const postReportRoute = createRoute({
     method: 'post',
-    path: '/private/report',
+    path: '/report',
     tags: ['Reporting'],
     description: "Allows authenticated users to submit reports about other users, specifying the reported user and the reason for the report.",
     request: {

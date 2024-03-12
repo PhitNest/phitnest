@@ -5,7 +5,7 @@ import {FriendRequestSchema} from "schemas/friendRequest.schema";
 
 export const getHomeDataRoute = createRoute({
     method: 'get',
-    path: '/private/home',
+    path: '/home',
     tags: ['Home Data'],
     description: "Retrieves data for the user's home screen, including personal information, recent messages, and pending friend requests.",
     summary: "Fetch home screen data",

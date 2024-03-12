@@ -2,7 +2,7 @@ import {createRoute, z} from "@hono/zod-openapi";
 
 export const loggingRoute = createRoute({
     method: 'post',
-    path: '/public/log',
+    path: '/log',
     tags: ['Logging'],
     description: "Allows public submission of a log event, structured according to the LogEvent schema. This endpoint is accessible without authentication.",
     summary: "Submit a public log event ",
