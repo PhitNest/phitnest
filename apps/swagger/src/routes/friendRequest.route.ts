@@ -40,17 +40,6 @@ export const sendFriendRequestRoute = createRoute({
             },
             description: "Friend request successfully sent or accepted."
         },
-        400: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        error: z.string(),
-                        message: z.string(),
-                    })
-                },
-            },
-            description: "Unauthorized request, such as missing or invalid authentication credentials."
-        },
     },
 })
 
@@ -85,17 +74,6 @@ export const deleteFriendRequestRoute = createRoute({
                 },
             },
             description: "Friend request successfully deleted."
-        },
-        400: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        error: z.string(),
-                        message: z.string(),
-                    })
-                },
-            },
-            description: "Bad request, such as missing friendId in the query parameters."
         },
     },
 })

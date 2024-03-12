@@ -22,29 +22,6 @@ export const getReportRoute = createRoute({
             },
             description: "Successfully retrieved user reports."
         },
-        401: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        error: z.string(),
-                        message: z.string(),
-                    })
-                },
-            },
-            description: "Unauthorized request, such as missing or invalid authentication credentials."
-        },
-        404: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        message: z.string().openapi({
-                            default: "No reports found."
-                        }),
-                    })
-                },
-            },
-            description: "No reports found."
-        },
     },
 })
 
@@ -78,28 +55,6 @@ export const postReportRoute = createRoute({
                 },
             },
             description: "Report submitted successfully."
-        },
-        400: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        error: z.string(),
-                        message: z.string(),
-                    })
-                },
-            },
-            description: "Bad request, such as missing required fields or invalid data."
-        },
-        401: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        error: z.string(),
-                        message: z.string(),
-                    })
-                },
-            },
-            description: "Unauthorized request, such as missing or invalid authentication credentials."
         },
     },
 })
