@@ -33,27 +33,5 @@ export const conversationRoute = createRoute({
             },
             description: "Successfully retrieved conversation messages."
         },
-        400: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        error: z.string(),
-                        message: z.string(),
-                    })
-                },
-            },
-            description: "Bad request, such as missing or invalid friendId in the query parameters."
-        }, 404: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        message: z.string().openapi({
-                            default: "No conversation found."
-                        }),
-                    })
-                },
-            },
-            description: "No conversation found with the specified friendId."
-        },
     },
 })

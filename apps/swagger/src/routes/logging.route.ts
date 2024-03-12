@@ -36,16 +36,5 @@ export const loggingRoute = createRoute({
             },
             description: "Public log event submitted successfully."
         },
-        400: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        error: z.string(),
-                        message: z.string(),
-                    })
-                },
-            },
-            description: "Bad request, such as invalid log event data."
-        },
     },
 })

@@ -19,29 +19,6 @@ export const deleteUserRoute = createRoute({
             },
             description: "User account and all associated data successfully deleted."
         },
-        401: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        error: z.string(),
-                        message: z.string(),
-                    })
-                },
-            },
-            description: "Unauthorized request, such as missing or invalid authentication credentials."
-        },
-        404: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        message: z.string().openapi({
-                            default: "User not found or already deleted."
-                        }),
-                    })
-                },
-            },
-            description: "User not found or already deleted."
-        },
     },
 })
 
@@ -66,29 +43,6 @@ export const exploreUsersRoute = createRoute({
                 },
             },
             description: "Successfully retrieved a list of users to explore."
-        },
-        400: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        error: z.string(),
-                        message: z.string(),
-                    }),
-                },
-            },
-            description: "Bad request, such as issues with query parameters or request formatting."
-        },
-        404: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        message: z.string().openapi({
-                            default: "No users found"
-                        }),
-                    }),
-                },
-            },
-            description: "No users found for exploration."
         },
     },
 })

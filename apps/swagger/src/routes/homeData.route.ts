@@ -22,16 +22,5 @@ export const getHomeDataRoute = createRoute({
             },
             description: "Successfully retrieved home screen data."
         },
-        401: {
-            content: {
-                'application/json': {
-                    schema: z.object({
-                        error: z.string(),
-                        message: z.string(),
-                    })
-                },
-            },
-            description: "Unauthorized request, such as missing or invalid authentication credentials."
-        },
     },
 })
